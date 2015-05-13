@@ -1,0 +1,33 @@
+body {
+
+	background-color: #1c1350;
+	background:url(img/bg.jpg);
+	margin-left: 0px;	margin-top: 0px;	margin-right: 0px;	margin-bottom: 0px;
+	font-size: 15px; font-family:"Arial,新細明體" color: #cccccc;  line-height:24px;
+	
+	
+
+height: 450px; /* div的高度 */
+width: 800px;/* div的寬度 */
+position: absolute;
+ top: 50%;
+ left: 50%;
+ margin: -290px 0 0 -500px;/* 邊界減去一半的寬高 */
+	 }	
+
+#right{border:0;}
+
+img {border:0;}
+table, tr, th, td, body { color:#cccccc; font-size: 15px; line-height: 24px; font-family:"Arial,新細明體" }
+
+
+a:link{ color:#8dc278; text-decoration: underline; }
+a:visited{ color:#8dc278; text-decoration: underline; }
+a:hover{ color:#d4ea99; text-decoration: underline; }
+
+
+.form-1{  border:0px solid #598993;  background-color:#575589; height:20px; margin:1px;  color:#ffffff; font-size: 14px;  font-family:"Arial"}
+
+#theDiv {
+
+}

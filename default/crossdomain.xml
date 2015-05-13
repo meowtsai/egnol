@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE cross-domain-policy SYSTEM
+	"http://www.macromedia.com/xml/dtds/cross-domain-policy.dtd" >
+<cross-domain-policy>
+	<site-control permitted-cross-domain-policies="all" />
+	<allow-access-from domain="*.xf.long_e.com.tw" />
+	<allow-http-request-headers-from domain="*.xf.long_e.com.tw" headers="*"/>
+	<allow-access-from domain="*.long_e.com.tw" />
+	<allow-http-request-headers-from domain="*.long_e.com.tw" headers="*"/>	
+	<allow-access-from domain="203.75.245.*" />
+	<allow-http-request-headers-from domain="203.75.245.*" headers="*"/>	
+</cross-domain-policy>

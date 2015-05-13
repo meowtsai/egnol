@@ -1,0 +1,33 @@
+body {
+
+	background-color: #000000;
+	margin-left: 0px;	margin-top: 0px;	margin-right: 0px;	margin-bottom: 0px;
+	font-size: 15px; font-family:"Arial,新細明體" color: #aaaaaa;	line-height:22px;
+	background:url(img/bg.jpg) center;
+	 }	
+
+#right{border:0;}
+
+img {border:0;}
+table, tr, th, td, body { color:#aaaaaa; font-size: 15px; line-height: 22px; font-family:"Arial,新細明體" }
+
+
+a:link{ color:#5ba6bc; text-decoration: underline; }
+a:visited{ color:#5ba6bc; text-decoration: underline; }
+a:hover{ color:#5ba6bc; text-decoration: underline; }
+
+
+.form-1{  border:0px solid #aaaaaa;  background-color:#263a46; height:20px; margin:1px;  color:#aaaaaa; font-size: 14px;  font-family:"Arial"}
+.form-2{  border:0px solid #aaaaaa;  background-color:#000000; height:20px; margin:1px;  color:#aaaaaa; font-size: 14px;  font-family:"Arial"}
+
+
+
+.font-size12 {  font-size: 12px; line-height: 17px; font-family:"Arial,新細明體"}
+.font-size15 {  font-size: 15px; line-height: 22px; font-family:"Arial,新細明體"; color: #c3b6a6;	}
+
+
+.text-white {  color:#ffffff;font-family:"Arial,新細明體"; }
+.text-white a:link{ color:#ffffff; text-decoration: underline; }
+.text-white a:visited{ color:#ffffff; text-decoration: underline; }
+.text-white a:hover{ color:#ffffff; text-decoration: none; }
+

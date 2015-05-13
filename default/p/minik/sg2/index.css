@@ -1,0 +1,70 @@
+body {
+
+	background-color: #000000;
+	margin-left: 0px;	margin-top: 0px;	margin-right: 0px;	margin-bottom: 0px;
+	font-size: 15px; font-family:"Arial,新細明體" color: #c4b29d;	line-height:22px;
+	 }	
+
+	
+img {border:0;}
+table, tr, th, td, body { color:#998675; font-size: 15px; line-height: 22px; font-family:"Arial,新細明體" }
+
+
+a:link{ color:#b6a291; text-decoration: underline; }
+a:visited{ color:#b6a291; text-decoration: underline; }
+a:hover{ color:#e9b485; text-decoration: underline; }
+
+
+.form-1{  border:0px solid #63574d;  background-color:#0e0a0b; height:17px; margin:1px;  color:#ffffff; font-size: 14px;  font-family:"Arial"}
+.form-2{ border: 0px solid;  color:#ffffff;  background-color:#927d63; height:17px; margin:1px;  font-size: 14px; line-height: 18px;font-family:"Arial"}
+
+
+
+.font-size12 {  font-size: 12px; line-height: 17px; font-family:"Arial,新細明體"}
+.font-size15 {  font-size: 15px; line-height: 22px; font-family:"Arial,新細明體"; color: #c3b6a6;	}
+
+
+.text-brown-size15 {  color:#a6937c; font-size: 15px; line-height: 22px; font-family:"Arial,新細明體"; }
+.text-brown-size15 a:link{ color:#a6937c; text-decoration: underline; }
+.text-brown-size15 a:visited{ color:#a6937c; text-decoration: underline; }
+.text-brown-size15 a:hover{ color:#c5b49e; text-decoration: none; }
+
+
+.text-orange-size12 {  color:#f8b551; font-size: 12px; line-height: 22px; font-family:"Arial,新細明體"; }
+.text-orange-size12  a:link{ color:#f8b551; text-decoration: underline; }
+.text-orange-size12  a:visited{ color:#f8b551; text-decoration: underline; }
+.text-orange-size12  a:hover{ color:#ffffff; text-decoration: none; }
+
+.text-orange-size15 {  color:#cfa972; font-size: 15px; line-height: 22px; font-family:"Arial,新細明體"; }
+
+
+
+.list-1{ float:left; width:201px; height:42px; background:url(img/index-server-img-01.png)}
+	.list-1-img{  float:left; width:144px; height:42px;}
+	.list-1-tx{ float:left; width:26px; height:17px; font-size: 12px; padding-top:12px; padding-bottom:12px; padding-right:27px;}
+
+
+
+.list-2{ float:left; width:201px; height:42px; background:url(img/index-server-img-03.png)}
+	.list-2-img{  float:left; width:144px; height:42px;}
+	.list-2-tx{ float:left; width:26px; height:17px; font-size: 12px; padding-top:12px; padding-bottom:12px; padding-right:27px;}
+
+
+.list-3{ float:left; width:148px; height:37px; background:url(img/index-loing-01.jpg)}
+	.list-3-img{  float:left; width:90px; height:22px; text-indent:15px; padding-top: 8px;    color:#ffffff;}
+	.list-3-tx{ float:left; width:50px; height:22px; font-size: 12px; padding-top:8px; text-indent:10px; padding-bottom:0px; padding-right:5px;}
+
+
+
+.back1 {
+     background-image:url(http://dh.long_e.com.tw/views/dh/img/index-game-img-011.jpg); 
+     background-repeat: no-repeat;
+}
+.back2 {
+     background-image:url(http://dh.long_e.com.tw/views/dh/img/index-game-img-021.jpg); 
+     background-repeat: no-repeat;
+}
+.back3 {
+     background-image:url(http://dh.long_e.com.tw/views/dh/img/index-game-img-031.jpg); 
+     background-repeat: no-repeat;
+}

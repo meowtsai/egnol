@@ -1,0 +1,24 @@
+body {
+
+	background-color: #3e342a;
+	margin-left: 0px;	margin-top: 0px;	margin-right: 0px;	margin-bottom: 0px;
+	font-size: 15px; font-family:"Arial,新細明體" color: #cccccc;  line-height:24px;
+	background:#3e342a ; }	
+
+#right{border:0;}
+
+img {border:0;}
+table, tr, th, td, body { color:#cccccc; font-size: 15px; line-height: 24px; font-family:"Arial,新細明體" }
+
+
+a:link{ color:#8dc278; text-decoration: underline; }
+a:visited{ color:#8dc278; text-decoration: underline; }
+a:hover{ color:#d4ea99; text-decoration: underline; }
+
+.form-1{
+border:0;height:36px; width:178px; margin:0px;
+background:url(/p/register/mon/img/title-bg.png) top center no-repeat;
+text-indent: 0.5em; 
+color:#ffffff; font-size: 14px;  font-family:"Arial" }
+
+.form-2{  border:0px solid #598993;  background-color:#598993; height:20px; margin:1px;  color:#ffffff; font-size: 14px;  font-family:"Arial"}

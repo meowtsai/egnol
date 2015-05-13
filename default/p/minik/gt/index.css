@@ -1,0 +1,36 @@
+body {
+
+	background-color: #504643;
+	margin-left: 0px;	margin-top: 0px;	margin-right: 0px;	margin-bottom: 0px;
+	font-size: 15px; font-family:"Arial,新細明體" color: #cccccc;  line-height:24px;
+	background:#504643 ; }	
+
+#right{border:0;}
+
+img {border:0;}
+table, tr, th, td, body { color:#ffffff; font-size: 15px; line-height: 24px; font-family:"Arial,新細明體" }
+
+
+a:link{ color:#8dc278; text-decoration: underline; }
+a:visited{ color:#8dc278; text-decoration: underline; }
+a:hover{ color:#d4ea99; text-decoration: underline; }
+
+.form-1{
+border:0;height:21px; width:205px;
+background:url(img/registration-img-5.png) top center no-repeat;
+padding-left: 8px;
+color:#ffffff; font-size: 14px;  font-family:"Arial"; }
+
+
+.form-2{
+border:0; height:21px; width:86px;
+background:url(img/registration-img-6.png) top no-repeat;
+padding-left: 8px;
+color:#ffffff; font-size: 14px;  font-family:"Arial"; }
+
+
+.form-3{  border:0px solid #598993;  background-color:#598993; height:20px; margin:1px;  color:#ffffff; font-size: 14px;  font-family:"Arial"}
+
+
+
+

@@ -1,0 +1,37 @@
+@charset "utf-8";
+charset {}
+
+body{margin:0px; background:#fcfdf8;}
+
+a {text-decoration: none}
+#left a, #left a:link, #left a:visited{text-decoration:none; color:#FFF;}
+#left a:hover{color:#FC0;}
+
+ol, ul {
+    list-style: none;
+}
+#wrap{width:100%;}
+#main{width:100%;}
+#intop{width:100%; height:450px;}
+#content{background:url(/p/img/content_bk_02.jpg) repeat-y center top;
+			border-top:4px solid #ffb400; border-bottom:1px solid #e1e2dd;}
+#content2{width:1000px; margin:0 auto; padding:2px 0 55px;}
+#left {width:250px; float:left; margin-left:100px;}
+#right {width:600px; float:left; margin-left:10px;}
+
+#msg {width:210px; height:115px; margin:0 auto; background-color:#000; text-align:center; padding:3px;}
+
+#box01{width:230px; height:240px; margin-left:10px; margin-top:15px; background-image:url(/p/img/input_bk.png); background-position:center top; background-repeat:no-repeat;}
+#box01-2{width:230px; height:240px; margin-left:10px; margin-top:15px;}
+#box02{width:230px; height:135px; margin-top:10px; margin-left:10px;}
+#box03{width:600px; margin-top:15px;}
+#box04{width:600px; height:210px; margin-top:10px; background-image:url(/p/img/info_bk.jpg); background-position:center top; background-repeat:no-repeat;}
+#box05{width:600px; margin-top:15px;}
+
+.news{width:540px; height:30px; font-family:Verdana, Geneva, sans-serif "微軟正黑體"; font-size:14px; color:#000; margin:0 auto;}
+.news a { color:#000;}
+
+.input01{width:100px; height:20px; font:Verdana, Geneva, sans-serif "微軟正黑體"; color:#000; background-color:#FFF; font-size:12px;}
+.input02{font:Verdana, Geneva, sans-serif "微軟正黑體"; color:#fff; font-size:12px;}
+
+.text2{font:Verdana, Geneva, sans-serif "微軟正黑體"; color:#F03; font-size:14px;}

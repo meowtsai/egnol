@@ -1,0 +1,109 @@
+table, tr, th, td, body { color:#464646; font-size: 12px; line-height: 18px; font-family:"Arial,新細明體" }
+
+.text-white {  color:#ffffff; font-size: 12px; line-height: 18px; font-family:"Arial,新細明體" }
+.text-white A:link{ color:#ffffff; text-decoration: underline; }
+.text-white A:visited{ color:#ffffff; text-decoration: none; }
+.text-white A:hover{ color:#ffffff; text-decoration: underline; }
+
+
+.text-brown {  color:#603913; font-size: 12px; line-height: 18px; font-family:"Arial,新細明體" }
+.text-brown A:link{ color:#603913; text-decoration: underline; }
+.text-brown A:visited{ color:#603913; text-decoration: none; }
+.text-brown A:hover{ color:#603913; text-decoration: underline; }
+
+.text-gray {  color:#464646; font-size: 12px; line-height: 18px; font-family:"Arial,新細明體" }
+.text-gray A:link{ color:#464646; text-decoration: underline; }
+.text-gray A:visited{ color:#464646; text-decoration: none; }
+.text-gray A:hover{ color:#464646; text-decoration: underline; }
+
+.text-gray-light {  color:#aaaaaa; font-size: 12px; line-height: 18px; font-family:"Arial,新細明體" }
+.text-gray-light A:link{ color:#aaaaaa; text-decoration: underline; }
+.text-gray-light A:visited{ color:#aaaaaa; text-decoration: none; }
+.text-gray-light A:hover{ color:#aaaaaa; text-decoration: underline; }
+
+.text-gray-white {  color:#D9D9D9; font-size: 12px; line-height: 18px; font-family:"Arial,新細明體" }
+.text-gray-white A:link{ color:#D9D9D9; text-decoration: underline; }
+.text-gray-white A:visited{ color:#D9D9D9; text-decoration: none; }
+.text-gray-white A:hover{ color:#D9D9D9; text-decoration: underline; }
+
+.text-blue {  color:#004a80; font-size: 12px; line-height: 18px; font-family:"Arial,新細明體" }
+.text-blue A:link{ color:#004a80; text-decoration: underline; }
+.text-blue A:visited{ color:#004a80; text-decoration: none; }
+.text-blue A:hover{ color:#004a80; text-decoration: underline; }
+
+.text-red {  color:#9d0039; font-size: 12px; line-height: 18px; font-family:"Arial,新細明體" }
+.text-red A:link{ color:#9d0039; text-decoration: underline; }
+.text-red A:visited{ color:#9d0039; text-decoration: none; }
+.text-red A:hover{ color:#9d0039; text-decoration: underline; }
+
+.text-orange {  color:#f26522; font-size: 12px; line-height: 18px; font-family:"Arial,新細明體" }
+.text-orange A:link{ color:#f26522; text-decoration: underline; }
+.text-orange A:visited{ color:#f26522; text-decoration: none; }
+.text-orange A:hover{ color:#f26522; text-decoration: underline; }
+
+
+.form-1 { color: #000000; font-size: 12px; line-height: 18px; style: height: 22px;  background-color:#BBBBBB; border: 0 solid; border-color:c2c2c2 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.t1 { font-size: 11px; color: #6A6A6A; line-height: 22px; font-family: Arial, 新細明體 }
+.t2 { font-size: 12px; color: #757575; line-height: 22px; font-family: Arial, 新細明體 }
+
+.form-10 { color: #333333; font-size: 10px; line-height: 16px; background-color:#eeeeee; border: 1 solid; border-color:888888 }
+.form-12 { color: #333333; font-size: 12px; line-height: 18px; background-color:#eeeeee; border: 1 solid; border-color:888888 }
+
+.menu-12 { color: #444444; font-style: normal; font-size: 12px;line-height: 18px; font-family:"Arial,新細明體" }
+.menu-12 A:link{ color:#444444; text-decoration: none; }
+.menu-12 A:visited{ color:#444444; text-decoration: none; }
+.menu-12 A:hover{ color:#08218c; text-decoration: underline; }
+
+.content-12 { color: #444444; font-style: normal; font-size: 12px;line-height: 18px; font-family:"Arial,新細明體" }
+.content-12 A:link{ color:#882222; text-decoration: none; }
+.content-12 A:visited{ color:#882222; text-decoration: none; }
+.content-12 A:hover{ color:#DD0044; text-decoration: underline; }
+
+.lightcolor-12 { color: #FFBBDD; font-style: normal; font-size: 12px;line-height: 18px; font-family:"Arial,新細明體" }
+.lightcolor-12 A:link{ color:#FFFF88; text-decoration: none; }
+.lightcolor-12 A:visited{ color:#FFFF88; text-decoration: none; }
+.lightcolor-12 A:hover{ color:#FFFF44; text-decoration: underline; }
+
+.content-13 { color: #666666; font-style: normal; font-size: 13px;line-height: 18px; font-family:"Arial,新細明體" }
+.content-13 A:link{ color:#882222; text-decoration: none; }
+.content-13 A:visited{ color:#882222; text-decoration: none; }
+.content-13 A:hover{ color:#08218c; text-decoration: underline; }
+
+.content-15 { color: #FF0088; font-style: normal; font-size: 15px;line-height: 21px; font-family:"Arial,新細明體" }
+
+.footer-12 { color: #0088BB; font-style: normal; font-size: 12px;line-height: 18px; font-family:"Arial,新細明體"; filter: glow(color=#ffffff,strength=3); padding:1px; }
+.footer-12 A:link{ color:#0088BB; text-decoration: none; }
+.footer-12 A:visited{ color:#0088BB; text-decoration: none; }
+.footer-12 A:hover{ color:#08218c; text-decoration: underline; }
+
+.PEcopyright { color: #4B4B4B; font-style: normal; font-size: 12px;line-height: 18px; font-family:"Arial,新細明體"; filter: glow(color=#ffffff,strength=3); padding:1px; }
+
+.marquee { color: #FFADC9; font-style: normal; font-size: 12px;line-height: 18px; font-family:"Arial,新細明體" }
+.marquee A:link{ color:#FFADC9; text-decoration: underline; }
+.marquee A:visited{ color:#FFADC9; text-decoration: none; }
+.marquee A:hover{ color:#FFFF44; text-decoration: underline; }
+.form-1 {
+	border: 5px 5 #000033;
+}
+.about {
+	line-height: 2;
+}
