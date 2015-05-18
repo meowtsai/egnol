@@ -36,7 +36,7 @@ class Minik_page extends MY_Controller {
 		
 				$cnt = $this->db->from("log_game_logins")
 					->where("account", $this->g_user->account)
-					->where("server_id in (SELECT id FROM `servers` WHERE game_id='{$game}')", null, false)
+					->where("server_id in (SELECT server_id FROM `servers` WHERE game_id='{$game}')", null, false)
 					->where("is_recent", "1")
 					->where("DATEDIFF(NOW(), create_time)<=90", null, false)
 					->count_all_results();

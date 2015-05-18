@@ -43,7 +43,7 @@ class Game
 			return $this->_return_error("尚未登入");
 		}		
 		
-		$this->log_game_login($user->uid, $user->account, $server->id);
+		$this->log_game_login($user->uid, $user->account, $server->server_id);
 
 		$this->CI->load->library("game_api/{$server->game_id}");		
 		$this->CI->{$server->game_id}->login($server, $user, $ad);
@@ -130,7 +130,7 @@ class Game
 		$this->CI->db
 			//->where("uid", $user->uid)
 			->where("account", $user->account)
-			->where("server_id", $server->id)
+			->where("server_id", $server->server_id)
 			->where("is_recent", "1")
 			->update("log_game_logins", array("is_recent" => "0"));
 			
@@ -153,7 +153,7 @@ class Game
 					'ip' => $_SERVER["REMOTE_ADDR"],
 					'create_time' => now(),
 					'is_recent' => '1',
-					'server_id' => $server->id,
+					'server_id' => $server->server_id,
 					'ad' => empty($ad) ? '' : $ad,
 					'game_id' => $site,
 					'is_first' => $is_first,

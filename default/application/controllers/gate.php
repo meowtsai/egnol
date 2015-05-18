@@ -269,7 +269,7 @@ class Gate extends MY_Controller {
 		
 		$cnt = $this->db->from("log_game_logins")
 			->where("account", $this->g_user->account)
-			->where("server_id in (SELECT id FROM `servers` WHERE game_id='{$game_id}')", null, false)
+			->where("server_id in (SELECT server_id FROM `servers` WHERE game_id='{$game_id}')", null, false)
 			->where("is_recent", "1")
 			->where("DATEDIFF(NOW(), create_time)<=90", null, false)
 			->count_all_results();
@@ -311,7 +311,7 @@ class Gate extends MY_Controller {
 									
 			$cnt = $this->db->from("log_game_logins")
 				->where("account", $this->g_user->account)
-				->where("server_id in (SELECT id FROM `servers` WHERE game_id='{$game_id}')", null, false)
+				->where("server_id in (SELECT server_id FROM `servers` WHERE game_id='{$game_id}')", null, false)
 				//->where("is_recent", "1")
 				->where("DATEDIFF(NOW(), create_time)<=90", null, false)
 				->count_all_results();
@@ -333,7 +333,7 @@ class Gate extends MY_Controller {
 					header("location: http://{$game_id}.long_e.com.tw");
 				}
 				else {
-					header("location: http://www.long_e.com.tw/play_game?sid=".$server->id."&ad={$ad}&");
+					header("location: http://www.long_e.com.tw/play_game?sid=".$server->server_id."&ad={$ad}&");
 				}
 			}
 			exit();
@@ -367,7 +367,7 @@ class Gate extends MY_Controller {
 		
 		$this->load->view("gate/play_game", array(
 			"server" => $server,
-			"game_url" => "http://www.long_e.com.tw/gate/login_game?sid={$server->id}&ad={$ad}",
+			"game_url" => "http://www.long_e.com.tw/gate/login_game?sid={$server->server_id}&ad={$ad}",
 			"is_minik_user" => (strpos($this->g_user->account, "@minik") !== false ? true : false),
 			"frame_conf" => $frame_conf,		
 			"bulletins" => $this->g_bulletins->get_list($server->game_id, 0, 5),		

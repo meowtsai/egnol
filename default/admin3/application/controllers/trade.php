@@ -241,7 +241,7 @@ class Trade extends MY_Controller {
 			}
 			
 			if ($ad_channel = $this->input->get("ad_channel")) {
-				$this->db->where("EXISTS(select * from characters where uid=ub.uid and server_id=gi.id and ad='{$ad_channel}')", null, false);
+				$this->db->where("EXISTS(select * from characters where uid=ub.uid and server_id=gi.server_id and ad='{$ad_channel}')", null, false);
 			}
 			
 			if ($this->input->get("display_game") == "server") {
@@ -295,7 +295,7 @@ class Trade extends MY_Controller {
 
 				case "廣告統計":			
 					$query = $this->db->select("gsr.ad title, sum(ub.amount) cnt", false)
-						->join("characters gsr", "gsr.uid=ub.uid and gsr.server_id=gi.id and ad<>''")
+						->join("characters gsr", "gsr.uid=ub.uid and gsr.server_id=gi.server_id and ad<>''")
 						->group_by("title, {$game_key}")
 						->order_by("cnt desc, {$game_key}")->get();					
 					break;		
@@ -1439,7 +1439,7 @@ class Trade extends MY_Controller {
 						default: $this->db->where("gsr.ad", $partner);
 					}	
 					$query = $this->db->select("gsr.ad title, sum(ub.amount) cnt", false)
-						->join("characters gsr", "gsr.uid=ub.uid and gsr.server_id=gi.id and ad<>''")
+						->join("characters gsr", "gsr.uid=ub.uid and gsr.server_id=gi.server_id and ad<>''")
 						->group_by("title, {$game_key}")
 						->order_by("cnt desc, {$game_key}")->get();					
 					break;					

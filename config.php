@@ -35,14 +35,14 @@ switch (ENVIRONMENT)
 			'hostname' 	=> 'localhost',
 			'database' 	=> 'long_e',
 			'username' 	=> 'root',
-			'password' 	=> '123',
+			'password' 	=> 'longeplay',
 			'port' 		=> '3306',
 			'db_debug'	=> TRUE,
 		);
 		$g_config['session'] = array(
 			'save_handler' 	=> 'memcache',
 			'save_path' 	=> 'tcp://localhost:11211?persistent=1&weight=1&timeout=1&retry_interval=15',
-			'cookie_domain' => '127.0.0.1',
+			'cookie_domain' => '203.75.245.16',
 			'gc_maxlifetime'=> '7200',
 		);
 		break;

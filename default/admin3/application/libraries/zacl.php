@@ -74,6 +74,7 @@ class Zacl
 		else {
 			if ($redirect_url) {
 				$current_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+				
 				header('location:'.site_url("platform/login?redirect_url=".urlencode($current_url)));
 				exit();
 			}

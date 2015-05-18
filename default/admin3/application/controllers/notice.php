@@ -83,7 +83,7 @@ limit 500000
 			");*/			
 			$this->db->query("
 				insert into notice_targets (notice_id, uid, create_time)  
-					select distinct '{$notice_id}', uid, NOW() from log_game_logins lgl join servers gi on lgl.server_id=gi.id where {$where}
+					select distinct '{$notice_id}', uid, NOW() from log_game_logins lgl join servers gi on lgl.server_id=gi.server_id where {$where}
 			");
 
 		}

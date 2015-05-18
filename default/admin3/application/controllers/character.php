@@ -73,7 +73,7 @@ class Character extends MY_Controller {
 			{
 				case "查詢": 					
 					$this->db->from("characters ga")
-						->join("servers gi", "ga.server_id=gi.id")
+						->join("servers gi", "ga.server_id=gi.server_id")
 						->join("users u", "u.account=ga.account");
 
 					$this->db->stop_cache();
@@ -101,7 +101,7 @@ class Character extends MY_Controller {
 					ini_set("memory_limit","2048M");
 					
 					$query = $this->db->from("characters ga")
-						->join("servers gi", "ga.server_id=gi.id")
+						->join("servers gi", "ga.server_id=gi.server_id")
 						->join("users u", "u.account=ga.account")->order_by("ga.id")->get();
 						
 					$filename = "output.xls";					
@@ -126,7 +126,7 @@ class Character extends MY_Controller {
 				case "通路統計":			
 					$query = $this->db->select("SUBSTRING(ga.account, INSTR(ga.account, '@'), 20 ) channel, count(*) cnt", false)
 						->from("characters ga")
-						->join("servers gi", "ga.server_id=gi.id")
+						->join("servers gi", "ga.server_id=gi.server_id")
 						//->where("ga.account in (select user_name from users where user_name=ga.account)", null, false)
 						//->where("exists (select uid from users where user_name=ga.account)", null, false)
 						->group_by("channel", false)->order_by("cnt desc")->get();
@@ -135,14 +135,14 @@ class Character extends MY_Controller {
 				case "廣告統計":
 					$query = $this->db->select("ga.ad, count(*) cnt", false)
 						->from("characters ga")
-						->join("servers gi", "ga.server_id=gi.id")
+						->join("servers gi", "ga.server_id=gi.server_id")
 						->group_by("ga.ad", false)->order_by("cnt desc")->get();
 					break;					
 					
 				case "伺服器時段統計":		
 					$query = $this->db->select("ga.server_id, gi.name, LEFT(ga.create_time, {$len}) time, COUNT(*) cnt", false)
 						->from('characters ga')
-						->join("servers gi", "ga.server_id=gi.id")
+						->join("servers gi", "ga.server_id=gi.server_id")
 						->group_by("time, ga.server_id")
 						->order_by("time desc, ga.server_id")->get();
 					//die($this->db->last_query());
@@ -151,7 +151,7 @@ class Character extends MY_Controller {
 				case "廣告時段統計":	
 					$query = $this->db->select("ga.ad, LEFT(ga.create_time, {$len}) time, COUNT(*) cnt", false)
 						->from('characters ga')
-						->join("servers gi", "ga.server_id=gi.id")
+						->join("servers gi", "ga.server_id=gi.server_id")
 						->group_by("time, ga.ad")
 						->order_by("time desc, ga.ad")->get();
 					//die($this->db->last_query());
@@ -280,11 +280,11 @@ class Character extends MY_Controller {
 										$cnt = $this->db->from("characters gr")->where("account", $d['account'])->count_all_results();
 										
 								    	if ($cnt > 0) {
-									    	$query = $this->db->from("characters gr")->join("servers gi", "gr.server_id=gi.id")
+									    	$query = $this->db->from("characters gr")->join("servers gi", "gr.server_id=gi.server_id")
 									    					->where("gi.game_id", $server->game_id)->where("account", $d['account'])->get();							
 									    	if ($query->num_rows() > 0) {
 									    		foreach($query->result() as $row) {
-									    			if ($row->server_id == $server->id) {
+									    			if ($row->server_id == $server->server_id) {
 									    				$create_status = 0;
 									    				break;
 									    			}
@@ -305,7 +305,7 @@ class Character extends MY_Controller {
 										$data = array(
 											'account' => $d['account'],
 											'character_name' => $d['character_name'],
-											'server_id' => $server->id,
+											'server_id' => $server->server_id,
 											'ad' => $d['ad'],
 											'create_time' => $create_time,
 											'create_status' => $create_status,
@@ -314,7 +314,7 @@ class Character extends MY_Controller {
 										//檢查角色是否存在
 										$chk_exists = $this->db->from("characters")
 											->where("character_name", $d['character_name'])
-											->where("server_id", $server->id)->count_all_results() > 0 ? true : false;
+											->where("server_id", $server->server_id)->count_all_results() > 0 ? true : false;
 										
 										if ($chk_exists) {
 											$error_message .= "#".($idx+1)." 已存在<br>";
@@ -427,7 +427,7 @@ class Character extends MY_Controller {
 		if ($this->input->get("action")) 
 		{
 			$this->db->from('characters ga')
-				->join("servers gi", "ga.server_id=gi.id")
+				->join("servers gi", "ga.server_id=gi.server_id")
 				->join("games g", "g.game_id=gi.game_id", "left");
 						
 			if ($this->zacl->check_acl("partner", "all") == false) {
@@ -524,7 +524,7 @@ class Character extends MY_Controller {
 		{
 			$query = $this->db->select("min(gl.id) as id")
 						->from("log_game_logins gl")
-						->join("servers g", "gl.server_id=g.id")
+						->join("servers g", "gl.server_id=g.server_id")
 						->join("characters gr", "gr.server_id=gl.server_id and gr.uid=gl.uid", "left")
 						->where("gl.uid <>", "0")
 						->where("gl.create_time >=", $this->input->get("start_date"))
@@ -537,7 +537,7 @@ class Character extends MY_Controller {
 		{
 			$row = $this->db->select("DATE_SUB(create_time, INTERVAL 30 MINUTE) create_time", false)
 					->from("characters gr")
-					->join("servers g", "gr.server_id=g.id")
+					->join("servers g", "gr.server_id=g.server_id")
 					->where("game_id", $this->game_id)
 					->order_by("create_time", "desc")->limit(1)->get()->row();
 			if ($row) {
@@ -564,7 +564,7 @@ class Character extends MY_Controller {
 		{
 			$query = $this->db->select("min(gl.id) as id")
 						->from("log_game_logins gl")
-						->join("servers g", "gl.server_id=g.id")
+						->join("servers g", "gl.server_id=g.server_id")
 						->join("characters gr", "gr.server_id=gl.server_id and gr.uid=gl.uid", "left")
 						->where("gl.uid <>", "0")
 						->where("gl.create_time >=", $this->input->get("start_date"))
@@ -577,7 +577,7 @@ class Character extends MY_Controller {
 		{
 			$row = $this->db->select("DATE_SUB(create_time, INTERVAL 30 MINUTE) create_time", false)
 					->from("characters gr")
-					->join("servers g", "gr.server_id=g.id")
+					->join("servers g", "gr.server_id=g.server_id")
 					->where("game_id", $this->game_id)
 					->order_by("create_time", "desc")->limit(1)->get()->row();
 			if ($row) {
@@ -605,7 +605,7 @@ class Character extends MY_Controller {
 
 		$row = $this->db->select("gl.uid, gl.account, gl.ad, game_id, gl.server_id, gl.create_time, g.id as sid, g.address, g.merge_address, g.server_id")
 					->from("log_game_logins gl")
-					->join("servers g", "gl.server_id=g.id")
+					->join("servers g", "gl.server_id=g.server_id")
 					->join("characters gr", "gr.server_id=gl.server_id and gr.uid=gl.uid", "left")
 					//->where_in("game_id", array("xj", "sg2", "xl", "gt", "jh", "eb", "dxc", "bt", "xg", "sw", "qjp2", "ly", "sj","dp", "st", "fs", "mq"))
 					->where("gl.uid <>", "0")
@@ -1085,7 +1085,7 @@ class Character extends MY_Controller {
 
 		$row = $this->db->select("DATE_SUB(create_time, INTERVAL 30 MINUTE) create_time", false)
 				->from("characters gr")
-				->join("servers g", "gr.server_id=g.id")
+				->join("servers g", "gr.server_id=g.server_id")
 				->where("game_id", $this->game_id)
 				->order_by("create_time", "desc")->limit(1)->get()->row();
 		
@@ -1098,7 +1098,7 @@ class Character extends MY_Controller {
 			    	
     	$query = $this->db->select("min(gl.id) as id")
 					->from("log_game_logins gl")
-					->join("servers g", "gl.server_id=g.id")
+					->join("servers g", "gl.server_id=g.server_id")
 					->join("characters gr", "gr.server_id=gl.server_id and gr.uid=gl.uid", "left")
 					->where("gl.uid <>", "0")
 					->where("gl.create_time >=", $start_date)

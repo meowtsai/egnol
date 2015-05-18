@@ -236,7 +236,7 @@ from
 				and create_time >= date_add(date(gsr.create_time), interval 29 day)) 
 		) 'c30'
 	FROM log_game_logins lgl
-	join servers gi on lgl.server_id=gi.id
+	join servers gi on lgl.server_id=gi.server_id
 	left join characters gsr on date(gsr.create_time)=date(lgl.create_time) and gsr.uid=lgl.uid and gsr.server_id=lgl.server_id
 	{$where}
 	and lgl.create_time between '{$start_date}' and '{$end_date} 23:59:59'
@@ -252,7 +252,7 @@ group by d
 				case "廣告時段統計":	
 					$query = $this->db->select("ga.ad, LEFT(ga.create_time, {$len}) time, COUNT(*) cnt", false)
 						->from('characters ga')
-						->join("servers gi", "ga.server_id=gi.id")
+						->join("servers gi", "ga.server_id=gi.server_id")
 						->group_by("time, ga.ad")
 						->order_by("time desc, ga.ad")->get();
 					//die($this->db->last_query());

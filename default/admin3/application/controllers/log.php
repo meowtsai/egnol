@@ -177,7 +177,7 @@ class Log extends MY_Controller {
 			}
 			
 			$this->db->from("log_game_logins lgl")
-				->join("servers gi", "gi.id=lgl.server_id", "left")
+				->join("servers gi", "gi.server_id=lgl.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left");
 									
 			if ($this->input->get("start_date")) {

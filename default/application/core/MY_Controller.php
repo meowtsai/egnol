@@ -26,7 +26,7 @@ class MY_Controller extends CI_Controller {
 		if ($this->g_user->check_login()) {
 			$recent_server = $this->db->select("g.name as game_name, gi.name as server_name, gi.id")
 				->from("log_game_logins lgl")
-				->join("servers gi","lgl.server_id=gi.id")
+				->join("servers gi","lgl.server_id=gi.server_id")
 				->join("games g","g.game_id=gi.game_id")
 				->where("lgl.uid", $this->g_user->uid)->where("is_recent", "1")->order_by("lgl.id desc")->limit(3)->get();
 		} else $recent_server = false;

@@ -43,7 +43,7 @@ class Ad extends MY_Controller {
 					
 					$old_user_cnt = $new_user_cnt = 0;
 					if ($game = $this->input->get("game")) {						
-						$old_user_cnt = $this->db->select("uid")->distinct()->where("exists (select * from characters gsr join servers gi on gi.id=gsr.server_id where uid=ll.uid and gi.game_id='{$game}' and create_time<ll.create_time)", null, false)->get()->num_rows();
+						$old_user_cnt = $this->db->select("uid")->distinct()->where("exists (select * from characters gsr join servers gi on gi.server_id=gsr.server_id where uid=ll.uid and gi.game_id='{$game}' and create_time<ll.create_time)", null, false)->get()->num_rows();
 						$new_user_cnt = $user_cnt - $old_user_cnt;
 					}
 					

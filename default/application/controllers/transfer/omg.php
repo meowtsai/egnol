@@ -165,7 +165,7 @@ $(function(){
 		
 		if ($paymentstatus != '1') {
 			$this->g_wallet->cancel_order($order, $paymentmessage);
-			go_result(0, $paymentmessage, "gi_id={$server->id}");
+			go_result(0, $paymentmessage, "gi_id={$server->server_id}");
 		}						
 		
 		//轉入遊戲		
@@ -175,19 +175,19 @@ $(function(){
 		
 		if ($re === "1") {
 			$this->g_wallet->complete_order($order);
-			go_result(1, "恭喜您！成功將OMG點數 <b>{$price}</b> 點轉至遊戲。", "gi_id={$server->id}");
+			go_result(1, "恭喜您！成功將OMG點數 <b>{$price}</b> 點轉至遊戲。", "gi_id={$server->server_id}");
 		}
 		else if ($re === "-1") {
 			$this->g_wallet->cancel_timeout_order($order);			
-			go_result(0, "遊戲端未有回應，請至客服中心與我們聯繫。(錯誤代碼: 002)", "gi_id={$server->id}");		
+			go_result(0, "遊戲端未有回應，請至客服中心與我們聯繫。(錯誤代碼: 002)", "gi_id={$server->server_id}");		
 		}
 		else if ($re === "-2") {			
 			$this->g_wallet->cancel_other_order($order, $error_message);
-			go_result(0, "{$error_message}，轉點未完成，請至客服中心與我們聯繫。(錯誤代碼: 003)", "gi_id={$server->id}");
+			go_result(0, "{$error_message}，轉點未完成，請至客服中心與我們聯繫。(錯誤代碼: 003)", "gi_id={$server->server_id}");
 		}		
 		else {
 			$this->g_wallet->cancel_order($order, $error_message);			
-			go_result(0, $error_message, "gi_id={$server->id}");	
+			go_result(0, $error_message, "gi_id={$server->server_id}");	
 		}
 	}
 	

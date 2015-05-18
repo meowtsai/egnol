@@ -12,7 +12,7 @@
                   <td align="right" style=" font-size:15px;"> 
                   	<? if ( ! empty($server)):?>
                   	<a href="<?=site_url("wallet/transfer/".$server->game_id)?>"> 繼續轉點 </a> |
-                  	<a href="<?=site_url("play_game?sid=".$server->id)?>" target="_blank">進遊戲</a>
+                  	<a href="<?=site_url("play_game?sid=".$server->server_id)?>" target="_blank">進遊戲</a>
                   	<? endif;?>
                   </td>
                 </tr>

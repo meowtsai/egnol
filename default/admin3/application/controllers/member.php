@@ -139,7 +139,7 @@ WHERE x.uid={$uid}";
 		
 		$role = $this->db->select("gsr.*, g.name as game_name, gi.name as server_name")
 			->from("characters gsr")
-			->join("servers gi", "gi.id=gsr.server_id")
+			->join("servers gi", "gi.server_id=gsr.server_id")
 			->join("games g", "g.game_id=gi.game_id")
 			->where("gsr.account", $user->account)->order_by("gsr.create_time desc")->get();
 		

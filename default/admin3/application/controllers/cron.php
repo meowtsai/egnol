@@ -18,7 +18,7 @@ FROM
 (
     SELECT lgl.uid, lgl.game_id, lgl.server_id,
         (SELECT IF(COUNT(*)>0, 1, 0) FROM characters
-		    JOIN servers ON characters.server_id = servers.id
+		    JOIN servers ON characters.server_id = servers.server_id
             WHERE characters.uid=lgl.uid AND servers.game_id=lgl.game_id 
                 AND characters.create_time >= lgl.create_time
         ) 'role'
@@ -84,12 +84,12 @@ FROM
 (
     SELECT lgl.uid, lgl.game_id, lgl.server_id,
         (SELECT IF(COUNT(*)>0, 1, 0) FROM characters
-		    JOIN servers ON characters.server_id = servers.id
+		    JOIN servers ON characters.server_id = servers.server_id
             WHERE characters.uid=lgl.uid AND servers.game_id=lgl.game_id 
                 AND characters.create_time >= lgl.create_time
         ) 'role',
         (SELECT IF(COUNT(*)>0, 1, 0) FROM log_game_logins
-		    JOIN servers ON log_game_logins.server_id = servers.id
+		    JOIN servers ON log_game_logins.server_id = servers.server_id
             WHERE uid=lgl.uid AND servers.game_id=lgl.game_id 
                 AND DATE(create_time) = DATE_ADD(DATE(lgl.create_time), interval {$days} day)
         ) 'retention'
@@ -133,12 +133,12 @@ FROM
 (
     SELECT lgl.uid, lgl.game_id, lgl.server_id,
         (SELECT IF(COUNT(*)>0, 1, 0) FROM characters
-		    JOIN servers ON characters.server_id = servers.id
+		    JOIN servers ON characters.server_id = servers.server_id
             WHERE characters.uid=lgl.uid AND servers.game_id=lgl.game_id 
                 AND characters.create_time >= lgl.create_time
         ) 'role',
         (SELECT IF(COUNT(*)>0, 1, 0) FROM log_game_logins
-		    JOIN servers ON log_game_logins.server_id = servers.id
+		    JOIN servers ON log_game_logins.server_id = servers.server_id
             WHERE uid=lgl.uid AND servers.game_id=lgl.game_id 
                 AND DATE(create_time) = DATE_ADD(DATE(lgl.create_time), interval 1 day)
         ) 'c1'

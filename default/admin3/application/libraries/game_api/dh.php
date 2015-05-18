@@ -16,7 +16,7 @@ class Dh
     	$query = $this->CI->db->from("servers")->where("game_id", $this->game)->order_by("id","desc")->get();
     	foreach($query->result() as $row) 
     	{
-    		$server_id = $row->id;
+    		$server_id = $row->server_id;
     		$ser = "s".strtr($row->server_id, array("dh"=>""));
     		    		
     		$last_row = $this->CI->db->from("characters")->where("server_id", $server_id)->order_by("create_time", "desc")->limit(1)->get()->row();
