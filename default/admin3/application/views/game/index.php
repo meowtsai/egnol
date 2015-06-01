@@ -22,7 +22,7 @@
 			<td><?=$row->name?></td>
 			<td><?=$row->abbr?></td>
 			<td><?=$row->exchange_rate?></td>
-			<td><?=$row->is_active=='1'?'<span style="color:green">開</span>':'<span style="color:red">關</span>'?></td>
+			<td><?=$row->is_active==TRUE?'<span style="color:green">開</span>':'<span style="color:red">關</span>'?></td>
 			<td>
 				<a href="<?=site_url("game/modify?game_id={$row->game_id}")?>" class="btn btn-mini">編輯</a>			
 			</td>

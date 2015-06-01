@@ -177,10 +177,24 @@ group by d
 		
 		$this->zacl->check("game_statistics", "read");
 		
+		$span = $this->input->get("span");
 		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
 		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
 		$game_id = $this->input->get("game_id_1") ? $this->input->get("game_id_1") : ($this->input->get("game_id_2") ? $this->input->get("game_id_2") : ($this->input->get("game_id_3") ? $this->input->get("game_id_3") : ""));
-					
+
+        switch($span) {
+			case "weekly":
+			    $date_group = 'WEEK';
+				break;
+			
+			case "monthly":
+			    $date_group = 'MONTH';
+				break;
+				
+			default:
+			    $date_group = 'DATE';
+				break;
+		}		
 		
 		$query = $this->db->query("
 		SELECT new_gt.game_id, new_gt.date,
@@ -213,7 +227,7 @@ group by d
 			new_deposit_t120,
 			new_deposit_tmore
 		FROM 
-		(SELECT game_id, DATE(create_time) 'date',
+		(SELECT game_id, {$date_group}(create_time) 'date',
 		    COUNT(uid) 'all_login_count',
 			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 15 THEN 1 ELSE NULL END) 'all_t15',
 			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 15 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 30 THEN 1 ELSE NULL END) 'all_t30',
@@ -226,9 +240,9 @@ group by d
 		AND create_time >= DATE('{$start_date}')
 		AND create_time <= DATE('{$end_date}')
 		AND is_first = 1
-		GROUP BY DATE(create_time)) AS all_gt
+		GROUP BY {$date_group}(create_time)) AS all_gt
 		LEFT JOIN
-		(SELECT game_id, DATE(create_time) 'date',
+		(SELECT game_id, {$date_group}(create_time) 'date',
 		    COUNT(uid) 'new_login_count',
 			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 15 THEN 1 ELSE NULL END) 'new_t15',
 			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 15 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 30 THEN 1 ELSE NULL END) 'new_t30',
@@ -240,9 +254,9 @@ group by d
 		WHERE game_id = '{$game_id}'
 		AND create_time >= DATE('{$start_date}')
 		AND create_time <= DATE('{$end_date}')
-		GROUP BY DATE(create_time)) AS new_gt ON all_gt.game_id=new_gt.game_id AND all_gt.date=new_gt.date
+		GROUP BY {$date_group}(create_time)) AS new_gt ON all_gt.game_id=new_gt.game_id AND all_gt.date=new_gt.date
 		LEFT JOIN
-		(SELECT lgl.game_id, DATE(lgl.create_time) 'date',
+		(SELECT lgl.game_id, {$date_group}(lgl.create_time) 'date',
 		    COUNT(lgl.uid) 'deposit_login_count',
 			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 15 THEN 1 ELSE NULL END) 'deposit_t15',
 			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 15 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 30 THEN 1 ELSE NULL END) 'deposit_t30',
@@ -257,9 +271,9 @@ group by d
 		AND lgl.create_time <= DATE('{$end_date}')
         AND ub.billing_type = 2 
         AND ub.result = 1
-		GROUP BY DATE(lgl.create_time)) AS deposit_gt ON all_gt.game_id=deposit_gt.game_id AND all_gt.date=deposit_gt.date
+		GROUP BY {$date_group}(lgl.create_time)) AS deposit_gt ON all_gt.game_id=deposit_gt.game_id AND all_gt.date=deposit_gt.date
 		LEFT JOIN
-		(SELECT lgl.game_id, DATE(lgl.create_time) 'date',
+		(SELECT lgl.game_id, {$date_group}(lgl.create_time) 'date',
 		    COUNT(lgl.uid) 'new_deposit_login_count',
 			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 15 THEN 1 ELSE NULL END) 'new_deposit_t15',
 			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 15 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 30 THEN 1 ELSE NULL END) 'new_deposit_t30',
@@ -274,12 +288,13 @@ group by d
 		AND lgl.create_time <= DATE('{$end_date}')
         AND ub.billing_type = 2 
         AND ub.result = 1
-		GROUP BY DATE(lgl.create_time)) AS new_deposit_gt ON all_gt.game_id=new_deposit_gt.game_id AND all_gt.date=new_deposit_gt.date
+		GROUP BY {$date_group}(lgl.create_time)) AS new_deposit_gt ON all_gt.game_id=new_deposit_gt.game_id AND all_gt.date=new_deposit_gt.date
 		");
         
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
+			->set("span", $span)
 			->set("game_id_1", $this->input->get("game_id_1"))
 			->set("game_id_2", $this->input->get("game_id_2"))
 			->set("game_id_3", $this->input->get("game_id_3"))
@@ -297,74 +312,161 @@ group by d
 		
 		$this->zacl->check("game_statistics", "read");
 		
+		$span = $this->input->get("span");
 		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
 		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
+		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
+			$start_date = date("Y-m-d",strtotime("-1 days"));
+			$end_date = date("Y-m-d",strtotime("-8 days"));
+		} 
 		$game_id = $this->input->get("game_id_1") ? $this->input->get("game_id_1") : ($this->input->get("game_id_2") ? $this->input->get("game_id_2") : ($this->input->get("game_id_3") ? $this->input->get("game_id_3") : ""));
 		
-		$query = $this->db->query("
-		(SELECT 
-		    stc.date 'date',
-			stc.game_id 'game_id',
-			stc.login_count 'login_count',
-			stc.new_login_count 'new_login_count',
-			stc.new_character_count 'new_character_count',
-			stc.device_count 'device_count',
-			stc2.login_count 'y_login_count',
-			stc2.new_login_count 'y_new_login_count',
-			stc2.one_retention_all_count 'y_one_retention_all_count',
-            stc2.one_retention_count 'y_one_retention_count',
-            stc.deposit_user_count 'deposit_user_count',
-            stc.new_deposit_user_count 'new_deposit_user_count',
-            stc.consume_user_count 'consume_user_count',
-            stc.new_consume_user_count 'new_consume_user_count',
-            stc.currency_total 'currency_total',
-            stc.paid_currency_total 'paid_currency_total',
-            stc.deposit_total 'deposit_total',
-            stc.consume_total 'consume_total',
-            stc.peak_user_count 'peak_user_count',
-            stc.total_time 'total_time',
-            stc.paid_total_time 'paid_total_time'
-		FROM statistics stc
-		LEFT JOIN statistics stc2 ON stc.game_id=stc2.game_id AND stc.date=DATE_ADD(stc2.date, interval 1 day)
-		WHERE stc.game_id = '{$game_id}'
-		AND stc.date >= '{$start_date}'
-		AND stc.date <= '{$end_date}')
+        switch($span) {
+			case "weekly":
+			    $date_group = 'WEEK';
+				break;
+			
+			case "monthly":
+			    $date_group = 'MONTH';
+				break;
+				
+			default:
+			    $date_group = 'DATE';
+				break;
+		}
 		
-		UNION
+		if ('DATE'==$date_group) {
+		    $query = $this->db->query("
+		    (SELECT 
+		        stc.date 'date',
+			    stc.game_id 'game_id',
+			    stc.login_count 'login_count',
+			    stc.new_login_count 'new_login_count',
+			    stc.new_character_count 'new_character_count',
+			    stc.device_count 'device_count',
+			    stc2.login_count 'y_login_count',
+			    stc2.new_login_count 'y_new_login_count',
+			    stc2.one_retention_all_count 'y_one_retention_all_count',
+                stc2.one_retention_count 'y_one_retention_count',
+                stc.deposit_user_count 'deposit_user_count',
+                stc.new_deposit_user_count 'new_deposit_user_count',
+                stc.consume_user_count 'consume_user_count',
+                stc.new_consume_user_count 'new_consume_user_count',
+                stc.currency_total 'currency_total',
+                stc.paid_currency_total 'paid_currency_total',
+                stc.deposit_total 'deposit_total',
+                stc.consume_total 'consume_total',
+                stc.peak_user_count 'peak_user_count',
+                stc.total_time 'total_time',
+                stc.paid_total_time 'paid_total_time'
+		    FROM statistics stc
+		    LEFT JOIN statistics stc2 ON stc.game_id=stc2.game_id AND stc.date=DATE_ADD(stc2.date, interval 1 day)
+		    WHERE stc.game_id = '{$game_id}'
+		    AND stc.date >= '{$start_date}'
+		    AND stc.date <= '{$end_date}')
 		
-		(SELECT 
-		    stc.date 'date',
-			stc.game_id 'game_id',
-			stc.login_count 'login_count',
-			stc.new_login_count 'new_login_count',
-			stc.new_character_count 'new_character_count',
-			stc.device_count 'device_count',
-			stc2.login_count 'y_login_count',
-			stc2.new_login_count 'y_new_login_count',
-			stc2.one_retention_all_count 'y_one_retention_all_count',
-            stc2.one_retention_count 'y_one_retention_count',
-            stc.deposit_user_count 'deposit_user_count',
-            stc.new_deposit_user_count 'new_deposit_user_count',
-            stc.consume_user_count 'consume_user_count',
-            stc.new_consume_user_count 'new_consume_user_count',
-            stc.currency_total 'currency_total',
-            stc.paid_currency_total 'paid_currency_total',
-            stc.deposit_total 'deposit_total',
-            stc.consume_total 'consume_total',
-            stc.peak_user_count 'peak_user_count',
-            stc.total_time 'total_time',
-            stc.paid_total_time 'paid_total_time'
-		FROM statistics stc
-		RIGHT JOIN statistics stc2 ON stc.game_id=stc2.game_id AND stc.date=DATE_ADD(stc2.date, interval 1 day)
-		WHERE stc.game_id = '{$game_id}'
-		AND stc.date >= '{$start_date}'
-		AND stc.date <= '{$end_date}')
-		ORDER BY date DESC
-		");
+		    UNION
+		
+		    (SELECT 
+		        stc.date 'date',
+			    stc.game_id 'game_id',
+			    stc.login_count 'login_count',
+			    stc.new_login_count 'new_login_count',
+			    stc.new_character_count 'new_character_count',
+			    stc.device_count 'device_count',
+			    stc2.login_count 'y_login_count',
+			    stc2.new_login_count 'y_new_login_count',
+			    stc2.one_retention_all_count 'y_one_retention_all_count',
+                stc2.one_retention_count 'y_one_retention_count',
+                stc.deposit_user_count 'deposit_user_count',
+                stc.new_deposit_user_count 'new_deposit_user_count',
+                stc.consume_user_count 'consume_user_count',
+                stc.new_consume_user_count 'new_consume_user_count',
+                stc.currency_total 'currency_total',
+                stc.paid_currency_total 'paid_currency_total',
+                stc.deposit_total 'deposit_total',
+                stc.consume_total 'consume_total',
+                stc.peak_user_count 'peak_user_count',
+                stc.total_time 'total_time',
+                stc.paid_total_time 'paid_total_time'
+		    FROM statistics stc
+		    RIGHT JOIN statistics stc2 ON stc.game_id=stc2.game_id AND stc.date=DATE_ADD(stc2.date, interval 1 day)
+		    WHERE stc.game_id = '{$game_id}'
+		    AND stc.date >= '{$start_date}'
+		    AND stc.date <= '{$end_date}')
+		    ORDER BY date DESC
+		    ");
+		}
+		else
+		{
+		    $query = $this->db->query("
+		    (SELECT 
+		        {$date_group}(stc.date) 'date',
+			    stc.game_id 'game_id',
+			    SUM(stc.login_count) 'login_count',
+			    SUM(stc.new_login_count) 'new_login_count',
+			    SUM(stc.new_character_count) 'new_character_count',
+			    SUM(stc.device_count) 'device_count',
+			    SUM(stc2.login_count) 'y_login_count',
+			    SUM(stc2.new_login_count) 'y_new_login_count',
+			    SUM(stc2.one_retention_all_count) 'y_one_retention_all_count',
+                SUM(stc2.one_retention_count) 'y_one_retention_count',
+                SUM(stc.deposit_user_count) 'deposit_user_count',
+                SUM(stc.new_deposit_user_count) 'new_deposit_user_count',
+                SUM(stc.consume_user_count) 'consume_user_count',
+                SUM(stc.new_consume_user_count) 'new_consume_user_count',
+                SUM(stc.currency_total) 'currency_total',
+                SUM(stc.paid_currency_total) 'paid_currency_total',
+                SUM(stc.deposit_total) 'deposit_total',
+                SUM(stc.consume_total) 'consume_total',
+                SUM(stc.peak_user_count) 'peak_user_count',
+                SUM(stc.total_time) 'total_time',
+                SUM(stc.paid_total_time) 'paid_total_time'
+		    FROM statistics stc
+		    LEFT JOIN statistics stc2 ON stc.game_id=stc2.game_id AND stc.date=DATE_ADD(stc2.date, interval 1 {$date_group})
+		    WHERE stc.game_id = '{$game_id}'
+		    AND stc.date >= '{$start_date}'
+		    AND stc.date <= '{$end_date}'
+		    GROUP BY {$date_group}(stc.date))
+		
+		    UNION
+		
+		    (SELECT 
+		        {$date_group}(stc.date) 'date',
+			    stc.game_id 'game_id',
+		    	SUM(stc.login_count) 'login_count',
+			    SUM(stc.new_login_count) 'new_login_count',
+			    SUM(stc.new_character_count) 'new_character_count',
+			    SUM(stc.device_count) 'device_count',
+			    SUM(stc2.login_count) 'y_login_count',
+			    SUM(stc2.new_login_count) 'y_new_login_count',
+			    SUM(stc2.one_retention_all_count) 'y_one_retention_all_count',
+                SUM(stc2.one_retention_count) 'y_one_retention_count',
+                SUM(stc.deposit_user_count) 'deposit_user_count',
+                SUM(stc.new_deposit_user_count) 'new_deposit_user_count',
+                SUM(stc.consume_user_count) 'consume_user_count',
+                SUM(stc.new_consume_user_count) 'new_consume_user_count',
+                SUM(stc.currency_total) 'currency_total',
+                SUM(stc.paid_currency_total) 'paid_currency_total',
+                SUM(stc.deposit_total) 'deposit_total',
+                SUM(stc.consume_total) 'consume_total',
+                SUM(stc.peak_user_count) 'peak_user_count',
+                SUM(stc.total_time) 'total_time',
+                SUM(stc.paid_total_time) 'paid_total_time'
+		    FROM statistics stc
+		    RIGHT JOIN statistics stc2 ON stc.game_id=stc2.game_id AND stc.date=DATE_ADD(stc2.date, interval 1 {$date_group})
+		    WHERE stc.game_id = '{$game_id}'
+		    AND stc.date >= '{$start_date}'
+		    AND stc.date <= '{$end_date}'
+		    GROUP BY {$date_group}(stc.date))
+		    ORDER BY date DESC
+		    ");
+		}
 		
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
+			->set("span", $span)
 			->set("game_id_1", $this->input->get("game_id_1"))
 			->set("game_id_2", $this->input->get("game_id_2"))
 			->set("game_id_3", $this->input->get("game_id_3"))

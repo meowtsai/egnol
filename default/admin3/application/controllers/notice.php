@@ -78,7 +78,7 @@ limit 500000
 			//if ($where == " 1=1 ") die(json_failure("請選擇條件")); 
 			
 			/*$this->db->query("
-				delete from notice_targets where uid not in (select uid from log_game_logins lgl join servers gi on lgl.server_id=gi.id where {$where})
+				delete from notice_targets where uid not in (select uid from log_game_logins lgl join servers gi on lgl.server_id=gi.server_id where {$where})
 					and notice_id='{$notice_id}'				
 			");*/			
 			$this->db->query("

@@ -8,7 +8,7 @@
 	
 	foreach($c_game_query->result() as $row) {
 		$c_game[$row->game_id] = $row;		
-		if ($row->is_active == 0) {$c_game_menu["關閉"][] = $row; continue;}
+		if (!$row->is_active) {$c_game_menu["關閉"][] = $row; continue;}
 		if (strpos($row->tags.",", "聯運,") !== false) {$c_game_menu["聯運"][] = $row; continue;}
 		$c_game_menu["獨代"][] = $row;
 	}
@@ -61,7 +61,7 @@
 				<th style="width:70px" rowspan="2">登入數</th>
 				<th style="width:70px" rowspan="2">創角數</th>
 				<th style="width:70px" rowspan="2">創角<Br>留存率</th>
-				<th style="width:140px" colspan="2">隔天</th>
+				<th style="width:140px" colspan="2">次日</th>
 				<th style="width:140px" colspan="2">3天</th>
 				<th style="width:140px" colspan="2">7天</th>
 				<th style="width:140px" colspan="2">14天</th>

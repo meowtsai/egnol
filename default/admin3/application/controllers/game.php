@@ -188,7 +188,7 @@ class Game extends MY_Controller {
 					$where = " where 1=1";
 					
 					if ($server = $this->input->get("server")) {
-						$where .= " and gi.id={$server} ";
+						$where .= " and gi.server_id={$server} ";
 					} else $where .= " and gi.game_id='{$this->game_id}' ";					
 					
 					if ($channel = $this->input->get("channel")) {

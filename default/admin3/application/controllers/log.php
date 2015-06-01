@@ -166,7 +166,7 @@ class Log extends MY_Controller {
 			$this->input->get("account") && $this->db->like("lgl.account", trim($this->input->get("account")));
 			$this->input->get("ip") && $this->db->where("lgl.ip", trim($this->input->get("ip")));
 			$this->input->get("game") && $this->db->where("g.game_id", $this->input->get("game"));
-			$this->input->get("server") && $this->db->where("gi.id", $this->input->get("server"));
+			$this->input->get("server") && $this->db->where("gi.server_id", $this->input->get("server"));
 			$this->input->get("ad_channel") && $this->db->where("lgl.ad", $this->input->get("ad_channel"));		
 			
 			if ($this->zacl->check_acl("all_game", "all") == false) {
@@ -230,8 +230,8 @@ class Log extends MY_Controller {
 			if ($this->input->get("action") <> "查詢") {
 								
 				if ($this->input->get("display_game") == "server") {
-					$this->db->select("gi.id, concat('(', g.abbr, ')', gi.name) as name", false);
-					$game_key = "gi.id";
+					$this->db->select("gi.server_id, concat('(', g.abbr, ')', gi.name) as name", false);
+					$game_key = "gi.server_id";
 				}
 				else {
 					$this->db->select("g.name as name");
@@ -360,7 +360,7 @@ class Log extends MY_Controller {
 			$this->db->start_cache();
 			
 			$this->input->get("game") && $this->db->where("g.game_id", $this->input->get("game"));
-			$this->input->get("server") && $this->db->where("gi.id", $this->input->get("server"));		
+			$this->input->get("server") && $this->db->where("gi.server_id", $this->input->get("server"));		
 			
 			if ($this->zacl->check_acl("all_game", "all") == false) {
 				if ($this->input->get("game")) {				 
@@ -370,7 +370,7 @@ class Log extends MY_Controller {
 			}
 			
 			$this->db->from("log_online_users lou")
-				->join("servers gi", "gi.id=lou.server_id", "left")
+				->join("servers gi", "gi.server_id=lou.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
 				->where("online_date > date_sub(now(), interval 15 minute)", null, false);
 			
@@ -402,8 +402,8 @@ class Log extends MY_Controller {
 				case "人數統計":					
 					
 					if ($this->input->get("display_game") == "server") {
-						$this->db->select("gi.id, concat('(', g.abbr, ')', gi.name) as title", false);
-						$game_key = "gi.id";
+						$this->db->select("gi.server_id, concat('(', g.abbr, ')', gi.name) as title", false);
+						$game_key = "gi.server_id";
 					}
 					else {
 						$this->db->select("g.name as title");

@@ -51,7 +51,7 @@ class Dh
     				if (empty($account) || empty($character_name) || empty($create_time)) continue;
     				
     				$create_status = 1;
-    				$query = $this->CI->db->from("characters gr")->join("servers gi", "gr.server_id=gi.id")
+    				$query = $this->CI->db->from("characters gr")->join("servers gi", "gr.server_id=gi.server_id")
     					->where("gi.game_id", "dh")->where("account", $account)->get();
     				if ($query->num_rows() > 0) {
     					foreach($query->result() as $row) {

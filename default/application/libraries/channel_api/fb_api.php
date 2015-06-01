@@ -36,7 +36,8 @@ class Fb_Api extends Channel_Api
     {
 	   	$loginUrl = $this->sdk->getLoginUrl(array_merge(array(
    				'scope' => $this->conf["scope"],
-   				'redirect_uri' => 'http://www.long_e.com.tw/gate/login_callback/facebook'
+   				'redirect_uri' => 'http://203.75.245.16/gate/login_callback/facebook'
+   				//'redirect_uri' => 'http://www.long_e.com.tw/gate/login_callback/facebook'
 	   		), $params));
 	   	//header("location: {$loginUrl}");
 	   	//exit();

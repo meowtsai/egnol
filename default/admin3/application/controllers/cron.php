@@ -49,6 +49,8 @@ GROUP BY game_id");
 			    }
 		    }
 		}
+		
+		echo "generate_login_statistics done - ".$date.PHP_EOL;
 	}
 	
 	function generate_retention_statistics($date="", $days=1)
@@ -119,6 +121,8 @@ GROUP BY game_id");
 			    }
 		    }
 		}
+		
+		echo "generate_retention_statistics done - ".$date.PHP_EOL;
 	}
 	
 	function generate_retention_all_statistics($date="")
@@ -168,6 +172,8 @@ GROUP BY game_id");
 			    }
 		    }
 		}
+		
+		echo "generate_retention_all_statistics done - ".$date.PHP_EOL;
 	}
 	
 	function generate_billing_statistics($date="")
@@ -215,6 +221,8 @@ GROUP BY game_id");
 			    }
 		    }
 		}
+		
+		echo "generate_billing_statistics done - ".$date.PHP_EOL;
 	}
 	
 	function generate_consume_statistics($date="")
@@ -258,6 +266,8 @@ GROUP BY game_id");
 			    }
 		    }
 		}
+		
+		echo "generate_consume_statistics done - ".$date.PHP_EOL;
 	}
 	
 	function generate_game_time_statistics($date="")
@@ -304,6 +314,7 @@ GROUP BY game_id");
 			    }
 		    }
 		}
+		echo "generate_game_time_statistics done - ".$date.PHP_EOL;
 	}
 	
 	function generate_peak_statistics($date="")
@@ -413,6 +424,40 @@ GROUP BY game_id");
 			        }
 			    }
 		    }
+		}
+		echo "generate_peak_statistics done - ".$date.PHP_EOL;
+	}
+	
+	function cron_bundle($date) {
+		ini_set('max_execution_time', 9999);
+		
+		$start_time = time();
+		
+		$this->generate_login_statistics($date);
+		$this->generate_retention_statistics($date, 1);
+		$this->generate_retention_statistics($date, 3);
+		$this->generate_retention_statistics($date, 7);
+		$this->generate_retention_statistics($date, 14);
+		$this->generate_retention_statistics($date, 30);
+		$this->generate_retention_all_statistics($date);
+		$this->generate_billing_statistics($date);
+		$this->generate_consume_statistics($date);
+		$this->generate_game_time_statistics($date);
+		$this->generate_peak_statistics($date);
+		
+		$end_time = time();
+		$passed_time = ($end_time - $start_time)/60;
+		echo 'Time spent: '.$passed_time.'m'.PHP_EOL;
+	}
+	
+	function cron_bundle_que($date) {
+		ini_set('max_execution_time', 99999);
+		
+		$run_date = $date;
+		
+		for ($run_date; $run_date <= date('Y-m-d'); $run_date=date("Y-m-d",strtotime('+1 day', strtotime($run_date)))) {
+			echo '['.$run_date.']'.PHP_EOL;
+			$this->cron_bundle($run_date);
 		}
 	}
 }

@@ -84,7 +84,7 @@ class Trade extends MY_Controller {
 			$this->input->get("account") && $this->db->where("u.account", $this->input->get("account"));
 			$this->input->get("order_no") && $this->db->where("ub.order_no", $this->input->get("order"));
 			$this->input->get("game") && $this->db->where("g.game_id", $this->input->get("game"));
-			$this->input->get("server") && $this->db->where("gi.id", $this->input->get("server"));
+			$this->input->get("server") && $this->db->where("gi.server_id", $this->input->get("server"));
 			$this->input->get("result") && $this->db->where("ub.result", substr($this->input->get("result"),1));
 			$this->input->get("transaction_type") && $this->db->where("ub.transaction_type", $this->input->get("transaction_type"));
 			
@@ -199,7 +199,7 @@ class Trade extends MY_Controller {
 			header("Cache-Control: private");		
 			
 			$this->input->get("game") && $this->db->where("g.game_id", $this->input->get("game"));
-			$this->input->get("server") && $this->db->where("gi.id", $this->input->get("server"));			
+			$this->input->get("server") && $this->db->where("gi.server_id", $this->input->get("server"));			
 			$this->input->get("transaction_type") && $this->db->where("ub.transaction_type", $this->input->get("transaction_type"));
 			
 			if ($this->zacl->check_acl("all_game", "all") == false) {
@@ -250,8 +250,8 @@ class Trade extends MY_Controller {
 					$game_key = "gi.address";
 				}
 				else {
-					$this->db->select("gi.id, concat('(', g.abbr, ')', gi.name) as name", false);
-					$game_key = "gi.id";
+					$this->db->select("gi.server_id, concat('(', g.abbr, ')', gi.name) as name", false);
+					$game_key = "gi.server_id";
 				}
 			}
 			else {
@@ -301,7 +301,7 @@ class Trade extends MY_Controller {
 					break;		
 				
 				case "儲值統計":
-					$query = $this->db->select("sum(ub.amount) cnt, count(*) cnt2, COUNT(DISTINCT ub.uid) cnt3, gi.id", false)			
+					$query = $this->db->select("sum(ub.amount) cnt, count(*) cnt2, COUNT(DISTINCT ub.uid) cnt3, gi.server_id", false)			
 							->group_by("{$game_key}")
 							->order_by("cnt desc")->get();
 					break;		
@@ -973,7 +973,7 @@ class Trade extends MY_Controller {
 				->where("status", "2")
 				->where("gb.uid not in (select uid from testaccounts)")	
 				->join("users u", "u.uid=gb.uid", "left")
-				->join("servers gi", "gi.id=gb.server_id", "left");				
+				->join("servers gi", "gi.server_id=gb.server_id", "left");				
 									
 			$this->input->get("country") && $this->db->where("gb.country", $this->input->get("country"));
 			$this->input->get("PAID") && $this->db->where("gb.PAID", $this->input->get("PAID"));
@@ -1053,7 +1053,7 @@ class Trade extends MY_Controller {
 				->where("pb.status", "2")
 				->where("pb.uid not in (select uid from testaccounts)")	
 				->join("users u", "u.uid=pb.uid", "left")
-				->join("servers gi", "gi.id=pb.server_id", "left");				
+				->join("servers gi", "gi.server_id=pb.server_id", "left");				
 									
 			$this->input->get("PROD_ID") && $this->db->where("pb.PROD_ID", $this->input->get("PROD_ID"));
 			
@@ -1127,7 +1127,7 @@ class Trade extends MY_Controller {
 		
 			$this->db->from("google_billing gb")
 				->join("users u", "u.uid=gb.uid", "left")
-				->join("servers gi", "gb.server_id=gi.id", "left")
+				->join("servers gi", "gb.server_id=gi.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
 				->where("purchase_state", "0")
 				->where("gb.uid not in (select uid from testaccounts)")	
@@ -1198,7 +1198,7 @@ class Trade extends MY_Controller {
 		
 			$this->db->from("ios_billing ib")
 				->join("users u", "u.uid=ib.uid", "left")
-				->join("servers gi", "ib.server_id=gi.id", "left")
+				->join("servers gi", "ib.server_id=gi.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
 				->where("transaction_state", "1")
 				->where("ib.uid not in (select uid from testaccounts)")	
@@ -1379,7 +1379,7 @@ class Trade extends MY_Controller {
 			}
 			
 			$this->input->get("game") && $this->db->where("g.game_id", $this->input->get("game"));
-			$this->input->get("server") && $this->db->where("gi.id", $this->input->get("server"));					
+			$this->input->get("server") && $this->db->where("gi.server_id", $this->input->get("server"));					
 									
 			if ($this->input->get("start_date")) {
 				$start_date = $this->db->escape($this->input->get("start_date"));
@@ -1396,8 +1396,8 @@ class Trade extends MY_Controller {
 					$game_key = "gi.address";
 				}
 				else {
-					$this->db->select("gi.id, concat('(', g.abbr, ')', gi.name) as name", false);
-					$game_key = "gi.id";
+					$this->db->select("gi.server_id, concat('(', g.abbr, ')', gi.name) as name", false);
+					$game_key = "gi.server_id";
 				}
 			}
 			else {

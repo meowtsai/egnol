@@ -216,7 +216,7 @@ if($client->getAuth()->isAccessTokenExpired()) {
 		$query = $this->db
 			->select("uid")->distinct()
 			->from("characters gsr")
-			->join("servers gi", "gsr.server_id=gi.id")
+			->join("servers gi", "gsr.server_id=gi.server_id")
 			->where("gi.game_id", "my")->order_by("uid")->get();
 		foreach($query->result() as $row) {
 			echo "{$row->uid}, {$this->g_user->encode($row->uid)}<br>";
@@ -430,8 +430,8 @@ if($client->getAuth()->isAccessTokenExpired()) {
 		require_once dirname(__FILE__).'/../libraries/channel_api/fb/facebook.php';
 		
 		$sdk = new Facebook(array(
-			'appId'  => '120701231314999',
-			'secret' => 'b2afbc46366f6b92ff373fc90d0211a7',
+			'appId'  => '1025425380808895',
+			'secret' => 'cc9819f7f4eac6749a9ecf714384c48c',
 			));
 		$user = $sdk->getUser();
 		echo "<pre>";

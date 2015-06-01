@@ -454,8 +454,8 @@ $config["channel_api"] = array(
 			'name' => 'Facebook',
 			'lib_name' => 'fb_api',
 			'status' => '2',
-			'appId' => '120701231314999',
-			'secret' => 'b2afbc46366f6b92ff373fc90d0211a7',
+			'appId' => '1025425380808895',
+			'secret' => 'cc9819f7f4eac6749a9ecf714384c48c',
 			'scope' => 'email', //publish_stream
 		),		
 		'm_facebook' => array(

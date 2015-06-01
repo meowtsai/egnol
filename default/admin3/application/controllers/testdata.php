@@ -13,6 +13,7 @@ class Testdata extends CI_Controller {
 	
 	function generate_logout_time()
 	{
+		ini_set('max_execution_time', 9999);
 		$this->lang->load('db_lang', 'zh-TW');
 		
 		$query = $this->db->get("log_game_logins");
@@ -27,13 +28,14 @@ class Testdata extends CI_Controller {
 				    'logout_time' => $gen_logout_time
 			    );
 				
-				if (empty($row->logout_time)) $this->db->where("id", $row->id)->update("log_game_logins", $data);
+				$this->db->where("id", $row->id)->update("log_game_logins", $data);
 			}
 		}
 	}
 	
 	function generate_consume()
 	{
+		ini_set('max_execution_time', 9999);
 		$this->lang->load('db_lang', 'zh-TW');
 		
 		$query = $this->db->get("log_game_logins");
@@ -59,6 +61,25 @@ class Testdata extends CI_Controller {
 				
 				    $this->db->insert("log_game_consumes", $data);
 			    }
+			}
+		}
+	}
+	
+	function unify_server_id()
+	{
+		ini_set('max_execution_time', 9999);
+		$this->lang->load('db_lang', 'zh-TW');
+		
+		$query = $this->db->get("servers");
+		
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+				
+			    $data = array(
+				    'server_id' => $row->server_id
+			    );
+				
+				$this->db->where("server_id", $row->id)->update("log_game_logins", $data);
 			}
 		}
 	}

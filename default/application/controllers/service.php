@@ -170,7 +170,7 @@ class Service extends MY_Controller {
 					->where("q.id", $id)
 					->where("q.status >", "0")
 					->from("questions q")
-					->join("servers gi", "gi.id=q.server_id")
+					->join("servers gi", "gi.server_id=q.server_id")
 					->join("games g", "g.game_id=gi.game_id")
 					->join("users u", "u.uid=q.uid")
 					->get()->row();

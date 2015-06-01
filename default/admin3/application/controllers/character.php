@@ -55,7 +55,7 @@ class Character extends MY_Controller {
 				$this->db->where('(create_status="1" or create_status="2" or create_status="3")', null, false);
 			}
 			else if ($member_type == 'new_character') {
-				//$this->db->join("(select min(gr.id) id, account from characters gr join servers gi on gr.server_id=gi.id where gi.game_id='{$this->game_id}' group by user_name) tmp", "tmp.account=ga.account and tmp.id=ga.id");
+				//$this->db->join("(select min(gr.id) id, account from characters gr join servers gi on gr.server_id=gi.server_id where gi.game_id='{$this->game_id}' group by user_name) tmp", "tmp.account=ga.account and tmp.id=ga.id");
 				$this->db->where('(create_status="2" or create_status="3")', null, false);
 			}
 			else if ($member_type == 'all_new_character') {
@@ -337,7 +337,7 @@ class Character extends MY_Controller {
 			}
 		}
 		
-		$server = $this->db->select("gi.name as server_name, gi.id")
+		$server = $this->db->select("gi.name as server_name, gi.server_id")
 					->from("games g")
 					->join("servers gi", "g.game_id=gi.game_id")
 					->where("g.game_id", $this->game_id)
@@ -464,8 +464,8 @@ class Character extends MY_Controller {
 			{		
 				case "時段統計":
 					if ($this->input->get("display_game") == "server") {
-						$this->db->select("gi.id, concat('(', g.abbr, ')', gi.name) as name", false);
-						$game_key = "gi.id";
+						$this->db->select("gi.server_id, concat('(', g.abbr, ')', gi.name) as name", false);
+						$game_key = "gi.server_id";
 					}
 					else {
 						$this->db->select("g.name as name");

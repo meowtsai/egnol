@@ -13,7 +13,7 @@ class Games extends CI_Model {
 		$query = $this->db->select("gi.*, g.name as game_name")
 			->from("servers gi")
 			->join("games g", "gi.game_id=g.game_id")
-			->where("gi.id", $id)->get();		
+			->where("gi.server_id", $id)->get();		
 		return $query->num_rows() > 0 ? $query->row() : false; 
 	}
 	 

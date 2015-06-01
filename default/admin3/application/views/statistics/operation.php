@@ -8,7 +8,7 @@
 	
 	foreach($c_game_query->result() as $row) {
 		$c_game[$row->game_id] = $row;		
-		if ($row->is_active == 0) {$c_game_menu["關閉"][] = $row; continue;}
+		if (!$row->is_active) {$c_game_menu["關閉"][] = $row; continue;}
 		if (strpos($row->tags.",", "聯運,") !== false) {$c_game_menu["聯運"][] = $row; continue;}
 		$c_game_menu["獨代"][] = $row;
 	}
@@ -20,8 +20,21 @@
 	
 </div>
 
+<ul class="nav nav-tabs">
+    <li class="<?=empty($span) ? "active" : ""?>">
+        <a href="<?=site_url("statistics/operation?game_id={$this->game_id}")?>">日報表</a>
+    </li>
+    <li class="<?=($span=='weekly') ? "active" : ""?>">
+        <a href="<?=site_url("statistics/operation?game_id={$this->game_id}&span=weekly")?>">週報表</a>
+    </li>
+    <li class="<?=($span=='monthly') ? "active" : ""?>">
+        <a href="<?=site_url("statistics/operation?game_id={$this->game_id}&span=monthly")?>">月報表</a>
+    </li>
+</ul>
+
 <form method="get" action="<?=site_url("statistics/operation")?>" class="form-search">
-	<!--input type="hidden" name="game_id" value="<?=$this->game_id?>"-->
+	<!--input type="hidden" name="game_id" value="<?=$this->input->get("span")?>"-->
+	<input type="hidden" name="span" value="<?=$this->input->get("span")?>">
 	<div class="control-group">
 		
 		<? $i = 1; 
@@ -107,12 +120,12 @@
 				<td style="text-align:right"><?=number_format($row->paid_currency_total)?></td>
 				<td style="text-align:right"><?=number_format($row->deposit_total)?></td>
 				<td style="text-align:right"><?=number_format($row->consume_total)?></td>
-				<td style="text-align:right"><?=number_format($row->deposit_total/$row->deposit_user_count, 2)?></td>
-				<td style="text-align:right"><?=number_format($row->consume_total/$row->consume_user_count, 2)?></td>
+				<td style="text-align:right"><?=number_format(($row->deposit_user_count)?$row->deposit_total/$row->deposit_user_count:0, 2)?></td>
+				<td style="text-align:right"><?=number_format(($row->consume_user_count)?$row->consume_total/$row->consume_user_count:0, 2)?></td>
 				<td style="text-align:right"><?=number_format($row->peak_user_count)?></td>
-				<td style="text-align:right"><?=number_format($row->total_time/$row->login_count/3600, 2)?></td>
-				<td style="text-align:right"><?=number_format($row->paid_total_time/$row->deposit_user_count/3600, 2)?></td>
-				<td style="text-align:right"><?=number_format($row->deposit_total/$row->login_count*1000, 2)?></td>																
+				<td style="text-align:right"><?=number_format(($row->login_count)?$row->total_time/$row->login_count/3600:0, 2)?></td>
+				<td style="text-align:right"><?=number_format(($row->deposit_user_count)?$row->paid_total_time/$row->deposit_user_count/3600:0, 2)?></td>
+				<td style="text-align:right"><?=number_format(($row->login_count)?$row->deposit_total/$row->login_count*1000:0, 2)?></td>																
 			</tr>
 		<? endforeach;?>
 		</tbody>

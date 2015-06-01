@@ -53,7 +53,7 @@
 	$items = get_channel_items($site, "../");
 	foreach($items as $channel => $name):		   	
 ?>
-			<a href="http://www.long_e.com.tw/gate/login/<?=$site?>?channel=<?=$channel?>&ad=<?=$ad?>&redirect_url=<?=urlencode($redirect_url)?>&"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="40" title="<?=$name?> 帳號登入" border="0"/></a>
+			<a href="http://<?=base_url();?>/gate/login/<?=$site?>?channel=<?=$channel?>&ad=<?=$ad?>&redirect_url=<?=urlencode($redirect_url)?>&"><img src="http://<?=base_url();?>/img/login/<?=$channel?>.png" width="40" title="<?=$name?> 帳號登入" border="0"/></a>
 			<? endforeach;?>
 		</div>
    </td>

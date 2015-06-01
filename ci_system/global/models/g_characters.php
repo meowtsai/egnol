@@ -11,7 +11,7 @@ class G_Characters extends CI_Model {
 		$cnt = $this->db->from("characters gr")->where("uid", $data["uid"])->count_all_results();
 
     	if ($cnt > 0) {
-	    	$query = $this->db->from("characters gr")->join("servers gi", "gr.server_id=gi.id")
+	    	$query = $this->db->from("characters gr")->join("servers gi", "gr.server_id=gi.server_id")
 	    					->where("gi.game_id", $server->game_id)->where("uid", $data["uid"])->get();
 	
 	    	if ($query->num_rows() > 0) {

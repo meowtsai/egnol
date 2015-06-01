@@ -30,7 +30,7 @@ class MY_Controller extends CI_Controller {
 			->set_meta("description", "《萌英雄》");
 		
 		if ($this->g_user->loginCheck()) {
-			$recent_server = $this->db->from("log_game_logins lgl")->join("servers gi","lgl.server_id=gi.id")
+			$recent_server = $this->db->from("log_game_logins lgl")->join("servers gi","lgl.server_id=gi.server_id")
 				->where("gi.game_id", $this->game)->where("account", $this->g_user->account)->where("is_recent", "1")->order_by("create_time desc")->limit(3)->get();
 		} else $recent_server = false;
 		$this->g_layout->set("recent_server", $recent_server);		

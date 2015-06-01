@@ -11,9 +11,9 @@
 	//echo $css_link;
 ?>
 
-<link rel='stylesheet' type='text/css' href='http://www.long_e.com.tw/p/css/common.css'>
-<link rel='stylesheet' type='text/css' href='http://www.long_e.com.tw/p/css/default.old.css'>
-<link rel='stylesheet' type='text/css' href='http://www.long_e.com.tw/p/css/jquery-ui-1.8.22.custom.css'>
+<link rel='stylesheet' type='text/css' href='http://<?=base_url();?>/p/css/common.css'>
+<link rel='stylesheet' type='text/css' href='http://<?=base_url();?>/p/css/default.old.css'>
+<link rel='stylesheet' type='text/css' href='http://<?=base_url();?>/p/css/jquery-ui-1.8.22.custom.css'>
 <link rel="stylesheet" href="/css/validationEngine.jquery.css" type="text/css" media="screen" charset="utf-8" />
 
 <?=$js_include?>
@@ -28,20 +28,20 @@
 </head>
 
 <body leftmargin=0 topmargin=0 marginwidth=0 marginheight=0>
-<table width="996" border="0" align="center" cellpadding="0" cellspacing="0" background="http://www.long_e.com.tw/img/Template-bg.jpg">
+<table width="996" border="0" align="center" cellpadding="0" cellspacing="0" background="http://<?=base_url();?>/img/Template-bg.jpg">
   <tr> 
-    <td width="305"><a href="/index.php"><img src="http://www.long_e.com.tw/img/logo.gif" height="42" border="0" /></a></td>
+    <td width="305"><a href="/index.php"><img src="http://<?=base_url();?>/img/logo.gif" height="42" border="0" /></a></td>
     <td width="662" align="right" class="text-white" style="padding-right: 10px;">
         <a href="/index.php"><font class="text-white">回首頁</font></a>
        │<a href="/PayFun/PayMethod.php"><font class="text-white">儲值轉點</font></a>
        │<a href="/eWallet/member_query.php"><font class="text-white">儲值記錄</font></a>
        │<a href="/member/msettings.php"><font class="text-white">會員專區</font></a>
-       │<a href="http://www.long_e.com.tw/service"><font class="text-white">線上客服</font></a>
+       │<a href="http://<?=base_url();?>/service"><font class="text-white">線上客服</font></a>
        │<font class="text-white">
             <? if ($this->g_user->loginCheck()):?>       
-                <a href="http://www.long_e.com.tw/member/logout.php">登出</a>
+                <a href="http://<?=base_url();?>/member/logout.php">登出</a>
             <? else:?>
-                <a href="http://www.long_e.com.tw/member/login.php">登入</a>
+                <a href="http://<?=base_url();?>/member/login.php">登入</a>
             <? endif;?>
         </font>
     </td>
@@ -51,7 +51,7 @@
     <td colspan="3" style="padding-top:50px;">   
 		<table width="762" border="0" align="center" cellpadding="0" cellspacing="0">
 			<tr>
-	          <td height="37" background="http://www.long_e.com.tw/img/Template-img-01.gif">
+	          <td height="37" background="http://<?=base_url();?>/img/Template-img-01.gif">
 	            <span style="float:right; padding-right:12px;">
 				  <?= empty($layout_tmp) ? '' : $layout_tmp?>
 				</span>
@@ -76,7 +76,7 @@
               <tr> 
                 <td align="center" class="text-gray-light"><div align="center"><a href="/aboutUs.php">關於我們</a> 
                     | <a href="/privacy.php">隱私權保護</a> | <a href="mailto:business@molibee.com">合作提案</a> 
-                    | <a href="http://www.long_e.com.tw/service">客服中心</a> | </div></td>
+                    | <a href="http://<?=base_url();?>/service">客服中心</a> | </div></td>
               </tr>
               <tr> 
                 <td align="center" class="text-gray-light"> 龍邑科技 版權所有 2009 Cooz.com 

@@ -239,7 +239,7 @@ class Service extends MY_Controller {
 		$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("id")->get("servers");
 
 		$query = $this->db->from("questions qt")
-			->join("servers gi", "qt.server_id=gi.id")
+			->join("servers gi", "qt.server_id=gi.server_id")
 			->where("type", "9")->where("id", $id)->get();
 		if ($query->num_rows() == 0) die('無此單號');
 		
@@ -313,7 +313,7 @@ class Service extends MY_Controller {
 				->select("q.*, g.name as game_name, au.name as admin_uname")
 				->select("(select sum(amount) from user_billing where uid=q.uid and billing_type=2 and result=1) as expense")
 				->from("questions q")
-				->join("servers gi", "gi.id=q.server_id", "left")
+				->join("servers gi", "gi.server_id=q.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
 				->join("users u", "u.uid=q.uid", "left")
 				->join("admin_users au", "au.uid=q.admin_uid", "left");
@@ -387,7 +387,7 @@ class Service extends MY_Controller {
 		$question = $this->db->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email, u.account, au.name allocate_user_name")
 			->where("q.id", $id)
 			->from("questions q")
-			->join("servers gi", "gi.id=q.server_id")
+			->join("servers gi", "gi.server_id=q.server_id")
 			->join("games g", "g.game_id=gi.game_id")
 			->join("users u", "u.uid=q.uid")
 			->join("admin_users au", "au.uid=q.allocate_admin_uid", "left")
