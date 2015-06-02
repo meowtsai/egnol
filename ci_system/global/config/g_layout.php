@@ -7,7 +7,7 @@ $config['css_path'] = 'p/css/';
 $config['js_path'] = 'p/js/';
 $config['img_path'] = 'p/img/';
 
-$config['default_css_link'] = array('http://'.base_url().'/p/css/common.css', 'default', 'jquery-ui-1.8.22.custom');
+$config['default_css_link'] = array(base_url().'/p/css/common.css', 'default', 'jquery-ui-1.8.22.custom');
 $config['default_js_include'] = array('jquery-1.7.2.min', 'jquery-ui-1.8.22.custom.min');
 
 $config['default_meta'] = array(

@@ -8,7 +8,7 @@
 		$euid = $CI->g_user->euid;
 		$time = time();
 		$hash = md5($time . $euid . $key . '_' . $url);
-		$url = "http://www.long_e.com.tw/api/login_long_e?euid={$euid}&time={$time}&hash={$hash}&redirect_url=".urlencode($url);
+		$url = base_url()."/api/login_long_e?euid={$euid}&time={$time}&hash={$hash}&redirect_url=".urlencode($url);
 		return $url;
 	}
 ?>

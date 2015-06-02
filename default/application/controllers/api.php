@@ -218,11 +218,11 @@ class Api extends MY_Controller {
 		if ($this->g_user->login($account, $password, $email, $name, $game)) 
 		{
 			if (empty($server)) {
-				header("location: http://".base_url()."/play_game/{$game}?url=http://{$game}.long_e.com.tw/index.php?serverin=1");
+				header("location: ".base_url()."/play_game/{$game}?url=http://{$game}.long_e.com.tw/index.php?serverin=1");
 				exit();
 			}
 			if (in_array($partner, array('artsy'))) { //使用我方遊戲bar
-				header("location: http://".base_url()."/play_game?sid={$server_row->id}");
+				header("location: ".base_url()."/play_game?sid={$server_row->id}");
 				exit();
 			}
 			
@@ -259,7 +259,7 @@ class Api extends MY_Controller {
 			print_r($post);			
 			echo "加密前字串: ".($md5_p1 . $md5_p2  . $post['ad'] . $post['character_name'] . $post['time'] . $post['key'])."<br>";
 			unset($post['key']);
-			echo "產生網址: http://".base_url()."/api/create_game_role?".http_build_query($post)."&hash=".$hash;
+			echo "產生網址: ".base_url()."/api/create_game_role?".http_build_query($post)."&hash=".$hash;
 			echo "</pre>";
 		}
 		?>
@@ -463,7 +463,7 @@ class Api extends MY_Controller {
 			print_r($post);			
 			echo "加密前字串: ".($post['partner'] . $post['uid'] . $post['game'] . $post['server'] . $post['time'] . $post['key'])."<br>";
 			unset($post['key']);
-			echo "產生網址: http://".base_url()."/api/check_role_status?".http_build_query($post)."&hash=".$hash;
+			echo "產生網址: ".base_url()."/api/check_role_status?".http_build_query($post)."&hash=".$hash;
 			echo "</pre>";
 		}
 		?>
@@ -497,7 +497,7 @@ class Api extends MY_Controller {
 			parse_str($_SERVER['QUERY_STRING'], $output);
 			$output['euid'] = "";
 			$output['hash'] = md5($this->partner . $this->game . $imei . $this->time . $this->key);
-			header('location: http://'.base_url().'/api/m_login_form?'.http_build_query($output));
+			header('location: '.base_url().'/api/m_login_form?'.http_build_query($output));
 			exit();
 		}
 		
@@ -1190,7 +1190,7 @@ class Api extends MY_Controller {
 		$uid = $this->g_user->decode($euid);
 		$this->g_user->switch_uid($uid);
 		
-		header("location: http://".base_url()."/payment?game=".$this->game);
+		header("location: ".base_url()."/payment?game=".$this->game);
 	}
 	
 	function m_open_long_e_billing_v2()
@@ -1243,16 +1243,16 @@ class Api extends MY_Controller {
 		//log_message('error', $uid." ".$type);
 		
 		if ($type == 'ios') {
-			$url = "http://".base_url()."/payment/m_ios_index?sid=".$server_row->id."&partner=".$this->partner."&game=".$this->game;
+			$url = base_url()."/payment/m_ios_index?sid=".$server_row->id."&partner=".$this->partner."&game=".$this->game;
 		}
 		else if ($type == 'google') {
-			$url = "http://".base_url()."/payment/m_google_index?sid=".$server_row->id."&partner=".$this->partner."&game=".$this->game."&eg=".$eg."&test=".$operator.$country;
+			$url = base_url()."/payment/m_google_index?sid=".$server_row->id."&partner=".$this->partner."&game=".$this->game."&eg=".$eg."&test=".$operator.$country;
 		}
 		else if ($type == 'long_e') {
-			$url = "http://".base_url()."/payment/m_long_e_index?sid=".$server_row->id."&partner=".$this->partner."&game=".$this->game."&eg=".$eg."&test=".$operator.$country;
+			$url = base_url()."/payment/m_long_e_index?sid=".$server_row->id."&partner=".$this->partner."&game=".$this->game."&eg=".$eg."&test=".$operator.$country;
 		}
 		else {
-			$url = "http://".base_url()."/payment/m_index?sid=".$server_row->id."&partner=".$this->partner."&game=".$this->game."&eg=".$eg."&test=".$operator.$country;
+			$url = base_url()."/payment/m_index?sid=".$server_row->id."&partner=".$this->partner."&game=".$this->game."&eg=".$eg."&test=".$operator.$country;
 		}
 		
 		header("location: {$url}");
@@ -1323,7 +1323,7 @@ class Api extends MY_Controller {
 		//echo $this->g_user->euid;
 		
 		if (get_mobile_os() == 'ios') {
-			echo "<script src='http://".base_url()."/p/js/iosBridge.js'></script>
+			echo "<script src='".base_url()."/p/js/iosBridge.js'></script>
 				<script type='text/javascript'>calliOSFunction('receiveEuid', ['{$this->g_user->euid}', '{$this->input->get("code")}']); history.back(); </script>";
 		}
 		else {
@@ -1344,7 +1344,7 @@ class Api extends MY_Controller {
 
 		$channel = isset($_SESSION['channel']) ? $_SESSION['channel'] : 'long_e';		
 		if (get_mobile_os() == 'ios') {
-			echo "<script src='http://".base_url()."/p/js/iosBridge.js'></script>
+			echo "<script src='".base_url()."/p/js/iosBridge.js'></script>
 				<script type='text/javascript'>calliOSFunction('receiveEuid', ['{$this->g_user->euid}', '{$hash}', '{$channel}']); history.back(); </script>";
 		}
 		else {
@@ -1364,7 +1364,7 @@ class Api extends MY_Controller {
 	function m_res_facebook()
 	{
 		if (get_mobile_os() == 'ios') {
-			echo "<script src='http://".base_url()."/p/js/iosBridge.js'></script>
+			echo "<script src='".base_url()."/p/js/iosBridge.js'></script>
 				<script type='text/javascript'>calliOSFunction('receiveEuid', ['', '' 'm_facebook']); history.back(); </script>";
 		}
 		else {
@@ -1385,7 +1385,7 @@ class Api extends MY_Controller {
 		echo "<script type='text/javascript'>alert('成功登出系統'); </script>";
 		
 		if (get_mobile_os() == 'ios') {
-			echo "<script src='http://".base_url()."/p/js/iosBridge.js'></script>
+			echo "<script src='".base_url()."/p/js/iosBridge.js'></script>
 				<script type='text/javascript'>calliOSFunction('dialogLogout');</script>";
 		}
 		else {

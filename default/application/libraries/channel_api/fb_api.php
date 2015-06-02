@@ -42,7 +42,7 @@ class Fb_Api extends Channel_Api
 	   	//header("location: {$loginUrl}");
 	   	//exit();
     	echo("
-    			<meta property='og:image' content='http://".base_url()."/p/upload/tmp.jpg' />
+    			<meta property='og:image' content='".base_url()."/p/upload/tmp.jpg' />
     			<meta property='og:title' content='龍邑遊戲' />
     			<meta property='og:description' content='超人氣三國大亂鬥，可愛萌英雄任你挑選！一起萌翻三國歷史吧！'>
     			<script> top.location.href='" . $loginUrl . "'</script>

@@ -79,7 +79,7 @@
 	function output_game_item($row)
 	{
 		if (file_exists(g_conf("http_document_root")."long_e/p/img/game/{$row->game_id}.gif")) {
-			echo "<img src='http://".base_url()."/p/img/game/{$row->game_id}.gif' style='height:16px; vertical-align:middle; margin-right:3px;'>;
+			echo "<img src='".base_url()."/p/img/game/{$row->game_id}.gif' style='height:16px; vertical-align:middle; margin-right:3px;'>;
 		}
 		
 		$output = "<a href='http://{$row->game_id}.long_e.com.tw' target='_blank'>{$row->name}</a>";

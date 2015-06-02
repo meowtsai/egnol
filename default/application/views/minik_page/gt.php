@@ -58,7 +58,7 @@ function chose_server_form() {
 	<? if ($old_user):?>
 	window.open("http://gt.long_e.com.tw/common/choose_server_form");
 	<? else:?>	
-	window.open("http://<?=base_url()?>/play_game/gt");
+	window.open("<?=base_url()?>/play_game/gt");
 	<? endif;?>    
 }
 </script>

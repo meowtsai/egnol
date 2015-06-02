@@ -17,7 +17,7 @@
 
               	<? 
               	foreach($games->result() as $game):
-						$url = "http://".base_url()."/wallet/transfer/{$game->game_id}";
+						$url = base_url()."/wallet/transfer/{$game->game_id}";
               	?>              		
               		<a href="<?=$url?>">
               			<span class="item">

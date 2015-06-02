@@ -14,7 +14,7 @@ class Zj extends Game_Api
     
     function login($server, $user, $ad)
     {
-    	$url = "http://".base_url();    	
+    	$url = base_url();    	
 		header("location:{$url}");
     }
     

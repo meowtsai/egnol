@@ -156,7 +156,7 @@ class Payment extends MY_Controller {
 		$this->g_user->check_login('', true);
 		
 		$type = $this->input->get("type");
-		$url = "http://".base_url()."/mycard/get_product/".urlencode($type);
+		$url = base_url()."/mycard/get_product/".urlencode($type);
 		$data = json_decode(file_get_contents($url));
 				
 		$this->_init_payment_layout()

@@ -6,7 +6,7 @@ class M_Facebook extends Channel_Api
 {	
     function login($site)
     {
-    	header('location: http://'.base_url().'/api/m_res_facebook');
+    	header('location: '.base_url().'/api/m_res_facebook');
     	exit();
     }
     

@@ -185,7 +185,7 @@ class Member extends MY_Controller {
 		{			
 			$row = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get()->row();		
 			if ( empty($row) ) { 
-				header("location: http://".base_url()."/member/bind_account");
+				header("location: ".base_url()."/member/bind_account");
 				exit();
 			}
 		}	
@@ -461,7 +461,7 @@ class Member extends MY_Controller {
 		{			
 			$row = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get()->row();		
 			if ( empty($row) ) { 
-				header("location: http://".base_url()."/member/bind_account");
+				header("location: ".base_url()."/member/bind_account");
 				exit();
 			}
 		}	

@@ -72,7 +72,7 @@ function ssss()
 	{
 		$client_id = '43086991528-jus4ns58iriinu63shrrfu1udb7gfl82.apps.googleusercontent.com';
 		$service_account = '43086991528-jus4ns58iriinu63shrrfu1udb7gfl82@developer.gserviceaccount.com';
-		$callback = 'http://'.base_url().'/test/google_callback';		
+		$callback = base_url().'/test/google_callback';		
 		$auth_url = 'https://accounts.google.com/o/oauth2/token';
 		
 		$code = $this->input->get('code');
@@ -115,7 +115,7 @@ $user_token= json_decode($ANDROIDUsertoken,true);
 			
 $client_id = '43086991528-jus4ns58iriinu63shrrfu1udb7gfl82.apps.googleusercontent.com';
 $service_account = '43086991528-jus4ns58iriinu63shrrfu1udb7gfl82@developer.gserviceaccount.com';
-$key = file_get_contents("http://".base_url()."/p/key.p12"); 
+$key = file_get_contents(base_url()."/p/key.p12"); 
 //'hA_w-PKZ5hMMJxJ43GX95nPv';
 
 $client = new Google_Client();
@@ -517,7 +517,7 @@ if($client->getAuth()->isAccessTokenExpired()) {
 	{
 		while (empty($data)) {$data = $this->create_account();}
 		$this->g_user->verify_account($data['account'], $data['password']);
-		header('location: http://'.base_url().'/gate/login_game/sg2');
+		header('location: '.base_url().'/gate/login_game/sg2');
 	}
 	
 	function create_account()

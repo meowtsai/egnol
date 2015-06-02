@@ -112,7 +112,7 @@ class Gate extends MY_Controller {
 					}	
 					else {
 						$choose_server_url = "http://{$site}.long_e.com.tw/index.php?serverin=1&ad={$ad}";
-						$url = "http://".base_url()."/play_game/{$site}?url=".urlencode($choose_server_url)."&ad={$ad}";
+						$url = base_url()."/play_game/{$site}?url=".urlencode($choose_server_url)."&ad={$ad}";
 						//die($url);
 						header('location:'.$url);
 					}
@@ -218,7 +218,7 @@ class Gate extends MY_Controller {
 			
 			//直接進遊戲
 			if ( ! empty($sid)) {
-				header("location: http://".base_url()."/play_game?sid={$sid}&ad={$ad}");
+				header("location: ".base_url()."/play_game?sid={$sid}&ad={$ad}");
 				exit();
 			}
 			
@@ -228,7 +228,7 @@ class Gate extends MY_Controller {
 				exit();
 			} */
 			
-			$url = 'http://'.base_url().'/index.php';
+			$url = base_url().'/index.php';
 			switch ($site)
 			{				
 					
@@ -237,12 +237,12 @@ class Gate extends MY_Controller {
 					break;
 				
 				case 'eya':
-					$url = "http://".base_url();
+					$url = base_url();
 					break;
 					
 				default:					
 					$choose_server_url = "http://{$site}.long_e.com.tw/index.php?serverin=1&ad={$ad}";
-					$url = "http://".base_url()."/play_game/{$site}?url=".urlencode($choose_server_url)."&ad={$ad}";
+					$url = base_url()."/play_game/{$site}?url=".urlencode($choose_server_url)."&ad={$ad}";
 			}
 			header("location: {$url}", 302);	
 			exit();	
@@ -333,7 +333,7 @@ class Gate extends MY_Controller {
 					header("location: http://{$game_id}.long_e.com.tw");
 				}
 				else {
-					header("location: http://".base_url()."/play_game?sid=".$server->server_id."&ad={$ad}&");
+					header("location: ".base_url()."/play_game?sid=".$server->server_id."&ad={$ad}&");
 				}
 			}
 			exit();
@@ -367,7 +367,7 @@ class Gate extends MY_Controller {
 		
 		$this->load->view("gate/play_game", array(
 			"server" => $server,
-			"game_url" => "http://".base_url()."/gate/login_game?sid={$server->server_id}&ad={$ad}",
+			"game_url" => base_url()."/gate/login_game?sid={$server->server_id}&ad={$ad}",
 			"is_minik_user" => (strpos($this->g_user->account, "@minik") !== false ? true : false),
 			"frame_conf" => $frame_conf,		
 			"bulletins" => $this->g_bulletins->get_list($server->game_id, 0, 5),		
@@ -455,7 +455,7 @@ class Gate extends MY_Controller {
 			switch ($type) 
 			{
 				case 'trade': header("location: /payment"); exit(); break;
-				case 'service': header("location: http://".base_url()."/service"); exit(); break;	
+				case 'service': header("location: ".base_url()."/service"); exit(); break;	
 			}
 		}
 	}
@@ -480,7 +480,7 @@ class Gate extends MY_Controller {
 			$redirect_url = "http://{$game_id}.long_e.com.tw/index.php";
 		}
 		else {
-			$redirect_url = "http://".base_url();
+			$redirect_url = base_url();
 		}
 		
 		header('Content-type:text/html; Charset=UTF-8');
@@ -504,7 +504,7 @@ class Gate extends MY_Controller {
 		{
 			if (check_mobile()) {
 				if (get_mobile_os() == 'ios') {
-					echo "<script src='http://".base_url()."/p/js/iosBridge.js'></script>
+					echo "<script src='".base_url()."/p/js/iosBridge.js'></script>
 						<script type='text/javascript'>calliOSFunction('showMsg', ['". mb_convert_encoding($msg, "UTF-8")."']); history.back(); </script>";
 				}
 				else {

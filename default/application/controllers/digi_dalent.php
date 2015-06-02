@@ -26,12 +26,12 @@ class Digi_Dalent extends MY_Controller {
 	
 	function pay_entry()
 	{
-		header("location: http://www.long_e.com.tw/payment?game={$this->game}");
+		header("location: ".base_url()."/payment?game={$this->game}");
 	}
 		
 	function feedback_entry()
 	{
-		header("location: http://www.long_e.com.tw/service/question?game={$this->game}");
+		header("location: ".base_url()."/service/question?game={$this->game}");
 	}
 	
 	function portal_entry()
