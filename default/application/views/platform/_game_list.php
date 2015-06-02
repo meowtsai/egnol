@@ -63,7 +63,7 @@
 
 <style type="text/css">
 #game_list {margin:auto; width:706px;}
-#game_list .index_items {background:url(http://www.long_e.com.tw/p/img/index_items.png); display:inline-block; width:12px; height:12px; vertical-align:middle; margin-left:3px;}
+#game_list .index_items {background:url(/p/img/index_items.png); display:inline-block; width:12px; height:12px; vertical-align:middle; margin-left:3px;}
 #game_list .title {margin-bottom:10px;}
 #game_list .list {margin-right:0px; margin-left:2px; clear:both;}
 #game_list .list li {background:#f6f6f6; margin:0 1px 1px; padding:5px; font-size:14px; line-height:21px; height:21px; float:left; width:174px; display:inline-block; text-align:left}
@@ -79,7 +79,7 @@
 	function output_game_item($row)
 	{
 		if (file_exists(g_conf("http_document_root")."long_e/p/img/game/{$row->game_id}.gif")) {
-			echo "<img src='http://www.long_e.com.tw/p/img/game/{$row->game_id}.gif' style='height:16px; vertical-align:middle; margin-right:3px;'>";
+			echo "<img src='http://".base_url()."/p/img/game/{$row->game_id}.gif' style='height:16px; vertical-align:middle; margin-right:3px;'>;
 		}
 		
 		$output = "<a href='http://{$row->game_id}.long_e.com.tw' target='_blank'>{$row->name}</a>";

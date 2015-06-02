@@ -48,8 +48,8 @@
 
 <div id="choose" style="display:none;"><?=$choose_server_form?></div>
 
-<script type="text/javascript" src="http://www.long_e.com.tw/p/js/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src='http://www.long_e.com.tw/p/js/jquery.blockUI.js'></script>
+<script type="text/javascript" src="/p/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src='/p/js/jquery.blockUI.js'></script>
 <script type="text/javascript">
 function invite_friend() {
 	$('#invite_ifm').attr("src", "<?=$inviteSrc?>");
@@ -58,7 +58,7 @@ function chose_server_form() {
 	<? if ($old_user):?>
 	window.open("http://gt.long_e.com.tw/common/choose_server_form");
 	<? else:?>	
-	window.open("http://www.long_e.com.tw/play_game/gt");
+	window.open("http://<?=base_url()?>/play_game/gt");
 	<? endif;?>    
 }
 </script>

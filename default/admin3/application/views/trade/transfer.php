@@ -172,9 +172,9 @@
 					<ul class="dropdown-menu pull-right">
 						<li><a href="<?=site_url("trade/modify_order/{$row->id}")?>"><i class="icon-pencil"></i> 編輯</a></li>
 						<? if (in_array($row->result, array("0", "3", "4"))):?>
-						<li><a href="javascript:;" class="json_post_alert" url="http://www.long_e.com.tw/ajax/resend_transfer/<?=$row->id?>" ><i class="icon-repeat"></i> 重送交易</a></li>
+						<li><a href="javascript:;" class="json_post_alert" url="/ajax/resend_transfer/<?=$row->id?>" ><i class="icon-repeat"></i> 重送交易</a></li>
 						<? elseif ($row->result == '2' && $row->transaction_type == 'rc_billing'):?>
-						<li><a href="javascript:;" class="json_post_alert" url="http://www.long_e.com.tw/ajax/resend_failed_order/<?=$row->id?>" ><i class="icon-repeat"></i> 重建訂單發送交易</a></li>
+						<li><a href="javascript:;" class="json_post_alert" url="/ajax/resend_failed_order/<?=$row->id?>" ><i class="icon-repeat"></i> 重建訂單發送交易</a></li>
 						<? endif;?>
 					</ul>
 				</div>			

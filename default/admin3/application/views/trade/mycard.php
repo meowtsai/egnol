@@ -153,7 +153,7 @@
 					</button>	
 					<? if ($row->trade_ok=='0'):?>
 					<ul class="dropdown-menu pull-right">
-						<li><a href="javascript:;" class="json_post_alert" url="http://www.long_e.com.tw/ajax/resend_mycard_billing/<?=$row->trade_seq?>" ><i class="icon-repeat"></i> 重送交易</a></li>
+						<li><a href="javascript:;" class="json_post_alert" url="/ajax/resend_mycard_billing/<?=$row->trade_seq?>" ><i class="icon-repeat"></i> 重送交易</a></li>
 					</ul>
 					<? endif;?>
 				</div>			

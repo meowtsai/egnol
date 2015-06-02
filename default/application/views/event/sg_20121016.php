@@ -32,7 +32,7 @@ body {background:url('/p/img/sg_20121016/20121011_bg_compressed.jpg') no-repeat 
 		<div id="content2">
 			<span id="code"><?=$code?></span>
 			<div style="margin:6px;">
-			<a href="http://www.long_e.com.tw/gate/login_game/sg2" target="_blank">進入遊戲</a> | 
+			<a href="/gate/login_game/sg2" target="_blank">進入遊戲</a> | 
 			<a href="http://sg2.long_e.com.tw" target="_blank">開啟官網</a>
 			</div>
 		</div>

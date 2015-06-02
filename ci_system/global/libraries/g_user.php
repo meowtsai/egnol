@@ -997,10 +997,10 @@ class G_User {
 	function display_notice()
 	{
 		$cnt = $this->CI->db->from("notice_targets")->where("uid", $this->uid)->where("is_read", 0)->count_all_results();
-		$re = "<a href='http://www.long_e.com.tw/notice/get_list' style='font-size:11px; line-height:20px; color:#ff0;' target='_blank'>";
+		$re = "<a href='http://".base_url()."/notice/get_list' style='font-size:11px; line-height:20px; color:#ff0;' target='_blank'>";
 		if ($cnt > 0) 
-			$re .= "<img src='http://www.long_e.com.tw/p/img/notice_on.gif' title='通知({$cnt})' onclick='$(this).attr(\"src\", \"http://www.long_e.com.tw/p/img/notice_off.gif\")'>";
-		else $re .= "<img src='http://www.long_e.com.tw/p/img/notice_off.gif' title='通知'>";
+			$re .= "<img src='http://".base_url()."/p/img/notice_on.gif' title='通知({$cnt})' onclick='$(this).attr(\"src\", \"http://".base_url()."/p/img/notice_off.gif\")'>";
+		else $re .= "<img src='http://".base_url()."/p/img/notice_off.gif' title='通知'>";
 		$re .= "</a>";
 		return $re;
 	}

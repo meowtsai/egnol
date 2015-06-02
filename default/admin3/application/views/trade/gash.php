@@ -145,9 +145,9 @@
 					</button>	
 					<ul class="dropdown-menu pull-right">						
 						<? if ($row->status=='2'):?>
-						<li><a href="javascript:;" class="json_post_alert" url="http://www.long_e.com.tw/ajax/redo_gash_billing/<?=$row->id?>"></i> 重做儲值</a></li>
+						<li><a href="javascript:;" class="json_post_alert" url="/ajax/redo_gash_billing/<?=$row->id?>"></i> 重做儲值</a></li>
 						<? else:?>
-						<li><a href="javascript:;" class="json_post_alert" url="http://www.long_e.com.tw/ajax/resend_gash_billing/<?=$row->id?>"></i> 重送交易</a></li>
+						<li><a href="javascript:;" class="json_post_alert" url="/ajax/resend_gash_billing/<?=$row->id?>"></i> 重送交易</a></li>
 						<? endif;?>
 					</ul>
 				</div>			

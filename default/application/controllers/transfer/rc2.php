@@ -21,7 +21,7 @@ class Rc2 extends MY_Controller {
 	function entry()
 	{
 		$redirect_url = urldecode($this->input->get("ref"));
-		if (empty($redirect_url)) $redirect_url = 'http://www.long_e.com.tw';
+		if (empty($redirect_url)) $redirect_url = 'http://'.base_url();
 		
 		$this->_rc2_login_api($redirect_url);
 	}
@@ -35,12 +35,12 @@ class Rc2 extends MY_Controller {
 			$game = $this->input->get("game");
 			log_message('error', 'website_entry $game:'.$game);
 		}
-		$this->_rc2_login_api("http://www.long_e.com.tw/gate/website/{$game}");
+		$this->_rc2_login_api("http://".base_url()."/gate/website/{$game}");
 	}
 	
 	function service_entry()
 	{
-		$this->_rc2_login_api("http://www.long_e.com.tw/service");
+		$this->_rc2_login_api("http://".base_url()."/service");
 	}
 	
 	function payment_entry()
@@ -52,7 +52,7 @@ class Rc2 extends MY_Controller {
 			$game = $this->input->get("game");
 			log_message('error', 'payment_entry $game:'.$game);
 		}
-		$this->_rc2_login_api("http://www.long_e.com.tw/payment?game={$game}");
+		$this->_rc2_login_api("http://".base_url()."/payment?game={$game}");
 	}
 	
 	function _rc2_login_api($go_url)

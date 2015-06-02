@@ -22,7 +22,7 @@ class Yoid extends Channel_Api
     function login($site)
     {	    	
     	$oauthapp = new YahooOAuthApplication(OAUTH_CONSUMER_KEY, OAUTH_CONSUMER_SECRET, OAUTH_APP_ID, OAUTH_DOMAIN);   	
-		$oauth_request_token = $oauthapp->getRequestToken("http://www.long_e.com.tw/gate/login_callback/yoid");
+		$oauth_request_token = $oauthapp->getRequestToken("http://".base_url()."/gate/login_callback/yoid");
     	$_SESSION['oauth_token'] = $oauth_request_token->to_string();
     	    	
     	$url = $oauthapp->getAuthorizationUrl($oauth_request_token); 

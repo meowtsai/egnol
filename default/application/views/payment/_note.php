@@ -44,6 +44,6 @@
               </tr>
               <tr> 
                 <td valign="top">》</td>
-                <td valign="top"><a href="http://www.long_e.com.tw/bulletin/detail/6035" target="_blank">不會使用GASH+會員帳號支付請點我</a>。</td>
+                <td valign="top"><a href="/bulletin/detail/6035" target="_blank">不會使用GASH+會員帳號支付請點我</a>。</td>
               </tr>
             </table>      

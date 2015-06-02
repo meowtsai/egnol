@@ -3,7 +3,7 @@
 .games img {width:100%;  vertical-align:middle;}
 </style>
 
-<a href="http://www.long_e.com.tw/wallet/guide" target="_blank"><strong>必讀：購點 / 轉點流程說明</strong></a>
+<a href="/wallet/guide" target="_blank"><strong>必讀：購點 / 轉點流程說明</strong></a>
 
 <table width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr> 
@@ -17,7 +17,7 @@
 
               	<? 
               	foreach($games->result() as $game):
-						$url = "http://www.long_e.com.tw/wallet/transfer/{$game->game_id}";
+						$url = "http://".base_url()."/wallet/transfer/{$game->game_id}";
               	?>              		
               		<a href="<?=$url?>">
               			<span class="item">

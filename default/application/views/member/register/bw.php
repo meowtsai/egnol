@@ -140,7 +140,7 @@ img {border:0;}
 	$items = get_channel_items("bw", "../");
 	foreach($items as $channel => $name):
 ?>
-	<a href="http://www.long_e.com.tw/gate/login/bw?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="30" title="<?=$name?> 帳號登入"/></a>
+	<a href="/gate/login/bw?channel=<?=$channel?>&ad=<?=$ad?>"><img src="/img/login/<?=$channel?>.png" width="30" title="<?=$name?> 帳號登入"/></a>
 <? endforeach;?>  
 </div>
 

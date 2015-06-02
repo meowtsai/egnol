@@ -1,4 +1,4 @@
-<script src='http://www.long_e.com.tw/p/js/member/register.js'></script>
+<script src='/p/js/member/register.js'></script>
 <style type="text/css">
 #long_e_register {background:#fff; width:500px; margin-top:20px; padding:20px; font-size:14px; text-align:left;}
 #long_e_register a {color:#00a;}
@@ -15,23 +15,23 @@
 
 <table>
 	<tr>
-		<td style="width:110px"><img src="http://www.long_e.com.tw/img/ball-blue.gif"> 會員帳號：</td>
+		<td style="width:110px"><img src="/img/ball-blue.gif"> 會員帳號：</td>
 		<td><input type="text" name="account" class="required" minlength="6" maxlength="18">
 			<div class="tip">6~18碼英文(系統會自動將大寫轉小寫)或數字組合。</div>
 		</td>
 	</tr>
 	<tr>
-		<td><img src="http://www.long_e.com.tw/img/ball-blue.gif"> 會員密碼：</td>
+		<td><img src="/img/ball-blue.gif"> 會員密碼：</td>
 		<td><input type="password" id="pwd" name="pwd" class="required" minlength="6" maxlength="18">
 			<div class="tip">6~18碼。</div>
 		</td>
 	</tr>
 	<tr>
-		<td><img src="http://www.long_e.com.tw/img/ball-blue.gif"> 確認密碼：</td>
+		<td><img src="/img/ball-blue.gif"> 確認密碼：</td>
 		<td><input type="password" name="pwd2" class="required" equalTo='#pwd'></td>
 	</tr>
 	<tr>
-		<td><img src="http://www.long_e.com.tw/img/ball-blue.gif"> 電子信箱：</td>
+		<td><img src="/img/ball-blue.gif"> 電子信箱：</td>
 		<td><input type="text" name="email" class="required email">
 			<div class="tip">活動或忘記密碼時使用。</div>
 		</td>
@@ -47,17 +47,17 @@
 
 <table id="detail" style="display:none; margin-bottom:20px;">
 	<tr>
-		<td><img src="http://www.long_e.com.tw/img/ball-gray.gif"> 您的姓名：</td>
+		<td><img src="/img/ball-gray.gif"> 您的姓名：</td>
 		<td><input type="text" name="name">
 			<div class="tip">請輸入您的真實姓名，作為客服聯繫時使用。</div>
 		</td>
 	</tr>
 	<tr>
-		<td><img src="http://www.long_e.com.tw/img/ball-gray.gif"> 身分證號：</td>
+		<td><img src="/img/ball-gray.gif"> 身分證號：</td>
 		<td><input type="text" size="25" maxlength="20" name="ident" class="twId"></td>
 	</tr>
 	<tr>
-		<td><img src="http://www.long_e.com.tw/img/ball-gray.gif"> 您的生日：</td>
+		<td><img src="/img/ball-gray.gif"> 您的生日：</td>
 		<td>
 				  <select name="birthday_y" style="width:80px">
 				    <option value=''>--</option>
@@ -186,7 +186,7 @@
 		</td>
 	</tr>
 	<tr>
-		<td><img src="http://www.long_e.com.tw/img/ball-gray.gif"> 性別：</td>
+		<td><img src="/img/ball-gray.gif"> 性別：</td>
 		<td>
 			<input id="sex_0" type="radio" value="1" name="sex" />
 			<label for="sex_0">男生</label>
@@ -195,19 +195,19 @@
 		</td>
 	</tr>
 	<tr>
-		<td><img src="http://www.long_e.com.tw/img/ball-gray.gif"> 手機號碼：</td>
+		<td><img src="/img/ball-gray.gif"> 手機號碼：</td>
 		<td>
 			<input type="text" size="25"  maxlength="10" name="mobile" class="isMobile">
 		</td>
 	</tr>
 	<tr>
-		<td><img src="http://www.long_e.com.tw/img/ball-gray.gif"> 聯絡電話：</td>
+		<td><img src="/img/ball-gray.gif"> 聯絡電話：</td>
 		<td>
 			<input type="text" size="25"  maxlength="16" name="phone_address" class="isPhone">
 		</td>
 	</tr>
 	<tr>
-		<td><img src="http://www.long_e.com.tw/img/ball-gray.gif"> 通訊地址：</td>
+		<td><img src="/img/ball-gray.gif"> 通訊地址：</td>
 		<td>
 			<input type='text' size='25'  maxlength='30' name='address_road'>	
 		</td>
@@ -217,7 +217,7 @@
 
 <table>
 	<tr>
-		<td><img src="http://www.long_e.com.tw/img/ball-blue.gif"> 驗證碼：</td>
+		<td><img src="/img/ball-blue.gif"> 驗證碼：</td>
 		<td>
 			<div id="captcha_area"></div>
 			<input type="text" name="captcha" size="5" maxlength="4" minlength="4" class="required" value="" />
@@ -232,7 +232,7 @@
 </table>
 
 <div style="text-align:center; margin:5px;">
-	<input type="image" src="http://www.long_e.com.tw/img/member-icon-3.gif" width="107" height="25" >
+	<input type="image" src="/img/member-icon-3.gif" width="107" height="25" >
 </div>
 
 </form>

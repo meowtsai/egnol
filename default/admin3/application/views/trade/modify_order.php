@@ -46,7 +46,7 @@
    		<div class="form-actions">
    			<button type="submit" class="btn"><i class="icon-ok"></i> 確認送出</button>
    			<? if (in_array($row->result, array("0", "3", "4"))):?>
-   			<button type="button" class="btn json_post_alert" url="http://www.long_e.com.tw/ajax/resend_transfer/<?=$row->id?>" ><i class="icon-repeat"></i> 重送交易</button>
+   			<button type="button" class="btn json_post_alert" url="/ajax/resend_transfer/<?=$row->id?>" ><i class="icon-repeat"></i> 重送交易</button>
    			<? endif;?>
    		</div>
    		

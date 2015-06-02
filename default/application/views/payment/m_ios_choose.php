@@ -7,7 +7,7 @@ h3 {border-bottom:1px solid #ccc; border-top:3px solid #493; padding:6px 16px; b
 #pay_choose li a {display:block; padding:12px 16px; color:#003;}
 </style>
 
-<script src='http://www.long_e.com.tw/p/js/iosBridge.js'></script>
+<script src='/p/js/iosBridge.js'></script>
 <script type="text/javascript">
 $(function(){
 	$('#pay_choose').on('click', 'a', function(){

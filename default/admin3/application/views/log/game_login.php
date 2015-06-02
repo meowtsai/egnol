@@ -164,11 +164,11 @@
 		<tr>
 			<td><?=$row->id?></td>
 			<td><a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?></a>
-				<a href="http://www.long_e.com.tw/admin3/log/game_login?uid=<?=$row->uid?>&action=查詢"><i class="icon-search"></i></a>
+				<a href="/admin3/log/game_login?uid=<?=$row->uid?>&action=查詢"><i class="icon-search"></i></a>
 			</td>
 			<td style="word-break:break-all"><?=$row->account?></td>
 			<td><?=$row->ip?>
-				<a href="http://www.long_e.com.tw/admin3/log/game_login?ip=<?=$row->ip?>&action=查詢"><i class="icon-search"></i></a>
+				<a href="/admin3/log/game_login?ip=<?=$row->ip?>&action=查詢"><i class="icon-search"></i></a>
 			</td>
 			<td><?=$row->create_time?></td>
 			<td><?=$row->game_name."_".$row->server_name?></td>			

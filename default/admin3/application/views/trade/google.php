@@ -114,7 +114,7 @@
 					</button>	
 					<ul class="dropdown-menu pull-right">
 						<? if ($row->purchase_state == '0' && $row->is_confirmed == '0'):?>
-						<li><a href="javascript:;" class="json_post_alert" url="http://www.long_e.com.tw/ajax/confirm_google_billing/<?=$row->id?>">請款</a></li>
+						<li><a href="javascript:;" class="json_post_alert" url="/ajax/confirm_google_billing/<?=$row->id?>">請款</a></li>
 						<? endif;?>
 					</ul>
 				</div>			

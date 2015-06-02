@@ -127,12 +127,12 @@ body,td,th {
 </map>
 
 
-<script type="text/javascript" src="http://www.long_e.com.tw/p/js/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src='http://www.long_e.com.tw/p/js/jquery.blockUI.js'></script>
+<script type="text/javascript" src="/p/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src='/p/js/jquery.blockUI.js'></script>
 <script type="text/javascript">
 $(function(){
 	$("#form_submit").click(function(){
-		$.blockUI({message: '<h3><img src="http://www.long_e.com.tw/p//p/transfer/beanfun/bw/img/icon/loading.gif" border="0"> 交易處理中，請稍候...</h3>' });		
+		$.blockUI({message: '<h3><img src="/p/transfer/beanfun/bw/img/icon/loading.gif" border="0"> 交易處理中，請稍候...</h3>' });		
 		$('form').submit();
 	});	
 })

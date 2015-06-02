@@ -34,7 +34,7 @@
 	    		<p class="navbar-text"><?=$_SESSION['admin_account']?></p>
 	    	</li>
 	    	<li>
-	    		<a href="http://www.long_e.com.tw/admin3/platform/partner_modify_password/<?=$partner?>">修改密碼</a>
+	    		<a href="/admin3/platform/partner_modify_password/<?=$partner?>">修改密碼</a>
 	    	</li>
 	    	<li>
 	    		<a href="<?=site_url("platform/logout")?>">登出</a>

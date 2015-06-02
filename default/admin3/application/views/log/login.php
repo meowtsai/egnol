@@ -137,7 +137,7 @@
 			</td>
 			<td><?=$row->account?></td>			
 			<td><?=$row->ip?>
-				<a href="http://www.long_e.com.tw/admin3/log/login?ip=<?=$row->ip?>&action=查詢"><i class="icon-search"></i></a>
+				<a href="/admin3/log/login?ip=<?=$row->ip?>&action=查詢"><i class="icon-search"></i></a>
 			</td>
 			<td><?=$row->create_time?></td>
 			<td><?=$row->site_name?></td>

@@ -19,7 +19,7 @@ $(function(){
 	{
 		var $li = $("#ids li:first").remove();
 		if ($li.length > 0) {
-			$.get("http://www.long_e.com.tw/admin3/character/run_job/"+$li.text(), function(){
+			$.get("/admin3/character/run_job/"+$li.text(), function(){
 				success++;					
 				$("#percent").width(success/total*100+"%");
 				$("#current").text(success);

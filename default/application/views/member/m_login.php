@@ -3,11 +3,11 @@ input {padding:12px;}
 </style>
 
 <? if (get_mobile_os() == 'ios') {?>
-	<script src='http://www.long_e.com.tw/p/js/iosBridge.js'></script>
+	<script src='/p/js/iosBridge.js'></script>
 	<script>
 	function open_service()
 	{
-		calliOSFunction('openCoozPage', ['http://www.long_e.com.tw/service?game=<?=$this->game?>']); 
+		calliOSFunction('openCoozPage', ['http://<?=base_url()?>/service?game=<?=$this->game?>']); 
 	}
 	</script>
 <? 
@@ -17,7 +17,7 @@ else {
 	<script type="text/javascript">
 	function open_service()
 	{
-		window.CoozSDK.openCoozPage("http://www.long_e.com.tw/service?game=<?=$this->game?>");
+		window.CoozSDK.openCoozPage("http://<?=base_url()?>/service?game=<?=$this->game?>");
 	}
 	</script>
 	<? 
@@ -79,7 +79,7 @@ else {
 <? if ($this->game == 'zj'):?>
 <div>
 
-<a href="http://www.long_e.com.tw/bulletin/detail/6220" op="1">
+<a href="http://<?=base_url()?>/bulletin/detail/6220" op="1">
 《真三十六計》結束營運公告
 </a>
 </div>
@@ -127,7 +127,7 @@ else {
 	foreach($items as $channel => $name):
 		if ($this->game == 'eya' && $channel == 'facebook') continue;		   	
 ?>
-			<a href="http://www.long_e.com.tw/gate/login/<?=$this->game?>?channel=<?=$channel?>&ad=<?=$ad?>&redirect_url=<?=urlencode($redirect_url)?>&"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="40" title="<?=$name?> 帳號登入" border="0"/></a>
+			<a href="http://<?=base_url()?>/gate/login/<?=$this->game?>?channel=<?=$channel?>&ad=<?=$ad?>&redirect_url=<?=urlencode($redirect_url)?>&"><img src="/img/login/<?=$channel?>.png" width="40" title="<?=$name?> 帳號登入" border="0"/></a>
 			<? endforeach;?>
 		</div>
 		

@@ -49,7 +49,7 @@
 		$items = get_channel_items("long_e", "../");
 		foreach($items as $channel => $name):
 	?>
-		<a href="http://www.long_e.com.tw/gate/login/long_e?channel=<?=$channel?>"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="36" title="<?=$name?> 帳號登入"/></a>
+		<a href="/gate/login/long_e?channel=<?=$channel?>"><img src="/img/login/<?=$channel?>.png" width="36" title="<?=$name?> 帳號登入"/></a>
 	<? endforeach;?> 
 					</div>
 <? endif;?>

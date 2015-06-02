@@ -50,7 +50,7 @@ class Bahamut extends Channel_Api
     
     function login_callback($site)
     {
-    	$memberLoginUrl = 'http://www.long_e.com.tw/member/login.php';
+    	$memberLoginUrl = 'http://'.base_url().'/member/login.php';
     	
     	if (!empty($_GET['oauth_token']) && !empty($_GET['oauth_verifier']) && ($_GET['xoauth_allow'] == 1) )
     	{       		

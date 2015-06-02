@@ -39,7 +39,7 @@
 								<p style="display:inline-block; text-align:center; width:250px;">						
 									<a href="http://<?=$row->game_id?>.long_e.com.tw/" target="_blank"><span class="btn01 index_items"></span></a>								
 									<? if (strpos($row->tags, "手遊")===false):?>
-									<a href="http://www.long_e.com.tw/play_game/<?=$row->game_id?>" target="_blank"><span class="btn02 index_items"></span></a>
+									<a href="/play_game/<?=$row->game_id?>" target="_blank"><span class="btn02 index_items"></span></a>
 									<? endif;?>
 								</p>
 							</span>
@@ -100,7 +100,7 @@
 						<div class="pic"><img src="/p/img/game/<?=$row->game_id?>_03.png"></div>
 						<div class="func">
 							<? if (strpos($row->tags, "手遊")===false):?>
-							<a href="http://www.long_e.com.tw/play_game/<?=$row->game_id?>" target="_blank"><span class="btn01 index_items"></span></a>
+							<a href="/play_game/<?=$row->game_id?>" target="_blank"><span class="btn01 index_items"></span></a>
 							<? endif;?>
 							<a href="http://<?=$row->game_id?>.long_e.com.tw" target="_blank"><span class="btn02 index_items"></span></a>
 						</div>
@@ -156,7 +156,7 @@
 						<div class="pic"><img src="/p/img/game/<?=$row->game_id?>_03.png"></div>
 						<div class="func">
 							<? if (strpos($row->tags, "手遊")===false):?>
-							<a href="http://www.long_e.com.tw/play_game/<?=$row->game_id?>" target="_blank"><span class="btn01 index_items"></span></a>
+							<a href="/play_game/<?=$row->game_id?>" target="_blank"><span class="btn01 index_items"></span></a>
 							<? endif;?>
 							<a href="http://<?=$row->game_id?>.long_e.com.tw" target="_blank"><span class="btn02 index_items"></span></a>
 						</div>

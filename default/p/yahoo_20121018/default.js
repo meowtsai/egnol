@@ -26,7 +26,7 @@ $(function(){
 				dataType: 'json',
 				success: function(json) {
 					if (json.status == 'success') {
-						location.href = 'http://www.long_e.com.tw/gate/login_game/mon?ad=mon_yahoo_a';
+						location.href = '/gate/login_game/mon?ad=mon_yahoo_a';
 					}
 					else alert(json.message);
 				}		

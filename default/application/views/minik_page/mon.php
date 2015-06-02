@@ -19,7 +19,7 @@ body {
 
 <div style="width:760px; position:relative; margin:0 auto;">
 	<div style="position:absolute; right:3px; top:150px;">
-		<a href="http://www.long_e.com.tw/payment?site=mon" target="_blank"><img src="/p/minik/icon-pay.png"></a>
+		<a href="/payment?site=mon" target="_blank"><img src="/p/minik/icon-pay.png"></a>
 	</div>
 </div>
 
@@ -42,7 +42,7 @@ body {
 	<? if ($old_user):?>
 	<area shape="rect" coords="382,116,676,225" href="javascript:chose_server_form();">
 	<? else:?>
-  	<area shape="rect" coords="382,116,676,225" href="http://www.long_e.com.tw/play_game/mon" target="_blank" />
+  	<area shape="rect" coords="382,116,676,225" href="/play_game/mon" target="_blank" />
   	<? endif;?>
 </map>
 
@@ -55,8 +55,8 @@ body {
 <iframe id="invite_ifm" src="" width="0" height="0" frameborder="0"></iframe>
 <div id="choose" style="display:none;"><?=$choose_server_form?></div>
 
-<script type="text/javascript" src="http://www.long_e.com.tw/p/js/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src='http://www.long_e.com.tw/p/js/jquery.blockUI.js'></script>
+<script type="text/javascript" src="/p/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src='/p/js/jquery.blockUI.js'></script>
 <script type="text/javascript">
 function invite_friend() {
 	$('#invite_ifm').attr("src", "<?=$inviteSrc?>");

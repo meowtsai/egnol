@@ -30,7 +30,7 @@ body {background:url('/p/img/fb_20121113/bg.jpg?1') no-repeat center top; paddin
 	<div id="content" style="display:none;">
 		<span id="code"><?=$code?></span>
 		<div style="margin:-15px 0 0 95px;">
-			<a href="http://www.long_e.com.tw/gate/login/xf?channel=facebook" target="_blank">
+			<a href="/gate/login/xf?channel=facebook" target="_blank">
 				<img src="/p/img/fb_20121113/enter_off.png" class="change">	
 			</a>
 		</div>

@@ -14,7 +14,7 @@ class Eya extends Game_Api
     
     function login($server, $user, $ad)
     {
-    	$url = "http://www.long_e.com.tw";
+    	$url = "http://".base_url();
     	
 		header("location:{$url}");
     }

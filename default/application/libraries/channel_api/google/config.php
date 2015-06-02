@@ -27,7 +27,7 @@ $apiConfig = array(
     // OAuth2 Settings, you can get these keys at https://code.google.com/apis/console
     'oauth2_client_id' => '385809868009-j91smhq51t2vjkn99o9rlknvk4mrt7un.apps.googleusercontent.com',
     'oauth2_client_secret' => '331dt-Oam3I5lDQhyI6b9DCn',
-    'oauth2_redirect_uri' => 'http://www.long_e.com.tw/gate/login_callback/google',
+    'oauth2_redirect_uri' => 'http://'.base_url().'/gate/login_callback/google',
 
     // The developer key, you get this at https://code.google.com/apis/console
     'developer_key' => 'AIzaSyDlynC-tUDRfRLa1HyvQZ2E8eLEW-uCfS8',

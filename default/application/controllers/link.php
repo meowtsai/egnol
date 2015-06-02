@@ -36,7 +36,7 @@ class Link extends MY_Controller {
 	//空白圖片
 	function s_gif()
 	{
-		$fileres = file_get_contents('http://www.long_e.com.tw/p/img/s.gif');
+		$fileres = file_get_contents('http://'.base_url().'/p/img/s.gif');
 		header('Content-type: image/gif');
 		echo $fileres;		
 	}

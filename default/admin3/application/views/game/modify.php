@@ -50,7 +50,7 @@
 		<label>重點(.jpg)
 			<span style="width:1920px; height:330px; line-height:330px; background:#ddd; text-align:center; display:block; overflow:hidden;">
 				<? if (file_exists(g_conf("http_document_root")."long_e/p/img/game/{$this->game_id}_01.jpg")):?>
-				<img src="http://www.long_e.com.tw/p/img/game/<?=$this->game_id?>_01.jpg?<?=time()?>">
+				<img src="/p/img/game/<?=$this->game_id?>_01.jpg?<?=time()?>">
 				<? else: echo '1920x330'; endif;?>
 			</span>
 			<input type="file" name="file01">
@@ -59,7 +59,7 @@
 		<label>重點縮圖(.png)
 			<span style="width:160px; height:36px; line-height:36px; background:#ddd; text-align:center; display:block; overflow:hidden;">				
 				<? if (file_exists(g_conf("http_document_root")."long_e/p/img/game/{$this->game_id}_02.png")):?>
-				<img src="http://www.long_e.com.tw/p/img/game/<?=$this->game_id?>_02.png?<?=time()?>">
+				<img src="/p/img/game/<?=$this->game_id?>_02.png?<?=time()?>">
 				<? else: echo '160x36'; endif;?>
 			</span>
 			<input type="file" name="file02">
@@ -68,7 +68,7 @@
 		<label>小區塊(.png)
 			<span style="width:160px; height:90px; line-height:90px; background:#ddd; text-align:center; display:block; overflow:hidden;">
 				<? if (file_exists(g_conf("http_document_root")."long_e/p/img/game/{$this->game_id}_03.png")):?>
-				<img src="http://www.long_e.com.tw/p/img/game/<?=$this->game_id?>_03.png?<?=time()?>">
+				<img src="/p/img/game/<?=$this->game_id?>_03.png?<?=time()?>">
 				<? else: echo '160x90'; endif;?>				
 			</span>
 			<input type="file" name="file03">
@@ -77,7 +77,7 @@
 		<label>小圖(.gif)
 			<span style="width:32px; height:32px; line-height:32px; background:#ddd; text-align:center; display:block; overflow:hidden;">
 				<? if (file_exists(g_conf("http_document_root")."long_e/p/img/game/{$this->game_id}.gif")):?>
-				<img src="http://www.long_e.com.tw/p/img/game/<?=$this->game_id?>.gif?<?=time()?>">
+				<img src="/p/img/game/<?=$this->game_id?>.gif?<?=time()?>">
 				<? else: echo '32x'; endif;?>				
 			</span>
 			<input type="file" name="file04">

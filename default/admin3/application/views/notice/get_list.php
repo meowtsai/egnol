@@ -15,7 +15,7 @@
 			<td><?=$row->id?></td>
 			<td>
 				<?=$row->title?>
-				<a href="http://www.long_e.com.tw/notice/preview/<?=$row->id?>" target="_blank" title="預覽"><i class="icon icon-search"></i></a>
+				<a href="/notice/preview/<?=$row->id?>" target="_blank" title="預覽"><i class="icon icon-search"></i></a>
 			</td>
 			<td style="font-size:13px; color:#666">
 				<?=date("Y/m/d H:i", strtotime($row->create_time))?>

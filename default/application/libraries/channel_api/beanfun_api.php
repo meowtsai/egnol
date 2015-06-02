@@ -47,7 +47,7 @@ class Beanfun_Api extends Channel_Api
 		
 		//進入遊戲			
 		$choose_server_url = "http://{$site}.long_e.com.tw/common/choose_server_form?ad={$ad}&";
-		$url = "http://www.long_e.com.tw/play_game/{$site}?url=".urlencode($choose_server_url)."&ad={$ad}&";
+		$url = "http://".base_url()."/play_game/{$site}?url=".urlencode($choose_server_url)."&ad={$ad}&";
 		header("location: {$url}");	
 		exit();			
     }

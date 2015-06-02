@@ -23,7 +23,7 @@ body {background:url('/p/img/fb_20121017/bg.jpg?1') no-repeat center top; paddin
 	<div id="content" style="display:none;">
 		<span id="code" style="padding: 0 10px 0 0"><?=$code?></span>
 		<div style="margin:18px 0 0; padding:0 22px 0 0;">
-			<a href="http://www.long_e.com.tw/gate/login/mon?channel=facebook" target="_blank">進入遊戲</a> <Br> 
+			<a href="/gate/login/mon?channel=facebook" target="_blank">進入遊戲</a> <Br> 
 			<a href="http://mon.long_e.com.tw/bulletin/detail/31" target="_blank">領取方式</a>
 		</div>
 	</div>

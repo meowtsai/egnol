@@ -231,7 +231,7 @@
               <tr> 
                 <td width="3%" valign="top">》</td>
                 <td width="97%" valign="top">身分證字號與E-mail輸入後將無法自行修改，如欲變更資料請下載
-                		<a href="http://www.long_e.com.tw/p/file/Cooz_Customer_Form.pdf" target="_blank">【龍邑科技玩家事項申請表】</a></td>
+                		<a href="/p/file/Cooz_Customer_Form.pdf" target="_blank">【龍邑科技玩家事項申請表】</a></td>
               </tr>
             </table>              
               

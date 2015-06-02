@@ -45,7 +45,7 @@
 				<tr>
 					<td><a href="<?=site_url("ad/statistics?ad_channel={$row2->ad}&action=時段統計")?>" title="查看統計"><?=$row2->ad?></a></td>
 					<td><?=date("Y-m-d", strtotime($row2->create_time))?></td>
-					<td style="border:2px solid #dcb; border-width:1px 2px;">http://www.long_e.com.tw/ad/trace?ad=<?=$row2->ad?></td>		
+					<td style="border:2px solid #dcb; border-width:1px 2px;">http://<?=base_url()?>/ad/trace?ad=<?=$row2->ad?></td>		
 					<td style="text-align:center;">		
 						<div class="btn-group">					
 							<a href="javascript:;" url="<?=site_url("ad/delete/{$row2->ad}")?>" class="json_del btn btn-mini">刪除</a>

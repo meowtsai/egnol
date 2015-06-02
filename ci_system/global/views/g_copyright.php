@@ -3,13 +3,13 @@
 #copyright li {list-style:none;}
 
 #copyright {font-family:"微軟正黑體"; color:#666; font-size:13px; position:relative; clear:both;
-	width:100%; height:209px; margin:0 auto; background:url(http://www.long_e.com.tw/p/img/copyright_bk.jpg) center top no-repeat;}
+	width:100%; height:209px; margin:0 auto; background:url(//p/img/copyright_bk.jpg) center top no-repeat;}
 #copyright2 {width:500px; height:30px; margin:0 auto;  text-align:center;}
 #copyright .cr_title {color:#333; font-size:14px; font-weight:bold;}
 #copyright a {color:#666;}
 #select {width:1000px; height:169px; margin:0 auto; position:relative;}
 
-#game_select {background:url(http://www.long_e.com.tw/p/img/select_bk.png) no-repeat center top; position:absolute; width:100%; top:0px;
+#game_select {background:url(//p/img/select_bk.png) no-repeat center top; position:absolute; width:100%; top:0px;
 				display:none;} 
 #game_select2 {background:#fff; min-height:130px; position:relative; z-index:100;}
 #game_select .boundary { width:1000px; margin:0 auto;}
@@ -37,34 +37,34 @@ $(function(){
         
 		  <div class="box">
 		  	<div class="box2">
-				<h3><img src="http://www.long_e.com.tw/p/img/icon4.gif"/>儲值中心</h3>
+				<h3><img src="/p/img/icon4.gif"/>儲值中心</h3>
 	            <ul>
-					<li><a href="http://www.long_e.com.tw/payment" target="_blank">儲值購買</a></li>
-					<li><a href="http://www.long_e.com.tw/wallet/transfer" target="_blank">兌換遊戲幣</a></li>
-					<li><a href="http://www.long_e.com.tw/member/payment_log" target="_blank">儲值歷程</a></li>
-					<li><a href="http://www.long_e.com.tw/member/wallet_log" target="_blank">兌換歷程</a></li>
+					<li><a href="/payment" target="_blank">儲值購買</a></li>
+					<li><a href="/wallet/transfer" target="_blank">兌換遊戲幣</a></li>
+					<li><a href="/member/payment_log" target="_blank">儲值歷程</a></li>
+					<li><a href="/member/wallet_log" target="_blank">兌換歷程</a></li>
 				</ul>
 			</div>
 		  </div>
 		  
 		  <div class="box">
 		  	<div class="box2">
-				<h3><img src="http://www.long_e.com.tw/p/img/icon4.gif" />客服中心</h3>
+				<h3><img src="/p/img/icon4.gif" />客服中心</h3>
 	            <ul>
-					<li><a href="http://www.long_e.com.tw/service/question" target="_blank">線上提問</a></li>
-					<li><a href="http://www.long_e.com.tw/service/listing" target="_blank">提問查詢</a></li>
-					<li><a href="http://www.long_e.com.tw/service/download" target="_blank">表單下載</a></li>
-					<li><a href="http://www.long_e.com.tw/platform/game_rule" target="_blank">遊戲規章</a></li>
+					<li><a href="/service/question" target="_blank">線上提問</a></li>
+					<li><a href="/service/listing" target="_blank">提問查詢</a></li>
+					<li><a href="/service/download" target="_blank">表單下載</a></li>
+					<li><a href="/platform/game_rule" target="_blank">遊戲規章</a></li>
 				</ul>
 			</div>
 		  </div>
 		  
 		  <div class="box">
 		  	<div class="box2">
-				<h3><img src="http://www.long_e.com.tw/p/img/icon4.gif" />會員中心</h3>
+				<h3><img src="/p/img/icon4.gif" />會員中心</h3>
 	            <ul>
-					<li><a href="http://www.long_e.com.tw/member/update_member_data" target="_blank">修改資料</a></li>
-					<li><a href="http://www.long_e.com.tw/member/change_password" target="_blank">修改密碼</a></li>
+					<li><a href="/member/update_member_data" target="_blank">修改資料</a></li>
+					<li><a href="/member/change_password" target="_blank">修改密碼</a></li>
 					<li></li>
 					<li></li>
 				</ul>
@@ -73,7 +73,7 @@ $(function(){
 		  
 		  <div class="box" id="long_e_game_center">
 		  	<div class="box2">
-				<h3><img src="http://www.long_e.com.tw/p/img/icon4.gif" />遊戲中心</h3>
+				<h3><img src="/p/img/icon4.gif" />遊戲中心</h3>
 	            <ul>
 					<li>網頁遊戲</li>
 					<li>手機遊戲</li>
