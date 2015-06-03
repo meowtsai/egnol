@@ -7,7 +7,7 @@ class Guides extends CI_Model {
 		if ($parent_id) {
 			$this->db->where("parent_id", $parent_id);
 		} else $this->db->where("parent_id", '0');
-		return $this->db->where("game_id", $game_id)->from("guides")->order_by("modify_date desc")->get();
+		return $this->db->where("game_id", $game_id)->from("guides")->order_by("update_time desc")->get();
 	}
 	
 	function get_guide($id)
@@ -18,7 +18,7 @@ class Guides extends CI_Model {
 	function insert_guide($data)
 	{
 		isset($data['create_time']) or $data['create_time'] = now();
-		isset($data['modify_date']) or $data['modify_date'] = now();
+		isset($data['update_time']) or $data['update_time'] = now();
 		
 		$this->db->insert('guides', $data);
 		return $this->db->insert_id();
@@ -26,7 +26,7 @@ class Guides extends CI_Model {
 	
 	function update_guide($id, $data)
 	{
-		$data['modify_date'] = now();
+		$data['update_time'] = now();
 		$this->db->where('id', $id)->update('guides', $data);
 	}
 	

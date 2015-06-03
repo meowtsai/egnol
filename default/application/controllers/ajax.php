@@ -249,7 +249,7 @@ class Ajax extends MY_Controller {
 			else if ($google_billing->purchase_state <> '0') die(json_failure("此交易失敗，不須請款"));
 			
 			$this->db
-				->set("modify_date", "NOW()", FALSE)
+				->set("update_time", "NOW()", FALSE)
 				->where("id", $id)
 				->update("google_billing", array("is_confirmed" => "1"));
 			

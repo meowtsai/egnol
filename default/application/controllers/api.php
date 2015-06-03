@@ -794,13 +794,13 @@ class Api extends MY_Controller {
 		if ($query->num_rows() > 0) {
 			$ios_billing_id = $query->row()->id;			
 			$this->db
-				->set("modify_date", "NOW()", FALSE)
+				->set("update_time", "NOW()", FALSE)
 				->where("id", $ios_billing_id)
 				->update("ios_billing", $data);
 		}
 		else {
 			$this->db
-				->set("modify_date", "NOW()", FALSE)
+				->set("update_time", "NOW()", FALSE)
 				->set("create_time", "NOW()", FALSE)
 				->insert("ios_billing", $data);
 			$ios_billing_id = $this->db->insert_id();
@@ -882,7 +882,7 @@ class Api extends MY_Controller {
 		);
 		$this->db
 			->set("create_time", "NOW()", FALSE)
-			->set("modify_date", "NOW()", FALSE)
+			->set("update_time", "NOW()", FALSE)
 			->insert("google_billing", $data);
 		
 		if ($insert_id = $this->db->insert_id())
@@ -967,7 +967,7 @@ class Api extends MY_Controller {
 		
 		// 更新google交易訂單
 		$this->db
-			->set("modify_date", "NOW()", FALSE)
+			->set("update_time", "NOW()", FALSE)
 			->where("id", $google_billing_id)
 			->where("uid", $uid)
 			->update("google_billing", $data);
@@ -1055,7 +1055,7 @@ class Api extends MY_Controller {
 		
 		// 更新google交易訂單，請款完成confirm=1
 		$this->db
-			->set("modify_date", "NOW()", FALSE)
+			->set("update_time", "NOW()", FALSE)
 			->where("id", $google_billing_id)
 			->where("uid", $uid)
 			->where("result", "1")

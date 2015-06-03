@@ -82,7 +82,7 @@ class Pepay extends MY_Controller {
 		$cnt = $this->db->where("ORDER_ID", $cOrderID)->from("pepay_billing")->count_all_results();
 		if ($cnt > 0) die('請重新操作');
 		
-		$this->db->set("create_time", "NOW()", false)->set("modify_date", "NOW()", false)->insert("pepay_billing", $data);		
+		$this->db->set("create_time", "NOW()", false)->set("update_time", "NOW()", false)->insert("pepay_billing", $data);		
 		
 		$data["SHOP_ID"] = $cShopID;
 		$data["ORDER_ITEM"] = $cOrderItemUrlEncode;
@@ -185,7 +185,7 @@ class Pepay extends MY_Controller {
 			$nRes = '2002';
 		}
 		else {
-			$this->db->set("modify_date", "NOW()", false)
+			$this->db->set("update_time", "NOW()", false)
 				->where("ORDER_ID", $cOrderID)
 				->update("pepay_billing", array(
 							"BILL_ID" => $cBillID,
@@ -270,7 +270,7 @@ class Pepay extends MY_Controller {
 		$order_id = $this->g_wallet->produce_income_order($billing->uid, "pepay_billing", $billing->id, $billing->AMOUNT);						
 		if (empty($order_id)) return $go_result ? go_payment_result(0, 0, $billing->AMOUNT, "資料庫寫入失敗") : "20203";
 		
-		$this->db->set("modify_date", "NOW()", false)
+		$this->db->set("update_time", "NOW()", false)
 			->where("id", $billing->id)
 			->update("pepay_billing", array("status" => "2"));			
 		

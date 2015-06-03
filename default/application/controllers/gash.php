@@ -103,7 +103,7 @@ class Gash extends MY_Controller {
 		$cnt = $this->db->where("COID", $trans->nodes["COID"])->from("gash_billing")->count_all_results();
 		if ($cnt > 0) die('請重新操作');
 			
-		$this->db->set("create_time", "NOW()", false)->set("modify_date", "NOW()", false)->insert("gash_billing", $data);
+		$this->db->set("create_time", "NOW()", false)->set("update_time", "NOW()", false)->insert("gash_billing", $data);
 		
 		// 取得送出之交易資料
 		$data = $trans->GetSendData();
@@ -158,7 +158,7 @@ class Gash extends MY_Controller {
 		// 檢核 GPS 交易驗證壓碼
 		if ( $trans->VerifyERPC($this->gash_conf[$country]["secret1"], $this->gash_conf[$country]["secret2"]) )
 		{					
-			$this->db->set("modify_date", "NOW()", false)
+			$this->db->set("update_time", "NOW()", false)
 				->where("COID", $trans->nodes["COID"])->update("gash_billing", array(
 					"MSG_TYPE" 	=> $trans->nodes["MSG_TYPE"],
 					"PCODE" 	=> $trans->nodes["PCODE"],
@@ -260,7 +260,7 @@ class Gash extends MY_Controller {
 			{
 				//echo "<pre>請款3".print_r($trans->nodes, true)."</pre>";
 					
-				$this->db->set("modify_date", "NOW()", false)
+				$this->db->set("update_time", "NOW()", false)
 					->where("COID", $trans->nodes["COID"])->update("gash_billing", array(
 						"MSG_TYPE" 	=> $trans->nodes["MSG_TYPE"],
 						"PCODE" 	=> $trans->nodes["PCODE"],
