@@ -581,7 +581,7 @@ class Api extends MY_Controller {
 			output_json(RESPONSE_FAILD, $this->game->error_message);
 		}
 		
-		output_json(RESPONSE_OK, "", array("euid" => $this->g_user->encode($_SESSION['user_id'])));	
+		output_json(RESPONSE_OK, "", array("euid" => $this->g_user->encode($_SESSION['user_id']), "token" => $_SESSION['token']));	
 	}
 	
 	function m_register()
@@ -612,7 +612,7 @@ class Api extends MY_Controller {
 		}
 			
 		$this->g_user->verify_account($account, $pwd);
-		output_json(RESPONSE_OK, "", array("euid" => $this->g_user->encode($_SESSION['user_id'])));	
+		output_json(RESPONSE_OK, "", array("euid" => $this->g_user->encode($_SESSION['user_id']), "token" => $_SESSION['token']));	
 	}
 
 	function m_use_imei()
@@ -670,7 +670,7 @@ class Api extends MY_Controller {
 			output_json(RESPONSE_FAILD, $this->game->error_message);
 		}
 				
-		output_json(RESPONSE_OK, "", array("euid" => $this->g_user->encode($_SESSION['user_id'])));
+		output_json(RESPONSE_OK, "", array("euid" => $this->g_user->encode($_SESSION['user_id']), "token" => $_SESSION['token']));
 	}	
 	
 	function m_get_iab_info()
@@ -753,7 +753,7 @@ class Api extends MY_Controller {
 		$product_id = $in_app->product_id;
 		$amount = $in_app->amount;		
 				
-		if ($this->hash <> md5($this->partner . $this->game . $server . $euid . $this->time . $transaction_state . $transaction_receipt . $this->key)) {
+		if ($this->hash <> md5($this->partner . $this->game . $server . $euid . $this->time . $transaction_state . $transaction_receipt . $this->key . $_SESSION['token'])) {
 			log_message('error', 'm_create_ios_billing: 認證碼錯誤');
 			output_json(RESPONSE_FAILD, "認證碼錯誤");
 		}
@@ -871,7 +871,7 @@ class Api extends MY_Controller {
 		$server_row = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
 		if (empty($server_row)) output_json(RESPONSE_FAILD, "無此伺服器");
 				
-		if ($this->hash <> md5($this->partner . $this->game . $euid  . $server . $this->time . $this->key)) {
+		if ($this->hash <> md5($this->partner . $this->game . $euid  . $server . $this->time . $this->key . $_SESSION['token'])) {
 			output_json(RESPONSE_FAILD, "認證碼錯誤");
 		}
 		
@@ -918,7 +918,7 @@ class Api extends MY_Controller {
 		}
 
 		// 檢查認證碼
-		if ($this->hash <> md5($this->partner . $this->game . $result . $note . $purchase_json . $signature . $this->time . $this->key)) {
+		if ($this->hash <> md5($this->partner . $this->game . $result . $note . $purchase_json . $signature . $this->time . $this->key . $_SESSION['token'])) {
 			log_message('error', 'update_google_billing hash faild: '.$this->partner . $this->game . $result . $note . $purchase_json . $signature . $this->time);
 			output_json(RESPONSE_FAILD, "認證碼錯誤");
 		}
@@ -1009,7 +1009,7 @@ class Api extends MY_Controller {
 		}
 
 		// 檢查認證碼
-		if ($this->hash <> md5($this->partner . $this->game . $purchase_json. $signature . $this->time . $this->key)) {
+		if ($this->hash <> md5($this->partner . $this->game . $purchase_json. $signature . $this->time . $this->key . $_SESSION['token'])) {
 			log_message('error', 'update_google_billing hash faild: '.$this->partner . $this->game . $purchase_json . $this->time);
 			output_json(RESPONSE_FAILD, "認證碼錯誤");
 		}
@@ -1128,7 +1128,7 @@ class Api extends MY_Controller {
 		else $server_id = $this->game;	
 		
 		// 檢查認證碼
-		if ($this->hash <> md5($this->partner . $this->game . $euid . $server . $log_login . $this->time . $this->key)) {
+		if ($this->hash <> md5($this->partner . $this->game . $euid . $server . $log_login . $this->time . $this->key . $_SESSION['token'])) {
 			output_json(RESPONSE_FAILD, "認證碼錯誤");
 		}
 				
@@ -1183,7 +1183,7 @@ class Api extends MY_Controller {
 		if (empty($euid))  output_json(RESPONSE_FAILD, "缺少參數");
 		
 		// 檢查認證碼
-		if ($this->hash <> md5($this->partner . $this->game . $euid . $this->time . $this->key)) {
+		if ($this->hash <> md5($this->partner . $this->game . $euid . $this->time . $this->key . $_SESSION['token'])) {
 			output_json(RESPONSE_FAILD, "認證碼錯誤");
 		}
 		
@@ -1232,7 +1232,7 @@ class Api extends MY_Controller {
 		//log_message('error', print_r($this->input->get(), true)); 
 		
 		// 檢查認證碼
-		if ($this->hash <> md5($this->partner . $this->game . $server . $euid . $this->time . $this->key)) {
+		if ($this->hash <> md5($this->partner . $this->game . $server . $euid . $this->time . $this->key . $_SESSION['token'])) {
 			output_json(RESPONSE_FAILD, "認證碼錯誤");
 		}
 		
@@ -1267,7 +1267,7 @@ class Api extends MY_Controller {
 		
 		//log_message('error', print_r($_GET, true));
 		// 檢查認證碼
-		if ($this->hash <> md5($this->partner . $this->game . $euid . $this->time . "@" . $this->key)) {
+		if ($this->hash <> md5($this->partner . $this->game . $euid . $this->time . "@" . $this->key . $_SESSION['token'])) {
 			die("認證碼錯誤");
 		}		
 		if (time() - $this->time > 300) die('逾時');
@@ -1288,7 +1288,7 @@ class Api extends MY_Controller {
 		if (empty($euid)) {
 			return output_json(RESPONSE_FAILD, "缺少參數");
 		}
-		else if ($this->hash <> md5($this->partner . $this->game . $euid . $this->time . $this->key)) {
+		else if ($this->hash <> md5($this->partner . $this->game . $euid . $this->time . $this->key . $_SESSION['token'])) {
 			return output_json(RESPONSE_FAILD, "認證碼錯誤");
 		}		
 		//if (time() - $this->time > 300) die('逾時');
@@ -1320,15 +1320,19 @@ class Api extends MY_Controller {
 		//echo $this->input->get("code").", ";
 		
 		if ( ! $this->g_user->check_login()) return ;		
-		//echo $this->g_user->euid;
+		echo $this->g_user->euid;
+		
+		$token = $_SESSION['token'];
 		
 		if (get_mobile_os() == 'ios') {
 			echo "<script src='".base_url()."/p/js/iosBridge.js'></script>
-				<script type='text/javascript'>calliOSFunction('receiveEuid', ['{$this->g_user->euid}', '{$this->input->get("code")}']); history.back(); </script>";
+				<script type='text/javascript'>calliOSFunction('receiveEuid', ['{$this->g_user->euid}', '{$this->input->get("code")}', '{$token}']); history.back(); </script>";
 		}
 		else {
 			echo "<script type='text/javascript'>
-					window.CoozSDK.receiveEuid('{$this->g_user->euid}', '{$this->input->get("code")}');
+			alert('m_get_euid');
+					//window.CoozSDK.receiveEuid('{$this->g_user->euid}', '{$this->input->get("code")}', '{$token}');
+					parent.receiveEuid('{$this->g_user->euid}', '{$this->input->get("code")}', '{$token}');
 				</script>
 			";
 		}
@@ -1342,18 +1346,22 @@ class Api extends MY_Controller {
 		$code = $this->input->get("code");
 		$hash = md5($code."b~ean".$this->g_user->euid."!#$..");
 
-		$channel = isset($_SESSION['channel']) ? $_SESSION['channel'] : 'long_e';		
+		$channel = isset($_SESSION['channel']) ? $_SESSION['channel'] : 'long_e';	
+        $token = $_SESSION['token'];
+		
 		if (get_mobile_os() == 'ios') {
 			echo "<script src='".base_url()."/p/js/iosBridge.js'></script>
-				<script type='text/javascript'>calliOSFunction('receiveEuid', ['{$this->g_user->euid}', '{$hash}', '{$channel}']); history.back(); </script>";
+				<script type='text/javascript'>calliOSFunction('receiveEuid', ['{$this->g_user->euid}', '{$hash}', '{$token}', '{$channel}']); history.back(); </script>";
 		}
 		else {
 			echo "<script type='text/javascript'>
 						try {
-							window.CoozSDK.receiveEuid('{$this->g_user->euid}', '{$hash}', '".$channel."');
+							//window.CoozSDK.receiveEuid('{$this->g_user->euid}', '{$hash}', '{$token}', '".$channel."');
+							parent.receiveEuid('{$this->g_user->euid}', '{$hash}', '{$token}', '".$channel."');
 						}
 						catch(e) {
-							window.CoozSDK.receiveEuid('{$this->g_user->euid}', '{$hash}');
+							//window.CoozSDK.receiveEuid('{$this->g_user->euid}', '{$hash}', '{$token}');
+							parent.receiveEuid('{$this->g_user->euid}', '{$hash}', '{$token}');
 						}
 				</script>
 			";
@@ -1363,13 +1371,15 @@ class Api extends MY_Controller {
 	
 	function m_res_facebook()
 	{
+		//$token = $_SESSION['token'];
 		if (get_mobile_os() == 'ios') {
 			echo "<script src='".base_url()."/p/js/iosBridge.js'></script>
-				<script type='text/javascript'>calliOSFunction('receiveEuid', ['', '' 'm_facebook']); history.back(); </script>";
+				<script type='text/javascript'>calliOSFunction('receiveEuid', ['', '', '', 'm_facebook']); history.back(); </script>";
 		}
 		else {
 			echo "<script type='text/javascript'>
-					window.CoozSDK.receiveEuid('', '', 'm_facebook');
+			        var ifrm = parent.receiveEuid('', '', '', 'm_facebook'); 
+					//window.CoozSDK.receiveEuid('', '', '', 'm_facebook');
 				</script>
 			";
 		}
@@ -1449,7 +1459,7 @@ log_message('error', 'm_long_e_menu 缺少參數euid：'.$euid);
 			output_json(RESPONSE_FAILD, "缺少參數");
 		}
 		
-		if ($this->hash <> md5($this->partner . $this->game . $this->time . $this->key . $euid)) {
+		if ($this->hash <> md5($this->partner . $this->game . $this->time . $this->key . $euid . $_SESSION['token'])) {
 			output_json(RESPONSE_FAILD, "認證碼錯誤");
 		}
 

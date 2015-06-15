@@ -13,11 +13,13 @@ class G_User {
 	var $euid;
 	var $account;
 	var $password;
+	var $mobile;
 	var $long_eDNA;
 	var $realName;
 	var $remoteAddr;
 	var $userAgent;
 	var $long_e_uid;
+	var $token;
 	
 	var $error_mssage='錯誤';
 
@@ -34,6 +36,8 @@ class G_User {
 			$this->remoteAddr = $_SERVER['REMOTE_ADDR'];
 			$this->userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 			$this->long_e_uid = isset($_SESSION['long_e_uid']) ? $_SESSION['long_e_uid'] : '';
+			$this->mobile = $_SESSION['mobile'];
+			$this->token = $_SESSION['token'];
 		}
 	}
 	
@@ -54,19 +58,21 @@ class G_User {
 	 *  @param string $name
 	 *  @return bool
 	 */
-	function setAccount($user_id, $account, $password, $name) 
+	function setAccount($user_id, $account, $password, $name, $mobile='') 
 	{
 		$this->uid = $user_id;
 		$this->euid = $this->encode($user_id);
 		$this->account = $account;
 		$this->realName = urlencode($name);
 		$this->long_eDNA = md5(trim($this->account.$this->remoteAddr.$this->userAgent));
+		$this->mobile = $mobile;
 		
 		$_SESSION['user_id'] = $this->uid;
 		$_SESSION['euid'] = $this->euid;
 		$_SESSION['account'] = $this->account;
 		$_SESSION['name'] = $this->realName;
 		$_SESSION['long_eDNA'] = $this->long_eDNA;
+		$_SESSION['mobile'] = $this->mobile;
 
 		return true;
 	}
@@ -145,6 +151,8 @@ class G_User {
 		$_SESSION['name'] = '';
 		$_SESSION['long_eDNA'] = '';
 		$_SESSION['long_e_uid'] = '';
+		$_SESSION['mobile'] = '';
+		$_SESSION['token'] = '';
 		$_SERVER['REMOTE_ADDR'] = '';
 		
 		unset($_SESSION['user_id']);
@@ -153,6 +161,8 @@ class G_User {
 		unset($_SESSION['name']);
 		unset($_SESSION['long_eDNA']);
 		unset($_SESSION['long_e_uid']);
+		unset($_SESSION['mobile']);
+		unset($_SESSION['token']);
 		
 		//setcookie('PHPSESSID', '', time()-3600);
 		//session_destroy();
@@ -206,7 +216,7 @@ class G_User {
 		
 		if ($query->num_rows() > 0 ) {
 			$row = $query->row();
-			$this->setAccount($row->uid, $row->account, $row->password, $row->name);
+			$this->setAccount($row->uid, $row->account, $row->password, $row->name, $row->mobile);
 			if(!empty($returnUrl)) {
 				header("LOCATION:{$returnUrl}");
 			}
@@ -511,6 +521,14 @@ class G_User {
 						->where("account", $this->account)
 						->where("password", $this->password)
 						->get();
+						
+			if ($query->num_rows() == 0 ) {
+				unset($query);
+			    $query = $this->CI->db->from("users")
+						    ->where("mobile", $this->account)
+						    ->where("password", $this->password)
+						    ->get();
+			}
 		}
 		else  {
 			$query = $this->CI->db->from("users")
@@ -533,7 +551,8 @@ class G_User {
 						
 			if ($row->is_banned != 0 && !IN_OFFICE) return $this->_return_error("停權");			
 					
-			$this->set_user($row->uid, $row->account, $row->name, $long_e_uid);
+				
+			$this->set_user($row->uid, $row->account, $row->name, $long_e_uid, $row->mobile);
 			return true;
 		} 
 		else {
@@ -541,7 +560,7 @@ class G_User {
 		}			
 	}
 	
-	function set_user($uid, $account, $name, $long_e_uid='') 
+	function set_user($uid, $account, $name, $long_e_uid='', $mobile='') 
 	{		
 		//登入log
 		/*
@@ -578,7 +597,9 @@ class G_User {
 		$this->account = $account;
 		$this->realName = urlencode($name);
 		$this->long_eDNA = md5(trim($this->account.$this->remoteAddr.$this->userAgent));
-		$this->long_e_uid = $long_e_uid;		
+		$this->long_e_uid = $long_e_uid;
+		$this->mobile = $mobile;		
+		$this->token = $this->generate_token();		
 		
 		$_SESSION['user_id'] = $this->uid;
 		$_SESSION['euid'] = $this->euid;
@@ -586,6 +607,8 @@ class G_User {
 		$_SESSION['name'] = $this->realName;
 		$_SESSION['long_eDNA'] = $this->long_eDNA;
 		$_SESSION['long_e_uid'] = $this->long_e_uid;
+		$_SESSION['mobile'] = $this->mobile;
+		$_SESSION['token'] = $this->token;
 	}
 	
 	function get_user_data($uid='') 
@@ -684,6 +707,13 @@ class G_User {
 			}
 			return true;
 		}
+	}
+	
+	function set_mobile($account, $password, $mobile) {
+		
+		return $this->CI->db
+			->where("account", $account)
+			->update("users", array("password" => md5($password), "mobile" => $mobile));
 	}
 	
 	function check_account_exist($account) 
@@ -966,7 +996,10 @@ class G_User {
 			}		
 		}
 		$re = $this->account;
-		if ($this->check_extra_account($this->account)) {
+		if (strpos($re, "@imei") && $this->mobile){
+			$re = $this->mobile;
+		}
+		elseif ($this->check_extra_account($this->account)) {
 			$tmp = explode("@", $this->account);
 			//if ($tmp[1] == 'igame') $tmp[1] = 'igamer'; //前人設定錯導致
 			if (array_key_exists($tmp[1], $display)) {
@@ -1008,5 +1041,31 @@ class G_User {
 	function _return_error($msg) {
 		$this->error_message = $msg;
 		return false;
+	}
+	
+	function generate_token($len = 32)
+	{
+
+		// Array of potential characters, shuffled.
+		$chars = array(
+			'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 
+			'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+			'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 
+			'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+			'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+		);
+		shuffle($chars);
+
+		$num_chars = count($chars) - 1;
+		$token = '';
+
+		// Create random token at the specified length.
+		for ($i = 0; $i < $len; $i++)
+		{
+			$token .= $chars[mt_rand(0, $num_chars)];
+		}
+
+		return $token;
+
 	}
 }

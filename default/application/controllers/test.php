@@ -590,6 +590,26 @@ if($client->getAuth()->isAccessTokenExpired()) {
 			return $data;
 		}		
 	}
+	
+	function m_login() {
+		
+		$html = $this->load->view("test/m_login", null, true);
+		echo "<html>";
+		echo $html;
+		echo "</html>";
+		exit();
+	}
+	
+	function m_playing() {
+		
+		$this->g_user->check_login('long_e', true);
+		
+		$html = $this->load->view("test/m_playing", null, true);
+		echo "<html>";
+		echo $html;
+		echo "</html>";
+		exit();
+	}
 }
 
 /* End of file welcome.php */

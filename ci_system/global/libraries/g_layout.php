@@ -81,7 +81,7 @@ class G_Layout
     	$str = "";
     	foreach($this->css_link as $item) {
     		if (strpos($item, "http://") === false) {
-    	        $href = $this->CI->config->site_url($this->css_path."/{$item}.css");
+    	        $href = $this->CI->config->site_url($this->css_path."{$item}.css");
     		} else $href = $item;
     		$str .= "<link rel='stylesheet' type='text/css' href='{$href}?5'>";
     	}
@@ -93,7 +93,7 @@ class G_Layout
     	$str = "";
     	foreach($this->js_include as $item) {
     		if (strpos($item, "http://") === false) {
-    	        $href = $this->CI->config->site_url($this->js_path."/{$item}.js");
+    	        $href = $this->CI->config->site_url($this->js_path."{$item}.js");
     		} else $href = $item;    		
     		$str .= "<script src='{$href}?8'></script>";
     	}

@@ -128,11 +128,12 @@ class Member extends MY_Controller {
 		$this->g_user->check_login_json();
 		
 		$account = $this->input->post("account");
+		$mobile = $this->input->post("mobile");
 		$pwd = $this->input->post("pwd");
 		$pwd2 = $this->input->post("pwd2");
 		$redirect_url = $this->input->post("redirect_url");
 	
-		if ( empty($account) || empty($pwd) ) {
+		if ( empty($account)|| empty($pwd) ) {
 			die(json_failure("請輸入帳號及密碼"));
 		}
 		else if ($pwd != $pwd2) {
@@ -140,6 +141,34 @@ class Member extends MY_Controller {
 		}
 	
 		$result = $this->g_user->create_account($account, $pwd, '', '', 'long_e', $this->g_user->uid);
+	
+		if ($result == true){
+			$this->g_user->verify_account($account, $pwd);
+			die(json_message(array("message"=>"成功", "back_url"=>$redirect_url)));
+		}
+		else {
+			die(json_failure($this->g_user->error_message));
+		}	
+	}
+	
+	function m_bind_account_json()
+	{
+		$this->g_user->check_login_json();
+		
+		$account = $this->input->post("account");
+		$mobile = $this->input->post("mobile");
+		$pwd = $this->input->post("pwd");
+		$pwd2 = $this->input->post("pwd2");
+		$redirect_url = $this->input->post("redirect_url");
+	
+		if ( empty($mobile) || empty($pwd) ) {
+			die(json_failure("請輸入手機號碼及密碼"));
+		}
+		else if ($pwd != $pwd2) {
+			die(json_failure("兩次密碼輸入不同"));
+		}
+	
+		$result = $this->g_user->set_mobile($account, $pwd, $mobile);
 	
 		if ($result == true){
 			$this->g_user->verify_account($account, $pwd);

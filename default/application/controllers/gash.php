@@ -105,6 +105,10 @@ class Gash extends MY_Controller {
 			
 		$this->db->set("create_time", "NOW()", false)->set("update_time", "NOW()", false)->insert("gash_billing", $data);
 		
+		print_r($trans->nodes);
+		print_r($data);
+		die;
+		
 		// 取得送出之交易資料
 		$data = $trans->GetSendData();
 		log_message("error", "order:".$data);

@@ -18,11 +18,12 @@ label {display:block;}
 
 <? else:?>
 
-<form method="post" class="json_form" action="<?=site_url("member/bind_account_json")?>">
+<form method="post" class="json_form" action="<?=site_url("member/m_bind_account_json")?>">
 <input type="hidden" name="redirect_url" value="<?=$this->input->get("redirect_url", TRUE)?>">
+<input type="hidden" name="account" value="<?=$user_data->account?>">
 
-<label>請設定帳號：<br>
-	<input type="text" name="account" size="24" maxlength="35" class="required" minlength="6" value="" />
+<label>請設定手機號碼：<br>
+	<input type="text" name="mobile" size="24" maxlength="10" class="required isMobile" value="" />
 </label>
 
 <label>請設定密碼：<br>

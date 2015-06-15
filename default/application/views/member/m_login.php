@@ -37,7 +37,8 @@ else {
 </div>
 <div>
 <? if ( ! empty($redirect_url) && ! ($this->game == 'zj')):?>
-<input type="button" value="開始遊戲" onclick="javascript:top.location.replace('<?=$redirect_url?>');" />
+<!--input type="button" value="開始遊戲" onclick="javascript:top.location.replace('<?=$redirect_url?>');" /--> <!-- 不明白為何這裡選擇用top. -->
+<input type="button" value="開始遊戲" onclick="javascript:location.href='<?=$redirect_url?>';" />
 <? endif;?>
 
 <? if ($this->g_user->is_channel_account() && $bind_account==false):
@@ -63,28 +64,11 @@ else {
 
 <? if ($this->g_user->get_channel() == 'imei'):?>
 <div style="color:#993333; font-size:13px; padding:12px 0;">
-<? if ($this->game != 'zj'):?>
 試玩帳號不須註冊即可立即體驗遊戲內容，讓您輕鬆暢遊遊戲；但若重新安裝或刪除遊戲及清除暫存後，將造成帳號資料遺失！
 建議您體驗遊戲後可進行「綁定帳號」，避免您的心血遺失！
 
-<?php else:?>
-
-即日起將進行儲值返還作業；故使用「試玩」帳號者，請先於手機上綁定龍邑會員帳號，方可於返還後使用龍邑平台點數。
-
-<?php endif;?>
-
 </div>
 <? endif;?>
-
-<? if ($this->game == 'zj'):?>
-<div>
-
-<a href="<?=base_url()?>/bulletin/detail/6220" op="1">
-《真三十六計》結束營運公告
-</a>
-</div>
-
-<?php endif;?>
 
 </div>
 <? else:?>
@@ -96,7 +80,8 @@ else {
                             <tr> 
                               <td><div align="right">龍邑帳號：</div></td>
                               <td align="left"> <input tabindex="1" name="account" class="required" maxlength="18" type="text" size="18" 
-                              						value="<?=empty($account) ? '' : ($this->g_user->check_extra_account($account) ? '' : $account)?>" /> 
+                              						value="<?=empty($account) ? '' : ($this->g_user->check_extra_account($account) ? '' : $account)?>" 
+                                                    placeholder="請輸入帳號或手機"	/> 
                               </td>
                             </tr>
                             <tr> 
