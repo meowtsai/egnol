@@ -146,7 +146,7 @@ class Service extends MY_Controller {
 		else {
 			$this->db
 				->set("create_time", "now()", false)
-				->set("modify_date", "now()", false)
+				->set("update_time", "now()", false)
 				->insert("question_assigns", $data);	
 			$id = $this->db->insert_id();			
 		}
@@ -277,7 +277,7 @@ class Service extends MY_Controller {
 		else {
 			$this->db
 				->set("create_time", "now()", false)
-				->set("modify_date", "now()", false)
+				->set("update_time", "now()", false)
 				->insert("questions", $data);	
 			$question_id = $this->db->insert_id();			
 		}
