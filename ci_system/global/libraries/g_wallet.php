@@ -105,6 +105,9 @@ class G_Wallet
 			->where("uid", $uid)
     		->update("users", $users_data);
     	
+		$country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
+		$country_code = ($country_code) ? $country_code : null;
+		
     	$user_billing_data = array(
     		'uid' 			=> $uid,
     		'transaction_type' => $transaction_type,
@@ -115,6 +118,7 @@ class G_Wallet
     		'balance' 		=> $calc_balance,
     		'result'		=> '0',
     		'note'			=> '',
+			'country_code'  => $country_code,
     	);    	
     	$order && $user_billing_data["order"] = $order;
     	
@@ -185,6 +189,9 @@ class G_Wallet
 			->where("uid", $uid)
 			->update("users", $users_data);
     	
+		$country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
+		$country_code = ($country_code) ? $country_code : null;
+		
     	$user_billing_data = array(
     			'uid' 			=> $uid,
     			'transaction_type' => $transaction_type,
@@ -193,6 +200,7 @@ class G_Wallet
     			'ip'		 	=> $_SERVER['REMOTE_ADDR'],
     			'result'		=> '1',
     			'mycard_billing_id' => $mycard_billing_id,
+				'country_code'  => $country_code,
     		);
     	
     	$this->CI->db->set("create_time", "now()", false)->insert("user_billing", $user_billing_data);
@@ -215,6 +223,9 @@ class G_Wallet
 		    ->set("update_time", "now()", false)
 			->where("uid", $uid)
 			->update("users", $users_data);
+			
+		$country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
+		$country_code = ($country_code) ? $country_code : null;
     	
     	$user_billing_data = array(
     			'uid' 			=> $uid,
@@ -224,6 +235,7 @@ class G_Wallet
     			'ip'		 	=> $_SERVER['REMOTE_ADDR'],
     			'result'		=> '1',
     			'gash_billing_id' => $gash_billing_id,
+				'country_code'  => $country_code,
     		);
     	
     	$this->CI->db->set("create_time", "now()", false)->insert("user_billing", $user_billing_data);
@@ -255,6 +267,9 @@ class G_Wallet
     		->set("update_time", "now()", false)
     		->insert("users", $users_data);
     	
+		$country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
+		$country_code = ($country_code) ? $country_code : null;
+		
     	$user_billing_data = array(
     			'uid' 			=> $uid,
     			'transaction_type' => $tran_type,
@@ -263,6 +278,7 @@ class G_Wallet
     			'amount' 		=> $amount,
     			'ip'		 	=> $_SERVER['REMOTE_ADDR'],
     			'result'		=> '1',
+				'country_code'  => $country_code,
     		);
     	$order && $data["order"] = $order;
     	

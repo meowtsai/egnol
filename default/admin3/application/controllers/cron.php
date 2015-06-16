@@ -95,13 +95,32 @@ FROM
             WHERE uid=lgl.uid AND servers.game_id=lgl.game_id 
                 AND DATE(create_time) = DATE_ADD(DATE(lgl.create_time), interval {$days} day)
         ) 'retention'
-FROM
-log_game_logins lgl
-WHERE DATE(lgl.create_time) = '{$date}'
-AND lgl.is_first = 1
-GROUP BY lgl.uid, lgl.game_id
+    FROM
+    log_game_logins lgl
+    WHERE DATE(lgl.create_time) = '{$date}'
+    AND lgl.is_first = 1
+    GROUP BY lgl.uid, lgl.game_id
 ) tmp
-GROUP BY game_id");		
+GROUP BY game_id");
+
+        $query = $this->db->query("
+SELECT game_id, SUM(uid) 'retention'
+FROM 
+(
+    SELECT lgl.uid, lgl.game_id, lgl.server_id
+    FROM
+    log_game_logins lgl
+    WHERE DATE(lgl.create_time) = '{$date}'
+    AND lgl.is_first = 1
+	AND lgl.uid IN (
+	    SELECT uid FROM log_game_logins
+		JOIN servers ON log_game_logins.server_id = servers.server_id
+        WHERE servers.game_id=lgl.game_id 
+            AND DATE(create_time) = DATE_ADD(DATE(lgl.create_time), interval {$days} day)
+	)
+    GROUP BY lgl.uid, lgl.game_id
+) tmp
+GROUP BY game_id");	
 
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {

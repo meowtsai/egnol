@@ -237,10 +237,9 @@ group by d
 			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 120 THEN 1 ELSE NULL END) 'all_tmore'
 		FROM log_game_logins
 		WHERE game_id = '{$game_id}'
-		AND create_time >= DATE('{$start_date}')
-		AND create_time <= DATE('{$end_date}')
+		AND create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
 		AND is_first = 1
-		GROUP BY {$date_group}(create_time)) AS all_gt
+		GROUP BY YEAR(create_time), {$date_group}(create_time)) AS all_gt
 		LEFT JOIN
 		(SELECT game_id, {$date_group}(create_time) 'date',
 		    COUNT(uid) 'new_login_count',
@@ -252,9 +251,8 @@ group by d
 			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 120 THEN 1 ELSE NULL END) 'new_tmore'
 		FROM log_game_logins
 		WHERE game_id = '{$game_id}'
-		AND create_time >= DATE('{$start_date}')
-		AND create_time <= DATE('{$end_date}')
-		GROUP BY {$date_group}(create_time)) AS new_gt ON all_gt.game_id=new_gt.game_id AND all_gt.date=new_gt.date
+		AND create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
+		GROUP BY YEAR(create_time), {$date_group}(create_time)) AS new_gt ON all_gt.game_id=new_gt.game_id AND all_gt.date=new_gt.date
 		LEFT JOIN
 		(SELECT lgl.game_id, {$date_group}(lgl.create_time) 'date',
 		    COUNT(lgl.uid) 'deposit_login_count',
@@ -267,11 +265,10 @@ group by d
 		FROM log_game_logins lgl
 		JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id AND lgl.create_time >= ub.create_time
 		WHERE lgl.game_id = '{$game_id}'
-		AND lgl.create_time >= DATE('{$start_date}')
-		AND lgl.create_time <= DATE('{$end_date}')
+		AND lgl.create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
         AND ub.billing_type = 2 
         AND ub.result = 1
-		GROUP BY {$date_group}(lgl.create_time)) AS deposit_gt ON all_gt.game_id=deposit_gt.game_id AND all_gt.date=deposit_gt.date
+		GROUP BY YEAR(lgl.create_time), {$date_group}(lgl.create_time)) AS deposit_gt ON all_gt.game_id=deposit_gt.game_id AND all_gt.date=deposit_gt.date
 		LEFT JOIN
 		(SELECT lgl.game_id, {$date_group}(lgl.create_time) 'date',
 		    COUNT(lgl.uid) 'new_deposit_login_count',
@@ -284,11 +281,10 @@ group by d
 		FROM log_game_logins lgl
 		JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id AND DATE(lgl.create_time) = DATE(ub.create_time)
 		WHERE lgl.game_id = '{$game_id}'
-		AND lgl.create_time >= DATE('{$start_date}')
-		AND lgl.create_time <= DATE('{$end_date}')
+		AND lgl.create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
         AND ub.billing_type = 2 
         AND ub.result = 1
-		GROUP BY {$date_group}(lgl.create_time)) AS new_deposit_gt ON all_gt.game_id=new_deposit_gt.game_id AND all_gt.date=new_deposit_gt.date
+		GROUP BY YEAR(lgl.create_time), {$date_group}(lgl.create_time)) AS new_deposit_gt ON all_gt.game_id=new_deposit_gt.game_id AND all_gt.date=new_deposit_gt.date
 		");
         
 		$this->g_layout
@@ -362,8 +358,7 @@ group by d
 		    FROM statistics stc
 		    LEFT JOIN statistics stc2 ON stc.game_id=stc2.game_id AND stc.date=DATE_ADD(stc2.date, interval 1 day)
 		    WHERE stc.game_id = '{$game_id}'
-		    AND stc.date >= '{$start_date}'
-		    AND stc.date <= '{$end_date}')
+		    AND stc.date BETWEEN '{$start_date}' AND '{$end_date}')
 		
 		    UNION
 		
@@ -393,7 +388,8 @@ group by d
 		    RIGHT JOIN statistics stc2 ON stc.game_id=stc2.game_id AND stc.date=DATE_ADD(stc2.date, interval 1 day)
 		    WHERE stc.game_id = '{$game_id}'
 		    AND stc.date >= '{$start_date}'
-		    AND stc.date <= '{$end_date}')
+		    AND stc.date <= '{$end_date}'
+		    AND stc.date BETWEEN '{$start_date}' AND '{$end_date}')
 		    ORDER BY date DESC
 		    ");
 		}
@@ -401,6 +397,7 @@ group by d
 		{
 		    $query = $this->db->query("
 		    (SELECT 
+		        YEAR(stc.date) 'year',
 		        {$date_group}(stc.date) 'date',
 			    stc.game_id 'game_id',
 			    SUM(stc.login_count) 'login_count',
@@ -425,13 +422,13 @@ group by d
 		    FROM statistics stc
 		    LEFT JOIN statistics stc2 ON stc.game_id=stc2.game_id AND stc.date=DATE_ADD(stc2.date, interval 1 {$date_group})
 		    WHERE stc.game_id = '{$game_id}'
-		    AND stc.date >= '{$start_date}'
-		    AND stc.date <= '{$end_date}'
-		    GROUP BY {$date_group}(stc.date))
+		    AND stc.date BETWEEN '{$start_date}' AND '{$end_date}'
+		    GROUP BY YEAR(stc.date), {$date_group}(stc.date))
 		
 		    UNION
 		
 		    (SELECT 
+		        YEAR(stc.date) 'year',
 		        {$date_group}(stc.date) 'date',
 			    stc.game_id 'game_id',
 		    	SUM(stc.login_count) 'login_count',
@@ -456,10 +453,9 @@ group by d
 		    FROM statistics stc
 		    RIGHT JOIN statistics stc2 ON stc.game_id=stc2.game_id AND stc.date=DATE_ADD(stc2.date, interval 1 {$date_group})
 		    WHERE stc.game_id = '{$game_id}'
-		    AND stc.date >= '{$start_date}'
-		    AND stc.date <= '{$end_date}'
-		    GROUP BY {$date_group}(stc.date))
-		    ORDER BY date DESC
+		    AND stc.date BETWEEN '{$start_date}' AND '{$end_date}'
+		    GROUP BY YEAR(stc.date), {$date_group}(stc.date))
+		    ORDER BY year, date DESC
 		    ");
 		}
 		
@@ -471,6 +467,73 @@ group by d
 			->set("game_id_2", $this->input->get("game_id_2"))
 			->set("game_id_3", $this->input->get("game_id_3"))
 			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("id")->get())
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+	
+	function revenue()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		$span = $this->input->get("span");
+		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
+		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
+		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
+			$start_date = date("Y-m-d",strtotime("-1 days"));
+			$end_date = date("Y-m-d",strtotime("-8 days"));
+		} 
+		//$game_id = $this->input->get("game_id_1") ? $this->input->get("game_id_1") : ($this->input->get("game_id_2") ? $this->input->get("game_id_2") : ($this->input->get("game_id_3") ? $this->input->get("game_id_3") : ""));
+		
+        switch($span) {
+			case "weekly":
+			    $date_group = 'WEEK';
+				break;
+			
+			case "monthly":
+			    $date_group = 'MONTH';
+				break;
+				
+			default:
+			    $date_group = 'DATE';
+				break;
+		}
+		
+		$query = $this->db->query("
+			SELECT
+		    {$date_group}(create_time) 'date',
+			SUM(amount) 'sum',
+			SUM(CASE WHEN transaction_type='ios_billing' THEN amount ELSE 0 END) 'ios_sum',
+			SUM(CASE WHEN transaction_type='android_billing' THEN amount ELSE 0 END) 'android_sum',
+			SUM(CASE WHEN transaction_type='gash_billing' THEN amount ELSE 0 END) 'gash_sum',
+			SUM(CASE WHEN transaction_type='mycard_billing' THEN amount ELSE 0 END) 'mycard_sum',
+			SUM(CASE WHEN transaction_type='paypal_billing' THEN amount ELSE 0 END) 'paypal_sum',
+			SUM(CASE WHEN transaction_type='atm_billing' THEN amount ELSE 0 END) 'atm_sum',
+			SUM(CASE WHEN transaction_type='cht_billing' THEN amount ELSE 0 END) 'cht_sum',
+			SUM(CASE WHEN transaction_type='twm_billing' THEN amount ELSE 0 END) 'twm_sum',
+			SUM(CASE WHEN transaction_type='fet_billing' THEN amount ELSE 0 END) 'fet_sum',
+			SUM(CASE WHEN transaction_type='vibo_billing' THEN amount ELSE 0 END) 'vibo_sum',
+			SUM(CASE WHEN transaction_type not in ('ios_billing','android_billing','gash_billing','mycard_billing','paypal_billing','atm_billing','cht_billing','twm_billing','fet_billing','vibo_billing') THEN amount ELSE 0 END) 'other_billing_sum',
+			SUM(CASE WHEN country_code='TWN' THEN amount ELSE 0 END) 'twn_sum',
+			SUM(CASE WHEN country_code='HKG' THEN amount ELSE 0 END) 'hkg_sum',
+			SUM(CASE WHEN country_code='MAC' THEN amount ELSE 0 END) 'mac_sum',
+			SUM(CASE WHEN country_code='SGP' THEN amount ELSE 0 END) 'sgp_sum',
+			SUM(CASE WHEN country_code='MYS' THEN amount ELSE 0 END) 'mys_sum',
+			SUM(CASE WHEN country_code not in ('TWN','HKG','MAC','SGP','MYS') THEN amount ELSE 0 END) 'other_country_sum'
+			FROM user_billing
+			WHERE create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
+			AND billing_type = 1
+			AND result = 1
+			GROUP BY YEAR(create_time), {$date_group}(create_time)
+		    ORDER BY YEAR(create_time) DESC, {$date_group}(create_time) DESC
+		");
+		
+		$this->g_layout
+			->set("query", isset($query) ? $query : false)
+			->set("span", $span)
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();

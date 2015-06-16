@@ -10,6 +10,7 @@ $config['main_menu'] = array(
 		 	array('name' => '數據報表', 'path' => 'statistics/operation'),
 			array('name' => '在線時長', 'path' => 'statistics/game_length'),
 			array('name' => '留存率', 'path' => 'statistics/retention'),
+			array('name' => '營收分析', 'path' => 'statistics/revenue'),
 			array('name' => '行銷效益', 'path' => 'ad'),
 		)
 	),	

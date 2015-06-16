@@ -83,6 +83,28 @@ class Testdata extends CI_Controller {
 			}
 		}
 	}
+	
+	function generate_country_code()
+	{
+		ini_set('max_execution_time', 9999);
+		$this->lang->load('db_lang', 'zh-TW');
+		
+		$query = $this->db->get("user_billing");
+		
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+				if ($row->ip) {
+				    $country_code = geoip_country_code3_by_name($row->ip);
+				
+			        $data = array(
+				        'country_code' => $country_code
+			        );
+				
+				    $this->db->where("id", $row->id)->update("user_billing", $data);
+				}
+			}
+		}
+	}
 }
 
 /* End of file search.php */
