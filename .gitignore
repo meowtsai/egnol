@@ -2,3 +2,5 @@
 Vagrantfile
 puphpet/
 vagrantVM.ppk
+default/application/logs/
+default/admin3/application/logs/
