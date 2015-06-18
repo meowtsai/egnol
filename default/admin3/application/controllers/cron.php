@@ -82,31 +82,33 @@ class Cron extends CI_Controller {
 		$this->lang->load('db_lang', 'zh-TW');
 		
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
-
+		$stop_time=date("Y-m-d H:i:s", strtotime("+1 days 4 hours", strtotime($date))); 
+			
         $query = $this->db->query("
 			SELECT 
-				game_id, SUM(new_role) 'role_cnt'
+				game_id, SUM(new_character) 'character_cnt'
 			FROM
 			(
 				SELECT 
-					servers.game_id, 1 'new_role'
+					lgl.game_id, 1 'new_character'
 				FROM
-					characters
-				JOIN servers ON characters.server_id = servers.server_id, 
+					log_game_logins AS lgl,
 				(
 					SELECT 
-						uid, game_id, server_id, create_time
+						uid, game_id, characters.create_time
 					FROM
-						log_game_logins
+						characters
+						JOIN servers ON characters.server_id = servers.server_id
 					WHERE
-						DATE(create_time) = '{$date}'
-							AND is_first = 1
-				) AS lgl
+						characters.create_time BETWEEN '{$date}' AND '{$stop_time}'
+				) AS new_characters
 				WHERE
-					characters.uid = lgl.uid
-						AND servers.game_id = lgl.game_id
-						AND characters.create_time >= lgl.create_time
-				GROUP BY servers.game_id , characters.uid
+					DATE(lgl.create_time) = '{$date}'
+						AND lgl.is_first = 1
+						AND new_characters.uid = lgl.uid
+						AND new_characters.game_id = lgl.game_id
+						AND new_characters.create_time >= lgl.create_time
+				GROUP BY lgl.game_id , lgl.uid
 			) AS tmp
 			GROUP BY game_id");	
 
@@ -116,7 +118,7 @@ class Cron extends CI_Controller {
 				    'game_id' => $row->game_id,
 				    'date' => $date,
 				    //'new_login_count' => $row->login_cnt,
-				    'new_character_count' => $row->role_cnt
+				    'new_character_count' => $row->character_cnt
 			    );
 			
 			    unset($statistics);
@@ -281,26 +283,18 @@ class Cron extends CI_Controller {
 			SELECT 
 				game_id,
 				COUNT(uid) 'consume_user_count',
-				SUM(amount_total) 'consume_total',
-				SUM(is_first) 'new_consume_user_count'
+				SUM(amount_total) 'consume_total'
 			FROM
 				(SELECT 
 					lgc.uid,
-						lgc.game_id,
-						SUM(lgc.amount) 'amount_total',
-						(SELECT 
-								IF(COUNT(*) > 0, 0, 1)
-							FROM
-								log_game_consumes
-							WHERE
-								log_game_consumes.create_time < lgc.create_time
-							LIMIT 1) 'is_first'
+					lgc.game_id,
+					SUM(lgc.amount) 'amount_total'
 				FROM
 					log_game_consumes lgc
 				WHERE
 					DATE(lgc.create_time) = '{$date}'
 				GROUP BY lgc.uid , lgc.game_id) tmp
-			GROUP BY game_id");		
+			GROUP BY game_id");	
 
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
@@ -309,8 +303,7 @@ class Cron extends CI_Controller {
 				    'game_id' => $row->game_id,
 				    'date' => $date,
 				    'consume_user_count' => $row->consume_user_count,
-				    'consume_total' => $row->consume_total,
-				    'new_consume_user_count' => $row->new_consume_user_count
+				    'consume_total' => $row->consume_total
 			    );
 			
 			    unset($statistics);
@@ -325,6 +318,51 @@ class Cron extends CI_Controller {
 		}
 		
 		echo "generate_consume_statistics done - ".$date.PHP_EOL;
+	}	
+	
+	function generate_new_consume_statistics($date="")
+	{
+		$this->lang->load('db_lang', 'zh-TW');
+		
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
+			
+		$query = $this->db->query("
+			SELECT 
+				game_id,
+				COUNT(uid) 'new_consume_user_count'
+			FROM
+				(SELECT 
+					uid, game_id, MIN(create_time) 'first_time'
+				FROM
+					log_game_consumes
+				WHERE
+					DATE(create_time) <= '{$date}'
+				GROUP BY uid, game_id) AS lgc
+			WHERE
+				DATE(first_time) = '{$date}'
+			GROUP BY game_id");		
+
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+				
+			    $data = array(
+				    'game_id' => $row->game_id,
+				    'date' => $date,
+				    'new_consume_user_count' => $row->new_consume_user_count
+			    );
+			
+			    unset($statistics);
+			    $statistics = $this->db->where("game_id", $row->game_id)->where("date", $date)->get("statistics");
+			
+		        if ($statistics->num_rows() > 0) {
+				    $this->db->where("game_id", $row->game_id)->where("date", $date)->update("statistics", $data);
+			    } else {
+				    $this->db->insert("statistics", $data);
+			    }
+		    }
+		}
+		
+		echo "generate_new_consume_statistics done - ".$date.PHP_EOL;
 	}
 	
 	function generate_game_time_statistics($date="")
@@ -335,22 +373,12 @@ class Cron extends CI_Controller {
 		$query = $this->db->query("
 			SELECT 
 				game_id,
-				SUM(game_time) 'total_time',
-				SUM(paid_game_time) 'paid_total_time'
+				SUM(game_time) 'total_time'
 			FROM
 				(SELECT 
 					lgl.uid,
-						lgl.game_id,
-						TIMESTAMPDIFF(SECOND, lgl.create_time, lgl.logout_time) 'game_time',
-						(SELECT 
-								IF(COUNT(*) > 0, TIMESTAMPDIFF(SECOND, lgl.create_time, lgl.logout_time), 0)
-							FROM
-								user_billing
-							WHERE
-								uid = lgl.uid AND game_id = lgl.game_id
-									AND billing_type = 2
-									AND result = 1
-									AND DATE(create_time) <= '{$date}') 'paid_game_time'
+					lgl.game_id,
+					TIMESTAMPDIFF(SECOND, lgl.create_time, lgl.logout_time) 'game_time'
 				FROM
 					log_game_logins lgl
 				WHERE
@@ -365,8 +393,7 @@ class Cron extends CI_Controller {
 			    $data = array(
 				    'game_id' => $row->game_id,
 				    'date' => $date,
-				    'total_time' => $row->total_time,
-				    'paid_total_time' => $row->paid_total_time
+				    'total_time' => $row->total_time
 			    );
 			
 			    unset($statistics);
@@ -380,6 +407,63 @@ class Cron extends CI_Controller {
 		    }
 		}
 		echo "generate_game_time_statistics done - ".$date.PHP_EOL;
+	}
+	
+	function generate_paid_game_time_statistics($date="")
+	{
+		$this->lang->load('db_lang', 'zh-TW');
+		
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
+			
+		$query = $this->db->query("
+			SELECT 
+				game_id,
+				SUM(paid_game_time) 'paid_total_time'
+			FROM
+				(SELECT 
+					lgl.uid,
+					lgl.game_id,
+					TIMESTAMPDIFF(SECOND, lgl.create_time, lgl.logout_time) 'paid_game_time'
+				FROM
+					log_game_logins lgl,
+					(SELECT 
+						uid, game_id, MIN(create_time)
+							FROM
+								user_billing
+								JOIN servers ON user_billing.server_id=servers.server_id
+							WHERE
+								billing_type = 2
+									AND result = 1
+									AND DATE(create_time) <= '{$date}'
+							GROUP BY uid, game_id) AS paid_users
+				WHERE
+					DATE(lgl.create_time) = '{$date}'
+						AND lgl.logout_time IS NOT NULL
+						AND lgl.uid = paid_users.uid
+						AND lgl.game_id = paid_users.game_id
+				GROUP BY lgl.uid , lgl.game_id) tmp
+			GROUP BY game_id");		
+
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+				
+			    $data = array(
+				    'game_id' => $row->game_id,
+				    'date' => $date,
+				    'paid_total_time' => $row->paid_total_time
+			    );
+			
+			    unset($statistics);
+			    $statistics = $this->db->where("game_id", $row->game_id)->where("date", $date)->get("statistics");
+			
+		        if ($statistics->num_rows() > 0) {
+				    $this->db->where("game_id", $row->game_id)->where("date", $date)->update("statistics", $data);
+			    } else {
+				    $this->db->insert("statistics", $data);
+			    }
+		    }
+		}
+		echo "generate_paid_game_time_statistics done - ".$date.PHP_EOL;
 	}
 	
 	function generate_peak_statistics($date="")
@@ -543,7 +627,11 @@ class Cron extends CI_Controller {
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_consume_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
+		$this->generate_new_consume_statistics($date);
+		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_game_time_statistics($date);
+		$start_time = $this->echo_passed_time($start_time);
+		$this->generate_paid_game_time_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_peak_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
