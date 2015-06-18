@@ -46,13 +46,16 @@ class Cron extends CI_Controller {
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
 
         $query = $this->db->query("
-			SELECT 
-				game_id, COUNT(uid) 'login_cnt'
+			SELECT
+				game_id, COUNT(uid) 'login_count', SUM(first_login) 'new_login_count'
 			FROM
-				log_game_logins
-			WHERE
-				DATE(create_time) = '{$date}'
-					AND is_first = 1
+				(SELECT
+					game_id, uid, SUM(is_first) 'first_login'
+				FROM
+					log_game_logins
+				WHERE
+					DATE(create_time) = '{$date}'
+				GROUP BY game_id, uid) tmp
 			GROUP BY game_id");	
 
 		if ($query->num_rows() > 0) {
@@ -60,7 +63,8 @@ class Cron extends CI_Controller {
 			    $data = array(
 				    'game_id' => $row->game_id,
 				    'date' => $date,
-				    'new_login_count' => $row->login_cnt
+				    'login_count' => $row->login_count,
+				    'new_login_count' => $row->new_login_count
 			    );
 			
 			    unset($statistics);
@@ -560,7 +564,7 @@ class Cron extends CI_Controller {
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
 				if (isset($row->game_id)) {
-			        $data = array(
+			        $online_users_statistics_data = array(
 				        'game_id' => $row->game_id,
 				        'date' => $date,
 				        'count_0' => $row->count_0,
@@ -593,10 +597,29 @@ class Cron extends CI_Controller {
 			        $online_users_statistics = $this->db->where("game_id", $row->game_id)->where("date", $date)->get("online_users_statistics");
 			
 		            if ($online_users_statistics->num_rows() > 0) {
-				        $this->db->where("game_id", $row->game_id)->where("date", $date)->update("online_users_statistics", $data);
+				        $this->db->where("game_id", $row->game_id)->where("date", $date)->update("online_users_statistics", $online_users_statistics_data);
 			        } else {
-				        $this->db->insert("online_users_statistics", $data);
+				        $this->db->insert("online_users_statistics", $online_users_statistics_data);
 			        }
+					
+				    $peak_user_count = max($row->count_0, $row->count_1, $row->count_2, $row->count_3, $row->count_4, $row->count_5, $row->count_6, 
+					    $row->count_7, $row->count_8, $row->count_9, $row->count_10, $row->count_11, $row->count_12, $row->count_13, $row->count_14, $row->count_15, 
+						$row->count_16, $row->count_17, $row->count_18, $row->count_19, $row->count_20, $row->count_21, $row->count_22, $row->count_23);
+					
+					$statistics_data = array(
+						'game_id' => $row->game_id,
+						'date' => $date,
+						'peak_user_count' => $peak_user_count
+					);
+				
+					unset($statistics);
+					$statistics = $this->db->where("game_id", $row->game_id)->where("date", $date)->get("statistics");
+				
+					if ($statistics->num_rows() > 0) {
+						$this->db->where("game_id", $row->game_id)->where("date", $date)->update("statistics", $statistics_data);
+					} else {
+						$this->db->insert("statistics", $statistics_data);
+					}
 			    }
 		    }
 		}
