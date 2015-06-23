@@ -14,7 +14,6 @@
 	}
 	
 	$channels = $this->config->item('channels');
-	$game_id = ($this->input->get("game_id_1")?$this->input->get("game_id_1"):($this->input->get("game_id_2")?$this->input->get("game_id_2"):($this->input->get("game_id_3")?$this->input->get("game_id_3"):'')));
 ?>
 <div id="func_bar">
 	
@@ -24,17 +23,17 @@
 	<!--input type="hidden" name="game_id" value="<?=$this->game_id?>"-->
 	<div class="control-group">
 		
-		<? $i = 1; 
-		foreach($c_game_menu as $category => $c_menu):?>
-	        <?=$category?>
-	        <select name="game_id_<?=$i?>">
-		        <option value="">--</option>
-		        <? foreach($c_menu as $key => $row):?>
-		        <option value="<?=$row->game_id?>" <?=($game_id==$row->game_id ? 'selected="selected"' : '')?>><?=$row->name?>	</option>
-		        <? endforeach;?>
-	        </select>
-        <? $i++;  
-		endforeach;?>	
+		<select name="game_id">
+		    <option value="">--</option>
+			<?
+			foreach($c_game_menu as $category => $c_menu):?>
+				<option value=""> -------- <?=$category?> --------</option>
+				<? foreach($c_menu as $key => $row):?>
+				<option value="<?=$row->game_id?>" <?=($game_id==$row->game_id ? 'selected="selected"' : '')?>><?=$row->name?>	</option>
+				<? endforeach;?>
+			<? $i++;  
+			endforeach;?>	
+	    </select>
 		
 		時間
 		<input type="text" name="start_date" class="date required" value="<?=$this->input->get("start_date")?>" style="width:120px"> 至

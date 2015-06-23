@@ -67,14 +67,7 @@ class Cron extends CI_Controller {
 				    'new_login_count' => $row->new_login_count
 			    );
 			
-			    unset($statistics);
-			    $statistics = $this->db->where('game_id', $row->game_id)->where('date', $date)->get('statistics');
-			
-		        if ($statistics->num_rows() > 0) {
-				    $this->db->where("game_id", $row->game_id)->where("date", $date)->update("statistics", $data);
-			    } else {
-				    $this->db->insert("statistics", $data);
-			    }
+			    $this->save_statistics($data);
 		    }
 		}
 		
@@ -121,31 +114,23 @@ class Cron extends CI_Controller {
 			    $data = array(
 				    'game_id' => $row->game_id,
 				    'date' => $date,
-				    //'new_login_count' => $row->login_cnt,
 				    'new_character_count' => $row->character_cnt
 			    );
 			
-			    unset($statistics);
-			    $statistics = $this->db->where('game_id', $row->game_id)->where('date', $date)->get('statistics');
-			
-		        if ($statistics->num_rows() > 0) {
-				    $this->db->where("game_id", $row->game_id)->where("date", $date)->update("statistics", $data);
-			    } else {
-				    $this->db->insert("statistics", $data);
-			    }
+			    $this->save_statistics($data);
 		    }
 		}
 		
 		echo "generate_new_character_statistics done - ".$date.PHP_EOL;
 	}
 	
-	function generate_retention_statistics($date="", $days=1, $is_first=TRUE)
+	function generate_retention_statistics($date="", $interval=1, $span="daily", $is_first=TRUE)
 	{
 		$this->lang->load('db_lang', 'zh-TW');
 		
-		if (empty($date)) $date=date("Y-m-d",strtotime("-".($days+1)." days"));
+		if (empty($date)) $date=date("Y-m-d",strtotime("-".($interval+1)." days"));
 		
-		switch ($days) {
+		switch ($interval) {
 			case 1:
 			    $update_field = 'one_retention';
 				break;
@@ -168,6 +153,28 @@ class Cron extends CI_Controller {
 		
 		$update_field = ($is_first) ?  $update_field.'_count' : $update_field.'_all_count';
 
+        switch($span) {
+			case "weekly":
+			    $span_query1 = "YEAR(create_time) = YEAR('{$date}') AND WEEKOFYEAR(create_time) = WEEKOFYEAR('{$date}')";
+				$span_query2 = "AND YEAR(log_game_logins.create_time) = YEAR(DATE_ADD(DATE('{$date}'), INTERVAL {$interval} WEEK))
+				                AND WEEKOFYEAR(log_game_logins.create_time) = WEEKOFYEAR(DATE_ADD(DATE('{$date}'), INTERVAL {$interval} WEEK))";
+				$save_table = "weekly_statistics";
+				break;
+			
+			case "monthly":
+			    $span_query1 = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}')";
+			    $span_query2 = "AND YEAR(log_game_logins.create_time) = YEAR(DATE_ADD(DATE('{$date}'), INTERVAL {$interval} WEEK))
+				                AND MONTH(log_game_logins.create_time) = MONTH(DATE_ADD(DATE('{$date}'), INTERVAL {$interval} MONTH))";
+				$save_table = "monthly_statistics";
+				break;
+				
+			default:
+			    $span_query1 = "DATE(create_time) = '{$date}'";
+			    $span_query2 = "AND DATE(log_game_logins.create_time) = DATE_ADD(DATE('{$date}'), INTERVAL {$interval} DAY)";
+				$save_table = "statistics";
+				break;
+		}
+		
         $query = $this->db->query("
 			SELECT 
 				game_id, SUM(is_retention) 'retention'
@@ -183,37 +190,31 @@ class Cron extends CI_Controller {
 					FROM
 						log_game_logins
 					WHERE
-						DATE(create_time) = '{$date}'
+						".$span_query1."
 							".(($is_first) ? " AND is_first = 1 " : "")."
 				) AS lgl
 				WHERE
 					log_game_logins.uid = lgl.uid
 						AND log_game_logins.game_id = lgl.game_id
-						AND DATE(log_game_logins.create_time) = DATE_ADD(DATE('{$date}'), INTERVAL {$days} DAY)
+						".$span_query2."
 				GROUP BY log_game_logins.game_id , log_game_logins.uid
 			) AS tmp
 			GROUP BY game_id");	
 
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
-			    $data = array(
-				    'game_id' => $row->game_id,
-				    'date' => $date,
-				    $update_field => $row->retention
-			    );
-			
-			    unset($statistics);
-			    $statistics = $this->db->where('game_id', $row->game_id)->where('date', $date)->get('statistics');
-			
-		        if ($statistics->num_rows() > 0) {
-				    $this->db->where("game_id", $row->game_id)->where("date", $date)->update("statistics", $data);
-			    } else {
-				    $this->db->insert("statistics", $data);
-			    }
+		
+				$data = array(
+					'game_id' => $row->game_id,
+					'date' => $date,
+					$update_field => $row->retention
+				);
+				
+			    $this->save_statistics($data, $save_table);
 		    }
 		}
 		
-		echo "generate_".$days."_retention_statistics(".(($is_first) ? "first" : "all").") done - ".$date.PHP_EOL;
+		echo "generate_".$interval."_retention_".$span."_statistics(".(($is_first) ? "first" : "all").") done - ".$date.PHP_EOL;
 	}
 	
 	function generate_billing_statistics($date="")
@@ -228,22 +229,25 @@ class Cron extends CI_Controller {
 				SUM(amount_total) 'deposit_total',
 				SUM(is_first) 'new_deposit_user_count'
 			FROM
-				(SELECT 
+			(   
+				SELECT 
 					ub.uid,
-						sv.game_id,
-						SUM(ub.amount) 'amount_total',
-						(SELECT 
-								IF(COUNT(*) > 0, 0, 1)
-							FROM
-								user_billing
-							JOIN servers ON user_billing.server_id = servers.server_id
-							WHERE
-								user_billing.uid = ub.uid
-									AND servers.game_id = sv.game_id
-									AND user_billing.create_time < ub.create_time
-						            AND user_billing.billing_type = 2
-						            AND user_billing.result = 1
-							LIMIT 1) 'is_first'
+					sv.game_id,
+					SUM(ub.amount) 'amount_total',
+					(
+						SELECT 
+							IF(COUNT(*) > 0, 0, 1)
+						FROM
+							user_billing
+						JOIN servers ON user_billing.server_id = servers.server_id
+						WHERE
+							user_billing.uid = ub.uid
+								AND servers.game_id = sv.game_id
+								AND user_billing.create_time < ub.create_time
+								AND user_billing.billing_type = 2
+								AND user_billing.result = 1
+						LIMIT 1
+					) 'is_first'
 				FROM
 					user_billing ub
 				JOIN servers sv ON ub.server_id = sv.server_id
@@ -251,7 +255,8 @@ class Cron extends CI_Controller {
 					DATE(ub.create_time) = '{$date}'
 						AND ub.billing_type = 2
 						AND ub.result = 1
-				GROUP BY ub.uid , sv.game_id) tmp
+				GROUP BY ub.uid , sv.game_id
+			) tmp
 			GROUP BY game_id");
 
 		if ($query->num_rows() > 0) {
@@ -263,15 +268,8 @@ class Cron extends CI_Controller {
 				    'deposit_total' => $row->deposit_total,
 				    'new_deposit_user_count' => $row->new_deposit_user_count
 			    );
-			
-			    unset($statistics);
-			    $statistics = $this->db->where("game_id", $row->game_id)->where("date", $date)->get("statistics");
-			
-		        if ($statistics->num_rows() > 0) {
-				    $this->db->where("game_id", $row->game_id)->where("date", $date)->update("statistics", $data);
-			    } else {
-				    $this->db->insert("statistics", $data);
-			    }
+				
+			    $this->save_statistics($data);
 		    }
 		}
 		
@@ -289,7 +287,8 @@ class Cron extends CI_Controller {
 				COUNT(uid) 'consume_user_count',
 				SUM(amount_total) 'consume_total'
 			FROM
-				(SELECT 
+			(
+				SELECT 
 					lgc.uid,
 					lgc.game_id,
 					SUM(lgc.amount) 'amount_total'
@@ -297,7 +296,8 @@ class Cron extends CI_Controller {
 					log_game_consumes lgc
 				WHERE
 					DATE(lgc.create_time) = '{$date}'
-				GROUP BY lgc.uid , lgc.game_id) tmp
+				GROUP BY lgc.uid , lgc.game_id
+			) tmp
 			GROUP BY game_id");	
 
 		if ($query->num_rows() > 0) {
@@ -309,15 +309,8 @@ class Cron extends CI_Controller {
 				    'consume_user_count' => $row->consume_user_count,
 				    'consume_total' => $row->consume_total
 			    );
-			
-			    unset($statistics);
-			    $statistics = $this->db->where("game_id", $row->game_id)->where("date", $date)->get("statistics");
-			
-		        if ($statistics->num_rows() > 0) {
-				    $this->db->where("game_id", $row->game_id)->where("date", $date)->update("statistics", $data);
-			    } else {
-				    $this->db->insert("statistics", $data);
-			    }
+				
+			    $this->save_statistics($data);
 		    }
 		}
 		
@@ -335,13 +328,15 @@ class Cron extends CI_Controller {
 				game_id,
 				COUNT(uid) 'new_consume_user_count'
 			FROM
-				(SELECT 
+			(
+				SELECT 
 					uid, game_id, MIN(create_time) 'first_time'
 				FROM
 					log_game_consumes
 				WHERE
 					DATE(create_time) <= '{$date}'
-				GROUP BY uid, game_id) AS lgc
+				GROUP BY uid, game_id
+			) AS lgc
 			WHERE
 				DATE(first_time) = '{$date}'
 			GROUP BY game_id");		
@@ -354,15 +349,8 @@ class Cron extends CI_Controller {
 				    'date' => $date,
 				    'new_consume_user_count' => $row->new_consume_user_count
 			    );
-			
-			    unset($statistics);
-			    $statistics = $this->db->where("game_id", $row->game_id)->where("date", $date)->get("statistics");
-			
-		        if ($statistics->num_rows() > 0) {
-				    $this->db->where("game_id", $row->game_id)->where("date", $date)->update("statistics", $data);
-			    } else {
-				    $this->db->insert("statistics", $data);
-			    }
+				
+			    $this->save_statistics($data);
 		    }
 		}
 		
@@ -379,7 +367,8 @@ class Cron extends CI_Controller {
 				game_id,
 				SUM(game_time) 'total_time'
 			FROM
-				(SELECT 
+			(
+				SELECT 
 					lgl.uid,
 					lgl.game_id,
 					TIMESTAMPDIFF(SECOND, lgl.create_time, lgl.logout_time) 'game_time'
@@ -388,7 +377,8 @@ class Cron extends CI_Controller {
 				WHERE
 					DATE(lgl.create_time) = '{$date}'
 						AND lgl.logout_time IS NOT NULL
-				GROUP BY lgl.uid , lgl.game_id) tmp
+				GROUP BY lgl.uid , lgl.game_id
+			) tmp
 			GROUP BY game_id");		
 
 		if ($query->num_rows() > 0) {
@@ -400,14 +390,7 @@ class Cron extends CI_Controller {
 				    'total_time' => $row->total_time
 			    );
 			
-			    unset($statistics);
-			    $statistics = $this->db->where("game_id", $row->game_id)->where("date", $date)->get("statistics");
-			
-		        if ($statistics->num_rows() > 0) {
-				    $this->db->where("game_id", $row->game_id)->where("date", $date)->update("statistics", $data);
-			    } else {
-				    $this->db->insert("statistics", $data);
-			    }
+			    $this->save_statistics($data);
 		    }
 		}
 		echo "generate_game_time_statistics done - ".$date.PHP_EOL;
@@ -424,28 +407,32 @@ class Cron extends CI_Controller {
 				game_id,
 				SUM(paid_game_time) 'paid_total_time'
 			FROM
-				(SELECT 
+			(
+				SELECT 
 					lgl.uid,
 					lgl.game_id,
 					TIMESTAMPDIFF(SECOND, lgl.create_time, lgl.logout_time) 'paid_game_time'
 				FROM
 					log_game_logins lgl,
-					(SELECT 
-						uid, game_id, MIN(create_time)
-							FROM
-								user_billing
-								JOIN servers ON user_billing.server_id=servers.server_id
-							WHERE
-								billing_type = 2
-									AND result = 1
-									AND DATE(create_time) <= '{$date}'
-							GROUP BY uid, game_id) AS paid_users
+					(
+						SELECT 
+							uid, game_id, MIN(create_time)
+						FROM
+							user_billing
+							JOIN servers ON user_billing.server_id=servers.server_id
+						WHERE
+							billing_type = 2
+								AND result = 1
+								AND DATE(create_time) = '{$date}'
+						GROUP BY uid, game_id
+					) AS paid_users
 				WHERE
 					DATE(lgl.create_time) = '{$date}'
 						AND lgl.logout_time IS NOT NULL
 						AND lgl.uid = paid_users.uid
 						AND lgl.game_id = paid_users.game_id
-				GROUP BY lgl.uid , lgl.game_id) tmp
+				GROUP BY lgl.uid , lgl.game_id
+			) tmp
 			GROUP BY game_id");		
 
 		if ($query->num_rows() > 0) {
@@ -457,14 +444,7 @@ class Cron extends CI_Controller {
 				    'paid_total_time' => $row->paid_total_time
 			    );
 			
-			    unset($statistics);
-			    $statistics = $this->db->where("game_id", $row->game_id)->where("date", $date)->get("statistics");
-			
-		        if ($statistics->num_rows() > 0) {
-				    $this->db->where("game_id", $row->game_id)->where("date", $date)->update("statistics", $data);
-			    } else {
-				    $this->db->insert("statistics", $data);
-			    }
+			    $this->save_statistics($data);
 		    }
 		}
 		echo "generate_paid_game_time_statistics done - ".$date.PHP_EOL;
@@ -504,7 +484,8 @@ class Cron extends CI_Controller {
 				SUM(online_22) 'count_22',
 				SUM(online_23) 'count_23'
 			FROM
-				(SELECT 
+			(
+				SELECT 
 					game_id,
 						IF(create_time <= '{$date} 00:00:00'
 							AND logout_time > '{$date} 00:00:00', 1, 0) 'online_0',
@@ -558,7 +539,8 @@ class Cron extends CI_Controller {
 					log_game_logins
 				WHERE
 					DATE(create_time) = '{$date}'
-						OR DATE(logout_time) = '{$date}') tmp
+						OR DATE(logout_time) = '{$date}'
+			) tmp
 			GROUP BY game_id");	
 
 		if ($query->num_rows() > 0) {
@@ -592,15 +574,8 @@ class Cron extends CI_Controller {
 				        'count_22' => $row->count_22,
 				        'count_23' => $row->count_23
 			        );
-			
-			        unset($statistics);
-			        $online_users_statistics = $this->db->where("game_id", $row->game_id)->where("date", $date)->get("online_users_statistics");
-			
-		            if ($online_users_statistics->num_rows() > 0) {
-				        $this->db->where("game_id", $row->game_id)->where("date", $date)->update("online_users_statistics", $online_users_statistics_data);
-			        } else {
-				        $this->db->insert("online_users_statistics", $online_users_statistics_data);
-			        }
+					
+					$this->save_statistics($online_users_statistics_data, "online_users_statistics");
 					
 				    $peak_user_count = max($row->count_0, $row->count_1, $row->count_2, $row->count_3, $row->count_4, $row->count_5, $row->count_6, 
 					    $row->count_7, $row->count_8, $row->count_9, $row->count_10, $row->count_11, $row->count_12, $row->count_13, $row->count_14, $row->count_15, 
@@ -612,25 +587,37 @@ class Cron extends CI_Controller {
 						'peak_user_count' => $peak_user_count
 					);
 				
-					unset($statistics);
-					$statistics = $this->db->where("game_id", $row->game_id)->where("date", $date)->get("statistics");
-				
-					if ($statistics->num_rows() > 0) {
-						$this->db->where("game_id", $row->game_id)->where("date", $date)->update("statistics", $statistics_data);
-					} else {
-						$this->db->insert("statistics", $statistics_data);
-					}
+					$this->save_statistics($statistics_data);
 			    }
 		    }
 		}
 		echo "generate_peak_statistics done - ".$date.PHP_EOL;
 	}
 	
-	function cron_bundle($date) {
+	function save_statistics($data, $save_table="statistics") {
+		$game_id = $data['game_id'];
+		
+		$statistics = $this->db->where("game_id", $data['game_id'])->where("date", $data['date'])->get($save_table);
+		
+		if ($statistics->num_rows() > 0) {
+			$this->db->where("game_id", $data['game_id'])->where("date", $data['date'])->update($save_table, $data);
+		} else {
+			$this->db->insert($save_table, $data);
+		}
+	}
+	
+	function cron_bundle($date="") {
 		ini_set('max_execution_time', 9999);
 		
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));	
+		$date_1=date("Y-m-d",strtotime("-1 days", strtotime($date)));
+		$date_3=date("Y-m-d",strtotime("-3 days", strtotime($date)));
+		$date_7=date("Y-m-d",strtotime("-7 days", strtotime($date)));
+		$date_14=date("Y-m-d",strtotime("-14 days", strtotime($date)));
+		$date_30=date("Y-m-d",strtotime("-30 days", strtotime($date)));
+		
 		$start_time = time();
-		$this->generate_login_statistics($date);
+		/*$this->generate_login_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_new_character_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
@@ -644,20 +631,36 @@ class Cron extends CI_Controller {
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_retention_statistics($date, 30);
 		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_retention_statistics($date, 1, FALSE);
+		$this->generate_retention_statistics($date, 1, 'daily', FALSE);
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_billing_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_consume_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_new_consume_statistics($date);
-		$start_time = $this->echo_passed_time($start_time);
+		$start_time = $this->echo_passed_time($start_time);*/
 		$this->generate_game_time_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_paid_game_time_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_peak_statistics($date);
-		$start_time = $this->echo_passed_time($start_time);
+		//$this->generate_peak_statistics($date);
+		//$start_time = $this->echo_passed_time($start_time);
+		
+		if ("7"==date("N", strtotime($date))) {
+			$date_week=date("Y-m-d",strtotime("-1 weeks", strtotime($date)));
+			$this->generate_retention_statistics($date_week, 1, 'weekly');
+			$start_time = $this->echo_passed_time($start_time);
+			$this->generate_retention_statistics($date_week, 1, 'weekly', FALSE);
+			$start_time = $this->echo_passed_time($start_time);
+		}
+		
+		if ($date==date("Y-m-t", strtotime($date))) {
+			$date_month=date("Y-m-d",strtotime("-1 months", strtotime($date)));
+			$this->generate_retention_statistics($date_month, 1, 'monthly');
+			$start_time = $this->echo_passed_time($start_time);
+			$this->generate_retention_statistics($date_month, 1, 'monthly', FALSE);
+			$start_time = $this->echo_passed_time($start_time);
+		}
 	}
 	
 	function echo_passed_time($start_time) {

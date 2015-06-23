@@ -58,48 +58,48 @@ class Statistics extends MY_Controller {
 			
 					$query = $this->db->query("
 							
-select d, count(*) 'login_cnt', sum(role) 'role_cnt', 
-	round(1-sum(role)/count(*), 3) 'role_p',
-	sum(role)-sum(c1) 'c1', 
-	round((sum(role)-sum(c1)) / sum(role), 3) 'c1_p',
-	sum(role)-sum(c7) 'c7', 
-	round((sum(role)-sum(c7)) / sum(role), 3) 'c7_p',
-	sum(role)-sum(c15) 'c15', 
-	round((sum(role)-sum(c15)) / sum(role), 3) 'c15_p',
-	sum(role)-sum(c30) 'c30', 
-	round((sum(role)-sum(c30)) / sum(role), 3) 'c30_p'
-from 
-(
-	SELECT 
-		date(lgl.create_time) 'd', lgl.uid, lgl.server_id, character_name,
-		if (gsr.id is null, '0', '1') 'role',
-		if (gsr.id is null, '0', (select if(count(*)>0, 1, 0) from log_game_logins
-			where uid=gsr.uid and server_id=gsr.server_id 
-				and create_time >= date_add(date(gsr.create_time), interval 1 day))
-		) 'c1', 
-		if (gsr.id is null, '0', (select if(count(*)>0, 1, 0) from log_game_logins
-			where uid=gsr.uid and server_id=gsr.server_id 
-				and create_time >= date_add(date(gsr.create_time), interval 6 day))
-		) 'c7', 
-		if (gsr.id is null, '0', (select if(count(*)>0, 1, 0) from log_game_logins
-			where uid=gsr.uid and server_id=gsr.server_id 
-				and create_time >= date_add(date(gsr.create_time), interval 14 day)) 
-		) 'c15', 
-		if (gsr.id is null, '0', (select if(count(*)>0, 1, 0) from log_game_logins
-			where uid=gsr.uid and server_id=gsr.server_id 
-				and create_time >= date_add(date(gsr.create_time), interval 29 day)) 
-		) 'c30'
-	FROM log_game_logins lgl
-	join servers gi on lgl.server_id=gi.server_id
-	left join characters gsr on date(gsr.create_time)=date(lgl.create_time) and gsr.uid=lgl.uid and gsr.server_id=lgl.server_id
-	{$where}
-	and lgl.create_time between '{$start_date}' and '{$end_date} 23:59:59'
-	and not exists(select * from characters where 
-		create_time < lgl.create_time and uid=lgl.uid and server_id=lgl.server_id
-	)	
-	group by date(lgl.create_time), lgl.uid, lgl.server_id 
-) tmp
-group by d														
+						select d, count(*) 'login_cnt', sum(role) 'role_cnt', 
+							round(1-sum(role)/count(*), 3) 'role_p',
+							sum(role)-sum(c1) 'c1', 
+							round((sum(role)-sum(c1)) / sum(role), 3) 'c1_p',
+							sum(role)-sum(c7) 'c7', 
+							round((sum(role)-sum(c7)) / sum(role), 3) 'c7_p',
+							sum(role)-sum(c15) 'c15', 
+							round((sum(role)-sum(c15)) / sum(role), 3) 'c15_p',
+							sum(role)-sum(c30) 'c30', 
+							round((sum(role)-sum(c30)) / sum(role), 3) 'c30_p'
+						from 
+						(
+							SELECT 
+								date(lgl.create_time) 'd', lgl.uid, lgl.server_id, character_name,
+								if (gsr.id is null, '0', '1') 'role',
+								if (gsr.id is null, '0', (select if(count(*)>0, 1, 0) from log_game_logins
+									where uid=gsr.uid and server_id=gsr.server_id 
+										and create_time >= date_add(date(gsr.create_time), interval 1 day))
+								) 'c1', 
+								if (gsr.id is null, '0', (select if(count(*)>0, 1, 0) from log_game_logins
+									where uid=gsr.uid and server_id=gsr.server_id 
+										and create_time >= date_add(date(gsr.create_time), interval 6 day))
+								) 'c7', 
+								if (gsr.id is null, '0', (select if(count(*)>0, 1, 0) from log_game_logins
+									where uid=gsr.uid and server_id=gsr.server_id 
+										and create_time >= date_add(date(gsr.create_time), interval 14 day)) 
+								) 'c15', 
+								if (gsr.id is null, '0', (select if(count(*)>0, 1, 0) from log_game_logins
+									where uid=gsr.uid and server_id=gsr.server_id 
+										and create_time >= date_add(date(gsr.create_time), interval 29 day)) 
+								) 'c30'
+							FROM log_game_logins lgl
+							join servers gi on lgl.server_id=gi.server_id
+							left join characters gsr on date(gsr.create_time)=date(lgl.create_time) and gsr.uid=lgl.uid and gsr.server_id=lgl.server_id
+							{$where}
+							and lgl.create_time between '{$start_date}' and '{$end_date} 23:59:59'
+							and not exists(select * from characters where 
+								create_time < lgl.create_time and uid=lgl.uid and server_id=lgl.server_id
+							)	
+							group by date(lgl.create_time), lgl.uid, lgl.server_id 
+						) tmp
+						group by d														
 					");
 					break;
 					
@@ -153,16 +153,13 @@ group by d
 		
 		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
 		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
-		$game_id = $this->input->get("game_id_1") ? $this->input->get("game_id_1") : ($this->input->get("game_id_2") ? $this->input->get("game_id_2") : ($this->input->get("game_id_3") ? $this->input->get("game_id_3") : ""));
+		$game_id = $this->input->get("game_id");
 					
 		$query = $this->db->where("game_id", $game_id)->where("date >=", $start_date)->where("date <=", $end_date)->get("statistics");
         
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
-			->set("game_id_1", $this->input->get("game_id_1"))
-			->set("game_id_2", $this->input->get("game_id_2"))
-			->set("game_id_3", $this->input->get("game_id_3"))
 		
 		->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("id")->get())
 			->add_js_include("game/statistics")
@@ -180,7 +177,7 @@ group by d
 		$span = $this->input->get("span");
 		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
 		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
-		$game_id = $this->input->get("game_id_1") ? $this->input->get("game_id_1") : ($this->input->get("game_id_2") ? $this->input->get("game_id_2") : ($this->input->get("game_id_3") ? $this->input->get("game_id_3") : ""));
+		$game_id = $this->input->get("game_id");
 
         switch($span) {
 			case "weekly":
@@ -291,9 +288,6 @@ group by d
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
 			->set("span", $span)
-			->set("game_id_1", $this->input->get("game_id_1"))
-			->set("game_id_2", $this->input->get("game_id_2"))
-			->set("game_id_3", $this->input->get("game_id_3"))
 		
 		->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("id")->get())
 			->add_js_include("game/statistics")
@@ -315,23 +309,28 @@ group by d
 			$start_date = date("Y-m-d",strtotime("-1 days"));
 			$end_date = date("Y-m-d",strtotime("-8 days"));
 		} 
-		$game_id = $this->input->get("game_id_1") ? $this->input->get("game_id_1") : ($this->input->get("game_id_2") ? $this->input->get("game_id_2") : ($this->input->get("game_id_3") ? $this->input->get("game_id_3") : ""));
+		$game_id = $this->input->get("game_id");
 		
         switch($span) {
 			case "weekly":
-			    $date_group = 'WEEK';
+			    $date_group = 'YEARWEEK';
+			    $interval = 'WEEK';
+				$stc3 = 'weekly_statistics';
 				break;
 			
 			case "monthly":
 			    $date_group = 'MONTH';
+				$interval = 'MONTH';
+				$stc3 = 'monthly_statistics';
 				break;
 				
 			default:
 			    $date_group = 'DATE';
+				$interval = 'DATE';
 				break;
 		}
 		
-		if ('DATE'==$date_group) {
+		if (''==$span) {
 		    $query = $this->db->query("
 		    (SELECT 
 		        stc.date 'date',
@@ -393,12 +392,11 @@ group by d
 		    ORDER BY date DESC
 		    ");
 		}
-		else
+		elseif('weekly'==$span)
 		{
 		    $query = $this->db->query("
 		    (SELECT 
-		        YEAR(stc.date) 'year',
-		        {$date_group}(stc.date) 'date',
+		        YEARWEEK((stc.date),3) 'date',
 			    stc.game_id 'game_id',
 			    SUM(stc.login_count) 'login_count',
 			    SUM(stc.new_login_count) 'new_login_count',
@@ -406,8 +404,8 @@ group by d
 			    SUM(stc.device_count) 'device_count',
 			    SUM(stc2.login_count) 'y_login_count',
 			    SUM(stc2.new_login_count) 'y_new_login_count',
-			    SUM(stc2.one_retention_all_count) 'y_one_retention_all_count',
-                SUM(stc2.one_retention_count) 'y_one_retention_count',
+			    SUM(stc3.one_retention_all_count) 'y_one_retention_all_count',
+                SUM(stc3.one_retention_count) 'y_one_retention_count',
                 SUM(stc.deposit_user_count) 'deposit_user_count',
                 SUM(stc.new_deposit_user_count) 'new_deposit_user_count',
                 SUM(stc.consume_user_count) 'consume_user_count',
@@ -420,16 +418,19 @@ group by d
                 SUM(stc.total_time) 'total_time',
                 SUM(stc.paid_total_time) 'paid_total_time'
 		    FROM statistics stc
-		    LEFT JOIN statistics stc2 ON stc.game_id=stc2.game_id AND stc.date=DATE_ADD(stc2.date, interval 1 {$date_group})
-		    WHERE stc.game_id = '{$game_id}'
-		    AND stc.date BETWEEN '{$start_date}' AND '{$end_date}'
-		    GROUP BY YEAR(stc.date), {$date_group}(stc.date))
+		    LEFT JOIN statistics stc2 ON stc.game_id=stc2.game_id 
+				AND stc.date=DATE_ADD(stc2.date, interval 1 week)
+			LEFT JOIN weekly_statistics stc3 ON stc3.game_id=stc2.game_id 
+				AND stc3.date=stc2.date
+		    WHERE 
+				stc.date BETWEEN '{$start_date}' AND '{$end_date}'
+					AND stc.game_id = '{$game_id}'
+		    GROUP BY YEARWEEK((stc.date),3))
 		
 		    UNION
 		
 		    (SELECT 
-		        YEAR(stc.date) 'year',
-		        {$date_group}(stc.date) 'date',
+		        YEARWEEK((stc.date),3) 'date',
 			    stc.game_id 'game_id',
 		    	SUM(stc.login_count) 'login_count',
 			    SUM(stc.new_login_count) 'new_login_count',
@@ -437,8 +438,8 @@ group by d
 			    SUM(stc.device_count) 'device_count',
 			    SUM(stc2.login_count) 'y_login_count',
 			    SUM(stc2.new_login_count) 'y_new_login_count',
-			    SUM(stc2.one_retention_all_count) 'y_one_retention_all_count',
-                SUM(stc2.one_retention_count) 'y_one_retention_count',
+			    SUM(stc3.one_retention_all_count) 'y_one_retention_all_count',
+                SUM(stc3.one_retention_count) 'y_one_retention_count',
                 SUM(stc.deposit_user_count) 'deposit_user_count',
                 SUM(stc.new_deposit_user_count) 'new_deposit_user_count',
                 SUM(stc.consume_user_count) 'consume_user_count',
@@ -451,11 +452,79 @@ group by d
                 SUM(stc.total_time) 'total_time',
                 SUM(stc.paid_total_time) 'paid_total_time'
 		    FROM statistics stc
-		    RIGHT JOIN statistics stc2 ON stc.game_id=stc2.game_id AND stc.date=DATE_ADD(stc2.date, interval 1 {$date_group})
-		    WHERE stc.game_id = '{$game_id}'
-		    AND stc.date BETWEEN '{$start_date}' AND '{$end_date}'
-		    GROUP BY YEAR(stc.date), {$date_group}(stc.date))
-		    ORDER BY year, date DESC
+		    RIGHT JOIN statistics stc2 ON stc.game_id=stc2.game_id 
+				AND stc.date=DATE_ADD(stc2.date, interval 1 week)
+			LEFT JOIN weekly_statistics stc3 ON stc3.game_id=stc2.game_id 
+				AND stc3.date=stc2.date
+		    WHERE 
+				stc.date BETWEEN '{$start_date}' AND '{$end_date}'
+					AND stc.game_id = '{$game_id}'
+		    GROUP BY YEARWEEK((stc.date),3))
+		    ORDER BY date DESC
+		    ");
+		}
+		else
+		{
+			$stc2_start_date = date("Y-m", strtotime('-1 month', strtotime($start_date)))."-01";
+			$stc2_end_date = date("Y-m-t", strtotime('-1 month', strtotime($end_date)));
+			
+		    $query = $this->db->query("
+				SELECT 
+					stc.*,
+					stc2.y_login_count,
+					stc2.y_new_login_count,
+					stc3.one_retention_all_count 'y_one_retention_all_count',
+					stc3.one_retention_count 'y_one_retention_count'
+				FROM
+					(
+						SELECT 
+							YEAR(stc.date) 'year',
+							MONTH(stc.date) 'date',
+							stc.game_id 'game_id',
+							SUM(stc.login_count) 'login_count',
+							SUM(stc.new_login_count) 'new_login_count',
+							SUM(stc.new_character_count) 'new_character_count',
+							SUM(stc.device_count) 'device_count',
+							SUM(stc.deposit_user_count) 'deposit_user_count',
+							SUM(stc.new_deposit_user_count) 'new_deposit_user_count',
+							SUM(stc.consume_user_count) 'consume_user_count',
+							SUM(stc.new_consume_user_count) 'new_consume_user_count',
+							SUM(stc.currency_total) 'currency_total',
+							SUM(stc.paid_currency_total) 'paid_currency_total',
+							SUM(stc.deposit_total) 'deposit_total',
+							SUM(stc.consume_total) 'consume_total',
+							SUM(stc.peak_user_count) 'peak_user_count',
+							SUM(stc.total_time) 'total_time',
+							SUM(stc.paid_total_time) 'paid_total_time'
+						FROM
+							statistics stc
+						WHERE
+							stc.date BETWEEN '{$start_date}' AND '{$end_date}'
+								AND stc.game_id = '{$game_id}'
+						GROUP BY YEAR(stc.date) , MONTH(stc.date)
+					) stc
+						LEFT JOIN
+					(
+						SELECT 
+							game_id,
+							YEAR(date) 'year',
+							MONTH(date) 'date',
+							SUM(login_count) 'y_login_count',
+							SUM(new_login_count) 'y_new_login_count'
+						FROM
+							statistics
+						WHERE
+							game_id = '{$game_id}'
+								AND date BETWEEN '{$stc2_start_date}' AND '{$stc2_end_date}'
+						GROUP BY YEAR(date) , MONTH(date)
+					) stc2 ON stc.game_id = stc2.game_id
+						AND stc2.year = YEAR(DATE_ADD(CONCAT(stc.year, '-', stc.date, '-01'), INTERVAL - 1 MONTH))
+						AND stc2.date = MONTH(DATE_ADD(CONCAT(stc.year, '-', stc.date, '-01'), INTERVAL - 1 MONTH))
+						LEFT JOIN
+					monthly_statistics stc3 ON stc3.game_id = stc2.game_id
+						AND YEAR(stc3.date) = stc2.year
+						AND MONTH(stc3.date) = stc2.date
+				ORDER BY stc.year DESC, stc.date DESC
 		    ");
 		}
 		
@@ -463,9 +532,6 @@ group by d
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
 			->set("span", $span)
-			->set("game_id_1", $this->input->get("game_id_1"))
-			->set("game_id_2", $this->input->get("game_id_2"))
-			->set("game_id_3", $this->input->get("game_id_3"))
 			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("id")->get())
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
@@ -486,7 +552,6 @@ group by d
 			$start_date = date("Y-m-d",strtotime("-1 days"));
 			$end_date = date("Y-m-d",strtotime("-8 days"));
 		} 
-		//$game_id = $this->input->get("game_id_1") ? $this->input->get("game_id_1") : ($this->input->get("game_id_2") ? $this->input->get("game_id_2") : ($this->input->get("game_id_3") ? $this->input->get("game_id_3") : ""));
 		
         switch($span) {
 			case "weekly":

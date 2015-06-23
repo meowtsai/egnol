@@ -106,7 +106,7 @@ li.dropdown li a {line-height:25px;}
 	
 		<? if (empty($full)):?>   
 		<div class="span2">
-			<? if ($this->game_id && array_key_exists($this->game_id, $servers)):?>
+			<? if ($this->uri->segment(1)<>"statistics" && $this->game_id && array_key_exists($this->game_id, $servers)):?>
 			<ul class="nav nav-tabs nav-stacked">
 		
 				<? foreach($servers[$this->game_id]['menu'] as $arr): ?>			
