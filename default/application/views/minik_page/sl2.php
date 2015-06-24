@@ -14,7 +14,7 @@ body {
 	background-color: #2E3E50;
 }
 </style>
-<link rel='stylesheet' type='text/css' href='http://sl2.long_e.com.tw/p/css/default.css'>
+<link rel='stylesheet' type='text/css' href='http://sl2.longeplay.com.tw/p/css/default.css'>
 <script type="text/javascript">
 function MM_swapImgRestore() { //v3.0
   var i,x,a=document.MM_sr; for(i=0;a&&i<a.length&&(x=a[i])&&x.oSrc;i++) x.src=x.oSrc;
@@ -41,7 +41,7 @@ function MM_swapImage() { //v3.0
 <body onload="MM_preloadImages('/p/minik/sl2/img/icon-01-on.jpg','/p/minik/sl2/img/icon-02-on.jpg','/p/minik/sl2/img/icon-03-on.jpg')">
 
 <div style="position:absolute; right:40px; top:345px;">
-	<a href="http://www.long_e.com.tw/payment?site=sl2" target="_blank"><img src="/p/minik/icon-pay.png"></a>
+	<a href="http://www.longeplay.com.tw/payment?site=sl2" target="_blank"><img src="/p/minik/icon-pay.png"></a>
 </div>
 
 <iframe id="invite_ifm" src="" width="0" height="0" frameborder="0"></iframe>
@@ -52,7 +52,7 @@ function MM_swapImage() { //v3.0
   </tr>
   <tr>
     <td><img src="/p/minik/sl2/img/img-02.jpg" width="206" height="138" /></td>
-    <td><a href="http://sl2.long_e.com.tw/" target="_blank"><img src="/p/minik/sl2/img/img-03.jpg" width="352" height="138" border="0" /></a></td>
+    <td><a href="http://sl2.longeplay.com.tw/" target="_blank"><img src="/p/minik/sl2/img/img-03.jpg" width="352" height="138" border="0" /></a></td>
     <td><img src="/p/minik/sl2/img/img-04.jpg" width="202" height="138" /></td>
   </tr>
   <tr>
@@ -63,13 +63,13 @@ function MM_swapImage() { //v3.0
             <? if ($old_user):?>
         	<a href="javascript:;" onclick="chose_server_form()"><img src="/p/minik/sl2/img/img-06.jpg" width="224" height="209" border="0" /></a>
         	<? else:?>
-        	<a href="http://www.long_e.com.tw/play_game/sl2" target="_blank"><img src="/p/minik/sl2/img/img-06.jpg" width="224" height="209" border="0" /></a>
+        	<a href="http://www.longeplay.com.tw/play_game/sl2" target="_blank"><img src="/p/minik/sl2/img/img-06.jpg" width="224" height="209" border="0" /></a>
         	<? endif;?>          
         </td>
         <td><img src="/p/minik/sl2/img/img-07.jpg" width="453" height="68" /></td>
       </tr>
       <tr>
-        <td><a href="javascript:invite_friend();" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('/icon-01','','/p/minik/sl2/img/icon-01-on.jpg',1)"><img src="/p/minik/sl2/img/icon-01-off.jpg" name="/icon-01" width="113" height="72" border="0" id="/icon-01" /></a><a href="http://tw.socialgame.yahoo.net/mtag/mtag.php?ac=home&tagid=4993" target="_blank" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('/icon-02','','/p/minik/sl2/img/icon-02-on.jpg',1)"><img src="/p/minik/sl2/img/icon-02-off.jpg" name="/icon-02" width="142" height="72" border="0" id="/icon-02" /></a><a href="http://sl2.long_e.com.tw" target="_blank" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('/icon-03','','/p/minik/sl2/img/icon-03-on.jpg',1)"><img src="/p/minik/sl2/img/icon-03-off.jpg" name="/icon-03" width="126" height="72" border="0" id="/icon-03" /></a><img src="/p/minik/sl2/img/img-08.jpg" width="72" height="72" border="0" /></td>
+        <td><a href="javascript:invite_friend();" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('/icon-01','','/p/minik/sl2/img/icon-01-on.jpg',1)"><img src="/p/minik/sl2/img/icon-01-off.jpg" name="/icon-01" width="113" height="72" border="0" id="/icon-01" /></a><a href="http://tw.socialgame.yahoo.net/mtag/mtag.php?ac=home&tagid=4993" target="_blank" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('/icon-02','','/p/minik/sl2/img/icon-02-on.jpg',1)"><img src="/p/minik/sl2/img/icon-02-off.jpg" name="/icon-02" width="142" height="72" border="0" id="/icon-02" /></a><a href="http://sl2.longeplay.com.tw" target="_blank" onmouseout="MM_swapImgRestore()" onmouseover="MM_swapImage('/icon-03','','/p/minik/sl2/img/icon-03-on.jpg',1)"><img src="/p/minik/sl2/img/icon-03-off.jpg" name="/icon-03" width="126" height="72" border="0" id="/icon-03" /></a><img src="/p/minik/sl2/img/img-08.jpg" width="72" height="72" border="0" /></td>
       </tr>
       <tr>
         <td><img src="/p/minik/sl2/img/img-09.jpg" width="453" height="69" /></td>
@@ -78,7 +78,7 @@ function MM_swapImage() { //v3.0
   </tr>
   <tr>
     <td colspan="3">
-    	<div style="position:absolute; right:15px; bottom:15px;"><img src="http://www.long_e.com.tw/img/rating/rating15.png"></div>
+    	<div style="position:absolute; right:15px; bottom:15px;"><img src="http://www.longeplay.com.tw/img/rating/rating15.png"></div>
     	<img src="/p/minik/sl2/img/img-10.jpg" width="760" height="420" />
     </td>
   </tr>
@@ -86,8 +86,8 @@ function MM_swapImage() { //v3.0
 
 <div id="choose" style="display:none;"><?=$choose_server_form?></div>
 
-<script type="text/javascript" src="http://www.long_e.com.tw/p/js/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src='http://www.long_e.com.tw/p/js/jquery.blockUI.js'></script>
+<script type="text/javascript" src="http://www.longeplay.com.tw/p/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src='http://www.longeplay.com.tw/p/js/jquery.blockUI.js'></script>
 <script type="text/javascript">
 function invite_friend() {
 	$('#invite_ifm').attr("src", "<?=$inviteSrc?>");

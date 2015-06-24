@@ -69,7 +69,7 @@ function chk_server_open($row)
 		return false;
 	}
 	
-	return 'http://www.long_e.com.tw/play_game?sid='.$row->id.'&ad='.@$_GET['ad'];
+	return 'http://www.longeplay.com.tw/play_game?sid='.$row->id.'&ad='.@$_GET['ad'];
 }
 
 /* End of file welcome.php */

@@ -30,10 +30,10 @@ class Xf extends Game_Api
     	
     	//channel,advertise,website,ip
     	$mapping = array(
-    		"203.75.245.56" => "s0.xf.long_e.com.tw",
-    		"203.75.245.53" => "s1.xf.long_e.com.tw",
-    		"203.75.245.55" => "s2.xf.long_e.com.tw",
-    		"203.75.245.57" => "s3.xf.long_e.com.tw",
+    		"203.75.245.56" => "s0.xf.longeplay.com.tw",
+    		"203.75.245.53" => "s1.xf.longeplay.com.tw",
+    		"203.75.245.55" => "s2.xf.longeplay.com.tw",
+    		"203.75.245.57" => "s3.xf.longeplay.com.tw",
     	);
     	if ( ! array_key_exists($server->address, $mapping)) {
     		die('伺服器未設定');

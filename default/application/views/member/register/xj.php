@@ -151,7 +151,7 @@ swfobject.registerObject("FlashID");
 	foreach($items as $channel => $name):
 		if ( ! in_array($channel, array("facebook", "yoid", "rc", "2000fun", "google"))) continue;
 ?>
-	<a href="http://www.long_e.com.tw/gate/login/xj?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="40" title="<?=$name?> 帳號登入"/></a>
+	<a href="http://www.longeplay.com.tw/gate/login/xj?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.longeplay.com.tw/img/login/<?=$channel?>.png" width="40" title="<?=$name?> 帳號登入"/></a>
 <? endforeach;?>     
     </td>
     </tr>
@@ -220,7 +220,7 @@ body{margin:0px; background-color:#000;}
 	foreach($items as $channel => $name):
 		if ( ! in_array($channel, array("facebook", "yoid", "rc", "2000fun", "google"))) continue;
 ?>
-	<a href="http://www.long_e.com.tw/gate/login/xj?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="40" title="<?=$name?> 帳號登入"/></a>
+	<a href="http://www.longeplay.com.tw/gate/login/xj?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.longeplay.com.tw/img/login/<?=$channel?>.png" width="40" title="<?=$name?> 帳號登入"/></a>
 <? endforeach;?> 
         </td>
         <td width="70">
@@ -444,7 +444,7 @@ swfobject.registerObject("FlashID");
 	$items = get_channel_items("xj", "../");
 	foreach($items as $channel => $name):
 ?>
-	<a href="http://www.long_e.com.tw/gate/login/xj?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="40" title="<?=$name?> 帳號登入"/></a>
+	<a href="http://www.longeplay.com.tw/gate/login/xj?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.longeplay.com.tw/img/login/<?=$channel?>.png" width="40" title="<?=$name?> 帳號登入"/></a>
 <? endforeach;?>     
     </td>
     </tr>
@@ -550,7 +550,7 @@ var google_remarketing_only = true;
 	$items = get_channel_items("xj", "../");
 	foreach($items as $channel => $name):
 ?>
-	<a href="http://www.long_e.com.tw/gate/login/xj?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="40" title="<?=$name?> 帳號登入"/></a>
+	<a href="http://www.longeplay.com.tw/gate/login/xj?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.longeplay.com.tw/img/login/<?=$channel?>.png" width="40" title="<?=$name?> 帳號登入"/></a>
 <? endforeach;?> 
         </div>
         <a class="btn-start" href="javascript:;" onclick="$('#register_form').submit();">開始遊戲</a>

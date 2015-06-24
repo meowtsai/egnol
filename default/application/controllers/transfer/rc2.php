@@ -107,7 +107,7 @@ class Rc2 extends MY_Controller {
 		$game = $this->input->get("game");
 		
 		//die(md5($rc_uid.$sid.$time.$key));		
-		//http://www.long_e.com.tw/transfer/rc2/check_role_status?game=mon&sid=0&uid=123456&time=123456789&sign=6b1d519d4f56ec9314430ae0ec0408e5
+		//http://www.longeplay.com.tw/transfer/rc2/check_role_status?game=mon&sid=0&uid=123456&time=123456789&sign=6b1d519d4f56ec9314430ae0ec0408e5
 		
 		if ($sign !== MD5($rc_uid.$sid.$time.$key) ) {
 			$this->_output("-1", "驗證碼錯誤");
@@ -149,7 +149,7 @@ class Rc2 extends MY_Controller {
 		$ext = $this->input->get("ext");		
 		
 		//die($sign . " " . MD5($oid.$rc_uid.$amount.$coins.$dtime.$key));
-		//http://www.long_e.com.tw/transfer/rc2/callback?uid=123456&oid=987654&amount=10&coins=10&dtime=123456789&ext=&sign=bf1959916207f6eec7303b5ea180a969&game=mon&server=0
+		//http://www.longeplay.com.tw/transfer/rc2/callback?uid=123456&oid=987654&amount=10&coins=10&dtime=123456789&ext=&sign=bf1959916207f6eec7303b5ea180a969&game=mon&server=0
 				
 		if ($sign !== MD5($oid.$rc_uid.$amount.$coins.$dtime.$key) ) {
 			log_message('error', 'rc2 callback error: 驗證碼錯誤, id:'.$oid);

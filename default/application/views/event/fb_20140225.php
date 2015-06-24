@@ -49,7 +49,7 @@ img {border:0px;}
 </div>
 
 <div id="logo">
-<!-- 	<a href="http://gt.long_e.com.tw/" target="_blank"><img src="/p/img/fb_20140225/logo.png"></a> -->
+<!-- 	<a href="http://gt.longeplay.com.tw/" target="_blank"><img src="/p/img/fb_20140225/logo.png"></a> -->
 </div>
 	
 </div>

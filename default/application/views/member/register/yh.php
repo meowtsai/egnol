@@ -74,7 +74,7 @@ swfobject.embedSWF("/p/register/yh/swf/page.swf", "flashCon", "1000", "630", "9.
 	$items = get_channel_items("yh", "../");
 	foreach($items as $channel => $name):
 ?>
-	<a href="http://www.long_e.com.tw/gate/login/yh?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="34" title="<?=$name?> 帳號登入"/></a>
+	<a href="http://www.longeplay.com.tw/gate/login/yh?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.longeplay.com.tw/img/login/<?=$channel?>.png" width="34" title="<?=$name?> 帳號登入"/></a>
 <? endforeach;?>  		
 		</td>
       </tr>

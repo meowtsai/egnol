@@ -41,7 +41,7 @@ class Rc2 extends Channel_Api
 		$server_row = $this->CI->db->from("servers")->where("server_id", $server_id)->get()->row();
 		if (empty($server_row)) return $this->_return_error('無此伺服器');
 		
-		//http://www.long_e.com.tw/gate/login_callback/rc2?game=mon&uid=123456&sid=0&cm=0&ltime=123456789&sign=0a8129ba56358e1a4ba228c443e45f1e
+		//http://www.longeplay.com.tw/gate/login_callback/rc2?game=mon&uid=123456&sid=0&cm=0&ltime=123456789&sign=0a8129ba56358e1a4ba228c443e45f1e
 		//die(md5($rc_uid.$sid.$cm.$ltime.$key));
 		
        	if ($sign == md5($rc_uid.$sid.$cm.$ltime.$key)) 

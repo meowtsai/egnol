@@ -24,7 +24,7 @@ class Gate extends MY_Controller {
 
 		$this->load->library("channel_api/fb_api", $param);
 		if ($this->g_user->check_login()) {
-			$_GET["url"] = "http://{$site}.long_e.com.tw/common/choose_server_form?ad={$ad}";
+			$_GET["url"] = "http://{$site}.longeplay.com.tw/common/choose_server_form?ad={$ad}";
 			$this->play_game($site);
 		} 
 		else {
@@ -111,7 +111,7 @@ class Gate extends MY_Controller {
 						header('location:'.site_url("/"));
 					}	
 					else {
-						$choose_server_url = "http://{$site}.long_e.com.tw/index.php?serverin=1&ad={$ad}";
+						$choose_server_url = "http://{$site}.longeplay.com.tw/index.php?serverin=1&ad={$ad}";
 						$url = base_url()."/play_game/{$site}?url=".urlencode($choose_server_url)."&ad={$ad}";
 						//die($url);
 						header('location:'.$url);
@@ -233,7 +233,7 @@ class Gate extends MY_Controller {
 			{				
 					
 				case 'qjp':
-					$url = "http://qjp.long_e.com.tw/go_game.php?srv=L8";
+					$url = "http://qjp.longeplay.com.tw/go_game.php?srv=L8";
 					break;
 				
 				case 'eya':
@@ -241,7 +241,7 @@ class Gate extends MY_Controller {
 					break;
 					
 				default:					
-					$choose_server_url = "http://{$site}.long_e.com.tw/index.php?serverin=1&ad={$ad}";
+					$choose_server_url = "http://{$site}.longeplay.com.tw/index.php?serverin=1&ad={$ad}";
 					$url = base_url()."/play_game/{$site}?url=".urlencode($choose_server_url)."&ad={$ad}";
 			}
 			header("location: {$url}", 302);	
@@ -292,7 +292,7 @@ class Gate extends MY_Controller {
 			if (array_key_exists($game_id, $enable_frame)) { //使用遊戲頁框
 				$ad = $this->input->get("ad"); //行銷參數
 				$server_info = $this->_select_server_entry($game_id);
-				header('location: http://www.long_e.com.tw/play_game?sid='.$server_info->id.'&ad='.$ad);
+				header('location: '.base_url().'/play_game?sid='.$server_info->id.'&ad='.$ad);
 				exit();
 			}
 			$this->login_game($game_id);
@@ -320,7 +320,7 @@ class Gate extends MY_Controller {
 			if ($cnt > 1) { //old
 				$url = $this->input->get("url");
 				if (empty($url)) {
-					header("location: http://{$game_id}.long_e.com.tw?serverin=1&ad={$ad}");
+					header("location: http://{$game_id}.longeplay.com.tw?serverin=1&ad={$ad}");
 					//$this->_redirect_web($game_id);
 				}
 				else {
@@ -330,7 +330,7 @@ class Gate extends MY_Controller {
 			else {
 				$server = $this->_select_server_entry($game_id);
 				if (empty($server)) {
-					header("location: http://{$game_id}.long_e.com.tw");
+					header("location: http://{$game_id}.longeplay.com.tw");
 				}
 				else {
 					header("location: ".base_url()."/play_game?sid=".$server->server_id."&ad={$ad}&");
@@ -420,7 +420,7 @@ class Gate extends MY_Controller {
 						if ( ! array_key_exists($server->game_id, $channel_api[$channel]["sites"])) {
 							die("<script>
 								alert('".$channel_api[$channel]['name']."帳號尚未開啟此遊戲服務，請使用其他帳號登入，謝謝！');
-								top.location.href = 'http://".$server->game_id.".long_e.com.tw/';
+								top.location.href = 'http://".$server->game_id.".longeplay.com.tw/';
 							</script>");
 						}
 					}
@@ -477,7 +477,7 @@ class Gate extends MY_Controller {
 	function _redirect_web($game_id='', $alert_msg='')
 	{
 		if ($game_id) {
-			$redirect_url = "http://{$game_id}.long_e.com.tw/index.php";
+			$redirect_url = "http://{$game_id}.longeplay.com.tw/index.php";
 		}
 		else {
 			$redirect_url = base_url();

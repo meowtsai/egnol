@@ -33,8 +33,8 @@ img {border:0px;}
 			專屬序號：<span style="font-size:17px; padding:3px;"><?=$code?></span>
 		</span>
 		<div style="margin-top:22px;">
-			<a href="http://www.long_e.com.tw/gate/login/bw?channel=facebook" target="_blank"><img src="/p/img/fb_20130415/enter_off.gif" class="change"></a>
-			<a href="http://bw.long_e.com.tw" target="_blank"><img src="/p/img/fb_20130415/home_off.gif" class="change"></a>
+			<a href="http://www.longeplay.com.tw/gate/login/bw?channel=facebook" target="_blank"><img src="/p/img/fb_20130415/enter_off.gif" class="change"></a>
+			<a href="http://bw.longeplay.com.tw" target="_blank"><img src="/p/img/fb_20130415/home_off.gif" class="change"></a>
 		</div>		
 	</div>
 	<? endif;?>

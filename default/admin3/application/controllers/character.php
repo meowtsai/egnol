@@ -692,7 +692,7 @@ class Character extends MY_Controller {
 			
 					/*
     			header('Content-Type: text/html; charset=GBK');
-    	    	$api_url = "http://game.zj.long_e.com.tw:1080/getnick.php";
+    	    	$api_url = "http://game.zj.longeplay.com.tw:1080/getnick.php";
 		    	$get = array(
 		    		'euid_f' => $this->g_user->encode($user->uid),		 
 		    		'servid' => $server->address,    		
@@ -708,7 +708,7 @@ class Character extends MY_Controller {
     			break;
     			
     		case 'ly':
-    	    	$api_url = "http://{$server->address}.ly.long_e.com.tw/getCharacterInfo.php";
+    	    	$api_url = "http://{$server->address}.ly.longeplay.com.tw/getCharacterInfo.php";
 		    	$get = array(
 		    		'id' => $this->g_user->encode($user->uid),		 
 		    		'time' => time(),    		
@@ -1035,7 +1035,7 @@ class Character extends MY_Controller {
 		    		$api_url = 'http://user.unite.kimi.com.tw/Char/getCharInfo';
 		    	}
 		    	else {
-		    		$api_url = 'http://user.qjp.long_e.com.tw/Char/getCharInfo';
+		    		$api_url = 'http://user.qjp.longeplay.com.tw/Char/getCharInfo';
 		    	}
 		    	
 		    	if (is_array($server)) $server = (object)$server; 

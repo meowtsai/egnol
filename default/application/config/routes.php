@@ -58,9 +58,9 @@ $route['ImageInfo.php?'] = 'link/s_gif';
 $route['Js/ads_banner.js'] = 'link/s';
 
 if ( ! empty($_GET['gate'])) {
-	$route['member/login_gate.php'] = 'link/pass/'.urlencode('http://www.long_e.com.tw/gate/login_callback/'.$_GET['gate'].'?'.$_SERVER['QUERY_STRING']);
+	$route['member/login_gate.php'] = 'link/pass/'.urlencode(base_url().'/gate/login_callback/'.$_GET['gate'].'?'.$_SERVER['QUERY_STRING']);
 }
-$route['member/yahoo/login_proc.php'] = 'link/pass/'.urlencode('http://www.long_e.com.tw/gate/login_callback/yahoo?'.$_SERVER['QUERY_STRING']);
+$route['member/yahoo/login_proc.php'] = 'link/pass/'.urlencode(base_url().'/gate/login_callback/yahoo?'.$_SERVER['QUERY_STRING']);
 
 $route['guide/t.htm'] = 'payment';
 

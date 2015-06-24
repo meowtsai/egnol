@@ -5,7 +5,7 @@
 
 <title>龍邑《<?=$server->game_name?>》- <?=$server->name?></title>
 
-<link rel="shortcut icon" href="http://<?=$server->game_id?>.long_e.com.tw/p/favicon.ico">
+<link rel="shortcut icon" href="http://<?=$server->game_id?>.longeplay.com.tw/p/favicon.ico">
 
 <script src="/p/js/jquery-1.8.3.min.js"></script>
 <script src="/p/js/jquery-ui-1.9.1.min.js"></script>
@@ -19,7 +19,7 @@ if (curl.indexOf('#_=_') > 0 ) {
     var newval = curl.replace(/\#\_\=\_/,'');
     window.location = newval;
 }
-//document.domain = 'long_e.com.tw';
+//document.domain = 'longeplay.com.tw';
 
 var my_layout;
 

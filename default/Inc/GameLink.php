@@ -17,15 +17,15 @@
                 
                 <table style="padding: 3px;">
                   <tr>
-                    <td><a href="http://www.long_e.com.tw/admin/manageActivitiesList.php"><img width="180" height="70" src="adminImg/logo.gif"></a></td>
-                    <td><a href="http://www.long_e.com.tw/admin/manageActivitiesList.php?game=mj"><img width="180" height="70" src="adminImg/mj.jpg"></a></td>
-                    <td><a href="http://www.long_e.com.tw/admin/manageActivitiesList.php?game=sg"><img width="180" height="70" src="adminImg/sg.jpg"></a></td>
-                    <td><a href="http://www.long_e.com.tw/admin/manageActivitiesList.php?game=qjp"><img width="180" height="70" src="adminImg/qjp.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageActivitiesList.php"><img width="180" height="70" src="adminImg/logo.gif"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageActivitiesList.php?game=mj"><img width="180" height="70" src="adminImg/mj.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageActivitiesList.php?game=sg"><img width="180" height="70" src="adminImg/sg.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageActivitiesList.php?game=qjp"><img width="180" height="70" src="adminImg/qjp.jpg"></a></td>
                   </tr>
                   <tr>
-                    <td><a href="http://www.long_e.com.tw/admin/manageActivitiesList.php?game=sl"><img width="180" height="70" src="adminImg/sl.jpg"></a></td><!--add "sl" 2011/01/25 -->
-                    <td><a href="http://www.long_e.com.tw/admin/manageActivitiesList.php?game=ms"><img width="180" height="70" src="adminImg/ms.jpg"></a></td>
-                    <td><a href="http://admin.long_e.com.tw/?game=xj"><img width="180" height="70" src="adminImg/xj.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageActivitiesList.php?game=sl"><img width="180" height="70" src="adminImg/sl.jpg"></a></td><!--add "sl" 2011/01/25 -->
+                    <td><a href="http://www.longeplay.com.tw/admin/manageActivitiesList.php?game=ms"><img width="180" height="70" src="adminImg/ms.jpg"></a></td>
+                    <td><a href="http://admin.longeplay.com.tw/?game=xj"><img width="180" height="70" src="adminImg/xj.jpg"></a></td>
                   </tr>
                 </table>
                 <hr>';
@@ -41,15 +41,15 @@
                 
                 <table style="padding: 3px;">
                   <tr>
-                    <td><a href="http://www.long_e.com.tw/admin/manageNewsList.php"><img width="180" height="70" src="adminImg/logo.gif"></a></td>
-                    <td><a href="http://www.long_e.com.tw/admin/manageNewsList.php?game=mj"><img width="180" height="70" src="adminImg/mj.jpg"></a></td>
-                    <td><a href="http://www.long_e.com.tw/admin/manageNewsList.php?game=sg"><img width="180" height="70" src="adminImg/sg.jpg"></a></td>
-                    <td><a href="http://www.long_e.com.tw/admin/manageNewsList.php?game=qjp"><img width="180" height="70" src="adminImg/qjp.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageNewsList.php"><img width="180" height="70" src="adminImg/logo.gif"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageNewsList.php?game=mj"><img width="180" height="70" src="adminImg/mj.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageNewsList.php?game=sg"><img width="180" height="70" src="adminImg/sg.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageNewsList.php?game=qjp"><img width="180" height="70" src="adminImg/qjp.jpg"></a></td>
                   </tr>
                   <tr>
-                    <td><a href="http://www.long_e.com.tw/admin/manageNewsList.php?game=sl"><img width="180" height="70" src="adminImg/sl.jpg"></a></td>
-                    <td><a href="http://www.long_e.com.tw/admin/manageNewsList.php?game=ms"><img width="180" height="70" src="adminImg/ms.jpg"></a></td>
-                    <td><a href="http://admin.long_e.com.tw/?game=xj"><img width="180" height="70" src="adminImg/xj.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageNewsList.php?game=sl"><img width="180" height="70" src="adminImg/sl.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageNewsList.php?game=ms"><img width="180" height="70" src="adminImg/ms.jpg"></a></td>
+                    <td><a href="http://admin.longeplay.com.tw/?game=xj"><img width="180" height="70" src="adminImg/xj.jpg"></a></td>
                   </tr>
                 </table>
                 <hr>';
@@ -65,15 +65,15 @@
                 
                 <table style="padding: 3px;">
                   <tr>
-                    <td><a href="http://www.long_e.com.tw/admin/manageSystemList.php"><img width="180" height="70" src="adminImg/logo.gif"></a></td>
-                    <td><a href="http://www.long_e.com.tw/admin/manageSystemList.php?game=mj"><img width="180" height="70" src="adminImg/mj.jpg"></a></td>
-                    <td><a href="http://www.long_e.com.tw/admin/manageSystemList.php?game=sg"><img width="180" height="70" src="adminImg/sg.jpg"></a></td>
-                    <td><a href="http://www.long_e.com.tw/admin/manageSystemList.php?game=qjp"><img width="180" height="70" src="adminImg/qjp.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageSystemList.php"><img width="180" height="70" src="adminImg/logo.gif"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageSystemList.php?game=mj"><img width="180" height="70" src="adminImg/mj.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageSystemList.php?game=sg"><img width="180" height="70" src="adminImg/sg.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageSystemList.php?game=qjp"><img width="180" height="70" src="adminImg/qjp.jpg"></a></td>
                   </tr>
                   <tr>
-                    <td><a href="http://www.long_e.com.tw/admin/manageSystemList.php?game=sl"><img width="180" height="70" src="adminImg/sl.jpg"></a></td>
-                    <td><a href="http://www.long_e.com.tw/admin/manageSystemList.php?game=ms"><img width="180" height="70" src="adminImg/ms.jpg"></a></td>
-                    <td><a href="http://admin.long_e.com.tw/?game=xj"><img width="180" height="70" src="adminImg/xj.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageSystemList.php?game=sl"><img width="180" height="70" src="adminImg/sl.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageSystemList.php?game=ms"><img width="180" height="70" src="adminImg/ms.jpg"></a></td>
+                    <td><a href="http://admin.longeplay.com.tw/?game=xj"><img width="180" height="70" src="adminImg/xj.jpg"></a></td>
                   </tr>
                 </table>
                 <hr>';
@@ -89,13 +89,13 @@
                 
                 <table style="padding: 3px;">
                   <tr>
-                    <td><a href="http://www.long_e.com.tw/admin/manageguidelist.php?game=sg_guide"><img width="180" height="70" src="adminImg/sg.jpg"></a></td>
-                    <td><a href="http://www.long_e.com.tw/admin/manageguidelist.php?game=qjp_guide"><img width="180" height="70" src="adminImg/qjp.jpg"></a></td>
-                    <td><a href="http://www.long_e.com.tw/admin/manageguidelist.php?game=sl_guide"><img width="180" height="70" src="adminImg/sl.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageguidelist.php?game=sg_guide"><img width="180" height="70" src="adminImg/sg.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageguidelist.php?game=qjp_guide"><img width="180" height="70" src="adminImg/qjp.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageguidelist.php?game=sl_guide"><img width="180" height="70" src="adminImg/sl.jpg"></a></td>
                   </tr>
                   <tr>
-                    <td><a href="http://www.long_e.com.tw/admin/manageguidelist.php?game=ms_guide"><img width="180" height="70" src="adminImg/ms.jpg"></a></td>
-                    <td><a href="http://admin.long_e.com.tw/?game=xj"><img width="180" height="70" src="adminImg/xj.jpg"></a></td>
+                    <td><a href="http://www.longeplay.com.tw/admin/manageguidelist.php?game=ms_guide"><img width="180" height="70" src="adminImg/ms.jpg"></a></td>
+                    <td><a href="http://admin.longeplay.com.tw/?game=xj"><img width="180" height="70" src="adminImg/xj.jpg"></a></td>
                   </tr>
                 </table>
                 <hr>';
@@ -110,13 +110,13 @@ if($_SESSION['gamelink']=='manage_guide_type'){
                   <td>
                     <table style="padding: 3px;">
                       <tr>
-                        <td><a href="http://www.long_e.com.tw/admin/manage_guide_type.php?game=sg_guide"><img width="180" height="70" src="adminImg/sg.jpg"></a></td>
-                        <td><a href="http://www.long_e.com.tw/admin/manage_guide_type.php?game=qjp_guide"><img width="180" height="70" src="adminImg/qjp.jpg"></a></td>
-                        <td><a href="http://www.long_e.com.tw/admin/manage_guide_type.php?game=sl_guide"><img width="180" height="70" src="adminImg/sl.jpg"></a></td>
+                        <td><a href="http://www.longeplay.com.tw/admin/manage_guide_type.php?game=sg_guide"><img width="180" height="70" src="adminImg/sg.jpg"></a></td>
+                        <td><a href="http://www.longeplay.com.tw/admin/manage_guide_type.php?game=qjp_guide"><img width="180" height="70" src="adminImg/qjp.jpg"></a></td>
+                        <td><a href="http://www.longeplay.com.tw/admin/manage_guide_type.php?game=sl_guide"><img width="180" height="70" src="adminImg/sl.jpg"></a></td>
                       </tr>
                       <tr>
-                        <td><a href="http://www.long_e.com.tw/admin/manage_guide_type.php?game=ms"><img width="180" height="70" src="adminImg/ms.jpg"></a></td>
-                        <td><a href="http://admin.long_e.com.tw/?game=xj"><img width="180" height="70" src="adminImg/xj.jpg"></a></td>
+                        <td><a href="http://www.longeplay.com.tw/admin/manage_guide_type.php?game=ms"><img width="180" height="70" src="adminImg/ms.jpg"></a></td>
+                        <td><a href="http://admin.longeplay.com.tw/?game=xj"><img width="180" height="70" src="adminImg/xj.jpg"></a></td>
                       </tr>
                     </table>
                   </td>

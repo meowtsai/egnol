@@ -180,17 +180,17 @@ class G_User {
 			if($redirect == true) {
 				header("Content-type: text/html; charset=utf-8");
 				$returnUrl = empty($returnUrl)?"http://{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}":$returnUrl;
-				$returnUrl = empty($returnUrl)?'http://www.long_e.com.tw/member/login.php':$returnUrl;
+				$returnUrl = empty($returnUrl)?'http://www.longeplay.com.tw/member/login.php':$returnUrl;
 				echo '<script type="text/javascript">
 							alert("請先進行登入");
 							location.replace("http://'.$_SERVER['SERVER_NAME'].'/member/login.php?returnUrl='.$returnUrl.'");
 					</script>';
-				//header('LOCATION:http://www.long_e.com.tw/member/login.php?returnUrl='.$returnUrl);
+				//header('LOCATION:http://www.longeplay.com.tw/member/login.php?returnUrl='.$returnUrl);
 				exit();
 			}
 			//echo '<script type="text/javascript">alert("請先進行登入");';
-			//echo 'location.replace("http://www.long_e.com.tw/member/login.php");</script>';
-			//header('LOCATION:http://www.long_e.com.tw/member/login.php');
+			//echo 'location.replace("http://www.longeplay.com.tw/member/login.php");</script>';
+			//header('LOCATION:http://www.longeplay.com.tw/member/login.php');
 			return false;
 		}else {
 			return true;

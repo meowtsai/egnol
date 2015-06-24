@@ -127,7 +127,7 @@
 						<span class="caret"></span>
 					</button>	
 					<ul class="dropdown-menu pull-right">
-						<li><a href="javascript:;" class="json_post_alert" url="http://www.long_e.com.tw/ajax/resend_gash_billing/<?=$row->COID?>"></i> 重送交易</a></li>
+						<li><a href="javascript:;" class="json_post_alert" url="http://www.longeplay.com.tw/ajax/resend_gash_billing/<?=$row->COID?>"></i> 重送交易</a></li>
 					</ul>
 				</div>			
 				 -->

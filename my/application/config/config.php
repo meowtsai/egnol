@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://my.long_e.com.tw';
+$config['base_url']	= 'http://my.longeplay.com.tw';
 
 /*
 |--------------------------------------------------------------------------
@@ -266,7 +266,7 @@ $config['sess_time_to_update']	= 300;
 |
 */
 $config['cookie_prefix']	= "";
-$config['cookie_domain']	= ".long_e.com.tw";
+$config['cookie_domain']	= ".longeplay.com.tw";
 $config['cookie_path']		= "/";
 $config['cookie_secure']	= FALSE;
 

@@ -17,7 +17,7 @@ class Ly extends Game_Api
 	
     function login($server, $user, $ad)
     {    		
-    	$api_url = "http://{$server->address}.ly.long_e.com.tw";
+    	$api_url = "http://{$server->address}.ly.longeplay.com.tw";
 
     	$get = array(
     		'id' => $user->euid,

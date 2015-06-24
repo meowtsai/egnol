@@ -36,7 +36,7 @@ class Digi_Dalent extends MY_Controller {
 	
 	function portal_entry()
 	{
-		header("location: http://{$this->game}.long_e.com.tw");
+		header("location: http://{$this->game}.longeplay.com.tw");
 	}
 	
 	function facebook_entry()

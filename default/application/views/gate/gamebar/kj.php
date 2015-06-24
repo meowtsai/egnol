@@ -22,7 +22,7 @@ $(function(){
 
 function do_poll()
 {
-	$.get("http://www.long_e.com.tw/ajax/get_realtime_bulletin/<?=$server->game_id?>/<?=$frame_conf['realtime_bulletin_id']?>/0/<?=$server->id?>", function(data) {		
+	$.get("http://www.longeplay.com.tw/ajax/get_realtime_bulletin/<?=$server->game_id?>/<?=$frame_conf['realtime_bulletin_id']?>/0/<?=$server->id?>", function(data) {		
 		var items = '<ul class="marquee">';
 		$(data).each(function(i,o) {
 			items += '<li>'+o.title+'</li>';
@@ -44,7 +44,7 @@ function do_poll()
 	<div style="width:960px; margin:0 auto; height:35px; position:relative; " >
 		
 		<div style="position:absolute; top:3px; left:21px">
-			<a href="http://kj.long_e.com.tw" target="_blank">
+			<a href="http://kj.longeplay.com.tw" target="_blank">
 				<img src="/p/img/gamebar/kj/logo.png">
 			</a>
 		</div>
@@ -57,9 +57,9 @@ function do_poll()
 		<div style="position:absolute; right:200px; top:9px;" class="link">		
 			<a href="https://www.facebook.com/long_e.inc" target="_blank"><img src="/p/img/gamebar/bw/b3_off.png" class="change"></a>			
 			<img src="/p/img/gamebar/bw/line.png">			
-			<a href="http://www.long_e.com.tw/payment?game=kj" target="_blank"><img src="/p/img/gamebar/bw/b5_off.png" class="change"></a>			
+			<a href="http://www.longeplay.com.tw/payment?game=kj" target="_blank"><img src="/p/img/gamebar/bw/b5_off.png" class="change"></a>			
 			<img src="/p/img/gamebar/bw/line.png">			
-			<a href="http://www.long_e.com.tw/gate/check_account_channel/service" target="_blank"><img src="/p/img/gamebar/bw/b4_off.png" class="change"></a>
+			<a href="http://www.longeplay.com.tw/gate/check_account_channel/service" target="_blank"><img src="/p/img/gamebar/bw/b4_off.png" class="change"></a>
 		</div>
 		<div style="position:absolute; right:20px; top:2px; padding:5px;">
 			<div id="info_block" class="marquee">
@@ -70,7 +70,7 @@ function do_poll()
 					<li>
 						<span title="<?=$this->g_user->account?>">歡迎 <?=mb_strimwidth($this->g_user->account, 0, 14, '...', 'UTF-8');?></span>
 						<? if ($this->g_user->check_extra_account($this->g_user->account)):?>
-						<!-- <a href="http://www.long_e.com.tw/member/bind_account?redirect_url=http://bw.long_e.com.tw" target="_blank" title="綁定帳號">綁定</a> -->
+						<!-- <a href="http://www.longeplay.com.tw/member/bind_account?redirect_url=http://bw.longeplay.com.tw" target="_blank" title="綁定帳號">綁定</a> -->
 						<? endif;?>
 					</li>
 				</ul>

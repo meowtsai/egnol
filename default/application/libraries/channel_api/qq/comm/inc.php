@@ -1,1 +1,1 @@
-{"appid":"101007265","appkey":"406c098cc59c4b21b4a430b9c0e0c365","callback":"http://www.long_e.com.tw/gate/login_callback/qq","scope":"get_user_info","errorReport":true,"storageType":"file","host":"localhost","user":"root","password":"root","database":"test"}
+{"appid":"101007265","appkey":"406c098cc59c4b21b4a430b9c0e0c365","callback":"http://www.longeplay.com.tw/gate/login_callback/qq","scope":"get_user_info","errorReport":true,"storageType":"file","host":"localhost","user":"root","password":"root","database":"test"}

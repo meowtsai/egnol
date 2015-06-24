@@ -41,7 +41,7 @@
             
             $this->Port = 465;
             
-            $this->Username = "service@long_e.com.tw";
+            $this->Username = "service@longeplay.com.tw";
             
             $this->Password = "QWERT@long_e.web";
             
@@ -65,7 +65,7 @@
                     如果您並未查詢且要求郵寄密碼，請立即回到【會員專區】檢視您的會員資料並 \n <br />
                     變更密碼，以防止您的帳號遭濫用。 \n <br />
                      \n <br />
-                    龍邑 Web Game 平台敬上：http://www.long_e.com.tw/   \n <br />
+                    龍邑 Web Game 平台敬上：http://www.longeplay.com.tw/   \n <br />
                     ----------------------------------------------------------------------------------------------------------------- \n <br />
                     ＊此為系統發出信件，請勿直接回覆；若您對本信函有疑問，請至客服中心留言  \n <br />
                     ";  

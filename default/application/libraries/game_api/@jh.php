@@ -27,7 +27,7 @@ class Jh extends Game_Api
     	);
     	$get['sign'] = md5($get['account'].$get['time'].$get['game'].$get['server'].$key);    	    	
     	
-		header("location: ".$api_url.'?'.http_build_query($get).'&errorUrl='.urlencode('http://jh.long_e.com.tw'));
+		header("location: ".$api_url.'?'.http_build_query($get).'&errorUrl='.urlencode('http://jh.longeplay.com.tw'));
     }    
     
     function transfer($server, $billing, $rate=1)

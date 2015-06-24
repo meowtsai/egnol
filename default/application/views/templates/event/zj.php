@@ -43,7 +43,7 @@ $(function(){
 	<div id="main">
 
 		<div style="position:absolute; top:23px; left:-28px;">
-			<a href="http://zj.long_e.com.tw/platform"><img src="/p/img/event/web_zj_1027/logo.png"></a>
+			<a href="http://zj.longeplay.com.tw/platform"><img src="/p/img/event/web_zj_1027/logo.png"></a>
 		</div>
 		
 		<div style="position:absolute; top:-2px; right:25px;">
@@ -51,8 +51,8 @@ $(function(){
 		</div>
 		
 		<div style="position:absolute; top:414px; left:453px;">
-			<a href="http://zj.long_e.com.tw/p/file/zj_1.01.ipa"><img src="/p/img/event/web_zj_1027/apple_IPA.png"></a>
-			<a href="http://zj.long_e.com.tw/p/file/zj_1.01.apk"><img src="/p/img/event/web_zj_1027/googleplay_apk.png"></a>
+			<a href="http://zj.longeplay.com.tw/p/file/zj_1.01.ipa"><img src="/p/img/event/web_zj_1027/apple_IPA.png"></a>
+			<a href="http://zj.longeplay.com.tw/p/file/zj_1.01.apk"><img src="/p/img/event/web_zj_1027/googleplay_apk.png"></a>
 			<a href="https://play.google.com/store/apps/details?id=com.long_e.zj" target="_blank"><img src="/p/img/event/web_zj_1027/googleplay.png"></a>
 <!-- 			<a href="javascript:alert('敬請期待');"><img src="/p/img/event/web_zj_1027/apple.png"></a> -->
 		</div>

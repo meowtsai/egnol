@@ -71,7 +71,7 @@
 	$items = get_channel_items("xf", "../");
 	foreach($items as $channel => $name):
 ?>
-	<a href="http://www.long_e.com.tw/gate/login/xf?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="29" title="<?=$name?> 帳號登入"/></a>
+	<a href="http://www.longeplay.com.tw/gate/login/xf?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.longeplay.com.tw/img/login/<?=$channel?>.png" width="29" title="<?=$name?> 帳號登入"/></a>
 <? endforeach;?>          	
           	</td>                 
 
@@ -90,7 +90,7 @@
   </tr>
 </table>
 <map name="MapMap" id="MapMap">
-  <area shape="rect" coords="138,42,406,168" href="http://xf.long_e.com.tw/index.php" />
+  <area shape="rect" coords="138,42,406,168" href="http://xf.longeplay.com.tw/index.php" />
 </map>
 </body>
 </html>

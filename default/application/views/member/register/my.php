@@ -132,7 +132,7 @@ function MM_swapImage() { //v3.0
 	foreach($items as $channel => $name):
 		if ( ! in_array($channel, array('facebook', 'google'))) continue;
 ?>
-	<a href="http://www.long_e.com.tw/gate/login/<?=$this->input->get("game")?>?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="36" title="<?=$name?> 帳號登入"/></a>
+	<a href="http://www.longeplay.com.tw/gate/login/<?=$this->input->get("game")?>?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.longeplay.com.tw/img/login/<?=$channel?>.png" width="36" title="<?=$name?> 帳號登入"/></a>
 <? endforeach;?>             	        
 
    	        </td>

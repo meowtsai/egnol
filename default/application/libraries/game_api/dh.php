@@ -36,7 +36,7 @@ class Dh extends Game_Api
     
 	function get_login_url($server, $user, $ad)
 	{
-		$sid = "s".strtr($server->address, array("dhcq"=>"", ".long_e.com.tw"=>""));
+		$sid = "s".strtr($server->address, array("dhcq"=>"", ".longeplay.com.tw"=>""));
     	$username = urldecode($user->account);
     	$time = time();
     	$cm = 1; //防沉迷
@@ -54,7 +54,7 @@ class Dh extends Game_Api
     	
     	$key = $this->conf['transfer_key'];
     	
-    	$post['server'] = "S".strtr($server->address, array("dhcq"=>"", ".long_e.com.tw"=>""));       
+    	$post['server'] = "S".strtr($server->address, array("dhcq"=>"", ".longeplay.com.tw"=>""));       
       	$post['game'] = 'dhcq'; 
       	$post['agent'] = 'long_e';
       	$post['user'] = urlencode($billing->account);

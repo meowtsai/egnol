@@ -82,7 +82,7 @@
 			echo "<img src='".base_url()."/p/img/game/{$row->game_id}.gif' style='height:16px; vertical-align:middle; margin-right:3px;'>;
 		}
 		
-		$output = "<a href='http://{$row->game_id}.long_e.com.tw' target='_blank'>{$row->name}</a>";
+		$output = "<a href='http://{$row->game_id}.longeplay.com.tw' target='_blank'>{$row->name}</a>";
 		$tags = explode(",", $row->tags);
 		foreach($tags as $tags) {
 			if ($tags == '最新') $output .= '<span class="index_items icon_n_game"></span>';

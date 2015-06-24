@@ -24,7 +24,7 @@ body {background:url('/p/img/sg_20121016/20121011_bg_compressed.jpg') no-repeat 
 	
 <div id="msg">
 	<div style="position:relative; margin-left:-100px ">
-		<a href="http://sg2.long_e.com.tw"><img src="/p/img/sg_20121016/20121011_logo.png"></a>
+		<a href="http://sg2.longeplay.com.tw"><img src="/p/img/sg_20121016/20121011_logo.png"></a>
 	</div>
 		
 	<? if ($code):?>
@@ -33,7 +33,7 @@ body {background:url('/p/img/sg_20121016/20121011_bg_compressed.jpg') no-repeat 
 			<span id="code"><?=$code?></span>
 			<div style="margin:6px;">
 			<a href="/gate/login_game/sg2" target="_blank">進入遊戲</a> | 
-			<a href="http://sg2.long_e.com.tw" target="_blank">開啟官網</a>
+			<a href="http://sg2.longeplay.com.tw" target="_blank">開啟官網</a>
 			</div>
 		</div>
 	</div>
@@ -42,7 +42,7 @@ body {background:url('/p/img/sg_20121016/20121011_bg_compressed.jpg') no-repeat 
 	<div id="mask" style="position:absolute; left:0; top:600px; ">
 		<? if ($status == 0):?>
 		<div class="s">
-			<div><a href="http://www.long_e.com.tw/member/login.php?returnUrl=http://www.long_e.com.tw/event/sg_20121016">請先登入long_e平台</a></div>
+			<div><a href="http://www.longeplay.com.tw/member/login.php?returnUrl=http://www.longeplay.com.tw/event/sg_20121016">請先登入long_e平台</a></div>
 		</div>		
 		<? elseif ($status == 1):?>
 		<a href="javascript:;" onclick="$('#mask').hide(); $('#content').show()">

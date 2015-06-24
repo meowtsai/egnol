@@ -21,7 +21,7 @@ body {background:url('/p/img/fb_20120927/20121011_bg_compressed.jpg?1') no-repea
 		<span id="code"><?=$code?></span>
 		<div style="margin:6px 0 0;">
 			<a href="/gate/login/sg2?channel=facebook" target="_blank">進入遊戲</a> | 
-			<a href="http://sg2.long_e.com.tw" target="_blank">開啟官網</a>
+			<a href="http://sg2.longeplay.com.tw" target="_blank">開啟官網</a>
 		</div>
 	</div>
 	<? endif;?>

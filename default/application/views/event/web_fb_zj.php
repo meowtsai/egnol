@@ -23,7 +23,7 @@ img {border:0;}
 <div style="height:2600px; width:1000px; margin:0 auto; position:relative;">
 
 	<div style="position:absolute; top:150px; left:233px;">
-		<a href="http://zj.long_e.com.tw/platform">
+		<a href="http://zj.longeplay.com.tw/platform">
 			<img src="/p/img/event/web_zj/logo.png">
 		</a>
 	</div>
@@ -33,7 +33,7 @@ img {border:0;}
 	</div>
 	
 	<div style="position:absolute; top:851px; left:139px;">
- 		<img src="http://zj.long_e.com.tw/p/img/qrcode.png" style="width:97px">
+ 		<img src="http://zj.longeplay.com.tw/p/img/qrcode.png" style="width:97px">
 	</div>
 	
 	<div style="position:absolute; top:851px; left:244px;">
@@ -45,11 +45,11 @@ img {border:0;}
 	</div>
 	
 	<div style="position:absolute; top:851px; left:384px;">
-		<a href="http://zj.long_e.com.tw/p/file/zj_1.01.apk" target="_blank"><img src="http://zj.long_e.com.tw/p/img/download_apk.png" style="width:136px"></a>	
+		<a href="http://zj.longeplay.com.tw/p/file/zj_1.01.apk" target="_blank"><img src="http://zj.longeplay.com.tw/p/img/download_apk.png" style="width:136px"></a>	
 	</div>
 	
 	<div style="position:absolute; top:910px; left:384px;">
-		<a href="http://zj.long_e.com.tw/p/file/zj_1.01.ipa" target="_blank"><img src="http://zj.long_e.com.tw/p/img/download_jb.png" style="width:136px"></a>
+		<a href="http://zj.longeplay.com.tw/p/file/zj_1.01.ipa" target="_blank"><img src="http://zj.longeplay.com.tw/p/img/download_jb.png" style="width:136px"></a>
 	</div>	
 	
 	<div style="position:absolute; top:851px; left:575px;">

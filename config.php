@@ -60,7 +60,7 @@ switch (ENVIRONMENT)
 		$g_config['session'] = array(
 			'save_handler' 	=> 'memcache',
 			'save_path' 	=> 'tcp://localhost:12321?persistent=1&weight=1&timeout=1&retry_interval=15',
-			'cookie_domain' => '.long_e.com.tw',
+			'cookie_domain' => '.longeplay.com.tw',
 			'gc_maxlifetime'=> '7200',
 		);
 		break;

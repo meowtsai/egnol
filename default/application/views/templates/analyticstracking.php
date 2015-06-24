@@ -2,7 +2,7 @@
 
   var _gaq = _gaq || [];
   _gaq.push(['_setAccount', 'UA-35161950-1']);
-  _gaq.push(['_setDomainName', 'long_e.com.tw']);
+  _gaq.push(['_setDomainName', 'longeplay.com.tw']);
   _gaq.push(['_trackPageview']);
 
   (function() {

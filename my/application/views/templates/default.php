@@ -13,7 +13,7 @@
 	echo $css_link;
 	echo $js_include;
 ?>
-<link href="http://www.long_e.com.tw/top/skybar.css" rel="stylesheet" type="text/css">
+<link href="http://www.longeplay.com.tw/top/skybar.css" rel="stylesheet" type="text/css">
 <link rel="shortcut icon" href="/p/favicon.ico">
 <script src="/p/js/swfobject_modified.js" type="text/javascript"></script>
 <script type="text/javascript">
@@ -142,10 +142,10 @@ function MM_swapImage() { //v3.0
 				       	您好，歡迎登入萌英雄
 				        <div class="Avatar">帳號：<span id="long_e_account"><?=$this->g_user->display_account()?></span>
 				          <p>                            
-				          	<a href="http://www.long_e.com.tw/member/update_member_data" target="_blank">
+				          	<a href="http://www.longeplay.com.tw/member/update_member_data" target="_blank">
 				          	<?= $this->g_user->check_extra_account($this->g_user->account) ? '帳號綁定' : '帳號管理';?>
 				          	</a>-				          	
-				          	<a href="http://www.long_e.com.tw/payment?site=my" target="_blank">儲值</a>-<a href="http://www.long_e.com.tw/gate/logout" >登出</a>
+				          	<a href="http://www.longeplay.com.tw/payment?site=my" target="_blank">儲值</a>-<a href="http://www.longeplay.com.tw/gate/logout" >登出</a>
 				          </p>
 				        </div>
 					<? if ($recent_server):
@@ -164,7 +164,7 @@ function MM_swapImage() { //v3.0
               
               <? else:?>
               
-				<form id="login_form" action="http://www.long_e.com.tw/gate/login/my" method="post">				
+				<form id="login_form" action="http://www.longeplay.com.tw/gate/login/my" method="post">				
 				              
               <table width="285" border="0" cellspacing="0" cellpadding="0">
                 <tr>
@@ -181,7 +181,7 @@ function MM_swapImage() { //v3.0
                         	<input type="password" name="pwd" id="textfield2" style="width:117px; height:25px;" tabindex="2"/></td>
                       </tr>
                     </table>
-                    <span class="text1"><a id="register" href="javascript:;">快速註冊</a> │ <a href="http://www.long_e.com.tw/member/forgot_password" target="_blank">忘記密碼</a></span></div></td>
+                    <span class="text1"><a id="register" href="javascript:;">快速註冊</a> │ <a href="http://www.longeplay.com.tw/member/forgot_password" target="_blank">忘記密碼</a></span></div></td>
                   </tr>
                 </table>
                 
@@ -193,7 +193,7 @@ function MM_swapImage() { //v3.0
 	$items = get_channel_items($this->game, "../");
 	foreach($items as $channel => $name):
 ?>
-	<a href="http://www.long_e.com.tw/gate/login/<?=$this->game?>?channel=<?=$channel?>"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="36" title="<?=$name?> 帳號登入"/></a>
+	<a href="http://www.longeplay.com.tw/gate/login/<?=$this->game?>?channel=<?=$channel?>"><img src="http://www.longeplay.com.tw/img/login/<?=$channel?>.png" width="36" title="<?=$name?> 帳號登入"/></a>
 
 <? endforeach;?>   
 	</div>
@@ -212,12 +212,12 @@ function MM_swapImage() { //v3.0
               <tr>
                 <td width="155" height="135">&nbsp;</td>
                 <td width="65" height="135" align="center" valign="top">
-                	<a href="http://www.long_e.com.tw/payment?game=my" target="_blank">
+                	<a href="http://www.longeplay.com.tw/payment?game=my" target="_blank">
                 		<img src="/p/img/btn1_1.png" name="btn1" width="58" height="123" vspace="10" border="0" id="btn1" onmouseover="MM_swapImage('btn1','','/p/img/btn1_2.png',1)" onmouseout="MM_swapImgRestore()" />
                 	</a>                	
                 </td>
                 <td width="65" height="135" align="center" valign="top">
-                	<a href="http://www.long_e.com.tw/wallet/transfer" target="_blank">
+                	<a href="http://www.longeplay.com.tw/wallet/transfer" target="_blank">
                 		<img src="/p/img/btn2_1.png" name="btn2" width="58" height="123" vspace="10" border="0" id="btn2" onmouseover="MM_swapImage('btn2','','/p/img/btn2_2.png',1)" onmouseout="MM_swapImgRestore()" />
                 	</a>
                 </td>
@@ -231,7 +231,7 @@ function MM_swapImage() { //v3.0
 					<li>專線時間：每日10:00-22:00</li>
 					<li>線上提問時間：24小時全年無休</li>
 	        	</ul>
-               	<a href="http://www.long_e.com.tw/service" target="_blank" >
+               	<a href="http://www.longeplay.com.tw/service" target="_blank" >
                		<img src="/p/img/btn3_1.png" name="btn3" border="0" id="btn3" onmouseover="MM_swapImage('btn3','','/p/img/btn3_2.png',1)" onmouseout="MM_swapImgRestore()" />
                	</a>        
             </div>
@@ -342,7 +342,7 @@ swfobject.registerObject("FlashID2");
 		                  <tr>
 		                    <td width="520" height="70" align="right" valign="middle" class="text5">龍邑科技 版權所有  Cooz.com All Rights Reserved</td>
 		                    <td width="10" height="70" align="right" valign="middle">&nbsp;</td>
-		                    <td width="50" height="70" align="center" valign="middle"><img src="http://www.long_e.com.tw/p/img/rating/rating12.png" width="45" height="45" /></td>
+		                    <td width="50" height="70" align="center" valign="middle"><img src="http://www.longeplay.com.tw/p/img/rating/rating12.png" width="45" height="45" /></td>
 		                    <td width="10" height="70" align="center" valign="middle">&nbsp;</td>
 		                    <td width="250" height="70" align="left" valign="middle" class="text5"><table width="250" border="0" cellspacing="0" cellpadding="0">
 		                      <tr>
@@ -366,7 +366,7 @@ swfobject.registerObject("FlashID2");
  
 <input type="hidden" name="ad" value="<?=$this->input->get("ad")?>">
 
-<script src="http://www.long_e.com.tw/top/skybar.js?<?php echo date("YmdHi");?>" type="text/javascript"></script>
+<script src="http://www.longeplay.com.tw/top/skybar.js?<?php echo date("YmdHi");?>" type="text/javascript"></script>
 
 </body>
 </html>

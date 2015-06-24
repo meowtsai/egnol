@@ -99,7 +99,7 @@ $(function(){
               				$game = $this->db->from("games")->not_like("tags", "手遊")->where("is_active", "1")->order_by("rank")->get();
               				foreach($game->result() as $row):
               			?>
-              				<li><a href="http://<?=$row->game_id?>.long_e.com.tw" target="_blank"><?=$row->name?></a></li>
+              				<li><a href="http://<?=$row->game_id?>.longeplay.com.tw" target="_blank"><?=$row->name?></a></li>
               			<? endforeach;?>                  			          				              		
               			</ul>
               		</div>
@@ -110,7 +110,7 @@ $(function(){
               				$game = $this->db->from("games")->like("tags", "手遊")->where("is_active", "1")->order_by("rank")->get();
               				foreach($game->result() as $row):
               			?>
-              				<li><a href="http://<?=$row->game_id?>.long_e.com.tw" target="_blank"><?=$row->name?></a></li>
+              				<li><a href="http://<?=$row->game_id?>.longeplay.com.tw" target="_blank"><?=$row->name?></a></li>
               			<? endforeach;?>  
               			</ul>              			
               		</div>

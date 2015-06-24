@@ -24,7 +24,7 @@ class Api extends MY_Controller {
 			print_r($post);			
 			echo "加密前字串: ".($post['partner'] . $post['uid'] . $post['game'] . $post['server'] . $post['order'] . $post['money'] . $post['time'] . $post['key'])."<br>";
 			unset($post['key']);
-			echo "產生網址: http://www.long_e.com.tw/api/transfer?".http_build_query($post)."&hash=".$hash;
+			echo "產生網址: ".base_url()."/api/transfer?".http_build_query($post)."&hash=".$hash;
 			echo "</pre>";
 		}
 		?>
@@ -150,7 +150,7 @@ class Api extends MY_Controller {
 			print_r($post);			
 			echo "加密前字串: ".($post['partner'] . $post['uid'] . $post['game'] . $post['server'] . $post['time'] . $post['key'])."<br>";
 			unset($post['key']);
-			echo "產生網址: http://www.long_e.com.tw/api/login_game?".http_build_query($post)."&hash=".$hash;
+			echo "產生網址: ".base_url()."/api/login_game?".http_build_query($post)."&hash=".$hash;
 			echo "</pre>";
 		}
 		?>
@@ -218,7 +218,7 @@ class Api extends MY_Controller {
 		if ($this->g_user->login($account, $password, $email, $name, $game)) 
 		{
 			if (empty($server)) {
-				header("location: ".base_url()."/play_game/{$game}?url=http://{$game}.long_e.com.tw/index.php?serverin=1");
+				header("location: ".base_url()."/play_game/{$game}?url=http://{$game}.longeplay.com.tw/index.php?serverin=1");
 				exit();
 			}
 			if (in_array($partner, array('artsy'))) { //使用我方遊戲bar
@@ -290,7 +290,7 @@ class Api extends MY_Controller {
 		$time = $this->input->get("time");
 		$hash = $this->input->get("hash");
 		
-		if ($this->input->get() && ($server == 's1.sl2.long_e.com.tw' || $server == 'dhcq1.long_e.com.tw' || $server == 'dhcq16.long_e.com.tw')) {
+		if ($this->input->get() && ($server == 's1.sl2.longeplay.com.tw' || $server == 'dhcq1.longeplay.com.tw' || $server == 'dhcq16.longeplay.com.tw')) {
 /*
 			$dh_log = "./logs/create_game_role.log";
 			$fp = fopen($dh_log, 'a');
@@ -358,7 +358,7 @@ class Api extends MY_Controller {
 
 		//log_message('error', "{$ad} {$server}");
 		//-----------
-		if ($ad == 'winwin' && ($server == 'bw1.long_e.com.tw' || $server == 'bw2.long_e.com.tw')) {			
+		if ($ad == 'winwin' && ($server == 'bw1.longeplay.com.tw' || $server == 'bw2.longeplay.com.tw')) {			
 			$row = $this->db->where("uid", $this->g_user->uid)->where("game", 'bw')->from("winwin_guids")->get()->row();
 			//log_message('error', print_r($row, true));
 			if ($row) {

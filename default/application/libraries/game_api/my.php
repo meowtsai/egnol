@@ -14,7 +14,7 @@ class My extends Game_Api
 	
     function login($server, $user, $ad)
     {
-		$sid = strtr($server->address, array("my-"=>"", ".long_e.com.tw"=>""));
+		$sid = strtr($server->address, array("my-"=>"", ".longeplay.com.tw"=>""));
     	$username = $this->CI->g_user->encode($user->uid);
     	$time = time();
     	$cm = '1'; //防沉迷
@@ -57,7 +57,7 @@ class My extends Game_Api
     	$flag = md5($order.$euid.$amount.$time.$key);
     	$money = floatval($billing->amount/5);
     	$p = "{$order}|{$euid}|{$amount}|{$time}|{$flag}|{$money}";
-    	$service_zone = strtr($server->address, array("my-"=>"", ".long_e.com.tw"=>""));
+    	$service_zone = strtr($server->address, array("my-"=>"", ".longeplay.com.tw"=>""));
     	   		
     	$transfer_url = "http://{$server->address}{$this->conf['transfer_url']}?p={$p}&service_zone={$service_zone}";
     	//return $this->_return_error($transfer_url);

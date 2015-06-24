@@ -123,7 +123,7 @@ li.dropdown li a {line-height:25px;}
 					<? endforeach;?>
 				<? endif;?>				
 					
-				<li><a href="http://<?=$this->game_id?>.long_e.com.tw" target="_blank" style="color:#777;">
+				<li><a href="http://<?=$this->game_id?>.longeplay.com.tw" target="_blank" style="color:#777;">
 					<i class="icon-home"></i> 檢視官網</a></li>				
 			
 		    </ul>

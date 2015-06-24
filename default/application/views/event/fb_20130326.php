@@ -35,8 +35,8 @@ img {border:0px;}
 		</span>
 
 		<div style="margin-top:12px;">
-		<a href="http://www.long_e.com.tw/gate/login/xl?channel=facebook" target="_blank"><img src="/p/img/fb_20130326/enter_off.jpg" class="change"></a>
-		<a href="http://xl.long_e.com.tw" target="_blank"><img src="/p/img/fb_20130326/home_off.jpg" class="change"></a>
+		<a href="http://www.longeplay.com.tw/gate/login/xl?channel=facebook" target="_blank"><img src="/p/img/fb_20130326/enter_off.jpg" class="change"></a>
+		<a href="http://xl.longeplay.com.tw" target="_blank"><img src="/p/img/fb_20130326/home_off.jpg" class="change"></a>
 		</div>
 
 	</div>

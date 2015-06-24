@@ -27,7 +27,7 @@ img {border:0px;}
 <div id="container">
 
 <div id="logo" >
-	<a href="http://sl2.long_e.com.tw/" target="_blank"><img src="/p/img/fb_20130104/logo.png" border="0"></a>
+	<a href="http://sl2.longeplay.com.tw/" target="_blank"><img src="/p/img/fb_20130104/logo.png" border="0"></a>
 </div>
 
 <div id="msg">
@@ -36,7 +36,7 @@ img {border:0px;}
 	<div id="content" style="display:none;">
 		<span id="code"><?=$code?></span>
 		<div style="margin:-15px 0 0 95px;">
-			<a href="http://www.long_e.com.tw/gate/login/sl2?channel=facebook" target="_blank">
+			<a href="http://www.longeplay.com.tw/gate/login/sl2?channel=facebook" target="_blank">
 				<img src="/p/img/fb_20130104/enter_off.png" class="change">	
 			</a>
 		</div>
