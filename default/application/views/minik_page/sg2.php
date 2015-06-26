@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <title>:::龍邑 Web Game:::三國風雲</title>
-<link rel='stylesheet' type='text/css' href='http://sg2.long_e.com.tw/p/css/default.css'>
+<link rel='stylesheet' type='text/css' href='http://sg2.longeplay.com.tw/p/css/default.css'>
 <link href="/p/minik/sg2/index.css" rel="stylesheet" type="text/css" />
 <body>
 
@@ -11,7 +11,7 @@
 
 <div style="width:1044px; position:relative; margin:0 auto;">
 	<div style="position:absolute; right:186px; top:416px;">
-		<a href="http://www.long_e.com.tw/payment?site=sg2" target="_blank"><img src="/p/minik/icon-pay.png"></a>
+		<a href="http://www.longeplay.com.tw/payment?site=sg2" target="_blank"><img src="/p/minik/icon-pay.png"></a>
 	</div>
 </div>
 
@@ -31,7 +31,7 @@
         	<a href="javascript:;" onclick="chose_server_form()">
         		<img src="/p/minik/sg2/img/img-06.jpg" width="302" height="132" border="0" /></a>
         	<? else:?>
-        	<a href="http://www.long_e.com.tw/play_game/sg2" target="_blank">
+        	<a href="http://www.longeplay.com.tw/play_game/sg2" target="_blank">
         		<img src="/p/minik/sg2/img/img-06.jpg" width="302" height="132" border="0" /></a>
         	<? endif;?>        	
         </td>
@@ -45,15 +45,15 @@
 </table>
 
 <map name="Map" id="Map">
-  <area shape="rect" coords="614,-10,743,50" href="http://sg2.long_e.com.tw" target="_blank" />
+  <area shape="rect" coords="614,-10,743,50" href="http://sg2.longeplay.com.tw" target="_blank" />
   <area shape="rect" coords="746,-14,867,49" href="http://tw.socialgame.yahoo.net/mtag/mtag.php?ac=home&tagid=4805" target="_blank" />
   <area shape="rect" coords="869,-8,989,51" href="javascript:invite_friend();" />
 </map>
 
 <div id="choose" style="display:none;"><?=$choose_server_form?></div>
 
-<script type="text/javascript" src="http://www.long_e.com.tw/p/js/jquery-1.7.2.min.js"></script>
-<script type="text/javascript" src='http://www.long_e.com.tw/p/js/jquery.blockUI.js'></script>
+<script type="text/javascript" src="http://www.longeplay.com.tw/p/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src='http://www.longeplay.com.tw/p/js/jquery.blockUI.js'></script>
 <script type="text/javascript">
 function invite_friend() {
 	$('#invite_ifm').attr("src", "<?=$inviteSrc?>");

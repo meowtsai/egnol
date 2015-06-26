@@ -115,7 +115,7 @@ function choose(type, def) {
 	$('#mycard_ingame_form').hide();	
 	$('#choose_other_form').hide();
 	$("#choose_title").text(type);	
-	$.get("http://www.long_e.com.tw/mycard/get_product/"+encodeURI(def), function(data){
+	$.get("http://www.longeplay.com.tw/mycard/get_product/"+encodeURI(def), function(data){
 		var html = '';
 		$.each(data, function(key,val){
 			html += '<label style="display:block;"><input type="radio" name="payment_amount" class="required" service_id="'+val+'" value="'+key+'" >'+key+'</label> ';

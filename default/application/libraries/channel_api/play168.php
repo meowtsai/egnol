@@ -15,7 +15,7 @@ class Play168 extends Channel_Api
     
     function login_callback($site)
     {
-    	//目前廠商指向  http://www.long_e.com.tw/member/play168/dataExchanger.php
+    	//目前廠商指向  http://www.longeplay.com.tw/member/play168/dataExchanger.php
     	return;    	
     }
       

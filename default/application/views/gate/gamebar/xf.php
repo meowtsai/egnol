@@ -10,7 +10,7 @@ $(function(){
 
 function do_poll()
 {
-	$.get("http://www.long_e.com.tw/ajax/get_realtime_bulletin/<?=$server->game_id?>/<?=$frame_conf['realtime_bulletin_id']?>/0/<?=$server->id?>", function(data) {		
+	$.get("http://www.longeplay.com.tw/ajax/get_realtime_bulletin/<?=$server->game_id?>/<?=$frame_conf['realtime_bulletin_id']?>/0/<?=$server->id?>", function(data) {		
 		var items = '<ul class="marquee">';
 		$(data).each(function(i,o) {
 			items += '<li>'+o.title+'</li>';
@@ -29,7 +29,7 @@ function do_poll()
 	<div style="width:960px; margin:0 auto; height:35px; position:relative; background:url('/p/img/gamebar/xf/ingamebar_xf_character.png') no-repeat top right;" >
 		
 		<!-- logo -->
-		<div style="position:absolute;"><a href="http://xf.long_e.com.tw/index.php" target="_blank"><img src="/p/img/gamebar/xf/ingamebar_xf_logo_01.png" style="height:35px;"></a></div>
+		<div style="position:absolute;"><a href="http://xf.longeplay.com.tw/index.php" target="_blank"><img src="/p/img/gamebar/xf/ingamebar_xf_logo_01.png" style="height:35px;"></a></div>
 		
 		<!-- new -->
 		<div style="position:absolute; top:-14px; left:85px; width:417px; height:50px; background:url('/p/img/gamebar/xf/ingamebar_xf_news_02.png')">
@@ -42,9 +42,9 @@ function do_poll()
 			<a href="https://www.facebook.com/long_e.xf" target="_blank"><img src="/p/img/gamebar/xf/ingamebar_xf_off_04.png" class="change" style="height:56px;"></a>
 			<a href="http://forum.gamer.com.tw/A.php?bsn=23269" target="_blank"><img src="/p/img/gamebar/xf/ingamebar_xf_off_05.png" class="change" style="height:56px;"></a>
 			<? endif;?>
-			<a href="http://xf.long_e.com.tw/guide/detail/82" target="_blank"><img src="/p/img/gamebar/xf/ingamebar_xf_off_06.png" class="change" style="height:56px;"></a>
-			<a href="http://www.long_e.com.tw/service" target="_blank"><img src="/p/img/gamebar/xf/ingamebar_xf_off_07.png" class="change" style="height:56px;"></a>
-			<a href="http://www.long_e.com.tw/payment?site=xf&account=<?=urlencode($this->g_user->account)?>" target="_blank"><img src="/p/img/gamebar/xf/ingamebar_xf_off_08.png" class="change" style="height:56px;"></a>
+			<a href="http://xf.longeplay.com.tw/guide/detail/82" target="_blank"><img src="/p/img/gamebar/xf/ingamebar_xf_off_06.png" class="change" style="height:56px;"></a>
+			<a href="http://www.longeplay.com.tw/service" target="_blank"><img src="/p/img/gamebar/xf/ingamebar_xf_off_07.png" class="change" style="height:56px;"></a>
+			<a href="http://www.longeplay.com.tw/payment?site=xf&account=<?=urlencode($this->g_user->account)?>" target="_blank"><img src="/p/img/gamebar/xf/ingamebar_xf_off_08.png" class="change" style="height:56px;"></a>
 		</div>
 		
 	</div>

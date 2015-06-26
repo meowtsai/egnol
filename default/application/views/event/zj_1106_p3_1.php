@@ -59,7 +59,7 @@
 	<div style="width:586px; height:174px; background:url(/p/img/event/zj_1106/event2_bk_1.png); margin:30px auto 0; position:relative;">
 		<div style="padding:10px 20px;">
 		
-	   <form id="login_form" method="post" action="http://www.long_e.com.tw/gate/login/zj?redirect_url=<?=$redirect_url?>">
+	   <form id="login_form" method="post" action="http://www.longeplay.com.tw/gate/login/zj?redirect_url=<?=$redirect_url?>">
 	   	<div style="position:absolute; left:147px; top:14px;">
 			<input name="account" type="text" tabindex="1"/><br>
 			<input name="pwd" type="password" tabindex="2"/>
@@ -72,7 +72,7 @@
 		$items = get_channel_items('zj', "../");
 		foreach($items as $channel => $name):
 	?>
-		<a href="http://www.long_e.com.tw/gate/login/zj?channel=<?=$channel?>&redirect_url=<?=$redirect_url?>"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="34" title="<?=$name?> 帳號登入"/></a>
+		<a href="http://www.longeplay.com.tw/gate/login/zj?channel=<?=$channel?>&redirect_url=<?=$redirect_url?>"><img src="http://www.longeplay.com.tw/img/login/<?=$channel?>.png" width="34" title="<?=$name?> 帳號登入"/></a>
 	
 	<? endforeach;?> 
 		</div>	  

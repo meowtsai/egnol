@@ -71,7 +71,7 @@
 	$items = get_channel_items("sg2", "../");
 	foreach($items as $channel => $name):
 ?>
-	<a href="http://www.long_e.com.tw/gate/login/sg2?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="28" title="<?=$name?> 帳號登入"/></a>
+	<a href="http://www.longeplay.com.tw/gate/login/sg2?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.longeplay.com.tw/img/login/<?=$channel?>.png" width="28" title="<?=$name?> 帳號登入"/></a>
 <? endforeach;?>             
            
            </td>

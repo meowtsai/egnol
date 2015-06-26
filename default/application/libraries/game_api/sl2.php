@@ -14,7 +14,7 @@ class Sl2 extends Game_Api
     
     function _get_server_id($address)
     {
-    	$no = strtr(substr($address, 1), array('.sl2.long_e.com.tw'=>''));
+    	$no = strtr(substr($address, 1), array('.sl2.longeplay.com.tw'=>''));
     	return '221674'.sprintf("%03s", $no);
     }
     

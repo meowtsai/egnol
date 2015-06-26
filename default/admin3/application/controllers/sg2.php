@@ -10,7 +10,7 @@ class Sg2 extends MY_Controller {
 		parent::__construct();
 		
 		$this->game = 'sg2';
-		$this->game_url = 'http://sg2.long_e.com.tw/';	
+		$this->game_url = 'http://sg2.longeplay.com.tw/';	
 		
 		$this->load->database($this->game);
 		$this->load->model($this->game.'model', 'model');

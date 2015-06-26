@@ -42,7 +42,7 @@ class Minik_page extends MY_Controller {
 					->count_all_results();
 
 			   	//選擇伺服器
-			   	$choose_server_form = file_get_contents("http://{$game}.long_e.com.tw/common/choose_server_form");
+			   	$choose_server_form = file_get_contents("http://{$game}.longeplay.com.tw/common/choose_server_form");
 			   	$choose_server_form = strtr($choose_server_form, array("target='_self'"=>"target='_blank'", 'target="_self"'=>'target="_blank"')); //調為開新頁
 			   	
 				$this->_init_layout();					

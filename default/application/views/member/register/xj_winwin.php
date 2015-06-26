@@ -65,7 +65,7 @@ swfobject.embedSWF("/p/register/xj_winwin/swf/index.swf", "flashCon", "1000", "7
 	$items = get_channel_items("xj", "../");
 	foreach($items as $channel => $name):
 ?>
-	<a href="http://www.long_e.com.tw/gate/login/xj?channel=<?=$channel?>&ad=winwin" target="_blank"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="40" title="<?=$name?> 帳號登入"/></a>
+	<a href="http://www.longeplay.com.tw/gate/login/xj?channel=<?=$channel?>&ad=winwin" target="_blank"><img src="http://www.longeplay.com.tw/img/login/<?=$channel?>.png" width="40" title="<?=$name?> 帳號登入"/></a>
 <? endforeach;?> 
         </div>
         <a class="btn-start" href="javascript:;" onclick="$('#register_form').submit();">開始遊戲</a>

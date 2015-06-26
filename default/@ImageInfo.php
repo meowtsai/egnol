@@ -10,7 +10,7 @@ require_once '../global.php';
 //require_once('admin/library/init.php');
 require_once('libraries/db.inc.php');
 
-#if url="http://www.long_e.com.tw/ImageInfo.php" or "http://www.long_e.com.tw/ImageInfo.php?adsBanner="
+#if url="http://www.longeplay.com.tw/ImageInfo.php" or "http://www.longeplay.com.tw/ImageInfo.php?adsBanner="
 #return long_e index..
     if($_GET['adsBanner'] == ''){
         echo "<script>window.location.href='index.php'</script>";

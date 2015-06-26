@@ -15,7 +15,7 @@ class Yoid extends Channel_Api
 		# openid/oauth credentials
 		define('OAUTH_CONSUMER_KEY', $this->conf['consumer_key']);
 		define('OAUTH_CONSUMER_SECRET', $this->conf['consumer_secret']);
-		define('OAUTH_DOMAIN', 'www.long_e.com.tw');
+		define('OAUTH_DOMAIN', base_url());
 		define('OAUTH_APP_ID', $this->conf['app_id']);
 	}
 	

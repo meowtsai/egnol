@@ -7,7 +7,7 @@ define("CASH_FLOW_DEBUG", FALSE);        //內定FALSE
 $returnUrl = 'http://'.$_SERVER['SERVER_NAME'].$_SERVER['PHP_SELF'];  //頁面所在路徑
 //
 define("DOC_ROOT",	dirname(dirname(__FILE__)).'/');	// 網站相對根目錄
-define("DOMAIN_NAME",	"www.long_e.com.tw");	// 網站名稱
+define("DOMAIN_NAME",	"www.longeplay.com.tw");	// 網站名稱
 define("SYS_ROOT",	DOC_ROOT . "admin/");   // 系統名稱
 define("INC_ROOT",	DOC_ROOT . "Inc/");          //子網域環境設定
 define("IMG_ROOT",	DOC_ROOT . "img/");
@@ -37,22 +37,22 @@ catch (PDOException $e)
 }
 
 //伺服器列表
-$game_server_list = array('mj1'=>"mj1.long_e.com.tw", 'mj2'=>"mj2.long_e.com.tw", 'mj3'=>"mj3.long_e.com.tw");              //伺服器串接位置
+$game_server_list = array('mj1'=>"mj1.longeplay.com.tw", 'mj2'=>"mj2.longeplay.com.tw", 'mj3'=>"mj3.longeplay.com.tw");              //伺服器串接位置
 $aryServerList = array(
                         'mj'=>array(
                                     'mj1'=>array(
                                                 'name'=>'魔晶幻想-希望之路',
-                                                'address'=>'mj1.long_e.com.tw',
+                                                'address'=>'mj1.longeplay.com.tw',
                                                 'server_status'=>'public'
                                                 ),
                                     'mj2'=>array(
                                                 'name'=>'魔晶幻想-星空之城',
-                                                'address'=>'mj2.long_e.com.tw',
+                                                'address'=>'mj2.longeplay.com.tw',
                                                 'server_status'=>'public'
                                                 ),
                                     'mj3'=>array(
                                                 'name'=>'魔晶幻想-魔幻森林',
-                                                'address'=>'mj3.long_e.com.tw',
+                                                'address'=>'mj3.longeplay.com.tw',
                                                 'server_status'=>'public'
                                                 )
                                     ),

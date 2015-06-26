@@ -32,7 +32,7 @@ class Eya extends Game_Api
     	
     	$key = $this->conf['transfer_key'];
     	
-    	$post['server'] = "S10".strtr($server->address, array("bw"=>"", ".long_e.com.tw"=>""));       
+    	$post['server'] = "S10".strtr($server->address, array("bw"=>"", ".longeplay.com.tw"=>""));       
       	$post['game'] = 'dhcq'; 
       	$post['agent'] = 'long_e';
       	$post['user'] = urlencode($billing->account);

@@ -46,15 +46,15 @@
         <td colspan="2">
         <table border="0" align="center" cellpadding="2" cellspacing="1">
           <tr>
-<!--           								<td><a href="http://www.long_e.com.tw/gate/login/mon?channel=facebook&ad=mon_yahoo_a"><img src="http://www.long_e.com.tw/img/login/facebook.png" width="30" title="facebook會員登入"/></a></td> -->
-			                            <td><a href="http://www.long_e.com.tw/gate/login/mon?channel=bahamut&ad=mon_yahoo_a"><img src="http://www.long_e.com.tw/img/login/bahamut.png" width="30" title="巴哈姆特會員登入"/></a></td>
-			                            <td><a href="http://www.long_e.com.tw/gate/login/mon?channel=gamebase&ad=mon_yahoo_a"><img src="http://www.long_e.com.tw/img/login/gamebase.png" width="30" title="遊戲基地會員登入"/></a></td>
-<!-- 			                            <td><a href="http://www.long_e.com.tw/gate/login/mon?channel=yahoo&ad=mon_yahoo_a"><img src="http://www.long_e.com.tw/img/login/yahoo.png" width="30" title="yahoo會員登入" /></a></td>   -->
- 			                            <td><a href="http://www.long_e.com.tw/gate/login/mon?channel=omg&ad=mon_yahoo_a"><img src="http://www.long_e.com.tw/img/login/omg.png" width="30" title="OhMyGod會員登入" /></a></td>
-<!-- 				                        <td><a href="http://www.long_e.com.tw/gate/login/mon?channel=rc&ad=mon_yahoo_a"><img src="http://www.long_e.com.tw/img/login/rc.png" width="30" title="RC語音會員登入"/></a></td> -->
-<!-- 				                        <td><a href="http://www.long_e.com.tw/gate/login/mon?channel=igamer&ad=mon_yahoo_a"><img src="http://www.long_e.com.tw/img/login/igamer.png" width="30" title="遊戲天堂會員登入" /></a></td> -->
-<!-- 										<td><a href="http://www.long_e.com.tw/gate/login/mon?channel=more&ad=mon_yahoo_a"><img src="http://www.long_e.com.tw/img/login/more.png" width="30" title="摸摸耳會員登入"/></a></td>			                         -->
-<!-- 			                            <td><a href="http://www.long_e.com.tw/gate/login/mon?channel=ggc&ad=mon_yahoo_a"><img src="http://www.long_e.com.tw/img/login/ggc.png" width="30" title="因思銳會員登入" /></a></td> -->
+<!--           								<td><a href="http://www.longeplay.com.tw/gate/login/mon?channel=facebook&ad=mon_yahoo_a"><img src="http://www.longeplay.com.tw/img/login/facebook.png" width="30" title="facebook會員登入"/></a></td> -->
+			                            <td><a href="http://www.longeplay.com.tw/gate/login/mon?channel=bahamut&ad=mon_yahoo_a"><img src="http://www.longeplay.com.tw/img/login/bahamut.png" width="30" title="巴哈姆特會員登入"/></a></td>
+			                            <td><a href="http://www.longeplay.com.tw/gate/login/mon?channel=gamebase&ad=mon_yahoo_a"><img src="http://www.longeplay.com.tw/img/login/gamebase.png" width="30" title="遊戲基地會員登入"/></a></td>
+<!-- 			                            <td><a href="http://www.longeplay.com.tw/gate/login/mon?channel=yahoo&ad=mon_yahoo_a"><img src="http://www.longeplay.com.tw/img/login/yahoo.png" width="30" title="yahoo會員登入" /></a></td>   -->
+ 			                            <td><a href="http://www.longeplay.com.tw/gate/login/mon?channel=omg&ad=mon_yahoo_a"><img src="http://www.longeplay.com.tw/img/login/omg.png" width="30" title="OhMyGod會員登入" /></a></td>
+<!-- 				                        <td><a href="http://www.longeplay.com.tw/gate/login/mon?channel=rc&ad=mon_yahoo_a"><img src="http://www.longeplay.com.tw/img/login/rc.png" width="30" title="RC語音會員登入"/></a></td> -->
+<!-- 				                        <td><a href="http://www.longeplay.com.tw/gate/login/mon?channel=igamer&ad=mon_yahoo_a"><img src="http://www.longeplay.com.tw/img/login/igamer.png" width="30" title="遊戲天堂會員登入" /></a></td> -->
+<!-- 										<td><a href="http://www.longeplay.com.tw/gate/login/mon?channel=more&ad=mon_yahoo_a"><img src="http://www.longeplay.com.tw/img/login/more.png" width="30" title="摸摸耳會員登入"/></a></td>			                         -->
+<!-- 			                            <td><a href="http://www.longeplay.com.tw/gate/login/mon?channel=ggc&ad=mon_yahoo_a"><img src="http://www.longeplay.com.tw/img/login/ggc.png" width="30" title="因思銳會員登入" /></a></td> -->
 			               
           </tr>
         </table></td>

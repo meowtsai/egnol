@@ -30,7 +30,7 @@ img {border:0px;}
 	<? if ($code):?>
 	<div id="content" style="display:none; position:relative;">
 		<div style="position:absolute; left:0px; top:0px;">
-			<a href="http://www.long_e.com.tw/gate/login/yh?channel=facebook" target="_blank"><img src="/p/img/fb_20130408/enter_off.png" class="change"></a>
+			<a href="http://www.longeplay.com.tw/gate/login/yh?channel=facebook" target="_blank"><img src="/p/img/fb_20130408/enter_off.png" class="change"></a>
 		</div>
 		<span id="code">
 			請複製以下序號，進遊戲內領獎<br>

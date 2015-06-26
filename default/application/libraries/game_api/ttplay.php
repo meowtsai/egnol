@@ -28,7 +28,7 @@ class Ttplay extends Game_Api
     	$data['sign'] = md5($data['account'].$data['time'].$data['game'].$data['server'].$this->conf['login_key']);    	    	
     	
     	//log_message('error', $this->conf['login_url'].http_build_query($data));
-		header("location: ".$this->conf['login_url'].http_build_query($data).'&errorUrl='.urlencode('http://'.$server->game_id.'.long_e.com.tw'));
+		header("location: ".$this->conf['login_url'].http_build_query($data).'&errorUrl='.urlencode('http://'.$server->game_id.'.longeplay.com.tw'));
     }    
     
     function transfer($server, $billing, $rate=1)

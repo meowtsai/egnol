@@ -7,6 +7,6 @@ function server_site_url($game_id, $path='')
 	
 	$servers =  $CI->config->item("servers");	
 	if ($game_id=='long_e') $game_id='www';
-	return "http://".$game_id.".long_e.com.tw/".$path;
+	return "http://".$game_id.".longeplay.com.tw/".$path;
 }
 

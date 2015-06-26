@@ -186,9 +186,9 @@ $config["partner_api"] = array(
 
 $config["game_api"] = array(
 		'kunlun' => array(
-			'login_url' => 'http://user.qjp.long_e.com.tw/User/uniteLogin',
-			'transfer_url' => 'http://user.qjp.long_e.com.tw/VouchV2/addGameCoin',
-			'check_role_url' => 'http://user.qjp.long_e.com.tw/Char/getCharInfo',
+			'login_url' => 'http://user.qjp.longeplay.com.tw/User/uniteLogin',
+			'transfer_url' => 'http://user.qjp.longeplay.com.tw/VouchV2/addGameCoin',
+			'check_role_url' => 'http://user.qjp.longeplay.com.tw/Char/getCharInfo',
 		),
 		'kunlun2' => array(
 			'login_url' => 'http://user.unite.kimi.com.tw/User/uniteLogin',
@@ -242,7 +242,7 @@ $config["game_api"] = array(
 		'sg' => array(
 			'login_key' => 'CkOuOnZLCuOnMcToWm0511', 
 			'transfer_key' => 'CkOuOnZLCuOnMcToWm0511',
-			'transfer_url' => 'http://user.qjp.long_e.com.tw/Vouch/AddGameCoin',
+			'transfer_url' => 'http://user.qjp.longeplay.com.tw/Vouch/AddGameCoin',
 		),		
 		'kw' => array( //Kunlun
 			'login_key' => 'caed2aa219b6a97a066247fd77740f4c', 

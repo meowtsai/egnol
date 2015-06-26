@@ -7,7 +7,7 @@ $(function(){
 	if (serverin && chk_login()) choose_server_form();
 	
 	$("#register").click(function(){		
-		$.get("http://www.long_e.com.tw/member/register?ajax=1", function(data){
+		$.get("http://www.longeplay.com.tw/member/register?ajax=1", function(data){
 			$.blockUI({ message: data,
 				css: { 
 					top: '0',

@@ -94,7 +94,7 @@
 	$items = get_channel_items("dh", "../");
 	foreach($items as $channel => $name):
 ?>
-	<a href="http://www.long_e.com.tw/gate/login/dh?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="33" title="<?=$name?> 帳號登入"/></a>
+	<a href="http://www.longeplay.com.tw/gate/login/dh?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.longeplay.com.tw/img/login/<?=$channel?>.png" width="33" title="<?=$name?> 帳號登入"/></a>
 <? endforeach;?>  
                 </div>
             </td>
@@ -148,8 +148,8 @@
 
 <map name="Map" id="Map">
   <area shape="rect" coords="11,7,52,48" href="http://p1.games.tp2.yahoo.com/playweb/reg.php?gamename=DH" />
-  <area shape="rect" coords="94,5,134,48" href="http://www.long_e.com.tw/member/login_gate.php?gate=bahamut&game_site=dh" />
-  <area shape="rect" coords="135,4,175,47" href="http://www.long_e.com.tw/member/login_gate.php?gate=gamebase&game_site=dh" />
+  <area shape="rect" coords="94,5,134,48" href="http://www.longeplay.com.tw/member/login_gate.php?gate=bahamut&game_site=dh" />
+  <area shape="rect" coords="135,4,175,47" href="http://www.longeplay.com.tw/member/login_gate.php?gate=gamebase&game_site=dh" />
 </map>
 <script type="text/javascript">
 swfobject.registerObject("FlashID");

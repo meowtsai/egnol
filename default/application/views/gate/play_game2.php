@@ -331,7 +331,7 @@ function ShowTheBox(only_once, side, corner, direction)
     else
 	    setTimeout("showIt("+ direction + ")",1030);
 }
-//document.domain = 'long_e.com.tw';
+//document.domain = 'longeplay.com.tw';
 </script>
  <script type="text/javascript" src="http://static.3722.com/js/jquery.js"></script>
 <script type="text/javascript" src="http://static.3722.com/js/jquery.vticker-min.js"></script>

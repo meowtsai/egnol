@@ -87,7 +87,7 @@ class Mon extends Game_Api
 		$key 		= 'YzM5NzFmZjVkNjNlMWUyZGNmOGRiMDM0MWQ2MzAzYT';
 		$flag		= md5($paynum . $billing->account . $paygold . $time . $key);
 		$rmb		= $billing->amount;
-		$group		= '100'.strtr($server->address, array("mon"=>"",".long_e.com.tw"=>""));				
+		$group		= '100'.strtr($server->address, array("mon"=>"",".longeplay.com.tw"=>""));				
 		if ($group == '1000') $group = '1999'; //測服固定為1001
 		
 		//echo "md5(".$paynum . $objAuthUser->account . $paygold . $time . $key.") = ";
@@ -154,7 +154,7 @@ class Mon extends Game_Api
     	
 		$username = $user_row->account;
 		$url = "http://{$server_address}/flash/check_role_exists.php";
-		$group = '100'.strtr($server_row->address, array("mon"=>"",".long_e.com.tw"=>""));	    	
+		$group = '100'.strtr($server_row->address, array("mon"=>"",".longeplay.com.tw"=>""));	    	
 		if ($group == '1000') $group = '1999'; //測服固定為1001
 
 		$maximumLoopNum = 3;

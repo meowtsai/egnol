@@ -46,17 +46,17 @@
 	<h4>伺服器圖示</h4>		
 	<label>新服(.png)</label>
 	<? if ($row && file_exists(g_conf("http_document_root").$this->game_id."/p/img/server/".$row->server_id."n.png")):?>
-	<img src="http://<?=$this->game_id?>.long_e.com.tw/p/img/server/<?=$row->server_id?>n.png">
+	<img src="http://<?=$this->game_id?>.longeplay.com.tw/p/img/server/<?=$row->server_id?>n.png">
 	<? endif;?>
 	<input type="file" name="file01">
 	<label>一般(.png)</label>
 	<? if ($row && file_exists(g_conf("http_document_root").$this->game_id."/p/img/server/".$row->server_id."_off.png")):?>
-	<img src="http://<?=$this->game_id?>.long_e.com.tw/p/img/server/<?=$row->server_id?>_off.png">
+	<img src="http://<?=$this->game_id?>.longeplay.com.tw/p/img/server/<?=$row->server_id?>_off.png">
 	<? endif;?>
 	<input type="file" name="file02">
 	<label>一般(滑鼠移入)(.png)</label>			
 	<? if ($row && file_exists(g_conf("http_document_root").$this->game_id."/p/img/server/".$row->server_id."_on.png")):?>
-	<img src="http://<?=$this->game_id?>.long_e.com.tw/p/img/server/<?=$row->server_id?>_on.png">
+	<img src="http://<?=$this->game_id?>.longeplay.com.tw/p/img/server/<?=$row->server_id?>_on.png">
 	<? endif;?>
 	<input type="file" name="file03">
 					

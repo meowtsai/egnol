@@ -52,7 +52,7 @@ img {border:0px;}
 	
 	
 	<div id="enter">
-		<a href="http://zj.long_e.com.tw" target="_blank">
+		<a href="http://zj.longeplay.com.tw" target="_blank">
 			<img src="/p/img/event/fb_20141015/enter_off.png" class="change">
 		</a>	
 	</div>
@@ -60,7 +60,7 @@ img {border:0px;}
 </div>
 
 <div id="logo">
-	<a href="http://zj.long_e.com.tw/" target="_blank"><img src="/p/img/event/fb_20141015/logo.png"></a>
+	<a href="http://zj.longeplay.com.tw/" target="_blank"><img src="/p/img/event/fb_20141015/logo.png"></a>
 </div>
 	
 </div>

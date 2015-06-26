@@ -144,7 +144,7 @@ var google_remarketing_only = true;
 	$items = get_channel_items("sl2", "../");
 	foreach($items as $channel => $name):
 ?>
-	<a href="http://www.long_e.com.tw/gate/login/sl2?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="34" title="<?=$name?> 帳號登入"/></a>
+	<a href="http://www.longeplay.com.tw/gate/login/sl2?channel=<?=$channel?>&ad=<?=$ad?>"><img src="http://www.longeplay.com.tw/img/login/<?=$channel?>.png" width="34" title="<?=$name?> 帳號登入"/></a>
 <? endforeach;?>   
                 </td>
             </tr>

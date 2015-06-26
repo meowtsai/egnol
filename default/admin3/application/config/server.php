@@ -43,7 +43,7 @@ $config["servers"] =
 		'mon' => array(
 			'menu' => array($fn['game/modify'], $fn['server'], $fn['news'], $fn['guide'], $fn['picture'], $fn['character'], $fn['log/game_login'], $fn['log/online_user']),
 			'extra_menu' => array(
-				array('name' => '祕密入口', 'url' => 'http://mon1.long_e.com.tw/flash/charlie.php', 'icon' => 'icon-share')
+				array('name' => '祕密入口', 'url' => 'http://mon1.longeplay.com.tw/flash/charlie.php', 'icon' => 'icon-share')
 			),
 		),		
 		'xl' => array(

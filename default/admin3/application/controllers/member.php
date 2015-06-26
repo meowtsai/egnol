@@ -240,10 +240,9 @@ WHERE x.uid={$uid}";
 		
 		if ($this->g_user->switch_uid($uid)) {
 			$this->load->model("log_admin_actions");
-			$this->log_admin_actions->insert_log($_SESSION["admin_uid"], 'member', 'switch', "登入玩家 #{$uid} 帳號");		
-            echo "[redirect long_e]"; die;
+			$this->log_admin_actions->insert_log($_SESSION["admin_uid"], 'member', 'switch', "登入玩家 #{$uid} 帳號");	
 			
-			header("location: http://www.long_e.com.tw");		
+			header("location: ".base_url());		
 		}
 		else {
 			die('帳號不存在');

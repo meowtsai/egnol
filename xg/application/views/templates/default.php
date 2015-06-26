@@ -11,7 +11,7 @@
 	echo $css_link;
 ?>
 <script src="/p/js/swfobject_modified.js" type="text/javascript"></script>
-<link href="http://www.long_e.com.tw/top/skybar.css" rel="stylesheet" type="text/css">
+<link href="http://www.longeplay.com.tw/top/skybar.css" rel="stylesheet" type="text/css">
 <link rel="shortcut icon" href="/p/favicon.ico">
 <script type="text/javascript">
 function MM_preloadImages() { //v3.0
@@ -48,7 +48,7 @@ $(function(){
 	
 });
 </script>
-<script src="http://www.long_e.com.tw/top/skybar.js?<?php echo date("YmdHi");?>" type="text/javascript"></script>
+<script src="http://www.longeplay.com.tw/top/skybar.js?<?php echo date("YmdHi");?>" type="text/javascript"></script>
 
 </head>
 <body>
@@ -97,7 +97,7 @@ $(function(){
             <div id="left">
            	  
            	  
-           	  <form id="login_form" method="post" action="http://www.long_e.com.tw/gate/login/<?=$this->game?>">
+           	  <form id="login_form" method="post" action="http://www.longeplay.com.tw/gate/login/<?=$this->game?>">
            	      <? if ($this->g_user->check_login($this->game)):?>
               	<div id="box01-2">
               	  <table width="230" border="0" cellspacing="0" cellpadding="0">
@@ -112,7 +112,7 @@ $(function(){
                       	
                     <div style="line-height:21px;">                    	
 				        <div class="Avatar">您好，<span id="long_e_account"><?=$this->g_user->display_account()?></span></div>
-				        <div><a href="http://www.long_e.com.tw/gate/logout"><img src="/p/img/log_out.png"></a></div>
+				        <div><a href="http://www.longeplay.com.tw/gate/logout"><img src="/p/img/log_out.png"></a></div>
 						<div style="">最近登入過的伺服器：</div>
 					<? if ($recent_server):
 						foreach ($recent_server->result() as $row):
@@ -159,7 +159,7 @@ $(function(){
            	      <tr>
            	        <td height="30" colspan="3" align="right">
                     	<div style="padding:10px; width:180px; height:30px; margin:0 auto;">
-                        	<div class="input02" style="width:70px; height:25px; display:block; float:right;"><a href="http://www.long_e.com.tw/member/forgot_password" target="_blank">◎忘記密碼</a></div>
+                        	<div class="input02" style="width:70px; height:25px; display:block; float:right;"><a href="http://www.longeplay.com.tw/member/forgot_password" target="_blank">◎忘記密碼</a></div>
                             <div class="input02" style="width:70px; height:25px; display:block; float:right;"><a id="register" href="javascript:;">◎快速註冊</a></div>
                         </div>
                     </td>
@@ -174,7 +174,7 @@ $(function(){
 	$items = get_channel_items($this->game, "../");
 	foreach($items as $channel => $name):
 ?>
-	<a href="http://www.long_e.com.tw/gate/login/<?=$this->game?>?channel=<?=$channel?>"><img src="http://www.long_e.com.tw/img/login/<?=$channel?>.png" width="34" title="<?=$name?> 帳號登入"/></a>
+	<a href="http://www.longeplay.com.tw/gate/login/<?=$this->game?>?channel=<?=$channel?>"><img src="http://www.longeplay.com.tw/img/login/<?=$channel?>.png" width="34" title="<?=$name?> 帳號登入"/></a>
 
 <? endforeach;?>                                    
                     </td>
@@ -191,14 +191,14 @@ $(function(){
                 	<table width="230" border="0" align="center" cellpadding="0" cellspacing="0">
   						<tr>
     						<td height="65" align="center" valign="middle">
-    							<a href="http://www.long_e.com.tw/payment?game=<?=$this->game?>" target="_blank">
+    							<a href="http://www.longeplay.com.tw/payment?game=<?=$this->game?>" target="_blank">
     								<img src="/p/img/btn1.png" name="btn1" width="230" height="65" border="0" id="btn1" onmouseover="MM_swapImage('btn1','','/p/img/btn1-2.png',1)" onmouseout="MM_swapImgRestore()" />
     							</a>
     						</td>
 					  </tr>
  						<tr>
     						<td height="65" align="center" valign="middle">
-    							<a href="http://www.long_e.com.tw/wallet/transfer?game=<?=$this->game?>" target="_blank">
+    							<a href="http://www.longeplay.com.tw/wallet/transfer?game=<?=$this->game?>" target="_blank">
     								<img src="/p/img/btn2.png" name="btn2" width="230" height="65" border="0" id="btn2" onmouseover="MM_swapImage('btn2','','/p/img/btn2-2.png',1)" onmouseout="MM_swapImgRestore()" />
     							</a>
     						</td>

@@ -13,7 +13,7 @@ $(function(){
 
 function do_poll()
 {
-	$.get("http://www.long_e.com.tw/ajax/get_realtime_bulletin/<?=$server->game_id?>/<?=$frame_conf['realtime_bulletin_id']?>/0/<?=$server->id?>", function(data) {		
+	$.get("http://www.longeplay.com.tw/ajax/get_realtime_bulletin/<?=$server->game_id?>/<?=$frame_conf['realtime_bulletin_id']?>/0/<?=$server->id?>", function(data) {		
 		var items = '<ul class="marquee">';
 		$(data).each(function(i,o) {
 			items += '<li>'+o.title+'</li>';
@@ -37,13 +37,13 @@ function do_poll()
 
 		
 		<div style="position:absolute; left:0px; top:9px;" class="link">		
-			<a href="http://www.long_e.com.tw/payment?site=xl" target="_blank"><img src="/p/img/gamebar/xl/b5_off.png" class="change"></a>			
+			<a href="http://www.longeplay.com.tw/payment?site=xl" target="_blank"><img src="/p/img/gamebar/xl/b5_off.png" class="change"></a>			
 			<img src="/p/img/gamebar/xl/line.png">			
-			<a href="http://www.long_e.com.tw/service" target="_blank"><img src="/p/img/gamebar/xl/b4_off.png" class="change"></a>
+			<a href="http://www.longeplay.com.tw/service" target="_blank"><img src="/p/img/gamebar/xl/b4_off.png" class="change"></a>
 		</div>
 		
 		<div style="position:absolute; top:-4px; left:205px">
-			<a href="http://xl.long_e.com.tw/index.php" target="_blank">
+			<a href="http://xl.longeplay.com.tw/index.php" target="_blank">
 				<img src="/p/img/gamebar/xl/logo_off.png" class="change" height="41">
 			</a>
 		</div>
@@ -56,9 +56,9 @@ function do_poll()
 		<div style="position:absolute; right:0px; top:9px;" class="link">		
 			<a href="https://www.facebook.com/long_e.xl" target="_blank"><img src="/p/img/gamebar/xl/b3_off.png" class="change"></a>			
 			<img src="/p/img/gamebar/xl/line.png">			
-			<a href="http://xl.long_e.com.tw/guide/get_list/213" target="_blank"><img src="/p/img/gamebar/xl/b2_off.png" class="change"></a>
+			<a href="http://xl.longeplay.com.tw/guide/get_list/213" target="_blank"><img src="/p/img/gamebar/xl/b2_off.png" class="change"></a>
 			<img src="/p/img/gamebar/xl/line.png">			
-			<a href="http://xl.long_e.com.tw/guide/get_list/218l" target="_blank"><img src="/p/img/gamebar/xl/b1_off.png" class="change"></a>
+			<a href="http://xl.longeplay.com.tw/guide/get_list/218l" target="_blank"><img src="/p/img/gamebar/xl/b1_off.png" class="change"></a>
 		</div>
 		
 		

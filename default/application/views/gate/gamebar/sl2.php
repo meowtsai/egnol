@@ -23,7 +23,7 @@ $(function(){
 
 function do_poll()
 {
-	$.get("http://www.long_e.com.tw/ajax/get_realtime_bulletin/<?=$server->game_id?>/<?=$frame_conf['realtime_bulletin_id']?>/0/<?=$server->id?>", function(data) {		
+	$.get("http://www.longeplay.com.tw/ajax/get_realtime_bulletin/<?=$server->game_id?>/<?=$frame_conf['realtime_bulletin_id']?>/0/<?=$server->id?>", function(data) {		
 		var items = '<ul class="marquee">';
 		$(data).each(function(i,o) {
 			items += '<li>'+o.title+'</li>';
@@ -43,7 +43,7 @@ function do_poll()
 	<div style="width:960px; margin:0 auto; height:30px; position:relative; " >
 		
 		<!-- logo -->
-		<div style="position:absolute;"><a href="http://sl2.long_e.com.tw/index.php" target="_blank">
+		<div style="position:absolute;"><a href="http://sl2.longeplay.com.tw/index.php" target="_blank">
 			<img src="/p/img/gamebar/sl2/logo.png" style="height:30px;"></a>
 		</div>
 		
@@ -57,13 +57,13 @@ function do_poll()
 			<? if ($is_minik_user == false):?>
 			<a href="https://www.facebook.com/long_e.sl2" target="_blank"><img src="/p/img/gamebar/xf/ingamebar_xf_off_04.png" class="change" style="height:54px;"></a>
 			<? endif;?>
-			<a href="http://sl2.long_e.com.tw/guide/detail/61" target="_blank"><img src="/p/img/gamebar/xf/ingamebar_xf_off_06.png" class="change" style="height:54px;"></a>
-			<a href="http://www.long_e.com.tw/service" target="_blank"><img src="/p/img/gamebar/xf/ingamebar_xf_off_07.png" class="change" style="height:54px;"></a>
-			<a href="http://www.long_e.com.tw/payment?site=sl2&account=<?=urlencode($this->g_user->account)?>" target="_blank"><img src="/p/img/gamebar/xf/ingamebar_xf_off_08.png" class="change" style="height:54px;"></a>
+			<a href="http://sl2.longeplay.com.tw/guide/detail/61" target="_blank"><img src="/p/img/gamebar/xf/ingamebar_xf_off_06.png" class="change" style="height:54px;"></a>
+			<a href="http://www.longeplay.com.tw/service" target="_blank"><img src="/p/img/gamebar/xf/ingamebar_xf_off_07.png" class="change" style="height:54px;"></a>
+			<a href="http://www.longeplay.com.tw/payment?site=sl2&account=<?=urlencode($this->g_user->account)?>" target="_blank"><img src="/p/img/gamebar/xf/ingamebar_xf_off_08.png" class="change" style="height:54px;"></a>
 			 
 			
 			<? if ($server->id == '--------backup-'):?> 
-			<a href="http://sl2.long_e.com.tw/bulletin/detail/304" target="_blank"><img src="/p/img/gamebar/new_server.gif" style="height:26px; margin-top:27px"></a>
+			<a href="http://sl2.longeplay.com.tw/bulletin/detail/304" target="_blank"><img src="/p/img/gamebar/new_server.gif" style="height:26px; margin-top:27px"></a>
 			<? endif;?>
 		</div>
 		

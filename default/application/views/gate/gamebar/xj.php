@@ -23,7 +23,7 @@ $(function(){
 
 function do_poll()
 {
-	$.get("http://www.long_e.com.tw/ajax/get_realtime_bulletin/<?=$server->game_id?>/<?=$frame_conf['realtime_bulletin_id']?>/0/<?=$server->id?>", function(data) {		
+	$.get("http://www.longeplay.com.tw/ajax/get_realtime_bulletin/<?=$server->game_id?>/<?=$frame_conf['realtime_bulletin_id']?>/0/<?=$server->id?>", function(data) {		
 		var items = '<ul class="marquee">';
 		$(data).each(function(i,o) {
 			items += '<li>'+o.title+'</li>';
@@ -67,19 +67,19 @@ function Add2Favorite(sURL,sTitle)
 </script>
 <? if (strpos($this->g_user->account, "@artsy") !== false):?>
 <div style="width:1024px; margin:0 auto; color:#777;">
-	<div style="position:absolute; top:1px; width:700px; height:30px; background:url('http://x1.xj.long_e.com.tw/images/bandeau_gene.jpg') 332px 0">
+	<div style="position:absolute; top:1px; width:700px; height:30px; background:url('http://x1.xj.longeplay.com.tw/images/bandeau_gene.jpg') 332px 0">
 	</div>
 </div>
 <? else:?>
 <div style="width:1024px; margin:0 auto; color:#777;">
-	<div style="position:absolute; top:1px; width:700px; height:30px; background:url('http://x1.xj.long_e.com.tw/images/bandeau_gene.jpg') 332px 0">
+	<div style="position:absolute; top:1px; width:700px; height:30px; background:url('http://x1.xj.longeplay.com.tw/images/bandeau_gene.jpg') 332px 0">
 	
 		<div style="padding:3px;">		
-			<a href="http://xj.long_e.com.tw" target="_blank">官網</a> ｜
-			<a href="http://www.long_e.com.tw/payment?site=xj" target="_blank">儲值</a> ｜  
+			<a href="http://xj.longeplay.com.tw" target="_blank">官網</a> ｜
+			<a href="http://www.longeplay.com.tw/payment?site=xj" target="_blank">儲值</a> ｜  
 			<a href="https://www.facebook.com/long_e.inc" target="_blank">粉絲團</a> ｜
-			<a href="http://www.long_e.com.tw/service" target="_blank">線上提問</a> ｜  
-			<a href="javascript:Add2Favorite('http://xj.long_e.com.tw/','2013年最具創意的即時卡通頁遊——《仙境幻想》')">加入最愛</a>
+			<a href="http://www.longeplay.com.tw/service" target="_blank">線上提問</a> ｜  
+			<a href="javascript:Add2Favorite('http://xj.longeplay.com.tw/','2013年最具創意的即時卡通頁遊——《仙境幻想》')">加入最愛</a>
 			
 			<span id="marquee_block"></span>
 		</div>

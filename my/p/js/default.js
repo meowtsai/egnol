@@ -43,7 +43,7 @@ $(function(){
 							dataType: 'json',
 							success: function(json) {
 								if (json.status == 'success') {
-									location.href = 'http://www.long_e.com.tw/play_game/my';
+									location.href = 'http://www.longeplay.com.tw/play_game/my';
 								}
 								else alert(json.message);
 							}		

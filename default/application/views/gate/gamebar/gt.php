@@ -25,7 +25,7 @@ $(function(){
 
 function do_poll()
 {
-	$.get("http://www.long_e.com.tw/ajax/get_realtime_bulletin/<?=$server->game_id?>/<?=$frame_conf['realtime_bulletin_id']?>/0/<?=$server->id?>", function(data) {		
+	$.get("http://www.longeplay.com.tw/ajax/get_realtime_bulletin/<?=$server->game_id?>/<?=$frame_conf['realtime_bulletin_id']?>/0/<?=$server->id?>", function(data) {		
 		var items = '<ul class="marquee">';
 		$(data).each(function(i,o) {
 			items += '<li>'+o.title+'</li>';
@@ -47,7 +47,7 @@ function do_poll()
 	<div style="width:960px; margin:0 auto; height:35px; position:relative; " >
 		
 		<div style="position:absolute; top:-7px; left:0px">
-			<a href="http://gt.long_e.com.tw/index.php" target="_blank">
+			<a href="http://gt.longeplay.com.tw/index.php" target="_blank">
 				<img src="/p/img/gamebar/gt/logo_off.png" class="change">
 			</a>
 		</div>
@@ -58,13 +58,13 @@ function do_poll()
 		</div>
 		
 		<div style="position:absolute; right:174px; top:9px;" class="link">	
-			<a href="http://gt.long_e.com.tw/guide/get_list/294" target="_blank"><img src="/p/img/gamebar/gt/b1_off.png" class="change" style="height:17px;"></a>			
+			<a href="http://gt.longeplay.com.tw/guide/get_list/294" target="_blank"><img src="/p/img/gamebar/gt/b1_off.png" class="change" style="height:17px;"></a>			
 			<img src="/p/img/gamebar/gt/line.png">		
 			<a href="https://www.facebook.com/long_e.inc" target="_blank"><img src="/p/img/gamebar/gt/b3_off.png" class="change" style="height:17px;"></a>			
 			<img src="/p/img/gamebar/gt/line.png">			
-			<a href="http://www.long_e.com.tw/payment?site=gt" target="_blank"><img src="/p/img/gamebar/gt/b5_off.png" class="change" style="height:17px;"></a>			
+			<a href="http://www.longeplay.com.tw/payment?site=gt" target="_blank"><img src="/p/img/gamebar/gt/b5_off.png" class="change" style="height:17px;"></a>			
 			<img src="/p/img/gamebar/gt/line.png">			
-			<a href="http://www.long_e.com.tw/service" target="_blank"><img src="/p/img/gamebar/gt/b4_off.png" class="change" style="height:17px;"></a>
+			<a href="http://www.longeplay.com.tw/service" target="_blank"><img src="/p/img/gamebar/gt/b4_off.png" class="change" style="height:17px;"></a>
 		</div>
 		<div style="position:absolute; right:20px; top:3px; padding:5px;">
 			<div id="info_block" class="marquee">
@@ -76,7 +76,7 @@ function do_poll()
 						<span title="<?=$this->g_user->account?>">歡迎 <?=mb_strimwidth($this->g_user->account, 0, 14, '...', 'UTF-8');?></span>
 						<? if ($this->g_user->check_extra_account($this->g_user->account)):?>
 						<!-- 
-						<a class="btn" href="http://www.long_e.com.tw/member/bind_account?redirect_url=http://gt.long_e.com.tw" target="_blank" title="綁定帳號">
+						<a class="btn" href="http://www.longeplay.com.tw/member/bind_account?redirect_url=http://gt.longeplay.com.tw" target="_blank" title="綁定帳號">
 							<span class="line">綁定</span>
 						</a>
 						 -->

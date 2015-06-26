@@ -37,7 +37,7 @@
 						<span>
 							<span style="position:absolute; margin:-108px 0 0 31px; display:inline-block;">		
 								<p style="display:inline-block; text-align:center; width:250px;">						
-									<a href="http://<?=$row->game_id?>.long_e.com.tw/" target="_blank"><span class="btn01 index_items"></span></a>								
+									<a href="http://<?=$row->game_id?>.longeplay.com.tw/" target="_blank"><span class="btn01 index_items"></span></a>								
 									<? if (strpos($row->tags, "手遊")===false):?>
 									<a href="/play_game/<?=$row->game_id?>" target="_blank"><span class="btn02 index_items"></span></a>
 									<? endif;?>
@@ -102,7 +102,7 @@
 							<? if (strpos($row->tags, "手遊")===false):?>
 							<a href="/play_game/<?=$row->game_id?>" target="_blank"><span class="btn01 index_items"></span></a>
 							<? endif;?>
-							<a href="http://<?=$row->game_id?>.long_e.com.tw" target="_blank"><span class="btn02 index_items"></span></a>
+							<a href="http://<?=$row->game_id?>.longeplay.com.tw" target="_blank"><span class="btn02 index_items"></span></a>
 						</div>
 					</li>
 					<? endforeach;?>
@@ -138,7 +138,7 @@
 								}
 								?>
 								<a href="<?=$url?>" target="_blank"><span class="btn_android_download index_items"></span></a>
-								<a href="http://<?=$row->game_id?>.long_e.com.tw" target="_blank"><span class="btn_go_web index_items"></span></a>
+								<a href="http://<?=$row->game_id?>.longeplay.com.tw" target="_blank"><span class="btn_go_web index_items"></span></a>
 							</div>
 						</div>
 					</li>
@@ -158,7 +158,7 @@
 							<? if (strpos($row->tags, "手遊")===false):?>
 							<a href="/play_game/<?=$row->game_id?>" target="_blank"><span class="btn01 index_items"></span></a>
 							<? endif;?>
-							<a href="http://<?=$row->game_id?>.long_e.com.tw" target="_blank"><span class="btn02 index_items"></span></a>
+							<a href="http://<?=$row->game_id?>.longeplay.com.tw" target="_blank"><span class="btn02 index_items"></span></a>
 						</div>
 					</li>
 					<? endforeach;?>

@@ -13,7 +13,7 @@ body {
 	background-color: #976c40;
 }
 </style>
-<link rel='stylesheet' type='text/css' href='http://mon.long_e.com.tw/p/css/default.css'>
+<link rel='stylesheet' type='text/css' href='http://mon.longeplay.com.tw/p/css/default.css'>
 
 <body>
 
@@ -47,9 +47,9 @@ body {
 </map>
 
 <map name="Map2" id="Map2">
-  <area shape="rect" coords="367,12,457,52" href="http://mon.long_e.com.tw" target="_blank"  />
+  <area shape="rect" coords="367,12,457,52" href="http://mon.longeplay.com.tw" target="_blank"  />
   <area shape="rect" coords="470,12,574,54" href="http://tw.socialgame.yahoo.net/mtag/mtag.php?ac=home&tagid=4807" target="_blank" />
-  <area shape="rect" coords="576,12,664,57" href="http://mon.long_e.com.tw/bulletin/get_list" target="_blank" />
+  <area shape="rect" coords="576,12,664,57" href="http://mon.longeplay.com.tw/bulletin/get_list" target="_blank" />
 </map>
 
 <iframe id="invite_ifm" src="" width="0" height="0" frameborder="0"></iframe>

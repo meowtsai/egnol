@@ -10,7 +10,7 @@
 		#flashContent { width:100%; height:100%; }
 		</style>
 		
-<link rel='stylesheet' type='text/css' href='http://gt.long_e.com.tw/p/css/default.css'>
+<link rel='stylesheet' type='text/css' href='http://gt.longeplay.com.tw/p/css/default.css'>
 <script src="/p/minik/gt/swfobject_modified.js" type="text/javascript"></script>
 
 <body>
@@ -56,7 +56,7 @@ function invite_friend() {
 }
 function chose_server_form() {
 	<? if ($old_user):?>
-	window.open("http://gt.long_e.com.tw/common/choose_server_form");
+	window.open("http://gt.longeplay.com.tw/common/choose_server_form");
 	<? else:?>	
 	window.open("<?=base_url()?>/play_game/gt");
 	<? endif;?>    
