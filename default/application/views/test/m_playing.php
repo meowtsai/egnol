@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Test Game</title>
-    <script type="text/javascript" src="http://www.cooz.com.tw/p/js/jquery-1.7.2.min.js?8"></script>
+    <script type="text/javascript" src="<?=base_url();?>/p/js/jquery-1.7.2.min.js?8"></script>
 </head>
 <body>
  

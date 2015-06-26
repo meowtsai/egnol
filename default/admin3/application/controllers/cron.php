@@ -155,22 +155,30 @@ class Cron extends CI_Controller {
 
         switch($span) {
 			case "weekly":
-			    $span_query1 = "YEAR(create_time) = YEAR('{$date}') AND WEEKOFYEAR(create_time) = WEEKOFYEAR('{$date}')";
-				$span_query2 = "AND YEAR(log_game_logins.create_time) = YEAR(DATE_ADD(DATE('{$date}'), INTERVAL {$interval} WEEK))
-				                AND WEEKOFYEAR(log_game_logins.create_time) = WEEKOFYEAR(DATE_ADD(DATE('{$date}'), INTERVAL {$interval} WEEK))";
+			    //$span_query1 = "YEAR(create_time) = YEAR('{$date}') AND WEEKOFYEAR(create_time) = WEEKOFYEAR('{$date}')";
+				//$span_query2 = " YEAR(log_game_logins.create_time) = YEAR(DATE_ADD(DATE('{$date}'), INTERVAL {$interval} WEEK))
+				//                AND WEEKOFYEAR(log_game_logins.create_time) = WEEKOFYEAR(DATE_ADD(DATE('{$date}'), INTERVAL {$interval} WEEK))";
+				$span_query1 = "create_time BETWEEN '".date("Y-m-d", strtotime("-6 days", strtotime($date)))."'
+								AND '".date("Y-m-d", strtotime($date))." 23:59:59'";
+				$span_query2 = "create_time BETWEEN '".date("Y-m-d", strtotime("+1 day", strtotime($date)))."'
+								AND '".date("Y-m-d", strtotime("+7 days", strtotime($date)))." 23:59:59'";
 				$save_table = "weekly_statistics";
 				break;
 			
 			case "monthly":
-			    $span_query1 = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}')";
-			    $span_query2 = "AND YEAR(log_game_logins.create_time) = YEAR(DATE_ADD(DATE('{$date}'), INTERVAL {$interval} WEEK))
-				                AND MONTH(log_game_logins.create_time) = MONTH(DATE_ADD(DATE('{$date}'), INTERVAL {$interval} MONTH))";
+			    //$span_query1 = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}')";
+			    //$span_query2 = " YEAR(log_game_logins.create_time) = YEAR(DATE_ADD(DATE('{$date}'), INTERVAL {$interval} MONTH))
+				//               AND MONTH(log_game_logins.create_time) = MONTH(DATE_ADD(DATE('{$date}'), INTERVAL {$interval} MONTH))";
+				$span_query1 = "create_time BETWEEN '".date("Y-m", strtotime($date))."-01'
+								AND '".date("Y-m-t", strtotime($date))." 23:59:59'";
+				$span_query2 = "create_time BETWEEN '".date("Y-m", strtotime("+1 day", strtotime($date)))."-01'
+								AND '".date("Y-m-t", strtotime("+1 day", strtotime($date)))." 23:59:59'";
 				$save_table = "monthly_statistics";
 				break;
 				
 			default:
 			    $span_query1 = "DATE(create_time) = '{$date}'";
-			    $span_query2 = "AND DATE(log_game_logins.create_time) = DATE_ADD(DATE('{$date}'), INTERVAL {$interval} DAY)";
+			    $span_query2 = " DATE(create_time) = DATE_ADD(DATE('{$date}'), INTERVAL {$interval} DAY)";
 				$save_table = "statistics";
 				break;
 		}
@@ -181,23 +189,30 @@ class Cron extends CI_Controller {
 			FROM
 			(
 				SELECT 
-					log_game_logins.game_id, 1 'is_retention'
+					lgl2.game_id, 1 'is_retention'
 				FROM
-					log_game_logins,
 				(
 					SELECT 
-						uid, game_id, server_id, create_time
+						uid, game_id, MIN(create_time)
 					FROM
 						log_game_logins
 					WHERE
 						".$span_query1."
 							".(($is_first) ? " AND is_first = 1 " : "")."
-				) AS lgl
-				WHERE
-					log_game_logins.uid = lgl.uid
-						AND log_game_logins.game_id = lgl.game_id
+					GROUP BY uid, game_id
+				) AS lgl,
+				(
+					SELECT 
+						uid, game_id, MIN(create_time)
+					FROM
+						log_game_logins
+					WHERE
 						".$span_query2."
-				GROUP BY log_game_logins.game_id , log_game_logins.uid
+					GROUP BY uid, game_id
+				) AS lgl2
+				WHERE
+					lgl2.uid = lgl.uid
+						AND lgl2.game_id = lgl.game_id
 			) AS tmp
 			GROUP BY game_id");	
 
@@ -638,16 +653,16 @@ class Cron extends CI_Controller {
 		$this->generate_consume_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_new_consume_statistics($date);
-		$start_time = $this->echo_passed_time($start_time);*/
+		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_game_time_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_paid_game_time_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
-		//$this->generate_peak_statistics($date);
-		//$start_time = $this->echo_passed_time($start_time);
+		$this->generate_peak_statistics($date);
+		$start_time = $this->echo_passed_time($start_time);*/
 		
 		if ("7"==date("N", strtotime($date))) {
-			$date_week=date("Y-m-d",strtotime("-1 weeks", strtotime($date)));
+			$date_week=date("Y-m-d",strtotime("-1 week", strtotime($date)));
 			$this->generate_retention_statistics($date_week, 1, 'weekly');
 			$start_time = $this->echo_passed_time($start_time);
 			$this->generate_retention_statistics($date_week, 1, 'weekly', FALSE);
@@ -655,7 +670,7 @@ class Cron extends CI_Controller {
 		}
 		
 		if ($date==date("Y-m-t", strtotime($date))) {
-			$date_month=date("Y-m-d",strtotime("-1 months", strtotime($date)));
+			$date_month=date("Y-m-t",strtotime("-31 days", strtotime($date)));
 			$this->generate_retention_statistics($date_month, 1, 'monthly');
 			$start_time = $this->echo_passed_time($start_time);
 			$this->generate_retention_statistics($date_month, 1, 'monthly', FALSE);

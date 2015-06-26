@@ -21,7 +21,7 @@
 			$game_server_cut = mb_strimwidth($game_server, 0, 26, '...', 'utf-8')
 		?>
 		<div style="line-height:19px;">
-			<a href="/play_game?sid=<?=$row->id?>" title="<?=$game_server?>"><?=$game_server_cut?></a>
+			<a href="/play_game?sid=<?=$row->server_id?>" title="<?=$game_server?>"><?=$game_server_cut?></a>
 		</div>
 		<? endforeach;?>
 	<? else: echo "<span style='color:#ddd; font-size:13px;'>尚未登入過遊戲</span>"?>
