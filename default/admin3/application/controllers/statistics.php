@@ -181,108 +181,95 @@ class Statistics extends MY_Controller {
 
         switch($span) {
 			case "weekly":
-			    $date_group = 'WEEK';
+			    $date_group = 'YEARWEEK(date, 3)';
 				break;
 			
 			case "monthly":
-			    $date_group = 'MONTH';
+			    $date_group = 'MONTH(date)';
 				break;
 				
 			default:
-			    $date_group = 'DATE';
+			    $date_group = 'DATE(date)';
 				break;
 		}		
 		
-		$query = $this->db->query("
-		SELECT new_gt.game_id, new_gt.date,
-		    new_login_count,
-			new_t15,
-			new_t30,
-			new_t60,
-			new_t90,
-			new_t120,
-			new_tmore,
-		    all_login_count,
-			all_t15,
-			all_t30,
-			all_t60,
-			all_t90,
-			all_t120,
-			all_tmore,
-		    deposit_login_count,
-			deposit_t15,
-			deposit_t30,
-			deposit_t60,
-			deposit_t90,
-			deposit_t120,
-			deposit_tmore,
-		    new_deposit_login_count,
-			new_deposit_t15,
-			new_deposit_t30,
-			new_deposit_t60,
-			new_deposit_t90,
-			new_deposit_t120,
-			new_deposit_tmore
-		FROM 
-		(SELECT game_id, {$date_group}(create_time) 'date',
-		    COUNT(uid) 'all_login_count',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 15 THEN 1 ELSE NULL END) 'all_t15',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 15 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 30 THEN 1 ELSE NULL END) 'all_t30',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 30 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 60 THEN 1 ELSE NULL END) 'all_t60',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 60 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 90 THEN 1 ELSE NULL END) 'all_t90',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 90 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 120 THEN 1 ELSE NULL END) 'all_t120',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 120 THEN 1 ELSE NULL END) 'all_tmore'
-		FROM log_game_logins
-		WHERE game_id = '{$game_id}'
-		AND create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-		AND is_first = 1
-		GROUP BY YEAR(create_time), {$date_group}(create_time)) AS all_gt
-		LEFT JOIN
-		(SELECT game_id, {$date_group}(create_time) 'date',
-		    COUNT(uid) 'new_login_count',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 15 THEN 1 ELSE NULL END) 'new_t15',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 15 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 30 THEN 1 ELSE NULL END) 'new_t30',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 30 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 60 THEN 1 ELSE NULL END) 'new_t60',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 60 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 90 THEN 1 ELSE NULL END) 'new_t90',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 90 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 120 THEN 1 ELSE NULL END) 'new_t120',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 120 THEN 1 ELSE NULL END) 'new_tmore'
-		FROM log_game_logins
-		WHERE game_id = '{$game_id}'
-		AND create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-		GROUP BY YEAR(create_time), {$date_group}(create_time)) AS new_gt ON all_gt.game_id=new_gt.game_id AND all_gt.date=new_gt.date
-		LEFT JOIN
-		(SELECT lgl.game_id, {$date_group}(lgl.create_time) 'date',
-		    COUNT(lgl.uid) 'deposit_login_count',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 15 THEN 1 ELSE NULL END) 'deposit_t15',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 15 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 30 THEN 1 ELSE NULL END) 'deposit_t30',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 30 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 60 THEN 1 ELSE NULL END) 'deposit_t60',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 60 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 90 THEN 1 ELSE NULL END) 'deposit_t90',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 90 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 120 THEN 1 ELSE NULL END) 'deposit_t120',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 120 THEN 1 ELSE NULL END) 'deposit_tmore'
-		FROM log_game_logins lgl
-		JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id AND lgl.create_time >= ub.create_time
-		WHERE lgl.game_id = '{$game_id}'
-		AND lgl.create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-        AND ub.billing_type = 2 
-        AND ub.result = 1
-		GROUP BY YEAR(lgl.create_time), {$date_group}(lgl.create_time)) AS deposit_gt ON all_gt.game_id=deposit_gt.game_id AND all_gt.date=deposit_gt.date
-		LEFT JOIN
-		(SELECT lgl.game_id, {$date_group}(lgl.create_time) 'date',
-		    COUNT(lgl.uid) 'new_deposit_login_count',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 15 THEN 1 ELSE NULL END) 'new_deposit_t15',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 15 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 30 THEN 1 ELSE NULL END) 'new_deposit_t30',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 30 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 60 THEN 1 ELSE NULL END) 'new_deposit_t60',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 60 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 90 THEN 1 ELSE NULL END) 'new_deposit_t90',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 90 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 120 THEN 1 ELSE NULL END) 'new_deposit_t120',
-			COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 120 THEN 1 ELSE NULL END) 'new_deposit_tmore'
-		FROM log_game_logins lgl
-		JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id AND DATE(lgl.create_time) = DATE(ub.create_time)
-		WHERE lgl.game_id = '{$game_id}'
-		AND lgl.create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-        AND ub.billing_type = 2 
-        AND ub.result = 1
-		GROUP BY YEAR(lgl.create_time), {$date_group}(lgl.create_time)) AS new_deposit_gt ON all_gt.game_id=new_deposit_gt.game_id AND all_gt.date=new_deposit_gt.date
-		");
+		if (!$span){
+			$query = $this->db->query("
+				SELECT
+					date,
+					new_login_count,
+					new_login_count_15,
+					new_login_count_30,
+					new_login_count_60,
+					new_login_count_90,
+					new_login_count_120,
+					new_login_count_more,
+					login_count,
+					login_count_15,
+					login_count_30,
+					login_count_60,
+					login_count_90,
+					login_count_120,
+					login_count_more,
+					deposit_login_count,
+					deposit_login_count_15,
+					deposit_login_count_30,
+					deposit_login_count_60,
+					deposit_login_count_90,
+					deposit_login_count_120,
+					deposit_login_count_more,
+					new_deposit_login_count,
+					new_deposit_login_count_15,
+					new_deposit_login_count_30,
+					new_deposit_login_count_60,
+					new_deposit_login_count_90,
+					new_deposit_login_count_120,
+					new_deposit_login_count_more
+				FROM statistics
+				WHERE game_id = '{$game_id}'
+				AND date BETWEEN '{$start_date}' AND '{$end_date}'
+				ORDER BY date DESC
+			");
+		} else {
+			$query = $this->db->query("
+				SELECT
+					YEAR(date) 'year',
+					{$date_group} 'date',
+					SUM(new_login_count) 'new_login_count',
+					SUM(new_login_count_15) 'new_login_count_15',
+					SUM(new_login_count_30) 'new_login_count_30',
+					SUM(new_login_count_60) 'new_login_count_60',
+					SUM(new_login_count_90) 'new_login_count_90',
+					SUM(new_login_count_120) 'new_login_count_120',
+					SUM(new_login_count_more) 'new_login_count_more',
+					SUM(login_count) 'login_count',
+					SUM(login_count_15) 'login_count_15',
+					SUM(login_count_30) 'login_count_30',
+					SUM(login_count_60) 'login_count_60',
+					SUM(login_count_90) 'login_count_90',
+					SUM(login_count_120) 'login_count_120',
+					SUM(login_count_more) 'login_count_more',
+					SUM(deposit_login_count) 'deposit_login_count',
+					SUM(deposit_login_count_15) 'deposit_login_count_15',
+					SUM(deposit_login_count_30) 'deposit_login_count_30',
+					SUM(deposit_login_count_60) 'deposit_login_count_60',
+					SUM(deposit_login_count_90) 'deposit_login_count_90',
+					SUM(deposit_login_count_120) 'deposit_login_count_120',
+					SUM(deposit_login_count_more) 'deposit_login_count_more',
+					SUM(new_deposit_login_count) 'new_deposit_login_count',
+					SUM(new_deposit_login_count_15) 'new_deposit_login_count_15',
+					SUM(new_deposit_login_count_30) 'new_deposit_login_count_30',
+					SUM(new_deposit_login_count_60) 'new_deposit_login_count_60',
+					SUM(new_deposit_login_count_90) 'new_deposit_login_count_90',
+					SUM(new_deposit_login_count_120) 'new_deposit_login_count_120',
+					SUM(new_deposit_login_count_more) 'new_deposit_login_count_more'
+				FROM statistics
+				WHERE game_id = '{$game_id}'
+				AND date BETWEEN '{$start_date}' AND '{$end_date}'
+				GROUP BY game_id, YEAR(date), {$date_group}
+				ORDER BY YEAR(date) DESC, {$date_group} DESC
+			");
+		}
         
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
@@ -330,7 +317,7 @@ class Statistics extends MY_Controller {
 				break;
 		}
 		
-		if (''==$span) {
+		if (!$span) {
 		    $query = $this->db->query("
 		    (SELECT 
 		        stc.date 'date',

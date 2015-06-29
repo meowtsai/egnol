@@ -609,6 +609,148 @@ class Cron extends CI_Controller {
 		echo "generate_peak_statistics done - ".$date.PHP_EOL;
 	}
 	
+	function generate_game_length_statistics($date="")
+	{
+		$this->lang->load('db_lang', 'zh-TW');
+		
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));			
+		
+			$query = $this->db->query("
+				SELECT new_gt.game_id, new_gt.date,
+					new_login_count,
+					new_login_count_15,
+					new_login_count_30,
+					new_login_count_60,
+					new_login_count_90,
+					new_login_count_120,
+					new_login_count_more,
+					all_login_count,
+					login_count_15,
+					login_count_30,
+					login_count_60,
+					login_count_90,
+					login_count_120,
+					login_count_more,
+					deposit_login_count,
+					deposit_login_count_15,
+					deposit_login_count_30,
+					deposit_login_count_60,
+					deposit_login_count_90,
+					deposit_login_count_120,
+					deposit_login_count_more,
+					new_deposit_login_count,
+					new_deposit_login_count_15,
+					new_deposit_login_count_30,
+					new_deposit_login_count_60,
+					new_deposit_login_count_90,
+					new_deposit_login_count_120,
+					new_deposit_login_count_more
+				FROM 
+				(
+					SELECT game_id, DATE(create_time) 'date',
+						COUNT(uid) 'all_login_count',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 15 THEN 1 ELSE NULL END) 'login_count_15',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 15 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 30 THEN 1 ELSE NULL END) 'login_count_30',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 30 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 60 THEN 1 ELSE NULL END) 'login_count_60',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 60 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 90 THEN 1 ELSE NULL END) 'login_count_90',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 90 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 120 THEN 1 ELSE NULL END) 'login_count_120',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 120 THEN 1 ELSE NULL END) 'login_count_more'
+					FROM log_game_logins
+					WHERE create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
+					GROUP BY game_id, DATE(create_time)
+				) AS all_gt
+					LEFT JOIN
+				(
+					SELECT game_id, DATE(create_time) 'date',
+						COUNT(uid) 'new_login_count',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 15 THEN 1 ELSE NULL END) 'new_login_count_15',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 15 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 30 THEN 1 ELSE NULL END) 'new_login_count_30',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 30 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 60 THEN 1 ELSE NULL END) 'new_login_count_60',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 60 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 90 THEN 1 ELSE NULL END) 'new_login_count_90',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 90 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 120 THEN 1 ELSE NULL END) 'new_login_count_120',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 120 THEN 1 ELSE NULL END) 'new_login_count_more'
+					FROM log_game_logins
+					WHERE create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
+						AND is_first = 1
+					GROUP BY game_id, DATE(create_time)
+				) AS new_gt ON all_gt.game_id=new_gt.game_id AND all_gt.date=new_gt.date
+					LEFT JOIN
+				(
+					SELECT lgl.game_id, DATE(lgl.create_time) 'date',
+						COUNT(lgl.uid) 'deposit_login_count',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 15 THEN 1 ELSE NULL END) 'deposit_login_count_15',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 15 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 30 THEN 1 ELSE NULL END) 'deposit_login_count_30',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 30 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 60 THEN 1 ELSE NULL END) 'deposit_login_count_60',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 60 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 90 THEN 1 ELSE NULL END) 'deposit_login_count_90',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 90 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 120 THEN 1 ELSE NULL END) 'deposit_login_count_120',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 120 THEN 1 ELSE NULL END) 'deposit_login_count_more'
+					FROM log_game_logins lgl
+					JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id AND lgl.create_time >= ub.create_time
+					WHERE lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
+						AND ub.billing_type = 2 
+						AND ub.result = 1
+					GROUP BY lgl.game_id, DATE(lgl.create_time)
+				) AS deposit_gt ON all_gt.game_id=deposit_gt.game_id AND all_gt.date=deposit_gt.date
+					LEFT JOIN
+				(
+					SELECT lgl.game_id, DATE(lgl.create_time) 'date',
+						COUNT(lgl.uid) 'new_deposit_login_count',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 15 THEN 1 ELSE NULL END) 'new_deposit_login_count_15',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 15 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 30 THEN 1 ELSE NULL END) 'new_deposit_login_count_30',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 30 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 60 THEN 1 ELSE NULL END) 'new_deposit_login_count_60',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 60 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 90 THEN 1 ELSE NULL END) 'new_deposit_login_count_90',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 90 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 120 THEN 1 ELSE NULL END) 'new_deposit_login_count_120',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 120 THEN 1 ELSE NULL END) 'new_deposit_login_count_more'
+					FROM log_game_logins lgl
+					JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id AND DATE(lgl.create_time) = DATE(ub.create_time)
+					WHERE lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
+						AND ub.billing_type = 2 
+						AND ub.result = 1
+					GROUP BY lgl.game_id, DATE(lgl.create_time)
+				) AS new_deposit_gt ON all_gt.game_id=new_deposit_gt.game_id AND all_gt.date=new_deposit_gt.date
+			");
+
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+				if (isset($row->game_id)) {
+			        $data = array(
+				        'game_id' => $row->game_id,
+				        'date' => $date,
+						'new_login_count_15' => $row->new_login_count_15,
+						'new_login_count_30' => $row->new_login_count_30,
+						'new_login_count_60' => $row->new_login_count_60,
+						'new_login_count_90' => $row->new_login_count_90,
+						'new_login_count_120' => $row->new_login_count_120,
+						'new_login_count_more' => $row->new_login_count_more,
+						'login_count_15' => $row->login_count_15,
+						'login_count_30' => $row->login_count_30,
+						'login_count_60' => $row->login_count_60,
+						'login_count_90' => $row->login_count_90,
+						'login_count_120' => $row->login_count_120,
+						'login_count_more' => $row->login_count_more,
+						'deposit_login_count' => $row->deposit_login_count,
+						'deposit_login_count_15' => $row->deposit_login_count_15,
+						'deposit_login_count_30' => $row->deposit_login_count_30,
+						'deposit_login_count_60' => $row->deposit_login_count_60,
+						'deposit_login_count_90' => $row->deposit_login_count_90,
+						'deposit_login_count_120' => $row->deposit_login_count_120,
+						'deposit_login_count_more' => $row->deposit_login_count_more,
+						'new_deposit_login_count' => $row->new_deposit_login_count,
+						'new_deposit_login_count_15' => $row->new_deposit_login_count_15,
+						'new_deposit_login_count_30' => $row->new_deposit_login_count_30,
+						'new_deposit_login_count_60' => $row->new_deposit_login_count_60,
+						'new_deposit_login_count_90' => $row->new_deposit_login_count_90,
+						'new_deposit_login_count_120' => $row->new_deposit_login_count_120,
+						'new_deposit_login_count_more' => $row->new_deposit_login_count_more
+			        );
+				
+					$this->save_statistics($data);
+			    }
+		    }
+		}
+		echo "generate_game_length_statistics done - ".$date.PHP_EOL;
+	}
+	
 	function save_statistics($data, $save_table="statistics") {
 		$game_id = $data['game_id'];
 		
@@ -660,8 +802,10 @@ class Cron extends CI_Controller {
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_peak_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);*/
+		$this->generate_game_length_statistics($date);
+		$start_time = $this->echo_passed_time($start_time);
 		
-		if ("7"==date("N", strtotime($date))) {
+		/*if ("7"==date("N", strtotime($date))) {
 			$date_week=date("Y-m-d",strtotime("-1 week", strtotime($date)));
 			$this->generate_retention_statistics($date_week, 1, 'weekly');
 			$start_time = $this->echo_passed_time($start_time);
@@ -675,7 +819,7 @@ class Cron extends CI_Controller {
 			$start_time = $this->echo_passed_time($start_time);
 			$this->generate_retention_statistics($date_month, 1, 'monthly', FALSE);
 			$start_time = $this->echo_passed_time($start_time);
-		}
+		}*/
 	}
 	
 	function echo_passed_time($start_time) {

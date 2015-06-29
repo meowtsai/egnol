@@ -1,4 +1,5 @@
 <?php 
+	$channels = $this->config->item('channels');
 	$c_game_query = $this->db->from("games")->order_by("rank")->get();
 
 	$c_game = array();
@@ -12,8 +13,6 @@
 		if (strpos($row->tags.",", "聯運,") !== false) {$c_game_menu["聯運"][] = $row; continue;}
 		$c_game_menu["獨代"][] = $row;
 	}
-	
-	$channels = $this->config->item('channels');
 ?>
 <div id="func_bar">
 	
@@ -102,33 +101,50 @@
 				$startdate = strtotime($row->date);
 				$enddate = time();
 				$days = round(($enddate-$startdate)/3600/24) ; 
+				
+				switch($this->input->get("span")) {
+					case "weekly":
+						$year = substr($row->date, 0, 4);
+						$week = substr($row->date, 4, 2);
+						$show_date =  date("Y-m-d",strtotime($year."W".sprintf('%02d', $week))) 
+						      . "~" . date("m-d",strtotime($year."W".sprintf('%02d',$week)."7"));
+						break;
+					
+					case "monthly":
+						$show_date = $row->year . "-" . $row->date;
+						break;
+						
+					default:
+						$show_date = $row->date;
+						break;
+				}
 		?>
 			<tr>			
-				<td nowrap="nowrap"><?=$row->date?></td>
-				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_t15*100/$row->new_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_t30*100/$row->new_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_t60*100/$row->new_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_t90*100/$row->new_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_t120*100/$row->new_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_tmore*100/$row->new_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->all_login_count)?$row->all_t15*100/$row->all_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->all_login_count)?$row->all_t30*100/$row->all_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->all_login_count)?$row->all_t60*100/$row->all_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->all_login_count)?$row->all_t90*100/$row->all_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->all_login_count)?$row->all_t120*100/$row->all_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->all_login_count)?$row->all_tmore*100/$row->all_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->new_deposit_login_count)?$row->new_deposit_t15*100/$row->new_deposit_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->new_deposit_login_count)?$row->new_deposit_t30*100/$row->new_deposit_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->new_deposit_login_count)?$row->new_deposit_t60*100/$row->new_deposit_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->new_deposit_login_count)?$row->new_deposit_t90*100/$row->new_deposit_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->new_deposit_login_count)?$row->new_deposit_t120*100/$row->new_deposit_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->new_deposit_login_count)?$row->new_deposit_tmore*100/$row->new_deposit_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->deposit_login_count)?$row->deposit_t15*100/$row->deposit_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->deposit_login_count)?$row->deposit_t30*100/$row->deposit_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->deposit_login_count)?$row->deposit_t60*100/$row->deposit_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->deposit_login_count)?$row->deposit_t90*100/$row->deposit_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->deposit_login_count)?$row->deposit_t120*100/$row->deposit_login_count:0, 2).'%'?></td>
-				<td style="text-align:right"><?=number_format(($row->deposit_login_count)?$row->deposit_tmore*100/$row->deposit_login_count:0, 2).'%'?></td>														
+				<td nowrap="nowrap"><?=$show_date?></td>
+				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_login_count_15*100/$row->new_login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_login_count_30*100/$row->new_login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_login_count_60*100/$row->new_login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_login_count_90*100/$row->new_login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_login_count_120*100/$row->new_login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_login_count_more*100/$row->new_login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->login_count)?$row->login_count_15*100/$row->login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->login_count)?$row->login_count_30*100/$row->login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->login_count)?$row->login_count_60*100/$row->login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->login_count)?$row->login_count_90*100/$row->login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->login_count)?$row->login_count_120*100/$row->login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->login_count)?$row->login_count_more*100/$row->login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->new_deposit_login_count)?$row->new_deposit_login_count_15*100/$row->new_deposit_login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->new_deposit_login_count)?$row->new_deposit_login_count_30*100/$row->new_deposit_login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->new_deposit_login_count)?$row->new_deposit_login_count_60*100/$row->new_deposit_login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->new_deposit_login_count)?$row->new_deposit_login_count_90*100/$row->new_deposit_login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->new_deposit_login_count)?$row->new_deposit_login_count_120*100/$row->new_deposit_login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->new_deposit_login_count)?$row->new_deposit_login_count_more*100/$row->new_deposit_login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->deposit_login_count)?$row->deposit_login_count_15*100/$row->deposit_login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->deposit_login_count)?$row->deposit_login_count_30*100/$row->deposit_login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->deposit_login_count)?$row->deposit_login_count_60*100/$row->deposit_login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->deposit_login_count)?$row->deposit_login_count_90*100/$row->deposit_login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->deposit_login_count)?$row->deposit_login_count_120*100/$row->deposit_login_count:0, 2).'%'?></td>
+				<td style="text-align:right"><?=number_format(($row->deposit_login_count)?$row->deposit_login_count_more*100/$row->deposit_login_count:0, 2).'%'?></td>														
 			</tr>
 		<? endforeach;?>
 		</tbody>
