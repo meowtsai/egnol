@@ -5,9 +5,9 @@ vagrantVM.ppk
 default/application/logs/
 default/admin3/application/logs/
 config.php
-ci_system/global/config/*
-!ci_system/global/config/template/
-default/application/config/*
-!default/application/config/template/
-default/admin3/application/config/*
-!default/admin3/application/config/template/
+#ci_system/global/config/*
+#!ci_system/global/config/template/
+#default/application/config/*
+#!default/application/config/template/
+#default/admin3/application/config/*
+#!default/admin3/application/config/template/
