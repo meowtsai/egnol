@@ -15,7 +15,14 @@ class Member extends MY_Controller {
 			->set("submenu", "member")
 			->set_breadcrumb(array("會員中心"=>"member/index"));	
 	}
-	
+
+	function _check_login_json()
+	{
+		if (empty($this->uid)) {
+			die(json_failure("尚未登入，請重新進行登入"));
+		}
+	}
+
 	function test()
 	{
 		fb($this->g_user->account, 'account');
@@ -125,7 +132,7 @@ class Member extends MY_Controller {
 	
 	function bind_account_json()
 	{
-		$this->g_user->check_login_json();
+		$this->_check_login_json();
 		
 		$account = $this->input->post("account");
 		$mobile = $this->input->post("mobile");
@@ -153,7 +160,7 @@ class Member extends MY_Controller {
 	
 	function m_bind_account_json()
 	{
-		$this->g_user->check_login_json();
+		$this->_check_login_json();
 		
 		$account = $this->input->post("account");
 		$mobile = $this->input->post("mobile");
@@ -182,7 +189,7 @@ class Member extends MY_Controller {
 	/*
 	function modify_bind_password()
 	{
-		$this->g_user->check_login_json();
+		$this->_check_login_json();
 		
 		$pwd = $this->input->post("pwd");
 		$pwd2 = $this->input->post("pwd2");
@@ -438,12 +445,61 @@ class Member extends MY_Controller {
 				->view("member/register/{$game}");	
 		}			
 	}
-	
+
 	function register_json()
-	{		
-		return $this->g_user->register_json('long_e');
-	}		
-	
+	{
+        $site = 'long_e';
+		$account = $this->input->post("account");
+		$pwd = $this->input->post("pwd");
+		$pwd2 = $this->input->post("pwd2");
+		$email = $this->input->post('email');
+		$name = $this->input->post("name");
+		$captcha = $this->input->post('captcha');
+
+		header('content-type:text/html; charset=utf-8');
+		if ( empty($account) || empty($pwd) ) {
+			die(json_failure("請輸入帳號及密碼進行登入"));
+		}
+		else if (!ereg("^[a-z0-9_]+$", $account))
+		{
+			die(json_failure("帳號不得包含特殊字元及大寫字母"));
+		}
+		else if ($pwd != $pwd2) {
+			die(json_failure("兩次密碼輸入不相同"));
+		}
+		else if (empty($_SESSION['captcha']) || $captcha != $_SESSION['captcha']) {
+			die(json_failure("驗證碼錯誤"));
+		}
+
+		$boolResult = $this->create_account($account, $pwd, $email, $name, $site);
+
+		if ($boolResult==true){
+			$users_data = array();
+			$this->input->post("sex") && $users_data["sex"] = $this->input->post("sex");
+			$this->input->post("mobile") && $users_data["mobile"] = $this->input->post("mobile");
+			if ($this->input->post("birthday_y")) {
+				$users_data["birthday"] = "{$this->input->post("birthday_y")}-{$this->input->post("birthday_m")}-{$this->input->post("birthday_d")}";
+			}
+			if (count($users_data) > 0) {
+				$this->db->where("account", $account)->update("users", $users_data);
+			}
+
+			$user_info_data = array();
+			$this->input->post("ident") && $user_info_data["ident"] = $this->input->post("ident");
+			$this->input->post("phone") && $user_info_data["phone"] = $this->input->post("phone");
+			$this->input->post("street") && $user_info_data["street"] = $this->input->post("street");
+			if (count($user_info_data) > 0) {
+				$this->db->where("account", $account)->update("user_info", $user_info_data);
+			}
+
+			$this->verify_account($account, $pwd);
+			die(json_message(array("message"=>"成功", "site"=>$site), true));
+		}
+		else {
+			die(json_failure($this->error_message));
+		}
+	}
+
 	function forgot_password()
 	{
 		$this->_init_layout()
@@ -509,7 +565,7 @@ class Member extends MY_Controller {
 	
 	function change_password_json()
 	{
-		$this->g_user->check_login_json();
+		$this->_check_login_json();
 		
 		$pwd = $this->input->post("pwd");
 		$pwd2 = $this->input->post("pwd2");
@@ -532,6 +588,3 @@ class Member extends MY_Controller {
 		die(json_message(array("message"=>"修改成功", "back_url"=>site_url("member/index"))));
 	}	
 }
-
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */

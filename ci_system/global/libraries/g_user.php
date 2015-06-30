@@ -118,14 +118,6 @@ class G_User {
 			return true;
 		}
 	}	
-	
-	function check_login_json()
-	{
-		if (empty($this->uid)) {
-			die(json_failure("尚未登入，請重新進行登入"));
-		}
-	}
-	
 	//進行登入，若帳號不存在，則建立
 	function login($account, $password='', $email='', $name='', $site='')
 	{
@@ -253,60 +245,7 @@ class G_User {
 		if (empty($uid)) $uid = $this->uid;
 		return $this->CI->db->from("users")->where("uid", $uid)->get()->row();
 	}
-	
-	function register_json($site='long_e')
-	{
-		$account = $this->CI->input->post("account");
-		$pwd = $this->CI->input->post("pwd");
-		$pwd2 = $this->CI->input->post("pwd2");
-		$email = $this->CI->input->post('email');
-		$name = $this->CI->input->post("name");		
-		$captcha = $this->CI->input->post('captcha');
 
-		header('content-type:text/html; charset=utf-8');
-		if ( empty($account) || empty($pwd) ) {
-			die(json_failure("請輸入帳號及密碼進行登入"));
-		}
-		else if (!ereg("^[a-z0-9_]+$", $account))
-		{
-			die(json_failure("帳號不得包含特殊字元及大寫字母"));
-		}
-		else if ($pwd != $pwd2) {
-			die(json_failure("兩次密碼輸入不相同"));
-		}
-		else if (empty($_SESSION['captcha']) || $captcha != $_SESSION['captcha']) {
-			die(json_failure("驗證碼錯誤"));
-		}
-	
-		$boolResult = $this->create_account($account, $pwd, $email, $name, $site);
-	
-		if ($boolResult==true){
-			$users_data = array();
-			$this->CI->input->post("sex") && $users_data["sex"] = $this->CI->input->post("sex");
-			$this->CI->input->post("mobile") && $users_data["mobile"] = $this->CI->input->post("mobile");
-			if ($this->CI->input->post("birthday_y")) {
-				$users_data["birthday"] = "{$this->CI->input->post("birthday_y")}-{$this->CI->input->post("birthday_m")}-{$this->CI->input->post("birthday_d")}";
-			}
-			if (count($users_data) > 0) {
-				$this->CI->db->where("account", $account)->update("users", $users_data);
-			} 
-			
-			$user_info_data = array();
-			$this->CI->input->post("ident") && $user_info_data["ident"] = $this->CI->input->post("ident");
-			$this->CI->input->post("phone") && $user_info_data["phone"] = $this->CI->input->post("phone");
-			$this->CI->input->post("street") && $user_info_data["street"] = $this->CI->input->post("street");
-			if (count($user_info_data) > 0) {
-				$this->CI->db->where("account", $account)->update("user_info", $user_info_data);
-			} 
-						
-			$this->verify_account($account, $pwd);
-			die(json_message(array("message"=>"成功", "site"=>$site), true));
-		}
-		else {
-			die(json_failure($this->error_message));
-		}
-	}	
-	
 	function create_account($account, $password, $email='', $name='', $site='', $bind_uid='') 
 	{			
 		$account = trim($account);
