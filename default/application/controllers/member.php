@@ -299,6 +299,23 @@ class Member extends MY_Controller
 		die(json_success());
 	}
 
+	// 註冊新帳號
+	//	GET 輸入參數:
+	//      redirect_url- String    註冊完成後要返回的網址
+	function register()
+	{
+		$redirect_url = urldecode($this->input->get("redirect_url", true));
+
+		if (empty($redirect_url))
+		{
+			$redirect_url = site_url("/");
+		}
+
+		$this->_init_layout()
+			->set("redirect_url", $redirect_url)
+			->standard_view("member/register");
+	}
+/*
 	function register()
 	{					
 		// Cross-Origin Resource Sharing Header
@@ -342,7 +359,7 @@ class Member extends MY_Controller
 				->view("member/register/{$game}");	
 		}			
 	}
-
+*/
 	function register_json()
 	{
         $site = 'long_e';

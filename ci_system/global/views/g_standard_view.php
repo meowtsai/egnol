@@ -21,7 +21,9 @@
 <body>
   <div id="container">
   	<? $this->load->view("g_top_bar", Array("site" => $site, "game_url" => $game_url)); ?>
-	<?=$layout_content?>
+	<div id="content_view">
+		<?=$layout_content?>
+	</div>
    	<? $this->load->view("g_copyright")?>
   </div>
 </body>
