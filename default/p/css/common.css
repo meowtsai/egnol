@@ -58,8 +58,8 @@ a:hover {
 	padding: 0;
 	border: 1px solid #ddd;
 	background-color: #fff;
-    word-wrap: none;
 	overflow: hidden;
+	font-size: 12px;
 }
 
 #le_footer {
@@ -78,6 +78,7 @@ a:hover {
 	margin: 5px 0;
 	text-align: center;
 	color: #333;
-	font-size: 14px;
+	font-size: 12px;
 	font-weight: bold;
+	overflow: hide;
 }
