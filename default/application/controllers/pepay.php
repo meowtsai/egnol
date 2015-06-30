@@ -32,7 +32,7 @@ class Pepay extends MY_Controller {
 	
 	function order()
 	{		
-		$this->g_user->check_login('long_e', true);
+		$this->_require_login();
 		
 		$query = $this->db->query("SELECT count(*) > (15-1) as chk FROM pepay_billing WHERE uid={$this->g_user->uid} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");
 		if ($query->row()->chk) die("請勿連續送出，以免重複扣款，造成您的損失!!");			

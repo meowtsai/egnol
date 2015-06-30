@@ -117,7 +117,36 @@ class G_User {
 		{			
 			return true;
 		}
-	}	
+	}
+
+	// 檢查玩家是否已登入, 若未登入則導向登入畫面
+	function require_login($site='', $redirect_url='')
+	{
+		if (empty($this->uid))
+		{
+			if (empty($redirect_url))
+			{
+				$redirect_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+			}
+			header("Content-type: text/html; charset=utf-8");
+			echo "<script type='text/javascript'>
+					alert('請先進行登入');
+					top.location.href='http://{$_SERVER['HTTP_HOST']}/member/login?site={$site}&redirect_url=".urlencode($redirect_url)."';
+					</script>";
+			exit();
+		}
+		else
+		{
+			return true;
+		}
+	}
+
+	// 檢查玩家是否已登入
+	function is_login()
+	{
+		return !empty($this->uid);
+	}
+
 	//進行登入，若帳號不存在，則建立
 	function login($account, $password='', $email='', $name='', $site='')
 	{
@@ -348,7 +377,8 @@ class G_User {
 		$back_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
 		$long_e_login_page = site_url("member/login?site={$site}&redirect_url=".urlencode($back_url));
 
-		if ($this->check_login($site)) { //已登入帶登入資訊
+		if ($this->is_login())
+		{ //已登入帶登入資訊
 			$account = $this->account;	
 		}
 		else {	//使用get資訊
@@ -483,7 +513,7 @@ class G_User {
 			}
 		}
 		
-		if ($this->check_login($site)) {
+		if ($this->is_login()) {
 			//if (($uid && $uid <> $this->uid) || ($account && $account <> $this->account)) {
 			//	header("location: {$long_e_login_page}"); 
 			//	exit();

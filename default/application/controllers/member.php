@@ -26,7 +26,7 @@ class Member extends MY_Controller {
 	function test()
 	{
 		fb($this->g_user->account, 'account');
-		var_dump($this->g_user->check_login("33sl"));
+		var_dump($this->_require_login("33sl"));
 		
 		exit();
 		die($this->g_user->display_account());
@@ -102,7 +102,7 @@ class Member extends MY_Controller {
 	
 	function bind_account()
 	{
-		$this->g_user->check_login('', true);
+		$this->_require_login();
 		
 		$user_data = $this->g_user->get_user_data();
 		
@@ -216,7 +216,7 @@ class Member extends MY_Controller {
 	
 	function update_member_data()
 	{
-		$this->g_user->check_login('', true);	
+		$this->_require_login();
 		if ($this->g_user->check_extra_account($this->g_user->account)) 
 		{			
 			$row = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get()->row();		
@@ -274,7 +274,7 @@ class Member extends MY_Controller {
 	
 	function payment_log()
 	{	
-		$this->g_user->check_login('', true);
+		$this->_require_login();
 		
 		$this->_init_layout();
 		$this->load->config("g_mycard");
@@ -346,7 +346,7 @@ class Member extends MY_Controller {
 	
 	function wallet_log()
 	{	
-		$this->g_user->check_login('', true);
+		$this->_require_login();
 		
 		$this->_init_layout();
 		
@@ -541,7 +541,7 @@ class Member extends MY_Controller {
 	
 	function change_password()
 	{
-		$this->g_user->check_login('', true);	
+		$this->_require_login();
 		if ($this->g_user->check_extra_account($this->g_user->account)) 
 		{			
 			$row = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get()->row();		

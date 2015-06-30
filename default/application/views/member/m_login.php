@@ -28,7 +28,7 @@ else {
 
 <? if (get_mobile_os() == 'ios') echo  '<br><br><br><br>'?>
 
-<? if ($this->g_user->check_login()):?>
+<? if ($this->g_user->is_login()):?>
 <div style="padding:6px">
 	Hello, <?=$this->g_user->display_account();?>
 	<? if ($bind_account):?>

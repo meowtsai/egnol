@@ -72,7 +72,7 @@ class Payment extends MY_Controller {
 	
 	/*function choose()
 	{
-		$this->g_user->check_login($site='', true); 
+		$this->_require_login();
 		
 		$f = file_get_contents(site_url("mycard/get_payment"));
 		$price = json_decode($f); 
@@ -92,7 +92,7 @@ class Payment extends MY_Controller {
 	
 	function m_index()
 	{
-		$this->g_user->check_login('', true);
+		$this->_require_login();
 			
 		$this->_init_payment_layout()
 			->set("sid", $this->input->get("sid"))	
@@ -102,7 +102,7 @@ class Payment extends MY_Controller {
 	
 	function m_long_e_index()
 	{
-		$this->g_user->check_login('', true);
+		$this->_require_login();
 			
 		$this->_init_payment_layout()
 			->set("sid", $this->input->get("sid"))	
@@ -112,7 +112,7 @@ class Payment extends MY_Controller {
 	
 	function m_ios_index()
 	{
-		$this->g_user->check_login('', true);
+		$this->_require_login();
 			
 		$partner = $this->input->get("partner");
 		$game = $this->input->get("game");
@@ -133,7 +133,7 @@ class Payment extends MY_Controller {
 	
 	function m_google_index()
 	{
-		$this->g_user->check_login('', true);
+		$this->_require_login();
 			
 		$this->_init_payment_layout()
 			->set("sid", $this->input->get("sid"))
@@ -143,7 +143,7 @@ class Payment extends MY_Controller {
 	
 // 	function m_index2()
 // 	{
-// 		$this->g_user->check_login('', true);
+// 		$this->_require_login();
 				
 // 		$this->_init_payment_layout()
 // 			->set("sid", $this->input->get("sid"))	
@@ -153,7 +153,7 @@ class Payment extends MY_Controller {
 	
 	function m_choose()
 	{
-		$this->g_user->check_login('', true);
+		$this->_require_login();
 		
 		$type = $this->input->get("type");
 		$url = base_url()."/mycard/get_product/".urlencode($type);
@@ -170,7 +170,7 @@ class Payment extends MY_Controller {
 	function m_choose2()
 	{
 		$this->load->config("g_gash");
-		$this->g_user->check_login('', true);
+		$this->_require_login();
 		
 		$type = $this->input->get("type");				
 		$this->_init_payment_layout()
@@ -182,7 +182,7 @@ class Payment extends MY_Controller {
 	function m_choose3()
 	{
 		$this->load->config("g_pepay");
-		$this->g_user->check_login('', true);
+		$this->_require_login();
 		
 		$type = $this->input->get("type");				
 		$this->_init_payment_layout()
@@ -193,7 +193,7 @@ class Payment extends MY_Controller {
 	
 	function m_google_choose()
 	{
-		$this->g_user->check_login('', true);
+		$this->_require_login();
 				
 		$this->load->config('api');		
 		$this->partner_conf = $this->config->item("partner_api");

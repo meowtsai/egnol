@@ -602,7 +602,7 @@ if($client->getAuth()->isAccessTokenExpired()) {
 	
 	function m_playing() {
 		
-		$this->g_user->check_login('long_e', true);
+		$this->_require_login();
 		
 		$html = $this->load->view("test/m_playing", null, true);
 		echo "<html>";

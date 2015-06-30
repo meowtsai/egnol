@@ -61,7 +61,7 @@ class Beanfun extends MY_Controller {
     			location.href='http://tw.beanfun.com/playweb/index.aspx';	
 			</script>");
 		}
-		if ($this->g_user->check_login($game_id) == false) {
+		if ($this->_require_login($game_id) == false) {
 			unset($_SESSION['beanfun_id']);
     		//若驗證失敗則將玩家導回Gamania網頁(http://tw.beanfun.com/playweb/index.aspx)重新操作。
     		die("<script type='text/javascript'>

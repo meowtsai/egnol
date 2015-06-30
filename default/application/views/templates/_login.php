@@ -1,4 +1,4 @@
-			<div id="login" class="<?= $this->g_user->check_login() ? 'logined' : ''?> box">
+			<div id="login" class="<?= $this->g_user->is_login() ? 'logined' : ''?> box">
 				<div class="bd">
 				
 <? if ($this->g_user->check_login()):?>

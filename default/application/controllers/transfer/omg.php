@@ -27,7 +27,7 @@ class Omg extends MY_Controller {
 
 	function submit_order()
 	{		
-		$this->g_user->check_login('', true);
+		$this->_require_login();
 				
 		$server_id = $this->input->post("server_id");
 		$price = $this->input->post("price");
@@ -104,7 +104,7 @@ $(function(){
 	
 	function callback()
 	{
-		$this->g_user->check_login('', true);
+		$this->_require_login();
 		
 		$storeid = $_POST['storeid'];
 		$tradeno = $_POST['tradeno'];

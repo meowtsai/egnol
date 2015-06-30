@@ -37,7 +37,7 @@ class Mycard extends MY_Controller {
 	
 	function ingame() //實體卡
 	{
-		$this->g_user->check_login('', true);
+		$this->_require_login();
 		
 		//新建訂單
 		$trade_seq = $this->_make_trade_seq();
@@ -184,7 +184,7 @@ class Mycard extends MY_Controller {
 	
 	function confirm()
 	{
-		$this->g_user->check_login('', true);
+		$this->_require_login();
 		
 		$cardId = $this->input->post("cardId");
 		$cardPwd = $this->input->post("cardPwd");
@@ -281,7 +281,7 @@ class Mycard extends MY_Controller {
 	
 	function choose()
 	{
-		$this->g_user->check_login('', true); 
+		$this->_require_login();
 		
 		$f = file_get_contents(site_url("mycard/get_payment"));
 		$price = json_decode($f); 

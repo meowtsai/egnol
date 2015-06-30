@@ -23,7 +23,7 @@ class Gate extends MY_Controller {
     	}
 
 		$this->load->library("channel_api/fb_api", $param);
-		if ($this->g_user->check_login()) {
+		if ($this->g_user->is_login()) {
 			$_GET["url"] = "http://{$site}.longeplay.com.tw/common/choose_server_form?ad={$ad}";
 			$this->play_game($site);
 		} 
@@ -303,7 +303,7 @@ class Gate extends MY_Controller {
 	{						
 		$ad = $this->input->get("ad"); //廣告參數
 		
-		$this->g_user->check_login($game_id, true);
+		$this->_require_login($game_id);
 		
 		if ($game_id) //系統選擇入口
 		{
@@ -346,7 +346,7 @@ class Gate extends MY_Controller {
 		$server = $this->games->get_server($sid);	
 		if (empty($server)) die('遊戲不存在');
 		
-		$this->g_user->check_login($server->game_id, true);
+		$this->_require_login($server->game_id);
 
 		$this->load->model(array("g_bulletins", "g_pictures"));
 		$this->load->config("game");
@@ -394,7 +394,7 @@ class Gate extends MY_Controller {
 		}
 		if (empty($server)) $this->_redirect_web($game_id, "伺服器不存在或未開放");			 
 		
-		$this->g_user->check_login($server->game_id, true);
+		$this->_require_login($server->game_id);
 		
 		/**
 		if ($ad == 'winwin' && isset($_SESSION["winwin_guid"])) {

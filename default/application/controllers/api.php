@@ -501,7 +501,7 @@ class Api extends MY_Controller {
 			exit();
 		}
 		
-		if ( ! $this->g_user->check_login()) {
+		if ( ! $this->g_user->is_login()) {
 			$_SESSION['channel'] = 'long_e';
 		}
 		
@@ -530,7 +530,7 @@ class Api extends MY_Controller {
 
 		$bind_account = false;
 		
-		if ($this->g_user->check_login() && $this->g_user->is_channel_account()) {
+		if ($this->g_user->is_login() && $this->g_user->is_channel_account()) {
 			$query = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get();
 			if ($query->num_rows() > 0) {
 				$bind_account = $query->row()->account;
@@ -1319,7 +1319,7 @@ class Api extends MY_Controller {
 		//log_message('error', '('.$_SERVER["REMOTE_ADDR"].')'."login:".$this->g_user->euid.", ".$this->g_user->account.", ".$this->input->get("code"));
 		//echo $this->input->get("code").", ";
 		
-		if ( ! $this->g_user->check_login()) return ;		
+		if ( ! $this->g_user->is_login()) return ;
 		echo $this->g_user->euid;
 		
 		$token = $_SESSION['token'];
@@ -1341,7 +1341,7 @@ class Api extends MY_Controller {
 	
 	function m_get_long_e_euid() 
 	{
-		if ( ! $this->g_user->check_login()) return ;		
+		if ( ! $this->g_user->is_login()) return ;
 		
 		$code = $this->input->get("code");
 		$hash = md5($code."b~ean".$this->g_user->euid."!#$..");

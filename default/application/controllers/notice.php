@@ -10,7 +10,7 @@ class Notice extends MY_Controller {
 	
 	function get_list()
 	{		
-		$this->g_user->check_login('', true);		
+		$this->_require_login();
 		$this->_init_layout();		
 				
 		$this->load->library('pagination');
@@ -53,7 +53,7 @@ class Notice extends MY_Controller {
 	
 	function detail($id=0)
 	{
-		$this->g_user->check_login('', true);
+		$this->_require_login();
 		
 		$this->_init_layout();
 		$row = $this->g_notices->get_notice($this->g_user->uid, $id);

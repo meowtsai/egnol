@@ -36,7 +36,7 @@ class Gash extends MY_Controller {
 	
 	function order()
 	{		
-		$this->g_user->check_login('long_e', true);
+		$this->_require_login();
 		
 		header("Content-Type:text/html; charset=utf-8");
 		

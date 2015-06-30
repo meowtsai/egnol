@@ -18,7 +18,7 @@ class Service extends MY_Controller {
 	
 	function index()
 	{
-		$this->g_user->check_login('long_e', true);
+		$this->_require_login();
 		$this->g_user->check_account_channel('service'); 
 		
 		$question_cnt = $this->db->where("uid", $this->g_user->uid)->where("status", "1")
@@ -40,7 +40,7 @@ class Service extends MY_Controller {
 
 	function question()
 	{
-		$this->g_user->check_login('long_e', true);
+		$this->_require_login();
 		
 		$server = $this->db->from("servers gi")
 			->join("games g", "gi.game_id=g.game_id")->get();
@@ -65,7 +65,7 @@ class Service extends MY_Controller {
 	
 	function question_ajax()
 	{
-		if ( ! $this->g_user->check_login('long_e')) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
+		if ( ! $this->g_user->is_login()) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
 		if ( ! $this->input->post("content")) die(json_encode(array("status"=>"failure", "message"=>"無內文")));
 		
 		$query = $this->db->query("SELECT count(*) > (3-1) as chk FROM questions WHERE uid={$this->g_user->uid} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");		
@@ -136,7 +136,7 @@ class Service extends MY_Controller {
 	
 	function listing()
 	{
-		$this->g_user->check_login('long_e', true);
+		$this->_require_login();
 		
 		$this->db->select("q.*")
 			->where("q.uid", $this->g_user->uid)->from("questions q")
@@ -163,7 +163,7 @@ class Service extends MY_Controller {
 	
 	function view($id)
 	{
-		$this->g_user->check_login('long_e', true);
+		$this->_require_login();
 		
 		$question = $this->db->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email")
 					->where("q.uid", $this->g_user->uid)
@@ -200,7 +200,7 @@ class Service extends MY_Controller {
 	
 	function insert_reply_json()
 	{
-		if ( ! $this->g_user->check_login('long_e')) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
+		if ( ! $this->g_user->is_login()) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
 		
 		$query = $this->db->query("SELECT count(*) > (3-1) as chk FROM question_replies WHERE uid={$this->g_user->uid} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");		
 		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問!")));		
@@ -224,7 +224,7 @@ class Service extends MY_Controller {
 	
 	function close_question($id)
 	{
-		if ( ! $this->g_user->check_login('long_e')) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
+		if ( ! $this->g_user->is_login()) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
 		
 		$question = $this->db->where("id", $id)->from("questions q")->get()->row();
 		if ($question->uid <> $this->g_user->uid) die(json_encode(array("status"=>"failure", "message"=>"權限不足")));
