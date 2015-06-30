@@ -1,13 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Member extends MY_Controller {
-
-	function index()
-	{
-		header("location:".site_url("member/update_member_data"));
-		exit();		
-	}
-	
+class Member extends MY_Controller
+{
 	function _init_member_layout()
 	{
 		$this->_init_layout();		
@@ -23,6 +17,39 @@ class Member extends MY_Controller {
 		}
 	}
 
+	// 會員資訊頁面
+	// 尚未登入則導向登入頁面, 已登入則顯示會員資料和修改選項
+	function index()
+	{
+		$this->_require_login();
+
+		//
+		//
+		//
+		$this->_init_layout()->standard_view("member/profile");
+	}
+
+	// 網頁登入介面
+	//	GET 輸入參數:
+	//		account - String    	預設登入帳號
+	//      redirect_url- String    登入完成後要返回的網址
+	function login()
+	{
+		// 取出 GET 參數
+		$account = urldecode($this->input->get("account", true));
+		$redirect_url = urldecode($this->input->get("redirect_url", true));
+
+		if (empty($redirect_url))
+		{
+			$redirect_url = site_url("/");
+		}
+
+		$this->_init_layout()
+			->set("account", $account)
+			->set("redirect_url", $redirect_url)
+			->standard_view("member/login");
+	}
+/*
 	function test()
 	{
 		fb($this->g_user->account, 'account');
@@ -99,7 +126,7 @@ class Member extends MY_Controller {
 			$this->g_layout->render("", "simple");	
 		}
 	}
-	
+	*/
 	function bind_account()
 	{
 		$this->_require_login();
@@ -271,137 +298,7 @@ class Member extends MY_Controller {
 		$this->db->where("uid", $target_uid)->update("users", $data);		
 		die(json_success());
 	}
-	
-	function payment_log()
-	{	
-		$this->_require_login();
-		
-		$this->_init_layout();
-		$this->load->config("g_mycard");
-		$this->load->config("g_gash");
-		
-		$this->db->start_cache();		
-		
-		$this->db->select("ub.*")
-					->select("coalesce(mb.trade_code, mb.mycard_trade_seq) as mycard_key", false)
-					->select("gb.PAID, gb.CUID")
-					->from("user_billing ub")					
-					->join("mycard_billing mb", "mb.id=ub.mycard_billing_id and mb.uid=ub.uid", "left")
-					->join("gash_billing gb", "gb.id=ub.gash_billing_id and gb.uid=ub.uid", "left")
-					->where("ub.uid", $this->g_user->uid)
-					->where("billing_type", "1");		
-		
-		if ($this->input->get("action") == '查詢') 
-		{					
-			if ($id = $this->input->get("id")) {
-				$id = trim($id);
-				if (substr($id, 0, 1) == "G") {
-					$this->db->where("ub.gash_billing_id", substr($id, 1, 20));
-				} 
-				else if (substr($id, 0, 1) == "M") {
-					$this->db->where("ub.mycard_billing_id", substr($id, 1, 20));
-				}
-				else $this->db->where("ub.mycard_billing_id", $id);
-			}
-			
-			if ($this->input->get("start_date")) {
-				$start_date = $this->db->escape($this->input->get("start_date"));
-				if ($this->input->get("end_date")) {
-					$end_date = $this->db->escape($this->input->get("end_date").":59");
-					$this->db->where("ub.create_time between {$start_date} and {$end_date}", null, false);	
-				}	
-				else $this->db->where("ub.create_time >= {$start_date}", null, false);
-			}			
-		}	
 
-		$this->db->stop_cache();		
-
-		$total_rows = $this->db->count_all_results();
-		$query = $this->db->limit(10, $this->input->get("record"))->order_by("ub.id desc")->get();					
-		
-		$this->db->flush_cache();
-		
-		$get = $this->input->get();					
-		if ( ! empty($get["reacord"])) unset($get["record"]);
-		$query_string = $get ? http_build_query($get) : "";					
-		
-		$this->load->library('pagination');
-		$this->pagination->initialize(array(
-				'base_url'	=> site_url("member/payment_log?{$query_string}"),
-				'total_rows'=> $total_rows,
-				'per_page'	=> 10
-			));				
-		
-		$this->g_layout->set("total_rows", $total_rows);
-		
-		$this->g_layout
-			->set_breadcrumb(array("儲值歷程"=>""))
-			->set("submenu", "payment")
-			->set("subtitle", "儲值歷程")
-			->set("query", $query)
-			->add_js_include("member/wallet_log")
-			->add_js_include("jquery-ui-timepicker-addon")			
-			->render("", "inner");		
-	}
-	
-	function wallet_log()
-	{	
-		$this->_require_login();
-		
-		$this->_init_layout();
-		
-		$this->db->start_cache();		
-		$this->db->select("ub.*, gi.name as server_name, g.name as game_name, g.abbr as game_abbr")
-					->from("user_billing ub")
-					->join("servers gi", "ub.pay_server_id=gi.server_id", "left")
-					->join("games g", "gi.game_id=g.game_id", "left")
-					->where("ub.uid", $this->g_user->uid)
-					->where("billing_type", "2");		
-		
-		if ($this->input->get("action") == '查詢') 
-		{					
-			$this->input->get("id") && $this->db->where("ub.id", trim($this->input->get("id")));
-			
-			if ($this->input->get("start_date")) {
-				$start_date = $this->db->escape($this->input->get("start_date"));
-				if ($this->input->get("end_date")) {
-					$end_date = $this->db->escape($this->input->get("end_date"));
-					$this->db->where("ub.create_time between {$start_date} and {$end_date}", null, false);	
-				}	
-				else $this->db->where("ub.create_time >= {$start_date}", null, false);
-			}			
-		}	
-
-		$this->db->stop_cache();		
-
-		$total_rows = $this->db->count_all_results();
-		$query = $this->db->limit(10, $this->input->get("record"))->order_by("ub.id desc")->get();					
-
-		$this->db->flush_cache();
-		
-		$get = $this->input->get();					
-		if ( ! empty($get["reacord"])) unset($get["record"]);
-		$query_string = $get ? http_build_query($get) : "";				
-		
-		$this->load->library('pagination');
-		$this->pagination->initialize(array(
-				'base_url'	=> site_url("member/wallet_log?{$query_string}"),
-				'total_rows'=> $total_rows,
-				'per_page'	=> 10
-			));				
-		
-		$this->g_layout->set("total_rows", $total_rows);
-		
-		$this->g_layout
-			->set_breadcrumb(array("兌換歷程"=>""))
-			->set("submenu", "payment")
-			->set("subtitle", "兌換歷程")
-			->set("query", $query)
-			->add_js_include("member/wallet_log")
-			->add_js_include("jquery-ui-timepicker-addon")			
-			->render("", "inner");		
-	}
-	
 	function register()
 	{					
 		// Cross-Origin Resource Sharing Header

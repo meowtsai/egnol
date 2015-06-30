@@ -20,7 +20,7 @@
 </head>
 <body>
   <div id="container">
-  	<? $this->load->view("g_top_bar", Array("site" => $site)); ?>
+  	<? $this->load->view("g_top_bar", Array("site" => $site, "game_url" => $game_url)); ?>
 	<?=$layout_content?>
    	<? $this->load->view("g_copyright")?>
   </div>
