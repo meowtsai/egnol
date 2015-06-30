@@ -9,46 +9,7 @@ class Platform extends MY_Controller {
 		
 	function index()
 	{		
-	
-		$highlight = $this->db->from("games")->like("tags", "重點")->where("is_active", 1)->order_by("rank")->get();
-		$commendation = $this->db->from("games")->like("tags", "推薦")->where("is_active", 1)->order_by("rank")->get();
-		$cooperation = $this->db->from("games")->like("tags", "好朋友")->where("is_active", 1)->order_by("rank")->get();
-		$mobile = $this->db->from("games")->like("tags", "手遊")->where("is_active", 1)->order_by("rank")->get();
-		
-		$game_a = $this->db->from("games")->like("tags", "即時")->where("is_active", 1)->order_by("rank")->get();
-		$game_b = $this->db->from("games")->like("tags", "策略")->where("is_active", 1)->order_by("rank")->get();
-		$game_c = $this->db->from("games")->like("tags", "回合")->where("is_active", 1)->order_by("rank")->get();
-		$game_d = $this->db->from("games")->like("tags", "其它")->where("is_active", 1)->order_by("rank")->get();
-		$game_e = $this->db->from("games")->like("tags", "手遊")->where("is_active", 1)->order_by("rank")->get();
-		
-		$this->load->model("g_bulletins");
-		
-		$news = $this->g_bulletins->get_list('long_e', 41, 4);
-		
-		//$this->load->model("g_pictures");
-		//$this->load->helper("g_picture");
-		//$banners = $this->g_pictures->get_list('long_e', 19, 3, 0, 'rand()');
-		
-		$this->_init_layout()
-			->add_css_link("index")
-			//->add_css_link("svwp_style")
-			//->add_js_include("jquery.slideViewerPro.1.5")
-			//->add_js_include("jquery.timers")
-			->add_js_include("jquery.jcarousel.min")
-			->add_js_include("jquery.pikachoose")			
-			->add_js_include("index")
-			->set("highlight", $highlight)
-			->set("commendation", $commendation)
-			->set("cooperation", $cooperation)
-			->set("mobile", $mobile)
-			->set("game_a", $game_a)
-			->set("game_b", $game_b)
-			->set("game_c", $game_c)
-			->set("game_d", $game_d)
-			->set("game_e", $game_e)
-			->set("news", $news)
-			//->set("banners", $banners)
-			->render("", "new");
+		$this->_init_layout()->standard_view();
 	}
 	
 	function top_bar()

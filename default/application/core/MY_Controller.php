@@ -34,7 +34,12 @@ class MY_Controller extends CI_Controller {
 		else $recent_server = false;
 
 		$this->g_layout->set("recent_server", $recent_server);
-		
+
+		// 取出指定的 site, 沒有指定的話就是 longe
+		$site = $this->input->get("site") ? $this->input->get("site", true) : "long_e";
+		$this->g_layout->set("site", $site);
+        $this->g_layout->set("game_url", ($site == "long_e" ? "/" : "/games/".$site));
+
 		return $this->g_layout
 			->add_js_include(array('jquery.validate.min', 'jquery.metadata', 'jquery.form', 'jquery.blockUI', 'jquery.easing.1.3', 'jquery-navAnimation', 'default'))
 			->set_meta("title", "::: 龍邑遊戲 ‧ LongE Games :::");
