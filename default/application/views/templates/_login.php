@@ -8,7 +8,7 @@
 	</div>
 	<div style="margin:10px 0 12px; height:27px;">
 		<? if ( ! $this->g_user->check_extra_account($this->g_user->account)):?>
-		<a href="<?=site_url("member/update_member_data")?>" class="btn01 items">修改資料</a><a href="<?=site_url("member/change_password")?>" class="btn01 items">變更密碼</a>
+		<a href="<?=site_url("member/update_profile")?>" class="btn01 items">修改資料</a><a href="<?=site_url("member/change_password")?>" class="btn01 items">變更密碼</a>
 		<? else:?>
 		<a href="<?=site_url("member/bind_account")?>" class="btn04 items"></a>
 		<? endif;?>

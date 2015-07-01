@@ -20,7 +20,7 @@
 	            		<span class="hd"></span>            		
 	            		<span class="bd">
 	            			<a href="<?=site_url("register")?>">註冊會員</a>
-	            			<a href="<?=site_url("member/update_member_data")?>">修改資料</a>
+	            			<a href="<?=site_url("member/update_profile")?>">修改資料</a>
 	            			<a href="<?=site_url("member/change_password")?>">修改密碼</a>
 	            			<a href="<?=site_url("member/forgot_password")?>">忘記密碼</a>
 	            		</span>

@@ -1,12 +1,12 @@
 
 .le_form {
-    display: block; list-style-type: none; margin: 0 auto; padding-left: 0; line-height: 40px;
+    display: block; list-style-type: none; margin: 0 auto; padding-left: 0; line-height: 36px;
 }
 .le_form .field_name {
-    display: inline-block; width: 30%; text-align: right;
+    display: inline-block; width: 40%; text-align: right;
 }
 .le_form .field_input {
-    display: inline-block; width: 65%; text-align: left;
+    display: inline-block; width: 55%; text-align: left;
 }
 .le_form .field_tip {
     font-size: 13px; color: #095;
@@ -142,7 +142,7 @@ input[type="color"],
 input,
 textarea,
 .uneditable-input {
-  width: 70%;
+  width: 80%;
 }
 
 textarea {

@@ -1,5 +1,3 @@
-<script src='/p/js/default.js'></script>
-<script src='/p/js/member/register.js'></script>
 <div style="padding:20px 0;width:80%; max-width:480px; margin: 0 auto; text-align: center;">
 	<form id="register_form" method="post" action="/member/register_json">
 		<input type="hidden" id="redirect_url" value="<?=$redirect_url?>">
@@ -36,7 +34,7 @@
 			</li>
 			<li>
 				<input tabindex="3" name="doLogin" type="submit" id="doLogin3" value="確定" />&nbsp;
-                  <input name="cancel" type="button" value="取消" onclick="javascript:history.back();" />
+				<input name="cancel" type="button" value="取消" onclick="javascript:history.back();" />
 			</li>
 			<li>
 				<div></div>
