@@ -147,7 +147,7 @@ class G_User {
 		return !empty($this->uid);
 	}
 
-	//進行登入，若帳號不存在，則建立
+	// 進行登入，若帳號不存在，則建立
 	function login($account, $password='', $email='', $name='', $site='')
 	{
 		if ($site) $_SESSION['site'] = $site;
@@ -279,7 +279,9 @@ class G_User {
 	{			
 		$account = trim($account);
 		
-		if (!ereg("^[a-z0-9@_]+$", $account)) {
+		if (!preg_match("/^[a-z0-9@_]+$/", $account))
+		//if (!ereg("^[a-z0-9@_]+$", $account))
+		{
 			return $this->_return_error('帳號不得包含特殊字元及大寫字母.');
 		}		
 		

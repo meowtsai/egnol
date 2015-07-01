@@ -44,9 +44,20 @@ class Member extends MY_Controller
 			$redirect_url = site_url("/");
 		}
 
+		// 載入第三方登入通道種類
+		$this->load->config("api");
+		$channel_api = $this->config->item("channel_api");
+		$channel_item = array();
+		foreach($channel_api as $key => $channel)
+		{
+			$channel['channel'] = $key;
+			array_push($channel_item, $channel);
+		}
+
 		$this->_init_layout()
 			->set("account", $account)
 			->set("redirect_url", $redirect_url)
+			->set("channel_item", $channel_item)
 			->standard_view("member/login");
 	}
 /*
@@ -313,7 +324,7 @@ class Member extends MY_Controller
 
 		$this->_init_layout()
 			->set("redirect_url", $redirect_url)
-			->standard_view("member/register");
+			->standard_view();
 	}
 /*
 	function register()
@@ -374,7 +385,8 @@ class Member extends MY_Controller
 		if ( empty($account) || empty($pwd) ) {
 			die(json_failure("請輸入帳號及密碼進行登入"));
 		}
-		else if (!ereg("^[a-z0-9_]+$", $account))
+		else if (!preg_match("/^[a-z0-9_]+$/", $account))
+		//else if (!ereg("^[a-z0-9_]+$", $account))
 		{
 			die(json_failure("帳號不得包含特殊字元及大寫字母"));
 		}
@@ -385,9 +397,11 @@ class Member extends MY_Controller
 			die(json_failure("驗證碼錯誤"));
 		}
 
-		$boolResult = $this->create_account($account, $pwd, $email, $name, $site);
+		$boolResult = $this->g_user->create_account($account, $pwd, $email, $name, $site);
 
-		if ($boolResult==true){
+		if ($boolResult==true)
+		{
+			/*
 			$users_data = array();
 			$this->input->post("sex") && $users_data["sex"] = $this->input->post("sex");
 			$this->input->post("mobile") && $users_data["mobile"] = $this->input->post("mobile");
@@ -405,11 +419,12 @@ class Member extends MY_Controller
 			if (count($user_info_data) > 0) {
 				$this->db->where("account", $account)->update("user_info", $user_info_data);
 			}
-
-			$this->verify_account($account, $pwd);
+			*/
+			$this->g_user->verify_account($account, $pwd);
 			die(json_message(array("message"=>"成功", "site"=>$site), true));
 		}
-		else {
+		else
+		{
 			die(json_failure($this->error_message));
 		}
 	}

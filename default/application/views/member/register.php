@@ -1,3 +1,4 @@
+<script src='/p/js/default.js'></script>
 <script src='/p/js/member/register.js'></script>
 <div style="padding:20px 0;width:80%; max-width:480px; margin: 0 auto; text-align: center;">
 	<form id="register_form" method="post" action="/member/register_json">
@@ -25,7 +26,10 @@
 			</li>
 			<li>
 				<div class="field_name">驗證碼：
-				</div><div class="field_input"></div>
+				</div><div class="field_input">
+					<div id="captcha_area"></div>
+					<input class="required" style="width:50%;" type="text" name="captcha" size="5" maxlength="4" minlength="4" value="" />
+				</div>
 			</li>
 			<li>
 				<input name="chk" type="checkbox" class="required">我已閱讀並同意<div id="btn_policy">『會員服務條款』</div>及<div id="btn_agreement">『個資同意書』</div>

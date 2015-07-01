@@ -564,7 +564,8 @@ class Api extends MY_Controller {
 			output_json(RESPONSE_FAILD, "認證碼錯誤");
 		}	
 		
-		if (!ereg("^[A-za-z0-9_]+$", $account)) {
+		if (!preg_match("/^[A-za-z0-9_]+$/", $account)) {
+		//if (!ereg("^[A-za-z0-9_]+$", $account)) {
 			output_json(RESPONSE_FAILD, "帳號不得包含特殊字元");
 		}
 			
@@ -601,7 +602,8 @@ class Api extends MY_Controller {
 			output_json(RESPONSE_FAILD, "認證碼錯誤");
 		}	
 		
-		if (!ereg("^[a-z0-9_]+$", $account)) {
+		if (!preg_match("/^[a-z0-9_]+$/", $account)) {
+		//if (!ereg("^[a-z0-9_]+$", $account)) {
 			output_json(RESPONSE_FAILD, "帳號不得包含特殊字元及大寫字母");
 		}
 		

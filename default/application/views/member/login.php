@@ -19,7 +19,13 @@
 				<a href="/member/forgot_password?site=<?=$site?>&redirect_url=<?=urlencode($redirect_url)?>">忘記密碼</a>
 			</li>
 			<li>
-				<div>Facebook Login</div>
+				<?
+					// 產生所有第三方登入按鈕
+					foreach($channel_item as $channel)
+					{
+						echo "<div style='display:inline-block;width:16%;margin:5px;border:1px solid #777;background-color:#ddd;'>{$channel['name']}</div>";
+					}
+				?>
 			</li>
 		</ul>
 	</form>
