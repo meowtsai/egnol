@@ -69,56 +69,6 @@ class G_User {
 		return true;
 	}
 
-	/**
-	 *  登入狀態檢查式
-	 *  @return bool
-	 */
-	function loginCheck( $redirect = false, $returnUrl = "" ) 
-	{
-		if(empty($this->long_eDNA) || empty($this->uid) || empty($this->account)) {
-			$this->logout();
-			if($redirect == true) {
-				header("Content-type: text/html; charset=utf-8");
-				$returnUrl = empty($returnUrl)?"http://{$_SERVER['SERVER_NAME']}{$_SERVER['REQUEST_URI']}":$returnUrl;
-				$returnUrl = empty($returnUrl)?'http://www.longeplay.com.tw/member/login.php':$returnUrl;
-				echo '<script type="text/javascript">
-							alert("請先進行登入");
-							location.replace("http://'.$_SERVER['SERVER_NAME'].'/member/login.php?returnUrl='.$returnUrl.'");
-					</script>';
-				//header('LOCATION:http://www.longeplay.com.tw/member/login.php?returnUrl='.$returnUrl);
-				exit();
-			}
-			//echo '<script type="text/javascript">alert("請先進行登入");';
-			//echo 'location.replace("http://www.longeplay.com.tw/member/login.php");</script>';
-			//header('LOCATION:http://www.longeplay.com.tw/member/login.php');
-			return false;
-		}else {
-			return true;
-		}
-	}
-
-	function check_login($site='', $redirect_url='') 
-	{
-		if (empty($this->uid)) {
-			if ($redirect_url) {
-				if ($redirect_url === true) {
-					$redirect_url = 'http://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-				}
-				header("Content-type: text/html; charset=utf-8");
-				echo "<script type='text/javascript'>
-						alert('請先進行登入');
-						top.location.href='http://{$_SERVER['HTTP_HOST']}/member/login?site={$site}&redirect_url=".urlencode($redirect_url)."';
-				</script>";
-				exit();
-			}
-			return false;
-		}
-		else 
-		{			
-			return true;
-		}
-	}
-
 	// 檢查玩家是否已登入, 若未登入則導向登入畫面
 	function require_login($site='', $redirect_url='')
 	{

@@ -19,6 +19,7 @@ class Service extends MY_Controller {
 	function index()
 	{
 		$this->_require_login();
+
 		$this->g_user->check_account_channel('service'); 
 		
 		$question_cnt = $this->db->where("uid", $this->g_user->uid)->where("status", "1")
@@ -30,12 +31,8 @@ class Service extends MY_Controller {
 		$this->init_service_layout()
 			->set("subtitle", "客服中心")			
 			->set("not_read_cnt", $not_read_cnt)
-			->set("question_cnt", $question_cnt);
-		
-		if (check_mobile()) {
-			$this->g_layout->render("service/m_index", "mobile");	
-		}
-		else $this->g_layout->render("", "inner2");
+			->set("question_cnt", $question_cnt)
+			->standard_view();
 	}
 
 	function question()

@@ -38,7 +38,7 @@
        │<a href="/member/msettings.php"><font class="text-white">會員專區</font></a>
        │<a href="<?=base_url();?>/service"><font class="text-white">線上客服</font></a>
        │<font class="text-white">
-            <? if ($this->g_user->loginCheck()):?>       
+            <? if ($this->g_user->is_login()):?>
                 <a href="<?=base_url();?>/member/logout.php">登出</a>
             <? else:?>
                 <a href="<?=base_url();?>/member/login.php">登入</a>

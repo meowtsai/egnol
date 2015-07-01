@@ -6,7 +6,7 @@ class Wallet extends MY_Controller {
 	{
 		parent::__construct();
 		
-		$this->g_user->loginCheck(true);
+		$this->_require_login();
 		$this->load->library("g_wallet");
 		$this->load->helper("transfer");
 	}

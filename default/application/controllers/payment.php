@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Payment extends MY_Controller {	
-	
+class Payment extends MY_Controller
+{
 	function _init_payment_layout()
 	{
 		$this->_init_layout();		
@@ -11,53 +11,24 @@ class Payment extends MY_Controller {
 			->set_breadcrumb(array("儲值"=>"payment"));	
 	}
 	
+	// 儲值中心
 	function index()
 	{		
-		$this->g_user->check_login('long_e', true); 	
+		$this->_require_login();
+
 		$this->g_user->check_account_channel('trade'); //導儲值通道
-		
-		if (strstr($this->g_user->account, '@rc2')) {			
-			echo '<script type="text/javascript">document.write("RC大廳帳號請由RC大廳上進行儲值"); alert("RC大廳帳號請由RC大廳上進行儲值"); history.back(-1);</script>';
-			exit();
-		}		
-				
+
 		$this->load->config("g_gash");
 		$games = $this->db->from("games")->where("is_active", "1")->get();
 		$servers = $this->db->order_by("id")->get("servers");	
 
-		$this->_init_payment_layout()	
-			->set("submenu", "payment")
-			->set("subtitle", "儲值")
+		$this->_init_layout()
 			->set("games", $games)
 			->set("servers", $servers)
 			->add_js_include("payment/index")
-			->render("", "inner");
+			->standard_view();
 	}	
-	
-	function guide()
-	{
-		$this->_init_payment_layout()
-			->add_breadcrumb("教學","payment/guide")
-			->set("subtitle", "儲值教學")
-			->render("", "inner2");			
-	}
-	
-	function guide_t1()
-	{
-		$this->_init_payment_layout()
-			->add_breadcrumb("教學","payment/guide")
-			->set("subtitle", "儲值教學")
-			->render("", "inner2");			
-	}	
-	
-	function guide_t2()
-	{
-		$this->_init_payment_layout()
-			->add_breadcrumb("教學","payment/guide")
-			->set("subtitle", "儲值教學")
-			->render("", "inner2");			
-	}		
-	
+
 	function result()
 	{
 		$this->_init_payment_layout()

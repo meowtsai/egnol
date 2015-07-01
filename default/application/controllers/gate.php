@@ -261,7 +261,7 @@ class Gate extends MY_Controller {
 	//待刪，統一使用play_game
 	function decide_game_entry($game_id)
 	{
-		$this->g_user->loginCheck(true);
+		$this->_require_login();
 		
 		if (in_array($game_id, array("qjp", "sg", "tc", "mh", "xj"))) { //舊遊戲沒有套
 			$this->_redirect_web($game_id);

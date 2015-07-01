@@ -14,9 +14,14 @@ class Member extends MY_Controller
 	// 尚未登入則導向登入頁面, 已登入則顯示會員資料和修改選項
 	function index()
 	{
-		$this->_require_login();
-
-		$this->_init_layout()->standard_view("member/profile");
+		if(!$this->g_user->is_login())
+		{
+			$this->login();
+		}
+		else
+		{
+			$this->_init_layout()->standard_view("member/profile");
+		}
 	}
 
 	// 網頁登入介面
