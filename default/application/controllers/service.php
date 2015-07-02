@@ -7,15 +7,7 @@ class Service extends MY_Controller {
 		parent::__construct();
 		$this->load->config("service");
 	}
-	
-	function init_service_layout()
-	{
-		return $this->_init_layout()
-			->set_breadcrumb(array("客服中心"=>"service"))
-			->set("submenu", "service")
-			->set("subtitle", "客服中心");
-	}
-	
+
 	function index()
 	{
 		$this->_require_login();
@@ -28,8 +20,7 @@ class Service extends MY_Controller {
 		$not_read_cnt = $this->db->where("uid", $this->g_user->uid)->where("status", "2")->where("is_read", "0")
 			->from("questions")->count_all_results();
 		
-		$this->init_service_layout()
-			->set("subtitle", "客服中心")			
+		$this->_init_layout()
 			->set("not_read_cnt", $not_read_cnt)
 			->set("question_cnt", $question_cnt)
 			->standard_view();
@@ -47,17 +38,12 @@ class Service extends MY_Controller {
 		
 		$user = $this->db->get_where("users", array("uid" => $this->g_user->uid))->row();
 		
-		$this->init_service_layout()
-			->add_breadcrumb("線上提問")
+		$this->_init_layout()
 			->add_js_include("service/question")
 			->set("games", $games)
 			->set("servers", $servers)
-			->set("user", $user);
-
-		if (!check_mobile()) {
-			$this->g_layout->render("service/m_question", "mobile");	
-		}
-		else $this->g_layout->render("", "inner2");
+			->set("user", $user)
+			->standard_view();
 	}
 	
 	function question_ajax()
@@ -148,14 +134,9 @@ class Service extends MY_Controller {
 		
 		$query = $this->db->get();
 		
-		$this->init_service_layout()
-			->add_breadcrumb("提問查詢")
-			->set("query", $query);
-
-		if (check_mobile()) {
-			$this->g_layout->render("", "mobile");	
-		}
-		else $this->g_layout->render("", "inner2");
+		$this->_init_layout()
+			->set("query", $query)
+			->standard_view();
 	}
 	
 	function view($id)
@@ -183,16 +164,11 @@ class Service extends MY_Controller {
 			$replies = false;
 		}
 		
-		$this->init_service_layout()
-			->add_breadcrumb("檢視")
+		$this->_init_layout()
 			->add_js_include("service/view")
 			->set("question", $question)
-			->set("replies", $replies);
-		
-		if (check_mobile()) {
-			$this->g_layout->render("", "mobile");	
-		}
-		else $this->g_layout->render("", "inner2");		
+			->set("replies", $replies)
+			->standard_view();
 	}
 	
 	function insert_reply_json()
@@ -229,17 +205,4 @@ class Service extends MY_Controller {
 		$this->db->set("status", "4")->where("id", $id)->update("questions");
 		die(json_encode(array("status"=>"success")));	
 	}
-	
-	function download()
-	{
-		$this->init_service_layout()
-			->add_breadcrumb("表單下載")
-			->set("subtitle", "客服中心");		
-		
-		if (check_mobile()) {
-			$this->g_layout->render("", "mobile");	
-		}
-		else $this->g_layout->render("", "inner2");				
-	}
-
 }
