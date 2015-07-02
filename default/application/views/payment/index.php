@@ -126,7 +126,7 @@
 // 			),
 			"海外(香港、菲律賓、馬來西亞)" => array(
 				"maximum" => 0, "minimum" => 0,	
-				"trade" => array("paid"=>"COPGAM02", "cuid"=>"PIN", "erp_id"=>"PINHALL", "action" => $gash_global_url)						
+				"trade" => array("paid"=>"COPGAM02", "cuid"=>"MYR", "erp_id"=>"PINHALL", "action" => $gash_global_url)						
 			),
 		),
 		"其它國家" => array(

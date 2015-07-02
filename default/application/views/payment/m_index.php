@@ -75,7 +75,7 @@ $(function(){
 			</ul>
 		</li>
 		<li><a href="<?=site_url("payment/m_choose2?type=Gash+實體卡(台灣)&PAID=COPGAM02&CUID=TWD&ERP_ID=PINHALL&sid={$sid}&game={$game}")?>">Gash+實體卡(台灣)</a></li>
-		<li><a href="<?=site_url("payment/m_choose2?type=Gash+實體卡(海外 - 香港、菲律賓、馬來西亞)&PAID=COPGAM02&CUID=PIN&ERP_ID=PINHALL&sid={$sid}&game={$game}")?>">Gash+實體卡(海外 - 香港、菲律賓、馬來西亞)</a></li>
+		<li><a href="<?=site_url("payment/m_choose2?type=Gash+實體卡(海外 - 香港、菲律賓、馬來西亞)&PAID=COPGAM02&CUID=MYR&ERP_ID=PINHALL&sid={$sid}&game={$game}")?>">Gash+實體卡(海外 - 香港、菲律賓、馬來西亞)</a></li>
 		<li><a href="javascript:;" class="switch">其它國家</a>
 			<ul class="sub">				
 				<li><a href="<?=site_url("payment/m_choose2?type=支付寶&PAID=BNK80804&CUID=TWD&ERP_ID=J990001&sid={$sid}&game={$game}")?>">支付寶</a></li>

@@ -107,7 +107,7 @@ class Gash extends MY_Controller {
 		
 		print_r($trans->nodes);
 		print_r($data);
-		die;
+		//die;
 		
 		// 取得送出之交易資料
 		$data = $trans->GetSendData();
@@ -157,7 +157,7 @@ class Gash extends MY_Controller {
 		}
 		*/
 		
-		//log_message('error', $trans->nodes["COID"].", ".$trans->nodes["RCODE"]);
+		log_message('error', $trans->nodes["COID"].", ".$trans->nodes["RCODE"]);
 		
 		// 檢核 GPS 交易驗證壓碼
 		if ( $trans->VerifyERPC($this->gash_conf[$country]["secret1"], $this->gash_conf[$country]["secret2"]) )
@@ -284,16 +284,21 @@ class Gash extends MY_Controller {
 		}
 	}
 	
-	function check_order()
+	function check_order($coid="")
 	{
 		require_once dirname(__FILE__).'/../libraries/gash/Common.php';
 		
 		set_time_limit(60*10);
-		
-		$query = $this->db->where("create_time between date_sub(now(), interval 72 hour) and date_sub(now(), interval 3 minute)", null, false)
-				->where("(PAY_STATUS='0' or PAY_STATUS='W' or RCODE='9998' or RCODE='9999' or RCODE is null)", null, false)
-				->where_in("country", array("tw", "global"))
-				->from("gash_billing")->get();
+		if($coid) {
+			$query = $this->db
+					->where_in("COID", $coid)
+					->from("gash_billing")->get();
+		} else {
+			$query = $this->db->where("create_time between date_sub(now(), interval 72 hour) and date_sub(now(), interval 3 minute)", null, false)
+					->where("(PAY_STATUS='0' or PAY_STATUS='W' or RCODE='9998' or RCODE='9999' or RCODE is null)", null, false)
+					->where_in("country", array("tw", "global"))
+					->from("gash_billing")->get();
+		}
 				
 		foreach($query->result() as $gash_billing) 
 		{
@@ -323,7 +328,7 @@ class Gash extends MY_Controller {
 				
 				// 解析回傳結果
 				$trans = new Trans( $result->getResponseResult );
-				echo "<pre>查單回傳".print_r($trans->nodes, true)."</pre>";
+				//echo "<pre>查單回傳".print_r($trans->nodes, true)."</pre>";
 				
 				//處理
 				$d = my_curl(site_url("gash/return_url?country={$gash_billing->country}"), array("data"=>$trans->GetSendData()));
