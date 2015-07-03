@@ -2,16 +2,8 @@
 
 class Payment extends MY_Controller
 {
-	function _init_payment_layout()
-	{
-		$this->_init_layout();		
-		return $this->g_layout
-			->set("subtitle", "儲值")
-			->set("submenu", "payment")
-			->set_breadcrumb(array("儲值"=>"payment"));	
-	}
-	
-	// 儲值中心
+	// 儲值中心主頁面
+	//	選擇遊戲、伺服器和儲值管道
 	function index()
 	{		
 		$this->_require_login();
@@ -29,16 +21,26 @@ class Payment extends MY_Controller
 			->standard_view();
 	}	
 
+	// 儲值第二步驟
+	//  根據儲值管道設定儲值選項
+	function step2()
+	{
+		if(!$this->g_user->is_login())
+		{
+		}
+
+
+	}
+
+
+
+
 	function result()
 	{
-		$this->_init_payment_layout()
+		$this->_init_layout()
 			->set("status", $this->input->get("status"))
-			->set("message", urldecode($this->input->get("message")));
-		
-		if (check_mobile()) {
-			$this->g_layout->render("", "mobile");	
-		}
-		else $this->g_layout->render("", "inner");		
+			->set("message", urldecode($this->input->get("message")))
+			->standard_view();
 	}
 	
 	/*function choose()
@@ -60,12 +62,11 @@ class Payment extends MY_Controller
 			->render();				
 	}*/
 
-	
 	function m_index()
 	{
 		$this->_require_login();
 			
-		$this->_init_payment_layout()
+		$this->_init_layout()
 			->set("sid", $this->input->get("sid"))	
 			->set("game", $this->input->get("game"))
 			->render("", "mobile");
@@ -75,7 +76,7 @@ class Payment extends MY_Controller
 	{
 		$this->_require_login();
 			
-		$this->_init_payment_layout()
+		$this->_init_layout()
 			->set("sid", $this->input->get("sid"))	
 			->set("game", $this->input->get("game"))
 			->render("", "mobile");
@@ -95,7 +96,7 @@ class Payment extends MY_Controller
 		
 		$products = $partner_api[$partner]['sites'][$game]['ios']['products'];		
 		
-		$this->_init_payment_layout()
+		$this->_init_layout()
 			->set("sid", $this->input->get("sid"))
 			->set("game", $this->input->get("game"))
 			->set("products", $products)	
@@ -106,7 +107,7 @@ class Payment extends MY_Controller
 	{
 		$this->_require_login();
 			
-		$this->_init_payment_layout()
+		$this->_init_layout()
 			->set("sid", $this->input->get("sid"))
 			->set("game", $this->input->get("game"))	
 			->render("", "mobile");
@@ -116,7 +117,7 @@ class Payment extends MY_Controller
 // 	{
 // 		$this->_require_login();
 				
-// 		$this->_init_payment_layout()
+// 		$this->_init_layout()
 // 			->set("sid", $this->input->get("sid"))	
 // 			->set("game", $this->input->get("game"))
 // 			->render("", "mobile");
@@ -130,7 +131,7 @@ class Payment extends MY_Controller
 		$url = base_url()."/mycard/get_product/".urlencode($type);
 		$data = json_decode(file_get_contents($url));
 				
-		$this->_init_payment_layout()
+		$this->_init_layout()
 			->set("type", urldecode($type))
 			->set("data", $data)	
 			->set("sid", $this->input->get("sid"))
@@ -144,7 +145,7 @@ class Payment extends MY_Controller
 		$this->_require_login();
 		
 		$type = $this->input->get("type");				
-		$this->_init_payment_layout()
+		$this->_init_layout()
 			->set("type", urldecode($type))
 			->set("game", $this->input->get("game"))
 			->render("", "mobile");	
@@ -156,7 +157,7 @@ class Payment extends MY_Controller
 		$this->_require_login();
 		
 		$type = $this->input->get("type");				
-		$this->_init_payment_layout()
+		$this->_init_layout()
 			->set("type", urldecode($type))
 			->set("game", $this->input->get("game"))
 			->render("", "mobile");	
@@ -181,7 +182,7 @@ class Payment extends MY_Controller
 			$products = $partner_api["google_iab_products"];
 		else $products = $partner_api[$partner]['sites'][$game]['iab']['products'];
 				
-		$this->_init_payment_layout()
+		$this->_init_layout()
 			->set("products", $products)	
 			->set("sid", $this->input->get("sid"))
 			->set("game", $this->input->get("game"))
