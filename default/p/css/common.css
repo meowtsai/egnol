@@ -10,7 +10,7 @@ body {
 	background: #ececec;
 	height: 100%;
 }
-#content_view{
+#content_frame {
 	position: absolute;
 	left: 0;
 	top: 56px;
@@ -18,6 +18,13 @@ body {
 	bottom: 40px;
 	overflow-x: hide;
 	overflow-y: auto;
+}
+#content_view {
+	padding: 20px 0;
+	width: 100%;
+	max-width: 480px;
+	margin: 0 auto;
+	text-align: center;
 }
 
 a {

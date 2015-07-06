@@ -8,6 +8,9 @@
 .le_form .field_input {
     display: inline-block; width: 55%; text-align: left;
 }
+.le_form .field_line {
+    display: inline-block; width: 95%; text-align: center;
+}
 .le_form .field_tip {
     font-size: 13px; color: #095;
 }
