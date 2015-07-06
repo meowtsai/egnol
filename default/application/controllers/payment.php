@@ -34,25 +34,6 @@ class Payment extends MY_Controller
 			->set("message", urldecode($this->input->get("message")))
 			->standard_view();
 	}
-	
-	/*function choose()
-	{
-		$this->_require_login();
-		
-		$f = file_get_contents(site_url("mycard/get_payment"));
-		$price = json_decode($f); 
-		
-		$this->load->library("g_wallet");
-				
-		$this->_init_layout();
-		$this->g_layout
-			->set_breadcrumb(array("儲值"=>"payment", "MyCard 購點"=>""))
-			//->set("layout_tmp", '<img src="/PayFun/img/service-icon-f.gif" width="171" height="25" border="0" usemap="#Map" />')
-			->set("remain", $this->g_wallet->get_balance($this->g_user->uid))
-			->set("price", $price)
-			->add_js_include("payment/choose")
-			->render();				
-	}*/
 
 	function m_index()
 	{
@@ -114,23 +95,7 @@ class Payment extends MY_Controller
 // 			->set("game", $this->input->get("game"))
 // 			->render("", "mobile");
 // 	}
-	
-	function m_choose()
-	{
-		$this->_require_login();
-		
-		$type = $this->input->get("type");
-		$url = base_url()."/mycard/get_product/".urlencode($type);
-		$data = json_decode(file_get_contents($url));
-				
-		$this->_init_layout()
-			->set("type", urldecode($type))
-			->set("data", $data)	
-			->set("sid", $this->input->get("sid"))
-			->set("game", $this->input->get("game"))
-			->render("", "mobile");	
-	}
-	
+
 	function m_choose2()
 	{
 		$this->load->config("g_gash");

@@ -170,43 +170,7 @@ class G_Wallet
     		->where("id", $order->id)
     		->update("user_billing", $data);
     }
-    
-    function produce_mycard_order($uid, $mycard_billing_id, $transaction_type, $amount)
-	{	
-		if ( ! in_array($transaction_type, array("mycard_ingame", "mycard_billing"))) return $this->_return_error("transaction_type 錯誤");
-		$cnt = $this->CI->db->from("user_billing")->where("mycard_billing_id", $mycard_billing_id)->where("result", "1")->count_all_results();
-		if ($cnt > 0)  return $this->_return_error("ID已被使用");		
-		
-    	$balance = $this->get_balance($uid);
-		$calc_balance = $balance + $amount;
-    	
-    	$users_data = array(
-    			'balance' 		=> $calc_balance
-    		);
-    	
-    	$this->CI->db
-		    ->set("update_time", "now()", false)
-			->where("uid", $uid)
-			->update("users", $users_data);
-    	
-		$country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
-		$country_code = ($country_code) ? $country_code : null;
-		
-    	$user_billing_data = array(
-    			'uid' 			=> $uid,
-    			'transaction_type' => $transaction_type,
-    			'billing_type'	=> '1',
-    			'amount' 		=> $amount,
-    			'ip'		 	=> $_SERVER['REMOTE_ADDR'],
-    			'result'		=> '1',
-    			'mycard_billing_id' => $mycard_billing_id,
-				'country_code'  => $country_code,
-    		);
-    	
-    	$this->CI->db->set("create_time", "now()", false)->insert("user_billing", $user_billing_data);
-    	return $this->CI->db->insert_id();
-    }    
-    
+
     function produce_gash_order($uid, $gash_billing_id, $amount)
 	{	
 		$cnt = $this->CI->db->from("user_billing")->where("gash_billing_id", $gash_billing_id)->where("result", "1")->count_all_results();

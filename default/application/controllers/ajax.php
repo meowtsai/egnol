@@ -109,59 +109,6 @@ class Ajax extends MY_Controller {
 			die(json_failure($error_message));	
 		}							
 	}	
-	
-	function resend_mycard_billing($trade_seq)
-	{
-		$row = $this->db->from("mycard_billing")->where("trade_seq", $trade_seq)->get()->row();
-		if ($row) 
-		{
-	    	if ( ! empty($row->auth_code)) 
-	    	{	        	
-	    		if ($row->cash_out == '1') die(json_failure("請款已完成"));
-	    		
-	    		$data = array(
-		        	"ReturnMsgNo" =>  "1",
-		        	"ReturnMsg" => "",
-		        	"AuthCode" => $row->auth_code,
-		        );
-		        my_curl(site_url("mycard/payment_confirm"), $data);
-	    	}
-	    	else 
-	    	{
-	    		if ($row->trade_ok == '1') die(json_failure("交易已完成"));
-	    		
-	    		$this->load->config("g_mycard");
-	    		$this->load->library("g_mycard");
-	    		$conf = $this->config->item("mycard");
-	    		
-	    		$result = $this->g_mycard->query_ingame($trade_seq);
-	    		if ( ! empty($result) && $result->ReturnMsgNo == '1') 
-	    		{
-	    			$data = array(
-	    				'facId' => $conf["facId"],
-    					'facMemId'	=> $row->uid,
-    					'facTradeSeq' 	=> $trade_seq,
-    					'tradeSeq'	=> $result->Save_Seq,
-    					'CardId' 	=> $result->MyCardId,
-    					'oProjNo'	=> $result->oProjNo,
-    					'CardKind'	=> $result->CardKind,
-    					'CardPoint'	=> $result->CardPoint,
-    					'ReturnMsgNo'	=> $result->ReturnMsgNo,
-    					'ErrorMsgNo'	=> '',
-    					'ErrorMsg'	=> '',
-	    			);					
-					$data['hash'] = hash('sha256', $conf["key1"].$data['facId'].$data['facMemId'].$data['facTradeSeq']
-							.$data['tradeSeq'].$data['CardId'].$data['oProjNo'].$data['CardKind'].$data['CardPoint']
-							.$data['ReturnMsgNo'].$data['ErrorMsgNo'].$data['ErrorMsg'].$conf["key2"]);
-			
-					my_curl(site_url("mycard/ingame_callback"), $data);
-	    		}
-	    		else die(json_failure("查無資料"));		    		
-	    	}
-	    	die(json_success());
-		}
-		else die(json_failure("交易不存在"));
-	}
 
 	function redo_gash_billing($id)
 	{
