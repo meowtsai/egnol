@@ -299,6 +299,9 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 			</div>
 		</li>
 		<li>
+			<div style="height:10px;"></div>
+		</li>
+		<li>
 			<div class="field_line">
 				<select name="billing_type" class="required" style="width:85%;">
                     <option value=''>--請選擇儲值方式--</option>
@@ -318,34 +321,32 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 			</div>
 		</li>
 		<li id="pay_type_block" class="line_row" style="display:none;">
-			<span class="field">請選擇支付管道</span>
-
-			<span class="line_field" style="width:85%; display:inline-block;">
+			<div class="field_line" style="display:inline-block;">
 				<? foreach($options as $tab => $arr): ?>
-				<span class="pay_type pay_type_<?=$tab?>">
+				<select name="billing_channel"  class="pay_type pay_type_<?=$tab?> required" style="width:85%;">
+                    <option value=''>--請選擇支付管道--</option>
+
 					<? foreach($arr as $opt => $arr2):
 						if (array_key_exists("trade", $arr)) continue;
 						$attr_str = '';
 						foreach($arr2['trade'] as $attr => $val) $attr_str .= " {$attr}='{$val}'";
 					?>
-					<label><input type="radio" name="gash_channel" class="gash_option" maximum="<?=$arr2['maximum']?>" minimum="<?=$arr2['minimum']?>" <?=$attr_str?>><?=$opt?></label><br>
+					<option value="<?=$opt?>" name="gash_channel" class="gash_option" maximum="<?=$arr2['maximum']?>" minimum="<?=$arr2['minimum']?>" <?=$attr_str?>><?=$opt?></option>
 					<? endforeach;?>
-				</span>
+				</select>
 				<? endforeach;?>
-			</span>
+			</div>
 		</li>
 		<li class="line_row amount_row" style="display:none;">
-			<span class="field">請選擇儲值金額</span>
-			<span class="line_field">
-				<span class="amount_block"></span>
-				<span id="gain_tip"></span>
-			</span>
+			<div class="field_line" style="display:inline-block;">
+				<select name="billing_money"  class="amount_block required" style="width:85%;">
+                    <option value=''>--請選擇儲值金額--</option>
+
+				</select>
+			</div>
 		</li>
 		<li>
 			<input tabindex="3" name="send" type="submit" id="send" value="確定" />
-		</li>
-		<li>
-			<? //$this->load->view("payment/_note")?>
 		</li>
 	</ul>
 </form>

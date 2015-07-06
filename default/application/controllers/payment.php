@@ -11,29 +11,21 @@ class Payment extends MY_Controller
 		$this->g_user->check_account_channel('trade'); //導儲值通道
 
 		$this->load->config("g_gash");
+
+		// 讀取遊戲列表
 		$games = $this->db->from("games")->where("is_active", "1")->get();
+		// 讀取伺服器列表
 		$servers = $this->db->order_by("id")->get("servers");	
+		// 讀取玩家角色列表
+		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();
 
 		$this->_init_layout()
 			->set("games", $games)
 			->set("servers", $servers)
+			->set("characters", $characters)
 			->add_js_include("payment/index")
 			->standard_view();
 	}	
-
-	// 儲值第二步驟
-	//  根據儲值管道設定儲值選項
-	function step2()
-	{
-		if(!$this->g_user->is_login())
-		{
-		}
-
-
-	}
-
-
-
 
 	function result()
 	{
