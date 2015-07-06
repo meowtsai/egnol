@@ -28,7 +28,17 @@
 		</li>
 		<li>
 			<div class="field_name">角色名稱
-			</div><div class="field_input"><input type="text" name="character_name" class="required" maxlength="30" /></div>
+			</div><div class="field_input">
+				<select name="character_name" class="required" style="width:85%;">
+					<option value="">--請選擇角色--</option>
+				</select>
+
+				<select id="character_pool" style="display:none;">
+					<? foreach($characters->result() as $row): ?>
+					<option value="<?=$row->id?>" class="<?=$row->server_id?>"><?=$row->character_name?></option>
+					<? endforeach;?>
+				</select>
+			</div>
 		</li>
 		<li>
 			<div class="field_name">問題類型

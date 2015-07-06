@@ -36,13 +36,14 @@ class Service extends MY_Controller {
 		$games = $this->db->from("games")->where("is_active", "1")->get();
 		$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("id")->get("servers");	
 		
-		$user = $this->db->get_where("users", array("uid" => $this->g_user->uid))->row();
-		
+		// 讀取玩家角色列表
+		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();
+
 		$this->_init_layout()
 			->add_js_include("service/question")
 			->set("games", $games)
 			->set("servers", $servers)
-			->set("user", $user)
+			->set("characters", $characters)
 			->standard_view();
 	}
 	
