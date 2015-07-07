@@ -249,7 +249,10 @@ class Pepay extends MY_Controller {
 				$this->_finish_payment($billing, true);
 			}
 			else {
-				go_payment_result(0, 0, $nAmount, $nTradeCode);	
+				$ResCode = $this->pepay_conf["ResCode"];
+				$message = ($ResCode[(string)$nTradeCode])?$ResCode[(string)$nTradeCode]:$nTradeCode;
+				
+				go_payment_result(0, 0, $nAmount, $message);	
 			}
 		}	
 	}

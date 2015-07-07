@@ -61,7 +61,7 @@
 // 			),					
 		),
 		"手機支付" => array(
-			"中華電信839" => array(
+/*			"中華電信839" => array(
 				"maximum" => 3000, "minimum" => 0,	
 				"trade" => array("paid"=>"TELCHT05", "cuid"=>"TWD", "erp_id"=>"J990001", "convert_rate"=>"1", "action" => $gash_tw_url)						
 			),	
@@ -76,24 +76,36 @@
 			"亞太電信" => array(
 				"maximum" => 1000, "minimum" => 0,	
 				"trade" => array("paid"=>"TELSON04", "cuid"=>"TWD", "erp_id"=>"J990001", "convert_rate"=>"1", "action" => $gash_tw_url)						
-			),		
+			),*/
 				
-// 			"中華電信839" => array(
-// 				"maximum" => 3000, "minimum" => 0,	
-// 				"trade" => array("pay_type"=>"TY-BILL", "subpay_type"=>"ST-MOBILE", "prod_id"=>"PD-BILL-CHTAAA-839", "convert_rate"=>"1", "action" => $pepay_url)					
-// 			),	
-// 			"台灣大哥大" => array(
-// 				"maximum" => 3000, "minimum" => 0,	
-// 				"trade" => array("pay_type"=>"TY-BILL", "subpay_type"=>"ST-MOBILE", "prod_id"=>"PD-BILL-TCC", "convert_rate"=>"1", "action" => $pepay_url)					
-// 			),	
-// 			"遠傳電信" => array(
-// 				"maximum" => 3000, "minimum" => 0,	
-// 				"trade" => array("pay_type"=>"TY-BILL", "subpay_type"=>"ST-MOBILE", "prod_id"=>"PD-BILL-FET", "convert_rate"=>"1", "action" => $pepay_url)					
-// 			),	
-// 			"亞太電信" => array(
-// 				"maximum" => 1000, "minimum" => 0,	
-// 				"trade" => array("pay_type"=>"TY-BILL", "subpay_type"=>"ST-MOBILE", "prod_id"=>"PD-BILL-APBW", "convert_rate"=>"1", "action" => $pepay_url)					
-// 			),	
+ 			"中華電信839" => array(
+ 				"maximum" => 3000, "minimum" => 0,	
+ 				"trade" => array("pay_type"=>"TY-BILL", "subpay_type"=>"ST-MOBILE", "prod_id"=>"PD-BILL-CHTAAA-839", "convert_rate"=>"1", "action" => $pepay_url)					
+ 			),	
+ 			"中華電信Hinet" => array(
+ 				"maximum" => 3000, "minimum" => 0,	
+ 				"trade" => array("pay_type"=>"TY-BILL", "subpay_type"=>"ST-ISP", "prod_id"=>"PD-BILL-CHTAAA-HINET", "convert_rate"=>"1", "action" => $pepay_url)					
+ 			),
+ 			"中華電信市內電話" => array(
+ 				"maximum" => 3000, "minimum" => 0,	
+ 				"trade" => array("pay_type"=>"TY-BILL", "subpay_type"=>"ST-LOCAL", "prod_id"=>"PD-BILL-CHTAAA-LOCAL", "convert_rate"=>"1", "action" => $pepay_url)					
+ 			),
+ 			"台灣大哥大" => array(
+ 				"maximum" => 3000, "minimum" => 0,	
+ 				"trade" => array("pay_type"=>"TY-BILL", "subpay_type"=>"ST-MOBILE", "prod_id"=>"PD-BILL-TCC", "convert_rate"=>"1", "action" => $pepay_url)					
+ 			),	
+ 			"遠傳電信" => array(
+ 				"maximum" => 3000, "minimum" => 0,	
+ 				"trade" => array("pay_type"=>"TY-BILL", "subpay_type"=>"ST-MOBILE", "prod_id"=>"PD-BILL-FET", "convert_rate"=>"1", "action" => $pepay_url)					
+ 			),	
+ 			"亞太電信" => array(
+ 				"maximum" => 1000, "minimum" => 0,	
+ 				"trade" => array("pay_type"=>"TY-BILL", "subpay_type"=>"ST-MOBILE", "prod_id"=>"PD-BILL-APBW", "convert_rate"=>"1", "action" => $pepay_url)					
+ 			),	
+ 			"威寶行動電話" => array(
+ 				"maximum" => 1000, "minimum" => 0,	
+ 				"trade" => array("pay_type"=>"TY-BILL", "subpay_type"=>"ST-MOBILE", "prod_id"=>"PD-BILL-VIBO", "convert_rate"=>"1", "action" => $pepay_url)					
+ 			),	
 		),
 		"支付寶" => array(
 			"maximum" => 10000, "minimum" => 0,	

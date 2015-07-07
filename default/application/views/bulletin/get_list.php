@@ -19,7 +19,7 @@
 			<?=date("Y-m-d", strtotime($row->create_time))?>
 		</span>
 		<a href="<?=site_url("bulletin/detail/{$row->id}")?>">
-			<?=mb_strimwidth($row->bulletin_title, 0, 58, '...', 'utf-8')?></a>
+			<?=mb_strimwidth($row->title, 0, 58, '...', 'utf-8')?></a>
 	</li>
 	<? endforeach;?>
 </ul>

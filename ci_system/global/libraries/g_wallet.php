@@ -97,7 +97,7 @@ class G_Wallet
     	}
     	
     	$users_data = array(
-    		'balance' 		=> $calc_balance
+    		'balance' => $calc_balance
     	);    	
 			
     	$this->CI->db
@@ -181,7 +181,7 @@ class G_Wallet
 		$calc_balance = $balance + $amount;
     	
     	$users_data = array(
-    			'balance' 		=> $calc_balance
+    			'balance' => $calc_balance
     		);
     	
     	$this->CI->db
@@ -216,7 +216,7 @@ class G_Wallet
 		$calc_balance = $balance + $amount;
     	
     	$users_data = array(
-    			'balance' 		=> $calc_balance
+    			'balance' => $calc_balance
     		);
     	
     	$this->CI->db
@@ -260,12 +260,12 @@ class G_Wallet
     	$calc_balance = $balance + $amount;
     	
     	$users_data = array(
-    			'balance' 		=> $calc_balance
-    		);
+    		'balance' => $calc_balance
+    	);
     	
     	$this->CI->db
     		->set("update_time", "now()", false)
-    		->insert("users", $users_data);
+    		->update("users", $users_data);
     	
 		$country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
 		$country_code = ($country_code) ? $country_code : null;
