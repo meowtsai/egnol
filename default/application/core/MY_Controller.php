@@ -16,7 +16,7 @@ class MY_Controller extends CI_Controller {
 
 		$this->load->database('long_e');
 		
-		$this->game_id = $this->input->get("game_id");
+		$this->game_id = $this->input->get("site");
 	}
 
 	function _init_layout()
@@ -40,6 +40,20 @@ class MY_Controller extends CI_Controller {
 		$this->g_layout->set("site", $site);
         $this->g_layout->set("game_url", ($site == "long_e" ? "/" : "/games/".$site));
 
+		// 設定粉絲專頁
+		$fan_page = "https://facebook.com";
+		if($site != "long_e")
+		{
+			$query = $this->db->from("games")->where("game_id", $site)->get();
+			if($query->num_rows() > 0)
+			{
+				$fan_page = $query->row()->fan_page;
+				if(empty($fan_page))
+					$fan_page = "not set!";
+			}
+		}
+		$this->g_layout->set("fan_page", $fan_page);
+
 		return $this->g_layout
 			->add_js_include(array('jquery.validate.min', 'jquery.metadata', 'jquery.form', 'jquery.blockUI', 'jquery.easing.1.3', 'jquery-navAnimation', 'default'))
 			->set_meta("title", "::: 龍邑遊戲 ‧ LongE Games :::");
@@ -48,7 +62,7 @@ class MY_Controller extends CI_Controller {
 	// 檢查並要求登入
 	function _require_login($redirect_url='')
 	{
-		$site = $this->input->get("game_id") ? $this->input->get("game_id", true) : "long_e";
+		$site = $this->input->get("site") ? $this->input->get("site", true) : "long_e";
 
 		return $this->g_user->require_login($site, $redirect_url);
 	}

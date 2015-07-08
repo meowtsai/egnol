@@ -8,6 +8,14 @@
 		</div><div class="field_input"></div>
 	</li>
 	<li>
+		<div class="field_name">e-mail
+		</div><div class="field_input">&nbsp;<?=$email?></div>
+	</li>
+	<li>
+		<div class="field_name">行動電話
+		</div><div class="field_input">&nbsp;<?=$mobile?></div>
+	</li>
+	<li>
 		<div class="field_name">姓名
 		</div><div class="field_input"></div>
 	</li>
@@ -21,14 +29,6 @@
 	</li>
 	<li>
 		<div class="field_name">住址
-		</div><div class="field_input"></div>
-	</li>
-	<li>
-		<div class="field_name">e-mail
-		</div><div class="field_input"></div>
-	</li>
-	<li>
-		<div class="field_name">行動電話
 		</div><div class="field_input"></div>
 	</li>
 	<li>

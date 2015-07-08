@@ -561,6 +561,7 @@ CREATE TABLE `users` (
   `email` varchar(128) DEFAULT NULL,
   `mobile` varchar(20) DEFAULT NULL,
   `password` char(32) NOT NULL,
+  `activation_code` varchar(20) DEFAULT NULL,
   `balance` int(6) DEFAULT NULL,
   `is_approved` bit(1) DEFAULT NULL,
   `is_banned` bit(1) DEFAULT NULL,
@@ -569,6 +570,5 @@ CREATE TABLE `users` (
   PRIMARY KEY (`uid`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `mobile_UNIQUE` (`mobile`)
-  KEY `email_INDEX` (`email`)
-) ENGINE=MyISAM AUTO_INCREMENT=2454635 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=2454664 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

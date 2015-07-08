@@ -20,7 +20,10 @@ class Member extends MY_Controller
 		}
 		else
 		{
-			$this->_init_layout()->standard_view("member/profile");
+			$this->_init_layout()
+					->set('email', $_SESSION['email'])
+					->set('mobile', $_SESSION['mobile'])
+					->standard_view("member/profile");
 		}
 	}
 

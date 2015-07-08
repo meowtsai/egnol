@@ -2,6 +2,14 @@
 	<input type="hidden" size="0" name="uid" value="<?=$data->uid?>">
 	<ul class="le_form">
 		<li>
+			<div class="field_name">e-mail：
+			</div><div class="field_input"><input type="text" size="25"  maxlength="50" name="email" value="<?=$data->email?>" class="required email"></div>
+		</li>
+		<li>
+			<div class="field_name">行動電話：
+			</div><div class="field_input"><input type="text" size="25"  maxlength="10" name="mobile" value="<?=$data->mobile?>" class="mobile isMobile"></div>
+		</li>
+		<li>
 			<div class="field_name">姓名：
 			</div><div class="field_input"><input type="text" size="12"  maxlength="12" name="name" value="<?=$data->name?>" class="required"></div>
 		</li>
@@ -169,14 +177,6 @@
 		<li>
 			<div class="field_name">住址：
 			</div><div class="field_input"><input type='text' size='25'  maxlength='30' name='address_road' value="<?//=$data->address_road?>"></div>
-		</li>
-		<li>
-			<div class="field_name">e-mail：
-			</div><div class="field_input"><input type="text" size="25"  maxlength="50" name="email" value="<?=$data->email?>" class="required email"></div>
-		</li>
-		<li>
-			<div class="field_name">行動電話：
-			</div><div class="field_input"><input type="text" size="25"  maxlength="10" name="mobile" value="<?=$data->mobile?>" class="isMobile"></div>
 		</li>
 		<li>
               <input TYPE="submit" value="確認送出" class="btn"/>

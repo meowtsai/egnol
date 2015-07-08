@@ -8,8 +8,6 @@ class Payment extends MY_Controller
 	{		
 		$this->_require_login();
 
-		//$this->g_user->check_account_channel('trade'); //導儲值通道
-
 		$this->load->config("g_gash");
 
 		// 讀取遊戲列表

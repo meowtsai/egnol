@@ -231,7 +231,7 @@ class G_User {
 		}
   		else if(!empty($mobile))
 		{
-			$account = "{$mobile}";
+			$account = $mobile;
 		}
 
 		$data = array(
@@ -273,12 +273,12 @@ class G_User {
 	{			
 		$email = strtolower(trim($email));
 		$mobile = trim($mobile);
-/*
+
 		if(!filter_var($email, FILTER_VALIDATE_EMAIL))
 		{
             return $this->_return_error('電子信箱格式錯誤');
 		}
-*/
+
 		if (strlen($password) < 4) return $this->_return_error('密碼不得少於四碼');
 
 		if ($this->check_account_exist($email, $mobile))
@@ -330,36 +330,7 @@ class G_User {
 			return false;
 		} else return true;
 	}
-	
-	//切換用戶(用於模擬角色)
-	function switch_account($account)
-	{
-		$query = $this->CI->db->from("users")->where("account", $account)->get();
-		if ($query->num_rows() > 0) {
-			$row = $query->row();
-			$this->set_user($row->uid, $row->account, $row->name);
-			return true;
-		}
-		else return false;
-	}
-	
-	//切換用戶(用於模擬角色)
-	function switch_uid($uid)
-	{
-		$query = $this->CI->db->from("users")->where("uid", $uid)->get();
-		if ($query->num_rows() > 0) {
-			$row = $query->row();
-			if ( ! empty($row->bind_uid)) { //若登入綁定用途帳號，則讀取主帳號 				
-				$query = $this->CI->db->from("users")->where("uid", $row->bind_uid)->get();
-				if ($query->num_rows() > 0 ) $row = $query->row(); 
-				else return $this->_return_error("綁定帳號不存在");
-			}
-			$this->set_user($row->uid, $row->account, $row->name);
-			return true;
-		}
-		else $this->_return_error("帳號不存在");
-	}
-	
+
 	function check_account_channel($type='')
 	{		
 		$site = $this->CI->input->get("site");
