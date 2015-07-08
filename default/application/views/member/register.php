@@ -1,25 +1,24 @@
 <form id="register_form" method="post" action="/member/register_json">
 	<input type="hidden" id="redirect_url" value="<?=$redirect_url?>">
 	<ul class="le_form">
-		<li>會員登入</li>
+		<li>會員註冊</li>
 		<li>
-			<div class="field_name">會員帳號：
-			</div><div class="field_input"><input type="text" name="account" class="required" minlength="6" maxlength="18">
-			</div><div class="field_tip">6~18碼英文(系統會自動將大寫轉小寫)或數字組合。</div>
+			<div class="field_name">電子信箱：
+			</div><div class="field_input"><input type="text" name="email" class="email" id="email">
+		</li>
+		<li>
+			<div class="field_name">行動電話：
+			</div><div class="field_input"><input type="text" name="mobile" class="mobile isMobile" id="mobile">
+			</div><div class="field_tip">電子信箱與行動電話至少需填寫其中一個。</div>
 		</li>
 		<li>
 			<div class="field_name">會員密碼：
 			</div><div class="field_input"><input type="password" id="pwd" name="pwd" class="required" minlength="6" maxlength="18">
-			</div><div class="field_tip">6~18碼。</div>
 		</li>
 		<li>
 			<div class="field_name">確認密碼：
 			</div><div class="field_input"><input type="password" name="pwd2" class="required" equalTo='#pwd'></div>
-		</li>
-		<li>
-			<div class="field_name">電子信箱：
-			</div><div class="field_input"><input type="text" name="email" class="required email">
-			</div><div class="field_tip">活動或忘記密碼時使用。</div>
+			</div><div class="field_tip">6~18碼。</div>
 		</li>
 		<li>
 			<div class="field_name">驗證碼：

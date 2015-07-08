@@ -89,28 +89,54 @@ class Gate extends MY_Controller {
 		}
 		else
 		{
+			// 檢查 e-mail or mobile
 			$account = $this->input->post("account");
-			$pwd = $this->input->post("pwd");
+			if(empty($account))
+			{
+				responseMsg('電子郵件或行動電話未填寫');
+			}
 
-			if (empty($account) || empty($pwd)) {				
+			$pwd = $this->input->post("pwd");
+			if (empty($pwd))
+			{
+				responseMsg('密碼尚未填寫');
+			}
+
+			$email = '';
+			$mobile = '';
+			if(filter_var($account, FILTER_VALIDATE_EMAIL))
+			{
+				$email = $account;
+			}
+			else
+			{
+				$mobile = $account;
+			}
+/*
+			$account = $this->input->post("account");
+			if (empty($account) || empty($pwd)) {
 				responseMsg('帳號或密碼尚未填寫');
 			}			
-			
+
 			if ( $this->g_user->check_extra_account($account) ) {
 				echo "<script type='text/javascript'>alert('登入失敗! 請由原社群網站登入口登入!'); history.back();</script>";
 				exit();
 			}
-			
-			if ( $this->g_user->verify_account($account, $pwd) === true ) {
-				
-				if ( ! empty($redirect_url)) {
+*/
+			if ( $this->g_user->verify_account($email, $mobile, $pwd) === true )
+			{
+				if ( ! empty($redirect_url))
+				{
 					header('location:'.$redirect_url);
 				} 
-				else {				
-					if ($site == 'long_e') {
+				else
+				{
+					if ($site == 'long_e')
+					{
 						header('location:'.site_url("/"));
 					}	
-					else {
+					else
+					{
 						$choose_server_url = "http://{$site}.longeplay.com.tw/index.php?serverin=1&ad={$ad}";
 						$url = base_url()."/play_game/{$site}?url=".urlencode($choose_server_url)."&ad={$ad}";
 						//die($url);
@@ -118,12 +144,12 @@ class Gate extends MY_Controller {
 					}
 				}				
 			}
-			else {	
+			else
+			{
 				responseMsg($this->g_user->error_message);				
 			}
 			exit();
 		}
-		
 	}
 	
 	//備用，暫時沒用到
@@ -136,10 +162,12 @@ class Gate extends MY_Controller {
 	{
 		header('P3P:CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
 				
-		if ($this->input->get("site")) {
+		if ($this->input->get("site"))
+		{
 			$_SESSION['site'] = $this->input->get("site");
 		}
-		if ($this->input->get("ad")) {
+		if ($this->input->get("ad"))
+		{
 			$_SESSION['ad'] = $this->input->get("ad");
 		}
 		$_SESSION['channel'] = $channel;
@@ -152,7 +180,8 @@ class Gate extends MY_Controller {
 				
 		$this->load->config("api");
 		$channel_api = $this->config->item("channel_api");
-		if (array_key_exists($channel, $channel_api) == false) {
+		if (array_key_exists($channel, $channel_api) == false)
+		{
 			die("未串接此通道({$channel})");
 		}
 		

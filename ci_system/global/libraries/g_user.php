@@ -11,9 +11,9 @@ class G_User {
 	var $CI;
 	var $uid;
 	var $euid;
-	var $account;
-	var $password;
+	var $email;
 	var $mobile;
+	var $password;
 	var $realName;
 	var $remoteAddr;
 	var $userAgent;
@@ -26,12 +26,11 @@ class G_User {
 	{
 		$this->CI =& get_instance();
 			
-		if ( ! empty($_SESSION['long_eDNA'])) {
+		if ( ! empty($_SESSION['user_id']))
+		{
 			$this->uid = $_SESSION['user_id'];
 			$this->euid = isset($_SESSION['euid']) ? $_SESSION['euid'] : '';
-			$this->account = $_SESSION['account'];
-			$this->realName = urldecode($_SESSION['name']);
-			$this->long_eDNA = $_SESSION['long_eDNA'];
+			//$this->realName = urldecode($_SESSION['name']);
 			$this->remoteAddr = $_SERVER['REMOTE_ADDR'];
 			$this->userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 			$this->long_e_uid = isset($_SESSION['long_e_uid']) ? $_SESSION['long_e_uid'] : '';
@@ -47,9 +46,7 @@ class G_User {
 	{				
 		$_SESSION['user_id'] = '';
 		$_SESSION['euid'] = '';		
-		$_SESSION['account'] = '';		
 		$_SESSION['name'] = '';
-		$_SESSION['long_eDNA'] = '';
 		$_SESSION['long_e_uid'] = '';
 		$_SESSION['mobile'] = '';
 		$_SESSION['token'] = '';
@@ -57,9 +54,7 @@ class G_User {
 		
 		unset($_SESSION['user_id']);
 		unset($_SESSION['euid']);
-		unset($_SESSION['account']);
 		unset($_SESSION['name']);
-		unset($_SESSION['long_eDNA']);
 		unset($_SESSION['long_e_uid']);
 		unset($_SESSION['mobile']);
 		unset($_SESSION['token']);
@@ -98,39 +93,68 @@ class G_User {
 	}
 
 	// 進行登入，若帳號不存在，則建立
-	function login($account, $password='', $email='', $name='', $site='')
+	function login($email, $mobile, $password='', $site='')
 	{
 		if ($site) $_SESSION['site'] = $site;
 		
-		if ($this->check_account_exist($account)) {
+		if ($this->check_account_exist($email, $mobile))
+		{
 			//帳號存在，進行登入
-			return $this->verify_account($account, $password);		
+			return $this->verify_account($email, $mobile, $password);
 		}
-		else {
+		else
+		{
 			//帳號不存在，創立帳號
-			if ($this->create_account($account, $password, $email, $name, $site)) {
+			if ($this->create_account($email, $mobile, $password, $site))
+			{
 				//創立成功，進行登入
-				return $this->verify_account($account, $password);
+				return $this->verify_account($email, $mobile, $password);
 			}
-			else{
+			else
+			{
 				//創立失敗
 				return false;
 			}
 		}	
 	}
 	
-	function verify_account($account, $password='') 
+	function verify_account($email, $mobile, $password='')
 	{		
-		$this->account = strtolower(trim($account));
-		
-		if ($this->check_extra_account($this->account) == FALSE) {
+		if(empty($email) && empty($mobile))
+		{
+             return $this->_return_error("帳號不存在");
+		}
+
+		$this->email = strtolower(trim($email));
+		$this->mobile = trim($mobile);
+
+        $query = null;
+		if(!empty($this->email))
+		{
+			// 以 e-mail 讀取帳號
+			$query = $this->CI->db->from("users")
+						->where("email", $this->email)
+						->get();
+		}
+		if(!empty($this->mobile))
+		{
+			// 若沒有則以行動電話讀取帳號
+			$query = $this->CI->db->from("users")
+								->where("mobile", $this->mobile)
+								->get();
+		}
+
+/*
+		if ($this->check_extra_account($this->account) == FALSE)
+		{
 			$this->password = md5(trim($password));
 			$query = $this->CI->db->from("users")
 						->where("account", $this->account)
 						->where("password", $this->password)
 						->get();
 						
-			if ($query->num_rows() == 0 ) {
+			if ($query->num_rows() == 0 )
+			{
 				unset($query);
 			    $query = $this->CI->db->from("users")
 						    ->where("mobile", $this->account)
@@ -143,32 +167,46 @@ class G_User {
 						->where("account", $this->account)
 						->get();
 		}
-		
-		if ($query->num_rows() > 0 ) {
+*/
+
+		if ($query != null && $query->num_rows() > 0)
+		{
 			$row = $query->row();	
-			
-			if ( ! empty($row->bind_uid)) {//若登入綁定用途帳號，則讀取主帳號
+
+			if (! empty($row->bind_uid))
+			{
+				//若登入綁定用途帳號，則讀取主帳號
 				$long_e_uid = $row->uid; 				
 				$query = $this->CI->db->from("users")->where("uid", $row->bind_uid)->get();
-				if ($query->num_rows() > 0 ) $row = $query->row(); 
-				else return $this->_return_error("綁定帳號不存在");
+				if ($query->num_rows() > 0 )
+				{
+					$row = $query->row();
+				}
+				else
+				{
+					return $this->_return_error("綁定帳號不存在");
+				}
 			}
-			else {
+			else
+			{
 				$long_e_uid = '';
 			}
 						
-			if ($row->is_banned != 0 && !IN_OFFICE) return $this->_return_error("停權");			
-					
-				
-			$this->set_user($row->uid, $row->account, $row->name, $long_e_uid, $row->mobile);
+			if ($row->is_banned != 0 && !IN_OFFICE)
+			{
+				return $this->_return_error("停權");
+			}
+
+			$this->set_user($row->uid, $row->email, $row->mobile, $long_e_uid);
 			return true;
 		} 
-		else {
+		else
+		{
 			return $this->_return_error("帳號不存在或密碼錯誤");	
-		}			
+		}
 	}
 	
-	function set_user($uid, $account, $name, $long_e_uid='', $mobile='') 
+	function set_user($uid, $email, $mobile, $long_e_uid='')
 	{		
 		//登入log
 		/*
@@ -185,7 +223,17 @@ class G_User {
 		
 		$site = $this->CI->input->get('site') ? $this->CI->input->get('site') : (empty($_SESSION['site']) ? 'long_e' : $_SESSION['site']);	
 		$ad = $this->CI->input->get('ad') ? $this->CI->input->get('ad') : (empty($_SESSION['ad']) ? '' : $_SESSION['ad']);
-				
+		$account = '';
+
+		if(!empty($email))
+		{
+			$account = $email;
+		}
+  		else if(!empty($mobile))
+		{
+			$account = "{$mobile}";
+		}
+
 		$data = array(
 			'uid' => $uid,
 			'account' => $account,
@@ -197,25 +245,21 @@ class G_User {
 		);
 		if ( ! empty($_SESSION['log_imei'])) $data['imei'] = $_SESSION['log_imei'];
 		if ( ! empty($_SESSION['log_android_id'])) $data['android_id'] = $_SESSION['log_android_id'];
-		
+
 		$this->CI->db->insert("log_logins", $data);	
-		
+
 		$this->uid = $uid;
 		$this->euid = $this->encode($uid);
-		$this->account = $account;
-		$this->realName = urlencode($name);
-		$this->long_eDNA = md5(trim($this->account.$this->remoteAddr.$this->userAgent));
+		$this->email = $email;
+		$this->mobile = $mobile;
 		$this->long_e_uid = $long_e_uid;
-		$this->mobile = $mobile;		
-		$this->token = $this->generate_token();		
+		$this->token = $this->generate_token();
 		
 		$_SESSION['user_id'] = $this->uid;
 		$_SESSION['euid'] = $this->euid;
-		$_SESSION['account'] = $this->account;
-		$_SESSION['name'] = $this->realName;
-		$_SESSION['long_eDNA'] = $this->long_eDNA;
-		$_SESSION['long_e_uid'] = $this->long_e_uid;
+		$_SESSION['email'] = $this->email;
 		$_SESSION['mobile'] = $this->mobile;
+		$_SESSION['long_e_uid'] = $this->long_e_uid;
 		$_SESSION['token'] = $this->token;
 	}
 	
@@ -225,28 +269,28 @@ class G_User {
 		return $this->CI->db->from("users")->where("uid", $uid)->get()->row();
 	}
 
-	function create_account($account, $password, $email='', $name='', $site='', $bind_uid='') 
+	function create_account($email, $mobile, $password, $site='', $bind_uid='')
 	{			
-		$account = trim($account);
-		
-		if (!preg_match("/^[a-z0-9@_]+$/", $account))
-		//if (!ereg("^[a-z0-9@_]+$", $account))
+		$email = strtolower(trim($email));
+		$mobile = trim($mobile);
+/*
+		if(!filter_var($email, FILTER_VALIDATE_EMAIL))
 		{
-			return $this->_return_error('帳號不得包含特殊字元及大寫字母.');
-		}		
-		
-		if (strlen($account) < 4) return $this->_return_error('帳號不得少於四碼');
-		if (strlen($password) < 4) return $this->_return_error('密碼不得少於四碼'); 
+            return $this->_return_error('電子信箱格式錯誤');
+		}
+*/
+		if (strlen($password) < 4) return $this->_return_error('密碼不得少於四碼');
 
-		if ($this->check_account_exist($account)) {
+		if ($this->check_account_exist($email, $mobile))
+		{
 			return $this->_return_error('帳號已經存在');
 		}
-		else {
+		else
+		{
 			$data = array(
-				'account'	=> strtolower($account),
-				'password'	=> md5(trim($password)),
 				'email'	=> strtolower(trim($email)),
-				'name' => trim($name),
+				'mobile' => trim($mobile),
+				'password'	=> md5(trim($password)),
 				'create_time' => date("YmdHis"),
 				'is_approved'	=> 0
 			);
@@ -265,18 +309,17 @@ class G_User {
 			return true;
 		}
 	}
-	
-	function set_mobile($account, $password, $mobile) {
-		
-		return $this->CI->db
-			->where("account", $account)
-			->update("users", array("password" => md5($password), "mobile" => $mobile));
-	}
-	
-	function check_account_exist($account) 
-	{		
-		$account = strtolower(trim($account));
-		$cnt = $this->CI->db->from("users")->where("account", $account)->count_all_results();
+
+	function check_account_exist($email, $mobile)
+	{
+		if(!empty($email))
+		{
+			$cnt = $this->CI->db->from("users")->where("email", $email)->count_all_results();
+		}
+		else if(!empty($mobile))
+		{
+			$cnt = $this->CI->db->from("users")->where("mobile", $mobile)->count_all_results();
+		}
 		return $cnt > 0 ? true : false;
 	}
 	

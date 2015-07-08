@@ -12,7 +12,7 @@ class Service extends MY_Controller {
 	{
 		$this->_require_login();
 
-		$this->g_user->check_account_channel('service'); 
+		//$this->g_user->check_account_channel('service');
 		
 		$question_cnt = $this->db->where("uid", $this->g_user->uid)->where("status", "1")
 			->from("questions")->count_all_results();

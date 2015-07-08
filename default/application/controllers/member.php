@@ -229,34 +229,35 @@ class Member extends MY_Controller
 	function register_json()
 	{
         $site = 'long_e';
-		$account = $this->input->post("account");
+		$email = $this->input->post('email');
+		$mobile = $this->input->post("mobile");
 		$pwd = $this->input->post("pwd");
 		$pwd2 = $this->input->post("pwd2");
-		$email = $this->input->post('email');
-		$name = $this->input->post("name");
 		$captcha = $this->input->post('captcha');
 
 		header('content-type:text/html; charset=utf-8');
-		if ( empty($account) || empty($pwd) ) {
-			die(json_failure("請輸入帳號及密碼進行登入"));
-		}
-		else if (!preg_match("/^[a-z0-9_]+$/", $account))
-		//else if (!ereg("^[a-z0-9_]+$", $account))
+		if ( empty($email) && empty($mobile) )
 		{
-			die(json_failure("帳號不得包含特殊字元及大寫字母"));
+			die(json_failure("電子郵件和行動電話至少需填寫一項"));
 		}
-		else if ($pwd != $pwd2) {
+		else if (empty($pwd) )
+		{
+			die(json_failure("請輸入密碼"));
+		}
+		else if ($pwd != $pwd2)
+		{
 			die(json_failure("兩次密碼輸入不相同"));
 		}
-		else if (empty($_SESSION['captcha']) || $captcha != $_SESSION['captcha']) {
+		else if (empty($_SESSION['captcha']) || $captcha != $_SESSION['captcha'])
+		{
 			die(json_failure("驗證碼錯誤"));
 		}
 
-		$boolResult = $this->g_user->create_account($account, $pwd, $email, $name, $site);
+		$boolResult = $this->g_user->create_account($email, $mobile, $pwd, $site);
 
 		if ($boolResult==true)
 		{
-			$this->g_user->verify_account($account, $pwd);
+			$this->g_user->verify_account($email, $mobile, $pwd);
 			die(json_message(array("message"=>"成功", "site"=>$site), true));
 		}
 		else

@@ -197,7 +197,7 @@ DROP TABLE IF EXISTS `log_logins`;
 CREATE TABLE `log_logins` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
-  `account` varchar(50) NOT NULL,
+  `account` varchar(128) NOT NULL,
   `ip` varchar(50) DEFAULT NULL,
   `ad` varchar(50) DEFAULT NULL,
   `site` varchar(50) DEFAULT NULL,
@@ -533,6 +533,9 @@ DROP TABLE IF EXISTS `user_info`;
 CREATE TABLE `user_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
+  `name` varchar(50) NOT NULL,
+  `birthday` date DEFAULT NULL,
+  `sex` tinyint(1) DEFAULT NULL,
   `nation` varchar(10) DEFAULT NULL,
   `ident` varchar(50) DEFAULT NULL,
   `phone` varchar(20) DEFAULT NULL,
@@ -555,22 +558,17 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
   `bind_uid` int(11) DEFAULT NULL,
-  `md5_id` char(32) DEFAULT NULL,
-  `account` varchar(50) NOT NULL,
-  `password` char(32) NOT NULL,
-  `name` varchar(50) NOT NULL,
-  `birthday` date DEFAULT NULL,
-  `sex` tinyint(1) DEFAULT NULL,
   `email` varchar(128) DEFAULT NULL,
   `mobile` varchar(20) DEFAULT NULL,
-  `activation_code` varchar(20) DEFAULT NULL,
+  `password` char(32) NOT NULL,
   `balance` int(6) DEFAULT NULL,
   `is_approved` bit(1) DEFAULT NULL,
   `is_banned` bit(1) DEFAULT NULL,
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`uid`),
-  UNIQUE KEY `account_UNIQUE` (`account`),
+  UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `mobile_UNIQUE` (`mobile`)
+  KEY `email_INDEX` (`email`)
 ) ENGINE=MyISAM AUTO_INCREMENT=2454635 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
