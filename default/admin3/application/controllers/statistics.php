@@ -556,29 +556,30 @@ class Statistics extends MY_Controller {
 		
 		$query = $this->db->query("
 			SELECT
-		    {$date_group}(create_time) 'date',
-			SUM(amount) 'sum',
-			SUM(CASE WHEN transaction_type='ios_billing' THEN amount ELSE 0 END) 'ios_sum',
-			SUM(CASE WHEN transaction_type='android_billing' THEN amount ELSE 0 END) 'android_sum',
-			SUM(CASE WHEN transaction_type='gash_billing' THEN amount ELSE 0 END) 'gash_sum',
-			SUM(CASE WHEN transaction_type='mycard_billing' THEN amount ELSE 0 END) 'mycard_sum',
-			SUM(CASE WHEN transaction_type='paypal_billing' THEN amount ELSE 0 END) 'paypal_sum',
-			SUM(CASE WHEN transaction_type='atm_billing' THEN amount ELSE 0 END) 'atm_sum',
-			SUM(CASE WHEN transaction_type='cht_billing' THEN amount ELSE 0 END) 'cht_sum',
-			SUM(CASE WHEN transaction_type='twm_billing' THEN amount ELSE 0 END) 'twm_sum',
-			SUM(CASE WHEN transaction_type='fet_billing' THEN amount ELSE 0 END) 'fet_sum',
-			SUM(CASE WHEN transaction_type='vibo_billing' THEN amount ELSE 0 END) 'vibo_sum',
-			SUM(CASE WHEN transaction_type not in ('ios_billing','android_billing','gash_billing','mycard_billing','paypal_billing','atm_billing','cht_billing','twm_billing','fet_billing','vibo_billing') THEN amount ELSE 0 END) 'other_billing_sum',
-			SUM(CASE WHEN country_code='TWN' THEN amount ELSE 0 END) 'twn_sum',
-			SUM(CASE WHEN country_code='HKG' THEN amount ELSE 0 END) 'hkg_sum',
-			SUM(CASE WHEN country_code='MAC' THEN amount ELSE 0 END) 'mac_sum',
-			SUM(CASE WHEN country_code='SGP' THEN amount ELSE 0 END) 'sgp_sum',
-			SUM(CASE WHEN country_code='MYS' THEN amount ELSE 0 END) 'mys_sum',
-			SUM(CASE WHEN country_code not in ('TWN','HKG','MAC','SGP','MYS') THEN amount ELSE 0 END) 'other_country_sum'
+				{$date_group}(create_time) 'date',
+				SUM(amount) 'sum',
+				SUM(CASE WHEN transaction_type='ios_billing' THEN amount ELSE 0 END) 'ios_sum',
+				SUM(CASE WHEN transaction_type='android_billing' THEN amount ELSE 0 END) 'android_sum',
+				SUM(CASE WHEN transaction_type='gash_billing' THEN amount ELSE 0 END) 'gash_sum',
+				SUM(CASE WHEN transaction_type='mycard_billing' THEN amount ELSE 0 END) 'mycard_sum',
+				SUM(CASE WHEN transaction_type='paypal_billing' THEN amount ELSE 0 END) 'paypal_sum',
+				SUM(CASE WHEN transaction_type='atm_billing' THEN amount ELSE 0 END) 'atm_sum',
+				SUM(CASE WHEN transaction_type='cht_billing' THEN amount ELSE 0 END) 'cht_sum',
+				SUM(CASE WHEN transaction_type='twm_billing' THEN amount ELSE 0 END) 'twm_sum',
+				SUM(CASE WHEN transaction_type='fet_billing' THEN amount ELSE 0 END) 'fet_sum',
+				SUM(CASE WHEN transaction_type='vibo_billing' THEN amount ELSE 0 END) 'vibo_sum',
+				SUM(CASE WHEN transaction_type not in ('ios_billing','android_billing','gash_billing','mycard_billing','paypal_billing','atm_billing','cht_billing','twm_billing','fet_billing','vibo_billing') THEN amount ELSE 0 END) 'other_billing_sum',
+				SUM(CASE WHEN country_code='TWN' THEN amount ELSE 0 END) 'twn_sum',
+				SUM(CASE WHEN country_code='HKG' THEN amount ELSE 0 END) 'hkg_sum',
+				SUM(CASE WHEN country_code='MAC' THEN amount ELSE 0 END) 'mac_sum',
+				SUM(CASE WHEN country_code='SGP' THEN amount ELSE 0 END) 'sgp_sum',
+				SUM(CASE WHEN country_code='MYS' THEN amount ELSE 0 END) 'mys_sum',
+				SUM(CASE WHEN country_code not in ('TWN','HKG','MAC','SGP','MYS') THEN amount ELSE 0 END) 'other_country_sum'
 			FROM user_billing
+				JOIN servers ON user_billing.server_id=servers.server_id
 			WHERE create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-			AND billing_type = 1
-			AND result = 1
+				AND billing_type = 1
+				AND result = 1
 			GROUP BY YEAR(create_time), {$date_group}(create_time)
 		    ORDER BY YEAR(create_time) DESC, {$date_group}(create_time) DESC
 		");
@@ -586,6 +587,165 @@ class Statistics extends MY_Controller {
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
 			->set("span", $span)
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+	
+	function deposit_behavior()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		$span = $this->input->get("span");
+		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
+		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
+		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
+			$start_date = date("Y-m-d",strtotime("-1 days"));
+			$end_date = date("Y-m-d",strtotime("-8 days"));
+		} 
+		
+		$deposit_count_query = $this->db->query("
+			SELECT
+				deposit_count, COUNT(deposit_count) 'deposit_count_rate'
+			FROM
+			(
+				SELECT 
+					COUNT(create_time) 'deposit_count'
+				FROM
+					user_billing
+				WHERE
+					create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
+					AND billing_type = 1
+					AND result = 1
+				GROUP BY uid
+			) tmp
+			GROUP BY deposit_count
+			ORDER BY deposit_count DESC
+		");
+		
+		$this->load->library('jpgraph');
+		$jgraph_data = array();
+		$jgraph_labels = array();
+		
+		$deposit_great_count = 0;
+		
+		foreach($deposit_count_query->result() as $row) {
+			if ($row->deposit_count >= 10) {
+				$deposit_great_count += $row->deposit_count;
+			} else {
+				$jgraph_data[] = $row->deposit_count_rate;
+				$jgraph_labels[] = (string)$row->deposit_count;
+			}
+		}
+		
+		if ($deposit_great_count) {
+			array_unshift($jgraph_data, $deposit_great_count);
+			array_unshift($jgraph_labels, "10+");
+		}
+		
+		$deposit_count_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/deposit_count_graph');
+		
+		$region_count_query = $this->db->query("
+			SELECT 
+				country_code, COUNT(create_time) 'region_count'
+			FROM
+				user_billing
+			WHERE
+				create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
+				AND billing_type = 1
+				AND result = 1
+			GROUP BY country_code
+		");
+		
+		//$this->load->library('jpgraph');
+		$jgraph_data = array();
+		$jgraph_labels = array();
+		
+		foreach($region_count_query->result() as $row) {
+			$jgraph_data[] = $row->region_count;
+			$jgraph_labels[] = (string)$row->country_code;
+		}
+		
+		$region_count_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/region_count_graph');
+		
+		$this->g_layout
+			->set("query", isset($query) ? $query : false)
+			->set("span", $span)
+			->set("deposit_count_graph",  isset($deposit_count_graph) ? $deposit_count_graph : false)
+			->set("region_count_graph",  isset($region_count_graph) ? $region_count_graph : false)
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+	
+	function user_return()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
+		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
+		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
+			$start_date = date("Y-m-d",strtotime("-1 days"));
+			$end_date = date("Y-m-d",strtotime("-8 days"));
+		} 
+		$game_id = $this->input->get("game_id");
+		
+		$query = $this->db->query("
+			SELECT
+				statistics.date,
+				statistics.game_id,
+				statistics.one_return_count 'one_return_count',
+				(statistics.one_return_count*100/statistics.login_count) 'one_return_percentage',
+				statistics.three_return_count 'three_return_count',
+				(statistics.three_return_count*100/statistics.login_count) 'three_return_percentage',
+				weekly_statistics.return_count 'weekly_return_count',
+				(weekly_statistics.return_count*100/weekly_statistics.login_count) 'weekly_return_percentage',
+				monthly_statistics.return_count 'monthly_return_count',
+				(monthly_statistics.return_count*100/monthly_statistics.login_count) 'monthly_return_percentage'
+			FROM statistics
+			LEFT JOIN weekly_statistics 
+				ON statistics.game_id = weekly_statistics.game_id 
+				AND statistics.date = weekly_statistics.date 
+			LEFT JOIN monthly_statistics 
+				ON statistics.game_id = monthly_statistics.game_id 
+				AND statistics.date = monthly_statistics.date 
+			WHERE statistics.date BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
+				AND statistics.game_id = '{$game_id}'
+		    ORDER BY statistics.date DESC
+		");
+		
+		$region_query = $this->db->query("
+			SELECT 
+				user_info.nation, COUNT(user_info.uid) 'user_count'
+			FROM
+				users
+				LEFT JOIN user_info ON users.uid=user_info.uid
+			WHERE
+				users.create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
+			GROUP BY user_info.nation
+		");
+		
+		$this->load->library('jpgraph');
+		$jgraph_data = array();
+		$jgraph_labels = array();
+		
+		foreach($region_query->result() as $row) {
+			$jgraph_data[] = $row->user_count;
+			$jgraph_labels[] = $row->nation;
+		}
+		
+		$region_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/region_graph');
+		
+		$this->g_layout
+			->set("query", isset($query) ? $query : false)
+			->set("region_graph",  isset($region_graph) ? $region_graph : false)
+			->set("game_id", $game_id)
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();

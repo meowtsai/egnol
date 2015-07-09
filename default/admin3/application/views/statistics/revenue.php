@@ -15,6 +15,9 @@
     <li class="<?=($span=='monthly') ? "active" : ""?>">
         <a href="<?=site_url("statistics/revenue?span=monthly")?>">月報表</a>
     </li>
+    <li class="<?=($span=='deposit_behavior') ? "active" : ""?>">
+        <a href="<?=site_url("statistics/deposit_behavior")?>">儲值習慣</a>
+    </li>
 </ul>
 
 <form method="get" action="<?=site_url("statistics/revenue")?>" class="form-search">

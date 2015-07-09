@@ -7,43 +7,52 @@ class Cron extends CI_Controller {
 	//	parent::__construct();					
 	//}
 	
-	function generate_temporary_lgl($date="") {
-		$this->lang->load('db_lang', 'zh-TW');
-		
-		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
-		
-		$this->drop_temporary_lgl();
-		
-        $query = $this->db->query("
-			CREATE TEMPORARY TABLE lgl
-			(
-			  `id` int(11) NOT NULL AUTO_INCREMENT,
-			  `uid` int(11) NOT NULL,
-			  `game_id` varchar(20) DEFAULT NULL,
-			  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-			  PRIMARY KEY (`id`)
-			) ENGINE=MEMORY;");	
-		
-        $query = $this->db->query("
-			INSERT INTO lgl (uid, game_id, create_time) 
-			SELECT 
-			    uid, game_id, create_time FROM log_game_logins 
-			WHERE 
-			    DATE(create_time) = '{$date}' 
-				    AND is_first = 1");	
-	}
-	
-	function drop_temporary_lgl() {
-		$this->lang->load('db_lang', 'zh-TW');
-		
-		$query = $this->db->query("DROP TABLE IF EXISTS `lgl`");	
-	}
-	
-	function generate_login_statistics($date="")
+	function generate_nation_by_ip($date="")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
 		
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
+			
+    	$query = $this->CI->db->select("uid")->from("user_info")
+    		->where("nation", NULL)->get();
+
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+			    $data = array(
+				    'game_id' => $row->game_id,
+				    'date' => $date,
+				    'new_character_count' => $row->character_cnt
+			    );
+			
+			    $this->save_statistics($data);
+		    }
+		}
+		
+		echo "generate_new_character_statistics done - ".$date.PHP_EOL;
+	}
+	
+	function generate_login_statistics($date="", $span="daily")
+	{
+		$this->lang->load('db_lang', 'zh-TW');
+		
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
+		
+        switch($span) {
+			case "weekly":
+			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND WEEKOFYEAR(create_time) = WEEKOFYEAR('{$date}')";
+				$save_table = "weekly_statistics";
+				break;
+			
+			case "monthly":
+			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}')";
+				$save_table = "monthly_statistics";
+				break;
+				
+			default:
+				$span_query = "DATE(create_time) = '{$date}'";
+				$save_table = "statistics";
+				break;
+		}
 
         $query = $this->db->query("
 			SELECT
@@ -54,7 +63,7 @@ class Cron extends CI_Controller {
 				FROM
 					log_game_logins
 				WHERE
-					DATE(create_time) = '{$date}'
+					".$span_query."
 				GROUP BY game_id, uid) tmp
 			GROUP BY game_id");	
 
@@ -67,11 +76,11 @@ class Cron extends CI_Controller {
 				    'new_login_count' => $row->new_login_count
 			    );
 			
-			    $this->save_statistics($data);
+			    $this->save_statistics($data, $save_table);
 		    }
 		}
 		
-		echo "generate_login_statistics done - ".$date.PHP_EOL;
+		echo "generate_login_".$span."_statistics done - ".$date.PHP_EOL;
 	}
 	
 	function generate_new_character_statistics($date="")
@@ -155,9 +164,6 @@ class Cron extends CI_Controller {
 
         switch($span) {
 			case "weekly":
-			    //$span_query1 = "YEAR(create_time) = YEAR('{$date}') AND WEEKOFYEAR(create_time) = WEEKOFYEAR('{$date}')";
-				//$span_query2 = " YEAR(log_game_logins.create_time) = YEAR(DATE_ADD(DATE('{$date}'), INTERVAL {$interval} WEEK))
-				//                AND WEEKOFYEAR(log_game_logins.create_time) = WEEKOFYEAR(DATE_ADD(DATE('{$date}'), INTERVAL {$interval} WEEK))";
 				$span_query1 = "create_time BETWEEN '".date("Y-m-d", strtotime("-6 days", strtotime($date)))."'
 								AND '".date("Y-m-d", strtotime($date))." 23:59:59'";
 				$span_query2 = "create_time BETWEEN '".date("Y-m-d", strtotime("+1 day", strtotime($date)))."'
@@ -166,9 +172,6 @@ class Cron extends CI_Controller {
 				break;
 			
 			case "monthly":
-			    //$span_query1 = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}')";
-			    //$span_query2 = " YEAR(log_game_logins.create_time) = YEAR(DATE_ADD(DATE('{$date}'), INTERVAL {$interval} MONTH))
-				//               AND MONTH(log_game_logins.create_time) = MONTH(DATE_ADD(DATE('{$date}'), INTERVAL {$interval} MONTH))";
 				$span_query1 = "create_time BETWEEN '".date("Y-m", strtotime($date))."-01'
 								AND '".date("Y-m-t", strtotime($date))." 23:59:59'";
 				$span_query2 = "create_time BETWEEN '".date("Y-m", strtotime("+1 day", strtotime($date)))."-01'
@@ -230,6 +233,90 @@ class Cron extends CI_Controller {
 		}
 		
 		echo "generate_".$interval."_retention_".$span."_statistics(".(($is_first) ? "first" : "all").") done - ".$date.PHP_EOL;
+	}
+	
+	function generate_return_statistics($date="", $interval=1, $span="daily")
+	{
+		$this->lang->load('db_lang', 'zh-TW');
+		
+		if (empty($date)) $date=date("Y-m-d",strtotime("-".($interval+1)." days"));
+		
+        switch($span) {
+			case "weekly":
+				$update_field = 'return_count';
+			    $span_query1 = "YEAR(create_time) = YEAR('{$date}') AND WEEKOFYEAR(create_time) = WEEKOFYEAR('{$date}')";
+				$span_query2 = "YEAR(create_time) = YEAR(DATE_SUB(DATE('{$date}'), INTERVAL 1 WEEK))
+				                AND WEEKOFYEAR(create_time) = WEEKOFYEAR(DATE_SUB(DATE('{$date}'), INTERVAL 1 WEEK))";
+				$save_table = "weekly_statistics";
+				break;
+			
+			case "monthly":
+				$update_field = 'return_count';
+			    $span_query1 = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}')";
+			    $span_query2 = "YEAR(log_game_logins.create_time) = YEAR(DATE_ADD(DATE('{$date}'), INTERVAL 1 MONTH))
+				               AND MONTH(log_game_logins.create_time) = MONTH(DATE_ADD(DATE('{$date}'), INTERVAL 1 MONTH))";
+				$save_table = "monthly_statistics";
+				break;
+				
+			default:
+				switch ($interval) {
+					case 1:
+						$update_field = 'one_return_count';
+						$span_query2 = "DATE(create_time) = DATE_SUB(DATE('{$date}'), INTERVAL 1 DAY)";
+						break;
+					case 3:
+						$update_field = 'three_return_count';
+						$span_query2 = "DATE(create_time) BETWEEN DATE_SUB(DATE('{$date}'), INTERVAL 3 DAY) AND DATE_SUB(DATE('{$date}'), INTERVAL 1 DAY)";
+						break;
+				}
+				$span_query1 = "DATE(create_time) = '{$date}'";
+				$save_table = "statistics";
+				break;
+		}
+		
+        $query = $this->db->query("
+			SELECT 
+				lgl.game_id, COUNT(lgl.uid) '{$update_field}'
+			FROM
+			(
+				SELECT 
+					uid, game_id, MIN(create_time)
+				FROM
+					log_game_logins lgl
+				WHERE
+					".$span_query1."
+						AND is_first <> 1
+				GROUP BY uid, game_id
+			) AS lgl
+				LEFT JOIN
+			(
+				SELECT 
+					uid, game_id, MIN(create_time)
+				FROM
+					log_game_logins
+				WHERE
+					".$span_query2."
+				GROUP BY uid, game_id
+			) AS lgl2 ON lgl.game_id = lgl2.game_id AND lgl.uid = lgl2.uid 
+			WHERE
+				lgl2.uid IS NULL
+			GROUP BY lgl.game_id
+		");	
+
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+		
+				$data = array(
+					'game_id' => $row->game_id,
+					'date' => $date,
+					$update_field => $row->$update_field 
+				);
+				
+			    $this->save_statistics($data, $save_table);
+		    }
+		}
+		
+		echo "generate_".$interval."_return_".$span."_statistics done - ".$date.PHP_EOL;
 	}
 	
 	function generate_billing_statistics($date="")
@@ -751,6 +838,222 @@ class Cron extends CI_Controller {
 		echo "generate_game_length_statistics done - ".$date.PHP_EOL;
 	}
 	
+	function generate_user_game_length_statistics($date="")
+	{
+		$this->lang->load('db_lang', 'zh-TW');
+		
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));			
+		
+			$query = $this->db->query("
+				SELECT game_id, date,
+					login_count_15,
+					login_count_30,
+					login_count_60,
+					login_count_90,
+					login_count_120,
+					login_count_more
+				FROM 
+				(
+					SELECT game_id, DATE(create_time) 'date',
+						COUNT(uid) 'all_login_count',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 15 THEN 1 ELSE NULL END) 'login_count_15',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 15 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 30 THEN 1 ELSE NULL END) 'login_count_30',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 30 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 60 THEN 1 ELSE NULL END) 'login_count_60',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 60 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 90 THEN 1 ELSE NULL END) 'login_count_90',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 90 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 120 THEN 1 ELSE NULL END) 'login_count_120',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 120 THEN 1 ELSE NULL END) 'login_count_more'
+					FROM log_game_logins
+					WHERE create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
+					GROUP BY game_id, DATE(create_time)
+				) AS all_gt
+			");
+
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+				if (isset($row->game_id)) {
+			        $data = array(
+				        'game_id' => $row->game_id,
+				        'date' => $date,
+						'login_count_15' => $row->login_count_15,
+						'login_count_30' => $row->login_count_30,
+						'login_count_60' => $row->login_count_60,
+						'login_count_90' => $row->login_count_90,
+						'login_count_120' => $row->login_count_120,
+						'login_count_more' => $row->login_count_more
+			        );
+				
+					$this->save_statistics($data);
+			    }
+		    }
+		}
+		echo "generate_user_game_length_statistics done - ".$date.PHP_EOL;
+	}
+	
+	function generate_new_user_game_length_statistics($date="")
+	{
+		$this->lang->load('db_lang', 'zh-TW');
+		
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));			
+		
+			$query = $this->db->query("
+				SELECT game_id, date,
+					new_login_count,
+					new_login_count_15,
+					new_login_count_30,
+					new_login_count_60,
+					new_login_count_90,
+					new_login_count_120,
+					new_login_count_more
+				FROM 
+				(
+					SELECT game_id, DATE(create_time) 'date',
+						COUNT(uid) 'new_login_count',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 15 THEN 1 ELSE NULL END) 'new_login_count_15',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 15 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 30 THEN 1 ELSE NULL END) 'new_login_count_30',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 30 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 60 THEN 1 ELSE NULL END) 'new_login_count_60',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 60 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 90 THEN 1 ELSE NULL END) 'new_login_count_90',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 90 AND TIMESTAMPDIFF(MINUTE, create_time, logout_time) < 120 THEN 1 ELSE NULL END) 'new_login_count_120',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 120 THEN 1 ELSE NULL END) 'new_login_count_more'
+					FROM log_game_logins
+					WHERE create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
+						AND is_first = 1
+					GROUP BY game_id, DATE(create_time)
+				) AS new_gt
+			");
+
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+				if (isset($row->game_id)) {
+			        $data = array(
+				        'game_id' => $row->game_id,
+				        'date' => $date,
+						'new_login_count_15' => $row->new_login_count_15,
+						'new_login_count_30' => $row->new_login_count_30,
+						'new_login_count_60' => $row->new_login_count_60,
+						'new_login_count_90' => $row->new_login_count_90,
+						'new_login_count_120' => $row->new_login_count_120,
+						'new_login_count_more' => $row->new_login_count_more
+			        );
+				
+					$this->save_statistics($data);
+			    }
+		    }
+		}
+		echo "generate_new_user_game_length_statistics done - ".$date.PHP_EOL;
+	}
+	
+	function generate_deposit_user_game_length_statistics($date="")
+	{
+		$this->lang->load('db_lang', 'zh-TW');
+		
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));			
+		
+			$query = $this->db->query("
+				SELECT game_id, date,
+					deposit_login_count,
+					deposit_login_count_15,
+					deposit_login_count_30,
+					deposit_login_count_60,
+					deposit_login_count_90,
+					deposit_login_count_120,
+					deposit_login_count_more
+				FROM 
+				(
+					SELECT lgl.game_id, DATE(lgl.create_time) 'date',
+						COUNT(lgl.uid) 'deposit_login_count',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 15 THEN 1 ELSE NULL END) 'deposit_login_count_15',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 15 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 30 THEN 1 ELSE NULL END) 'deposit_login_count_30',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 30 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 60 THEN 1 ELSE NULL END) 'deposit_login_count_60',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 60 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 90 THEN 1 ELSE NULL END) 'deposit_login_count_90',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 90 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 120 THEN 1 ELSE NULL END) 'deposit_login_count_120',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 120 THEN 1 ELSE NULL END) 'deposit_login_count_more'
+					FROM log_game_logins lgl
+					JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id AND lgl.create_time >= ub.create_time
+					WHERE lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
+						AND ub.billing_type = 2 
+						AND ub.result = 1
+					GROUP BY lgl.game_id, DATE(lgl.create_time)
+				) AS deposit_gt
+			");
+
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+				if (isset($row->game_id)) {
+			        $data = array(
+				        'game_id' => $row->game_id,
+				        'date' => $date,
+						'deposit_login_count' => $row->deposit_login_count,
+						'deposit_login_count_15' => $row->deposit_login_count_15,
+						'deposit_login_count_30' => $row->deposit_login_count_30,
+						'deposit_login_count_60' => $row->deposit_login_count_60,
+						'deposit_login_count_90' => $row->deposit_login_count_90,
+						'deposit_login_count_120' => $row->deposit_login_count_120,
+						'deposit_login_count_more' => $row->deposit_login_count_more
+			        );
+				
+					$this->save_statistics($data);
+			    }
+		    }
+		}
+		echo "generate_deposit_user_game_length_statistics done - ".$date.PHP_EOL;
+	}
+	
+	function generate_new_deposit_user_game_length_statistics($date="")
+	{
+		$this->lang->load('db_lang', 'zh-TW');
+		
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));			
+		
+			$query = $this->db->query("
+				SELECT game_id, date,
+					new_deposit_login_count,
+					new_deposit_login_count_15,
+					new_deposit_login_count_30,
+					new_deposit_login_count_60,
+					new_deposit_login_count_90,
+					new_deposit_login_count_120,
+					new_deposit_login_count_more
+				FROM 
+				(
+					SELECT lgl.game_id, DATE(lgl.create_time) 'date',
+						COUNT(lgl.uid) 'new_deposit_login_count',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 15 THEN 1 ELSE NULL END) 'new_deposit_login_count_15',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 15 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 30 THEN 1 ELSE NULL END) 'new_deposit_login_count_30',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 30 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 60 THEN 1 ELSE NULL END) 'new_deposit_login_count_60',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 60 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 90 THEN 1 ELSE NULL END) 'new_deposit_login_count_90',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 90 AND TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) < 120 THEN 1 ELSE NULL END) 'new_deposit_login_count_120',
+						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, lgl.create_time, lgl.logout_time) >= 120 THEN 1 ELSE NULL END) 'new_deposit_login_count_more'
+					FROM log_game_logins lgl
+					JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id AND DATE(lgl.create_time) = DATE(ub.create_time)
+					WHERE lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
+						AND ub.billing_type = 2 
+						AND ub.result = 1
+					GROUP BY lgl.game_id, DATE(lgl.create_time)
+				) AS new_deposit_gt
+			");
+
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+				if (isset($row->game_id)) {
+			        $data = array(
+				        'game_id' => $row->game_id,
+				        'date' => $date,
+						'new_deposit_login_count' => $row->new_deposit_login_count,
+						'new_deposit_login_count_15' => $row->new_deposit_login_count_15,
+						'new_deposit_login_count_30' => $row->new_deposit_login_count_30,
+						'new_deposit_login_count_60' => $row->new_deposit_login_count_60,
+						'new_deposit_login_count_90' => $row->new_deposit_login_count_90,
+						'new_deposit_login_count_120' => $row->new_deposit_login_count_120,
+						'new_deposit_login_count_more' => $row->new_deposit_login_count_more
+			        );
+				
+					$this->save_statistics($data);
+			    }
+		    }
+		}
+		echo "generate_new_deposit_user_game_length_statistics done - ".$date.PHP_EOL;
+	}
+	
 	function save_statistics($data, $save_table="statistics") {
 		$game_id = $data['game_id'];
 		
@@ -789,8 +1092,12 @@ class Cron extends CI_Controller {
 		$this->generate_retention_statistics($date, 30);
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_retention_statistics($date, 1, 'daily', FALSE);
+		$start_time = $this->echo_passed_time($start_time);*/
+		$this->generate_return_statistics($date, 1);
 		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_billing_statistics($date);
+		$this->generate_return_statistics($date, 3);
+		$start_time = $this->echo_passed_time($start_time);
+		/*$this->generate_billing_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_consume_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
@@ -801,25 +1108,39 @@ class Cron extends CI_Controller {
 		$this->generate_paid_game_time_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_peak_statistics($date);
-		$start_time = $this->echo_passed_time($start_time);*/
-		$this->generate_game_length_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
+		$this->generate_user_game_length_statistics($date);
+		$start_time = $this->echo_passed_time($start_time);
+		$this->generate_new_user_game_length_statistics($date);
+		$start_time = $this->echo_passed_time($start_time);
+		$this->generate_deposit_user_game_length_statistics($date);
+		$start_time = $this->echo_passed_time($start_time);
+		$this->generate_new_deposit_user_game_length_statistics($date);
+		$start_time = $this->echo_passed_time($start_time);*/
 		
-		/*if ("7"==date("N", strtotime($date))) {
-			$date_week=date("Y-m-d",strtotime("-1 week", strtotime($date)));
+		if ("7"==date("N", strtotime($date))) {
+			$this->generate_login_statistics($date, 'weekly');
+			$start_time = $this->echo_passed_time($start_time);
+			/*$date_week=date("Y-m-d",strtotime("-1 week", strtotime($date)));
 			$this->generate_retention_statistics($date_week, 1, 'weekly');
 			$start_time = $this->echo_passed_time($start_time);
 			$this->generate_retention_statistics($date_week, 1, 'weekly', FALSE);
+			$start_time = $this->echo_passed_time($start_time);*/
+			$this->generate_return_statistics($date, 1, 'weekly');
 			$start_time = $this->echo_passed_time($start_time);
 		}
 		
 		if ($date==date("Y-m-t", strtotime($date))) {
-			$date_month=date("Y-m-t",strtotime("-31 days", strtotime($date)));
+			$this->generate_login_statistics($date, 'monthly');
+			$start_time = $this->echo_passed_time($start_time);
+			/*$date_month=date("Y-m-t",strtotime("-31 days", strtotime($date)));
 			$this->generate_retention_statistics($date_month, 1, 'monthly');
 			$start_time = $this->echo_passed_time($start_time);
 			$this->generate_retention_statistics($date_month, 1, 'monthly', FALSE);
+			$start_time = $this->echo_passed_time($start_time);*/
+			$this->generate_return_statistics($date, 1, 'monthly');
 			$start_time = $this->echo_passed_time($start_time);
-		}*/
+		}
 	}
 	
 	function echo_passed_time($start_time) {
