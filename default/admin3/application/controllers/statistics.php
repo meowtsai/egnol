@@ -681,6 +681,117 @@ class Statistics extends MY_Controller {
 			->render();
 	}
 	
+	function whale_users()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		$game_id = $this->input->get("game_id");
+		
+		/*$query = $this->db->query("
+			SELECT 
+				ub.uid 'uid',
+				chr.character_name 'character_name',
+				svr.name 'server_name',
+				SUM(ub.amount) 'deposit_total',
+				gm.exchange_rate*SUM(ub.amount) 'currency_total',
+				gm.exchange_rate*SUM(ub.amount) - csm.consume_sum 'currency_left',
+				csm.consume_sum 'currency_consumed',
+				DATE(chr.create_time) 'create_date'
+			FROM
+				user_billing ub
+				JOIN servers svr ON svr.server_id = ub.server_id
+				JOIN games gm ON svr.game_id = gm.game_id
+				LEFT JOIN characters chr ON chr.uid = ub.uid
+					AND chr.server_id = ub.server_id
+				LEFT JOIN
+				(
+					SELECT
+						uid,
+						server_id,
+						SUM(amount) 'consume_sum'
+					FROM
+						log_game_consumes
+					WHERE
+						game_id = '{$game_id}'
+					GROUP BY server_id, uid
+				) csm ON csm.uid = ub.uid
+					AND csm.server_id = ub.server_id
+			WHERE
+				ub.billing_type = 2
+				AND ub.result = 1
+				AND svr.game_id = '{$game_id}'
+			GROUP BY ub.uid
+			ORDER BY SUM(ub.amount) DESC
+			LIMIT 20
+		");*/
+		$query = $this->db->query("
+			SELECT 
+				whales.uid 'uid',
+				chr.character_name 'character_name',
+				whales.server_name 'server_name',
+				whales.deposit_total 'deposit_total',
+				gm.exchange_rate*whales.deposit_total 'currency_total',
+				DATE(chr.create_time) 'create_date',
+				csm.consume_sum 'currency_consumed'
+			FROM
+				(	
+					SELECT 
+						ub.uid 'uid',
+						ub.server_id 'server_id',
+						svr.game_id 'game_id',
+						svr.name 'server_name',
+						SUM(ub.amount) 'deposit_total'
+					FROM
+						user_billing ub
+						JOIN servers svr ON svr.server_id = ub.server_id
+						LEFT JOIN testaccounts ta ON ub.uid = ta.uid
+					WHERE
+						ub.billing_type = 2
+						AND ub.result = 1
+						AND svr.game_id = '{$game_id}'
+						AND ta.uid IS NULL
+					GROUP BY ub.uid
+					ORDER BY SUM(ub.amount) DESC
+					LIMIT 20
+				) whales
+					JOIN games gm ON whales.game_id = gm.game_id
+					LEFT JOIN 
+				( 
+					SELECT
+						uid,
+						server_id,
+						MIN(create_time) 'create_time',
+						character_name
+					FROM characters
+					GROUP BY server_id, uid
+				) chr ON chr.uid = whales.uid
+						AND chr.server_id = whales.server_id
+					LEFT JOIN
+				(
+					SELECT
+						uid,
+						server_id,
+						SUM(amount) 'consume_sum'
+					FROM
+						log_game_consumes
+					WHERE
+						game_id = '{$game_id}'
+					GROUP BY server_id, uid
+				) csm ON csm.uid = whales.uid
+					AND csm.server_id = whales.server_id
+		");
+		
+		$this->g_layout
+			->set("query", isset($query) ? $query : false)
+			->set("game_id", $game_id)
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+	
 	function user_return()
 	{			
 		$this->_init_statistics_layout();			

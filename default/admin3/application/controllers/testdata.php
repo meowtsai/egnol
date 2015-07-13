@@ -79,7 +79,7 @@ class Testdata extends CI_Controller {
 				    'server_id' => $row->server_id
 			    );
 				
-				$this->db->where("server_id", $row->id)->update("log_game_logins", $data);
+				$this->db->where("server_id", $row->id)->update("log_game_consumes", $data);
 			}
 		}
 	}
