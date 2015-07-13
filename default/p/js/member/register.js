@@ -1,5 +1,5 @@
-$(function(){
-	
+$(function()
+{
 	$("#register_form").validate({
 		onfocusout: false,
 		onkeyup: false,
@@ -13,12 +13,7 @@ $(function(){
 			mobile: {
 				required: ""
 			},
-/*			account: {
-				required: "`帳號`必填",
-				minlength: "`帳號`最少6碼",
-				maxlength: "`帳號`最多18碼",
-			},
-*/			pwd: {
+			pwd: {
 				required: "`密碼`必填",
 				minlength: "`密碼`最少6碼",
 				maxlength: "`密碼`最多18碼",
@@ -61,7 +56,6 @@ $(function(){
 					window.CoozSDK.showMsg(err);
 				}
 		   }
-		   //this.defaultShowErrors();
 		},
 		submitHandler: function(form)
 		{

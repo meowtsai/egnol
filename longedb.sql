@@ -421,7 +421,6 @@ CREATE TABLE `servers` (
   `id` int(11) NOT NULL,
   `game_id` varchar(20) NOT NULL,
   `server_id` varchar(20) NOT NULL,
-  `logo_path` varchar(50) DEFAULT NULL,
   `name` varchar(255) DEFAULT NULL,
   `address` varchar(100) DEFAULT NULL,
   `server_connection_key` varchar(64) DEFAULT NULL,

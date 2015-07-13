@@ -265,7 +265,7 @@ class Member extends MY_Controller
 		}
 		else
 		{
-			die(json_failure($this->error_message));
+			die(json_failure($this->g_user->error_message));
 		}
 	}
 

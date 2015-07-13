@@ -269,14 +269,18 @@ class G_User {
 		return $this->CI->db->from("users")->where("uid", $uid)->get()->row();
 	}
 
+	// 建立新帳號
 	function create_account($email, $mobile, $password, $site='', $bind_uid='')
 	{			
 		$email = strtolower(trim($email));
 		$mobile = trim($mobile);
 
-		if(!filter_var($email, FILTER_VALIDATE_EMAIL))
+		if(!empty($email))
 		{
-            return $this->_return_error('電子信箱格式錯誤');
+			if(!filter_var($email, FILTER_VALIDATE_EMAIL))
+			{
+	            return $this->_return_error('電子信箱格式錯誤');
+			}
 		}
 
 		if (strlen($password) < 4) return $this->_return_error('密碼不得少於四碼');
@@ -288,13 +292,16 @@ class G_User {
 		else
 		{
 			$data = array(
-				'email'	=> strtolower(trim($email)),
-				'mobile' => trim($mobile),
 				'password'	=> md5(trim($password)),
 				'create_time' => date("YmdHis"),
 				'is_approved'	=> 0
 			);
 			if ($bind_uid) $data['bind_uid'] = $bind_uid;
+
+        	// 有指定 email 或 mobile 才寫入, 沒指定就會預設為 NULL
+			// 否則若寫入空字串會被當成合法的唯一值而造成誤判
+			if(!empty($email)) $data['email'] = $email;
+			if(!empty($mobile)) $data['mobile'] = $mobile;
 			
 			$this->CI->db->insert("users", $data);
 			$uid = $this->CI->db->insert_id();
@@ -310,17 +317,25 @@ class G_User {
 		}
 	}
 
+	// 檢查帳號是否已存在
 	function check_account_exist($email, $mobile)
 	{
 		if(!empty($email))
 		{
+			// 檢查 email
 			$cnt = $this->CI->db->from("users")->where("email", $email)->count_all_results();
+			if($cnt > 0)
+				return true;
 		}
-		else if(!empty($mobile))
+		if(!empty($mobile))
 		{
+			// 檢查行動電話
 			$cnt = $this->CI->db->from("users")->where("mobile", $mobile)->count_all_results();
+			if($cnt > 0)
+				return true;
 		}
-		return $cnt > 0 ? true : false;
+
+		return false;
 	}
 	
 	function check_extra_account($account='')
