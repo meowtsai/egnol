@@ -1,4 +1,4 @@
-<form id="register_form" method="post" action="/member/register_json">
+<form id="question_form" method="post" action="/member/">
 	<ul class="le_form">
 		<li>線上回報</li>
 		<li>

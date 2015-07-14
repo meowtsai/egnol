@@ -15,8 +15,6 @@ class MY_Controller extends CI_Controller {
 		$this->load->library(array("g_user"));
 
 		$this->load->database('long_e');
-		
-		$this->game_id = $this->input->get("site");
 	}
 
 	function _init_layout()
@@ -35,8 +33,8 @@ class MY_Controller extends CI_Controller {
 
 		$this->g_layout->set("recent_server", $recent_server);
 
-		// 取出指定的 site, 沒有指定的話就是 longe
-		$site = $this->input->get("site") ? $this->input->get("site", true) : "long_e";
+		// 取出指定的 site, 沒有指定的話就是 long_e
+		$site = $this->_get_site();
 		$this->g_layout->set("site", $site);
         $this->g_layout->set("game_url", ($site == "long_e" ? "/" : "/games/".$site));
 
@@ -62,8 +60,12 @@ class MY_Controller extends CI_Controller {
 	// 檢查並要求登入
 	function _require_login($redirect_url='')
 	{
-		$site = $this->input->get("site") ? $this->input->get("site", true) : "long_e";
+		return $this->g_user->require_login($this->_get_site(), $redirect_url);
+	}
 
-		return $this->g_user->require_login($site, $redirect_url);
+	// 取得目前的遊戲
+	function _get_site()
+	{
+		return $this->input->get("site") ? $this->input->get("site", true) : "long_e";
 	}
 }

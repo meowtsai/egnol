@@ -1,43 +1,20 @@
 $(function()
 {
-	$("#register_form").validate({
+	$("#login_form").validate({
 		onfocusout: false,
 		onkeyup: false,
 		onclick: false,
 		messages:
 		{
-			email: {
-				required: "`電子信箱`與`行動電話`至少需填寫其中之一",
-				email: "請填寫正確的電子信箱位址"
-			},
-			mobile: {
-				required: ""
+			account: {
+				required: "`電子信箱`或`行動電話`必填"
 			},
 			pwd: {
-				required: "`密碼`必填",
+				required: "`密碼`尚未填寫",
 				minlength: "`密碼`最少6碼",
 				maxlength: "`密碼`最多18碼",
 			},
-			pwd2: { 
-				required: "`確認密碼`必填",
-				equalTo: "兩次密碼不相同",
-			},
-			captcha: {
-				required: "`認證碼`必填",
-				minlength: "`認證碼`應為4碼",
-				maxlength: "`認證碼`應為4碼",
-			},
-			chk: "請詳閱會員條款並同意",
 		},
-		rules:
-		{
-			email: {
-				required: "#mobile:blank"
-			},
-			mobile: {
-				required: "#email:blank"
-			}
-    	},
 		showErrors: function(errorMap, errorList)
 		{
 		   var err = '';
@@ -47,7 +24,7 @@ $(function()
 		   });
 		   if (err)
 		   {
-				leOpenDialog('註冊錯誤', err, leDialogType.MESSAGE);
+				leOpenDialog('登入錯誤', err, leDialogType.MESSAGE);
 		   }
 		},
 		submitHandler: function(form)
@@ -62,12 +39,12 @@ $(function()
 						else if (json.site == 'long_e') location.href = '/';
 						else location.href = '/play_game/'+json.site;
 						return;
-					}					
+					}
 					else
 					{
-						leOpenDialog('註冊錯誤', json.message, leDialogType.MESSAGE);
+						leOpenDialog('登入錯誤', json.message, leDialogType.MESSAGE);
 					}
-				}
+				}		
 			});
 		}
 	});

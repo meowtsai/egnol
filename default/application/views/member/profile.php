@@ -38,7 +38,7 @@
 			<input type="button" value="綁定帳號" onclick="javascript:location.href='/member/bind_account'" />
           </div>
 		<div style="float:right;">
-			<input type="button" value="登出" onclick="javascript:location.href='/gate/logout'" />
+			<input type="button" value="登出" onclick="javascript:location.href='/member/logout'" />
 		</div>
 		<div style="clear:both;"></div>
 	</li>

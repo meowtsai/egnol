@@ -53,22 +53,126 @@ class Member extends MY_Controller
 		}
 
 		$this->_init_layout()
+			->add_js_include("member/login")
 			->set("account", $account)
 			->set("redirect_url", $redirect_url)
 			->set("channel_item", $channel_item)
 			->standard_view("member/login");
 	}
-/*
-		$game_name = '';
-		if ($site !== 'long_e') 
+
+	function login_json()
+	{
+		header('content-type:text/html; charset=utf-8');
+
+		$site = $this->_get_site();
+
+		$_SESSION['site'] = $site;
+
+		// 檢查 e-mail or mobile
+		$account = $this->input->post("account");
+		if(empty($account))
 		{
-			$this->load->model('games');
-			$game_row = $this->games->get_game($site);
-			$game_name = $game_row ? $game_row->name : '';
+			die(json_failure('電子郵件或行動電話未填寫'));
 		}
-*/
+
+		$pwd = $this->input->post("pwd");
+		if (empty($pwd))
+		{
+			die(json_failure('密碼尚未填寫'));
+		}
+
+		$email = '';
+		$mobile = '';
+		if(filter_var($account, FILTER_VALIDATE_EMAIL))
+		{
+			$email = $account;
+		}
+		else
+		{
+			$mobile = $account;
+		}
+
+		if ( $this->g_user->verify_account($email, $mobile, $pwd) === true )
+		{
+			die(json_message(array("message"=>"成功", "site"=>$site), true));
+		}
+		else
+		{
+			die(json_failure($this->g_user->error_message));
+		}
+	}
+
+	// 登出
+	function logout()
+	{
+		$this->g_user->logout();
+
+		header('Content-type:text/html; Charset=UTF-8');
+		echo "<script type='text/javascript'>alert('成功登出系統'); history.back();</script>";
+	}
+
+	// 註冊新帳號
+	//	GET 輸入參數:
+	//      redirect_url- String    註冊完成後要返回的網址
+	function register()
+	{
+		$redirect_url = urldecode($this->input->get("redirect_url", true));
+
+		if (empty($redirect_url))
+		{
+			$redirect_url = site_url("/");
+		}
+
+		$this->_init_layout()
+			->add_js_include("member/register")
+			->set("redirect_url", $redirect_url)
+			->standard_view();
+	}
+
+	function register_json()
+	{
+		header('content-type:text/html; charset=utf-8');
+
+        $site = 'long_e';
+		$email = $this->input->post('email');
+		$mobile = $this->input->post("mobile");
+		$pwd = $this->input->post("pwd");
+		$pwd2 = $this->input->post("pwd2");
+		$captcha = $this->input->post('captcha');
+
+		if ( empty($email) && empty($mobile) )
+		{
+			die(json_failure("電子郵件和行動電話至少需填寫一項"));
+		}
+		else if (empty($pwd) )
+		{
+			die(json_failure("請輸入密碼"));
+		}
+		else if ($pwd != $pwd2)
+		{
+			die(json_failure("兩次密碼輸入不相同"));
+		}
+		else if (empty($_SESSION['captcha']) || $captcha != $_SESSION['captcha'])
+		{
+			die(json_failure("驗證碼錯誤"));
+		}
+
+		$boolResult = $this->g_user->create_account($email, $mobile, $pwd, $site);
+		if ($boolResult==true)
+		{
+			$this->g_user->verify_account($email, $mobile, $pwd);
+			die(json_message(array("message"=>"成功", "site"=>$site), true));
+		}
+		else
+		{
+			die(json_failure($this->g_user->error_message));
+		}
+	}
+
+	// 綁定帳號
 	function bind_account()
 	{
+		// 先登入才能綁定
 		$this->_require_login();
 		
 		$user_data = $this->g_user->get_user_data();
@@ -118,35 +222,6 @@ class Member extends MY_Controller
 			die(json_failure($this->g_user->error_message));
 		}	
 	}
-/*
-	function m_bind_account_json()
-	{
-		$this->_check_login_json();
-		
-		$account = $this->input->post("account");
-		$mobile = $this->input->post("mobile");
-		$pwd = $this->input->post("pwd");
-		$pwd2 = $this->input->post("pwd2");
-		$redirect_url = $this->input->post("redirect_url");
-	
-		if ( empty($mobile) || empty($pwd) ) {
-			die(json_failure("請輸入手機號碼及密碼"));
-		}
-		else if ($pwd != $pwd2) {
-			die(json_failure("兩次密碼輸入不同"));
-		}
-	
-		$result = $this->g_user->set_mobile($account, $pwd, $mobile);
-	
-		if ($result == true){
-			$this->g_user->verify_account($account, $pwd);
-			die(json_message(array("message"=>"成功", "back_url"=>$redirect_url)));
-		}
-		else {
-			die(json_failure($this->g_user->error_message));
-		}	
-	}
-*/
 
 	// 修改會員資料
 	function update_profile()
@@ -209,64 +284,6 @@ class Member extends MY_Controller
 		
 		$this->db->where("uid", $target_uid)->update("users", $data);		
 		die(json_success());
-	}
-
-	// 註冊新帳號
-	//	GET 輸入參數:
-	//      redirect_url- String    註冊完成後要返回的網址
-	function register()
-	{
-		$redirect_url = urldecode($this->input->get("redirect_url", true));
-
-		if (empty($redirect_url))
-		{
-			$redirect_url = site_url("/");
-		}
-
-		$this->_init_layout()
-			->add_js_include("member/register")
-			->set("redirect_url", $redirect_url)
-			->standard_view();
-	}
-
-	function register_json()
-	{
-        $site = 'long_e';
-		$email = $this->input->post('email');
-		$mobile = $this->input->post("mobile");
-		$pwd = $this->input->post("pwd");
-		$pwd2 = $this->input->post("pwd2");
-		$captcha = $this->input->post('captcha');
-
-		header('content-type:text/html; charset=utf-8');
-		if ( empty($email) && empty($mobile) )
-		{
-			die(json_failure("電子郵件和行動電話至少需填寫一項"));
-		}
-		else if (empty($pwd) )
-		{
-			die(json_failure("請輸入密碼"));
-		}
-		else if ($pwd != $pwd2)
-		{
-			die(json_failure("兩次密碼輸入不相同"));
-		}
-		else if (empty($_SESSION['captcha']) || $captcha != $_SESSION['captcha'])
-		{
-			die(json_failure("驗證碼錯誤"));
-		}
-
-		$boolResult = $this->g_user->create_account($email, $mobile, $pwd, $site);
-
-		if ($boolResult==true)
-		{
-			$this->g_user->verify_account($email, $mobile, $pwd);
-			die(json_message(array("message"=>"成功", "site"=>$site), true));
-		}
-		else
-		{
-			die(json_failure($this->g_user->error_message));
-		}
 	}
 
 	// 忘記密碼處理

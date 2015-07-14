@@ -15,33 +15,7 @@ class Api extends MY_Controller {
 		$this->load->config('api');		
 		$this->partner_conf = $this->config->item("partner_api");
 	}
-	
-	function test_transfer()
-	{
-		if ($post = $this->input->post()) {
-			$hash = md5($post['partner'] . $post['uid'] . $post['game'] . $post['server'] . $post['order'] . $post['money'] . $post['time'] . $post['key']);
-			echo "<pre>參數: ";
-			print_r($post);			
-			echo "加密前字串: ".($post['partner'] . $post['uid'] . $post['game'] . $post['server'] . $post['order'] . $post['money'] . $post['time'] . $post['key'])."<br>";
-			unset($post['key']);
-			echo "產生網址: ".base_url()."/api/transfer?".http_build_query($post)."&hash=".$hash;
-			echo "</pre>";
-		}
-		?>
-		<form method="post">
-			partner:<input name="partner" value="<?=$this->input->post("partner")?>"><br>
-			uid:<input name="uid" value="<?=$this->input->post("uid")?>"><br>
-			game:<input name="game" value="<?=$this->input->post("game")?>"><br>
-			server:<input name="server" value="<?=$this->input->post("server")?>"><br>
-			order:<input name="order" value="<?=$this->input->post("order")?>"><br>
-			money:<input name="money" value="<?=$this->input->post("money")?>"><br>
-			time:<input name="time" value="<?=$this->input->post("partner") ? $this->input->post("partner") : time()?>"><br>
-			key:<input name="key" value="<?=$this->input->post("key")?>"><br>
-			<input type="submit" value="送出">
-		</form>
-		<?
-	}	
-	
+
 	function transfer()
 	{
 		$partner = $this->input->get("partner");
@@ -141,30 +115,6 @@ class Api extends MY_Controller {
 			die(json_encode(array("result"=>"0", "error"=>$error_message)));		
 		}
 	}
-	
-	function test_login_game()
-	{
-		if ($post = $this->input->post()) {
-			$hash = md5($post['partner'] . $post['uid'] . $post['game'] . $post['server'] . $post['time'] . $post['key']);
-			echo "<pre>參數: ";
-			print_r($post);			
-			echo "加密前字串: ".($post['partner'] . $post['uid'] . $post['game'] . $post['server'] . $post['time'] . $post['key'])."<br>";
-			unset($post['key']);
-			echo "產生網址: ".base_url()."/api/login_game?".http_build_query($post)."&hash=".$hash;
-			echo "</pre>";
-		}
-		?>
-		<form method="post">
-			partner:<input name="partner" value="<?=$this->input->post("partner")?>"><br>
-			uid:<input name="uid" value="<?=$this->input->post("uid")?>"><br>
-			game:<input name="game" value="<?=$this->input->post("game")?>"><br>
-			server:<input name="server" value="<?=$this->input->post("server")?>"><br>
-			time:<input name="time" value="<?=$this->input->post("time") ? $this->input->post("time") : time()?>"><br>
-			key:<input name="key" value="<?=$this->input->post("key")?>"><br>
-			<input type="submit" value="送出">
-		</form>
-		<?
-	}
 
 	function login_game()
 	{
@@ -240,44 +190,7 @@ class Api extends MY_Controller {
 		}
 			
 	} 
-	
-	function test_create_game_role()
-	{		 
-		if ($post = $this->input->post()) {
-			
-			if ($post['uid']) $md5_p1 = $post['uid'];
-			else if ($post['euid']) $md5_p1 = $post['euid'];
-			else $md5_p1 = $post['account'];
-			
-			//if (empty($post['uid']) && $post['euid']) $post['uid'] = $this->g_user->decode($post['euid']);			
-			
-			if ($post['game']) $md5_p2 = $post['game'].$post['server'];
-			else $md5_p2 = $post['server'];
 
-			$hash = md5($md5_p1 . $md5_p2 . $post['ad'] . $post['character_name'] . $post['time'] . $post['key']);
-			echo "<pre>參數: ";
-			print_r($post);			
-			echo "加密前字串: ".($md5_p1 . $md5_p2  . $post['ad'] . $post['character_name'] . $post['time'] . $post['key'])."<br>";
-			unset($post['key']);
-			echo "產生網址: ".base_url()."/api/create_game_role?".http_build_query($post)."&hash=".$hash;
-			echo "</pre>";
-		}
-		?>
-		<form method="post">
-			uid:<input name="uid" value="<?=$this->input->post("uid")?>"><br>
-			euid:<input name="euid" value="<?=$this->input->post("euid")?>"><br>
-			user_name:<input name="account" value="<?=$this->input->post("account")?>"><br>
-			character_name:<input name="character_name" value="<?=$this->input->post("character_name")?>"><br>
-			game:<input name="game" value="<?=$this->input->post("game")?>"><br>
-			server:<input name="server" value="<?=$this->input->post("server")?>"><br>
-			ad:<input name="ad" value="<?=$this->input->post("ad")?>"><br>
-			time:<input name="time" value="<?=$this->input->post("time") ? $this->input->post("time") : time()?>"><br>
-			key:<input name="key" value="<?=$this->input->post("key")?>"><br>
-			<input type="submit" value="送出">
-		</form>
-		<?
-	}	
-	
 	function create_game_role()
 	{
 		$uid = $this->input->get("uid");
@@ -454,31 +367,7 @@ class Api extends MY_Controller {
 		}
 			
 	} 	
-	
-	function test_check_role_status()
-	{
-		if ($post = $this->input->post()) {
-			$hash = md5($post['partner'] . $post['uid'] . $post['game'] . $post['server'] . $post['time'] . $post['key']);
-			echo "<pre>參數: ";
-			print_r($post);			
-			echo "加密前字串: ".($post['partner'] . $post['uid'] . $post['game'] . $post['server'] . $post['time'] . $post['key'])."<br>";
-			unset($post['key']);
-			echo "產生網址: ".base_url()."/api/check_role_status?".http_build_query($post)."&hash=".$hash;
-			echo "</pre>";
-		}
-		?>
-		<form method="post">
-			partner:<input name="partner" value="<?=$this->input->post("partner")?>"><br>
-			uid:<input name="uid" value="<?=$this->input->post("uid")?>"><br>
-			game:<input name="game" value="<?=$this->input->post("game")?>"><br>
-			server:<input name="server" value="<?=$this->input->post("server")?>"><br>
-			time:<input name="time" value="<?=$this->input->post("time") ? $this->input->post("time") : time()?>"><br>
-			key:<input name="key" value="<?=$this->input->post("key")?>"><br>
-			<input type="submit" value="送出">
-		</form>
-		<?
-	}	
-	
+
 	function m_login_form()
 	{	
 		$this->_chk_partner();
