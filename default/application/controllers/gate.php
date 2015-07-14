@@ -1,14 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class Gate extends MY_Controller {
-
-	function test_game($game)
-	{
-		$this->load->library("game_api/{$game}");
-		$result = $this->{$game}->test();
-		fb($result);
-	}	
-	
+class Gate extends MY_Controller
+{
 	function fb_app($site='long_e')
 	{
 		$ad = $this->input->get("ad");
@@ -112,17 +105,7 @@ class Gate extends MY_Controller {
 			{
 				$mobile = $account;
 			}
-/*
-			$account = $this->input->post("account");
-			if (empty($account) || empty($pwd)) {
-				responseMsg('帳號或密碼尚未填寫');
-			}			
 
-			if ( $this->g_user->check_extra_account($account) ) {
-				echo "<script type='text/javascript'>alert('登入失敗! 請由原社群網站登入口登入!'); history.back();</script>";
-				exit();
-			}
-*/
 			if ( $this->g_user->verify_account($email, $mobile, $pwd) === true )
 			{
 				if ( ! empty($redirect_url))
@@ -151,13 +134,7 @@ class Gate extends MY_Controller {
 			exit();
 		}
 	}
-	
-	//備用，暫時沒用到
-	function login_callback2($channel)
-	{
-		$this->login_callback($channel);
-	}
-	
+
 	function login_callback($channel)
 	{
 		header('P3P:CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
@@ -201,8 +178,8 @@ class Gate extends MY_Controller {
 					'secret' => $fb_app_conf[$ad]['secret'],    				
 	    		);
 	    	}
-		} 
-					
+		}
+
 		$this->load->library("channel_api/{$lib}", $param);
 		$result = $this->{$lib}->{$this->router->fetch_method()}($site);
 		
@@ -286,7 +263,7 @@ class Gate extends MY_Controller {
 		header('Content-type:text/html; Charset=UTF-8');
 		echo "<script type='text/javascript'>alert('成功登出系統'); history.back();</script>";
 	}	
-		
+
 	//待刪，統一使用play_game
 	function decide_game_entry($game_id)
 	{
