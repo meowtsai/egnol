@@ -233,6 +233,7 @@ var browser = {
 	}()
 } 
 
+//--------------------------------------------------
 function checkMobileRegion(value)
 {
 	var phone = value.trim().replace(/-/g, "").replace(/\+/g, "");
@@ -259,7 +260,7 @@ function mobileNormalize(value)
 	switch(checkMobileRegion(value))
 	{
 	case 'tw':  // 09XX-XXX-XXX
-		if(phone.indexOf('886') != -1)
+		if(phone.indexOf('886') == 0)
 			phone = phone.replace('886', '0');
 
 		phone = phone.slice(0, 4) + '-' + phone.slice(4, 3) + '-' + phone.slice(7);
@@ -276,4 +277,114 @@ function mobileNormalize(value)
 	}
 
 	return phone;
+}
+
+//--------------------------------------------------
+function leNew(n, i)
+{
+	if("undefined" == typeof n)
+		n = "div";
+
+	var e = document.createElement(n);
+	if("undefined" == typeof i)
+		return e;
+
+	for(var o in i)
+		$(e).attr(o, i[o]);
+
+	return e;
+}
+
+function leAppend(n, i, e)
+{
+	if("undefined" == typeof i)
+		i = "div";
+
+	var o = n.appendChild(document.createElement(i));
+	if("undefined" == typeof e)
+		return o;
+
+	for(var t in e)
+		$(o).attr(t, e[t]);
+
+	return o;
+}
+
+function leSeparator(n, i)
+{
+	return "undefined" == typeof i && (i =! 1), i ? leAppend(n,"div",{"class":"le_separator_v"}):leAppend(n,"div",{"class":"le_separator"});
+}
+
+function leShowScreenMask(n)
+{
+	if(null != n)
+	{
+		var i = document.getElementById("le_screen_mask");
+		if(null == i)
+			i = leAppend(document.body,"div",{id:"le_screen_mask"});
+		$(i).css("opacity",n), $(i).css("filter","Alpha(opacity="+Math.floor(100*n)+")"),$(i).css("display","inline");
+	}
+	var e = document.getElementById("le_window_viewport");
+	return null == e && (e = leAppend(document.body,"div",{id:"le_window_viewport"})),$(e).css("display","inline"),e;
+}
+
+function leHideScreenMask()
+{
+	$("#le_window_viewport").css("display","none"),$("#le_screen_mask").css("display","none"),$("#le_window_viewport").empty();
+}
+
+function leOpenDocumentViewer(doc, cb)
+{
+    var t = leShowScreenMask(.3);
+	var vw = leAppend(t, "div", {"class":"le_viewer_frm"});
+
+	$(vw).css("top", 4);
+	$(vw).css("height", $(window).height() - 8 - 10 - 2);
+	$(vw).css("z-index", 988);
+
+	var s = ($(window).width() - 8 - $(vw).width()) / 2;
+	$(vw).css("left", s);
+
+	var content = leAppend(vw, "div", {id:"le_viewer_content"});
+	$(content).css("width", $(vw).width() - 10);
+	$(content).css("height", $(vw).height() - 50);
+
+	content.innerHTML = doc;
+
+	var d = leAppend(vw,"div",{id:"le_dialog_button_list"});
+	var p = leAppend(d, "div", {"class":"le_dialog_button"});
+
+    p.innerHTML = '關閉';
+	$(p).click(function()
+	{
+		leHideScreenMask();
+		if(null != cb)
+			cb();
+	});
+}
+
+var leDialogType = { MESSAGE: 0, CONFIRM: 1 };
+
+function leOpenDialog(n, i, e, o)
+{
+    var t = leShowScreenMask(.3);
+	var u = leAppend(t,"div",{"class":"le_window_frm"});
+
+	leAppend(u, "div",{"class":"le_window_title"}).innerHTML = "&nbsp;" + n;
+	leSeparator(u);
+
+	var d = (leAppend(u, "div", {id:"le_dialog_content"}).innerHTML = i,leAppend(u,"div",{id:"le_dialog_button_list"}));
+	var p = leAppend(d, "div", {"class":"le_dialog_button"});
+	switch(p.innerHTML='確定',$(p).click(function(){leHideScreenMask(),null!=o&&o(!0)}),e)
+	{
+	case leDialogType.CONFIRM:
+		var a=leAppend(d,"div",{"class":"le_dialog_button"});
+		a.innerHTML='取消',$(a).click(function()
+		{
+			leHideScreenMask(),null!=o&&o(!1);
+		});
+		break;
+	}
+	var s = ($(window).width()-$(u).width())/2,r=($(window).height()-$(u).height())/3;
+	$(u).css("left",s),$(u).css("top",r);
 }

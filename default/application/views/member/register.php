@@ -1,3 +1,7 @@
+<script type='text/javascript'>
+	var policy = '會員服務條款~~~~~~~';
+	var agreement = '個資同意書~~~~~~~';
+</script>
 <form id="register_form" method="post" action="/member/register_json">
 	<input type="hidden" id="redirect_url" value="<?=$redirect_url?>">
 	<ul class="le_form">
@@ -13,11 +17,11 @@
 		</li>
 		<li>
 			<div class="field_name">會員密碼：
-			</div><div class="field_input"><input type="password" id="pwd" name="pwd" class="required" minlength="6" maxlength="18">
+			</div><div class="field_input"><input type="password" id="pwd" name="pwd" class="required" minlength="6" maxlength="18"></div>
 		</li>
 		<li>
 			<div class="field_name">確認密碼：
-			</div><div class="field_input"><input type="password" name="pwd2" class="required" equalTo='#pwd'></div>
+			</div><div class="field_input"><input type="password" name="pwd2" class="required" equalTo='#pwd'>
 			</div><div class="field_tip">6~18碼。</div>
 		</li>
 		<li>
@@ -28,11 +32,11 @@
 			</div>
 		</li>
 		<li>
-			<input name="chk" type="checkbox" class="required">我已閱讀並同意<div id="btn_policy">『會員服務條款』</div>及<div id="btn_agreement">『個資同意書』</div>
+			<input name="chk" type="checkbox" class="required">我已閱讀並同意<div id="btn_policy" onclick="javascript:leOpenDocumentViewer(policy);">『會員服務條款』</div>及<div id="btn_agreement" onclick="javascript:leOpenDocumentViewer(agreement);">『個資同意書』</div>
 		</li>
 		<li>
 			<input tabindex="3" name="doLogin" type="submit" id="doLogin3" value="確定" />&nbsp;
-			<input name="cancel" type="button" value="取消" onclick="javascript:history.back();" />
+			<input name="cancel" type="button" value="取消" onclick="javascript:History.back();" />
 		</li>
 		<li>
 			<div></div>
