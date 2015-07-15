@@ -39,12 +39,6 @@ class Member extends MY_Controller
 	{
 		// 取出 GET 參數
 		$account = urldecode($this->input->get("account", true));
-		$redirect_url = urldecode($this->input->get("redirect_url", true));
-
-		if (empty($redirect_url))
-		{
-			$redirect_url = site_url("/");
-		}
 
 		// 載入第三方登入通道種類
 		$this->load->config("api");
@@ -59,7 +53,6 @@ class Member extends MY_Controller
 		$this->_init_layout()
 			->add_js_include("member/login")
 			->set("account", $account)
-			->set("redirect_url", $redirect_url)
 			->set("channel_item", $channel_item)
 			->standard_view("member/login");
 	}

@@ -35,9 +35,10 @@ $(function()
 				{
 					if (json.status == 'success')
 					{
-						if ($('#redirect_url').val()) location.href = $('#redirect_url').val();						
-						else if (json.site == 'long_e') location.href = '/';
-						else location.href = '/play_game/'+json.site;
+						if ($('#redirect_url').val())
+							location.href = $('#redirect_url').val();
+						else
+							location.href = '/member/index?site='+json.site;
 						return;
 					}
 					else

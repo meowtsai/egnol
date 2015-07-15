@@ -10,7 +10,7 @@ class MY_Controller extends CI_Controller
 	{
 		parent::__construct();
 		
-		$this->game_id = '';
+		$this->game_id = 'stm';
 		$this->game_name = '';
 		
 		$this->global_dir = BASEPATH.'../global/';	
@@ -48,7 +48,7 @@ class MY_Controller extends CI_Controller
 		$redirect_url = urldecode($this->input->get("redirect_url", true));
 		$this->g_layout->set("redirect_url", $redirect_url);
 
-		// 設定粉絲專頁
+		// 設定名稱與粉絲專頁
 		$fan_page = "https://facebook.com";
 		$query = $this->db->from("games")->where("game_id", $this->game_id)->get();
 		if($query->num_rows() > 0)

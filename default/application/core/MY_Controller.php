@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
-class MY_Controller extends CI_Controller {
-
+class MY_Controller extends CI_Controller
+{
 	var $global_dir;
 
 	function __construct()
@@ -11,7 +11,6 @@ class MY_Controller extends CI_Controller {
 		$this->global_dir = BASEPATH.'../global/';
 		$this->load->add_package_path($this->global_dir);
 		$this->load->helper("g_common");
-		//$this->load->library(array("g_user", "FirePHP", "Fb"));
 		$this->load->library(array("g_user"));
 
 		$this->load->database('long_e');
@@ -38,6 +37,9 @@ class MY_Controller extends CI_Controller {
 		$this->g_layout->set("site", $site);
         $this->g_layout->set("game_url", ($site == "long_e" ? "/" : "/games/".$site));
 
+		$redirect_url = urldecode($this->input->get("redirect_url", true));
+		$this->g_layout->set("redirect_url", $redirect_url);
+
 		// 設定粉絲專頁
 		$fan_page = "https://facebook.com";
 		if($site != "long_e")
@@ -45,7 +47,7 @@ class MY_Controller extends CI_Controller {
 			$query = $this->db->from("games")->where("game_id", $site)->get();
 			if($query->num_rows() > 0)
 			{
-				$fan_page = $query->row()->fan_page;
+				$fan_page = $query->row()->fanpage;
 				if(empty($fan_page))
 					$fan_page = "not set!";
 			}
@@ -58,8 +60,10 @@ class MY_Controller extends CI_Controller {
 	}
 
 	// 檢查並要求登入
-	function _require_login($redirect_url='')
+	function _require_login()
 	{
+		$redirect_url = $this->input->get("redirect_url") ? $this->input->get("redirect_url", true) : "";
+
 		return $this->g_user->require_login($this->_get_site(), $redirect_url);
 	}
 
