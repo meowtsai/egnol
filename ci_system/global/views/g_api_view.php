@@ -21,8 +21,7 @@
 </head>
 <body>
   <div id="container">
-  	<? $this->load->view("g_top_bar", Array("site" => $site, "game_url" => $game_url, "fan_page" => $fan_page)); ?>
-	<div id="content_frame">
+	<div id="api_frame">
 		<div id="content_view">
 			<?=$layout_content?>
 		</div>

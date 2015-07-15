@@ -53,7 +53,7 @@ class MY_Controller extends CI_Controller {
 		$this->g_layout->set("fan_page", $fan_page);
 
 		return $this->g_layout
-			->add_js_include(array('jquery.validate.min', 'jquery.metadata', 'jquery.form', 'jquery.blockUI', 'jquery.easing.1.3', 'jquery-navAnimation', 'default'))
+			->add_js_include(array('jquery.validate.min', 'jquery.metadata', 'jquery.form'))
 			->set_meta("title", "::: 龍邑遊戲 ‧ LongE Games :::");
 	}
 

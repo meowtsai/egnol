@@ -1,5 +1,8 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+//
+// 網站會員系統付費功能
+//
 class Payment extends MY_Controller
 {
 	// 儲值中心主頁面

@@ -1,7 +1,11 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
+//
+// 網站會員系統功能
+//
 class Member extends MY_Controller
 {
+	// AJAX 回應 function 檢查是否已登入
 	function _check_login_json()
 	{
 		if (empty($this->uid))
