@@ -21,6 +21,85 @@ class Statistics extends MY_Controller {
 			->add_breadcrumb("統計", "statistics");
 	}
 	
+	function index()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		//$this->zacl->check("game_statistics", "read");
+		$date = array();
+		$date[0] = date("Y-m-d",strtotime("-1 days"));
+		$date[1] = date("Y-m-d",strtotime("-2 days"));
+		$date[2] = date("Y-m-d",strtotime("-8 days"));
+		
+		$date[0] = '2015-01-08';
+		$date[1] = '2015-01-07';
+		$date[2] = '2015-01-01';
+		
+		foreach($date as $k => $d) {
+			$name = 'query'.$k;
+			$$name = $this->db->query("
+				SELECT
+					*
+				FROM
+				(
+					SELECT 
+						date AS 'find_date',
+						SUM(login_count) 'login_count',
+						SUM(new_login_count) 'new_login_count',
+						SUM(device_count) 'device_count',
+						SUM(deposit_user_count) 'deposit_user_count',
+						SUM(new_deposit_user_count) 'new_deposit_user_count',
+						SUM(deposit_total) 'deposit_total',
+						SUM(consume_total) 'consume_total',
+						SUM(peak_user_count) 'peak_user_count',
+						SUM(total_time) 'total_time',
+						SUM(one_retention_all_count) 'one_retention_all_count',
+						SUM(one_retention_count) 'one_retention_count',
+						SUM(seven_retention_count) 'seven_retention_count',
+						SUM(one_ltv) 'one_ltv'
+					FROM statistics
+					WHERE date = '{$d}'
+					GROUP by date
+				) a,
+				(
+					SELECT
+						SUM(uid) 'total_users'
+					FROM
+						users
+					WHERE create_time <= '{$d} 23:59:59'
+				) b,
+				(
+					SELECT
+						SUM(amount) 'historical_revenue_sum'
+					FROM
+						user_billing
+					WHERE create_time <= '{$d} 23:59:59'
+						AND billing_type = 1
+						AND result = 1
+				) c,
+				(
+					SELECT
+						COUNT(DISTINCT uid) 'historical_deposit_user_count'
+					FROM
+						user_billing
+					WHERE create_time <= '{$d} 23:59:59'
+						AND billing_type = 1
+						AND result = 1
+				) d
+			");
+		}
+		
+		$this->g_layout
+			->set("query0", isset($query0) ? $query0 : false)
+			->set("query1", isset($query1) ? $query1 : false)
+			->set("query2", isset($query2) ? $query2 : false)
+			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("id")->get())
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+	
 	function statistics()
 	{			
 		$this->_init_statistics_layout();			
@@ -160,8 +239,31 @@ class Statistics extends MY_Controller {
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
+			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("id")->get())
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+	
+	function lifetime_value()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
 		
-		->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("id")->get())
+		$this->zacl->check("game_statistics", "read");
+		
+		$span = $this->input->get("span");
+		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
+		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
+		$game_id = $this->input->get("game_id");
+					
+		$query = $this->db->where("game_id", $game_id)->where("date >=", $start_date)->where("date <=", $end_date)->get("statistics");
+        
+		$this->g_layout
+			->set("query", isset($query) ? $query : false)
+			->set("game_id", $game_id)
+			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("id")->get())
+			->set("span", $span)
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
@@ -690,43 +792,6 @@ class Statistics extends MY_Controller {
 		
 		$game_id = $this->input->get("game_id");
 		
-		/*$query = $this->db->query("
-			SELECT 
-				ub.uid 'uid',
-				chr.character_name 'character_name',
-				svr.name 'server_name',
-				SUM(ub.amount) 'deposit_total',
-				gm.exchange_rate*SUM(ub.amount) 'currency_total',
-				gm.exchange_rate*SUM(ub.amount) - csm.consume_sum 'currency_left',
-				csm.consume_sum 'currency_consumed',
-				DATE(chr.create_time) 'create_date'
-			FROM
-				user_billing ub
-				JOIN servers svr ON svr.server_id = ub.server_id
-				JOIN games gm ON svr.game_id = gm.game_id
-				LEFT JOIN characters chr ON chr.uid = ub.uid
-					AND chr.server_id = ub.server_id
-				LEFT JOIN
-				(
-					SELECT
-						uid,
-						server_id,
-						SUM(amount) 'consume_sum'
-					FROM
-						log_game_consumes
-					WHERE
-						game_id = '{$game_id}'
-					GROUP BY server_id, uid
-				) csm ON csm.uid = ub.uid
-					AND csm.server_id = ub.server_id
-			WHERE
-				ub.billing_type = 2
-				AND ub.result = 1
-				AND svr.game_id = '{$game_id}'
-			GROUP BY ub.uid
-			ORDER BY SUM(ub.amount) DESC
-			LIMIT 20
-		");*/
 		$query = $this->db->query("
 			SELECT 
 				whales.uid 'uid',

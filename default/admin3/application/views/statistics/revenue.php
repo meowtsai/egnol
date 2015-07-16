@@ -18,6 +18,9 @@
     <li class="<?=($span=='deposit_behavior') ? "active" : ""?>">
         <a href="<?=site_url("statistics/deposit_behavior")?>">儲值習慣</a>
     </li>
+    <li class="<?=($span=='lifetime_value') ? "active" : ""?>">
+        <a href="<?=site_url("statistics/lifetime_value")?>">玩家價值</a>
+    </li>
 </ul>
 
 <form method="get" action="<?=site_url("statistics/revenue")?>" class="form-search">

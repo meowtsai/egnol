@@ -1054,6 +1054,67 @@ class Cron extends CI_Controller {
 		echo "generate_new_deposit_user_game_length_statistics done - ".$date.PHP_EOL;
 	}
 	
+	function generate_new_user_lifetime_value_statistics($date="", $interval=1)
+	{
+		$this->lang->load('db_lang', 'zh-TW');
+		
+		if (empty($date)) $date=date("Y-m-d",strtotime("-".($interval+1)." days"));
+		$end_date=date("Y-m-d",strtotime("+".$interval." days", strtotime($date)));
+		
+		switch ($interval) {
+			case 1:
+			    $update_field = 'one_ltv';
+				break;
+			case 7:
+			    $update_field = 'seven_ltv';
+				break;
+			case 14:
+			    $update_field = 'fourteen_ltv';
+				break;
+			case 30:
+			    $update_field = 'thirty_ltv';
+				break;
+			case 60:
+			    $update_field = 'sixty_ltv';
+				break;
+			case 90:
+			    $update_field = 'ninety_ltv';
+				break;
+			default:
+			    echo "Only 1,7,14,30,60,90 allowed for second parameter!";
+				return 0;
+				break;
+		}
+		
+		$query = $this->db->query("
+			SELECT lgl.game_id, DATE(lgl.create_time) 'date',
+				SUM(ub.amount) 'life_time_value'
+			FROM log_game_logins lgl
+			JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id
+			WHERE lgl.is_first = 1
+				AND lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
+				AND ub.billing_type = 2 
+				AND ub.result = 1
+				AND ub.create_time BETWEEN '{$date} 00:00:00' AND '{$end_date} 00:00:00'
+			GROUP BY lgl.game_id, DATE(lgl.create_time)
+		");
+
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+				if (isset($row->game_id)) {
+			        $data = array(
+				        'game_id' => $row->game_id,
+				        'date' => $date,
+						$update_field => $row->life_time_value
+			        );
+				
+					$this->save_statistics($data);
+			    }
+		    }
+		}
+		echo "generate_new_user_".$interval."_lifetime_value_statistics done - ".$date.PHP_EOL;
+	}
+	
 	function save_statistics($data, $save_table="statistics") {
 		$game_id = $data['game_id'];
 		
@@ -1092,12 +1153,12 @@ class Cron extends CI_Controller {
 		$this->generate_retention_statistics($date, 30);
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_retention_statistics($date, 1, 'daily', FALSE);
-		$start_time = $this->echo_passed_time($start_time);*/
+		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_return_statistics($date, 1);
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_return_statistics($date, 3);
 		$start_time = $this->echo_passed_time($start_time);
-		/*$this->generate_billing_statistics($date);
+		$this->generate_billing_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_consume_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
@@ -1117,15 +1178,27 @@ class Cron extends CI_Controller {
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_new_deposit_user_game_length_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);*/
+		$this->generate_new_user_lifetime_value_statistics($date, 1);
+		$start_time = $this->echo_passed_time($start_time);
+		$this->generate_new_user_lifetime_value_statistics($date, 7);
+		$start_time = $this->echo_passed_time($start_time);
+		$this->generate_new_user_lifetime_value_statistics($date, 14);
+		$start_time = $this->echo_passed_time($start_time);
+		$this->generate_new_user_lifetime_value_statistics($date, 30);
+		$start_time = $this->echo_passed_time($start_time);
+		$this->generate_new_user_lifetime_value_statistics($date, 60);
+		$start_time = $this->echo_passed_time($start_time);
+		$this->generate_new_user_lifetime_value_statistics($date, 90);
+		$start_time = $this->echo_passed_time($start_time);
 		
-		if ("7"==date("N", strtotime($date))) {
+		/*if ("7"==date("N", strtotime($date))) {
 			$this->generate_login_statistics($date, 'weekly');
 			$start_time = $this->echo_passed_time($start_time);
-			/*$date_week=date("Y-m-d",strtotime("-1 week", strtotime($date)));
+			$date_week=date("Y-m-d",strtotime("-1 week", strtotime($date)));
 			$this->generate_retention_statistics($date_week, 1, 'weekly');
 			$start_time = $this->echo_passed_time($start_time);
 			$this->generate_retention_statistics($date_week, 1, 'weekly', FALSE);
-			$start_time = $this->echo_passed_time($start_time);*/
+			$start_time = $this->echo_passed_time($start_time);
 			$this->generate_return_statistics($date, 1, 'weekly');
 			$start_time = $this->echo_passed_time($start_time);
 		}
@@ -1133,14 +1206,14 @@ class Cron extends CI_Controller {
 		if ($date==date("Y-m-t", strtotime($date))) {
 			$this->generate_login_statistics($date, 'monthly');
 			$start_time = $this->echo_passed_time($start_time);
-			/*$date_month=date("Y-m-t",strtotime("-31 days", strtotime($date)));
+			$date_month=date("Y-m-t",strtotime("-31 days", strtotime($date)));
 			$this->generate_retention_statistics($date_month, 1, 'monthly');
 			$start_time = $this->echo_passed_time($start_time);
 			$this->generate_retention_statistics($date_month, 1, 'monthly', FALSE);
-			$start_time = $this->echo_passed_time($start_time);*/
+			$start_time = $this->echo_passed_time($start_time);
 			$this->generate_return_statistics($date, 1, 'monthly');
 			$start_time = $this->echo_passed_time($start_time);
-		}
+		}*/
 	}
 	
 	function echo_passed_time($start_time) {
