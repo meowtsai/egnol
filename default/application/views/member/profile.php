@@ -33,9 +33,9 @@
 	</li>
 	<li>
 		<div style="float:left;">
-			<input type="button" value="修改資料" onclick="javascript:location.href='/member/update_profile'" />
-			<input type="button" value="修改密碼" onclick="javascript:location.href='/member/change_password'" />
-			<input type="button" value="綁定帳號" onclick="javascript:location.href='/member/bind_account'" />
+			<input type="button" value="修改資料" onclick="javascript:location.href='/member/update_profile?site=<?=$site?>'" />
+			<input type="button" value="修改密碼" onclick="javascript:location.href='/member/change_password?site=<?=$site?>'" />
+			<input type="button" value="綁定帳號" onclick="javascript:location.href='/member/bind_account?site=<?=$site?>'" />
           </div>
 		<div style="float:right;">
 			<input type="button" value="登出" onclick="javascript:location.href='/member/logout'" />

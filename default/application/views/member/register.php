@@ -1,6 +1,7 @@
 <script type='text/javascript'>
-	var policy = '會員服務條款~~~~~~~';
-	var agreement = '個資同意書~~~~~~~';
+	var agreement1 = '<iframe style="width:100%;height:98%;border:0;margin:0padding:0;" src="/p/agreement/doc1.htm"></iframe>';
+	var agreement2 = '<iframe style="width:100%;height:98%;border:0;margin:0padding:0;" src="/p/agreement/doc2.htm"></iframe>';
+	var agreement3 = '<iframe style="width:100%;height:98%;border:0;margin:0padding:0;" src="/p/agreement/doc3.htm"></iframe>';
 </script>
 <form id="register_form" method="post" action="/member/register_json">
 	<input type="hidden" id="redirect_url" value="<?=$redirect_url?>">
@@ -32,7 +33,10 @@
 			</div>
 		</li>
 		<li>
-			<input name="chk" type="checkbox" class="required">我已閱讀並同意<div id="btn_policy" onclick="javascript:leOpenDocumentViewer(policy);">『會員服務條款』</div>及<div id="btn_agreement" onclick="javascript:leOpenDocumentViewer(agreement);">『個資同意書』</div>
+			<input name="chk" type="checkbox" class="required">我已閱讀並同意
+			<div id="btn_agreement" onclick="javascript:leOpenDocumentViewer(agreement1);">『服務條款』</div>、
+			<div id="btn_agreement" onclick="javascript:leOpenDocumentViewer(agreement2);">『個資同意書』</div>及
+			<div id="btn_agreement" onclick="javascript:leOpenDocumentViewer(agreement3);">『隱私權政策』</div>
 		</li>
 		<li>
 			<input tabindex="3" name="doLogin" type="submit" id="doLogin3" value="確定" />&nbsp;

@@ -1,4 +1,4 @@
-<form name="member_update" id="member_update" method="post" action="<?=site_url("member/update_profile_json")?>">
+<form name="member_update" id="/member_update" method="post" action="member/update_profile_json?site=<?=$site?>">
 	<input type="hidden" size="0" name="uid" value="<?=$data->uid?>">
 	<ul class="le_form">
 		<li>
@@ -11,14 +11,14 @@
 		</li>
 		<li>
 			<div class="field_name">姓名：
-			</div><div class="field_input"><input type="text" size="12"  maxlength="12" name="name" value="<?=$data->name?>" class="required"></div>
+			</div><div class="field_input"><input type="text" size="12"  maxlength="12" name="name" value="<?=$user_info->name?>" class="required"></div>
 		</li>
 		<li>
 			<div class="field_name">性別：
 			</div><div class="field_input">
-                	<input id="sex_0" type="radio" value="1" name="sex" <?=($data->sex == '1' || empty($data->sex)) ? "checked='checked'" : ""?> />
+                	<input id="sex_0" type="radio" value="1" name="sex" <?=($user_info->sex == '1' || empty($user_info->sex)) ? "checked='checked'" : ""?> />
                 	<label for="sex_0">男生</label>
-                	<input id="sex_1" type="radio" value="2" name="sex" <?=($data->sex == '2') ? "checked='checked'" : ""?> />
+                	<input id="sex_1" type="radio" value="2" name="sex" <?=($user_info->sex == '2') ? "checked='checked'" : ""?> />
                   <label for="sex_1">女生</label>
 			</div>
 		</li>
@@ -26,8 +26,8 @@
 			<div class="field_name">生日：
 			</div><div class="field_input">
 				<?
-					if ( ! empty($data->birthday)) {
-						$split_birthday = explode("-", $data->birthday);
+					if ( ! empty($user_info->birthday)) {
+						$split_birthday = explode("-", $user_info->birthday);
 						$year = $split_birthday[0];
 						$month = $split_birthday[1];
 						$day = $split_birthday[2];

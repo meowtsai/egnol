@@ -173,12 +173,12 @@ class Member extends MY_Controller
 		$this->_require_login();
 		
 		$user_data = $this->g_user->get_user_data();
-		
+/*
 		if (strstr($this->g_user->account, '@') == FALSE)
 		{
 			die($this->g_user->account.'你的帳號不需要綁定');
 		}
-				
+*/
 		$query = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get();
 		$bind_data = ($query->num_rows() > 0 ? $query->row() : false);
 			
@@ -224,7 +224,7 @@ class Member extends MY_Controller
 	function update_profile()
 	{
 		$this->_require_login();
-
+/*
 		if ($this->g_user->check_extra_account($this->g_user->account)) 
 		{			
 			$row = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get()->row();		
@@ -237,9 +237,13 @@ class Member extends MY_Controller
 		{
 			$row = $this->db->from("users")->where("uid", $this->g_user->uid)->get()->row();
 		}		
-		
+*/
+		$row = $this->db->from("users")->where("uid", $this->g_user->uid)->get()->row();
+		$user_info = $this->db->from("user_info")->where("uid", $this->g_user->uid)->get()->row();
+
 		$this->_init_layout()
 			->set("data", $row)
+			->set("user_info", $user_info)
 			->add_js_include("member/update_profile")
 			->standard_view();
 	}
@@ -247,12 +251,14 @@ class Member extends MY_Controller
 	function update_profile_json()
 	{			
 		$data = array(
+			'mobile' => $this->input->post("mobile"),
+		);
+		$user_info = array(
 			'name' => $this->input->post("name"),
 			'sex' => $this->input->post("sex"),
 			'phone_address' => $this->input->post("phone_address"),
-			'mobile' => $this->input->post("mobile"),
-			'address_road' => $this->input->post("address_road"),	
-		);		
+			'address_road' => $this->input->post("address_road"),
+		);
 		if ($this->input->post("email")) $data["email"] = $this->input->post("email");
 		if ($this->input->post("ident")) $data["ident"] = $this->input->post("ident");
 				
@@ -266,7 +272,7 @@ class Member extends MY_Controller
 			$value = trim(strip_tags($value));
 		}
 		array_walk($data, 'clear');
-			
+/*
 		if ($this->g_user->check_extra_account())
 		{
 			$row = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get()->row();
@@ -278,8 +284,12 @@ class Member extends MY_Controller
 		{
 			$target_uid = $this->g_user->uid;
 		}
-		
-		$this->db->where("uid", $target_uid)->update("users", $data);		
+*/
+		$target_uid = $this->g_user->uid;
+
+		$this->db->where("uid", $target_uid)->update("users", $data);
+		$this->db->where("uid", $target_uid)->update("user_info", $user_info);
+
 		die(json_success());
 	}
 
@@ -326,8 +336,8 @@ class Member extends MY_Controller
 	{
 		$this->_require_login();
 
-		$redirect_url = urldecode($this->input->get("redirect_url", true));
-
+//		$redirect_url = urldecode($this->input->get("redirect_url", true));
+/*
 		if ($this->g_user->check_extra_account($this->g_user->account)) 
 		{			
 			$row = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get()->row();		
@@ -337,15 +347,15 @@ class Member extends MY_Controller
 				exit();
 			}
 		}	
-		
+*/
 		$bind_data = false;
-		if ($this->g_user->check_extra_account())
+/*		if ($this->g_user->check_extra_account())
 		{
 			$bind_data = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get()->row();
 		}
-		
+*/
 		$this->_init_layout()
-			->set("redirect_url", $redirect_url)
+//			->set("redirect_url", $redirect_url)
 			->set("bind_data", $bind_data)
 			->standard_view();
 	}

@@ -4,7 +4,7 @@
 
 <? else:?>
 
-<form method="post" class="json_form" action="/longe/member/bind_account_json">
+<form method="post" class="json_form" action="/member/bind_account_json?site=<?=$site?>">
 	<input type="hidden" name="redirect_url" value="<?=$this->input->get("redirect_url", TRUE)?>">
 	<ul class="le_form">
 		<li>綁定帳號</li>
