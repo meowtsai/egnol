@@ -38,7 +38,7 @@
 |
 */
 
-$route['default_controller'] = "platform";
+$route['default_controller'] = "statistics";
 $route['404_override'] = '';
 
 $route['partner/(:any)'] = 'platform/partner_index/$1';

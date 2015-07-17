@@ -64,29 +64,14 @@ class Statistics extends MY_Controller {
 				) a,
 				(
 					SELECT
-						SUM(uid) 'total_users'
+						SUM(new_login_count) 'total_users',
+						SUM(deposit_total) 'historical_revenue_sum',
+						SUM(new_deposit_user_count) 'historical_deposit_user_count'
 					FROM
-						users
-					WHERE create_time <= '{$d} 23:59:59'
-				) b,
-				(
-					SELECT
-						SUM(amount) 'historical_revenue_sum'
-					FROM
-						user_billing
-					WHERE create_time <= '{$d} 23:59:59'
-						AND billing_type = 1
-						AND result = 1
-				) c,
-				(
-					SELECT
-						COUNT(DISTINCT uid) 'historical_deposit_user_count'
-					FROM
-						user_billing
-					WHERE create_time <= '{$d} 23:59:59'
-						AND billing_type = 1
-						AND result = 1
-				) d
+						statistics
+					WHERE
+						date <= '{$d}'
+				) historical_total
 			");
 		}
 		
