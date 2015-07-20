@@ -1,4 +1,4 @@
-<form name="member_update" id="/member_update" method="post" action="member/update_profile_json?site=<?=$site?>">
+<form name="member_update" id="member_update" method="post" action="<?=$longe_url?>member/update_profile_json?site=<?=$site?>">
 	<input type="hidden" size="0" name="uid" value="<?=$data->uid?>">
 	<ul class="le_form">
 		<li>

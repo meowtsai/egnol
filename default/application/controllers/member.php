@@ -179,10 +179,11 @@ class Member extends MY_Controller
 			die($this->g_user->account.'你的帳號不需要綁定');
 		}
 */
-		$query = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get();
-		$bind_data = ($query->num_rows() > 0 ? $query->row() : false);
+		//$query = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get();
+		$bind_data = false;//($query->num_rows() > 0 ? $query->row() : false);
 			
 		$this->_init_layout()
+			->add_js_include("member/bind_account")
 				->set("user_data", $user_data)
 				->set("bind_data", $bind_data)
 				->standard_view();

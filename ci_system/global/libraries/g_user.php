@@ -338,7 +338,7 @@ class G_User {
 		$row = query_account($this->email, $this->mobile);
 		if($row != null)
 		{
-			return !empty(%row->external_id);
+			return !empty($row->external_id);
 		}
 
 		return false;
@@ -446,6 +446,7 @@ class G_User {
 	
 	function display_account($show_notice=true)
 	{
+	/*
 		$this->CI->load->config('../../../default/application/config/api');
 		$channel_api = $this->CI->config->item("channel_api");
 		$display = array();
@@ -466,6 +467,8 @@ class G_User {
 			}		
 		}		
 		return $re.( $show_notice ? " ".$this->display_notice() : "");
+		*/
+		return '';
 	}
 	
 	function get_channel()

@@ -1,4 +1,4 @@
-<form id="forgot_form" action="/member/change_password_json?site=<?=$site?>" method="post">
+<form id="forgot_form" action="<?=$longe_url?>member/change_password_json?site=<?=$site?>" method="post">
       <input type="hidden" name="redirect_url" value="<?=$redirect_url?>">
 	<ul class="le_form">
 		<li>

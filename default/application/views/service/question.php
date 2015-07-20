@@ -1,4 +1,4 @@
-<form id="question_form" method="post" action="/member/">
+<form id="question_form" method="post" action="<?=$longe_url?>service/question_ajax?site=<?=$site?>">
 	<ul class="le_form">
 		<li>線上回報</li>
 		<li>

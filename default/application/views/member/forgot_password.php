@@ -1,4 +1,4 @@
-<form id="forgot_form" action="/member/reset_password_json?site=<?=$site?>" method="post">
+<form id="forgot_form" action="<?=$longe_url?>member/reset_password_json?site=<?=$site?>" method="post">
 	<ul class="le_form">
 		<li>
 			<div class="field_name">電子郵件或行動電話：

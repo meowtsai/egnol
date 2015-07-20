@@ -1,9 +1,9 @@
 <script type='text/javascript'>
-	var agreement1 = '<iframe style="width:100%;height:98%;border:0;margin:0padding:0;" src="/p/agreement/doc1.htm"></iframe>';
-	var agreement2 = '<iframe style="width:100%;height:98%;border:0;margin:0padding:0;" src="/p/agreement/doc2.htm"></iframe>';
-	var agreement3 = '<iframe style="width:100%;height:98%;border:0;margin:0padding:0;" src="/p/agreement/doc3.htm"></iframe>';
+	var agreement1 = '<iframe style="width:100%;height:98%;border:0;margin:0padding:0;" src="<?=$longe_url?>p/agreement/doc1.htm"></iframe>';
+	var agreement2 = '<iframe style="width:100%;height:98%;border:0;margin:0padding:0;" src="<?=$longe_url?>p/agreement/doc2.htm"></iframe>';
+	var agreement3 = '<iframe style="width:100%;height:98%;border:0;margin:0padding:0;" src="<?=$longe_url?>p/agreement/doc3.htm"></iframe>';
 </script>
-<form id="register_form" method="post" action="/member/register_json">
+<form id="register_form" method="post" action="<?=$longe_url?>member/register_json?site=<?=$site?>">
 	<input type="hidden" id="redirect_url" value="<?=$redirect_url?>">
 	<ul class="le_form">
 		<li>會員註冊</li>

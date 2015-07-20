@@ -1,9 +1,9 @@
 <?
 	$gash_conf = $this->config->item("gash");
 	
-	$gash_tw_url = "/gash/order?country=tw";
-	$gash_global_url = "/gash/order?country=global";
-	$pepay_url = "/pepay/order";
+	$gash_tw_url = $longe_url."gash/order?country=tw";
+	$gash_global_url = $longe_url."gash/order?country=global";
+	$pepay_url = $longe_url."pepay/order";
 
 	$options = array(
 		"手機市話" => array(

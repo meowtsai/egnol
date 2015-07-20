@@ -1,4 +1,4 @@
-<form id="login_form" method="post" action="/member/login_json?site=<?=$site?>">
+<form id="login_form" method="post" action="<?=$longe_url?>member/login_json?site=<?=$site?>">
 	<input type="hidden" id="redirect_url" value="<?=$redirect_url?>">
 	<ul class="le_form">
 		<li>會員登入</li>

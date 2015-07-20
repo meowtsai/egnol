@@ -20,9 +20,12 @@ $(function()
 		   var err = '';
 		   $(errorList).each(function(i, v)
 		   {
-			   err += v.message + "\n";
+			   err += v.message + "<br/>";
 		   });
-		   if (err) alert(err);
+		   if (err)
+		   {
+				leOpenDialog('儲值錯誤', err, leDialogType.MESSAGE);
+			}
 		}
 	 }
 
