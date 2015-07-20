@@ -23,7 +23,7 @@ class MY_Controller extends CI_Controller {
 		
 		$this->load->library("g_layout");
 		
-		if ($this->g_user->check_login()) {
+		if ($this->g_user->is_login()) {
 			$recent_server = $this->db->select("g.name as game_name, gi.name as server_name, gi.server_id")
 				->from("log_game_logins lgl")
 				->join("servers gi","lgl.server_id=gi.server_id")

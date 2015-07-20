@@ -3,8 +3,12 @@
 define("RESPONSE_OK", "1");
 define("RESPONSE_FAILD", "0");
 
-class Api extends MY_Controller {
-
+//
+// 會員系統廠商協作功能 API
+//  - ui 前置的 function 為有提供 web 畫面的 API
+//
+class Api extends MY_Controller
+{
 	var $partner_conf;
 	
 	var $partner, $game, $time, $hash, $key;
@@ -15,33 +19,89 @@ class Api extends MY_Controller {
 		$this->load->config('api');		
 		$this->partner_conf = $this->config->item("partner_api");
 	}
-	
-	function test_transfer()
+
+	// 帳號登入
+	// - 帳號功能主要入口, 其他 ui 前置 function 由 web 呼叫
+	function ui_login()
 	{
-		if ($post = $this->input->post()) {
-			$hash = md5($post['partner'] . $post['uid'] . $post['game'] . $post['server'] . $post['order'] . $post['money'] . $post['time'] . $post['key']);
-			echo "<pre>參數: ";
-			print_r($post);			
-			echo "加密前字串: ".($post['partner'] . $post['uid'] . $post['game'] . $post['server'] . $post['order'] . $post['money'] . $post['time'] . $post['key'])."<br>";
-			unset($post['key']);
-			echo "產生網址: ".base_url()."/api/transfer?".http_build_query($post)."&hash=".$hash;
-			echo "</pre>";
+	}
+
+	// 帳號登出
+	function ui_logout()
+	{
+		$this->g_user->logout();
+
+		header('Content-type:text/html; Charset=UTF-8');
+		echo "<script type='text/javascript'>alert('成功登出系統'); </script>";
+
+		if (get_mobile_os() == 'ios')
+		{
+			echo "<script src='".base_url()."/p/js/iosBridge.js'></script>
+				<script type='text/javascript'>calliOSFunction('dialogLogout');</script>";
 		}
-		?>
-		<form method="post">
-			partner:<input name="partner" value="<?=$this->input->post("partner")?>"><br>
-			uid:<input name="uid" value="<?=$this->input->post("uid")?>"><br>
-			game:<input name="game" value="<?=$this->input->post("game")?>"><br>
-			server:<input name="server" value="<?=$this->input->post("server")?>"><br>
-			order:<input name="order" value="<?=$this->input->post("order")?>"><br>
-			money:<input name="money" value="<?=$this->input->post("money")?>"><br>
-			time:<input name="time" value="<?=$this->input->post("partner") ? $this->input->post("partner") : time()?>"><br>
-			key:<input name="key" value="<?=$this->input->post("key")?>"><br>
-			<input type="submit" value="送出">
-		</form>
-		<?
-	}	
-	
+		else
+		{
+			echo "<script type='text/javascript'>
+						try {
+							window.CoozSDK.dialogLogout();
+						}
+						catch(e) {	}
+				</script>";
+		}
+		echo "<script type='text/javascript'>history.back();</script>";
+	}
+
+	// 帳號註冊
+	function ui_register()
+	{
+	}
+
+	// 帳號綁定
+	function ui_bind_account()
+	{
+	}
+
+	// 忘記密碼
+	function ui_forgot_password()
+	{
+	}
+
+	// 重設密碼
+	function ui_reset_password()
+	{
+	}
+
+	// 點數儲值
+	function ui_save_point()
+	{
+	}
+
+	// 帳號登入
+	function login()
+	{
+	}
+
+	// 帳號登出
+	function logout()
+	{
+		$this->g_user->logout();
+	}
+
+	// 點數儲值
+	function save_point()
+	{
+	}
+
+	// 建立遊戲角色
+	function create_role()
+	{
+	}
+
+	// 取得遊戲角色狀態
+	function get_role_status()
+	{
+	}
+
 	function transfer()
 	{
 		$partner = $this->input->get("partner");
@@ -141,30 +201,6 @@ class Api extends MY_Controller {
 			die(json_encode(array("result"=>"0", "error"=>$error_message)));		
 		}
 	}
-	
-	function test_login_game()
-	{
-		if ($post = $this->input->post()) {
-			$hash = md5($post['partner'] . $post['uid'] . $post['game'] . $post['server'] . $post['time'] . $post['key']);
-			echo "<pre>參數: ";
-			print_r($post);			
-			echo "加密前字串: ".($post['partner'] . $post['uid'] . $post['game'] . $post['server'] . $post['time'] . $post['key'])."<br>";
-			unset($post['key']);
-			echo "產生網址: ".base_url()."/api/login_game?".http_build_query($post)."&hash=".$hash;
-			echo "</pre>";
-		}
-		?>
-		<form method="post">
-			partner:<input name="partner" value="<?=$this->input->post("partner")?>"><br>
-			uid:<input name="uid" value="<?=$this->input->post("uid")?>"><br>
-			game:<input name="game" value="<?=$this->input->post("game")?>"><br>
-			server:<input name="server" value="<?=$this->input->post("server")?>"><br>
-			time:<input name="time" value="<?=$this->input->post("time") ? $this->input->post("time") : time()?>"><br>
-			key:<input name="key" value="<?=$this->input->post("key")?>"><br>
-			<input type="submit" value="送出">
-		</form>
-		<?
-	}
 
 	function login_game()
 	{
@@ -240,44 +276,7 @@ class Api extends MY_Controller {
 		}
 			
 	} 
-	
-	function test_create_game_role()
-	{		 
-		if ($post = $this->input->post()) {
-			
-			if ($post['uid']) $md5_p1 = $post['uid'];
-			else if ($post['euid']) $md5_p1 = $post['euid'];
-			else $md5_p1 = $post['account'];
-			
-			//if (empty($post['uid']) && $post['euid']) $post['uid'] = $this->g_user->decode($post['euid']);			
-			
-			if ($post['game']) $md5_p2 = $post['game'].$post['server'];
-			else $md5_p2 = $post['server'];
 
-			$hash = md5($md5_p1 . $md5_p2 . $post['ad'] . $post['character_name'] . $post['time'] . $post['key']);
-			echo "<pre>參數: ";
-			print_r($post);			
-			echo "加密前字串: ".($md5_p1 . $md5_p2  . $post['ad'] . $post['character_name'] . $post['time'] . $post['key'])."<br>";
-			unset($post['key']);
-			echo "產生網址: ".base_url()."/api/create_game_role?".http_build_query($post)."&hash=".$hash;
-			echo "</pre>";
-		}
-		?>
-		<form method="post">
-			uid:<input name="uid" value="<?=$this->input->post("uid")?>"><br>
-			euid:<input name="euid" value="<?=$this->input->post("euid")?>"><br>
-			user_name:<input name="account" value="<?=$this->input->post("account")?>"><br>
-			character_name:<input name="character_name" value="<?=$this->input->post("character_name")?>"><br>
-			game:<input name="game" value="<?=$this->input->post("game")?>"><br>
-			server:<input name="server" value="<?=$this->input->post("server")?>"><br>
-			ad:<input name="ad" value="<?=$this->input->post("ad")?>"><br>
-			time:<input name="time" value="<?=$this->input->post("time") ? $this->input->post("time") : time()?>"><br>
-			key:<input name="key" value="<?=$this->input->post("key")?>"><br>
-			<input type="submit" value="送出">
-		</form>
-		<?
-	}	
-	
 	function create_game_role()
 	{
 		$uid = $this->input->get("uid");
@@ -454,31 +453,7 @@ class Api extends MY_Controller {
 		}
 			
 	} 	
-	
-	function test_check_role_status()
-	{
-		if ($post = $this->input->post()) {
-			$hash = md5($post['partner'] . $post['uid'] . $post['game'] . $post['server'] . $post['time'] . $post['key']);
-			echo "<pre>參數: ";
-			print_r($post);			
-			echo "加密前字串: ".($post['partner'] . $post['uid'] . $post['game'] . $post['server'] . $post['time'] . $post['key'])."<br>";
-			unset($post['key']);
-			echo "產生網址: ".base_url()."/api/check_role_status?".http_build_query($post)."&hash=".$hash;
-			echo "</pre>";
-		}
-		?>
-		<form method="post">
-			partner:<input name="partner" value="<?=$this->input->post("partner")?>"><br>
-			uid:<input name="uid" value="<?=$this->input->post("uid")?>"><br>
-			game:<input name="game" value="<?=$this->input->post("game")?>"><br>
-			server:<input name="server" value="<?=$this->input->post("server")?>"><br>
-			time:<input name="time" value="<?=$this->input->post("time") ? $this->input->post("time") : time()?>"><br>
-			key:<input name="key" value="<?=$this->input->post("key")?>"><br>
-			<input type="submit" value="送出">
-		</form>
-		<?
-	}	
-	
+
 	function m_login_form()
 	{	
 		$this->_chk_partner();
@@ -501,7 +476,7 @@ class Api extends MY_Controller {
 			exit();
 		}
 		
-		if ( ! $this->g_user->check_login()) {
+		if ( ! $this->g_user->is_login()) {
 			$_SESSION['channel'] = 'long_e';
 		}
 		
@@ -530,7 +505,7 @@ class Api extends MY_Controller {
 
 		$bind_account = false;
 		
-		if ($this->g_user->check_login() && $this->g_user->is_channel_account()) {
+		if ($this->g_user->is_login() && $this->g_user->is_channel_account()) {
 			$query = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get();
 			if ($query->num_rows() > 0) {
 				$bind_account = $query->row()->account;
@@ -564,7 +539,8 @@ class Api extends MY_Controller {
 			output_json(RESPONSE_FAILD, "認證碼錯誤");
 		}	
 		
-		if (!ereg("^[A-za-z0-9_]+$", $account)) {
+		if (!preg_match("/^[A-za-z0-9_]+$/", $account)) {
+		//if (!ereg("^[A-za-z0-9_]+$", $account)) {
 			output_json(RESPONSE_FAILD, "帳號不得包含特殊字元");
 		}
 			
@@ -601,7 +577,8 @@ class Api extends MY_Controller {
 			output_json(RESPONSE_FAILD, "認證碼錯誤");
 		}	
 		
-		if (!ereg("^[a-z0-9_]+$", $account)) {
+		if (!preg_match("/^[a-z0-9_]+$/", $account)) {
+		//if (!ereg("^[a-z0-9_]+$", $account)) {
 			output_json(RESPONSE_FAILD, "帳號不得包含特殊字元及大寫字母");
 		}
 		
@@ -1319,7 +1296,7 @@ class Api extends MY_Controller {
 		//log_message('error', '('.$_SERVER["REMOTE_ADDR"].')'."login:".$this->g_user->euid.", ".$this->g_user->account.", ".$this->input->get("code"));
 		//echo $this->input->get("code").", ";
 		
-		if ( ! $this->g_user->check_login()) return ;		
+		if ( ! $this->g_user->is_login()) return ;
 		echo $this->g_user->euid;
 		
 		$token = $_SESSION['token'];
@@ -1341,7 +1318,7 @@ class Api extends MY_Controller {
 	
 	function m_get_long_e_euid() 
 	{
-		if ( ! $this->g_user->check_login()) return ;		
+		if ( ! $this->g_user->is_login()) return ;
 		
 		$code = $this->input->get("code");
 		$hash = md5($code."b~ean".$this->g_user->euid."!#$..");
@@ -1455,7 +1432,7 @@ class Api extends MY_Controller {
 		
 		$euid = $this->input->get_post("euid");
 		if (empty($euid) || $euid == 'null') {
-log_message('error', 'm_long_e_menu 缺少參數euid：'.$euid);
+			log_message('error', 'm_long_e_menu 缺少參數euid：'.$euid);
 			output_json(RESPONSE_FAILD, "缺少參數");
 		}
 		
@@ -1490,16 +1467,6 @@ log_message('error', 'm_long_e_menu 缺少參數euid：'.$euid);
 		
 		$this->key = $this->partner_conf[$this->partner]["sites"][$this->game]['key'];
 	}	
-	
-	function testt()
-	{
-		$_POST["partner"] = "tenone";
-		$_POST["game"] = "eya";
-		$_POST["time"] = "123456";
-		$_POST["hash"] = "hhhhhhhhhhhhhhhhhhhhhhhh";
-		$_POST["euid"] = "54580463";
-		$this->m_check_order();
-	}
 }
 
 function output_json($result, $err="", $arr=array()) {

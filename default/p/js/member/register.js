@@ -1,14 +1,17 @@
-$(function(){
-	
+$(function()
+{
 	$("#register_form").validate({
 		onfocusout: false,
 		onkeyup: false,
 		onclick: false,
-		messages: {
-			account: {
-				required: "`帳號`必填",
-				minlength: "`帳號`最少6碼",
-				maxlength: "`帳號`最多18碼",
+		messages:
+		{
+			email: {
+				required: "`電子信箱`與`行動電話`至少需填寫其中之一",
+				email: "請填寫正確的電子信箱位址"
+			},
+			mobile: {
+				required: ""
 			},
 			pwd: {
 				required: "`密碼`必填",
@@ -19,10 +22,6 @@ $(function(){
 				required: "`確認密碼`必填",
 				equalTo: "兩次密碼不相同",
 			},
-			email: {
-				required: "`電子信箱`必填",
-				email: "請填寫正確的電子信箱位址"
-			},
 			captcha: {
 				required: "`認證碼`必填",
 				minlength: "`認證碼`應為4碼",
@@ -30,47 +29,48 @@ $(function(){
 			},
 			chk: "請詳閱會員條款並同意",
 		},
-		showErrors: function(errorMap, errorList) {
+		rules:
+		{
+			email: {
+				required: "#mobile:blank"
+			},
+			mobile: {
+				required: "#email:blank"
+			}
+    	},
+		showErrors: function(errorMap, errorList)
+		{
 		   var err = '';
-		   $(errorList).each(function(i, v){
-			   err += v.message + "\n";
+		   $(errorList).each(function(i, v)
+		   {
+			   err += v.message + "<br/>";
 		   });
-		   if (err) {
-			   if (typeof window.CoozSDK == "undefined") {
-				   alert(err);
-				}
-				else {
-					window.CoozSDK.showMsg(err);
-				}
-			   
+		   if (err)
+		   {
+				leOpenDialog('註冊錯誤', err, leDialogType.MESSAGE);
 		   }
-		   //this.defaultShowErrors();
 		},
-		submitHandler: function(form) {
+		submitHandler: function(form)
+		{
 			$(form).ajaxSubmit({
 				dataType: 'json',
-				success: function(json) {
-					if (typeof window.CoozSDK == "undefined") {
-						alert(json.message)
-					}
-					else {
-						window.CoozSDK.showMsg(json.message);
-					}					
-					if (json.status == 'success') {
-						if ($('#redirect_url').val()) location.href = $('#redirect_url').val();						
-						else if (json.site == 'long_e') location.href = '/';
-						else location.href = '/play_game/'+json.site;
+				success: function(json)
+				{
+					if (json.status == 'success')
+					{
+						if ($('#redirect_url').val())
+							location.href = $('#redirect_url').val();
+						else
+							location.href = '/member/index?site='+json.site;
 						return;
 					}					
-				}		
+					else
+					{
+						leOpenDialog('註冊錯誤', json.message, leDialogType.MESSAGE);
+					}
+				}
 			});
 		}
 	});
-	
-	$('#detail_switch').on('click', function(){
-		$(this).hide();
-		$('#detail').slideDown();		
-	});
-	
 });
 

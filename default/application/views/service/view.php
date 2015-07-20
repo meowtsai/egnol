@@ -72,7 +72,7 @@
 		</tr>			
 		<tr>
 			<td></td>
-			<td colspan="3">( 聯絡電話及E-mail由系統自動帶入，若要變更請至<a href="<?=site_url("member/update_member_data")?>" target="_blank">會員中心</a>。)</td>
+			<td colspan="3">( 聯絡電話及E-mail由系統自動帶入，若要變更請至<a href="<?=site_url("member/update_profile")?>" target="_blank">會員中心</a>。)</td>
 		</tr>
 	</table>
 			

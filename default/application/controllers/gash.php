@@ -11,14 +11,7 @@ class Gash extends MY_Controller {
 		$this->load->config("g_gash");
 		$this->gash_conf = $this->config->item("gash");
 	}
-	
-	function _init_mycard_layout()
-	{
-		return $this->_init_layout()
-			->set_breadcrumb(array("儲值"=>"payment", "MyCard 購點"=>""))
-			->set("subtitle", "Mycard購點");
-	}
-	
+
 	function _make_trade_seq()
 	{
 		$row = $this->db->from("gash_billing")->where("COID like 'G".date("Ymd")."%'", null, false)->order_by("COID desc")->limit(1)->get()->row();
@@ -36,7 +29,7 @@ class Gash extends MY_Controller {
 	
 	function order()
 	{		
-		$this->g_user->check_login('long_e', true);
+		$this->_require_login();
 		
 		header("Content-Type:text/html; charset=utf-8");
 		

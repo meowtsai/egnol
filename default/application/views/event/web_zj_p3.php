@@ -1,1 +1,0 @@
-<img src="/p/img/event/web_zj_1027/event3.png" class="change">
