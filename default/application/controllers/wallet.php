@@ -12,7 +12,7 @@ class Wallet extends MY_Controller {
 	
 	function _init_transfer_layout($check_login=true)
 	{
-		if ($check_login) $this->g_user->check_login("", true);
+		if ($check_login) $this->_require_login();
 		
 		return $this->_init_layout()
 				->set_breadcrumb(array("儲值"=>"payment", "轉換遊戲點數"=>"wallet/transfer"));
@@ -20,7 +20,7 @@ class Wallet extends MY_Controller {
 	
 	function choose()
 	{
-		$this->g_user->check_account_channel('trade');
+		//$this->g_user->check_account_channel('trade');
 		
 		$games = $this->db->where("is_active", "1")->from("games")->get();
 		

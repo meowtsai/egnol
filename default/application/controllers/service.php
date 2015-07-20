@@ -7,19 +7,12 @@ class Service extends MY_Controller {
 		parent::__construct();
 		$this->load->config("service");
 	}
-	
-	function init_service_layout()
-	{
-		return $this->_init_layout()
-			->set_breadcrumb(array("客服中心"=>"service"))
-			->set("submenu", "service")
-			->set("subtitle", "客服中心");
-	}
-	
+
 	function index()
 	{
-		$this->g_user->check_login('long_e', true);
-		$this->g_user->check_account_channel('service'); 
+		$this->_require_login();
+
+		//$this->g_user->check_account_channel('service');
 		
 		$question_cnt = $this->db->where("uid", $this->g_user->uid)->where("status", "1")
 			->from("questions")->count_all_results();
@@ -27,20 +20,15 @@ class Service extends MY_Controller {
 		$not_read_cnt = $this->db->where("uid", $this->g_user->uid)->where("status", "2")->where("is_read", "0")
 			->from("questions")->count_all_results();
 		
-		$this->init_service_layout()
-			->set("subtitle", "客服中心")			
+		$this->_init_layout()
 			->set("not_read_cnt", $not_read_cnt)
-			->set("question_cnt", $question_cnt);
-		
-		if (check_mobile()) {
-			$this->g_layout->render("service/m_index", "mobile");	
-		}
-		else $this->g_layout->render("", "inner2");
+			->set("question_cnt", $question_cnt)
+			->standard_view();
 	}
 
 	function question()
 	{
-		$this->g_user->check_login('long_e', true);
+		$this->_require_login();
 		
 		$server = $this->db->from("servers gi")
 			->join("games g", "gi.game_id=g.game_id")->get();
@@ -48,24 +36,20 @@ class Service extends MY_Controller {
 		$games = $this->db->from("games")->where("is_active", "1")->get();
 		$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("id")->get("servers");	
 		
-		$user = $this->db->get_where("users", array("uid" => $this->g_user->uid))->row();
-		
-		$this->init_service_layout()
-			->add_breadcrumb("線上提問")
+		// 讀取玩家角色列表
+		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();
+
+		$this->_init_layout()
 			->add_js_include("service/question")
 			->set("games", $games)
 			->set("servers", $servers)
-			->set("user", $user);
-
-		if (!check_mobile()) {
-			$this->g_layout->render("service/m_question", "mobile");	
-		}
-		else $this->g_layout->render("", "inner2");
+			->set("characters", $characters)
+			->standard_view();
 	}
 	
 	function question_ajax()
 	{
-		if ( ! $this->g_user->check_login('long_e')) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
+		if ( ! $this->g_user->is_login()) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
 		if ( ! $this->input->post("content")) die(json_encode(array("status"=>"failure", "message"=>"無內文")));
 		
 		$query = $this->db->query("SELECT count(*) > (3-1) as chk FROM questions WHERE uid={$this->g_user->uid} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");		
@@ -136,7 +120,7 @@ class Service extends MY_Controller {
 	
 	function listing()
 	{
-		$this->g_user->check_login('long_e', true);
+		$this->_require_login();
 		
 		$this->db->select("q.*")
 			->where("q.uid", $this->g_user->uid)->from("questions q")
@@ -151,19 +135,14 @@ class Service extends MY_Controller {
 		
 		$query = $this->db->get();
 		
-		$this->init_service_layout()
-			->add_breadcrumb("提問查詢")
-			->set("query", $query);
-
-		if (check_mobile()) {
-			$this->g_layout->render("", "mobile");	
-		}
-		else $this->g_layout->render("", "inner2");
+		$this->_init_layout()
+			->set("query", $query)
+			->standard_view();
 	}
 	
 	function view($id)
 	{
-		$this->g_user->check_login('long_e', true);
+		$this->_require_login();
 		
 		$question = $this->db->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email")
 					->where("q.uid", $this->g_user->uid)
@@ -186,21 +165,16 @@ class Service extends MY_Controller {
 			$replies = false;
 		}
 		
-		$this->init_service_layout()
-			->add_breadcrumb("檢視")
+		$this->_init_layout()
 			->add_js_include("service/view")
 			->set("question", $question)
-			->set("replies", $replies);
-		
-		if (check_mobile()) {
-			$this->g_layout->render("", "mobile");	
-		}
-		else $this->g_layout->render("", "inner2");		
+			->set("replies", $replies)
+			->standard_view();
 	}
 	
 	function insert_reply_json()
 	{
-		if ( ! $this->g_user->check_login('long_e')) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
+		if ( ! $this->g_user->is_login()) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
 		
 		$query = $this->db->query("SELECT count(*) > (3-1) as chk FROM question_replies WHERE uid={$this->g_user->uid} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");		
 		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問!")));		
@@ -224,7 +198,7 @@ class Service extends MY_Controller {
 	
 	function close_question($id)
 	{
-		if ( ! $this->g_user->check_login('long_e')) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
+		if ( ! $this->g_user->is_login()) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
 		
 		$question = $this->db->where("id", $id)->from("questions q")->get()->row();
 		if ($question->uid <> $this->g_user->uid) die(json_encode(array("status"=>"failure", "message"=>"權限不足")));
@@ -232,17 +206,4 @@ class Service extends MY_Controller {
 		$this->db->set("status", "4")->where("id", $id)->update("questions");
 		die(json_encode(array("status"=>"success")));	
 	}
-	
-	function download()
-	{
-		$this->init_service_layout()
-			->add_breadcrumb("表單下載")
-			->set("subtitle", "客服中心");		
-		
-		if (check_mobile()) {
-			$this->g_layout->render("", "mobile");	
-		}
-		else $this->g_layout->render("", "inner2");				
-	}
-
 }

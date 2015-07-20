@@ -52,7 +52,7 @@ $route['member/login.php'] = 'member/login';
 $route['member/forgot.php'] = 'member/forgot_password';
 $route['member/regist.php'] = 'member/register';
 $route['member/register.php'] = 'member/register';
-$route['member/msettings.php'] = 'member/update_member_data';
+$route['member/msettings.php'] = 'member/update_profile';
 
 $route['ImageInfo.php?'] = 'link/s_gif';
 $route['Js/ads_banner.js'] = 'link/s';

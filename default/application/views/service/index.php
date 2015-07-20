@@ -1,46 +1,7 @@
-<style>
-<!--
-
-#service .item {width:271px; height:165px; display:inline-block; float:left; background:url(/p/img/service02.png); margin:10px;}
-#service .item .title {color:#78be44; font-size:16px; font-weight:bold; display:block; margin:20px;}
-#service .item .content {color:#222; display:block; margin:20px; line-height:20px; font-size:14px;}
--->
-</style>
-<div id="service" style="margin:0 auto; width:623px;">
-
-<img src="/p/img/service01.png" >
-
-	<div style="margin:10px auto 0; width:590px;">
-	
-	<a href="<?=site_url("service/question?game=".$this->input->get("game"))?>">
-		<span class="item">
-			<span class="title">線上提問</span>
-			<span class="content">
-				如果您在遊戲內或儲值、轉點過程中遇到問題、BUG，請使用線上提問，我們將盡速回覆您。
-			</span>
-		</span>
-	</a>
-	
-	<a href="<?=site_url("service/listing")?>">
-		<span class="item">
-			<span class="title">提問查詢</span>
-			<span class="content">
-				在此可查詢您曾經提問的回覆紀錄<br>
-				目前回覆狀況：<br>
-				- 您有 <b><?=$question_cnt?></b>條提問尚未處理。<br>
-				- 您有 <b><?=$not_read_cnt?></b>條提問回覆尚未讀取			
-			</span>
-		</span>
-	</a>
-	
-	<a href="<?=site_url("service/download")?>">
-		<span class="item">
-			<span class="title">表單下載</span>
-			<span class="content">
-				帳號持有證明表單、有價獎項領取表單下載。	
-			</span>
-		</span>
-	</a>
-	</div>
-
-</div>
+<ul class="le_form">
+	<li>客服回報</li>
+	<li>
+		<input type="button" name="question" id="question" value="線上回報" onclick="javascript:location.href='<?=$longe_url?>service/question?site=<?=$site?>'" />
+		<input type="button" name="service_lise" id="service_list" value="回報紀錄" onclick="javascript:location.href='<?=$longe_url?>service/listing?site=<?=$site?>'" />
+	</li>
+</ul>

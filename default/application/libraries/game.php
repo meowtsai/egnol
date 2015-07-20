@@ -39,7 +39,7 @@ class Game
 			}
 		}
 				
-		if ($this->CI->g_user->check_login() == false) {
+		if ($this->CI->g_user->is_login() == false) {
 			return $this->_return_error("尚未登入");
 		}		
 		
