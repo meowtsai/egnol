@@ -3,8 +3,12 @@
 define("RESPONSE_OK", "1");
 define("RESPONSE_FAILD", "0");
 
-class Api extends MY_Controller {
-
+//
+// 會員系統廠商協作功能 API
+//  - ui 前置的 function 為有提供 web 畫面的 API
+//
+class Api extends MY_Controller
+{
 	var $partner_conf;
 	
 	var $partner, $game, $time, $hash, $key;
@@ -14,6 +18,88 @@ class Api extends MY_Controller {
 		parent::__construct();
 		$this->load->config('api');		
 		$this->partner_conf = $this->config->item("partner_api");
+	}
+
+	// 帳號登入
+	// - 帳號功能主要入口, 其他 ui 前置 function 由 web 呼叫
+	function ui_login()
+	{
+	}
+
+	// 帳號登出
+	function ui_logout()
+	{
+		$this->g_user->logout();
+
+		header('Content-type:text/html; Charset=UTF-8');
+		echo "<script type='text/javascript'>alert('成功登出系統'); </script>";
+
+		if (get_mobile_os() == 'ios')
+		{
+			echo "<script src='".base_url()."/p/js/iosBridge.js'></script>
+				<script type='text/javascript'>calliOSFunction('dialogLogout');</script>";
+		}
+		else
+		{
+			echo "<script type='text/javascript'>
+						try {
+							window.CoozSDK.dialogLogout();
+						}
+						catch(e) {	}
+				</script>";
+		}
+		echo "<script type='text/javascript'>history.back();</script>";
+	}
+
+	// 帳號註冊
+	function ui_register()
+	{
+	}
+
+	// 帳號綁定
+	function ui_bind_account()
+	{
+	}
+
+	// 忘記密碼
+	function ui_forgot_password()
+	{
+	}
+
+	// 重設密碼
+	function ui_reset_password()
+	{
+	}
+
+	// 點數儲值
+	function ui_save_point()
+	{
+	}
+
+	// 帳號登入
+	function login()
+	{
+	}
+
+	// 帳號登出
+	function logout()
+	{
+		$this->g_user->logout();
+	}
+
+	// 點數儲值
+	function save_point()
+	{
+	}
+
+	// 建立遊戲角色
+	function create_role()
+	{
+	}
+
+	// 取得遊戲角色狀態
+	function get_role_status()
+	{
 	}
 
 	function transfer()
@@ -1346,7 +1432,7 @@ class Api extends MY_Controller {
 		
 		$euid = $this->input->get_post("euid");
 		if (empty($euid) || $euid == 'null') {
-log_message('error', 'm_long_e_menu 缺少參數euid：'.$euid);
+			log_message('error', 'm_long_e_menu 缺少參數euid：'.$euid);
 			output_json(RESPONSE_FAILD, "缺少參數");
 		}
 		
@@ -1381,16 +1467,6 @@ log_message('error', 'm_long_e_menu 缺少參數euid：'.$euid);
 		
 		$this->key = $this->partner_conf[$this->partner]["sites"][$this->game]['key'];
 	}	
-	
-	function testt()
-	{
-		$_POST["partner"] = "tenone";
-		$_POST["game"] = "eya";
-		$_POST["time"] = "123456";
-		$_POST["hash"] = "hhhhhhhhhhhhhhhhhhhhhhhh";
-		$_POST["euid"] = "54580463";
-		$this->m_check_order();
-	}
 }
 
 function output_json($result, $err="", $arr=array()) {
