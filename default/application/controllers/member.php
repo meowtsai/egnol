@@ -192,27 +192,32 @@ class Member extends MY_Controller
 	{
 		$this->_check_login_json();
 		
-		$account = $this->input->post("account");
+		$email = $this->input->post("email");
 		$mobile = $this->input->post("mobile");
 		$pwd = $this->input->post("pwd");
 		$pwd2 = $this->input->post("pwd2");
 		$redirect_url = $this->input->post("redirect_url");
 	
-		if ( empty($account)|| empty($pwd) )
+		if ( empty($email) && empty($mobile) )
 		{
-			die(json_failure("請輸入帳號及密碼"));
+			die(json_failure("電子信箱和手機號碼至少需輸入一項"));
+		}
+		else if ( empty($pwd) )
+		{
+			die(json_failure("請輸入密碼"));
 		}
 		else if ($pwd != $pwd2)
 		{
 			die(json_failure("兩次密碼輸入不同"));
 		}
 	
-		$result = $this->g_user->create_account($account, $pwd, '', '', 'long_e', $this->g_user->uid);
-	
+//		$result = $this->g_user->create_account($email, $mobile, $pwd, '', '', 'long_e', $this->g_user->uid);
+
+		$result = $this->g_user->bind_account($this->g_user->uid, $email, $mobile, $pwd);
 		if ($result == true)
 		{
-			$this->g_user->verify_account($account, $pwd);
-			die(json_message(array("message"=>"成功", "back_url"=>$redirect_url)));
+			$this->g_user->verify_account($email, $mobile, $pwd);
+			die(json_message(array("message"=>"成功", "redirect_url"=>$redirect_url)));
 		}
 		else
 		{

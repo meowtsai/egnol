@@ -43,7 +43,8 @@ class MY_Controller extends CI_Controller
 		$this->server = $this->_get_server();
 
 		$this->g_layout->set("site", $this->game_id);
-        $this->g_layout->set("game_url", "/games/".$this->game_id);
+        $this->g_layout->set("game_url", "/games/".$this->game_id."/");
+        $this->g_layout->set("longe_url", g_conf('url', 'longe'));
 
 		$redirect_url = urldecode($this->input->get("redirect_url", true));
 		$this->g_layout->set("redirect_url", $redirect_url);

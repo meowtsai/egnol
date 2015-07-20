@@ -7,7 +7,7 @@
 				<select name="game" class="required" style="width:85%;">
 					<option value="">--請選擇--</option>
 					<? foreach($games->result() as $row):?>
-					<option value="<?=$row->game_id?>" <?=($this->input->get("game")==$row->game_id ? 'selected="selected"' : '')?>><?=$row->name?></option>
+					<option value="<?=$row->game_id?>" <?=($site==$row->game_id ? 'selected="selected"' : '')?>><?=$row->name?></option>
 					<? endforeach;?>
 				</select>
 			</div>

@@ -20,7 +20,7 @@ class Wallet extends MY_Controller {
 	
 	function choose()
 	{
-		$this->g_user->check_account_channel('trade');
+		//$this->g_user->check_account_channel('trade');
 		
 		$games = $this->db->where("is_active", "1")->from("games")->get();
 		

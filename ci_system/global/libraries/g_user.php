@@ -14,10 +14,9 @@ class G_User {
 	var $email;
 	var $mobile;
 	var $password;
-	var $realName;
+	var $external_id;
 	var $remoteAddr;
 	var $userAgent;
-	var $long_e_uid;
 	var $token;
 	
 	var $error_mssage='錯誤';
@@ -33,7 +32,6 @@ class G_User {
 			//$this->realName = urldecode($_SESSION['name']);
 			$this->remoteAddr = $_SERVER['REMOTE_ADDR'];
 			$this->userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
-			$this->long_e_uid = isset($_SESSION['long_e_uid']) ? $_SESSION['long_e_uid'] : '';
 			$this->mobile = $_SESSION['mobile'];
 			$this->token = $_SESSION['token'];
 		}
@@ -47,7 +45,6 @@ class G_User {
 		$_SESSION['user_id'] = '';
 		$_SESSION['euid'] = '';		
 		$_SESSION['name'] = '';
-		$_SESSION['long_e_uid'] = '';
 		$_SESSION['mobile'] = '';
 		$_SESSION['token'] = '';
 		$_SERVER['REMOTE_ADDR'] = '';
@@ -55,7 +52,6 @@ class G_User {
 		unset($_SESSION['user_id']);
 		unset($_SESSION['euid']);
 		unset($_SESSION['name']);
-		unset($_SESSION['long_e_uid']);
 		unset($_SESSION['mobile']);
 		unset($_SESSION['token']);
 		
@@ -144,60 +140,16 @@ class G_User {
 								->get();
 		}
 
-/*
-		if ($this->check_extra_account($this->account) == FALSE)
-		{
-			$this->password = md5(trim($password));
-			$query = $this->CI->db->from("users")
-						->where("account", $this->account)
-						->where("password", $this->password)
-						->get();
-						
-			if ($query->num_rows() == 0 )
-			{
-				unset($query);
-			    $query = $this->CI->db->from("users")
-						    ->where("mobile", $this->account)
-						    ->where("password", $this->password)
-						    ->get();
-			}
-		}
-		else  {
-			$query = $this->CI->db->from("users")
-						->where("account", $this->account)
-						->get();
-		}
-*/
-
 		if ($query != null && $query->num_rows() > 0)
 		{
 			$row = $query->row();	
 
-			if (! empty($row->bind_uid))
-			{
-				//若登入綁定用途帳號，則讀取主帳號
-				$long_e_uid = $row->uid; 				
-				$query = $this->CI->db->from("users")->where("uid", $row->bind_uid)->get();
-				if ($query->num_rows() > 0 )
-				{
-					$row = $query->row();
-				}
-				else
-				{
-					return $this->_return_error("綁定帳號不存在");
-				}
-			}
-			else
-			{
-				$long_e_uid = '';
-			}
-						
 			if ($row->is_banned != 0 && !IN_OFFICE)
 			{
 				return $this->_return_error("停權");
 			}
 
-			$this->set_user($row->uid, $row->email, $row->mobile, $long_e_uid);
+			$this->set_user($row->uid, $row->email, $row->mobile);
 			return true;
 		} 
 		else
@@ -206,7 +158,7 @@ class G_User {
 		}
 	}
 	
-	function set_user($uid, $email, $mobile, $long_e_uid='')
+	function set_user($uid, $email, $mobile)
 	{		
 		//登入log
 		/*
@@ -252,14 +204,12 @@ class G_User {
 		$this->euid = $this->encode($uid);
 		$this->email = $email;
 		$this->mobile = $mobile;
-		$this->long_e_uid = $long_e_uid;
 		$this->token = $this->generate_token();
 		
 		$_SESSION['user_id'] = $this->uid;
 		$_SESSION['euid'] = $this->euid;
 		$_SESSION['email'] = $this->email;
 		$_SESSION['mobile'] = $this->mobile;
-		$_SESSION['long_e_uid'] = $this->long_e_uid;
 		$_SESSION['token'] = $this->token;
 	}
 	
@@ -317,6 +267,42 @@ class G_User {
 		}
 	}
 
+	// 讀取帳號資料
+	function query_account($email, $mobile)
+	{
+        $query = null;
+		if(!empty($this->email))
+		{
+			// 以 e-mail 讀取帳號
+			$query = $this->CI->db->from("users")
+						->where("email", $this->email)
+						->get();
+		}
+		if(!empty($this->mobile))
+		{
+			// 若沒有則以行動電話讀取帳號
+			$query = $this->CI->db->from("users")
+								->where("mobile", $this->mobile)
+								->get();
+		}
+
+		if ($query != null && $query->num_rows() > 0)
+		{
+			$row = $query->row();
+
+			return $row;
+		}
+
+		return null;
+	}
+
+	// 綁定帳號
+	function bind_account($uid, $email, $mobile, $password)
+	{
+
+		return true;
+	}
+
 	// 檢查帳號是否已存在
 	function check_account_exist($email, $mobile)
 	{
@@ -346,8 +332,21 @@ class G_User {
 		} else return true;
 	}
 
+	// 檢查目前使用者是否為從第三方登入建立的帳號
+	function is_from_3rd_party()
+	{
+		$row = query_account($this->email, $this->mobile);
+		if($row != null)
+		{
+			return !empty(%row->external_id);
+		}
+
+		return false;
+	}
+
+/*
 	function check_account_channel($type='')
-	{		
+	{
 		$site = $this->CI->input->get("site");
 		$account = $this->CI->input->get("account");
 		$uid = $this->CI->input->get("uid");
@@ -366,134 +365,7 @@ class G_User {
 			if ($euid) $uid = $this->decode($euid);		
 			if ($uid) $account = $this->CI->db->from("users")->where("uid", $uid)->get()->row()->account;
 		}
-		
-		if ($account) 
-		{
-			$spt = explode("@", $account);
-			$channel = empty($spt[1]) ? '' : $spt[1];
-			
-			if ($type == 'trade') 
-			{
-				switch($channel) 
-				{
-					case 'omg':
-						header("location: /transfer/omg/"); exit();
-						break;
-						
-					case 'artsy':
-						header("location: http://www.artsy.com.tw/product/index"); exit();
-						break;
 
-						/*
-					case 'rc2':
-						header("location: http://game.raidtalk.com.tw/pay/game_detail"); exit();
-						break;
-						*/
-						
-					case 'dtalent':
-						if ($site == 'long_e') $site='xj';
-						header("location: http://www.player.com.tw/bank/bk_portal.php?product={$site}"); exit();
-						break;
-					
-					case 'beanfun':
-						$this->CI->load->config("api");
-						$channel_api = $this->CI->config->item("channel_api");				
-						if ($site && array_key_exists($site, $channel_api['beanfun']['sites'])) {
-							$ServiceCode = $channel_api['beanfun']['sites'][$site]['ServiceCode'];
-							$redirect_url = "http://tw.beanfun.com/TW_ThirdPartyWeb/gamelaunch.aspx?ServiceCode={$ServiceCode}&ServiceRegion=B2&ServiceMode=D";
-						}
-						else {
-							$redirect_url = "http://tw.beanfun.com/playweb/index.aspx";
-						}
-			  			header("location: {$redirect_url}"); exit();
-			  			break;							
-						
-					case 'kimi':
-						$this->CI->load->config("api");
-						$partner_api = $this->CI->config->item("partner_api");	
-						if ($site && array_key_exists($site, $partner_api['kimi']['sites'])) {
-							$redirect_url = $partner_api['kimi']['transfer_url'].$partner_api['kimi']['sites'][$site]['pid'];
-							header("location: {$redirect_url}"); exit();
-						}						
-						break;
-						
-					case '179game':
-						header("location: http://www.gamexdd.com/Point"); exit();
-						break;						
-						
-					case 'smmo':
-						header("location: http://www.smmogames.com/TopUpListing.aspx"); exit();
-						break;
-						
-					case 'muxplay':
-						header("location: http://www.muxplay.com/pay/43"); exit();
-						break;
-
-					case 'egame101':
-						header("location: http://www.egame101.com/index.php/member/index"); exit();
-						break;		
-
-					case '58play':
-						header("location: http://www.58play.com.tw/payment2.php?gamesn=52"); exit();
-						break;	
-						
-					case 'nicegame':
-						header("location: http://www.nicegame.com.tw/payment/"); exit();
-						break;	
-						
-					case 'skyler':
-						header("location: http://www.skyler.asia/changepoint.php"); exit();
-						break;	
-				}		
-			}
-			else if ($type == 'service') 
-			{
-				switch($channel) 
-				{
-					case 'beanfun':
-						header("location: http://tw.beanfun.com/customerservice/"); exit();
-						break;
-						
-					case '179game':
-						header("location: http://www.gamexdd.com/public/news/9/50.htm"); exit();
-						break;			
-
-					case 'muxplay':
-						header("location: http://www.muxplay.com/service"); exit();
-						break;
-					
-					case 'egame101':
-						header("location: http://www.egame101.com/"); exit();
-						break;
-						
-					case 'skyler':
-						header("location: http://www.skyler.asia/customerservice.php"); exit();
-						break;
-				}						
-			}
-			else 
-			{
-				switch($channel) 
-				{
-					case 'beanfun':
-						header("location: http://tw.beanfun.com/playweb/index.aspx"); exit();
-						break;
-						
-					case 'muxplay':
-						header("location: http://www.muxplay.com/myz"); exit();
-						break;
-						
-					case 'egame101':
-						header("location: http://www.egame101.com/"); exit();
-						break;
-					
-					case 'skyler':
-						header("location: http://www.skyler.asia/"); exit();
-						break;
-				}						
-			}
-		}
-		
 		if ($this->is_login()) {
 			//if (($uid && $uid <> $this->uid) || ($account && $account <> $this->account)) {
 			//	header("location: {$long_e_login_page}"); 
@@ -528,7 +400,7 @@ class G_User {
 			return true;
 		}		
 	}
-	
+*/
 	function loadDB()
 	{		
 		return $this->CI->load->database("long_e", true);

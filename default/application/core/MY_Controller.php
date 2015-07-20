@@ -35,7 +35,8 @@ class MY_Controller extends CI_Controller
 		// 取出指定的 site, 沒有指定的話就是 long_e
 		$site = $this->_get_site();
 		$this->g_layout->set("site", $site);
-        $this->g_layout->set("game_url", ($site == "long_e" ? "/" : "/games/".$site));
+        $this->g_layout->set("game_url", ($site == "long_e" ? g_conf('url', 'longe') : "/games/".$site."/"));
+        $this->g_layout->set("longe_url", g_conf('url', 'longe'));
 
 		$redirect_url = urldecode($this->input->get("redirect_url", true));
 		$this->g_layout->set("redirect_url", $redirect_url);

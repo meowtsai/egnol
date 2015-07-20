@@ -3,9 +3,9 @@
 <head>
 	<title><?=$meta["title"]?></title>
 	<link rel="icon" type="image/png" href="<?=$game_url?>p/img/favicon.png" />
-    <link rel='stylesheet' type='text/css' href='/p/css/default.css'>
-	<script src='/p/js/jquery-1.7.2.min.js'></script>
-	<script src='/p/js/default.js'></script>
+    <link rel='stylesheet' type='text/css' href='<?=$longe_url?>p/css/default.css'>
+	<script src='<?=$longe_url?>p/js/jquery-1.7.2.min.js'></script>
+	<script src='<?=$longe_url?>p/js/default.js'></script>
     <meta name=viewport content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE9" />
