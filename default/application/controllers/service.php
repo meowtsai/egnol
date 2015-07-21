@@ -72,7 +72,8 @@ class Service extends MY_Controller {
 		$config['encrypt_name'] = true;
 		
 		$upload_cnt = 0;
-		if ( ! empty($_FILES["file01"]["name"])) {
+		if ( ! empty($_FILES["file01"]["name"]))
+		{
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("file01"))
 			{
@@ -85,7 +86,8 @@ class Service extends MY_Controller {
 			}
 		}
 		
-		if ( ! empty($_FILES["file02"]["name"])) {
+		if ( ! empty($_FILES["file02"]["name"]))
+		{
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("file02"))
 			{
@@ -97,7 +99,8 @@ class Service extends MY_Controller {
 				$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");					
 			}
 		}
-		if ( ! empty($_FILES["file03"]["name"])) {
+		if ( ! empty($_FILES["file03"]["name"]))
+		{
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("file03"))
 			{
