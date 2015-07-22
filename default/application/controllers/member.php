@@ -173,19 +173,15 @@ class Member extends MY_Controller
 		$this->_require_login();
 		
 		$user_data = $this->g_user->get_user_data();
-/*
-		if (strstr($this->g_user->account, '@') == FALSE)
+
+		if (!empty($user_data->email) || (!empty($user_data->mobile))
 		{
-			die($this->g_user->account.'你的帳號不需要綁定');
+			die('你的帳號不需要綁定');
 		}
-*/
-		//$query = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get();
-		$bind_data = false;//($query->num_rows() > 0 ? $query->row() : false);
-			
+
 		$this->_init_layout()
 			->add_js_include("member/bind_account")
 				->set("user_data", $user_data)
-				->set("bind_data", $bind_data)
 				->standard_view();
 	}
 	
@@ -212,8 +208,6 @@ class Member extends MY_Controller
 			die(json_failure("兩次密碼輸入不同"));
 		}
 	
-//		$result = $this->g_user->create_account($email, $mobile, $pwd, '', '', 'long_e', $this->g_user->uid);
-
 		$result = $this->g_user->bind_account($this->g_user->uid, $email, $mobile, $pwd);
 		if ($result == true)
 		{
@@ -230,20 +224,7 @@ class Member extends MY_Controller
 	function update_profile()
 	{
 		$this->_require_login();
-/*
-		if ($this->g_user->check_extra_account($this->g_user->account)) 
-		{			
-			$row = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get()->row();		
-			if ( empty($row) ) { 
-				header("location: ".base_url()."/member/bind_account");
-				exit();
-			}
-		}	
-		else
-		{
-			$row = $this->db->from("users")->where("uid", $this->g_user->uid)->get()->row();
-		}		
-*/
+
 		$row = $this->db->from("users")->where("uid", $this->g_user->uid)->get()->row();
 		$user_info = $this->db->from("user_info")->where("uid", $this->g_user->uid)->get()->row();
 
@@ -278,19 +259,7 @@ class Member extends MY_Controller
 			$value = trim(strip_tags($value));
 		}
 		array_walk($data, 'clear');
-/*
-		if ($this->g_user->check_extra_account())
-		{
-			$row = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get()->row();
-			if (empty($row)) die(json_failure("尚未綁定帳號"));
-			
-			$target_uid = $row->uid;
-		}
-		else
-		{
-			$target_uid = $this->g_user->uid;
-		}
-*/
+
 		$target_uid = $this->g_user->uid;
 
 		$this->db->where("uid", $target_uid)->update("users", $data);
@@ -342,27 +311,7 @@ class Member extends MY_Controller
 	{
 		$this->_require_login();
 
-//		$redirect_url = urldecode($this->input->get("redirect_url", true));
-/*
-		if ($this->g_user->check_extra_account($this->g_user->account)) 
-		{			
-			$row = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get()->row();		
-			if ( empty($row) )
-			{
-				header("location: ".base_url()."/member/bind_account");
-				exit();
-			}
-		}	
-*/
-		$bind_data = false;
-/*		if ($this->g_user->check_extra_account())
-		{
-			$bind_data = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get()->row();
-		}
-*/
 		$this->_init_layout()
-//			->set("redirect_url", $redirect_url)
-			->set("bind_data", $bind_data)
 			->standard_view();
 	}
 	
@@ -377,17 +326,16 @@ class Member extends MY_Controller
 		if ( empty($pwd) ) die(json_failure("請輸入密碼"));
 		else if ($pwd != $pwd2) die(json_failure("兩次密碼輸入不同"));
 		
-		if ($this->g_user->check_extra_account()) {
-			$row = $this->db->from("users")->where("bind_uid", $this->g_user->uid)->get()->row();
-			if (empty($row)) die(json_failure("尚未綁定帳號"));
-			
-			$target_uid = $row->uid;
+		if ($this->g_user->is_from_3rd_party())
+		{
+			$row = $this->g_user->get_user_data($this->g_user->uid);
+			if(empty($row->email) && empty($row->mobile))
+			{
+                die(json_failure("尚未綁定帳號"));
+			}
 		}
-		else {
-			$target_uid = $this->g_user->uid;
-		}
-		
-		$this->db->where("uid", $target_uid)->update("users", array("password" => md5(trim($pwd))));
+
+		$this->db->where("uid", $this->g_user->uid)->update("users", array("password" => md5(trim($pwd))));
 		die(json_message(array("message"=>"修改成功", "back_url"=>site_url("member/index"))));
 	}	
 }

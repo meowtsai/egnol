@@ -40,7 +40,7 @@
 		</li>
 		<li>
 			<input tabindex="3" name="doLogin" type="submit" id="doLogin3" value="確定" />&nbsp;
-			<input name="cancel" type="button" value="取消" onclick="javascript:History.back();" />
+			<input name="cancel" type="button" value="取消" onclick="javascript:history.back();" />
 		</li>
 		<li>
 			<div></div>
