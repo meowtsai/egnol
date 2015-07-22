@@ -6,8 +6,8 @@
  * @package     authUser
 */
 
-class G_User {
-
+class G_User
+{
 	var $CI;
 	var $uid;
 	var $euid;
@@ -118,8 +118,8 @@ class G_User {
 	}
 	
 	function verify_account($email, $mobile, $password='', $external_id='')
-	{		
-		if(empty($email) && empty($mobile) && empty($external_id)
+	{
+		if(empty($email) && empty($mobile) && empty($external_id))
 		{
              return $this->_return_error("帳號不存在");
 		}
@@ -127,12 +127,12 @@ class G_User {
 		$this->email = strtolower(trim($email));
 		$this->mobile = trim($mobile);
 
-		$user_row = query_account($email, $mobile, $external_id);
+		$user_row = $this->query_account($email, $mobile, $external_id);
 		if (!empty($user_row))
 		{
 			if(!empty($password))
 			{
-				if($user_row->password == md5($password))
+				if($user_row->password != md5($password))
 				{
 					return $this->_return_error("帳號不存在或密碼錯誤");
 				}
@@ -290,23 +290,17 @@ class G_User {
 		if(!empty($email))
 		{
 			// 以 e-mail 讀取帳號
-			$query = $this->CI->db->from("users")
-						->where("email", $email)
-						->get();
+			$query = $this->CI->db->from("users")->where("email", $email)->get();
 		}
 		else if(!empty($mobile))
 		{
 			// 若沒有則以行動電話讀取帳號
-			$query = $this->CI->db->from("users")
-								->where("mobile", $mobile)
-								->get();
+			$query = $this->CI->db->from("users")->where("mobile", $mobile)->get();
 		}
 		else if(!empty($external_id))
 		{
 			// 若沒有則以行動電話讀取帳號
-			$query = $this->CI->db->from("users")
-								->where("external_id", $external_id)
-								->get();
+			$query = $this->CI->db->from("users")->where("external_id", $external_id)->get();
 		}
 
 		if ($query != null && $query->num_rows() > 0)

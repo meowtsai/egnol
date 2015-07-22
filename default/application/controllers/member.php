@@ -174,7 +174,7 @@ class Member extends MY_Controller
 		
 		$user_data = $this->g_user->get_user_data();
 
-		if (!empty($user_data->email) || (!empty($user_data->mobile))
+		if (!empty($user_data->email) || (!empty($user_data->mobile)))
 		{
 			die('你的帳號不需要綁定');
 		}
