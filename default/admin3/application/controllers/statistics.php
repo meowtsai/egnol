@@ -135,7 +135,7 @@ class Statistics extends MY_Controller {
 						from 
 						(
 							SELECT 
-								date(lgl.create_time) 'd', lgl.uid, lgl.server_id, character_name,
+								date(lgl.create_time) 'd', lgl.uid, lgl.server_id, gsr.name,
 								if (gsr.id is null, '0', '1') 'role',
 								if (gsr.id is null, '0', (select if(count(*)>0, 1, 0) from log_game_logins
 									where uid=gsr.uid and server_id=gsr.server_id 
@@ -780,7 +780,7 @@ class Statistics extends MY_Controller {
 		$query = $this->db->query("
 			SELECT 
 				whales.uid 'uid',
-				chr.character_name 'character_name',
+				chr.name 'character_name',
 				whales.server_name 'server_name',
 				whales.deposit_total 'deposit_total',
 				gm.exchange_rate*whales.deposit_total 'currency_total',
@@ -814,7 +814,7 @@ class Statistics extends MY_Controller {
 						uid,
 						server_id,
 						MIN(create_time) 'create_time',
-						character_name
+						name
 					FROM characters
 					GROUP BY server_id, uid
 				) chr ON chr.uid = whales.uid

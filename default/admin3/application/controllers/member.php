@@ -35,8 +35,8 @@ class Member extends MY_Controller {
 
 			if ($this->input->get("character_name")) {
 				$this->db->join("characters gsr", "gsr.uid=u.uid")
-					->where("gsr.character_name", trim($this->input->get("character_name")))				
-					->where("gsr.id = (select max(id) from characters where uid=gsr.uid and character_name=gsr.character_name)", null, false)
+					->where("gsr.name", trim($this->input->get("character_name")))				
+					->where("gsr.id = (select max(id) from characters where uid=gsr.uid and name=gsr.name)", null, false)
 					;
 			}
 			

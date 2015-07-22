@@ -217,7 +217,7 @@ select d, count(*) 'login_cnt', sum(role) 'role_cnt',
 from 
 (
 	SELECT 
-		date(lgl.create_time) 'd', lgl.uid, lgl.server_id, character_name,
+		date(lgl.create_time) 'd', lgl.uid, lgl.server_id, gsr.name,
 		if (gsr.id is null, '0', '1') 'role',
 		if (gsr.id is null, '0', (select if(count(*)>0, 1, 0) from log_game_logins
 			where uid=gsr.uid and server_id=gsr.server_id 

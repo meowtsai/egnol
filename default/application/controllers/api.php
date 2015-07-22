@@ -378,7 +378,7 @@ class Api extends MY_Controller
 			array(
 				"uid" => $uid,
 				'account' => $account,
-				'character_name' => $character_name,
+				'name' => $character_name,
 				'ad' => $ad,
 			));
 

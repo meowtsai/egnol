@@ -29,10 +29,9 @@ class Character extends MY_Controller {
 			
 			$this->input->get("server") && $this->db->where("ga.server_id", $this->input->get("server")) or $this->db->where("gi.game_id", $this->game_id) ;
 			$this->input->get("ad_channel") && $this->db->where("ga.ad", $this->input->get("ad_channel"));			
-			$this->input->get("character_name") && $this->db->where("ga.character_name", trim($this->input->get("character_name")));
+			$this->input->get("character_name") && $this->db->where("ga.name", trim($this->input->get("character_name")));
 			$this->input->get("uid") && $this->db->where("ga.uid", trim($this->input->get("uid")));
 			$this->input->get("euid") && $this->db->where("ga.uid", $this->g_user->decode($this->input->get("euid")));
-			$this->input->get("account") && $this->db->where("ga.account", trim($this->input->get("account")));
 			
 			if ($this->input->get("start_date")) {
 				$start_date = $this->db->escape($this->input->get("start_date"));
@@ -41,11 +40,6 @@ class Character extends MY_Controller {
 					$this->db->where("ga.create_time between {$start_date} and {$end_date}", null, false);	
 				}	
 				else $this->db->where("ga.create_time >= {$start_date}", null, false);
-			}			
-
-			if ($channel = $this->input->get("channel")) {
-				if ($channel == 'long_e') $this->db->not_like("ga.account", "@");
-				else $this->db->where("ga.account like '%@{$channel}'", null, false);
 			}
 		
 			$member_type = $this->input->get("member_type");
@@ -71,19 +65,20 @@ class Character extends MY_Controller {
 			
 			switch ($this->input->get("action"))
 			{
-				case "查詢": 					
-					$this->db->from("characters ga")
+				case "查詢":					
+					$this->db->select("u.uid, u.email, u.mobile, ga.create_time, gi.name 'server_name', ga.name 'character_name'")
+						->from("characters ga")
 						->join("servers gi", "ga.server_id=gi.server_id")
-						->join("users u", "u.account=ga.account");
+						->join("users u", "u.uid=ga.uid");
 
 					$this->db->stop_cache();
 
 					$total_rows = $this->db->count_all_results();
 					
 					$query = $this->db->limit(10, $this->input->get("record"))
-								->order_by("ga.create_time desc")->get();					
+								->order_by("ga.create_time desc")->get();
 
-					$get = $this->input->get();					
+					$get = $this->input->get();
 					unset($get["record"]);
 					$query_string = http_build_query($get);
 					
@@ -92,7 +87,7 @@ class Character extends MY_Controller {
 							'base_url'	=> site_url("character?".$query_string),
 							'total_rows'=> $total_rows,
 							'per_page'	=> 10
-						));				
+						));
 					
 					$this->g_layout->set("total_rows", $total_rows);
 					break;
@@ -102,35 +97,31 @@ class Character extends MY_Controller {
 					
 					$query = $this->db->from("characters ga")
 						->join("servers gi", "ga.server_id=gi.server_id")
-						->join("users u", "u.account=ga.account")->order_by("ga.id")->get();
+						->join("users u", "u.uid=ga.uid")->order_by("ga.id")->get();
 						
 					$filename = "output.xls";					
 					header("Content-type:application/vnd.ms-excel;");
 					header("Content-Disposition: filename={$filename};");
 					
-					$content = "會員帳號 \t會員ID \te-mail \t會員帳號來源 \t註冊日期 \t角色名稱 \t建檔時間\n";
+					$content = "會員帳號 \t會員ID \te-mail \t註冊日期 \t角色名稱 \t建檔時間\n";
 					foreach($query->result() as $row) {
 						$regist_date = date("Y-m-d", strtotime($row->create_time));
 						
-						$channels = $this->config->item('channels');
-						$spt = explode("@", $row->account);
-						$key= (count($spt)>1) ? $spt[1] : 'long_e';
-						
-						$content .= "=\"{$row->account}\"\t{$row->uid}\t{$row->email}\t{$channels[$key]}\t{$regist_date}\t{$row->character_name}\t{$row->create_time}\n";
+						$content .= "=\"{$row->account}\"\t{$row->uid}\t{$row->email}\t{$regist_date}\t{$row->name}\t{$row->create_time}\n";
 					}
 					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
 					exit();
 						
-					break;					
+					break;			
 			
-				case "通路統計":			
+				/*case "通路統計":			
 					$query = $this->db->select("SUBSTRING(ga.account, INSTR(ga.account, '@'), 20 ) channel, count(*) cnt", false)
 						->from("characters ga")
 						->join("servers gi", "ga.server_id=gi.server_id")
 						//->where("ga.account in (select user_name from users where user_name=ga.account)", null, false)
 						//->where("exists (select uid from users where user_name=ga.account)", null, false)
 						->group_by("channel", false)->order_by("cnt desc")->get();
-					break;
+					break;*/
 					
 				case "廣告統計":
 					$query = $this->db->select("ga.ad, count(*) cnt", false)
@@ -239,7 +230,7 @@ class Character extends MY_Controller {
 			    		{
 			      			$success_cnt = 0;
 			      			$size = ($file_data["file_size"]*1024)+1;
-			      			$field = array('uid', 'euid', 'account', 'character_name', 'ad', 'create_time');
+			      			$field = array('uid', 'euid', 'name', 'ad', 'create_time');
 			      					      			
 			      			foreach ($fdata as $idx => $row)
 			      			{		
@@ -304,7 +295,7 @@ class Character extends MY_Controller {
 								    	
 										$data = array(
 											'account' => $d['account'],
-											'character_name' => $d['character_name'],
+											'name' => $d['name'],
 											'server_id' => $server->server_id,
 											'ad' => $d['ad'],
 											'create_time' => $create_time,
@@ -313,7 +304,7 @@ class Character extends MY_Controller {
 										
 										//檢查角色是否存在
 										$chk_exists = $this->db->from("characters")
-											->where("character_name", $d['character_name'])
+											->where("name", $d['name'])
 											->where("server_id", $server->server_id)->count_all_results() > 0 ? true : false;
 										
 										if ($chk_exists) {
@@ -626,7 +617,7 @@ class Character extends MY_Controller {
 					'create_time' => $row->create_time,
 					'ad' => $row->ad,
 				);
-				if ( ! empty($re_arr["character_name"])) $data["character_name"] = $re_arr["character_name"];
+				if ( ! empty($re_arr["name"])) $data["name"] = $re_arr["name"];
 				$this->g_characters->create_character($server, $data);
 				
 				echo 'insert:'. $this->db->insert_id();
@@ -658,7 +649,7 @@ class Character extends MY_Controller {
     			$re = my_curl($url.'?'.http_build_query($get));
     			$arr = explode("|", $re);    			
     			if (empty($arr)) return '-1';
-    			else if ($arr[0] == '0') return array("result"=>"1", "character_name"=>$arr[1]);
+    			else if ($arr[0] == '0') return array("result"=>"1", "name"=>$arr[1]);
     			else {
     				return array("result"=>"-1");
     			}    			    			
@@ -684,7 +675,7 @@ class Character extends MY_Controller {
 					$re = my_curl($url);
 					$json = json_decode($re);
 					if ($json->status === 0) {
-						return array("result"=>"1", "character_name"=>$json->player->nick);	
+						return array("result"=>"1", "name"=>$json->player->nick);	
 					}
 					else {
 						return array("result"=>"-1");
@@ -720,7 +711,7 @@ class Character extends MY_Controller {
 		   		else {
 					$json = json_decode($re);
 					if ($json) {
-						return array("result"=>"1", "character_name"=>$json[0]->name);	
+						return array("result"=>"1", "name"=>$json[0]->name);	
 					}   						
 		   		}
 		   		return array("result"=>"-1");
@@ -764,7 +755,7 @@ class Character extends MY_Controller {
 		   		if ($re) {   			
 			   		$json = json_decode($re);
 			   		if ($json->status == "4") {
-			   			return array("result"=>"1", "character_name"=>$json->character[0]->characterName);	
+			   			return array("result"=>"1", "name"=>$json->character[0]->characterName);	
 			   		}
 		   		}	
 		   		
@@ -815,7 +806,7 @@ class Character extends MY_Controller {
 		        $json = json_decode($re);
 		        
 		   		if (!empty($json->roleName)) {
-		   			return array("result"=>"1", "character_name"=>$json->roleName);	
+		   			return array("result"=>"1", "name"=>$json->roleName);	
 		   		}
 		   		else if ($re == '') return array("result"=>"-1");
 		   		else {   			
@@ -872,9 +863,9 @@ class Character extends MY_Controller {
 		    		
 		    		if (empty($json_result)) return array("result"=>"-1");
 		    		
-	    			if ( ! empty($json_result['character_name']) || ! empty($json_result[0]['character_name'])) {
-	    				$character_name = empty($json_result['character_name']) ? $json_result[0]['character_name'] : $json_result['character_name'];
-		    			return array("result"=>"1", "character_name"=>$character_name);
+	    			if ( ! empty($json_result['name']) || ! empty($json_result[0]['name'])) {
+	    				$character_name = empty($json_result['name']) ? $json_result[0]['name'] : $json_result['name'];
+		    			return array("result"=>"1", "name"=>$name);
 		    		}
 		    		else {
 		    			return array("result"=>"-1");	    				
@@ -914,7 +905,7 @@ class Character extends MY_Controller {
 		    			return array("result"=>"-1");
 		    		}
 		    		else {		    			
-		    			return array("result"=>"1", "character_name"=>$data->role[0]->name);
+		    			return array("result"=>"1", "name"=>$data->role[0]->name);
 		    		}
 				}				
     			break;
@@ -942,7 +933,7 @@ class Character extends MY_Controller {
 		    		
 		    		if ($game == 'jh') {
 			    		if ($data->result == '1') {
-			    			return array("result"=>"1", "character_name"=>$data->charInfo[0]->cname);
+			    			return array("result"=>"1", "name"=>$data->charInfo[0]->cname);
 			    		}
 			    		else {
 			    			return array("result"=>"-1");
@@ -950,7 +941,7 @@ class Character extends MY_Controller {
 		    		}
 		    		else if ($game == 'aj') {
 			    		if ($data->result == '1') {
-			    			return array("result"=>"1", "character_name"=>urldecode($data->roleinfo[0]->name));
+			    			return array("result"=>"1", "name"=>urldecode($data->roleinfo[0]->name));
 			    		}
 			    		else {
 			    			return array("result"=>"-1");
@@ -958,7 +949,7 @@ class Character extends MY_Controller {
 		    		}
 		    	    else if ($game == 'mq') {    		
 				        if ( ! empty($data->roleName)) {
-				        	return array("result"=>"1", "character_name"=>$data->roleName);
+				        	return array("result"=>"1", "name"=>$data->roleName);
 				        }
 				    	else {
 				    		return array("result"=>"-1");
@@ -967,7 +958,7 @@ class Character extends MY_Controller {
 				    else if ($game == 'dd') {
 				    	
 				  	    if ($data->status == 'ok' && ! empty($data->roles)) {
-	    					return array("result"=>"1", "character_name"=>urldecode($data->roles[0]->name));
+	    					return array("result"=>"1", "name"=>urldecode($data->roles[0]->name));
 			    		}
 			    		else {
 			    			return array("result"=>"-1");
@@ -977,9 +968,9 @@ class Character extends MY_Controller {
 		    			if ($data->status == '1') {
 				    		foreach ($data->data as $property=>$value)
 							{
-							   $character_name = $value[0]->name;
+							   $name = $value[0]->name;
 							}
-			    			return array("result"=>"1", "character_name"=>$character_name);
+			    			return array("result"=>"1", "name"=>$name);
 			    		}
 			    		else {
 			    			return array("result"=>"-1");
@@ -1010,7 +1001,7 @@ class Character extends MY_Controller {
 		    			return array("result"=>"-1");
 		    		}
 		    		else {
-			    		if ( ! empty($json_result[0]['character_name'])) {
+			    		if ( ! empty($json_result[0]['name'])) {
 			    			return array("result"=>"1");
 			    		}
 			    		else {
