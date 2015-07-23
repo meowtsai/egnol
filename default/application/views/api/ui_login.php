@@ -1,4 +1,4 @@
-<form id="login_form" method="post" action="<?=$longe_url?>member/login_json?site=<?=$site?>">
+<form id="login_form" method="post" action="<?=$longe_url?>api/ui_login_json?site=<?=$site?>">
 	<input type="hidden" id="redirect_url" value="<?=$redirect_url?>">
 	<ul class="le_form">
 		<li>會員登入</li>
@@ -15,8 +15,11 @@
 			<input tabindex="4" type="hidden" name="remember" id="remember" value="0" />
 		</li>
 		<li class="text-gray-light">
-			<a href="/member/register?site=<?=$site?>&redirect_url=<?=urlencode($redirect_url)?>">立即註冊</a>│
-			<a href="/member/forgot_password?site=<?=$site?>&redirect_url=<?=urlencode($redirect_url)?>">忘記密碼</a>
+			<a href="/api/ui_forgot_password?site=<?=$site?>">忘記密碼</a>
+		</li>
+		<li>
+			<input type="button" name="register" id="register" value="立即註冊" onclick="javascript:location.href='/api/ui_register?site=<?=$site?>'" />
+			<input type="button" name="bind" id="bind" value="綁定帳號" onclick="javascript:location.href='/api/ui_bind_account?site=<?=$site?>'" />
 		</li>
 		<li>
 			<?

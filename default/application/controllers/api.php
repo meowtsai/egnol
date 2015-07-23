@@ -55,6 +55,48 @@ class Api extends MY_Controller
 			->api_view();
 	}
 
+	function ui_login_json()
+	{
+		header('content-type:text/html; charset=utf-8');
+
+		$site = $this->_get_site();
+
+		$_SESSION['site'] = $site;
+
+		// 檢查 e-mail or mobile
+		$account = $this->input->post("account");
+		if(empty($account))
+		{
+			die(json_failure('電子郵件或行動電話未填寫'));
+		}
+
+		$pwd = $this->input->post("pwd");
+		if (empty($pwd))
+		{
+			die(json_failure('密碼尚未填寫'));
+		}
+
+		$email = '';
+		$mobile = '';
+		if(filter_var($account, FILTER_VALIDATE_EMAIL))
+		{
+			$email = $account;
+		}
+		else
+		{
+			$mobile = $account;
+		}
+
+		if ( $this->g_user->verify_account($email, $mobile, $pwd) === true )
+		{
+			die(json_message(array("message"=>"成功", "site"=>$site), true));
+		}
+		else
+		{
+			die(json_failure($this->g_user->error_message));
+		}
+	}
+
 	// 帳號登出
 	function ui_logout()
 	{
@@ -62,21 +104,6 @@ class Api extends MY_Controller
 
 		header('Content-type:text/html; Charset=UTF-8');
 		echo "<script type='text/javascript'>alert('成功登出系統'); </script>";
-
-		if (get_mobile_os() == 'ios')
-		{
-			echo "<script src='".base_url()."/p/js/iosBridge.js'></script>
-				<script type='text/javascript'>calliOSFunction('dialogLogout');</script>";
-		}
-		else
-		{
-			echo "<script type='text/javascript'>
-						try {
-							window.CoozSDK.dialogLogout();
-						}
-						catch(e) {	}
-				</script>";
-		}
 		echo "<script type='text/javascript'>history.back();</script>";
 	}
 
@@ -88,23 +115,88 @@ class Api extends MY_Controller
 			->api_view();
 	}
 
-	// 帳號綁定
-	function ui_bind_account()
+	function ui_register_json()
 	{
-		// 先登入才能綁定
-		$this->_require_login();
+		header('content-type:text/html; charset=utf-8');
 
-		$user_data = $this->g_user->get_user_data();
+        $site = 'long_e';
+		$email = $this->input->post('email');
+		$mobile = $this->input->post("mobile");
+		$pwd = $this->input->post("pwd");
+		$pwd2 = $this->input->post("pwd2");
+		$captcha = $this->input->post('captcha');
 
-		if (!empty($user_data->email) || (!empty($user_data->mobile))
+		if ( empty($email) && empty($mobile) )
 		{
-			die('你的帳號不需要綁定');
+			die(json_failure("電子郵件和行動電話至少需填寫一項"));
+		}
+		else if (empty($pwd) )
+		{
+			die(json_failure("請輸入密碼"));
+		}
+		else if ($pwd != $pwd2)
+		{
+			die(json_failure("兩次密碼輸入不相同"));
+		}
+		else if (empty($_SESSION['captcha']) || $captcha != $_SESSION['captcha'])
+		{
+			die(json_failure("驗證碼錯誤"));
 		}
 
+		$boolResult = $this->g_user->create_account($email, $mobile, $pwd, $site);
+		if ($boolResult==true)
+		{
+			$this->g_user->verify_account($email, $mobile, $pwd);
+			die(json_message(array("message"=>"成功", "site"=>$site), true));
+		}
+		else
+		{
+			die(json_failure($this->g_user->error_message));
+		}
+	}
+
+	// 帳號綁定
+	// API 的綁定頁面直接包含登入功能, 和網頁版不同
+	function ui_bind_account()
+	{
 		$this->_init_layout()
 			->add_js_include("api/bind_account")
-				->set("user_data", $user_data)
-				->api_view();
+			->api_view();
+	}
+
+	function ui_bind_account_json()
+	{
+		$this->_check_login_json();
+
+		$email = $this->input->post("email");
+		$mobile = $this->input->post("mobile");
+		$pwd = $this->input->post("pwd");
+		$pwd2 = $this->input->post("pwd2");
+		$redirect_url = $this->input->post("redirect_url");
+
+		if ( empty($email) && empty($mobile) )
+		{
+			die(json_failure("電子信箱和手機號碼至少需輸入一項"));
+		}
+		else if ( empty($pwd) )
+		{
+			die(json_failure("請輸入密碼"));
+		}
+		else if ($pwd != $pwd2)
+		{
+			die(json_failure("兩次密碼輸入不同"));
+		}
+
+		$result = $this->g_user->bind_account($this->g_user->uid, $email, $mobile, $pwd);
+		if ($result == true)
+		{
+			$this->g_user->verify_account($email, $mobile, $pwd);
+			die(json_message(array("message"=>"成功", "redirect_url"=>$redirect_url)));
+		}
+		else
+		{
+			die(json_failure($this->g_user->error_message));
+		}
 	}
 
 	// 忘記密碼
@@ -115,6 +207,36 @@ class Api extends MY_Controller
 			->api_view();
 	}
 
+	function ui_reset_password_json()
+	{
+		$account = $this->input->post("account");
+		$email = $this->input->post("email");
+		$captcha = $this->input->post("captcha");
+
+		header('content-type:text/html; charset=utf-8');
+		if ( empty($account) || empty($email) ) {
+			die(json_failure("尚有資料未填"));
+		}
+		else if (empty($_SESSION['captcha']) || $captcha != $_SESSION['captcha']) {
+			die(json_failure("驗證碼錯誤"));
+		}
+
+		$cnt = $this->db->from("users")->where("account", $account)->where("email", $email)->count_all_results();
+		if ($cnt == 0) {
+			die(json_failure("沒有這位使用者或mail填寫錯誤。"));
+		}
+
+	    $new = rand(100000, 999999);
+	    $md5_new = md5($new);
+
+	    $this->db->where("account", $account)->update("users", array("password" => $md5_new));
+/*
+		$this->load->library("long_e_mailer");
+		$this->long_e_mailer->passwdResetMail($email, $account, $new, $account);
+*/
+		die(json_success("帳號及新密碼已發送到信箱."));
+	}
+
 	// 修改密碼
 	function ui_change_password()
 	{
@@ -122,6 +244,30 @@ class Api extends MY_Controller
 
 		$this->_init_layout()
 			->api_view();
+	}
+
+	function ui_change_password_json()
+	{
+		$this->_check_login_json();
+
+		$pwd = $this->input->post("pwd");
+		$pwd2 = $this->input->post("pwd2");
+		$redirect_url = $this->input->post("redirect_url");
+
+		if ( empty($pwd) ) die(json_failure("請輸入密碼"));
+		else if ($pwd != $pwd2) die(json_failure("兩次密碼輸入不同"));
+
+		if ($this->g_user->is_from_3rd_party())
+		{
+			$row = $this->g_user->get_user_data($this->g_user->uid);
+			if(empty($row->email) && empty($row->mobile))
+			{
+                die(json_failure("尚未綁定帳號"));
+			}
+		}
+
+		$this->db->where("uid", $this->g_user->uid)->update("users", array("password" => md5(trim($pwd))));
+		die(json_message(array("message"=>"修改成功", "back_url"=>site_url("member/index"))));
 	}
 
 	// 點數儲值
