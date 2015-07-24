@@ -55,7 +55,7 @@
 		</td>
 		<td><?=$row->address?></td>
 		<td style="color:<?=$sever_status[$row->server_status]["color"]?>"><?=$sever_status[$row->server_status]["name"]?></td>
-		<td style="color:<?=$enable[$row->is_transaction_active]["color"]?>"><?=$enable[$row->is_transaction_active]["name"]?></td>
+		<td style="color:<?=$enable[($row->is_transaction_active)?1:0]["color"]?>"><?=$enable[($row->is_transaction_active)?1:0]["name"]?></td>
 		<td>
 			<div class="btn-group">
 				<a href="<?=site_url("server/edit/{$row->id}?game_id={$this->game_id}")?>" class="btn btn-mini">修改</a>		

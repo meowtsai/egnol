@@ -26,11 +26,13 @@ class Member extends MY_Controller {
 					
 			$this->db->start_cache();
 			
+			$this->db->select("u.*, uf.name");
 			$this->db->from("users u");
+			$this->db->join("user_info uf", "uf.uid=u.uid", 'left');
 			
 			$this->input->get("uid") && $this->db->where("u.uid", trim($this->input->get("uid")));
 			$this->input->get("euid") && $this->db->where("u.uid", $this->g_user->decode(trim($this->input->get("euid"))));			
-			$this->input->get("account") && $this->db->where("u.account", trim($this->input->get("account")));			
+			//$this->input->get("account") && $this->db->where("u.account", trim($this->input->get("account")));			
 			$this->input->get("name") && $this->db->where("u.name", trim($this->input->get("name")));			
 
 			if ($this->input->get("character_name")) {
