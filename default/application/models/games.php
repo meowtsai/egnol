@@ -19,7 +19,7 @@ class Games extends CI_Model {
 	 
 	function get_server_by_address($address)
 	{
-		return $this->db->from("servers")->where("address", $address)->order_by("id")->get()->row();
+		return $this->db->from("servers")->where("address", $address)->order_by("server_id")->get()->row();
 	}	
 	
 	function get_server_by_server_id($server_id)
@@ -29,7 +29,7 @@ class Games extends CI_Model {
 		
 	function get_server_list($game_id)
 	{
-		return $this->db->from("servers")->where("game_id", $game_id)->order_by("id", "desc")->get();
+		return $this->db->from("servers")->where("game_id", $game_id)->order_by("server_id", "desc")->get();
 	}	
 	
 }

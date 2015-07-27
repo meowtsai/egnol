@@ -19,7 +19,7 @@ class Notice extends MY_Controller {
 		$this->load->library("user_agent");
 		
 		$games = $this->db->from("games")->get();
-		$servers = $this->db->from("servers")->order_by("id desc")->get();	
+		$servers = $this->db->from("servers")->order_by("server_id desc")->get();	
 			
 		$this->g_layout
 			->add_breadcrumb("通知", "notice/get_list")

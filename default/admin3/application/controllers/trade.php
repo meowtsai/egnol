@@ -169,7 +169,7 @@ class Trade extends MY_Controller {
 		}
 		
 		$games = $this->db->from("games")->get();
-		$servers = $this->db->from("servers")->order_by("id desc")->get();		
+		$servers = $this->db->from("servers")->order_by("server_id desc")->get();		
 			
 		$this->g_layout
 			->add_breadcrumb("轉點查詢")	
@@ -312,7 +312,7 @@ class Trade extends MY_Controller {
 		}
 		
 		$games = $this->db->from("games")->get();
-		$servers = $this->db->from("servers")->order_by("id")->get();
+		$servers = $this->db->from("servers")->order_by("server_id")->get();
 			
 		$this->g_layout
 			->add_breadcrumb("轉點統計")	
@@ -1450,7 +1450,7 @@ class Trade extends MY_Controller {
 		}
 		
 		$games = $this->db->from("games")->get();
-		$servers = $this->db->from("servers")->order_by("id")->get();
+		$servers = $this->db->from("servers")->order_by("server_id")->get();
 			
 		$this->g_layout
 			->add_breadcrumb("轉點統計")

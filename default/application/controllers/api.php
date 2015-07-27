@@ -804,7 +804,7 @@ class Api extends MY_Controller
 			}
 			
 			// 開啟轉點
-			$servers = $this->db->from("servers")->where("id", $order->server_id)->get()->row();	
+			$servers = $this->db->from("servers")->where("server_id", $order->server_id)->get()->row();	
 			$billing_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $order->price, $servers->server_id);
 			if (empty($billing_id)) {
 				log_message('error', '資料庫發生錯誤-ios 訂單轉點'. $this->g_wallet->error_message);
@@ -1056,7 +1056,7 @@ class Api extends MY_Controller
 			if (empty($billing_id)) output_json(RESPONSE_FAILD, "資料庫發生錯誤-新增google income訂單", array("order_json"=> (array) $order));
 			
 			// 開啟轉點
-			$servers = $this->db->from("servers")->where("id", $order->server_id)->get()->row();	
+			$servers = $this->db->from("servers")->where("server_id", $order->server_id)->get()->row();	
 			$billing_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $order->price, $servers->server_id);
 			if (empty($billing_id)) output_json(RESPONSE_FAILD, "資料庫發生錯誤-google訂單轉點", array("order_json"=> (array) $order));
 			

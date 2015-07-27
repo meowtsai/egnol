@@ -209,7 +209,7 @@ class Ajax extends MY_Controller {
 				if (empty($billing_id)) die(json_failure("資料庫發生錯誤-新增google income訂單"));
 				
 				// 開啟轉點
-				$servers = $this->db->from("servers")->where("id", $google_billing->server_id)->get()->row();	
+				$servers = $this->db->from("servers")->where("server_id", $google_billing->server_id)->get()->row();	
 				$billing_id = $this->g_wallet->produce_order($google_billing->uid, "top_up_account", "2", $google_billing->price, $servers->server_id);
 				if (empty($billing_id)) die(json_failure("資料庫發生錯誤-google訂單轉點")); 
 				

@@ -284,7 +284,7 @@ group by d
 		
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
-			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("id")->get())
+			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();

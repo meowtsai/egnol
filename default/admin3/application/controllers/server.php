@@ -27,7 +27,7 @@ class Server extends MY_Controller {
 		if (empty($this->game_id)) {
 			$query = "";
 		} else {
-			$query = $this->db->where("game_id", $this->game_id)->from("servers")->order_by("id", "desc")->get();
+			$query = $this->db->where("game_id", $this->game_id)->from("servers")->order_by("server_id", "desc")->get();
 		}
 		
 		$this->_init_layout();
@@ -53,12 +53,12 @@ class Server extends MY_Controller {
 			->render("server/form");
 	}
 		
-	function edit($id)
+	function edit($server_id)
 	{
 		$this->zacl->check("server", "modify");
 		
 		$this->_chk_game_id();
-		$row = $this->db->where("id", $id)->from("servers")->get()->row();
+		$row = $this->db->where("server_id", $server_id)->from("servers")->get()->row();
 		if ($row == false) die("無此記錄");
 		
 		$this->_init_layout();
