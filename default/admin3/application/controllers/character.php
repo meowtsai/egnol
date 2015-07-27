@@ -163,7 +163,7 @@ class Character extends MY_Controller {
 		}		
 		
 		$games = $this->db->from("games")->get();
-		$servers = $this->db->from("servers")->order_by("id desc")->get();	
+		$servers = $this->db->from("servers")->order_by("server_id desc")->get();	
 		
 		$this->g_layout
 			->set("games", $games)
@@ -496,7 +496,7 @@ class Character extends MY_Controller {
 		}				
 		
 		$games = $this->db->from("games")->get();
-		$servers = $this->db->from("servers")->order_by("id desc")->get();
+		$servers = $this->db->from("servers")->order_by("server_id desc")->get();
 		
 		$this->g_layout
 			->add_breadcrumb("創角統計")
