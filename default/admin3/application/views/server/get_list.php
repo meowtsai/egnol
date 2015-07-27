@@ -65,7 +65,7 @@
 						    <a tabindex="-1" href="#">伺服器狀況</a>
 						    <ul class="dropdown-menu">
 								<li><a href="javascript:;" class="json_post" url="<?=site_url("server/set_status/{$row->server_id}/public?game_id={$this->game_id}")?>">公開</a></li>
-								<li><a href="javascript:;" class="json_post" url="<?=site_url("server/set_status/{$row->server_id}/maintaining?game_id={$this->game_id}")?>">維護</a></li>
+								<li><a href="javascript:;" class="json_post" url="<?=site_url("server/set_status/{$row->server_id}/maintenance?game_id={$this->game_id}")?>">維護</a></li>
 								<li><a href="javascript:;" class="json_post" url="<?=site_url("server/set_status/{$row->server_id}/private?game_id={$this->game_id}")?>">內測</a></li>
 								<li><a href="javascript:;" class="json_post" url="<?=site_url("server/set_status/{$row->server_id}/hide?game_id={$this->game_id}")?>">關閉</a></li>
 						    </ul>
@@ -88,7 +88,7 @@
   		<td colspan="60">
 	  		伺服器狀況: 
   			<a href="javascript:;" class="btn btn-inverse btn-mini muti_json_post" url="<?=site_url("server/set_muti_status/public?game_id={$this->game_id}")?>">公開</a>
-  			<a href="javascript:;" class="btn btn-inverse btn-mini muti_json_post" url="<?=site_url("server/set_muti_status/maintaining?game_id={$this->game_id}")?>">維護</a>
+  			<a href="javascript:;" class="btn btn-inverse btn-mini muti_json_post" url="<?=site_url("server/set_muti_status/maintenance?game_id={$this->game_id}")?>">維護</a>
   			<a href="javascript:;" class="btn btn-inverse btn-mini muti_json_post" url="<?=site_url("server/set_muti_status/private?game_id={$this->game_id}")?>">內測</a>
   			<a href="javascript:;" class="btn btn-inverse btn-mini muti_json_post" url="<?=site_url("server/set_muti_status/hide?game_id={$this->game_id}")?>">關閉</a>
   			<span class="sptl"></span>

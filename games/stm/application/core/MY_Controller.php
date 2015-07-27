@@ -96,9 +96,9 @@ class MY_Controller extends CI_Controller
 /*
 function chk_server_open($row)
 {		
-	if ($row->server_status == 'maintaining' &&  ! IN_OFFICE) {
+	if ($row->server_status == 'maintenance' &&  ! IN_OFFICE) {
 		if ( ! IN_OFFICE) {
-			return "javascript:alert('{$row->maintaining_msg}');";
+			return "javascript:alert('{$row->maintenance_msg}');";
 		}
 	} 
 	else if ($row->server_status == 'private' &&  ! IN_OFFICE) {
