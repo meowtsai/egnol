@@ -104,7 +104,7 @@
 		<tr>
 			<th>帳號：</th>
 			<td colspan="3">
-				<?=$question->account?>
+				<?=$question->uid?>
 			</td>
 		</tr>	
 		<? endif;?>	

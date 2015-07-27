@@ -384,7 +384,7 @@ class Service extends MY_Controller {
 	{
 		$this->zacl->check("service", "modify");
 
-		$question = $this->db->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email, u.account, au.name allocate_user_name")
+		$question = $this->db->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email, u.uid, au.name allocate_user_name")
 			->where("q.id", $id)
 			->from("questions q")
 			->join("servers gi", "gi.server_id=q.server_id")
