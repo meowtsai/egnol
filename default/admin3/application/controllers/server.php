@@ -90,20 +90,20 @@ class Server extends MY_Controller {
 		else
 		{			
 			$data = array(
-					//'game_id'		=> $this->input->post("game_id"),
-					'server_id'		=> $this->input->post("server_id"),
-					'name'			=> $this->input->post("name"),
-					'address'			=> $this->input->post("address"),
-					'server_status'	=> $this->input->post("server_status"),
-					'is_transaction_active'	=> $this->input->post("is_transaction_active"),
-					'maintaining_msg'	=> $this->input->post("maintaining_msg"),
-					//'exchange_rate'		=> $this->input->post("exchange_rate"),
-					//'server_performance'=> $this->input->post("server_performance"),
-					'is_new_server'		=> $this->input->post("is_new_server"),
+				//'game_id'		=> $this->input->post("game_id"),
+				'server_id'		=> $this->input->post("server_id"),
+				'name'			=> $this->input->post("name"),
+				'address'		=> $this->input->post("address"),
+				'server_status'	=> $this->input->post("server_status"),
+				'is_transaction_active'	=> $this->input->post("is_transaction_active"),
+				'maintenance_msg'	=> $this->input->post("maintenance_msg"),
+				//'exchange_rate'	=> $this->input->post("exchange_rate"),
+				//'server_performance'=> $this->input->post("server_performance"),
+				'is_new_server'	=> $this->input->post("is_new_server"),
 			);
 				
 			if ($id = $this->input->post("id")) { //修改
-				$this->db->where("id", $id)->update("servers", $data);
+				$this->db->where("server_id", $id)->update("servers", $data);
 			}
 			else { //新增
 				$data["game_id"] = $this->input->post("game_id");
@@ -175,7 +175,7 @@ class Server extends MY_Controller {
 		//一次只能有一個新服
 		$this->db->where("game_id", $this->game_id)->where("is_new_server", "1")
 				->set("is_new_server", "0")->update("servers"); //清空
-		$this->db->where("game_id", $this->game_id)->where("id", $id)
+		$this->db->where("game_id", $this->game_id)->where("server_id", $id)
 				->set("is_new_server", "1")->update("servers"); //設定
 		echo json_success();
 		return;		
@@ -185,7 +185,7 @@ class Server extends MY_Controller {
 	{
 		if ( ! $this->zacl->check_acl("server", "modify")) die(json_failure("沒有權限"));
 		
-		$this->db->where("game_id", $this->game_id)->where("id", $id)
+		$this->db->where("game_id", $this->game_id)->where("server_id", $id)
 		->set("server_status", $status)->update("servers");
 		echo $this->db->affected_rows()>0 ? json_success() : json_failure("無變更");
 	}
@@ -195,7 +195,7 @@ class Server extends MY_Controller {
 		if ( ! $this->zacl->check_acl("server", "modify")) die(json_failure("沒有權限"));
 		
 		$ids = $this->input->post("ids");
-		$this->db->where("game_id", $this->game_id)->where_in("id", $ids)
+		$this->db->where("game_id", $this->game_id)->where_in("server_id", $ids)
 		->set("server_status", $status)->update("servers");
 		echo $this->db->affected_rows()>0 ? json_success() : json_failure("無變更");
 	}	
@@ -204,7 +204,7 @@ class Server extends MY_Controller {
 	{
 		if ( ! $this->zacl->check_acl("server", "modify")) die(json_failure("沒有權限"));
 		
-		$this->db->where("game_id", $this->game_id)->where("id", $id)
+		$this->db->where("game_id", $this->game_id)->where("server_id", $id)
 			->set("is_transaction_active", $status?"1":"0")->update("servers");
 		echo $this->db->affected_rows()>0 ? json_success() : json_failure("無變更");		
 	}
@@ -214,7 +214,7 @@ class Server extends MY_Controller {
 		if ( ! $this->zacl->check_acl("server", "modify")) die(json_failure("沒有權限"));
 		
 		$ids = $this->input->post("ids");
-		$this->db->where("game_id", $this->game_id)->where_in("id", $ids)
+		$this->db->where("game_id", $this->game_id)->where_in("server_id", $ids)
 			->set("is_transaction_active", $status?"1":"0")->update("servers");
 		echo $this->db->affected_rows()>0 ? json_success() : json_failure("無變更");
 	}	

@@ -29,7 +29,7 @@ class Game
 		elseif ($server->server_status=='maintaining')
 		{
 			if ( ! (IN_OFFICE || $pass)) {
-				return $this->_return_error($server->maintaining_msg);
+				return $this->_return_error($server->maintenance_msg);
 			}
 		}
 		elseif ($server->server_status=='private')
@@ -106,7 +106,7 @@ class Game
 		elseif ($server->server_status=='maintaining')
 		{
 			if ( ! (IN_OFFICE)) {
-				return $this->_return_error($server->maintaining_msg);
+				return $this->_return_error($server->maintenance_msg);
 			}
 		}
 		elseif ($server->server_status=='private')
