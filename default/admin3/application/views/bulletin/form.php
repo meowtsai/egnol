@@ -31,7 +31,7 @@
 			<label class="checkbox"><input type="checkbox" id="clickAll"> 全選</label>
 			<div id="servers">
 				<? foreach($server_list->result() as $row):?>
-				<label class="checkbox inline"><input type="checkbox" name="target[]" value="<?=$row->id?>" <?=in_array($row->id, $arr) ? 'checked="checked"' : ''?>> <?=$row->name?></label>
+				<label class="checkbox inline"><input type="checkbox" name="target[]" value="<?=$row->server_id?>" <?=in_array($row->server_id, $arr) ? 'checked="checked"' : ''?>> <?=$row->name?></label>
 				<? endforeach;?>
 			</div>
 		</div>

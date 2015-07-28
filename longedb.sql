@@ -92,7 +92,7 @@ CREATE TABLE `characters` (
   `id` int(11) NOT NULL,
   `uid` int(11) NOT NULL,
   `account` varchar(50) NOT NULL,
-  `character_name` varchar(50) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL,
   `server_id` int(11) NOT NULL,
   `ad` varchar(50) DEFAULT NULL,
   `create_status` char(1) DEFAULT NULL,
@@ -418,9 +418,8 @@ DROP TABLE IF EXISTS `servers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `servers` (
-  `id` int(11) NOT NULL,
-  `game_id` varchar(20) NOT NULL,
   `server_id` varchar(20) NOT NULL,
+  `game_id` varchar(20) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `address` varchar(100) DEFAULT NULL,
   `server_connection_key` varchar(64) DEFAULT NULL,
@@ -433,8 +432,7 @@ CREATE TABLE `servers` (
   `is_new_server` bit(1) DEFAULT b'0',
   `is_entry_server` bit(1) DEFAULT b'0',
   `is_test_server` bit(1) DEFAULT b'0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `server_id_UNIQUE` (`server_id`)
+  PRIMARY KEY (`server_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
