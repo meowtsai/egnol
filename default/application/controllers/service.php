@@ -34,7 +34,7 @@ class Service extends MY_Controller {
 			->join("games g", "gi.game_id=g.game_id")->get();
 		
 		$games = $this->db->from("games")->where("is_active", "1")->get();
-		$servers = $this->db->where_in("server_status", array("public", "maintenance"))->order_by("id")->get("servers");	
+		$servers = $this->db->where_in("server_status", array("public", "maintenance"))->order_by("server_id")->get("servers");	
 		
 		// 讀取玩家角色列表
 		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();

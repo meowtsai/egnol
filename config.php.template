@@ -1,4 +1,7 @@
 <?php
+// {development, testing, production}
+define('ENVIRONMENT', 'development');
+define('SYSTEM_OS', (PATH_SEPARATOR==';') ? 'window' : 'linux');
 
 $g_config = array(
 	'master_web' => array(
