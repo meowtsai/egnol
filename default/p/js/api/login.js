@@ -36,8 +36,7 @@ $(function()
 					if (json.status == 'success')
 					{
 						// 回傳資料
-						//
-						//
+                        LongeAPI.onLoginSuccess(json.uid, json.email, json.mobile, json.externalId);
 						return;
 					}
 					else

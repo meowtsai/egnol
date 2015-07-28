@@ -151,7 +151,7 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 		<li class="game_option line_row">
 			<div class="field_line">
 				<select name="server" class="required" style="width:85%;">
-					<option value="">--請先選擇遊戲--</option>
+					<option value="">--請先選擇伺服器--</option>
 				</select>
 
 				<select id="server_pool" style="display:none;">
@@ -224,6 +224,7 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 		</li>
 		<li>
 			<input tabindex="3" name="send" type="submit" id="send" value="確定" />
+			<input name="cancel" type="button" id="cancel" value="取消" onclick="javascript:LongeAPI.onPaymentCancel();" />
 		</li>
 	</ul>
 </form>

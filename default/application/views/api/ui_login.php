@@ -4,7 +4,7 @@
 		<li>會員登入</li>
 		<li>
 			<div class="field_name">電子郵件或行動電話：
-			</div><div class="field_input"><input tabindex="1" name="account" class="required" maxlength="128" type="text" size="18" value="<?=empty($account) ? '' : $account?>" /></div>
+			</div><div class="field_input"><input tabindex="1" name="account" class="required" maxlength="128" type="text" size="18" /></div>
 		</li>
 		<li>
 			<div class="field_name">密碼：
