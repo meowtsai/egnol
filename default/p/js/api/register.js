@@ -58,10 +58,7 @@ $(function()
 				{
 					if (json.status == 'success')
 					{
-						// 回傳資料(建完帳號會自動完成登入, 可直接回傳登入結果)
-						//
-						//
-						//
+						location.href = '/api/ui_login?site='+json.site;
 						return;
 					}					
 					else

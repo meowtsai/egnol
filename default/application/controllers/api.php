@@ -131,7 +131,7 @@ class Api extends MY_Controller
 	{
 		header('content-type:text/html; charset=utf-8');
 
-        $site = 'long_e';
+        $site = $this->input->get('site');
 		$email = $this->input->post('email');
 		$mobile = $this->input->post("mobile");
 		$pwd = $this->input->post("pwd");
@@ -180,11 +180,11 @@ class Api extends MY_Controller
 	{
 		$this->_check_login_json();
 
+        $site = $this->input->get('site');
 		$email = $this->input->post("email");
 		$mobile = $this->input->post("mobile");
 		$pwd = $this->input->post("pwd");
 		$pwd2 = $this->input->post("pwd2");
-		$redirect_url = $this->input->post("redirect_url");
 
 		if ( empty($email) && empty($mobile) )
 		{
@@ -203,7 +203,7 @@ class Api extends MY_Controller
 		if ($result == true)
 		{
 			$this->g_user->verify_account($email, $mobile, $pwd);
-			die(json_message(array("message"=>"成功", "redirect_url"=>$redirect_url)));
+			die(json_message(array("message"=>"成功", "site"=>$site)));
 		}
 		else
 		{

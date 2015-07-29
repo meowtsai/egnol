@@ -3,7 +3,7 @@
 	<ul class="le_form">
 		<li>會員登入</li>
 		<li>
-			<div class="field_name">電子郵件或行動電話：
+			<div class="field_name">Email或手機號碼：
 			</div><div class="field_input"><input tabindex="1" name="account" class="required" maxlength="128" type="text" size="18" /></div>
 		</li>
 		<li>
