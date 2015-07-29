@@ -115,9 +115,9 @@ class Api extends MY_Controller
 	// 直接登入
 	function ui_quick_login()
 	{
-		//header('Content-type:text/html; Charset=UTF-8');
+		header('Content-type:text/html; Charset=UTF-8');
 
-        $site = $this->input->get('site');
+		$site = $this->_get_site();
         $device_id = $this->input->get('deviceid');
 		$external_id = "mobile.".$device_id;
 
@@ -159,7 +159,7 @@ class Api extends MY_Controller
 	{
 		header('content-type:text/html; charset=utf-8');
 
-        $site = $this->input->get('site');
+		$site = $this->_get_site();
 		$email = $this->input->post('email');
 		$mobile = $this->input->post("mobile");
 		$pwd = $this->input->post("pwd");
@@ -207,7 +207,7 @@ class Api extends MY_Controller
 	{
 		$this->_check_login_json();
 
-        $site = $this->input->get('site');
+		$site = $this->_get_site();
 		$email = $this->input->post("email");
 		$mobile = $this->input->post("mobile");
 		$pwd = $this->input->post("pwd");
@@ -289,7 +289,7 @@ class Api extends MY_Controller
 		$this->load->library("long_e_mailer");
 		$this->long_e_mailer->passwdResetMail($email, $account, $new, $account);
 */
-		die(json_success("新密碼已發送到您的".$send_to."。"));
+		die(json_message(array("message"=>"新密碼已發送到您的".$send_to."。", "site"=>$site)));
 	}
 
 	// 修改密碼
@@ -313,7 +313,7 @@ class Api extends MY_Controller
 
 		if(empty($this->g_user->email) && empty($this->g_user->mobile))
 		{
-              die(json_failure("尚未綁定帳號"));
+			die(json_failure("尚未綁定帳號"));
 		}
 
 		$this->db->where("uid", $this->g_user->uid)->update("users", array("password" => md5(trim($pwd))));
@@ -345,23 +345,33 @@ class Api extends MY_Controller
 	// 建立遊戲角色
 	function create_role()
 	{
-		$uid = $this->input->get("uid");
-		$euid = $this->input->get("euid");
-		$game = $this->input->get("game");
-		$server = $this->input->get("server");
-		$character_name = urldecode($this->input->get("character_name"));
-		$time = $this->input->get("time");
-		$hash = $this->input->get("hash");
+		$partner = $this->input->post("partner");
+		$game = $this->input->post("game");
+		$server = $this->input->post("server");
+		$uid = $this->input->post("uid");
+		$character_name = $this->input->post("character_name");
 
-		if ((empty($uid) && empty($euid)) || (empty($server) && empty($game)) || empty($time))
+		if (empty($uid) || empty($server) || empty($game) || empty($character_name))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
 		}
 
-		if (empty($uid) && $euid)
+		$partner_conf = $this->config->item("partner_api");
+		if ( ! array_key_exists($partner, $partner_conf))
 		{
-			$uid = $this->g_user->decode($euid);
-			$md5_p1 = $euid;
+			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
+		}
+		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"]))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
+		}
+
+		$server_id = "{$game}_".sprintf("%02d", $server);
+		$server_info = $this->db->from("servers")->where("server_id", "{$server_id}")->get()->row();
+
+		if (empty($server_info))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"伺服器不存在")));
 		}
 
 		$query = $this->db->from("users")->where("uid", $uid)->get();
@@ -372,36 +382,6 @@ class Api extends MY_Controller
 		else
 		{
 			die(json_encode(array("result"=>"0", "error"=>"uid不存在")));
-		}
-
-		if (empty($md5_p1))
-		{
-			$md5_p1 = $uid;
-		}
-
-		$this->load->model("games");
-		if ($game)
-		{
-			$md5_p2 = $game.$server;
-			$server_id = "{$game}_".sprintf("%02d", $server);
-			$server_info = $this->db->from("servers")->where("server_id", "{$server_id}")->get()->row();
-		}
-		else
-		{
-			$md5_p2 = $server;
-			$server_info = $this->games->get_server_by_address($server);
-		}
-		if (empty($server_info))
-		{
-			die(json_encode(array("result"=>"0", "error"=>"伺服器不存在")));
-		}
-
-		$game_api = $this->config->item("game_api");
-		$key = $game_api[$server_info->game_id]['key'];
-
-		if ($hash <> md5($md5_p1 . $md5_p2 . $character_name . $time . $key))
-		{
-			die(json_encode(array("result"=>"0", "error"=>"認證碼錯誤")));
 		}
 
 		$this->load->model("g_characters");
@@ -426,18 +406,17 @@ class Api extends MY_Controller
 		exit();
 	}
 
-	// 取得遊戲角色狀態
-	function get_role_status()
+	// 取得遊戲角色資料
+	function get_role()
 	{
-		$partner = $this->input->get("partner");
-		$uid = $this->input->get("uid");
-		$game = $this->input->get("game");
-		$server = $this->input->get("server");
-		$time = $this->input->get("time");
-		$hash = $this->input->get("hash");
+		$partner = $this->input->post("partner");
+		$game = $this->input->post("game");
+		$server = $this->input->post("server");
+		$uid = $this->input->post("uid");
+		$character_name = $this->input->post("character_name");
 
 		// 檢查參數
-		if (empty($partner) || empty($uid) || empty($game) || empty($server) || empty($time))
+		if (empty($partner) || empty($uid) || empty($game) || empty($server))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
 		}
@@ -451,11 +430,6 @@ class Api extends MY_Controller
 		{
 			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
 		}
-		$key = $partner_conf[$partner]["sites"][$game]['key'];
-		if ($hash <> md5($partner . $uid . $game . $server . $time . $key))
-		{
-			die(json_encode(array("result"=>"0", "error"=>"認證碼錯誤")));
-		}
 
 		$server_id = "{$game}_".sprintf("%02d", $server);
 		$server_row = $this->db->from("servers")->where("server_id", "{$server_id}")->get()->row();
@@ -464,37 +438,24 @@ class Api extends MY_Controller
 			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
 		}
 
-		// 登入帳號
 		$query = $this->db->where("uid", $uid)->get("users");
 		if($query->num_rows() == 0)
 		{
 			die(json_encode(array("result"=>"0", "error"=>"無此帳號")));
 		}
-
 		$user_row = $query->row();
-		if ($this->g_user->verify_account($user_row->email, $user_row->mobile))
-		{
-			/*
-			$this->load->library("game_api/{$server_row->game_id}");
-			$re = $this->{$server_row->game_id}->check_role_status($server_row, $user_row);
-			if ($re == "1")
-			{
-				die(json_encode(array("result"=>"1")));
-			}
-			else if ($re === "-1")
-			{
-				die(json_encode(array("result"=>"-1", "error"=>"遊戲伺服器無回應")));
-			}
-			else
-			{
-				die(json_encode(array("result"=>"0", "error"=>"該帳號無角色")));
-			}
-			*/
-		}
-		else
-		{
-			die(json_encode(array("result"=>"0", "error"=>$this->g_user->error_message)));
-		}
+
+		$this->load->model("g_characters");
+		$role = $this->g_characters->get_role($server_info, $uid, $character_name);
+
+		echo json_encode(array("result"				=> "1",
+								"id"				=> $role->id,
+								"uid"				=> $role->uid,
+								"character_name"	=> $role->character_name,
+								"server_id"         => $role->server_id,
+								"create_time"       => $role->create_time
+								));
+		exit();
 	}
 
 	// 儲值後自動執行轉點, 玩家不用自行操作
