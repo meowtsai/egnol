@@ -21,6 +21,15 @@ class Api extends MY_Controller
 		$this->partner_conf = $this->config->item("partner_api");
 	}
 
+	// AJAX 回應 function 檢查是否已登入
+	function _check_login_json()
+	{
+		if (!$this->g_user->is_login())
+		{
+			die(json_failure("尚未登入，請重新進行登入"));
+		}
+	}
+
 	function _output_json($result, $err="", $arr=array())
 	{
 		$output_arr = array("result" => $result, "error" => $err);

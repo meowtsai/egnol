@@ -8,7 +8,7 @@ class Member extends MY_Controller
 	// AJAX 回應 function 檢查是否已登入
 	function _check_login_json()
 	{
-		if (empty($this->uid))
+		if (!$this->g_user->is_login())
 		{
 			die(json_failure("尚未登入，請重新進行登入"));
 		}
