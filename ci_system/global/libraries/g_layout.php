@@ -83,7 +83,7 @@ class G_Layout
     		if (strpos($item, "http://") === false) {
     	        $href = $this->CI->config->site_url($this->css_path."{$item}.css");
     		} else $href = $item;
-    		$str .= "<link rel='stylesheet' type='text/css' href='{$href}?5'>";
+    		$str .= "<link rel='stylesheet' type='text/css' href='{$href}'>";
     	}
     	return $str;
     }
@@ -95,7 +95,7 @@ class G_Layout
     		if (strpos($item, "http://") === false) {
     	        $href = $this->CI->config->site_url($this->js_path."{$item}.js");
     		} else $href = $item;    		
-    		$str .= "<script src='{$href}?8'></script>";
+    		$str .= "<script src='{$href}'></script>";
     	}
     	return $str;
     }

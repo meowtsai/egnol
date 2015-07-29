@@ -91,32 +91,6 @@ class G_User
 		return !empty($this->uid);
 	}
 
-	// 進行登入，若帳號不存在，則建立
-	function login($email, $mobile, $password, $site, $external_id)
-	{
-		if (!empty($site)) $_SESSION['site'] = $site;
-		
-		if ($this->check_account_exist($email, $mobile, $external_id))
-		{
-			//帳號存在，進行登入
-			return $this->verify_account($email, $mobile, $password, $external_id);
-		}
-		else
-		{
-			//帳號不存在，創立帳號
-			if ($this->create_account($email, $mobile, $password, $site, $external_id))
-			{
-				//創立成功，進行登入
-				return $this->verify_account($email, $mobile, $password, $external_id);
-			}
-			else
-			{
-				//創立失敗
-				return false;
-			}
-		}	
-	}
-	
 	function verify_account($email, $mobile, $password='', $external_id='')
 	{
 		if(empty($email) && empty($mobile) && empty($external_id))
@@ -220,7 +194,7 @@ class G_User
 	}
 
 	// 建立新帳號
-	function create_account($email, $mobile, $password, $site='', $external_id='')
+	function create_account($email, $mobile, $password, $external_id='')
 	{
 		if(!empty($email) || !empty($mobile))
 		{
@@ -235,14 +209,14 @@ class G_User
 				}
 			}
 
-			if (strlen($password) < 4)
+			if (strlen($password) < 6)
 			{
-				return $this->_return_error('密碼不得少於四碼');
+				return $this->_return_error('密碼不得少於六碼');
 			}
 		}
 		else
 		{
-			if(!empty($external_id))
+			if(empty($external_id))
 			{
 	            return $this->_return_error('第三方登入帳號錯誤');
 			}
@@ -299,7 +273,7 @@ class G_User
 		}
 		else if(!empty($external_id))
 		{
-			// 若沒有則以行動電話讀取帳號
+			// 若沒有則以第三方登入 id 讀取帳號
 			$query = $this->CI->db->from("users")->where("external_id", $external_id)->get();
 		}
 

@@ -1,4 +1,4 @@
-<form method="post" id="bind_form" action="<?=$longe_url?>api/ui_bind_account_json?site=<?=$site?>">
+<form method="post" id="bind_form" action="/api/ui_bind_account_json?site=<?=$site?>">
 	<ul class="le_form">
 		<li>綁定帳號</li>
 		<li>您的會員ID為 <?=$this->g_user->uid?></li>

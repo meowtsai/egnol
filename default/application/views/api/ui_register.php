@@ -3,7 +3,7 @@
 	var agreement2 = '<iframe style="width:100%;height:98%;border:0;margin:0padding:0;" src="<?=$longe_url?>p/agreement/doc2.htm"></iframe>';
 	var agreement3 = '<iframe style="width:100%;height:98%;border:0;margin:0padding:0;" src="<?=$longe_url?>p/agreement/doc3.htm"></iframe>';
 </script>
-<form id="register_form" method="post" action="<?=$longe_url?>api/ui_register_json?site=<?=$site?>">
+<form id="register_form" method="post" action="/api/ui_register_json?site=<?=$site?>">
 	<ul class="le_form">
 		<li>會員註冊</li>
 		<li>

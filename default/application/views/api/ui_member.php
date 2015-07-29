@@ -18,7 +18,10 @@
 		<div class="field_name">手機號碼：
 		</div><div class="field_input"><?=$mobile?></div>
 	</li>
-<? else: ?>	
+	<li>
+		<input type="button" name="change_pwd" id="change_pwd" value="修改密碼" onclick="javascript:location.href='/api/ui_change_password?site=<?=$site?>'" />
+	</li>
+<? else: ?>
 	<li>
 		<input type="button" name="bind" id="bind" value="綁定帳號" onclick="javascript:location.href='/api/ui_bind_account?site=<?=$site?>'" />
 	</li>

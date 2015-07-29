@@ -154,7 +154,7 @@ class Member extends MY_Controller
 			die(json_failure("驗證碼錯誤"));
 		}
 
-		$boolResult = $this->g_user->create_account($email, $mobile, $pwd, $site);
+		$boolResult = $this->g_user->create_account($email, $mobile, $pwd);
 		if ($boolResult==true)
 		{
 			$this->g_user->verify_account($email, $mobile, $pwd);

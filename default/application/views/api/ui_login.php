@@ -1,5 +1,4 @@
-<form id="login_form" method="post" action="<?=$longe_url?>api/ui_login_json?site=<?=$site?>">
-	<input type="hidden" id="redirect_url" value="<?=$redirect_url?>">
+<form id="login_form" method="post" action="/api/ui_login_json?site=<?=$site?>">
 	<ul class="le_form">
 		<li>會員登入</li>
 		<li>
@@ -11,15 +10,14 @@
 			</div><div class="field_input"><input tabindex="2" name="pwd" type="password"  class="required" id="txtbox" maxlength="32"  size="20" AUTOCOMPLETE='OFF'/></div>
 		</li>
 		<li>
-			<input tabindex="3" name="doLogin" type="submit" id="doLogin3" value="送出" />
-			<input tabindex="4" type="hidden" name="remember" id="remember" value="0" />
+			<input tabindex="3" name="doLogin" type="submit" id="doLogin" value="送出" />
+			<input name="quickLogin" type="button" id="quickLogin" value="直接登入" onclick="javascript:location.href='/api/ui_quick_login?deviceid=<?=$device_id?>&site=<?=$site?>'" />
 		</li>
 		<li class="text-gray-light">
 			<a href="/api/ui_forgot_password?site=<?=$site?>">忘記密碼</a>
 		</li>
 		<li>
 			<input type="button" name="register" id="register" value="立即註冊" onclick="javascript:location.href='/api/ui_register?site=<?=$site?>'" />
-			<input type="button" name="bind" id="bind" value="綁定帳號" onclick="javascript:location.href='/api/ui_bind_account?site=<?=$site?>'" />
 		</li>
 		<li>
 			<?

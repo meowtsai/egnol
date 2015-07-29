@@ -39,6 +39,8 @@ class Api extends MY_Controller
 		if(!$this->g_user->is_login())
 		{
 			// 未登入, 直接進入登入畫面
+			$device_id = $this->input->get("deviceid");
+
 			// 載入第三方登入通道種類
 			$this->load->config("api");
 			$channel_api = $this->config->item("channel_api");
@@ -51,6 +53,7 @@ class Api extends MY_Controller
 
 			$this->_init_layout()
 				->add_js_include("api/login")
+				->set("device_id", $device_id)
 				->set("channel_item", $channel_item)
 				->api_view();
 		}
@@ -60,7 +63,6 @@ class Api extends MY_Controller
 			$this->_init_layout()
 				->api_view("api/ui_member");
 		}
-
 	}
 
 	function ui_login_json()
@@ -110,6 +112,32 @@ class Api extends MY_Controller
 		}
 	}
 
+	// 直接登入
+	function ui_quick_login()
+	{
+		//header('Content-type:text/html; Charset=UTF-8');
+
+        $site = $this->input->get('site');
+        $device_id = $this->input->get('deviceid');
+		$external_id = "mobile.".$device_id;
+
+		$boolResult = $this->g_user->verify_account('', '', '', $external_id);
+		if ($boolResult != true)
+		{
+			$boolResult = $this->g_user->create_account('', '', '', $external_id);
+		}
+
+		if ($boolResult==true)
+		{
+			$this->g_user->verify_account('', '', '', $external_id);
+			echo "<script type='text/javascript'>location.href='/api/ui_login?site={$site}';</script>";
+		}
+		else
+		{
+			echo "<script type='text/javascript'>alert('登入失敗!');location.href='/api/ui_login?site={$site}';</script>";
+		}
+	}
+
 	// 帳號登出
 	function ui_logout()
 	{
@@ -155,7 +183,7 @@ class Api extends MY_Controller
 			die(json_failure("驗證碼錯誤"));
 		}
 
-		$boolResult = $this->g_user->create_account($email, $mobile, $pwd, $site);
+		$boolResult = $this->g_user->create_account($email, $mobile, $pwd);
 		if ($boolResult==true)
 		{
 			$this->g_user->verify_account($email, $mobile, $pwd);
@@ -168,7 +196,6 @@ class Api extends MY_Controller
 	}
 
 	// 帳號綁定
-	// API 的綁定頁面直接包含登入功能, 和網頁版不同
 	function ui_bind_account()
 	{
 		$this->_init_layout()
@@ -221,32 +248,48 @@ class Api extends MY_Controller
 
 	function ui_reset_password_json()
 	{
+		header('content-type:text/html; charset=utf-8');
+
 		$account = $this->input->post("account");
-		$email = $this->input->post("email");
 		$captcha = $this->input->post("captcha");
 
-		header('content-type:text/html; charset=utf-8');
-		if ( empty($account) || empty($email) ) {
-			die(json_failure("尚有資料未填"));
-		}
-		else if (empty($_SESSION['captcha']) || $captcha != $_SESSION['captcha']) {
+		if (empty($_SESSION['captcha']) || $captcha != $_SESSION['captcha'])
+		{
 			die(json_failure("驗證碼錯誤"));
 		}
 
-		$cnt = $this->db->from("users")->where("account", $account)->where("email", $email)->count_all_results();
-		if ($cnt == 0) {
-			die(json_failure("沒有這位使用者或mail填寫錯誤。"));
+		// 檢查 e-mail or mobile
+		if(empty($account))
+		{
+			die(json_failure('Email或手機號碼未填寫'));
+		}
+
+		$query = null;
+		$send_to = 'email 信箱';
+		if(filter_var($account, FILTER_VALIDATE_EMAIL))
+		{
+			$query = $this->db->from("users")->where("email", $account)->get();
+		}
+		else
+		{
+			$query = $this->db->from("users")->where("mobile", $account)->get();
+			$send_to = '手機簡訊';
+		}
+
+		if (empty($query) || $query->num_rows() == 0)
+		{
+			die(json_failure("沒有這位使用者。"));
 		}
 
 	    $new = rand(100000, 999999);
 	    $md5_new = md5($new);
 
-	    $this->db->where("account", $account)->update("users", array("password" => $md5_new));
+	    $this->db->where("uid", $query->row()->uid)->update("users", array("password" => $md5_new));
 /*
 		$this->load->library("long_e_mailer");
 		$this->long_e_mailer->passwdResetMail($email, $account, $new, $account);
 */
-		die(json_success("帳號及新密碼已發送到信箱."));
+		die(json_success("新密碼已發送到您的".$send_to."。"));
 	}
 
 	// 修改密碼
@@ -264,22 +307,17 @@ class Api extends MY_Controller
 
 		$pwd = $this->input->post("pwd");
 		$pwd2 = $this->input->post("pwd2");
-		$redirect_url = $this->input->post("redirect_url");
 
 		if ( empty($pwd) ) die(json_failure("請輸入密碼"));
 		else if ($pwd != $pwd2) die(json_failure("兩次密碼輸入不同"));
 
-		if ($this->g_user->is_from_3rd_party())
+		if(empty($this->g_user->email) && empty($this->g_user->mobile))
 		{
-			$row = $this->g_user->get_user_data($this->g_user->uid);
-			if(empty($row->email) && empty($row->mobile))
-			{
-                die(json_failure("尚未綁定帳號"));
-			}
+              die(json_failure("尚未綁定帳號"));
 		}
 
 		$this->db->where("uid", $this->g_user->uid)->update("users", array("password" => md5(trim($pwd))));
-		die(json_message(array("message"=>"修改成功", "back_url"=>site_url("member/index"))));
+		die(json_message(array("message"=>"修改成功")));
 	}
 
 	// 點數儲值
