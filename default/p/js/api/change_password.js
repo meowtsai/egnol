@@ -1,18 +1,19 @@
 $(function()
 {
-	$("#login_form").validate({
+	$("#change_form").validate({
 		onfocusout: false,
 		onkeyup: false,
 		onclick: false,
 		messages:
 		{
-			account: {
-				required: "`電子信箱`或`行動電話`必填"
-			},
 			pwd: {
-				required: "`密碼`尚未填寫",
+				required: "`密碼`必填",
 				minlength: "`密碼`最少6碼",
 				maxlength: "`密碼`最多18碼",
+			},
+			pwd2: { 
+				required: "`確認密碼`必填",
+				equalTo: "兩次密碼不相同",
 			},
 		},
 		showErrors: function(errorMap, errorList)
@@ -24,7 +25,7 @@ $(function()
 		   });
 		   if (err)
 		   {
-				leOpenDialog('登入錯誤', err, leDialogType.MESSAGE);
+				leOpenDialog('變更密碼錯誤', err, leDialogType.MESSAGE);
 		   }
 		},
 		submitHandler: function(form)
@@ -35,25 +36,16 @@ $(function()
 				{
 					if (json.status == 'success')
 					{
-                        location.reload();
+						location.href = '/api/ui_login?site='+json.site;
 						return;
-					}
+					}					
 					else
 					{
-						leOpenDialog('登入錯誤', json.message, leDialogType.MESSAGE);
+						leOpenDialog('變更密碼錯誤', json.message, leDialogType.MESSAGE);
 					}
-				}		
+				}
 			});
 		}
 	});
 });
 
-function OnQuickLogin(deviceId, gameId, serverId)
-{
-	if(serverId == '')
-	{
-		serverId = $('#server_selection').find(":selected").val();
-	}
-
-    location.href='/api/ui_quick_login?deviceid=' + deviceId + '&site=' + gameId + '&serverid=' + serverId;
-}

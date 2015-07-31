@@ -1,6 +1,35 @@
 <form id="login_form" method="post" action="/api/ui_login_json?site=<?=$site?>">
+	<input type="hidden" name="partner" value="<?=$partner?>">
+	<input type="hidden" name="game_key" value="<?=$game_key?>">
+<? if(!empty($server_id)) : ?>
+	<input type="hidden" name="server_id" value="<?=$server_id?>">
+<? endif; ?>
 	<ul class="le_form">
 		<li>會員登入</li>
+<? if(empty($server_id)) : ?>
+		<li class="game_option line_row">
+			<div class="field_line">
+				<select id="server_selection" name="server" class="required" style="width:85%;">
+					<?
+						$selected = "selected";
+						foreach($servers->result() as $row)
+						{
+							if ( IN_OFFICE == false && in_array($row->server_status, array("private", "hide")))
+								continue;
+
+							echo "<option value='{$row->server_id}' {$selected}>{$row->name}</option>";
+							$selected = "";
+						}
+					?>
+				</select>
+			</div>
+		</li>
+<? else : ?>
+		<li>
+			<div class="field_name">登入伺服器：
+			</div><div class="field_input"><?=$servers->name?></div>
+		</li>
+<? endif; ?>
 		<li>
 			<div class="field_name">Email或手機號碼：
 			</div><div class="field_input"><input tabindex="1" name="account" class="required" maxlength="128" type="text" size="18" /></div>
@@ -11,7 +40,7 @@
 		</li>
 		<li>
 			<input tabindex="3" name="doLogin" type="submit" id="doLogin" value="送出" />
-			<input name="quickLogin" type="button" id="quickLogin" value="直接登入" onclick="javascript:location.href='/api/ui_quick_login?deviceid=<?=$device_id?>&site=<?=$site?>'" />
+			<input name="quickLogin" type="button" id="quickLogin" value="直接登入" onclick="OnQuickLogin('<?=$device_id?>','<?=$site?>','<?=(empty($server_id)?'':$server_id)?>');" />
 		</li>
 		<li class="text-gray-light">
 			<a href="/api/ui_forgot_password?site=<?=$site?>">忘記密碼</a>

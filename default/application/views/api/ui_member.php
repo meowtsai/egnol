@@ -28,7 +28,7 @@
 <? endif; ?>	
 	<li>
 		<input type="button" name="continue" id="continue" value="進入遊戲" onclick="javascript:LongeAPI.onLoginSuccess(<?
-          echo "'{$this->g_user->uid}','{$email}','{$mobile}','{$external_id}'";
+          echo "'{$this->g_user->uid}','{$email}','{$mobile}','{$external_id}','{$server_id}'";
 		?>)" />
 	</li>
 </ul>

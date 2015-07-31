@@ -48,7 +48,22 @@ class Api extends MY_Controller
 		if(!$this->g_user->is_login())
 		{
 			// 未登入, 直接進入登入畫面
-			$device_id = $this->input->get("deviceid");
+			$site		= $this->_get_site();
+			$partner    = $this->input->get("partner");
+			$game_key   = $this->input->get("gamekey");
+			$server_id  = $this->input->get("serverid");
+			$device_id	= $this->input->get("deviceid");
+
+			if(empty($server_id))
+			{
+				// 讀取伺服器列表
+				$servers = $this->db->from("servers")->where("game_id", $site)->order_by("id")->get();
+			}
+			else
+			{
+				// 取得指定的伺服器
+				$servers = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
+			}
 
 			// 載入第三方登入通道種類
 			$this->load->config("api");
@@ -62,6 +77,10 @@ class Api extends MY_Controller
 
 			$this->_init_layout()
 				->add_js_include("api/login")
+				->set("partner", $partner)
+				->set("game_key", $game_key)
+				->set("servers", $servers)
+				->set("server_id", $server_id)
 				->set("device_id", $device_id)
 				->set("channel_item", $channel_item)
 				->api_view();
@@ -70,6 +89,7 @@ class Api extends MY_Controller
 		{
 			// 已登入, 改顯示會員畫面
 			$this->_init_layout()
+				->set("server_id", $_SESSION['server_id'])
 				->api_view("api/ui_member");
 		}
 	}
@@ -79,8 +99,13 @@ class Api extends MY_Controller
 		header('content-type:text/html; charset=utf-8');
 
 		$site = $this->_get_site();
+		$server_id = $this->input->post("server_id");
+
+		if(empty($server_id))
+			$server_id = $this->input->get("serverid");
 
 		$_SESSION['site'] = $site;
+		$_SESSION['server_id'] = $server_id;
 
 		// 檢查 e-mail or mobile
 		$account = $this->input->post("account");
@@ -108,11 +133,15 @@ class Api extends MY_Controller
 
 		if ( $this->g_user->verify_account($email, $mobile, $pwd) === true )
 		{
+			$server_row = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
+
 			$res = array("uid" => $this->g_user->uid,
 						"email" => !empty($this->g_user->email) ? $this->g_user->email : "",
 						"mobile" => !empty($this->g_user->mobile) ? $this->g_user->mobile : "",
 						"externalId" => !empty($this->g_user->external_id) ? $this->g_user->external_id : "",
-						"site" => $site);
+						"site" => $site,
+						"serverId" => $server_id,
+						"serverName" => $server_row->name);
 			die(json_message($res, true));
 		}
 		else
@@ -127,8 +156,12 @@ class Api extends MY_Controller
 		header('Content-type:text/html; Charset=UTF-8');
 
 		$site = $this->_get_site();
+        $server_id = $this->input->get('serverid');
         $device_id = $this->input->get('deviceid');
 		$external_id = "mobile.".$device_id;
+
+		$_SESSION['site'] = $site;
+		$_SESSION['server_id'] = $server_id;
 
 		$boolResult = $this->g_user->verify_account('', '', '', $external_id);
 		if ($boolResult != true)
@@ -151,6 +184,12 @@ class Api extends MY_Controller
 	function ui_logout()
 	{
 		$this->g_user->logout();
+
+		$_SESSION['site'] = '';
+		$_SESSION['server_id'] = '';
+
+		unset($_SESSION['site']);
+		unset($_SESSION['server_id']);
 
 		header('Content-type:text/html; Charset=UTF-8');
 		echo "<script type='text/javascript'>LongeAPI.onLogoutSuccess()</script>";
@@ -307,6 +346,7 @@ class Api extends MY_Controller
 		$this->_require_login();
 
 		$this->_init_layout()
+			->add_js_include("api/change_password")
 			->api_view();
 	}
 
@@ -349,6 +389,41 @@ class Api extends MY_Controller
 			->set("characters", $characters)
 			->add_js_include("api/payment")
 			->api_view();
+	}
+
+	// 取得伺服器列表
+	function get_server_list()
+	{
+		$game = $this->input->post("game");
+
+		if (empty($game))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
+		}
+
+		$servers = $this->db->from("servers")->where("game_id", $game)->order_by("id")->get();
+
+		//
+		//
+		//
+	}
+
+	// 取得伺服器角色列表
+	function get_role_list()
+	{
+		$server = $this->input->post("server");
+		$uid = $this->input->post("uid");
+
+		if (empty($uid) || empty($server))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
+		}
+
+		$characters = $this->db->from("characters")->where("server_id", $server)->order_by("id")->get();
+
+		//
+		//
+		//
 	}
 
 	// 建立遊戲角色
@@ -411,7 +486,10 @@ class Api extends MY_Controller
 			die(json_encode(array("result"=>"0", "error"=>"資料庫新增錯誤")));
 		}
 
-		echo json_encode(array("result"=>"1"));
+		echo json_encode(array("result"				=> "1",
+								"id"				=> $insert_id,
+								"character_name"	=> $character_name,
+								));
 		exit();
 	}
 

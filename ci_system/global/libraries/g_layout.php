@@ -90,12 +90,13 @@ class G_Layout
     
     function produce_js_include()
     {
+		$rnd = rand(1, 99);
     	$str = "";
     	foreach($this->js_include as $item) {
     		if (strpos($item, "http://") === false) {
     	        $href = $this->CI->config->site_url($this->js_path."{$item}.js");
     		} else $href = $item;    		
-    		$str .= "<script src='{$href}'></script>";
+    		$str .= "<script src='{$href}?' + $rnd></script>";
     	}
     	return $str;
     }

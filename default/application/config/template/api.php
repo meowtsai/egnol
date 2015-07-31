@@ -17,7 +17,7 @@ $config["partner_api"] = array(
 		'name' => '移動方舟',
 		'ips' => array('61.148.75.238'),
 		'sites' => array(
-			'stm' => array('key'=>'4d963914a5f6d5b8ba84cda47a4b4bCz'),
+			'stm' => array('key'=>'d2e3b7998ac3c3405956dbfb5fe584d4'),
 		),
 	),
 );
@@ -33,11 +33,6 @@ $config["channel_api"] = array(
 		'secret' => 'cc9819f7f4eac6749a9ecf714384c48c',
 		'scope' => 'email', //publish_stream
 	),		
-	'm_facebook' => array(
-		'name' => 'Facebook',
-		'status' => '2',
-		'sites' => array('eya'=>''),
-	),			
 	'google' => array(
 		'name' => 'Google',
 		'status' => '2',

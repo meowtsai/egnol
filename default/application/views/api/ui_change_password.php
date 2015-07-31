@@ -1,4 +1,4 @@
-<form id="forgot_form" action="/api/ui_change_password_json?site=<?=$site?>" method="post">
+<form id="change_form" action="/api/ui_change_password_json?site=<?=$site?>" method="post">
 	<ul class="le_form">
 		<li>
 			<div class="field_name">輸入新密碼：
