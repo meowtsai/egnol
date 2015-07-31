@@ -117,7 +117,7 @@ CREATE TABLE `games` (
   `currency` varchar(50) DEFAULT NULL,
   `tags` varchar(255) DEFAULT NULL,
   `rank` tinyint(4) DEFAULT NULL,
-  `is_active` bit(1) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 0,
   `fanpage` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`game_id`),
   UNIQUE KEY `game_id_UNIQUE` (`game_id`),
@@ -179,10 +179,10 @@ CREATE TABLE `log_game_logins` (
   `account` varchar(50) NOT NULL,
   `ip` varchar(50) DEFAULT NULL,
   `ad` varchar(50) DEFAULT NULL,
-  `is_recent` bit(1) DEFAULT NULL,
+  `is_recent` tinyint(1) DEFAULT 0,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `logout_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `is_first` bit(1) DEFAULT b'0',
+  `is_first` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -203,7 +203,7 @@ CREATE TABLE `log_logins` (
   `site` varchar(50) DEFAULT NULL,
   `imei` varchar(50) DEFAULT NULL,
   `android_id` varchar(50) DEFAULT NULL,
-  `is_recent` bit(1) DEFAULT b'0',
+  `is_recent` tinyint(1) DEFAULT 0,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
@@ -311,7 +311,7 @@ CREATE TABLE `pictures` (
   `src` varchar(255) NOT NULL,
   `link` varchar(255) DEFAULT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `is_active` bit(1) NOT NULL DEFAULT b'1',
+  `is_active` tinyint(1) NOT NULL DEFAULT 0,
   `width` smallint(6) DEFAULT NULL,
   `height` smallint(6) DEFAULT NULL,
   `category_id` int(11) NOT NULL,
@@ -332,7 +332,7 @@ CREATE TABLE `question_assignees` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `question_assign_id` int(11) NOT NULL,
   `admin_uid` int(11) NOT NULL,
-  `is_read` bit(1) NOT NULL DEFAULT b'0',
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -428,10 +428,10 @@ CREATE TABLE `servers` (
   `exchange_rate` float DEFAULT NULL,
   `server_performance` varchar(255) DEFAULT NULL,
   `merge_address` varchar(45) DEFAULT NULL,
-  `is_transaction_active` bit(1) DEFAULT b'0',
-  `is_new_server` bit(1) DEFAULT b'0',
-  `is_entry_server` bit(1) DEFAULT b'0',
-  `is_test_server` bit(1) DEFAULT b'0',
+  `is_transaction_active` tinyint(1) DEFAULT 0,
+  `is_new_server` tinyint(1) DEFAULT 0,
+  `is_entry_server` tinyint(1) DEFAULT 0,
+  `is_test_server` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`server_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -513,7 +513,7 @@ CREATE TABLE `user_billing` (
   `server_id` varchar(20) DEFAULT NULL,
   `plug` tinyint(1) DEFAULT NULL,
   `order_no` varchar(50) DEFAULT NULL,
-  `is_confirmed` bit(1) DEFAULT NULL,
+  `is_confirmed` tinyint(1) DEFAULT 0,
   `create_time` timestamp NULL DEFAULT NULL,
   `update_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -557,8 +557,8 @@ CREATE TABLE `users` (
   `external_id` varchar(128) DEFAULT NULL,
   `activation_code` varchar(20) DEFAULT NULL,
   `balance` int(6) DEFAULT NULL,
-  `is_approved` bit(1) DEFAULT NULL,
-  `is_banned` bit(1) DEFAULT NULL,
+  `is_approved` tinyint(1) DEFAULT 0,
+  `is_banned` tinyint(1) DEFAULT 0,
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`uid`),
