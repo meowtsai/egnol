@@ -91,7 +91,6 @@ DROP TABLE IF EXISTS `characters`;
 CREATE TABLE `characters` (
   `id` int(11) NOT NULL,
   `uid` int(11) NOT NULL,
-  `account` varchar(50) NOT NULL,
   `name` varchar(50) DEFAULT NULL,
   `server_id` int(11) NOT NULL,
   `ad` varchar(50) DEFAULT NULL,
@@ -156,7 +155,6 @@ CREATE TABLE `log_game_consumes` (
   `uid` int(11) NOT NULL,
   `server_id` varchar(20) DEFAULT NULL,
   `game_id` varchar(20) DEFAULT NULL,
-  `account` varchar(50) NOT NULL,
   `ip` varchar(50) DEFAULT NULL,
   `amount` float DEFAULT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -176,7 +174,6 @@ CREATE TABLE `log_game_logins` (
   `uid` int(11) NOT NULL,
   `server_id` varchar(20) DEFAULT NULL,
   `game_id` varchar(20) DEFAULT NULL,
-  `account` varchar(50) NOT NULL,
   `ip` varchar(50) DEFAULT NULL,
   `ad` varchar(50) DEFAULT NULL,
   `is_recent` tinyint(1) DEFAULT 0,
@@ -197,7 +194,6 @@ DROP TABLE IF EXISTS `log_logins`;
 CREATE TABLE `log_logins` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
-  `account` varchar(128) NOT NULL,
   `ip` varchar(50) DEFAULT NULL,
   `ad` varchar(50) DEFAULT NULL,
   `site` varchar(50) DEFAULT NULL,
@@ -482,7 +478,6 @@ DROP TABLE IF EXISTS `testaccounts`;
 CREATE TABLE `testaccounts` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `uid` int(10) NOT NULL,
-  `account` varchar(100) NOT NULL,
   `note` varchar(100) DEFAULT NULL COMMENT '註解',
   `creator` varchar(20) NOT NULL DEFAULT '',
   `create_time` int(11) DEFAULT NULL,

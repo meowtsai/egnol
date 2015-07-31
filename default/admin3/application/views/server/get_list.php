@@ -29,11 +29,11 @@
 	</select>
 <? endforeach;?>	
 
-<? if ($query):?>
 <div id="func_bar">
 	<a class="btn btn-primary" href="<?=site_url("server/add?game_id={$this->game_id}")?>">新增</a>
 </div>
 
+<? if ($query):?>
 <table class="table table-striped table-bordered">
   <thead>
 	<tr>
