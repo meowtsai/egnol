@@ -99,6 +99,152 @@ class Member extends MY_Controller
 		}
 	}
 
+	// 第三方登入
+	function channel_login()
+	{
+		$site = $this->_get_site();
+		$channel = $this->input->get("channel", true);
+
+		$_SESSION['site'] = $site;
+
+		$redirect_url = $this->input->get('redirect_url', true);
+		if(empty($redirect_url))
+			$_SESSION['redirect_url'] = g_conf('url', "longe")."member";
+		else
+			$_SESSION['redirect_url'] = $redirect_url;
+
+		$param = $login_param = array();
+
+		$this->load->config("api");
+		$channel_api = $this->config->item("channel_api");
+		if (array_key_exists($channel, $channel_api) == false)
+		{
+			die("未串接此通道({$channel})");
+		}
+
+		if (isset($channel_api[$channel]['lib_name']))
+		{ //lib重命名
+			$lib = $channel_api[$channel]['lib_name'];
+		}
+		else
+		{
+			$lib = $channel;
+		}
+
+		if ($channel == "facebook")
+		{
+	    	$fb_app_conf = $this->config->item("fb_app");
+	    	if ( !empty($ad) && array_key_exists($ad, $fb_app_conf))
+	    	{
+	    		$param = array(
+					'appId'  => $fb_app_conf[$ad]['appId'],
+					'secret' => $fb_app_conf[$ad]['secret'],
+	    		);
+	    		$login_param = array('scope' => '',);
+	    	}
+		}
+
+		$this->load->library("channel_api/{$lib}", $param);
+		$result = $this->{$lib}->login($site, $login_param);
+		if ($result == false)
+		{
+			die($this->{$lib}->error_message);
+		}
+	}
+
+	function login_callback($channel)
+	{
+		header('P3P:CP="IDC DSP COR ADM DEVi TAIi PSA PSD IVAi IVDi CONi HIS OUR IND CNT"');
+
+		$_SESSION['channel'] = $channel;
+
+		if(!empty($_SESSION['redirect_url']))
+		{
+			$redirect_url = $_SESSION['redirect_url'];
+
+            $_SESSION['redirect_url'] = '';
+			unset($_SESSION['redirect_url']);
+		}
+		else
+			$redirect_url = '';
+
+		$site = empty($_SESSION['site']) ? 'long_e' : $_SESSION['site'];
+		$param = array();
+
+		$this->load->config("api");
+		$channel_api = $this->config->item("channel_api");
+		if (array_key_exists($channel, $channel_api) == false) {
+			die("未串接此通道({$channel})");
+		}
+
+		if (isset($channel_api[$channel]['lib_name'])) { //lib重命名
+			$lib = $channel_api[$channel]['lib_name'];
+		}
+		else {
+			$lib = $channel;
+		}
+
+		if ($channel == "facebook") {
+	    	$fb_app_conf = $this->config->item("fb_app");
+	    	if ( !empty($ad) && array_key_exists($ad, $fb_app_conf))
+	    	{
+	    		$param = array(
+					'appId'  => $fb_app_conf[$ad]['appId'],
+					'secret' => $fb_app_conf[$ad]['secret'],
+	    		);
+	    	}
+		}
+
+		$this->load->library("channel_api/{$lib}", $param);
+		$result = $this->{$lib}->{$this->router->fetch_method()}($site);
+
+		header('Content-type:text/html; Charset=UTF-8');
+
+		if ($result == false)
+		{
+			echo "<script type='text/javascript'>alert('登入失敗!');</script>";
+		}
+		else
+		{
+			if(!empty($result['external_id']))
+			{
+				$external_id = $result['external_id']."@".$channel;
+				$boolResult = $this->g_user->verify_account('', '', '', $external_id);
+				if ($boolResult != true)
+				{
+					$boolResult = $this->g_user->create_account('', '', '', $external_id);
+					if($boolResult == true )
+					{
+						$this->g_user->verify_account('', '', '', $external_id);
+					}
+					else
+					{
+						echo "<script type='text/javascript'>alert('登入失敗!');</script>";
+					}
+				}
+			}
+			else
+			{
+				$msg = '登入失敗!';
+				if(!empty($result['error']))
+					$msg = $result['error'];
+				echo "<script type='text/javascript'>alert('{$msg}');</script>";
+			}
+		}
+
+		if(strpos($redirect_url, '?') == FALSE)
+		{
+			$redirect_url = $redirect_url."?site=".$site;
+		}
+		else
+		{
+			if(strpos($redirect_url, "site") == FALSE)
+				$redirect_url = $redirect_url."&site=".$site;
+		}
+
+		echo "<script>location.href='{$redirect_url}';</script>";
+	}
+
 	// 登出
 	function logout()
 	{

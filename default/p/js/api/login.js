@@ -48,12 +48,7 @@ $(function()
 	});
 });
 
-function OnQuickLogin(deviceId, gameId, serverId)
+function OnQuickLogin(deviceId, gameId)
 {
-	if(serverId == '')
-	{
-		serverId = $('#server_selection').find(":selected").val();
-	}
-
-    location.href='/api/ui_quick_login?deviceid=' + deviceId + '&site=' + gameId + '&serverid=' + serverId;
+    location.href='/api/ui_quick_login?deviceid=' + deviceId + '&site=' + gameId;
 }

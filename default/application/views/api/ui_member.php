@@ -25,10 +25,36 @@
 	<li>
 		<input type="button" name="bind" id="bind" value="綁定帳號" onclick="javascript:location.href='/api/ui_bind_account?site=<?=$site?>'" />
 	</li>
-<? endif; ?>	
+<? endif; ?>
+<? if(!empty($servers)): ?>
+	<li class="game_option line_row">
+		<div class="field_line">
+			<select id="server_selection" name="server" class="required" style="width:85%;">
+				<?
+					$selected = "selected";
+					foreach($servers->result() as $row)
+					{
+						if ( IN_OFFICE == false && in_array($row->server_status, array("private", "hide")))
+							continue;
+
+						echo "<option value='{$row->server_id}' {$selected}>{$row->name}</option>";
+						$selected = "";
+					}
+				?>
+			</select>
+		</div>
+	</li>
+<? endif; ?>
 	<li>
 		<input type="button" name="continue" id="continue" value="進入遊戲" onclick="javascript:LongeAPI.onLoginSuccess(<?
-          echo "'{$this->g_user->uid}','{$email}','{$mobile}','{$external_id}','{$server_id}'";
+			if(!empty($servers))
+			{
+	        	echo "'{$this->g_user->uid}','{$email}','{$mobile}','{$external_id}',$('#server_selection').find(':selected').val()";
+			}
+			else
+			{
+	        	echo "'{$this->g_user->uid}','{$email}','{$mobile}','{$external_id}',''";
+			}
 		?>)" />
 	</li>
 </ul>

@@ -29,8 +29,8 @@ $config["channel_api"] = array(
 		'name' => 'Facebook',
 		'lib_name' => 'fb_api',
 		'status' => '2',
-		'appId' => '1025425380808895',
-		'secret' => 'cc9819f7f4eac6749a9ecf714384c48c',
+		'appId' => '599788076790753',
+		'secret' => '9fd9c4900793f62ad9346a154c66cdb6',
 		'scope' => 'email', //publish_stream
 	),		
 	'google' => array(
@@ -41,7 +41,7 @@ $config["channel_api"] = array(
 
 $config["fb_app"] = array(
 	'dh_ad_a' => array(
-		'appId' => '229365737185562',
-		'secret' => 'c5fd11000b8e3bd9c055d74764ffd406',
+		'appId' => '599788076790753',
+		'secret' => '9fd9c4900793f62ad9346a154c66cdb6',
 	),
 );

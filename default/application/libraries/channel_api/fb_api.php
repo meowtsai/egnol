@@ -36,7 +36,8 @@ class Fb_Api extends Channel_Api
     {
 	   	$loginUrl = $this->sdk->getLoginUrl(array_merge(array(
    				'scope' => $this->conf["scope"],
-   				'redirect_uri' => base_url().'/gate/login_callback/facebook'
+   				'redirect_uri' => 'http://ec2-52-69-89-253.ap-northeast-1.compute.amazonaws.com/member/login_callback/facebook'
+   				//'redirect_uri' => base_url().'/gate/login_callback/facebook'
    				//'redirect_uri' => 'http://www.longeplay.com.tw/gate/login_callback/facebook'
 	   		), $params));
 	   	//header("location: {$loginUrl}");
@@ -55,29 +56,34 @@ class Fb_Api extends Channel_Api
     	{
     		$user_date = array();
     		
-    		$row = $this->CI->db->get_where("users", array("account" => $this->uid."@facebook"))->row();
+    		$row = $this->CI->db->get_where("users", array("external_id" => $this->uid."@facebook"))->row();
     		if ($row) 
     		{
-    			$user_data['euid'] = $this->uid;
-    			$user_data['name'] = $row->name;
     			$user_data['email'] = $row->email;
+    			$user_data['external_id'] = $this->uid;
     		}
     		else 
     		{
-    			try {
+    			try
+				{
 	    			// Proceed knowing you have a logged in user who's authenticated.
 	    			$user_profile = $this->sdk->api('/me');
-	    		} catch (FacebookApiException $e) {
+	    		} catch (FacebookApiException $e)
+				{
 	    			return $this->_return_error($e);
 	    		} 
 	    		    		
-	   			$user_data['euid'] = $user_profile["id"];
+	   			$user_data['external_id'] = $user_profile["id"];
 	   			$user_data['name'] = $user_profile["name"];
-	   			if ( ! empty($user_profile['email'])) $user_data['email'] = $user_profile['email'];
+	   			if ( ! empty($user_profile['email']))
+				{
+				   $user_data['email'] = $user_profile['email'];
+				}
     		}   			
     		return $user_data;    		
     	}
-    	else {
+    	else
+		{
     		$this->sdk->destroySession();
     		return $this->_return_error("尚未登入");
     	}    	

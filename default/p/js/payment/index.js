@@ -159,4 +159,17 @@ $(function()
 	{
     	$('#choose_form').attr('action', $('#choose_form').attr('action').replace("tw", "global"));
     });
+
+	$("select[name='game'] option").each(function()
+	{
+	    var $this = $(this);
+		var curGameId = $('#cur_game_id').val();
+
+	    if ($this.val() == curGameId)
+		{
+	        $this.prop('selected', true);
+			game.trigger("change");
+	        return false;
+	    }
+	});
 });

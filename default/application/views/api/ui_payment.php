@@ -147,6 +147,7 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 					<? endforeach;?>
 				</select>
 			</div>
+			<input type="hidden" id="cur_game_id" value="<?=$site?>">
 		</li>
 		<li class="game_option line_row">
 			<div class="field_line">
@@ -160,6 +161,7 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 					<option value="<?=$row->id?>" <?=($this->input->get("server")==$row->id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?></option>
 					<? endforeach;?>
 				</select>
+			<input type="hidden" id="cur_server_id" value="<?=$server_id?>">
 			</div>
 		</li>
 		<li>

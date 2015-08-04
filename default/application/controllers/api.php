@@ -45,25 +45,22 @@ class Api extends MY_Controller
 	// - 帳號功能主要入口, 其他 ui 前置 function 由 web 呼叫
 	function ui_login()
 	{
+		$site	= $this->_get_site();
+
 		if(!$this->g_user->is_login())
 		{
 			// 未登入, 直接進入登入畫面
-			$site		= $this->_get_site();
 			$partner    = $this->input->get("partner");
 			$game_key   = $this->input->get("gamekey");
-			$server_id  = $this->input->get("serverid");
 			$device_id	= $this->input->get("deviceid");
 
-			if(empty($server_id))
+			// server 登入選擇模式, 0 = 不選擇(default), 1 = 登入後選擇
+			$server_mode = $this->input->get("servermode");
+			if(empty($server_mode))
 			{
-				// 讀取伺服器列表
-				$servers = $this->db->from("servers")->where("game_id", $site)->order_by("id")->get();
+				$server_mode = 0;
 			}
-			else
-			{
-				// 取得指定的伺服器
-				$servers = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
-			}
+			$_SESSION['server_mode'] = $server_mode;
 
 			// 載入第三方登入通道種類
 			$this->load->config("api");
@@ -79,8 +76,7 @@ class Api extends MY_Controller
 				->add_js_include("api/login")
 				->set("partner", $partner)
 				->set("game_key", $game_key)
-				->set("servers", $servers)
-				->set("server_id", $server_id)
+				->set("server_mode", $server_mode)
 				->set("device_id", $device_id)
 				->set("channel_item", $channel_item)
 				->api_view();
@@ -88,8 +84,16 @@ class Api extends MY_Controller
 		else
 		{
 			// 已登入, 改顯示會員畫面
+			$server_mode = empty($_SESSION['server_mode']) ? 0 : $_SESSION['server_mode'];
+			$servers = null;
+			if($server_mode == 1)
+			{
+				// 讀取伺服器列表
+				$servers = $this->db->from("servers")->where("game_id", $site)->order_by("id")->get();
+			}
+
 			$this->_init_layout()
-				->set("server_id", $_SESSION['server_id'])
+				->set("servers", $servers)
 				->api_view("api/ui_member");
 		}
 	}
@@ -99,13 +103,8 @@ class Api extends MY_Controller
 		header('content-type:text/html; charset=utf-8');
 
 		$site = $this->_get_site();
-		$server_id = $this->input->post("server_id");
-
-		if(empty($server_id))
-			$server_id = $this->input->get("serverid");
 
 		$_SESSION['site'] = $site;
-		$_SESSION['server_id'] = $server_id;
 
 		// 檢查 e-mail or mobile
 		$account = $this->input->post("account");
@@ -133,16 +132,7 @@ class Api extends MY_Controller
 
 		if ( $this->g_user->verify_account($email, $mobile, $pwd) === true )
 		{
-			$server_row = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
-
-			$res = array("uid" => $this->g_user->uid,
-						"email" => !empty($this->g_user->email) ? $this->g_user->email : "",
-						"mobile" => !empty($this->g_user->mobile) ? $this->g_user->mobile : "",
-						"externalId" => !empty($this->g_user->external_id) ? $this->g_user->external_id : "",
-						"site" => $site,
-						"serverId" => $server_id,
-						"serverName" => $server_row->name);
-			die(json_message($res, true));
+			die(json_message(array("message"=>"成功", "site"=>$site), true));
 		}
 		else
 		{
@@ -155,13 +145,13 @@ class Api extends MY_Controller
 	{
 		header('Content-type:text/html; Charset=UTF-8');
 
+		$server_mode = empty($_SESSION['server_mode']) ? 0 : $_SESSION['server_mode'];
+
 		$site = $this->_get_site();
-        $server_id = $this->input->get('serverid');
         $device_id = $this->input->get('deviceid');
-		$external_id = "mobile.".$device_id;
+		$external_id = $device_id."@device";
 
 		$_SESSION['site'] = $site;
-		$_SESSION['server_id'] = $server_id;
 
 		$boolResult = $this->g_user->verify_account('', '', '', $external_id);
 		if ($boolResult != true)
@@ -172,11 +162,59 @@ class Api extends MY_Controller
 		if ($boolResult==true)
 		{
 			$this->g_user->verify_account('', '', '', $external_id);
-			echo "<script type='text/javascript'>location.href='/api/ui_login?site={$site}';</script>";
 		}
 		else
 		{
-			echo "<script type='text/javascript'>alert('登入失敗!');location.href='/api/ui_login?site={$site}';</script>";
+			echo "<script type='text/javascript'>alert('登入失敗!');</script>";
+		}
+		echo "<script type='text/javascript'>location.href='/api/ui_login?site={$site}';</script>";
+	}
+
+	// 第三方登入
+	function ui_channel_login()
+	{
+		$site = $this->_get_site();
+		$channel = $this->input->get("channel", true);
+
+		$_SESSION['site'] = $site;
+		$_SESSION['redirect_url'] = 'http://ec2-52-69-89-253.ap-northeast-1.compute.amazonaws.com/api/ui_login';
+
+		$param = $login_param = array();
+
+		$this->load->config("api");
+		$channel_api = $this->config->item("channel_api");
+		if (array_key_exists($channel, $channel_api) == false)
+		{
+			die("未串接此通道({$channel})");
+		}
+
+		if (isset($channel_api[$channel]['lib_name']))
+		{ //lib重命名
+			$lib = $channel_api[$channel]['lib_name'];
+		}
+		else
+		{
+			$lib = $channel;
+		}
+
+		if ($channel == "facebook")
+		{
+	    	$fb_app_conf = $this->config->item("fb_app");
+	    	if ( !empty($ad) && array_key_exists($ad, $fb_app_conf))
+	    	{
+	    		$param = array(
+					'appId'  => $fb_app_conf[$ad]['appId'],
+					'secret' => $fb_app_conf[$ad]['secret'],
+	    		);
+	    		$login_param = array('scope' => '',);
+	    	}
+		}
+
+		$this->load->library("channel_api/{$lib}", $param);
+		$result = $this->{$lib}->login($site, $login_param);
+		if ($result == false)
+		{
+			die($this->{$lib}->error_message);
 		}
 	}
 
@@ -186,10 +224,10 @@ class Api extends MY_Controller
 		$this->g_user->logout();
 
 		$_SESSION['site'] = '';
-		$_SESSION['server_id'] = '';
+		$_SESSION['server_mode'] = '';
 
 		unset($_SESSION['site']);
-		unset($_SESSION['server_id']);
+		unset($_SESSION['server_mode']);
 
 		header('Content-type:text/html; Charset=UTF-8');
 		echo "<script type='text/javascript'>LongeAPI.onLogoutSuccess()</script>";
@@ -376,6 +414,9 @@ class Api extends MY_Controller
 
 		$this->load->config("g_gash");
 
+		$site = $this->_get_site();
+		$server_id = $this->input->get("serverid");
+
 		// 讀取遊戲列表
 		$games = $this->db->from("games")->where("is_active", "1")->get();
 		// 讀取伺服器列表
@@ -386,6 +427,7 @@ class Api extends MY_Controller
 		$this->_init_layout()
 			->set("games", $games)
 			->set("servers", $servers)
+			->set("server_id", $server_id)
 			->set("characters", $characters)
 			->add_js_include("api/payment")
 			->api_view();
