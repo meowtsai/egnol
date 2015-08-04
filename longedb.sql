@@ -92,7 +92,7 @@ CREATE TABLE `characters` (
   `id` int(11) NOT NULL,
   `uid` int(11) NOT NULL,
   `name` varchar(50) DEFAULT NULL,
-  `server_id` int(11) NOT NULL,
+  `server_id` varchar(20) NOT NULL,
   `ad` varchar(50) DEFAULT NULL,
   `create_status` char(1) DEFAULT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -122,6 +122,41 @@ CREATE TABLE `games` (
   UNIQUE KEY `game_id_UNIQUE` (`game_id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `gash_billing`
+--
+
+DROP TABLE IF EXISTS `gash_billing`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `gash_billing` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `COID` varchar(20) NOT NULL,
+  `CUID` varchar(3) NOT NULL,
+  `PAID` varchar(20) NOT NULL,
+  `MSG_TYPE` varchar(4) NOT NULL,
+  `PCODE` varchar(6) NOT NULL,
+  `AMOUNT` float NOT NULL,
+  `ERQC` varchar(30) DEFAULT NULL,
+  `ERPC` varchar(30) DEFAULT NULL,
+  `ERP_ID` varchar(20) DEFAULT NULL,
+  `RRN` varchar(20) DEFAULT NULL,
+  `PAY_STATUS` char(1) DEFAULT NULL,
+  `RCODE` varchar(4) DEFAULT NULL,
+  `PAY_RCODE` varchar(4) DEFAULT NULL,
+  `TXTIME` varchar(14) DEFAULT NULL,
+  `USER_IP` varchar(20) DEFAULT NULL,
+  `status` char(1) DEFAULT '0',
+  `create_time` datetime NOT NULL,
+  `update_time` datetime NOT NULL,
+  `server_id` int(11) DEFAULT NULL,
+  `country` varchar(45) DEFAULT 'global',
+  `note` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -383,7 +418,7 @@ CREATE TABLE `questions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` char(1) NOT NULL COMMENT '1:帳號問題\\n2:儲值問題\\n3:遊戲問題\\n4:BUG回報\\n5:玩家建議',
   `content` text NOT NULL,
-  `server_id` int(11) NOT NULL,
+  `server_id` varchar(20) NOT NULL,
   `character_name` varchar(45) DEFAULT NULL,
   `pic_path1` varchar(300) DEFAULT NULL,
   `pic_path2` varchar(300) DEFAULT NULL,
@@ -508,6 +543,9 @@ CREATE TABLE `user_billing` (
   `server_id` varchar(20) DEFAULT NULL,
   `plug` tinyint(1) DEFAULT NULL,
   `order_no` varchar(50) DEFAULT NULL,
+  `country_code` varchar(3) DEFAULT NULL,
+  `gash_billing_id` int(11) DEFAULT NULL,
+  `character_id` int(11) DEFAULT NULL,  
   `is_confirmed` tinyint(1) DEFAULT 0,
   `create_time` timestamp NULL DEFAULT NULL,
   `update_time` timestamp NULL DEFAULT NULL,
