@@ -65,7 +65,7 @@ class Gash extends MY_Controller {
 			"CUID"			=> $CUID, // 幣別 ISO Alpha Code
 			"PAID"			=> $PAID, // 付款代收業者代碼 
 			"AMOUNT"		=> $payment_amount, // 交易金額
-			"RETURN_URL"	=> site_url("gash/return_url?country={$country}"), // 商家接收交易結果網址
+			"RETURN_URL"	=> $this->config->payment_url()."gash/return_url?country={$country}", // 商家接收交易結果網址
 			"ORDER_TYPE"	=> "M", // 是否指定付款代收業者_ 請固定填 M
 			"MEMO"			=> "", // 交易備註 ( 此為選填 )
 			"ERP_ID"		=> $ERP_ID, // 樂點卡ERP商品代碼 ( 此為選填 )
@@ -324,7 +324,7 @@ class Gash extends MY_Controller {
 				//echo "<pre>查單回傳".print_r($trans->nodes, true)."</pre>";
 				
 				//處理
-				$d = my_curl(site_url("gash/return_url?country={$gash_billing->country}"), array("data"=>$trans->GetSendData()));
+				$d = my_curl($this->config->payment_url()."gash/return_url?country={$gash_billing->country}", array("data"=>$trans->GetSendData()));
 				print_r($d);				
 				
 				usleep(250000);
