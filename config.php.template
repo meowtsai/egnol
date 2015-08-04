@@ -71,6 +71,7 @@ switch (ENVIRONMENT)
 		);
 		$g_config['url'] = array(
 			'longe'     => 'http://game.longeplay.com.tw/'
+			'payment'   => 'http://payment.longeplay.com.tw/'
 		);
 		break;
 }
