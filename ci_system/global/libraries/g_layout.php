@@ -83,19 +83,20 @@ class G_Layout
     		if (strpos($item, "http://") === false) {
     	        $href = $this->CI->config->site_url($this->css_path."{$item}.css");
     		} else $href = $item;
-    		$str .= "<link rel='stylesheet' type='text/css' href='{$href}?5'>";
+    		$str .= "<link rel='stylesheet' type='text/css' href='{$href}'>";
     	}
     	return $str;
     }
     
     function produce_js_include()
     {
+		$rnd = rand(1, 99);
     	$str = "";
     	foreach($this->js_include as $item) {
     		if (strpos($item, "http://") === false) {
     	        $href = $this->CI->config->site_url($this->js_path."{$item}.js");
     		} else $href = $item;    		
-    		$str .= "<script src='{$href}?8'></script>";
+    		$str .= "<script src='{$href}?' + $rnd></script>";
     	}
     	return $str;
     }
@@ -168,5 +169,23 @@ class G_Layout
     	$this->template_data['js_include'] = $this->produce_js_include();
 
     	echo $this->CI->load->view("g_standard_view", $this->template_data, true);
+    }
+
+	// 顯示 API 制式畫面
+    function api_view($view="")
+    {
+    	if (empty($view))
+		{
+    		$view = $this->CI->router->directory . $this->CI->router->class."/".$this->CI->router->method;
+    	}
+
+    	$this->data['layout_breadcrumb'] = $this->breadcrumb;
+
+    	$this->template_data['meta'] = $this->meta;
+    	$this->template_data['layout_content'] = $this->CI->load->view($view, $this->data, true);
+    	$this->template_data['css_link'] = $this->produce_css_link();
+    	$this->template_data['js_include'] = $this->produce_js_include();
+
+    	echo $this->CI->load->view("g_api_view", $this->template_data, true);
     }
 }

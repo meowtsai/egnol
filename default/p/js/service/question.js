@@ -32,13 +32,19 @@ $(function()
 		}
 	});
 
-	$("form").validate({
+	$("#question_form").validate({
 		submitHandler: function(form)
 		{
-			$(form).json_ajaxSubmit(function(json)
+			$(form).ajaxSubmit(
 			{
-				alert('成功!');
-				location.href = '/service/listing';
+				dataType: 'json',
+				success: function(json)
+				{
+	                leOpenDialog('玩家提問', '提問成功！', leDialogType.MESSAGE, function()
+					{
+	                    location.href = '/service/listing';
+					});
+				}
 			});
 		}
 	});

@@ -1,8 +1,7 @@
-<form method="post" id="bind_form" action="<?=$longe_url?>member/bind_account_json?site=<?=$site?>">
-	<input type="hidden" name="redirect_url" value="<?=$this->input->get("redirect_url", TRUE)?>">
+<form method="post" id="bind_form" action="/api/ui_bind_account_json?site=<?=$site?>">
 	<ul class="le_form">
 		<li>綁定帳號</li>
-		<li>您的帳號為 <?=$this->g_user->display_account();?></li>
+		<li>您的會員ID為 <?=$this->g_user->uid?></li>
 		<li>
 			<div class="field_name">電子信箱：
 			</div><div class="field_input"><input type="text" name="email" class="required email"></div>

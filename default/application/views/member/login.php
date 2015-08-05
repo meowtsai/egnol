@@ -1,3 +1,16 @@
+<style>
+.channel_button{
+    display:inline-block;
+	width:16%;
+	margin:5px;
+	border:1px solid #777;
+	background-color:#ddd;
+}
+.channel_button:hover{
+	background-color:#fff;
+	cursor:pointer;
+}
+</style>
 <form id="login_form" method="post" action="<?=$longe_url?>member/login_json?site=<?=$site?>">
 	<input type="hidden" id="redirect_url" value="<?=$redirect_url?>">
 	<ul class="le_form">
@@ -21,9 +34,10 @@
 		<li>
 			<?
 				// 產生所有第三方登入按鈕
+				$back_url = urlencode($redirect_url);
 				foreach($channel_item as $channel)
 				{
-					echo "<div style='display:inline-block;width:16%;margin:5px;border:1px solid #777;background-color:#ddd;'>{$channel['name']}</div>";
+					echo "<div class='channel_button' onclick='javascript:location.href="."\"/member/channel_login?site={$site}&channel={$channel['channel']}&redirect_url={$back_url}\""."'>{$channel['name']}</div>";
 				}
 			?>
 		</li>

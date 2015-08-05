@@ -26,7 +26,6 @@
 			<?=$layout_content?>
 		</div>
 	</div>
-   	<? $this->load->view("g_copyright")?>
   </div>
 </body>
 </html>

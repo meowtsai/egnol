@@ -15,8 +15,10 @@ class Game
     {	    	
     	$pass_ips = array();    	
     	$partner_conf = $this->CI->config->item("partner_api");
-    	foreach($partner_conf as $partner => $item) {
-    		if (isset($item['sites']) && isset($item['ips']) && array_key_exists($server->game_id, (array) $item['sites'])) {
+    	foreach($partner_conf as $partner => $item)
+		{
+    		if (isset($item['sites']) && isset($item['ips']) && array_key_exists($server->game_id, (array) $item['sites']))
+			{
     			$pass_ips = array_merge($pass_ips, $item['ips']);
     		}
     	}    
@@ -45,8 +47,8 @@ class Game
 		
 		$this->log_game_login($user->uid, $user->account, $server->server_id);
 
-		$this->CI->load->library("game_api/{$server->game_id}");		
-		$this->CI->{$server->game_id}->login($server, $user, $ad);
+		//$this->CI->load->library("game_api/{$server->game_id}");
+		//$this->CI->{$server->game_id}->login($server, $user, $ad);
 		exit();
     }
     

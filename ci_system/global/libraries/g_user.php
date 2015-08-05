@@ -6,8 +6,8 @@
  * @package     authUser
 */
 
-class G_User {
-
+class G_User
+{
 	var $CI;
 	var $uid;
 	var $euid;
@@ -29,10 +29,11 @@ class G_User {
 		{
 			$this->uid = $_SESSION['user_id'];
 			$this->euid = isset($_SESSION['euid']) ? $_SESSION['euid'] : '';
-			//$this->realName = urldecode($_SESSION['name']);
 			$this->remoteAddr = $_SERVER['REMOTE_ADDR'];
 			$this->userAgent = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
+			$this->email = $_SESSION['email'];
 			$this->mobile = $_SESSION['mobile'];
+			$this->external_id = $_SESSION['external_id'];
 			$this->token = $_SESSION['token'];
 		}
 	}
@@ -44,15 +45,17 @@ class G_User {
 	{				
 		$_SESSION['user_id'] = '';
 		$_SESSION['euid'] = '';		
-		$_SESSION['name'] = '';
+		$_SESSION['email'] = '';
 		$_SESSION['mobile'] = '';
+		$_SESSION['external_id'] = '';
 		$_SESSION['token'] = '';
 		$_SERVER['REMOTE_ADDR'] = '';
 		
 		unset($_SESSION['user_id']);
 		unset($_SESSION['euid']);
-		unset($_SESSION['name']);
+		unset($_SESSION['email']);
 		unset($_SESSION['mobile']);
+		unset($_SESSION['external_id']);
 		unset($_SESSION['token']);
 		
 		//setcookie('PHPSESSID', '', time()-3600);
@@ -88,35 +91,9 @@ class G_User {
 		return !empty($this->uid);
 	}
 
-	// 進行登入，若帳號不存在，則建立
-	function login($email, $mobile, $password='', $site='')
+	function verify_account($email, $mobile, $password='', $external_id='')
 	{
-		if ($site) $_SESSION['site'] = $site;
-		
-		if ($this->check_account_exist($email, $mobile))
-		{
-			//帳號存在，進行登入
-			return $this->verify_account($email, $mobile, $password);
-		}
-		else
-		{
-			//帳號不存在，創立帳號
-			if ($this->create_account($email, $mobile, $password, $site))
-			{
-				//創立成功，進行登入
-				return $this->verify_account($email, $mobile, $password);
-			}
-			else
-			{
-				//創立失敗
-				return false;
-			}
-		}	
-	}
-	
-	function verify_account($email, $mobile, $password='')
-	{		
-		if(empty($email) && empty($mobile))
+		if(empty($email) && empty($mobile) && empty($external_id))
 		{
              return $this->_return_error("帳號不存在");
 		}
@@ -124,32 +101,23 @@ class G_User {
 		$this->email = strtolower(trim($email));
 		$this->mobile = trim($mobile);
 
-        $query = null;
-		if(!empty($this->email))
+		$user_row = $this->query_account($email, $mobile, $external_id);
+		if (!empty($user_row))
 		{
-			// 以 e-mail 讀取帳號
-			$query = $this->CI->db->from("users")
-						->where("email", $this->email)
-						->get();
-		}
-		if(!empty($this->mobile))
-		{
-			// 若沒有則以行動電話讀取帳號
-			$query = $this->CI->db->from("users")
-								->where("mobile", $this->mobile)
-								->get();
-		}
+			if(!empty($password))
+			{
+				if($user_row->password != md5($password))
+				{
+					return $this->_return_error("帳號不存在或密碼錯誤");
+				}
+			}
 
-		if ($query != null && $query->num_rows() > 0)
-		{
-			$row = $query->row();	
-
-			if ($row->is_banned != 0 && !IN_OFFICE)
+			if ($user_row->is_banned != 0 && !IN_OFFICE)
 			{
 				return $this->_return_error("停權");
 			}
 
-			$this->set_user($row->uid, $row->email, $row->mobile);
+			$this->set_user($user_row->uid, $user_row->email, $user_row->mobile, $user_row->external_id);
 			return true;
 		} 
 		else
@@ -158,7 +126,7 @@ class G_User {
 		}
 	}
 	
-	function set_user($uid, $email, $mobile)
+	function set_user($uid, $email, $mobile, $external_id='')
 	{		
 		//登入log
 		/*
@@ -193,12 +161,14 @@ class G_User {
 		$this->euid = $this->encode($uid);
 		$this->email = $email;
 		$this->mobile = $mobile;
+		$this->external_id = $external_id;
 		$this->token = $this->generate_token();
 		
 		$_SESSION['user_id'] = $this->uid;
 		$_SESSION['euid'] = $this->euid;
 		$_SESSION['email'] = $this->email;
 		$_SESSION['mobile'] = $this->mobile;
+		$_SESSION['external_id'] = $this->external_id;
 		$_SESSION['token'] = $this->token;
 	}
 	
@@ -209,22 +179,35 @@ class G_User {
 	}
 
 	// 建立新帳號
-	function create_account($email, $mobile, $password, $site='', $bind_uid='')
-	{			
-		$email = strtolower(trim($email));
-		$mobile = trim($mobile);
-
-		if(!empty($email))
+	function create_account($email, $mobile, $password, $external_id='')
+	{
+		if(!empty($email) || !empty($mobile))
 		{
-			if(!filter_var($email, FILTER_VALIDATE_EMAIL))
+			$email = strtolower(trim($email));
+			$mobile = trim($mobile);
+
+			if(!empty($email))
 			{
-	            return $this->_return_error('電子信箱格式錯誤');
+				if(!filter_var($email, FILTER_VALIDATE_EMAIL))
+				{
+		            return $this->_return_error('電子信箱格式錯誤');
+				}
+			}
+
+			if (strlen($password) < 6)
+			{
+				return $this->_return_error('密碼不得少於六碼');
+			}
+		}
+		else
+		{
+			if(empty($external_id))
+			{
+	            return $this->_return_error('第三方登入帳號錯誤');
 			}
 		}
 
-		if (strlen($password) < 4) return $this->_return_error('密碼不得少於四碼');
-
-		if ($this->check_account_exist($email, $mobile))
+		if ($this->check_account_exist($email, $mobile, $external_id))
 		{
 			return $this->_return_error('帳號已經存在');
 		}
@@ -235,18 +218,21 @@ class G_User {
 				'create_time' => date("YmdHis"),
 				'is_approved'	=> 0
 			);
-			if ($bind_uid) $data['bind_uid'] = $bind_uid;
 
         	// 有指定 email 或 mobile 才寫入, 沒指定就會預設為 NULL
 			// 否則若寫入空字串會被當成合法的唯一值而造成誤判
 			if(!empty($email)) $data['email'] = $email;
 			if(!empty($mobile)) $data['mobile'] = $mobile;
-			
+			if(!empty($external_id)) $data['external_id'] = $external_id;
+
 			$this->CI->db->insert("users", $data);
 			$uid = $this->CI->db->insert_id();
-			if ( ! $uid) {
+			if ( ! $uid)
+			{
 				return $this->_return_error('資料庫新增錯誤');
-			} else {
+			}
+			else
+			{
 			    $user_info_data = array(
 				    'uid'	=> $uid
 			    );
@@ -257,22 +243,23 @@ class G_User {
 	}
 
 	// 讀取帳號資料
-	function query_account($email, $mobile)
+	function query_account($email, $mobile, $external_id='')
 	{
         $query = null;
-		if(!empty($this->email))
+		if(!empty($email))
 		{
 			// 以 e-mail 讀取帳號
-			$query = $this->CI->db->from("users")
-						->where("email", $this->email)
-						->get();
+			$query = $this->CI->db->from("users")->where("email", $email)->get();
 		}
-		if(!empty($this->mobile))
+		else if(!empty($mobile))
 		{
 			// 若沒有則以行動電話讀取帳號
-			$query = $this->CI->db->from("users")
-								->where("mobile", $this->mobile)
-								->get();
+			$query = $this->CI->db->from("users")->where("mobile", $mobile)->get();
+		}
+		else if(!empty($external_id))
+		{
+			// 若沒有則以第三方登入 id 讀取帳號
+			$query = $this->CI->db->from("users")->where("external_id", $external_id)->get();
 		}
 
 		if ($query != null && $query->num_rows() > 0)
@@ -288,12 +275,24 @@ class G_User {
 	// 綁定帳號
 	function bind_account($uid, $email, $mobile, $password)
 	{
+		$data = array(
+			'password' => md5(trim($password))
+		);
+
+      	// 有指定 email 或 mobile 才寫入, 沒指定就會預設為 NULL
+		// 否則若寫入空字串會被當成合法的唯一值而造成誤判
+		if(!empty($email)) $data['email'] = $email;
+		if(!empty($mobile)) $data['mobile'] = $mobile;
+
+		$this->CI->db
+			->where("uid", $uid)
+			->update("users", $data);
 
 		return true;
 	}
 
 	// 檢查帳號是否已存在
-	function check_account_exist($email, $mobile)
+	function check_account_exist($email, $mobile, $external_id='')
 	{
 		if(!empty($email))
 		{
@@ -309,28 +308,21 @@ class G_User {
 			if($cnt > 0)
 				return true;
 		}
+		if(!empty($external_id))
+		{
+			// 檢查第三方登入 id
+			$cnt = $this->CI->db->from("users")->where("external_id", $external_id)->count_all_results();
+			if($cnt > 0)
+				return true;
+		}
 
 		return false;
-	}
-	
-	function check_extra_account($account='')
-	{		
-		if (empty($account)) $account = $this->account;
-		if (strstr($account, '@') == FALSE) {
-			return false;
-		} else return true;
 	}
 
 	// 檢查目前使用者是否為從第三方登入建立的帳號
 	function is_from_3rd_party()
 	{
-		$row = query_account($this->email, $this->mobile);
-		if($row != null)
-		{
-			return !empty($row->external_id);
-		}
-
-		return false;
+		return !empty($this->external_id);
 	}
 
 /*

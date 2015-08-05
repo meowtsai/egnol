@@ -169,6 +169,19 @@ $(function()
 		{
 	        $this.prop('selected', true);
 			game.trigger("change");
+
+			$("select[name='server'] option").each(function()
+			{
+			    var $this = $(this);
+				var curServerId = $('#cur_server_id').val();
+
+			    if ($this.val() == curServerId)
+				{
+			        $this.prop('selected', true);
+					$("select[name='server']").trigger("change");
+			        return false;
+			    }
+			});
 	        return false;
 	    }
 	});
