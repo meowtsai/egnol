@@ -12,6 +12,7 @@ class Payment extends MY_Controller
 		$this->_require_login();
 
 		$this->load->config("g_gash");
+		$this->load->config("payment");
 
 		// 讀取遊戲列表
 		$games = $this->db->from("games")->where("is_active", "1")->get();
