@@ -13,6 +13,7 @@
 		</li>
 		<li>
 			<input type="submit" value="送出">
+			  <input type="button" value="取消" onclick="javascript:history.back();" />
 		</li>
 		<li>
 			<div style="text-align:left;">

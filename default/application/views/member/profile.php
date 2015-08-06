@@ -34,7 +34,7 @@
 		</div><div class="field_input"></div>
 	</li>
 	<li>
-		<div style="float;left;">
+		<div>
 			<input type="button" value="修改資料" onclick="javascript:location.href='<?=$longe_url?>member/update_profile?site=<?=$site?>'" />
 			<input type="button" value="修改密碼" onclick="javascript:location.href='<?=$longe_url?>member/change_password?site=<?=$site?>'" />
 <? else: ?>
@@ -51,7 +51,7 @@
 	?>
 	</li>
 	<li>
-		<div style="float;left;">
+		<div>
 			<input type="button" name="bind" id="bind" value="綁定帳號" onclick="javascript:location.href='<?=$longe_url?>member/bind_account?site=<?=$site?>'" />
 <? endif; ?>
 		</div>

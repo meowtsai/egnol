@@ -11,6 +11,7 @@
 		</li>
 		<li>
               <input type="submit" value="確認送出" class="btn">
+			  <input type="button" value="取消" onclick="javascript:history.back();" />
 		</li>
 	</ul>
 </form>
