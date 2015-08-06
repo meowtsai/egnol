@@ -433,39 +433,119 @@ class Api extends MY_Controller
 			->api_view();
 	}
 
+	// 點數儲值測試
+	function ui_payment_test()
+	{
+		$this->_require_login();
+
+		$this->load->config("g_gash");
+
+		$site = $this->_get_site();
+		$server_id = $this->input->get("serverid");
+
+		// 讀取遊戲列表
+		$games = $this->db->from("games")->where("is_active", "1")->get();
+		// 讀取伺服器列表
+		$servers = $this->db->order_by("server_id")->get("servers");
+		// 讀取玩家角色列表
+		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();
+
+		$this->_init_layout()
+			->set("games", $games)
+			->set("servers", $servers)
+			->set("server_id", $server_id)
+			->set("characters", $characters)
+			->add_js_include("api/payment_test")
+			->api_view();
+	}
+
+	function ui_payment_test_result()
+	{
+		header('Content-type:text/html; Charset=UTF-8');
+
+		$game_id = $this->input->post("game");
+		$server_id = $this->input->post("server");
+		$character_name = $this->input->post("character");
+		$billingType = $this->input->post("pay_type");
+		$payType = $this->input->post("subpay_type");
+		$money = $this->input->post("payment_amount");
+		$get_point = $money;
+
+		echo "<script type='text/javascript'>LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character_name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10));</script>";
+	}
+
 	// 取得伺服器列表
 	function get_server_list()
 	{
+		$partner = $this->input->post("partner");
 		$game = $this->input->post("game");
 
-		if (empty($game))
+		if (empty($partner) || empty($game))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
 		}
 
 		$servers = $this->db->from("servers")->where("game_id", $game)->order_by("id")->get();
 
-		//
-		//
-		//
+		$partner_conf = $this->config->item("partner_api");
+		if ( ! array_key_exists($partner, $partner_conf))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
+		}
+		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"]))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
+		}
+
+		$query = $this->db->from("servers")->where("game_id", $game)->get();
+		$server_list = array();
+		foreach($query->result() as $row)
+		{
+			$server = array("server_id"=>$row->server_id,
+							"name"=>$row->name,
+							"status"=>0);
+			$server_list[] = $server;
+		}
+
+		echo json_encode(array("result"	=> 1, "servers" => $server_list));
+		exit();
 	}
 
 	// 取得伺服器角色列表
 	function get_role_list()
 	{
+		$partner = $this->input->post("partner");
+		$game = $this->input->post("game");
 		$server = $this->input->post("server");
 		$uid = $this->input->post("uid");
 
-		if (empty($uid) || empty($server))
+		if (empty($partner) || empty($game) || empty($uid) || empty($server))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
 		}
 
-		$characters = $this->db->from("characters")->where("server_id", $server)->order_by("id")->get();
+		$partner_conf = $this->config->item("partner_api");
+		if ( ! array_key_exists($partner, $partner_conf))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
+		}
+		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"]))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
+		}
 
-		//
-		//
-		//
+		$query = $this->db->from("characters")->where("server_id", $server)->where("uid", $uid)->order_by("id")->get();
+		$role_list = array();
+		foreach($query->result() as $row)
+		{
+			$role = array(
+						"id"=>$row->id,
+						"character_name"=>$row->characrer_name);
+			$role_list[] = $role;
+		}
+
+		echo json_encode(array("result"	=> 1, "roles" => $role_list));
+		exit();
 	}
 
 	// 建立遊戲角色
@@ -492,8 +572,7 @@ class Api extends MY_Controller
 			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
 		}
 
-		$server_id = "{$game}_".sprintf("%02d", $server);
-		$server_info = $this->db->from("servers")->where("server_id", "{$server_id}")->get()->row();
+		$server_info = $this->db->from("servers")->where("server_id", $server)->get()->row();
 
 		if (empty($server_info))
 		{
@@ -501,11 +580,7 @@ class Api extends MY_Controller
 		}
 
 		$query = $this->db->from("users")->where("uid", $uid)->get();
-		if ($query->num_rows() > 0)
-		{
-			$account = $query->row()->account;
-		}
-		else
+		if ($query->num_rows() == 0)
 		{
 			die(json_encode(array("result"=>"0", "error"=>"uid不存在")));
 		}
@@ -528,10 +603,9 @@ class Api extends MY_Controller
 			die(json_encode(array("result"=>"0", "error"=>"資料庫新增錯誤")));
 		}
 
-		echo json_encode(array("result"				=> "1",
-								"id"				=> $insert_id,
-								"character_name"	=> $character_name,
-								));
+		echo json_encode(array("result"	=> 1,
+								"id" => $insert_id,
+								"character_name" => $character_name));
 		exit();
 	}
 
