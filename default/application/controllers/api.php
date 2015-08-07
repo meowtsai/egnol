@@ -89,7 +89,7 @@ class Api extends MY_Controller
 			if($server_mode == 1)
 			{
 				// 讀取伺服器列表
-				$servers = $this->db->from("servers")->where("game_id", $site)->order_by("id")->get();
+				$servers = $this->db->from("servers")->where("game_id", $site)->order_by("server_id")->get();
 			}
 
 			$this->_init_layout()
@@ -420,7 +420,7 @@ class Api extends MY_Controller
 		// 讀取遊戲列表
 		$games = $this->db->from("games")->where("is_active", "1")->get();
 		// 讀取伺服器列表
-		$servers = $this->db->order_by("id")->get("servers");
+		$servers = $this->db->order_by("server_id")->get("servers");
 		// 讀取玩家角色列表
 		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();
 
@@ -465,13 +465,15 @@ class Api extends MY_Controller
 
 		$game_id = $this->input->post("game");
 		$server_id = $this->input->post("server");
-		$character_name = $this->input->post("character");
-		$billingType = $this->input->post("pay_type");
-		$payType = $this->input->post("subpay_type");
-		$money = $this->input->post("payment_amount");
+		$character_id = $this->input->post("character");
+		$billingType = $this->input->post("billing_type");
+		$payType = "";
+		$money = $this->input->post("billing_money");
 		$get_point = $money;
 
-		echo "<script type='text/javascript'>LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character_name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10));</script>";
+		$character = $this->db->from("characters")->where("id", $character_id)->get()->row();
+
+		echo "<script type='text/javascript'>LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character->character_name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10));</script>";
 	}
 
 	// 取得伺服器列表

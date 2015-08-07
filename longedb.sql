@@ -91,9 +91,8 @@ DROP TABLE IF EXISTS `characters`;
 CREATE TABLE `characters` (
   `id` int(11) NOT NULL,
   `uid` int(11) NOT NULL,
-  `account` varchar(50) NOT NULL,
-  `character_name` varchar(50) DEFAULT NULL,
-  `server_id` int(11) NOT NULL,
+  `name` varchar(50) DEFAULT NULL,
+  `server_id` varchar(20) NOT NULL,
   `ad` varchar(50) DEFAULT NULL,
   `create_status` char(1) DEFAULT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -117,12 +116,47 @@ CREATE TABLE `games` (
   `currency` varchar(50) DEFAULT NULL,
   `tags` varchar(255) DEFAULT NULL,
   `rank` tinyint(4) DEFAULT NULL,
-  `is_active` bit(1) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 0,
   `fanpage` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`game_id`),
   UNIQUE KEY `game_id_UNIQUE` (`game_id`),
   UNIQUE KEY `name_UNIQUE` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `gash_billing`
+--
+
+DROP TABLE IF EXISTS `gash_billing`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `gash_billing` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `COID` varchar(20) NOT NULL,
+  `CUID` varchar(3) NOT NULL,
+  `PAID` varchar(20) NOT NULL,
+  `MSG_TYPE` varchar(4) NOT NULL,
+  `PCODE` varchar(6) NOT NULL,
+  `AMOUNT` float NOT NULL,
+  `ERQC` varchar(30) DEFAULT NULL,
+  `ERPC` varchar(30) DEFAULT NULL,
+  `ERP_ID` varchar(20) DEFAULT NULL,
+  `RRN` varchar(20) DEFAULT NULL,
+  `PAY_STATUS` char(1) DEFAULT NULL,
+  `RCODE` varchar(4) DEFAULT NULL,
+  `PAY_RCODE` varchar(4) DEFAULT NULL,
+  `TXTIME` varchar(14) DEFAULT NULL,
+  `USER_IP` varchar(20) DEFAULT NULL,
+  `status` char(1) DEFAULT '0',
+  `create_time` datetime NOT NULL,
+  `update_time` datetime NOT NULL,
+  `server_id` int(11) DEFAULT NULL,
+  `country` varchar(45) DEFAULT 'global',
+  `note` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -156,7 +190,6 @@ CREATE TABLE `log_game_consumes` (
   `uid` int(11) NOT NULL,
   `server_id` varchar(20) DEFAULT NULL,
   `game_id` varchar(20) DEFAULT NULL,
-  `account` varchar(50) NOT NULL,
   `ip` varchar(50) DEFAULT NULL,
   `amount` float DEFAULT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -176,13 +209,12 @@ CREATE TABLE `log_game_logins` (
   `uid` int(11) NOT NULL,
   `server_id` varchar(20) DEFAULT NULL,
   `game_id` varchar(20) DEFAULT NULL,
-  `account` varchar(50) NOT NULL,
   `ip` varchar(50) DEFAULT NULL,
   `ad` varchar(50) DEFAULT NULL,
-  `is_recent` bit(1) DEFAULT NULL,
+  `is_recent` tinyint(1) DEFAULT 0,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `logout_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `is_first` bit(1) DEFAULT b'0',
+  `is_first` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -197,13 +229,12 @@ DROP TABLE IF EXISTS `log_logins`;
 CREATE TABLE `log_logins` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
-  `account` varchar(128) NOT NULL,
   `ip` varchar(50) DEFAULT NULL,
   `ad` varchar(50) DEFAULT NULL,
   `site` varchar(50) DEFAULT NULL,
   `imei` varchar(50) DEFAULT NULL,
   `android_id` varchar(50) DEFAULT NULL,
-  `is_recent` bit(1) DEFAULT b'0',
+  `is_recent` tinyint(1) DEFAULT 0,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
@@ -311,7 +342,7 @@ CREATE TABLE `pictures` (
   `src` varchar(255) NOT NULL,
   `link` varchar(255) DEFAULT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `is_active` bit(1) NOT NULL DEFAULT b'1',
+  `is_active` tinyint(1) NOT NULL DEFAULT 0,
   `width` smallint(6) DEFAULT NULL,
   `height` smallint(6) DEFAULT NULL,
   `category_id` int(11) NOT NULL,
@@ -332,7 +363,7 @@ CREATE TABLE `question_assignees` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `question_assign_id` int(11) NOT NULL,
   `admin_uid` int(11) NOT NULL,
-  `is_read` bit(1) NOT NULL DEFAULT b'0',
+  `is_read` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -387,7 +418,7 @@ CREATE TABLE `questions` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `type` char(1) NOT NULL COMMENT '1:帳號問題\\n2:儲值問題\\n3:遊戲問題\\n4:BUG回報\\n5:玩家建議',
   `content` text NOT NULL,
-  `server_id` int(11) NOT NULL,
+  `server_id` varchar(20) NOT NULL,
   `character_name` varchar(45) DEFAULT NULL,
   `pic_path1` varchar(300) DEFAULT NULL,
   `pic_path2` varchar(300) DEFAULT NULL,
@@ -418,9 +449,8 @@ DROP TABLE IF EXISTS `servers`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `servers` (
-  `id` int(11) NOT NULL,
-  `game_id` varchar(20) NOT NULL,
   `server_id` varchar(20) NOT NULL,
+  `game_id` varchar(20) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `address` varchar(100) DEFAULT NULL,
   `server_connection_key` varchar(64) DEFAULT NULL,
@@ -429,12 +459,11 @@ CREATE TABLE `servers` (
   `exchange_rate` float DEFAULT NULL,
   `server_performance` varchar(255) DEFAULT NULL,
   `merge_address` varchar(45) DEFAULT NULL,
-  `is_transaction_active` bit(1) DEFAULT b'0',
-  `is_new_server` bit(1) DEFAULT b'0',
-  `is_entry_server` bit(1) DEFAULT b'0',
-  `is_test_server` bit(1) DEFAULT b'0',
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `server_id_UNIQUE` (`server_id`)
+  `is_transaction_active` tinyint(1) DEFAULT 0,
+  `is_new_server` tinyint(1) DEFAULT 0,
+  `is_entry_server` tinyint(1) DEFAULT 0,
+  `is_test_server` tinyint(1) DEFAULT 0,
+  PRIMARY KEY (`server_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -484,7 +513,6 @@ DROP TABLE IF EXISTS `testaccounts`;
 CREATE TABLE `testaccounts` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `uid` int(10) NOT NULL,
-  `account` varchar(100) NOT NULL,
   `note` varchar(100) DEFAULT NULL COMMENT '註解',
   `creator` varchar(20) NOT NULL DEFAULT '',
   `create_time` int(11) DEFAULT NULL,
@@ -515,7 +543,10 @@ CREATE TABLE `user_billing` (
   `server_id` varchar(20) DEFAULT NULL,
   `plug` tinyint(1) DEFAULT NULL,
   `order_no` varchar(50) DEFAULT NULL,
-  `is_confirmed` bit(1) DEFAULT NULL,
+  `country_code` varchar(3) DEFAULT NULL,
+  `gash_billing_id` int(11) DEFAULT NULL,
+  `character_id` int(11) DEFAULT NULL,
+  `is_confirmed` tinyint(1) DEFAULT 0,
   `create_time` timestamp NULL DEFAULT NULL,
   `update_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
@@ -559,8 +590,8 @@ CREATE TABLE `users` (
   `external_id` varchar(128) DEFAULT NULL,
   `activation_code` varchar(20) DEFAULT NULL,
   `balance` int(6) DEFAULT NULL,
-  `is_approved` bit(1) DEFAULT NULL,
-  `is_banned` bit(1) DEFAULT NULL,
+  `is_approved` tinyint(1) DEFAULT 0,
+  `is_banned` tinyint(1) DEFAULT 0,
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `update_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`uid`),
