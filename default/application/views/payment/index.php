@@ -158,7 +158,7 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 				<select id="server_pool" style="display:none;">
 					<? foreach($servers->result() as $row):
 					if ( IN_OFFICE == false && in_array($row->server_status, array("private", "hide"))) continue;?>
-					<option value="<?=$row->id?>" <?=($this->input->get("server")==$row->id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?></option>
+					<option value="<?=$row->server_id?>" <?=($this->input->get("server")==$row->server_id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?></option>
 					<? endforeach;?>
 				</select>
 			</div>
