@@ -168,6 +168,16 @@ class G_Layout
     	$this->template_data['css_link'] = $this->produce_css_link();
     	$this->template_data['js_include'] = $this->produce_js_include();
 
+        $this->CI->load->config('../config/g_tracker');
+		$google_analytics = $this->CI->config->item('google_analytics');
+
+		$this->template_data['tracker_code'] = $google_analytics['long_e'];
+
+		if(!empty($this->data['site']) && $this->data['site'] != 'long_e')
+		{
+            $this->template_data['tracker_code'] = $this->template_data['tracker_code'].$google_analytics[$this->data['site']];
+		}
+
     	echo $this->CI->load->view("g_standard_view", $this->template_data, true);
     }
 
