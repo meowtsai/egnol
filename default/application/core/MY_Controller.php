@@ -35,7 +35,7 @@ class MY_Controller extends CI_Controller
 		// 取出指定的 site, 沒有指定的話就是 long_e
 		$site = $this->_get_site();
 		$this->g_layout->set("site", $site);
-        $this->g_layout->set("game_url", ($site == "long_e" ? g_conf('url', 'longe') : "/games/".$site."/"));
+        $this->g_layout->set("game_url", ($site == "long_e" ? g_conf('url', 'longe') : "http://".$site.".longeplay.com.tw/"));
         $this->g_layout->set("longe_url", g_conf('url', 'longe'));
 
 		$redirect_url = urldecode($this->input->get("redirect_url", true));
@@ -57,7 +57,7 @@ class MY_Controller extends CI_Controller
 
 		return $this->g_layout
 			->add_js_include(array('jquery.validate.min', 'jquery.metadata', 'jquery.form'))
-			->set_meta("title", "::: 龍邑遊戲 ‧ LongE Games :::");
+			->set_meta("title", "龍邑遊戲‧LongE Play");
 	}
 
 	// 檢查並要求登入
