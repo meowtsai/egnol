@@ -424,32 +424,53 @@ class Member extends MY_Controller
 
 	function reset_password_json()
 	{
-		$account = $this->input->post("account");
 		$email = $this->input->post("email");
 		$captcha = $this->input->post("captcha");
 		
 		header('content-type:text/html; charset=utf-8');
-		if ( empty($account) || empty($email) ) {
+		if ( empty($email) ) {
 			die(json_failure("尚有資料未填"));
 		}
 		else if (empty($_SESSION['captcha']) || $captcha != $_SESSION['captcha']) {
 			die(json_failure("驗證碼錯誤"));
 		}
-		
-		$cnt = $this->db->from("users")->where("account", $account)->where("email", $email)->count_all_results();
-		if ($cnt == 0) {
-			die(json_failure("沒有這位使用者或mail填寫錯誤。"));
-		}
-		
+
 	    $new = rand(100000, 999999);
 	    $md5_new = md5($new);
 
-	    $this->db->where("account", $account)->update("users", array("password" => $md5_new));
-/*
-		$this->load->library("long_e_mailer");
-		$this->long_e_mailer->passwdResetMail($email, $account, $new, $account);
-*/
-		die(json_success("帳號及新密碼已發送到信箱."));
+		if(filter_var($email, FILTER_VALIDATE_EMAIL))
+		{
+			// 使用 email
+			$cnt = $this->db->from("users")->where("email", $email)->count_all_results();
+			if ($cnt == 0)
+			{
+				die(json_failure("沒有這位使用者或資料填寫錯誤。"));
+			}
+		    $this->db->where("email", $email)->update("users", array("password" => $md5_new));
+
+			$this->load->library("send_mail");
+			$this->send_mail->passwdResetMail($email, $account, $new);
+
+			die(json_success("新密碼已發送到信箱。"));
+		}
+		else
+		{
+			// 使用手機號碼
+			$cnt = $this->db->from("users")->where("mobile", $email)->count_all_results();
+			if ($cnt == 0)
+			{
+				die(json_failure("沒有這位使用者或資料填寫錯誤。"));
+			}
+		    $this->db->where("mobile", $email)->update("users", array("password" => $md5_new));
+
+			//
+			// 手機號碼的話要發送簡訊
+			//
+			//
+			//
+
+			die(json_success("新密碼已使用簡訊發送。"));
+		}
 	}
 	
 	// 修改密碼
