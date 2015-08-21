@@ -323,6 +323,7 @@ function leShowScreenMask(n)
 		if(null == i)
 			i = leAppend(document.body,"div",{id:"le_screen_mask"});
 		$(i).css("opacity",n), $(i).css("filter","Alpha(opacity="+Math.floor(100*n)+")"),$(i).css("display","inline");
+		$(i).css("height",$(document).height());
 	}
 	var e = document.getElementById("le_window_viewport");
 	return null == e && (e = leAppend(document.body,"div",{id:"le_window_viewport"})),$(e).css("display","inline"),e;
@@ -385,6 +386,6 @@ function leOpenDialog(n, i, e, o)
 		});
 		break;
 	}
-	var s = ($(window).width()-$(u).width())/2,r=($(window).height()-$(u).height())/3;
+	var s = ($(window).width()-$(u).width())/2,r=($(window).height()-$(u).height())/3+$(document).scrollTop();
 	$(u).css("left",s),$(u).css("top",r);
 }

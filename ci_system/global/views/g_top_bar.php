@@ -11,7 +11,7 @@
 
 <div class="nav">
 <ul class="cf">
-<li><a href="<?=$longe_url?>member?site=<?=$site?>&redirect_url=<?=urlencode($redirect_url)?>" title="會員登入"></a></li>
+<li><a href="<?=$longe_url?>member?site=<?=$site?>&redirect_url=<?=urlencode($redirect_url)?>" title="<?=$member_title?>"></a></li>
 <li><a href="<?=$longe_url?>service?site=<?=$site?>" title="客服中心"></a></li>
 <li><a href="<?=$fan_page?>" target="_blank" title="粉絲團NEWS"></a></li>
 <li><a href="<?=$longe_url?>payment?site=<?=$site?>" title="儲值中心"></a></li>

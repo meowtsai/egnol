@@ -24,9 +24,13 @@ class Member extends MY_Controller
 		}
 		else
 		{
+			$user_info = $this->db->from("user_info")->where("uid", $_SESSION['user_id'])->get()->row();
+
 			$this->_init_layout()
 					->set('email', $_SESSION['email'])
 					->set('mobile', $_SESSION['mobile'])
+					->set('user_info', $user_info)
+					->add_css_link("login")
 					->standard_view("member/profile");
 		}
 	}
@@ -51,6 +55,7 @@ class Member extends MY_Controller
 		}
 
 		$this->_init_layout()
+			->add_css_link("login")
 			->add_js_include("member/login")
 			->set("account", $account)
 			->set("channel_item", $channel_item)
@@ -248,27 +253,20 @@ class Member extends MY_Controller
 	// 登出
 	function logout()
 	{
+		$site = $this->_get_site();
+
 		$this->g_user->logout();
 
 		header('Content-type:text/html; Charset=UTF-8');
-		echo "<script type='text/javascript'>alert('成功登出系統'); history.back();</script>";
+		echo "<script type='text/javascript'>alert('成功登出系統'); location.href='/member?site={$site}';</script>";
 	}
 
 	// 註冊新帳號
-	//	GET 輸入參數:
-	//      redirect_url- String    註冊完成後要返回的網址
 	function register()
 	{
-		$redirect_url = urldecode($this->input->get("redirect_url", true));
-
-		if (empty($redirect_url))
-		{
-			$redirect_url = site_url("/");
-		}
-
 		$this->_init_layout()
+			->add_css_link("login")
 			->add_js_include("member/register")
-			->set("redirect_url", $redirect_url)
 			->standard_view();
 	}
 
@@ -276,7 +274,8 @@ class Member extends MY_Controller
 	{
 		header('content-type:text/html; charset=utf-8');
 
-        $site = 'long_e';
+		$site = $this->_get_site();
+
 		$email = $this->input->post('email');
 		$mobile = $this->input->post("mobile");
 		$pwd = $this->input->post("pwd");
@@ -326,21 +325,23 @@ class Member extends MY_Controller
 		}
 
 		$this->_init_layout()
+			->add_css_link("login")
 			->add_js_include("member/bind_account")
-				->set("user_data", $user_data)
-				->standard_view();
+			->set("user_data", $user_data)
+			->standard_view();
 	}
 	
 	function bind_account_json()
 	{
 		$this->_check_login_json();
 		
+		$site = $this->_get_site();
+
 		$email = $this->input->post("email");
 		$mobile = $this->input->post("mobile");
 		$pwd = $this->input->post("pwd");
 		$pwd2 = $this->input->post("pwd2");
-		$redirect_url = $this->input->post("redirect_url");
-	
+
 		if ( empty($email) && empty($mobile) )
 		{
 			die(json_failure("電子信箱和手機號碼至少需輸入一項"));
@@ -358,7 +359,7 @@ class Member extends MY_Controller
 		if ($result == true)
 		{
 			$this->g_user->verify_account($email, $mobile, $pwd);
-			die(json_message(array("message"=>"成功", "redirect_url"=>$redirect_url)));
+			die(json_message(array("message"=>"成功", "site"=>$site)));
 		}
 		else
 		{
@@ -377,27 +378,45 @@ class Member extends MY_Controller
 		$this->_init_layout()
 			->set("data", $row)
 			->set("user_info", $user_info)
+			->add_css_link("login")
 			->add_js_include("member/update_profile")
 			->standard_view();
 	}
 	
 	function update_profile_json()
 	{			
+		$site = $this->_get_site();
+
 		$data = array(
-			'mobile' => $this->input->post("mobile"),
 		);
 		$user_info = array(
 			'name' => $this->input->post("name"),
 			'sex' => $this->input->post("sex"),
-			'phone_address' => $this->input->post("phone_address"),
-			'address_road' => $this->input->post("address_road"),
+			'street' => $this->input->post("address_road"),
 		);
-		if ($this->input->post("email")) $data["email"] = $this->input->post("email");
+		if ($this->input->post("email"))
+		{
+			$email = $this->input->post("email");
+			if($email != $this->g_user->email && $this->db->from("users")->where("email", $email)->count_all_results() > 0)
+			{
+				die(json_failure("E-MAIL 已被使用"));
+			}
+			$data["email"] = $email;
+		}
+		if ($this->input->post("mobile"))
+		{
+			$mobile = $this->input->post("mobile");
+			if($mobile != $this->g_user->mobile && $this->db->from("users")->where("mobile", $mobile)->count_all_results() > 0)
+			{
+				die(json_failure("手機號碼已被使用"));
+			}
+			$data["mobile"] = $mobile;
+		}
 		if ($this->input->post("ident")) $data["ident"] = $this->input->post("ident");
-				
+
 		if ($this->input->post("birthday_y"))
 		{
-			$data['birthday'] = "{$this->input->post("birthday_y")}-{$this->input->post("birthday_m")}-{$this->input->post("birthday_d")}"; 
+			$user_info['birthday'] = "{$this->input->post("birthday_y")}-{$this->input->post("birthday_m")}-{$this->input->post("birthday_d")}";
 		}
 
 		function clear(&$value)
@@ -411,13 +430,25 @@ class Member extends MY_Controller
 		$this->db->where("uid", $target_uid)->update("users", $data);
 		$this->db->where("uid", $target_uid)->update("user_info", $user_info);
 
-		die(json_success());
+		if ($this->input->post("email"))
+		{
+			$_SESSION["email"] = $email;
+			$this->g_user->email = $email;
+		}
+		if ($this->input->post("mobile"))
+		{
+			$_SESSION["mobile"] = $this->input->post("mobile");
+			$this->g_user->mobile = $this->input->post("mobile");
+		}
+
+		die(json_message(array("message"=>"成功", "site"=>$site), true));
 	}
 
 	// 忘記密碼處理
 	function forgot_password()
 	{
 		$this->_init_layout()
+			->add_css_link("login")
 			->add_js_include("member/forgot_password")
 			->standard_view();
 	}
@@ -425,14 +456,10 @@ class Member extends MY_Controller
 	function reset_password_json()
 	{
 		$email = $this->input->post("email");
-		$captcha = $this->input->post("captcha");
-		
+
 		header('content-type:text/html; charset=utf-8');
 		if ( empty($email) ) {
 			die(json_failure("尚有資料未填"));
-		}
-		else if (empty($_SESSION['captcha']) || $captcha != $_SESSION['captcha']) {
-			die(json_failure("驗證碼錯誤"));
 		}
 
 	    $new = rand(100000, 999999);
@@ -449,7 +476,8 @@ class Member extends MY_Controller
 		    $this->db->where("email", $email)->update("users", array("password" => $md5_new));
 
 			$this->load->library("send_mail");
-			$this->send_mail->passwdResetMail($email, $account, $new);
+
+			//$this->send_mail->passwdResetMail($email, $account, $new);
 
 			die(json_success("新密碼已發送到信箱。"));
 		}
@@ -479,6 +507,8 @@ class Member extends MY_Controller
 		$this->_require_login();
 
 		$this->_init_layout()
+			->add_css_link("login")
+			->add_js_include("member/change_password")
 			->standard_view();
 	}
 	
@@ -486,12 +516,23 @@ class Member extends MY_Controller
 	{
 		$this->_check_login_json();
 		
+		$site = $this->_get_site();
+		$old = $this->input->post("old");
 		$pwd = $this->input->post("pwd");
 		$pwd2 = $this->input->post("pwd2");
-		$redirect_url = $this->input->post("redirect_url");
-			
-		if ( empty($pwd) ) die(json_failure("請輸入密碼"));
-		else if ($pwd != $pwd2) die(json_failure("兩次密碼輸入不同"));
+
+		if ( empty($old) )
+		{
+			die(json_failure("請輸入舊密碼"));
+		}
+		else if ( empty($pwd) )
+		{
+			die(json_failure("請輸入新密碼"));
+		}
+		else if ($pwd != $pwd2)
+		{
+			die(json_failure("密碼與驗證密碼不同"));
+		}
 		
 		if ($this->g_user->is_from_3rd_party())
 		{
@@ -502,7 +543,37 @@ class Member extends MY_Controller
 			}
 		}
 
+		$user_data = $this->g_user->get_user_data();
+		if($user_data->password != md5($old))
+		{
+            die(json_failure("舊密碼錯誤"));
+		}
+
 		$this->db->where("uid", $this->g_user->uid)->update("users", array("password" => md5(trim($pwd))));
-		die(json_message(array("message"=>"修改成功", "back_url"=>site_url("member/index"))));
-	}	
+		die(json_message(array("message"=>"修改成功", "site"=>$site)));
+	}
+
+	// 服務條款
+	function service_agreement()
+	{
+		$this->_init_layout()
+			->add_css_link("login")
+			->standard_view();
+	}
+
+	// 隱私權政策
+	function privacy_agreement()
+	{
+		$this->_init_layout()
+			->add_css_link("login")
+			->standard_view();
+	}
+
+	// 個資同意書
+	function member_agreement()
+	{
+		$this->_init_layout()
+			->add_css_link("login")
+			->standard_view();
+	}
 }

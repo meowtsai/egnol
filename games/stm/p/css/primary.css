@@ -6,7 +6,7 @@
 
 
 /*content*/
-#content { background: #110f27 url(/games/stm/p/image/content/content_bg.jpg) top center no-repeat; -moz-background-size: cover; background-size: cover; margin:0; padding:0; text-align:center; min-height:550px; height:100%; display:block; z-index:1;}
+#content { background: #110f27 url(/p/image/content/content_bg.jpg) top center no-repeat; -moz-background-size: cover; background-size: cover; margin:0; padding:0; text-align:center; min-height:550px; height:100%; display:block; z-index:1;}
 #content .contenter{max-width:1200px; width:100%; margin:0 auto; padding-top:10px; display:block; text-align:right; height:100%; }
 #content .contenter ul, #content .contenter ul li {list-style-type:none; }
 #content .contenter ul.icon{width:50%;  max-width:340px;  display:inline-block; padding:10px; }
@@ -19,15 +19,15 @@
 @media only screen and (max-width:800px){ 
 
 #content .contenter ul.icon{width:70%; }
-#content { background: url(/games/stm/p/image/content/content_bg4.jpg) top center no-repeat; }
+#content { background: url(/p/image/content/content_bg4.jpg) top center no-repeat; }
 }
 
 @media only screen and (max-width:650px){ 
-#content { background: url(/games/stm/p/image/content/content_bg4.jpg) top center no-repeat; }.copyright p{ font-size:14px;}}
+#content { background: url(/p/image/content/content_bg4.jpg) top center no-repeat; }.copyright p{ font-size:14px;}}
 
 
 @media only screen and (max-width:553px){ 
-#content { background: url(/games/stm/p/image/content/content_bg6.jpg) top center no-repeat; }
+#content { background: url(/p/image/content/content_bg6.jpg) top center no-repeat; }
 #content .contenter{text-align:center; padding-top:20px; }
 #content .contenter ul.icon{width:80%; }
 }

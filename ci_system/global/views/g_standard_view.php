@@ -9,7 +9,6 @@
 <meta name="keywords" content="">
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
-<link rel='stylesheet' type='text/css' href='<?=$longe_url?>p/css/default.css'>
 <link href="<?=$longe_url?>p/css/reset.css" rel="stylesheet" type="text/css" />
 <link href="<?=$longe_url?>p/css/primary.css" rel="stylesheet" type="text/css" />
 <link href="<?=$game_url?>p/css/primary.css" rel="stylesheet" type="text/css" />
@@ -28,6 +27,14 @@
 
 
 <script src="http://s3.amazonaws.com/nwapi/nwmatcher/nwmatcher-1.2.5-min.js"></script>
+<?
+	unset($meta["title"]);
+	foreach($meta as $key => $content)
+	{
+		echo "<meta name='{$key}' content='{$content}'>";
+	}
+	echo $css_link;
+?>
 </head>
 
 <body>
@@ -67,12 +74,6 @@ $('#menu').slicknav({
 </script>
 
 <?
-	unset($meta["title"]);
-	foreach($meta as $key => $content)
-	{
-		echo "<meta name='{$key}' content='{$content}'>";
-	}
-	echo $css_link;
 	echo $js_include;
 ?>
 <script src='<?=$longe_url?>p/js/default.js'></script>

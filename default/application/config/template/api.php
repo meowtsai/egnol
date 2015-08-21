@@ -5,7 +5,7 @@ $config["partner_api"] = array(
 
 	// 自己測試用
 	'longe' => array(
-		'name' => '龍邑科技',
+		'name' => '龍邑遊戲',
 		'ips' => array('61.220.44.200'),
 		'sites' => array(
 			'leg1' => array('key'=>'12345678901234567890123456789012'),

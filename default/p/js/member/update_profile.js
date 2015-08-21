@@ -1,6 +1,6 @@
 $(function()
 {
-	$("form").validate({
+	$("#member_update").validate({
 		messages:
 		{
 			email: {
@@ -20,15 +20,34 @@ $(function()
 				required: "#email:blank"
 			}
     	},
+		showErrors: function(errorMap, errorList)
+		{
+		   var err = '';
+		   $(errorList).each(function(i, v)
+		   {
+			   err += v.message + "<br/>";
+		   });
+		   if (err)
+		   {
+				leOpenDialog('修改資料錯誤', err, leDialogType.MESSAGE);
+		   }
+		},
 		submitHandler: function(form)
 		{
-			$(form).json_ajaxSubmit(function(json)
-			{
-				alert(json.message);
-				if (json.status == 'success')
+			$(form).ajaxSubmit({
+				dataType: 'json',
+				success: function(json)
 				{
-					location.href = location.href;
-				} 				
+					if (json.status == 'success')
+					{
+						location.href = '/member/index?site='+json.site;
+						return;
+					}
+					else
+					{
+						leOpenDialog('修改資料錯誤', json.message, leDialogType.MESSAGE);
+					}
+				}
 			});
 		}
 	});

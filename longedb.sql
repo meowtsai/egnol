@@ -599,3 +599,30 @@ CREATE TABLE `users` (
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `external_id_UNIQUE` (`external_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE `events` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '活動編號',
+  `game_id` varchar(20) DEFAULT NULL COMMENT '對應遊戲',
+  `event_name` varchar(20) NOT NULL COMMENT '活動名稱',
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '活動類型',
+  `serial_limit` int(11) DEFAULT NULL COMMENT '序號發放數量限制',
+  `begin_time` datetime DEFAULT NULL COMMENT '活動開始時間',
+  `end_time` datetime DEFAULT NULL COMMENT '活動結束時間',
+  `fulfill_time` datetime DEFAULT NULL COMMENT '兌換期限(若有兌換獎勵)',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE `event_serial` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `event_id` int(11) NOT NULL,
+  `serial` varchar(20) NOT NULL,
+  `uid` int(11) DEFAULT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `serial_UNIQUE` (`serial`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

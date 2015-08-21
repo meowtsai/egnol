@@ -1,45 +1,46 @@
-<style>
-.channel_button{
-    display:inline-block;
-	width:16%;
-	margin:5px;
-	border:1px solid #777;
-	background-color:#ddd;
-}
-.channel_button:hover{
-	background-color:#fff;
-	cursor:pointer;
-}
-</style>
-<form id="login_form" method="post" action="<?=$longe_url?>member/login_json?site=<?=$site?>">
-	<input type="hidden" id="redirect_url" value="<?=$redirect_url?>">
-	<ul class="le_form">
-		<li>會員登入</li>
-		<li>
-			<div class="field_name">電子郵件或行動電話：
-			</div><div class="field_input"><input tabindex="1" name="account" class="required" maxlength="128" type="text" size="18" value="<?=empty($account) ? '' : $account?>" /></div>
-		</li>
-		<li>
-			<div class="field_name">密碼：
-			</div><div class="field_input"><input tabindex="2" name="pwd" type="password"  class="required" id="txtbox" maxlength="32"  size="20" AUTOCOMPLETE='OFF'/></div>
-		</li>
-		<li>
-			<input tabindex="3" name="doLogin" type="submit" id="doLogin3" value="送出" />
-			<input tabindex="4" type="hidden" name="remember" id="remember" value="0" />
-		</li>
-		<li class="text-gray-light">
-			<a href="/member/register?site=<?=$site?>&redirect_url=<?=urlencode($redirect_url)?>">立即註冊</a>│
-			<a href="/member/forgot_password?site=<?=$site?>&redirect_url=<?=urlencode($redirect_url)?>">忘記密碼</a>
-		</li>
-		<li>
+<div id="content-login">
+	<div class="login-ins">
+		<div class="bread cf" typeof="v:Breadcrumb">
+			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>member?site=<?=$site?>" title="會員登入" rel="v:url" property="v:title">會員登入</a>
+		</div>
+		<form id="login_form" method="post" action="<?=$longe_url?>member/login_json?site=<?=$site?>">
+			<input type="hidden" id="redirect_url" value="<?=$redirect_url?>">
+			<div class="login-form">
+			<table class="member_password">
+				<tr>
+					<th><span class="title">E-mail或手機號碼</span><input type="text" class="required" name="account" id="name" maxlength="128" size="33"></th>
+				</tr>
+				<tr>
+					<th><span class="title">密碼</span><input type="password" class="required" name="pwd" id="name" maxlength="18" size="33" AUTOCOMPLETE="OFF"></th>
+				</tr>
+			</table>
+
+			<div class="login-button">
+				<input name="doLogin" type="submit" id="doSubmit" value="" style="display:none;" />
+				<p><a href="#" title="login"><img src="<?=$longe_url?>p/image/member/login-btn.png" onclick="javascript:$('#doSubmit').trigger('click')"></a></p>
+				<p><a href="<?=$longe_url?>member/register?site=<?=$site?>&redirect_url=<?=urlencode($redirect_url)?>" title="login">註冊帳號</a>&nbsp;│&nbsp;
+				<a href="<?=$longe_url?>member/forgot_password?site=<?=$site?>&redirect_url=<?=urlencode($redirect_url)?>" title="login">忘記密碼</a></p>
+			</div>
+
+			<div class="login-other">
 			<?
 				// 產生所有第三方登入按鈕
 				$back_url = urlencode($redirect_url);
 				foreach($channel_item as $channel)
 				{
-					echo "<div class='channel_button' onclick='javascript:location.href="."\"/member/channel_login?site={$site}&channel={$channel['channel']}&redirect_url={$back_url}\""."'>{$channel['name']}</div>";
+					if($channel['channel'] != "facebook" && $channel['channel'] != "google")
+						continue;
+
+					if($channel['channel'] == "facebook")
+						echo "<img style='cursor:pointer;' src='/p/image/member/login-btn-fb.png' onclick='javascript:location.href=\"";
+					if($channel['channel'] == "google")
+						echo "<img style='cursor:pointer;' src='/p/image/member/login-btn-google.png' onclick='javascript:location.href=\"";
+
+					echo "/member/channel_login?site={$site}&channel={$channel['channel']}&redirect_url={$redirect_url}\"'>";
 				}
 			?>
-		</li>
-	</ul>
-</form>
+			</div>
+		</form>
+	</div>
+</div>
+<div id="copyright_space"></div>

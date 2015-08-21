@@ -19,7 +19,7 @@ class G_User
 	var $userAgent;
 	var $token;
 	
-	var $error_mssage='錯誤';
+	var $error_message='錯誤';
 
 	function __construct() 
 	{
@@ -296,8 +296,24 @@ class G_User
 
       	// 有指定 email 或 mobile 才寫入, 沒指定就會預設為 NULL
 		// 否則若寫入空字串會被當成合法的唯一值而造成誤判
-		if(!empty($email)) $data['email'] = $email;
-		if(!empty($mobile)) $data['mobile'] = $mobile;
+		if(!empty($email))
+		{
+			if($this->CI->db->from("users")->where("email", $email)->count_all_results() > 0)
+			{
+				$this->error_message = "E-MAIL 已被使用";
+				return false;
+			}
+			$data['email'] = $email;
+		}
+		if(!empty($mobile))
+		{
+			if($this->CI->db->from("users")->where("mobile", $mobile)->count_all_results() > 0)
+			{
+				$this->error_message = "手機號碼已被使用";
+				return false;
+			}
+			$data['mobile'] = $mobile;
+		}
 
 		$this->CI->db
 			->where("uid", $uid)

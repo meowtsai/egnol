@@ -24,6 +24,8 @@ class Payment extends MY_Controller
 			->set("games", $games)
 			->set("servers", $servers)
 			->set("characters", $characters)
+			->add_css_link("login")
+			->add_css_link("money")
 			->add_js_include("payment/index")
 			->standard_view();
 	}	
@@ -33,6 +35,8 @@ class Payment extends MY_Controller
 		$this->_init_layout()
 			->set("status", $this->input->get("status"))
 			->set("message", urldecode($this->input->get("message")))
+			->add_css_link("login")
+			->add_css_link("money")
 			->standard_view();
 	}
 

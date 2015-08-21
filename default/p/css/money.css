@@ -1,0 +1,14 @@
+@charset "utf-8";
+/* CSS Document */
+#content-login{background: #110f27 url(../image/content/bg-money.jpg) top center no-repeat;  -moz-background-size: cover; background-size: cover;}
+.member_info select, .member_info textarea{border-radius:6px; height:35px; font-size:18px; border-width:1px; border-color:#004999;font-family:微軟正黑體; max-width:310px; width:90%;background:-webkit-linear-gradient(top,#ffffff,#c1c2c3);}
+.member_info textarea{ height:140px; resize: none;}
+
+.member_info .pic_btn{ margin-top:7px;}
+.member_info .pic_input{ width:60%;}
+
+@media only screen and (max-width:450px){ 
+.member_info tr > th{ width:30%;}
+.member_info tr > td{ width:70%;}
+.member_info .pic_input{ width:100%;}
+}

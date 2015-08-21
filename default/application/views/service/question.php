@@ -1,74 +1,84 @@
-<form id="question_form" method="post" action="<?=$longe_url?>service/question_ajax?site=<?=$site?>">
-	<ul class="le_form">
-		<li>線上回報</li>
-		<li>
-			<div class="field_name">遊戲
-			</div><div class="field_input">
-				<select name="game" class="required" style="width:85%;">
-					<option value="">--請選擇--</option>
-					<? foreach($games->result() as $row):?>
-					<option value="<?=$row->game_id?>" <?=($site==$row->game_id ? 'selected="selected"' : '')?>><?=$row->name?></option>
-					<? endforeach;?>
-				</select>
-			</div>
-		</li>
-		<li>
-			<div class="field_name">伺服器
-			</div><div class="field_input">
-				<select name="server" class="required" style="width:85%;">
-					<option value="">--請先選擇遊戲--</option>
-				</select>
+<style>
+.pic_input { color:#000; }
+</style>
+<div id="content-login">
+	<div class="login-ins">
+		<div class="bread cf" typeof="v:Breadcrumb">
+			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>service?site=<?=$site?>" title="客服中心" rel="v:url" property="v:title">客服中心</a> > <a href="<?=$longe_url?>service/question?site=<?=$site?>" title="線上回報" rel="v:url" property="v:title">線上回報</a>
+		</div>
+		<form id="question_form" method="post" action="<?=$longe_url?>service/question_ajax?site=<?=$site?>">
+			<div class="login-form">
+				<table class="member_info">
+					<tr>
+						<th>遊戲名稱</th>
+						<td>
+							<select name="game" class="required" style="width:90%;">
+								<option value="">--請選擇--</option>
+								<? foreach($games->result() as $row):?>
+								<option value="<?=$row->game_id?>" <?=($site==$row->game_id ? 'selected="selected"' : '')?>><?=$row->name?></option>
+								<? endforeach;?>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th>伺服器</th>
+						<td>
+							<select name="server" class="required" style="width:90%;">
+								<option value="">--請先選擇遊戲--</option>
+							</select>
 
-				<select id="server_pool" style="display:none;">
-					<? foreach($servers->result() as $row):?>
-					<option value="<?=$row->id?>" <?=($this->input->get("server")==$row->id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?></option>
-					<? endforeach;?>
-				</select>
-			</div>
-		</li>
-		<li>
-			<div class="field_name">角色名稱
-			</div><div class="field_input">
-				<select name="character_name" class="required" style="width:85%;">
-					<option value="">--請選擇角色--</option>
-				</select>
+							<select id="server_pool" style="display:none;">
+								<? foreach($servers->result() as $row):?>
+								<option value="<?=$row->server_id?>" <?=($this->input->get("server")==$row->server_id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?></option>
+								<? endforeach;?>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th>角色名稱</th>
+						<td>
+							<select name="character_name" class="required" style="width:90%;">
+								<option value="">--請選擇角色--</option>
+							</select>
 
-				<select id="character_pool" style="display:none;">
-					<? foreach($characters->result() as $row): ?>
-					<option value="<?=$row->id?>" class="<?=$row->server_id?>"><?=$row->character_name?></option>
-					<? endforeach;?>
-				</select>
+							<select id="character_pool" style="display:none;">
+								<? foreach($characters->result() as $row): ?>
+								<option value="<?=$row->character_name?>" class="<?=$row->server_id?>"><?=$row->character_name?></option>
+								<? endforeach;?>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th>問題類型</th>
+						<td>
+							<select name="question_type" class="required" style="width:90%;">
+								<option value="">--請選擇--</option>
+								<? foreach($this->config->item("question_type") as $id => $type):?>
+								<option value="<?=$id?>"><?=$type?></option>
+								<? endforeach;?>
+							</select>
+						</td>
+					<tr>
+						<th>問題描述</th><td><textarea name="content" class="required" minlength="5" maxlength="500"></textarea></td>
+					</tr>
+					<tr>
+						<th>圖片附件</th><td><img src="<?=$longe_url?>p/image/server/server-pic-btn1.png" class="pic_btn"> <input type="file" name="file01" class="pic_input" /></td>
+					</tr>
+					<tr>
+						<th>&nbsp;</th><td><img src="<?=$longe_url?>p/image/server/server-pic-btn2.png" class="pic_btn"> <input type="file" name="file02" class="pic_input"></td>
+					</tr>
+					<tr>
+						<th>&nbsp;</th><td><img src="<?=$longe_url?>p/image/server/server-pic-btn3.png" class="pic_btn"> <input type="file" name="file03" class="pic_input"></td>
+					</tr>
+				</table>
+				<div class="login-button">
+					<p>
+						<input name="doSubmit" type="submit" id="doSubmit" value="" style="display:none;" />
+                        <img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-back-btn1.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')" />&nbsp;
+						<img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-back-btn2.png" class="button_submit" onclick="javascript:history.back();" />
+					</p>
+				</div>
 			</div>
-		</li>
-		<li>
-			<div class="field_name">問題類型
-			</div><div class="field_input">
-				<select name="question_type" class="required" style="width:85%;">
-					<option value="">--請選擇--</option>
-					<? foreach($this->config->item("question_type") as $id => $type):?>
-					<option value="<?=$id?>"><?=$type?></option>
-					<? endforeach;?>
-				</select>
-			</div>
-		</li>
-		<li>
-			<div class="field_name">問題描述
-			</div><div class="field_input">
-				<textarea rows="3" minlength="5" maxlength="500" style="width:85%;" name="content" class="required"></textarea>
-			</div>
-		</li>
-		<li>
-			<div class="field_name">圖片附件1
-			</div><div class="field_input"><input type="file" name="file01" />
-			</div><div class="field_name">圖片附件2
-			</div><div class="field_input"><input type="file" name="file02" />
-			</div><div class="field_name">圖片附件3
-			</div><div class="field_input"><input type="file" name="file03" />
-			</div>
-		</li>
-		<li>
-			<input tabindex="3" name="send_question" type="submit" id="send_question" value="提交" />&nbsp;
-			<input name="cancel" type="button" value="取消" onclick="javascript:history.back();" />
-		</li>
-	</ul>
-</form>
+		</form>
+	</div>
+</div>

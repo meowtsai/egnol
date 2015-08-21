@@ -8,12 +8,12 @@ $apiConfig = array(
     'application_name' => '',
 
     // OAuth2 Settings, you can get these keys at https://code.google.com/apis/console
-    'oauth2_client_id' => 'kb6e6nibapfp5r9lf220vrbt76jj1ttn.apps.googleusercontent.com',
-    'oauth2_client_secret' => '-C6cRJt1mv4yfkuwfnOa-1Uf',
+    'oauth2_client_id' => '561077152666-6818bihapsd69ktufro4026nuau34bpq.apps.googleusercontent.com',
+    'oauth2_client_secret' => 'etLHaIiXG-dimQtsOQvqA8P1',
     'oauth2_redirect_uri' => 'http://game.longeplay.com.tw/member/login_callback/google',
 
     // The developer key, you get this at https://code.google.com/apis/console
-    'developer_key' => 'AIzaSyDHvc5rGr0qExSXmBuFDdEDWxIkWDHzPtY',
+    'developer_key' => 'AIzaSyBMPutmkunA32ASf7TJuMTZwBQd7rc9zEY',
   
     // Site name to show in the Google's OAuth 1 authentication screen.
     'site_name' => 'LongE Play',
