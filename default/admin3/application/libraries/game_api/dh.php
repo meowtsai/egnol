@@ -13,7 +13,7 @@ class Dh
     
     function update_role()
     {
-    	$query = $this->CI->db->from("servers")->where("game_id", $this->game)->order_by("id","desc")->get();
+    	$query = $this->CI->db->from("servers")->where("game_id", $this->game)->order_by("server_id","desc")->get();
     	foreach($query->result() as $row) 
     	{
     		$server_id = $row->server_id;

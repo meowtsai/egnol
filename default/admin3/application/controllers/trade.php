@@ -80,8 +80,7 @@ class Trade extends MY_Controller {
 			
 			$this->input->get("id") && $this->db->where("ub.id", $this->input->get("id"));
 			$this->input->get("uid") && $this->db->where("ub.uid", $this->input->get("uid"));
-			$this->input->get("euid") && $this->db->where("ub.uid", $this->g_user->decode($this->input->get("euid")));			
-			$this->input->get("account") && $this->db->where("u.account", $this->input->get("account"));
+			$this->input->get("euid") && $this->db->where("ub.uid", $this->g_user->decode($this->input->get("euid")));
 			$this->input->get("order_no") && $this->db->where("ub.order_no", $this->input->get("order"));
 			$this->input->get("game") && $this->db->where("g.game_id", $this->input->get("game"));
 			$this->input->get("server") && $this->db->where("gi.server_id", $this->input->get("server"));
@@ -96,7 +95,7 @@ class Trade extends MY_Controller {
 			}
 			
 			$this->db->from("user_billing ub")
-					->join("servers gi", "gi.server_id=ub.pay_server_id", "left")
+					->join("servers gi", "gi.server_id=ub.server_id", "left")
 					->join("games g", "g.game_id=gi.game_id", "left")
 					->join("users u", "u.uid=ub.uid", "left");
 									
@@ -107,11 +106,6 @@ class Trade extends MY_Controller {
 					$this->db->where("ub.create_time between {$start_date} and {$end_date}", null, false);	
 				}	
 				else $this->db->where("ub.create_time >= {$start_date}", null, false);
-			}
-
-			if ($channel = $this->input->get("channel")) {
-				if ($channel == 'long_e') $this->db->not_like("u.account", "@");
-				else $this->db->where("u.account like '%@{$channel}'", null, false);
 			}
 			
 			if ($this->input->get("test") == 'no') {
@@ -125,7 +119,7 @@ class Trade extends MY_Controller {
 			switch ($this->input->get("action"))
 			{
 				case "查詢": 					
-					$this->db->select("ub.*, gi.name server_name, g.name game_name, g.abbr game_abbr_name, u.account")->stop_cache();
+					$this->db->select("ub.*, gi.name server_name, g.name game_name, g.abbr game_abbr_name")->stop_cache();
 
 					$total_rows = $this->db->count_all_results();
 					$query = $this->db->limit(100, $this->input->get("record"))->order_by("ub.id desc")->get();					
@@ -147,15 +141,15 @@ class Trade extends MY_Controller {
 				case "輸出":
 					ini_set("memory_limit","2048M");
 				
-					$query = $this->db->select("ub.*, gi.name server_name, g.name game_name, g.abbr game_abbr_name, u.account")->get();
+					$query = $this->db->select("ub.*, gi.name server_name, g.name game_name, g.abbr game_abbr_name")->get();
 						
 					$filename = "output.xls";					
 					header("Content-type:application/vnd.ms-excel;");
 					header("Content-Disposition: filename={$filename};");
 					
-					$content = "訂單號 \tuid \teuid \t帳號 \t轉點管道 \t金額 \t遊戲伺服器 \t結果 \t訊息 \t第三方訂單號 \t建立日期\n";
+					$content = "訂單號 \tuid \teuid \t轉點管道 \t金額 \t遊戲伺服器 \t結果 \t訊息 \t第三方訂單號 \t建立日期\n";
 					foreach($query->result() as $row) {
-						$content .= "{$row->id}\t{$row->uid}\t".$this->g_user->encode($row->uid)."\t=\"{$row->account}\"\t{$row->transaction_type}\t{$row->amount}\t({$row->game_abbr_name}){$row->server_name}\t{$row->result}\t{".strip_tags($row->note)."\t=\"{$row->order}\"\t".date("Y-m-d H:i", strtotime($row->create_time))."\n";
+						$content .= "{$row->id}\t{$row->uid}\t".$this->g_user->encode($row->uid)."\t{$row->transaction_type}\t{$row->amount}\t({$row->game_abbr_name}){$row->server_name}\t{$row->result}\t{".strip_tags($row->note)."\t=\"{$row->order}\"\t".date("Y-m-d H:i", strtotime($row->create_time))."\n";
 					}
 					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
 					exit();						
@@ -175,7 +169,7 @@ class Trade extends MY_Controller {
 		}
 		
 		$games = $this->db->from("games")->get();
-		$servers = $this->db->from("servers")->order_by("id desc")->get();		
+		$servers = $this->db->from("servers")->order_by("server_id desc")->get();		
 			
 		$this->g_layout
 			->add_breadcrumb("轉點查詢")	
@@ -211,7 +205,7 @@ class Trade extends MY_Controller {
 			
 			$this->db->from("user_billing ub")
 					->join("users u", "u.uid=ub.uid", "left")			
-					->join("servers gi", "gi.server_id=ub.pay_server_id", "left")
+					->join("servers gi", "gi.server_id=ub.server_id", "left")
 					->join("games g", "g.game_id=gi.game_id", "left")
 					->where("billing_type", "2")
 					->where("result", "1")					
@@ -264,12 +258,12 @@ class Trade extends MY_Controller {
 			{							
 				case "通路統計":				
 					if ($this->input->get("game")) {
-						$query = $this->db->select("SUBSTRING(u.account, INSTR(u.account, '@'), 20 ) title, sum(ub.amount) cnt, count(*) cnt2, COUNT(DISTINCT u.uid) cnt3", false)
+						$query = $this->db->select("SUBSTRING(u.uid, INSTR(u.uid, '@'), 20 ) title, sum(ub.amount) cnt, count(*) cnt2, COUNT(DISTINCT u.uid) cnt3", false)
 							->group_by("title")
 							->order_by("cnt desc")->get();
 					}
 					else {
-						$query = $this->db->select("SUBSTRING(u.account, INSTR(u.account, '@'), 20 ) title, sum(ub.amount) cnt", false)
+						$query = $this->db->select("SUBSTRING(u.uid, INSTR(u.uid, '@'), 20 ) title, sum(ub.amount) cnt", false)
 							->group_by("title, {$game_key}")
 							->order_by("cnt desc, {$game_key}")->get();
 					}					
@@ -318,7 +312,7 @@ class Trade extends MY_Controller {
 		}
 		
 		$games = $this->db->from("games")->get();
-		$servers = $this->db->from("servers")->order_by("id")->get();
+		$servers = $this->db->from("servers")->order_by("server_id")->get();
 			
 		$this->g_layout
 			->add_breadcrumb("轉點統計")	
@@ -1367,7 +1361,7 @@ class Trade extends MY_Controller {
 		if ($this->input->get("action")) 
 		{	
 			$this->db->from("user_billing ub")
-					->join("servers gi", "gi.server_id=ub.pay_server_id", "left")
+					->join("servers gi", "gi.server_id=ub.server_id", "left")
 					->join("games g", "g.game_id=gi.game_id", "left")
 					->join("users u", "u.uid=ub.uid", "left")
 					->where("billing_type", "2")
@@ -1456,7 +1450,7 @@ class Trade extends MY_Controller {
 		}
 		
 		$games = $this->db->from("games")->get();
-		$servers = $this->db->from("servers")->order_by("id")->get();
+		$servers = $this->db->from("servers")->order_by("server_id")->get();
 			
 		$this->g_layout
 			->add_breadcrumb("轉點統計")

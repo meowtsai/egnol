@@ -1,4 +1,7 @@
 <?php
+// {development, testing, production}
+define('ENVIRONMENT', 'development');
+define('SYSTEM_OS', (PATH_SEPARATOR==';') ? 'window' : 'linux');
 
 $g_config = array(
 	'master_web' => array(
@@ -68,6 +71,7 @@ switch (ENVIRONMENT)
 		);
 		$g_config['url'] = array(
 			'longe'     => 'http://game.longeplay.com.tw/'
+			'payment'   => 'http://payment.longeplay.com.tw/'
 		);
 		break;
 }

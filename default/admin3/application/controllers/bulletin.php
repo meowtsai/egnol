@@ -59,7 +59,7 @@ class Bulletin extends MY_Controller {
 			->set("back_url", $this->agent->is_referral() ? $this->agent->referrer() : "")
 			->set("bulletin", $bulletin)
 			->set("bulletin_type_list", $this->config->item('bulletin_type'))
-			->set("server_list", $this->db->where("game_id", $this->game_id)->order_by("id")->get("servers"))
+			->set("server_list", $this->db->where("game_id", $this->game_id)->order_by("server_id")->get("servers"))
 			->render("bulletin/form");		
 	}
 	
@@ -81,7 +81,7 @@ class Bulletin extends MY_Controller {
 			->set("back_url", $this->agent->is_referral() ? $this->agent->referrer() : "")
 			->set("bulletin", false)
 			->set("bulletin_type_list", $this->config->item('bulletin_type'))
-			->set("server_list", $this->db->where("game_id", $this->game_id)->order_by("id")->get("servers"))
+			->set("server_list", $this->db->where("game_id", $this->game_id)->order_by("server_id")->get("servers"))
 			->render("bulletin/form");
 	}
 	

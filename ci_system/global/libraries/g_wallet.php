@@ -12,7 +12,7 @@ class G_Wallet
     
     function get_order($order_id)
     {
-    	return $this->CI->db->select("ub.*, u.account")
+    	return $this->CI->db->select("ub.*")
     				->from("user_billing ub")
     				->join("users u", "ub.uid=u.uid")
     				->where("id", $order_id)->get()->row();

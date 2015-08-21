@@ -26,17 +26,19 @@ class Member extends MY_Controller {
 					
 			$this->db->start_cache();
 			
+			$this->db->select("u.*, uf.name");
 			$this->db->from("users u");
+			$this->db->join("user_info uf", "uf.uid=u.uid", 'left');
 			
 			$this->input->get("uid") && $this->db->where("u.uid", trim($this->input->get("uid")));
 			$this->input->get("euid") && $this->db->where("u.uid", $this->g_user->decode(trim($this->input->get("euid"))));			
-			$this->input->get("account") && $this->db->where("u.account", trim($this->input->get("account")));			
+			//$this->input->get("account") && $this->db->where("u.account", trim($this->input->get("account")));			
 			$this->input->get("name") && $this->db->where("u.name", trim($this->input->get("name")));			
 
 			if ($this->input->get("character_name")) {
 				$this->db->join("characters gsr", "gsr.uid=u.uid")
-					->where("gsr.character_name", trim($this->input->get("character_name")))				
-					->where("gsr.id = (select max(id) from characters where uid=gsr.uid and character_name=gsr.character_name)", null, false)
+					->where("gsr.name", trim($this->input->get("character_name")))				
+					->where("gsr.id = (select max(id) from characters where uid=gsr.uid and name=gsr.name)", null, false)
 					;
 			}
 			

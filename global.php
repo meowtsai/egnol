@@ -1,9 +1,4 @@
 <?php
-
-// {development, testing, production}
-define('ENVIRONMENT', 'development');
-define('SYSTEM_OS', (PATH_SEPARATOR==';') ? 'window' : 'linux');
-
 require_once dirname(__FILE__).'/config.php';
 
 define('IN_OFFICE', in_array($_SERVER["REMOTE_ADDR"], g_conf("office_ip")) && empty($_GET["lock"]) ? TRUE : FALSE);

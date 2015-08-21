@@ -37,32 +37,38 @@
 | in the URL cannot be matched to a valid route.
 |
 */
+if ($_SERVER['HTTP_HOST']==parse_url($this->config->base_url(), PHP_URL_HOST)) {
 
-$route['default_controller'] = "platform";
-$route['404_override'] = '';
+	$route['default_controller'] = "platform";
+	$route['404_override'] = '';
 
-$route['play_game'] = 'gate/play_game';
-$route['play_game/(:any)'] = 'gate/play_game/$1';
+	$route['play_game'] = 'gate/play_game';
+	$route['play_game/(:any)'] = 'gate/play_game/$1';
 
-$route['register'] = 'member/register';
-$route['cust/CustServiceNew.php'] = 'service';
-$route['PayFun/PayMethod.php'] = 'payment';
-$route['eWallet/transfer_index.php'] = 'wallet/transfer';
-$route['member/login.php'] = 'member/login';
-$route['member/forgot.php'] = 'member/forgot_password';
-$route['member/regist.php'] = 'member/register';
-$route['member/register.php'] = 'member/register';
-$route['member/msettings.php'] = 'member/update_profile';
+	$route['register'] = 'member/register';
+	$route['cust/CustServiceNew.php'] = 'service';
+	$route['PayFun/PayMethod.php'] = 'payment';
+	$route['eWallet/transfer_index.php'] = 'wallet/transfer';
+	$route['member/login.php'] = 'member/login';
+	$route['member/forgot.php'] = 'member/forgot_password';
+	$route['member/regist.php'] = 'member/register';
+	$route['member/register.php'] = 'member/register';
+	$route['member/msettings.php'] = 'member/update_profile';
 
-$route['ImageInfo.php?'] = 'link/s_gif';
-$route['Js/ads_banner.js'] = 'link/s';
+	$route['ImageInfo.php?'] = 'link/s_gif';
+	$route['Js/ads_banner.js'] = 'link/s';
 
-if ( ! empty($_GET['gate'])) {
-	$route['member/login_gate.php'] = 'link/pass/'.urlencode($this->config->base_url().'/gate/login_callback/'.$_GET['gate'].'?'.$_SERVER['QUERY_STRING']);
+	if ( ! empty($_GET['gate'])) {
+		$route['member/login_gate.php'] = 'link/pass/'.urlencode($this->config->base_url().'/gate/login_callback/'.$_GET['gate'].'?'.$_SERVER['QUERY_STRING']);
+	}
+	$route['member/yahoo/login_proc.php'] = 'link/pass/'.urlencode($this->config->base_url().'/gate/login_callback/yahoo?'.$_SERVER['QUERY_STRING']);
+
+	$route['guide/t.htm'] = 'payment';
+} elseif ($_SERVER['HTTP_HOST']==parse_url($this->config->payment_url(), PHP_URL_HOST)) {
+	
+	$route['gash/return_url'] = 'gash/return_url';
+	$route['(:any)'] = 'errors/error_404';
 }
-$route['member/yahoo/login_proc.php'] = 'link/pass/'.urlencode($this->config->base_url().'/gate/login_callback/yahoo?'.$_SERVER['QUERY_STRING']);
-
-$route['guide/t.htm'] = 'payment';
 
 
 

@@ -1,0 +1,6 @@
+RewriteEngine On
+
+RewriteCond %{REQUEST_URI} !^default/
+RewriteRule ^(.*)$ default/$1 [L]
+
+Options -Indexes

@@ -150,7 +150,7 @@ $config["servers"] =
 $config["server_status"] = 
 	array(
 		"public" => array("name" => "公開", "color" => "#080"),
-		"maintaining" => array("name" => "維護", "color" => "#921"),
+		"maintenance" => array("name" => "維護", "color" => "#921"),
 		"private" => array("name" => "內測", "color" => "#129"),
 		"hide" => array("name" => "關閉", "color" => "#888")
 	);

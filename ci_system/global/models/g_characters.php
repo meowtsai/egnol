@@ -35,11 +35,11 @@ class G_Characters extends CI_Model {
 		return $this->db->insert_id();
 	}
 	
-	function chk_role_exists($server, $uid, $character_name)
+	function chk_role_exists($server, $uid, $name)
 	{
 		$this->db->from("characters")
 			->where("uid", $uid)
-			->where("character_name", $character_name)
+			->where("name", $name)
 			->where("server_id", $server->server_id);
 		
 		return $this->db->count_all_results() > 0;

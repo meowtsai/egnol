@@ -28,10 +28,10 @@ class Game
 		{
 			return $this->_return_error("伺服器不開放");
 		}
-		elseif ($server->server_status=='maintaining')
+		elseif ($server->server_status=='maintenance')
 		{
 			if ( ! (IN_OFFICE || $pass)) {
-				return $this->_return_error($server->maintaining_msg);
+				return $this->_return_error($server->maintenance_msg);
 			}
 		}
 		elseif ($server->server_status=='private')
@@ -105,10 +105,10 @@ class Game
 		{
 			return $this->_return_error("伺服器不開放");
 		}
-		elseif ($server->server_status=='maintaining')
+		elseif ($server->server_status=='maintenance')
 		{
 			if ( ! (IN_OFFICE)) {
-				return $this->_return_error($server->maintaining_msg);
+				return $this->_return_error($server->maintenance_msg);
 			}
 		}
 		elseif ($server->server_status=='private')

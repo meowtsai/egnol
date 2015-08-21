@@ -809,7 +809,7 @@ class Api extends MY_Controller
 		}
 		if ($money < 0) {
 			die(json_encode(array("result"=>"0", "error"=>"金額設定錯誤")));
-		}		
+		}	
 		
 		//開ip
 		$pass_ips = array();    	

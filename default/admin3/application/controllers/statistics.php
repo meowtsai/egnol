@@ -79,7 +79,7 @@ class Statistics extends MY_Controller {
 			->set("query0", isset($query0) ? $query0 : false)
 			->set("query1", isset($query1) ? $query1 : false)
 			->set("query2", isset($query2) ? $query2 : false)
-			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("id")->get())
+			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
@@ -135,7 +135,7 @@ class Statistics extends MY_Controller {
 						from 
 						(
 							SELECT 
-								date(lgl.create_time) 'd', lgl.uid, lgl.server_id, character_name,
+								date(lgl.create_time) 'd', lgl.uid, lgl.server_id, gsr.name,
 								if (gsr.id is null, '0', '1') 'role',
 								if (gsr.id is null, '0', (select if(count(*)>0, 1, 0) from log_game_logins
 									where uid=gsr.uid and server_id=gsr.server_id 
@@ -202,7 +202,7 @@ class Statistics extends MY_Controller {
 		
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
-			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("id")->get())
+			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
@@ -224,7 +224,7 @@ class Statistics extends MY_Controller {
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
-			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("id")->get())
+			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
@@ -247,7 +247,7 @@ class Statistics extends MY_Controller {
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
-			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("id")->get())
+			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
 			->set("span", $span)
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
@@ -363,7 +363,7 @@ class Statistics extends MY_Controller {
 			->set("game_id", $game_id)
 			->set("span", $span)
 		
-		->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("id")->get())
+		->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
@@ -606,7 +606,7 @@ class Statistics extends MY_Controller {
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
 			->set("span", $span)
-			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("id")->get())
+			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
@@ -780,7 +780,7 @@ class Statistics extends MY_Controller {
 		$query = $this->db->query("
 			SELECT 
 				whales.uid 'uid',
-				chr.character_name 'character_name',
+				chr.name 'character_name',
 				whales.server_name 'server_name',
 				whales.deposit_total 'deposit_total',
 				gm.exchange_rate*whales.deposit_total 'currency_total',
@@ -814,7 +814,7 @@ class Statistics extends MY_Controller {
 						uid,
 						server_id,
 						MIN(create_time) 'create_time',
-						character_name
+						name
 					FROM characters
 					GROUP BY server_id, uid
 				) chr ON chr.uid = whales.uid

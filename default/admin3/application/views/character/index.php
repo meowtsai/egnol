@@ -60,7 +60,6 @@
 	
 		<input type="text" name="uid" value="<?=$this->input->get("uid")?>" style="width:70px" placeholder="uid">
 		<input type="text" name="euid" value="<?=$this->input->get("euid")?>" style="width:70px" placeholder="euid">
-		<input type="text" name="account" value="<?=$this->input->get("account")?>" style="width:90px" placeholder="帳號">
 		<input type="text" name="character_name" value="<?=$this->input->get("character_name")?>" style="width:90px" placeholder="角色名稱">		
 
 	</div>
@@ -125,8 +124,8 @@
 		<tr>
 			<th style="width:80px;">uid
 				<div style="color:#777;">euid</div></th>
-			<th style="width:400px">會員帳號</th>
-			<th style="width:100px;">會員帳號來源</th>
+			<th style="width:400px">信箱</th>
+			<th style="width:400px">手機</th>
 			<th style="width:90px;">註冊日期</th>
 			<th style="width:90px;">伺服器</th>		
 			<th style="width:120px;">角色名稱</th>
@@ -141,15 +140,10 @@
 				<a href="<?=site_url("character?uid={$row->uid}&action=查詢")?>"><i class="icon-search"></i></a>
 				<div style="color:#777;"><?=$this->g_user->encode($row->uid)?></div>
 			</td>
-			<td><?=$row->account?></td>
-			<td>
-				<?
-				$spt = explode("@", $row->account);
-				$key= (count($spt)>1) ? $spt[1] : 'long_e';
-				echo $channels[$key]?>
-			</td>
+			<td><?=$row->email?></td>
+			<td><?=$row->mobile?></td>
 			<td><?=date("Y-m-d", strtotime($row->create_time))?></td>
-			<td><?=$row->name?></td>
+			<td><?=$row->server_name?></td>
 			<td><?=$row->character_name?></td>
 			<td><?=$row->create_time?></td>
 		</tr>

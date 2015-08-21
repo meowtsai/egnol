@@ -332,7 +332,7 @@ class Log extends MY_Controller {
 		}
 		
 		$games = $this->db->get("games");
-		$servers = $this->db->order_by("id")->get("servers");		
+		$servers = $this->db->order_by("server_id")->get("servers");		
 			
 		$this->g_layout
 			->add_breadcrumb("遊戲登入")	
@@ -432,7 +432,7 @@ class Log extends MY_Controller {
 		}
 		
 		$games = $this->db->get("games");
-		$servers = $this->db->order_by("id")->get("servers");		
+		$servers = $this->db->order_by("server_id")->get("servers");		
 			
 		$this->g_layout
 			->add_breadcrumb("線上會員")	

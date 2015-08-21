@@ -143,24 +143,9 @@ class G_User
 		
 		$site = $this->CI->input->get('site') ? $this->CI->input->get('site') : (empty($_SESSION['site']) ? 'long_e' : $_SESSION['site']);	
 		$ad = $this->CI->input->get('ad') ? $this->CI->input->get('ad') : (empty($_SESSION['ad']) ? '' : $_SESSION['ad']);
-		$account = '';
-
-		if(!empty($email))
-		{
-			$account = $email;
-		}
-  		else if(!empty($mobile))
-		{
-			$account = $mobile;
-		}
-  		else if(!empty($external_id))
-		{
-			$account = $external_id;
-		}
 
 		$data = array(
 			'uid' => $uid,
-			'account' => $account,
 			'ip' => $_SERVER["REMOTE_ADDR"],
 			'create_time' => now(),
 			'is_recent' => '1',

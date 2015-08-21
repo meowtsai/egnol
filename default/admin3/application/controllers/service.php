@@ -222,7 +222,7 @@ class Service extends MY_Controller {
 	function add()
 	{		
 		$games = $this->db->from("games")->where("is_active", "1")->get();
-		$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("id")->get("servers");	
+		$servers = $this->db->where_in("server_status", array("public", "maintenance"))->order_by("id")->get("servers");	
 		
 		$this->_init_service_layout()
 			->add_breadcrumb("新增電話案件")
@@ -236,7 +236,7 @@ class Service extends MY_Controller {
 	function edit($id)
 	{		
 		$games = $this->db->from("games")->where("is_active", "1")->get();
-		$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("id")->get("servers");
+		$servers = $this->db->where_in("server_status", array("public", "maintenance"))->order_by("id")->get("servers");
 
 		$query = $this->db->from("questions qt")
 			->join("servers gi", "qt.server_id=gi.server_id")
@@ -384,7 +384,7 @@ class Service extends MY_Controller {
 	{
 		$this->zacl->check("service", "modify");
 
-		$question = $this->db->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email, u.account, au.name allocate_user_name")
+		$question = $this->db->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email, u.uid, au.name allocate_user_name")
 			->where("q.id", $id)
 			->from("questions q")
 			->join("servers gi", "gi.server_id=q.server_id")

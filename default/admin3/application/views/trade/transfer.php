@@ -83,7 +83,6 @@
 		<input type="text" name="id" value="<?=$this->input->get("id")?>" class="input-small" placeholder="#id">
 		<input type="text" name="uid" value="<?=$this->input->get("uid")?>" class="input-small" placeholder="uid">		
 		<input type="text" name="euid" value="<?=$this->input->get("euid")?>" class="input-small" placeholder="euid">
-		<input type="text" name="account" value="<?=$this->input->get("account")?>" class="input-medium" placeholder="帳號">
 		<input type="text" name="order_no" value="<?=$this->input->get("order_no")?>" class="input-medium" placeholder="第三方訂單號">				
 	
 		<input type="submit" class="btn btn-small btn-inverse" name="action" value="查詢">
@@ -135,7 +134,7 @@
 		<tr class="<?=$row->billing_type=='2' ? $result_table[$row->result]["class"] : ''?>">
 			<td><?=$row->id?>
 			</td>
-			<td title="帳號: <?=$row->account?>">
+			<td title="帳號:">
 				<a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?></a>
 				<a href="<?=site_url("trade/transfer?uid={$row->uid}&action=查詢")?>"><i class="icon-search"></i></a>
 				<div style="color:#777"><?=$this->g_user->encode($row->uid)?></div>

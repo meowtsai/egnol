@@ -93,21 +93,3 @@ class MY_Controller extends CI_Controller
 		return $this->g_user->require_login($this->game_id, $redirect_url);
 	}
 }
-/*
-function chk_server_open($row)
-{		
-	if ($row->server_status == 'maintaining' &&  ! IN_OFFICE) {
-		if ( ! IN_OFFICE) {
-			return "javascript:alert('{$row->maintaining_msg}');";
-		}
-	} 
-	else if ($row->server_status == 'private' &&  ! IN_OFFICE) {
-		return false;
-	}
-	else if ($row->server_status == 'hide') {
-		return false;
-	}
-	
-	return 'http://www.longeplay.com.tw/play_game?sid='.$row->id.'&ad='.@$_GET['ad'];
-}
-*/

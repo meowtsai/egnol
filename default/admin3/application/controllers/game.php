@@ -217,7 +217,7 @@ select d, count(*) 'login_cnt', sum(role) 'role_cnt',
 from 
 (
 	SELECT 
-		date(lgl.create_time) 'd', lgl.uid, lgl.server_id, character_name,
+		date(lgl.create_time) 'd', lgl.uid, lgl.server_id, gsr.name,
 		if (gsr.id is null, '0', '1') 'role',
 		if (gsr.id is null, '0', (select if(count(*)>0, 1, 0) from log_game_logins
 			where uid=gsr.uid and server_id=gsr.server_id 
@@ -284,7 +284,7 @@ group by d
 		
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
-			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("id")->get())
+			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();

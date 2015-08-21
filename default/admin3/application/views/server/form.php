@@ -1,9 +1,9 @@
 <?php 
-	$sever_status = $this->config->item("server_status");	
+	$server_status = $this->config->item("server_status");	
 ?>
 
 <form enctype="multipart/form-data" action="<?=site_url("server/modify")?>" method="post">
-	<input type="hidden" name="id" value="<?=$row ? $row->id : ''?>">
+	<input type="hidden" name="id" value="<?=$row ? $row->server_id : ''?>">
 	<input type="hidden" name="game_id" value="<?=htmlspecialchars($this->game_id)?>">
 		
 	<label>伺服器代碼</label>
@@ -17,13 +17,13 @@
 	
 	<label>上下架狀態</label>
 	<select name="server_status" id="server_status" style="width:120px;">
-		<? foreach($sever_status as $key => $val):?>
+		<? foreach($server_status as $key => $val):?>
 		<option value="<?=$key?>" <?=$row ? ($row->server_status==$key ? 'selected="selected"' : '') : ''?>><?=$val["name"]?></option>
 		<?endforeach;?>
 	</select>
 	
 	<label>維護公告</label>
-	<input type="text" value="<?=$row ? $row->maintaining_msg : ''?>" name="maintaining_msg" style="width:300px;">
+	<input type="text" value="<?=$row ? $row->maintenance_msg : ''?>" name="maintenance_msg" style="width:300px;">
 		
 	<label>金流交易許可</label>
 	<label class="radio inline"><input type="radio" value="0" name="is_transaction_active" <?=$row ? ($row->is_transaction_active=='0' ? 'checked="checked"' : '') : 'checked="checked"'?>>不可交易</label>
