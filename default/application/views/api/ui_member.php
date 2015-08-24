@@ -3,20 +3,29 @@
 	$mobile = !empty($this->g_user->mobile) ? $this->g_user->mobile : "";
 	$external_id = !empty($this->g_user->external_id) ? $this->g_user->external_id : "";
 ?>
+<script type="text/javascript">
+function loginSuccessButton (uid, email, mobile, external_id, server_id) {
+	if (typeof LongeAPI != 'undefined') { 
+        LongeAPI.onLoginSuccess(uid, email, mobile, external_id, server_id);
+    } else {
+        window.location = "ios://loginsuccess" + "-_-" + uid + "-_-" + email + "-_-" + mobile + "-_-" + external_id + "-_-" + server_id;
+	}
+}
+</script>
 <ul class="le_form">
 	<li>會員</li>
 	<li>
 		<div class="field_name">會員ID：
-		</div><div class="field_input"><?=$this->g_user->uid?></div>
+		</div><div class="field_input" id="user_id"><?=$this->g_user->uid?></div>
 	</li>
 <? if(!empty($this->g_user->email) || !empty($this->g_user->mobile)): ?>
 	<li>
 		<div class="field_name">Email：
-		</div><div class="field_input"><?=$email?></div>
+		</div><div class="field_input" id="email"><?=$email?></div>
 	</li>
 	<li>
 		<div class="field_name">手機號碼：
-		</div><div class="field_input"><?=$mobile?></div>
+		</div><div class="field_input" id="mobile"><?=$mobile?></div>
 	</li>
 	<li>
 		<input type="button" name="change_pwd" id="change_pwd" value="修改密碼" onclick="javascript:location.href='/api/ui_change_password?site=<?=$site?>'" />
@@ -46,7 +55,7 @@
 	</li>
 <? endif; ?>
 	<li>
-		<input type="button" name="continue" id="continue" value="進入遊戲" onclick="javascript:LongeAPI.onLoginSuccess(<?
+		<input type="button" name="continue" id="continue" value="進入遊戲" onclick="loginSuccessButton(<?
 			if(!empty($servers))
 			{
 	        	echo "'{$this->g_user->uid}','{$email}','{$mobile}','{$external_id}',$('#server_selection').find(':selected').val()";

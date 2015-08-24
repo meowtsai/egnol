@@ -125,6 +125,14 @@
 
 <script type="text/javascript">
 var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
+
+function cancelButton () {
+	if (typeof LongeAPI != 'undefined') { 
+        LongeAPI.onPaymentCancel();  
+    } else {
+        window.location = "ios://cancelbutton";
+	}
+}
 </script>
 
 <form id="choose_form" class="choose_form" method="post" action="/api/ui_payment_test_result?site=<?=$site?>" target="_blank" >
@@ -172,7 +180,7 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 
 				<select id="character_pool" style="display:none;">
 					<? foreach($characters->result() as $row): ?>
-					<option value="<?=$row->id?>" class="<?=$row->server_id?>"><?=$row->character_name?></option>
+					<option value="<?=$row->id?>" class="<?=$row->server_id?>"><?=$row->name?></option>
 					<? endforeach;?>
 				</select>
 			</div>
@@ -226,7 +234,7 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 		</li>
 		<li>
 			<input tabindex="3" name="send" type="submit" id="send" value="確定" />
-			<input name="cancel" type="button" id="cancel" value="取消" onclick="javascript:LongeAPI.onPaymentCancel();" />
+			<input name="cancel" type="button" id="cancel" value="取消" onclick="javascript:cancelButton();" />
 		</li>
 	</ul>
 </form>

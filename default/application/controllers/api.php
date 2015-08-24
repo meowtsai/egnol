@@ -231,6 +231,13 @@ class Api extends MY_Controller
 
 		header('Content-type:text/html; Charset=UTF-8');
 		echo "<script type='text/javascript'>LongeAPI.onLogoutSuccess()</script>";
+		echo "<script type='text/javascript'>
+	        if (typeof LongeAPI != 'undefined') { 
+                LongeAPI.onLogoutSuccess()
+            } else {
+                window.location = \"ios://logoutsuccess\";
+	        }
+		</script>";
 	}
 
 	// 帳號註冊
@@ -473,7 +480,14 @@ class Api extends MY_Controller
 
 		$character = $this->db->from("characters")->where("id", $character_id)->get()->row();
 
-		echo "<script type='text/javascript'>LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character->character_name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10));</script>";
+		echo "\"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\"
+		<script type='text/javascript'>
+	        if (typeof LongeAPI != 'undefined') { 
+                LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character->name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10)); 
+            } else {
+                window.location = \"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\";
+	        }
+		</script>";
 	}
 
 	// 取得伺服器列表
