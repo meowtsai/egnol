@@ -19,7 +19,7 @@
 <? if(!empty($this->g_user->email) || !empty($this->g_user->mobile)): ?>
 			<table class="member_info">
 				<tr>
-					<th>帳號類型　|　</th>
+					<th>帳號類型　|</th>
 					<td>
 					<?
 				  		if(strpos($external_id, "@facebook"))
@@ -42,22 +42,22 @@
 					</td>
 				</tr>
 				<tr>
-					<th>姓　　名　|　</th><td><?=$user_info->name?></td>
+					<th>姓　　名　|</th><td><?=$user_info->name?></td>
 				</tr>
 				<tr>
-					<th>性　　別　|　</th><td><?=$sex_text[$sex]?></td>
+					<th>性　　別　|</th><td><?=$sex_text[$sex]?></td>
 				</tr>
 				<tr>
-					<th>生　　日　|　</th><td><?=$user_info->birthday?></td>
+					<th>生　　日　|</th><td><?=$user_info->birthday?></td>
 				</tr>
 				<tr>
-					<th>地　　址　|　</th><td><?=$user_info->street?></td>
+					<th>地　　址　|</th><td><?=$user_info->street?></td>
 				</tr>
 				<tr>
-					<th>E-MAIL　|　</th><td><?=$email?></td>
+					<th>E-MAIL　|</th><td><?=$email?></td>
 				</tr>
 				<tr>
-					<th>行動電話　|　</th><td><?=$mobile?></td>
+					<th>手機號碼　|</th><td><?=$mobile?></td>
 				</tr>
 			</table>
 
@@ -70,12 +70,12 @@
 			</div>
 
 			<ul class="notes">
-				<li>★ 個資填寫提醒訊息</li>
+				<li>★ 請經常確認您的個人資料是否符合現況，若有變動時請即時進行修正。</li>
 			</ul>
 <? else: ?>
 			<table class="member_info">
 				<tr>
-					<th>帳號類型　|　</th>
+					<th>帳號類型　|</th>
 					<td>
 					<?
 				  		if(strpos($external_id, "@facebook"))
@@ -103,7 +103,7 @@
 			</div>
 
 			<ul class="notes">
-				<li>★ 綁定提醒訊息</li>
+				<li>★ 您目前為透過第三方或行動裝置直接登入方式進入本系統，建議可進行帳號綁定以確保未來若更換手機或第三方帳號時，仍可使用龍邑之帳密進行登入。</li>
 			</ul>
 <? endif; ?>
 		</div>

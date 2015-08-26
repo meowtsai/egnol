@@ -44,11 +44,9 @@ body{font-family: "微軟正黑體",  "Arial"; }
 
 
 /*footer*/
-#clear_copyright{ clear:both; height:50px;}
+#clear_copyright{ clear:both; height:50px;background-color:#fff;}
 .copyright {text-align:center; width:100%; margin:-30px 0 20px 0; display:block; z-index:9999;}
-.copyright p{ width:80%; margin:0 auto;}
-
-#copyright_space{background-color:#fff;max-width:1200px; width:100%; margin:0 auto; padding-top:10px; display:block; text-align:right; height:50px; }
+.copyright p{ width:90%; margin:0 auto;}
 
 footer {
 	display: none;
@@ -130,7 +128,7 @@ footer .footer-ins {width:80%}
 #content .contenter ul.icon > ul{ width:115px; margin-right:10px;}
 #content .contenter ul.icon > ul:nth-of-type(2){ margin-right:0;}
 #content .contenter ul.icon ul:nth-of-type(2) li{ margin-bottom:9px;}
-.copyright {margin:10px 0;}
+.copyright {margin:-50px 0 0;}
 .copyright p{ font-size:10px;}
-#clear_copyright{ height: auto;}
+#clear_copyright{ height: 60px;}
 }

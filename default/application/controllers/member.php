@@ -379,6 +379,7 @@ class Member extends MY_Controller
 			->set("data", $row)
 			->set("user_info", $user_info)
 			->add_css_link("login")
+			->add_css_link("money")
 			->add_js_include("member/update_profile")
 			->standard_view();
 	}

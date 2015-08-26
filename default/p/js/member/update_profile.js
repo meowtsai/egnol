@@ -1,6 +1,9 @@
 $(function()
 {
 	$("#member_update").validate({
+		onfocusout: false,
+		onkeyup: false,
+		onclick: false,
 		messages:
 		{
 			email: {

@@ -219,12 +219,14 @@ class G_Layout
         $this->CI->load->config('../config/g_tracker');
 		$google_analytics = $this->CI->config->item('google_analytics');
 
-		$this->template_data['tracker_code'] = $google_analytics['long_e'];
+		$track_code = $google_analytics['long_e'];
 
 		if(!empty($this->data['site']) && $this->data['site'] != 'long_e')
 		{
-            $this->template_data['tracker_code'] = $this->template_data['tracker_code'].$google_analytics[$this->data['site']];
+            $track_code = $track_code.$google_analytics[$this->data['site']];
 		}
+
+        $this->template_data['tracker_code'] = "<script>".$track_code."</script>";
 
     	echo $this->CI->load->view("g_event_view", $this->template_data, true);
     }

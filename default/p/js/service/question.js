@@ -33,6 +33,32 @@ $(function()
 	});
 
 	$("#question_form").validate({
+		onfocusout: false,
+		onkeyup: false,
+		onclick: false,
+		messages: {
+			game: "尚未選擇遊戲",
+			server: "尚未選擇伺服器",
+			character_name: "尚未選擇角色",
+			question_type: "尚未選擇問題類型",
+			content: {
+				required: "尚未填寫問題描述",
+				minlength: "問題描述最少需填寫 5 個字",
+				maxlength: "問題描述最多填寫 500 個字"
+			},
+		},
+		showErrors: function(errorMap, errorList)
+		{
+		   var err = '';
+		   $(errorList).each(function(i, v)
+		   {
+			   err += v.message + "<br/>";
+		   });
+		   if (err)
+		   {
+				leOpenDialog('提問錯誤', err, leDialogType.MESSAGE);
+			}
+		},
 		submitHandler: function(form)
 		{
 			$(form).ajaxSubmit(
@@ -40,10 +66,17 @@ $(function()
 				dataType: 'json',
 				success: function(json)
 				{
-	                leOpenDialog('玩家提問', '提問成功！', leDialogType.MESSAGE, function()
+					if (json.status == 'success')
 					{
-	                    location.href = '/service/listing';
-					});
+		                leOpenDialog('玩家提問', '提問成功！', leDialogType.MESSAGE, function()
+						{
+		                    location.href = '/service/listing?site=' + json.site;
+						});
+					}
+					else
+					{
+						leOpenDialog('提問錯誤', json.message, leDialogType.MESSAGE);
+					}
 				}
 			});
 		}

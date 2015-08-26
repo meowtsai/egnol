@@ -37,6 +37,7 @@ class MY_Controller extends CI_Controller
 		$this->g_layout->set("site", $site);
         $this->g_layout->set("game_url", ($site == "long_e" ? g_conf('url', 'longe') : "http://".$site.".longeplay.com.tw/"));
         $this->g_layout->set("longe_url", g_conf('url', 'longe'));
+		$this->g_layout->set("is_system_page", true);
 
 		$redirect_url = urldecode($this->input->get("redirect_url", true));
 		$this->g_layout->set("redirect_url", $redirect_url);

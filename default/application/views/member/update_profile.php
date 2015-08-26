@@ -41,7 +41,7 @@
 					<tr>
 						<th>性　　別</th>
 						<td>
-							<select name="sex" style="width:80%;">
+							<select name="sex">
 								<option value='0' <?=($user_info->sex == 0 ? "selected" : "")?>>--請選擇--</option>
 								<option value='1' <?=($user_info->sex == 1 ? "selected" : "")?>>男性</option>
 								<option value='2' <?=($user_info->sex == 2 ? "selected" : "")?>>女性</option>
@@ -207,7 +207,7 @@
 						<th>E-MAIL</th><td><input type="text" maxlength="50" name="email" value="<?=$data->email?>" class="required email" size="33"></td>
 					</tr>
 					<tr>
-						<th>行動電話</th><td><input type="text" maxlength="10" name="mobile" value="<?=$data->mobile?>" class="mobile isMobile" size="33"></td>
+						<th>手機號碼</th><td><input type="text" maxlength="10" name="mobile" value="<?=$data->mobile?>" class="mobile isMobile" size="33"></td>
 					</tr>
 				</table>
 
@@ -219,7 +219,7 @@
 					</p>
 				</div>
 				<ul class="notes">
-					<li>★ </li>
+					<li>★ 請正確填寫個人資料，並注意勿冒用他人資料以免觸法。</li>
 				</ul>
 			</div>
 		</form>

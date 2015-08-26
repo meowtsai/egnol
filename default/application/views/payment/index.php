@@ -59,7 +59,7 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 
 							<select id="character_pool" style="display:none;">
 								<? foreach($characters->result() as $row): ?>
-								<option value="<?=$row->id?>" class="<?=$row->server_id?>"><?=$row->character_name?></option>
+								<option value="<?=$row->id?>" class="<?=$row->server_id?>"><?=$row->name?></option>
 								<? endforeach;?>
 							</select>
 						</td>
@@ -124,7 +124,7 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 				</div>
 
 				<ul class="notes">
-					<li>點數比值與相關訊息...</li>
+					<li id="payment_msg">點數比值與相關訊息...</li>
 				</ul>
 			</div>
 		</form>

@@ -473,7 +473,7 @@ class Api extends MY_Controller
 
 		$character = $this->db->from("characters")->where("id", $character_id)->get()->row();
 
-		echo "<script type='text/javascript'>LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character->character_name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10));</script>";
+		echo "<script type='text/javascript'>LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character->name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10));</script>";
 	}
 
 	// 取得伺服器列表
@@ -542,7 +542,7 @@ class Api extends MY_Controller
 		{
 			$role = array(
 						"id"=>$row->id,
-						"character_name"=>$row->characrer_name);
+						"character_name"=>$row->name);
 			$role_list[] = $role;
 		}
 
@@ -597,7 +597,7 @@ class Api extends MY_Controller
 		$insert_id = $this->g_characters->create_role($server_info,
 			array(
 				"uid" => $uid,
-				'character_name' => $character_name,
+				'name' => $character_name,
 			));
 
 		if (empty($insert_id))
@@ -656,7 +656,7 @@ class Api extends MY_Controller
 		echo json_encode(array("result"				=> "1",
 								"id"				=> $role->id,
 								"uid"				=> $role->uid,
-								"character_name"	=> $role->character_name,
+								"character_name"	=> $role->name,
 								"server_id"         => $role->server_id,
 								"create_time"       => $role->create_time
 								));

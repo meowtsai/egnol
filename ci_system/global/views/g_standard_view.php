@@ -11,7 +11,9 @@
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
 <link href="<?=$longe_url?>p/css/reset.css" rel="stylesheet" type="text/css" />
 <link href="<?=$longe_url?>p/css/primary.css" rel="stylesheet" type="text/css" />
+<? if(empty($is_system_page)) { ?>
 <link href="<?=$game_url?>p/css/primary.css" rel="stylesheet" type="text/css" />
+<? } ?>
 <!--[if lt IE 9]>
 <script src="<?=$longe_url?>p/js/html5shiv.min.js"></script>
 <![endif]-->

@@ -18,8 +18,7 @@
 			<div class="login-button">
 				<input name="doLogin" type="submit" id="doSubmit" value="" style="display:none;" />
 				<p><a href="#" title="login"><img src="<?=$longe_url?>p/image/member/login-btn.png" onclick="javascript:$('#doSubmit').trigger('click')"></a></p>
-				<p><a href="<?=$longe_url?>member/register?site=<?=$site?>&redirect_url=<?=urlencode($redirect_url)?>" title="login">註冊帳號</a>&nbsp;│&nbsp;
-				<a href="<?=$longe_url?>member/forgot_password?site=<?=$site?>&redirect_url=<?=urlencode($redirect_url)?>" title="login">忘記密碼</a></p>
+				<p><a href="<?=$longe_url?>member/register?site=<?=$site?>&redirect_url=<?=urlencode($redirect_url)?>" title="login">註冊帳號</a>&nbsp;│&nbsp;<a href="<?=$longe_url?>member/forgot_password?site=<?=$site?>&redirect_url=<?=urlencode($redirect_url)?>" title="login">忘記密碼</a></p>
 			</div>
 
 			<div class="login-other">
@@ -43,4 +42,3 @@
 		</form>
 	</div>
 </div>
-<div id="copyright_space"></div>

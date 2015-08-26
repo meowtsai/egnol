@@ -9,7 +9,6 @@
 <meta name="keywords" content="">
 <meta name="description" content="" />
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;">
-<link rel='stylesheet' type='text/css' href='<?=$longe_url?>p/css/default.css'>
 <link href="<?=$longe_url?>p/css/reset.css" rel="stylesheet" type="text/css" />
 <link href="<?=$longe_url?>p/css/primary.css" rel="stylesheet" type="text/css" />
 <link href="<?=$game_url?>p/css/primary.css" rel="stylesheet" type="text/css" />

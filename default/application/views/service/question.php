@@ -6,7 +6,7 @@
 		<div class="bread cf" typeof="v:Breadcrumb">
 			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>service?site=<?=$site?>" title="客服中心" rel="v:url" property="v:title">客服中心</a> > <a href="<?=$longe_url?>service/question?site=<?=$site?>" title="線上回報" rel="v:url" property="v:title">線上回報</a>
 		</div>
-		<form id="question_form" method="post" action="<?=$longe_url?>service/question_ajax?site=<?=$site?>">
+		<form id="question_form" enctype="multipart/form-data" method="post" action="<?=$longe_url?>service/question_ajax?site=<?=$site?>">
 			<div class="login-form">
 				<table class="member_info">
 					<tr>
@@ -43,7 +43,7 @@
 
 							<select id="character_pool" style="display:none;">
 								<? foreach($characters->result() as $row): ?>
-								<option value="<?=$row->character_name?>" class="<?=$row->server_id?>"><?=$row->character_name?></option>
+								<option value="<?=$row->name?>" class="<?=$row->server_id?>"><?=$row->name?></option>
 								<? endforeach;?>
 							</select>
 						</td>

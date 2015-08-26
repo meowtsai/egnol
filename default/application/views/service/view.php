@@ -7,7 +7,7 @@
 <? if ($question):?>
 			<table class="member_info">
 				<tr>
-					<th>提問類型</th>
+					<th>提問類型　|</th>
 					<td>
 					<?
 						$type = $this->config->item("question_type");
@@ -16,31 +16,31 @@
 					</td>
 				</tr>
 				<tr>
-					<th>遊戲名稱</th>
+					<th>遊戲名稱　|</th>
 					<td><?=$question->game_name?></td>
 				</tr>
 				<tr>
-					<th>伺服器</th>
+					<th>伺服器　|</th>
 					<td><?=$question->server_name?></td>
 				</tr>
 				<tr>
-					<th>角色名稱</th>
+					<th>角色名稱　|</th>
 					<td><?=$question->character_name?></td>
 				</tr>
 				<tr>
-					<th>E-MAIL</th>
+					<th>E-MAIL　|</th>
 					<td><?=$question->email?></td>
 				</tr>
 				<tr>
-					<th>手機號碼</th>
+					<th>手機號碼　|</th>
 					<td><?=$question->mobile?></td>
 				</tr>
 				<tr>
-					<th>提問描述</th>
+					<th>提問描述　|</th>
 					<td><?=$question->content?></td>
 				</tr>
 				<tr>
-					<th>截圖</th>
+					<th>截圖　|</th>
 					<td>
 		        	<? if ($question->pic_path1):?>
 						<a href="<?=$question->pic_path1?>" target="_blank">
