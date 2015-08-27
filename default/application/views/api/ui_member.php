@@ -8,7 +8,7 @@ function loginSuccessButton (uid, email, mobile, external_id, server_id) {
 	if (typeof LongeAPI != 'undefined') { 
         LongeAPI.onLoginSuccess(uid, email, mobile, external_id, server_id);
     } else {
-        window.location = "ios://loginsuccess" + "-_-" + uid + "-_-" + email + "-_-" + mobile + "-_-" + external_id + "-_-" + server_id;
+        window.location = "ios://loginsuccess" + "-_-" + encodeURIComponent(uid + "-_-" + email + "-_-" + mobile + "-_-" + external_id + "-_-" + server_id);
 	}
 }
 </script>
