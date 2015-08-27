@@ -36,7 +36,13 @@ class Pepay extends MY_Controller {
 		
 		$query = $this->db->query("SELECT count(*) > (15-1) as chk FROM pepay_billing WHERE uid={$this->g_user->uid} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");
 		if ($query->row()->chk) die("請勿連續送出，以免重複扣款，造成您的損失!!");			
-		
+
+		// 儲存儲值資料
+		$_SESSION['payment_game']		= $this->input->post('game');
+		$_SESSION['payment_server']		= $this->input->post('server');
+		$_SESSION['payment_character']	= $this->input->post('character');
+
+		//
 		$cShopID = $this->pepay_conf["ShopID"];
 		$cSysTrustCode = $this->pepay_conf["SysTrustCode"];
 		$cShopTrustCode = $this->pepay_conf["ShopTrustCode"];

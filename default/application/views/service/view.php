@@ -60,6 +60,7 @@
 					</td>
 				</tr>
 				<tr>
+					<th>處理狀態　|</th>
 					<td>
 					<?
 					if ($replies->num_rows() == 0) echo '目前尚在處理中';
