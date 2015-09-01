@@ -80,10 +80,24 @@ $(function()
 			$("#pay_type_block").show();
 			$(".pay_type").hide();
 			$(".pay_type_" + option.attr("pay_type")).show();
+			
+            var currency = $("select[name='currency']").val();
+		    $(".currency").hide();
+		    $(".currency_" + currency).show();
 			return;
 		}
 
         onBillingOptionSelected($("option:selected", this));
+	});
+
+    $("select[name='currency']").on("change", function ()
+	{
+		$('#pay_type_block').hide();
+		
+        var currency = $("select[name='currency']").val();
+		$(".billing_type_opt").show();
+		$(".billing_type_opt").not("." + currency).hide();
+		return;
 	});
 
     $("select[name='billing_channel']").on("change", function ()
