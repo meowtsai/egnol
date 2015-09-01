@@ -41,7 +41,8 @@ switch (ENVIRONMENT)
 			'gc_maxlifetime'=> '7200',
 		);
 		$g_config['url'] = array(
-			'longe'     => '/'
+			'longe'     => '/',
+			'api'       => '/',
 		);
 		break;
 
@@ -62,8 +63,10 @@ switch (ENVIRONMENT)
 			'gc_maxlifetime'=> '7200',
 		);
 		$g_config['url'] = array(
-			'longe'     => 'http://game.longeplay.com.tw/',
-                        'payment'   => 'http://payment.longeplay.com.tw/'
+			'longe'     => 'https://game.longeplay.com.tw/',
+			'payment'   => 'http://payment.longeplay.com.tw/',
+			'api'       => 'https://api.longeplay.com.tw/'
 		);
+        $_SERVER['HTTPS'] = 'on';
 		break;
 }

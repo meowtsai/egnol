@@ -41,6 +41,9 @@ class Pepay extends MY_Controller {
 		$_SESSION['payment_game']		= $this->input->post('game');
 		$_SESSION['payment_server']		= $this->input->post('server');
 		$_SESSION['payment_character']	= $this->input->post('character');
+		$_SESSION['payment_type']		= $this->input->post('billing_type');
+		$_SESSION['payment_channel']	= $this->input->post('billing_channel');
+		$_SESSION['payment_api_call']   = $this->input->post('api_call');
 
 		//
 		$cShopID = $this->pepay_conf["ShopID"];
@@ -57,7 +60,7 @@ class Pepay extends MY_Controller {
 		$cProdID = $this->input->post('prod_id'); //"PD-BILL-FET"
 		
 		$server_id = $this->input->post('server');
-		$nAmount = floatval($this->input->post("payment_amount"));
+		$nAmount = floatval($this->input->post("billing_money"));
 
 		$cCurrency = "TWD";	
 		$cOrderID = $this->_make_trade_seq();		
@@ -341,8 +344,15 @@ class Pepay extends MY_Controller {
 
 function go_payment_result($status, $transfer_status, $price, $message='', $args='') 
 {
-	//return;
-	header('location: '.site_url("payment/result?s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args));
+	$api_call = $_SESSION['payment_api_call'];
+
+    $_SESSION['payment_api_call'] = '';
+	unset($_SESSION['payment_api_call']);
+
+	if($api_call == 'true')
+		header('location: '.g_conf('url', 'api')."api/ui_payment_result?s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args);
+	else
+		header('location: '.g_conf('url', 'longe')."payment/result?s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args);
 	exit();
 }
 

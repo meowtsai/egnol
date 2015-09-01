@@ -152,7 +152,7 @@ CREATE TABLE `gash_billing` (
   `status` char(1) DEFAULT '0',
   `create_time` datetime NOT NULL,
   `update_time` datetime NOT NULL,
-  `server_id` int(11) DEFAULT NULL,
+  `server_id` varchar(20) DEFAULT NULL,
   `country` varchar(45) DEFAULT 'global',
   `note` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)

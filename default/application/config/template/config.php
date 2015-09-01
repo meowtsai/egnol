@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://203.75.245.16';
+$config['base_url']	= 'https://game.longeplay.com.tw/';
 
 /*
 |--------------------------------------------------------------------------

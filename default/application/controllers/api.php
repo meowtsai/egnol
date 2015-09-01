@@ -73,6 +73,7 @@ class Api extends MY_Controller
 			}
 
 			$this->_init_layout()
+				->add_css_link("login")
 				->add_js_include("api/login")
 				->set("partner", $partner)
 				->set("game_key", $game_key)
@@ -94,6 +95,7 @@ class Api extends MY_Controller
 
 			$this->_init_layout()
 				->set("servers", $servers)
+				->add_css_link("login")
 				->api_view("api/ui_member");
 		}
 	}
@@ -145,28 +147,36 @@ class Api extends MY_Controller
 	{
 		header('Content-type:text/html; Charset=UTF-8');
 
-		$server_mode = empty($_SESSION['server_mode']) ? 0 : $_SESSION['server_mode'];
-
 		$site = $this->_get_site();
         $device_id = $this->input->get('deviceid');
 		$external_id = $device_id."@device";
 
-		$_SESSION['site'] = $site;
-
-		$boolResult = $this->g_user->verify_account('', '', '', $external_id);
-		if ($boolResult != true)
+		if(!empty($device_id))
 		{
-			$boolResult = $this->g_user->create_account('', '', '', $external_id);
-		}
+			$server_mode = empty($_SESSION['server_mode']) ? 0 : $_SESSION['server_mode'];
 
-		if ($boolResult==true)
-		{
-			$this->g_user->verify_account('', '', '', $external_id);
+			$_SESSION['site'] = $site;
+
+			$boolResult = $this->g_user->verify_account('', '', '', $external_id);
+			if ($boolResult != true)
+			{
+				$boolResult = $this->g_user->create_account('', '', '', $external_id);
+			}
+
+			if ($boolResult==true)
+			{
+				$this->g_user->verify_account('', '', '', $external_id);
+			}
+			else
+			{
+				echo "<script type='text/javascript'>alert('登入失敗!');</script>";
+			}
 		}
 		else
 		{
-			echo "<script type='text/javascript'>alert('登入失敗!');</script>";
+			echo "<script type='text/javascript'>alert('無法取得行動裝置資訊，登入失敗!');</script>";
 		}
+
 		echo "<script type='text/javascript'>location.href='/api/ui_login?site={$site}';</script>";
 	}
 
@@ -177,7 +187,7 @@ class Api extends MY_Controller
 		$channel = $this->input->get("channel", true);
 
 		$_SESSION['site'] = $site;
-		$_SESSION['redirect_url'] = 'http://ec2-52-69-89-253.ap-northeast-1.compute.amazonaws.com/api/ui_login';
+		$_SESSION['redirect_url'] = 'https://api.longeplay.com.tw/api/ui_login';
 
 		$param = $login_param = array();
 
@@ -230,13 +240,21 @@ class Api extends MY_Controller
 		unset($_SESSION['server_mode']);
 
 		header('Content-type:text/html; Charset=UTF-8');
-		echo "<script type='text/javascript'>LongeAPI.onLogoutSuccess()</script>";
+		//echo "<script type='text/javascript'>LongeAPI.onLogoutSuccess()</script>";
+        echo "<script type='text/javascript'>
+	        if (typeof LongeAPI != 'undefined') {
+                LongeAPI.onLogoutSuccess()
+            } else {
+                window.location = \"ios://logoutsuccess\";
+	        }
+		</script>";
 	}
 
 	// 帳號註冊
 	function ui_register()
 	{
 		$this->_init_layout()
+			->add_css_link("login")
 			->add_js_include("api/register")
 			->api_view();
 	}
@@ -285,6 +303,7 @@ class Api extends MY_Controller
 	function ui_bind_account()
 	{
 		$this->_init_layout()
+			->add_css_link("login")
 			->add_js_include("api/bind_account")
 			->api_view();
 	}
@@ -328,6 +347,7 @@ class Api extends MY_Controller
 	function ui_forgot_password()
 	{
 		$this->_init_layout()
+			->add_css_link("login")
 			->add_js_include("api/forgot_password")
 			->api_view();
 	}
@@ -384,6 +404,7 @@ class Api extends MY_Controller
 		$this->_require_login();
 
 		$this->_init_layout()
+			->add_css_link("login")
 			->add_js_include("api/change_password")
 			->api_view();
 	}
@@ -392,19 +413,65 @@ class Api extends MY_Controller
 	{
 		$this->_check_login_json();
 
+		$site = $this->_get_site();
+		$old = $this->input->post("old");
 		$pwd = $this->input->post("pwd");
 		$pwd2 = $this->input->post("pwd2");
 
-		if ( empty($pwd) ) die(json_failure("請輸入密碼"));
-		else if ($pwd != $pwd2) die(json_failure("兩次密碼輸入不同"));
-
-		if(empty($this->g_user->email) && empty($this->g_user->mobile))
+		if ( empty($old) )
 		{
-			die(json_failure("尚未綁定帳號"));
+			die(json_failure("請輸入舊密碼"));
+		}
+		else if ( empty($pwd) )
+		{
+			die(json_failure("請輸入新密碼"));
+		}
+		else if ($pwd != $pwd2)
+		{
+			die(json_failure("密碼與驗證密碼不同"));
+		}
+
+		if ($this->g_user->is_from_3rd_party())
+		{
+			$row = $this->g_user->get_user_data($this->g_user->uid);
+			if(empty($row->email) && empty($row->mobile))
+			{
+                die(json_failure("尚未綁定帳號"));
+			}
+		}
+
+		$user_data = $this->g_user->get_user_data();
+		if($user_data->password != md5($old))
+		{
+            die(json_failure("舊密碼錯誤"));
 		}
 
 		$this->db->where("uid", $this->g_user->uid)->update("users", array("password" => md5(trim($pwd))));
-		die(json_message(array("message"=>"修改成功")));
+		die(json_message(array("message"=>"修改成功", "site"=>$site)));
+	}
+
+	// 服務條款
+	function ui_service_agreement()
+	{
+		$this->_init_layout()
+			->add_css_link("login")
+			->api_view('member/service_agreement');
+	}
+
+	// 隱私權政策
+	function ui_privacy_agreement()
+	{
+		$this->_init_layout()
+			->add_css_link("login")
+			->api_view('member/privacy_agreement');
+	}
+
+	// 個資同意書
+	function ui_member_agreement()
+	{
+		$this->_init_layout()
+			->add_css_link("login")
+			->api_view('member/member_agreement');
 	}
 
 	// 點數儲值
@@ -413,6 +480,7 @@ class Api extends MY_Controller
 		$this->_require_login();
 
 		$this->load->config("g_gash");
+		$this->load->config("payment");
 
 		$site = $this->_get_site();
 		$server_id = $this->input->get("serverid");
@@ -429,7 +497,57 @@ class Api extends MY_Controller
 			->set("servers", $servers)
 			->set("server_id", $server_id)
 			->set("characters", $characters)
+			->add_css_link("login")
+			->add_css_link("money")
 			->add_js_include("api/payment")
+			->api_view();
+	}
+
+	function ui_payment_result()
+	{
+		if(empty($_SESSION['site']))
+		{
+            die("儲值錯誤");
+		}
+
+		$site				= $_SESSION['site'];
+		$payment_game		= $_SESSION['payment_game'];
+		$payment_server		= $_SESSION['payment_server'];
+		$payment_character	= $_SESSION['payment_character'];
+		$payment_type		= $_SESSION['payment_type'];
+		$payment_channel	= $_SESSION['payment_channel'];
+
+		$_SESSION['site']				= '';
+		$_SESSION['payment_game']		= '';
+		$_SESSION['payment_server']		= '';
+		$_SESSION['payment_character']	= '';
+		$_SESSION['payment_type']		= '';
+		$_SESSION['payment_channel']	= '';
+		unset($_SESSION['site']);
+		unset($_SESSION['payment_game']);
+		unset($_SESSION['payment_server']);
+		unset($_SESSION['payment_character']);
+		unset($_SESSION['payment_type']);
+		unset($_SESSION['payment_channel']);
+
+		// 讀取遊戲資料
+		$game = $this->db->from("games")->where("game_id", $payment_game)->get()->row();
+		// 讀取伺服器資料
+		$server = $this->db->from("servers")->where("server_id", $payment_server)->get()->row();
+		// 讀取玩家角色資料
+		$character = $this->db->from("characters")->where("id", $payment_character)->get()->row();
+
+		$this->_init_layout()
+			->set("site", $site)
+			->set("game", $game)
+			->set("server", $server)
+			->set("character", $character)
+			->set("billing_type", $payment_type)
+			->set("pay_type", $payment_channel)
+			->set("status", $this->input->get("status"))
+			->set("message", urldecode($this->input->get("message")))
+			->add_css_link("login")
+			->add_css_link("money")
 			->api_view();
 	}
 
@@ -473,7 +591,15 @@ class Api extends MY_Controller
 
 		$character = $this->db->from("characters")->where("id", $character_id)->get()->row();
 
-		echo "<script type='text/javascript'>LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character->name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10));</script>";
+		//echo "<script type='text/javascript'>LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character->name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10));</script>";
+        echo "\"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\"
+		<script type='text/javascript'>
+	        if (typeof LongeAPI != 'undefined') {
+                LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character->name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10));
+            } else {
+                window.location = \"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\";
+	        }
+		</script>";
 	}
 
 	// 取得伺服器列表

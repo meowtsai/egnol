@@ -37,7 +37,7 @@
 					<tr>
 						<th>角色名稱</th>
 						<td>
-							<select name="character_name" class="required" style="width:90%;">
+							<select name="character_name" style="width:90%;">
 								<option value="">--請選擇角色--</option>
 							</select>
 

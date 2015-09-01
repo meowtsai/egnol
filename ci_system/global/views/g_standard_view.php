@@ -28,7 +28,7 @@
 <![endif]-->
 
 
-<script src="http://s3.amazonaws.com/nwapi/nwmatcher/nwmatcher-1.2.5-min.js"></script>
+<script src="https://s3.amazonaws.com/nwapi/nwmatcher/nwmatcher-1.2.5-min.js"></script>
 <?
 	unset($meta["title"]);
 	foreach($meta as $key => $content)
@@ -50,8 +50,8 @@
 <!--slider -->
 <link rel="stylesheet" type="text/css" href="<?=$longe_url?>p/css/slick.css"/>
 <link rel="stylesheet" type="text/css" href="<?=$longe_url?>p/css/slick-theme.css"/>
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
-<script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="<?=$longe_url?>p/js/slick.min.js"></script>
 <script>
 $(document).ready(function(){

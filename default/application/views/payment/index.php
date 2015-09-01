@@ -12,7 +12,7 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 		<div class="bread cf" typeof="v:Breadcrumb">
 			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>payment?site=<?=$site?>" title="儲值中心" rel="v:url" property="v:title">儲值中心</a>
 		</div>
-		<form id="choose_form" class="choose_form" method="post" action="" target="_blank" >
+		<form id="choose_form" class="choose_form" method="post" action="">
 			<input type="hidden" name="PAID">
 			<input type="hidden" name="CUID">
 			<input type="hidden" name="ERP_ID">
@@ -20,6 +20,8 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 			<input type="hidden" name="pay_type">
 			<input type="hidden" name="subpay_type">
 			<input type="hidden" name="prod_id">
+
+			<input type="hidden" name="api_call" value="false" />
 
 			<div class="login-form">
 				<table class="member_info">
