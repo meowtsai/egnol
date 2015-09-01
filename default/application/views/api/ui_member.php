@@ -3,6 +3,15 @@
 	$mobile = !empty($this->g_user->mobile) ? $this->g_user->mobile : "";
 	$external_id = !empty($this->g_user->external_id) ? $this->g_user->external_id : "";
 ?>
+<script type="text/javascript">
+function loginSuccessButton (uid, email, mobile, external_id, server_id) {
+	if (typeof LongeAPI != 'undefined') { 
+        LongeAPI.onLoginSuccess(uid, email, mobile, external_id, server_id);
+    } else {
+        window.location = "ios://loginsuccess" + "-_-" + encodeURIComponent(uid + "-_-" + email + "-_-" + mobile + "-_-" + external_id + "-_-" + server_id);
+	}
+}
+</script>
 <ul class="le_form">
 	<li>會員</li>
 	<li>
@@ -46,7 +55,7 @@
 	</li>
 <? endif; ?>
 	<li>
-		<input type="button" name="continue" id="continue" value="進入遊戲" onclick="javascript:LongeAPI.onLoginSuccess(<?
+		<input type="button" name="continue" id="continue" value="進入遊戲" onclick="loginSuccessButton(<?
 			if(!empty($servers))
 			{
 	        	echo "'{$this->g_user->uid}','{$email}','{$mobile}','{$external_id}',$('#server_selection').find(':selected').val()";
