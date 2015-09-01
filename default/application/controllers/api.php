@@ -73,6 +73,7 @@ class Api extends MY_Controller
 			}
 
 			$this->_init_layout()
+				->add_css_link("login")
 				->add_js_include("api/login")
 				->set("partner", $partner)
 				->set("game_key", $game_key)
@@ -89,11 +90,12 @@ class Api extends MY_Controller
 			if($server_mode == 1)
 			{
 				// 讀取伺服器列表
-				$servers = $this->db->from("servers")->where("game_id", $site)->order_by("id")->get();
+				$servers = $this->db->from("servers")->where("game_id", $site)->order_by("server_id")->get();
 			}
 
 			$this->_init_layout()
 				->set("servers", $servers)
+				->add_css_link("login")
 				->api_view("api/ui_member");
 		}
 	}
@@ -145,28 +147,36 @@ class Api extends MY_Controller
 	{
 		header('Content-type:text/html; Charset=UTF-8');
 
-		$server_mode = empty($_SESSION['server_mode']) ? 0 : $_SESSION['server_mode'];
-
 		$site = $this->_get_site();
         $device_id = $this->input->get('deviceid');
 		$external_id = $device_id."@device";
 
-		$_SESSION['site'] = $site;
-
-		$boolResult = $this->g_user->verify_account('', '', '', $external_id);
-		if ($boolResult != true)
+		if(!empty($device_id))
 		{
-			$boolResult = $this->g_user->create_account('', '', '', $external_id);
-		}
+			$server_mode = empty($_SESSION['server_mode']) ? 0 : $_SESSION['server_mode'];
 
-		if ($boolResult==true)
-		{
-			$this->g_user->verify_account('', '', '', $external_id);
+			$_SESSION['site'] = $site;
+
+			$boolResult = $this->g_user->verify_account('', '', '', $external_id);
+			if ($boolResult != true)
+			{
+				$boolResult = $this->g_user->create_account('', '', '', $external_id);
+			}
+
+			if ($boolResult==true)
+			{
+				$this->g_user->verify_account('', '', '', $external_id);
+			}
+			else
+			{
+				echo "<script type='text/javascript'>alert('登入失敗!');</script>";
+			}
 		}
 		else
 		{
-			echo "<script type='text/javascript'>alert('登入失敗!');</script>";
+			echo "<script type='text/javascript'>alert('無法取得行動裝置資訊，登入失敗!');</script>";
 		}
+
 		echo "<script type='text/javascript'>location.href='/api/ui_login?site={$site}';</script>";
 	}
 
@@ -177,7 +187,7 @@ class Api extends MY_Controller
 		$channel = $this->input->get("channel", true);
 
 		$_SESSION['site'] = $site;
-		$_SESSION['redirect_url'] = 'http://ec2-52-69-89-253.ap-northeast-1.compute.amazonaws.com/api/ui_login';
+		$_SESSION['redirect_url'] = 'https://api.longeplay.com.tw/api/ui_login';
 
 		$param = $login_param = array();
 
@@ -230,13 +240,21 @@ class Api extends MY_Controller
 		unset($_SESSION['server_mode']);
 
 		header('Content-type:text/html; Charset=UTF-8');
-		echo "<script type='text/javascript'>LongeAPI.onLogoutSuccess()</script>";
+		//echo "<script type='text/javascript'>LongeAPI.onLogoutSuccess()</script>";
+        echo "<script type='text/javascript'>
+	        if (typeof LongeAPI != 'undefined') {
+                LongeAPI.onLogoutSuccess()
+            } else {
+                window.location = \"ios://logoutsuccess\";
+	        }
+		</script>";
 	}
 
 	// 帳號註冊
 	function ui_register()
 	{
 		$this->_init_layout()
+			->add_css_link("login")
 			->add_js_include("api/register")
 			->api_view();
 	}
@@ -285,6 +303,7 @@ class Api extends MY_Controller
 	function ui_bind_account()
 	{
 		$this->_init_layout()
+			->add_css_link("login")
 			->add_js_include("api/bind_account")
 			->api_view();
 	}
@@ -328,6 +347,7 @@ class Api extends MY_Controller
 	function ui_forgot_password()
 	{
 		$this->_init_layout()
+			->add_css_link("login")
 			->add_js_include("api/forgot_password")
 			->api_view();
 	}
@@ -384,6 +404,7 @@ class Api extends MY_Controller
 		$this->_require_login();
 
 		$this->_init_layout()
+			->add_css_link("login")
 			->add_js_include("api/change_password")
 			->api_view();
 	}
@@ -392,23 +413,146 @@ class Api extends MY_Controller
 	{
 		$this->_check_login_json();
 
+		$site = $this->_get_site();
+		$old = $this->input->post("old");
 		$pwd = $this->input->post("pwd");
 		$pwd2 = $this->input->post("pwd2");
 
-		if ( empty($pwd) ) die(json_failure("請輸入密碼"));
-		else if ($pwd != $pwd2) die(json_failure("兩次密碼輸入不同"));
-
-		if(empty($this->g_user->email) && empty($this->g_user->mobile))
+		if ( empty($old) )
 		{
-			die(json_failure("尚未綁定帳號"));
+			die(json_failure("請輸入舊密碼"));
+		}
+		else if ( empty($pwd) )
+		{
+			die(json_failure("請輸入新密碼"));
+		}
+		else if ($pwd != $pwd2)
+		{
+			die(json_failure("密碼與驗證密碼不同"));
+		}
+
+		if ($this->g_user->is_from_3rd_party())
+		{
+			$row = $this->g_user->get_user_data($this->g_user->uid);
+			if(empty($row->email) && empty($row->mobile))
+			{
+                die(json_failure("尚未綁定帳號"));
+			}
+		}
+
+		$user_data = $this->g_user->get_user_data();
+		if($user_data->password != md5($old))
+		{
+            die(json_failure("舊密碼錯誤"));
 		}
 
 		$this->db->where("uid", $this->g_user->uid)->update("users", array("password" => md5(trim($pwd))));
-		die(json_message(array("message"=>"修改成功")));
+		die(json_message(array("message"=>"修改成功", "site"=>$site)));
+	}
+
+	// 服務條款
+	function ui_service_agreement()
+	{
+		$this->_init_layout()
+			->add_css_link("login")
+			->api_view('member/service_agreement');
+	}
+
+	// 隱私權政策
+	function ui_privacy_agreement()
+	{
+		$this->_init_layout()
+			->add_css_link("login")
+			->api_view('member/privacy_agreement');
+	}
+
+	// 個資同意書
+	function ui_member_agreement()
+	{
+		$this->_init_layout()
+			->add_css_link("login")
+			->api_view('member/member_agreement');
 	}
 
 	// 點數儲值
 	function ui_payment()
+	{
+		$this->_require_login();
+
+		$this->load->config("g_gash");
+		$this->load->config("payment");
+
+		$site = $this->_get_site();
+		$server_id = $this->input->get("serverid");
+
+		// 讀取遊戲列表
+		$games = $this->db->from("games")->where("is_active", "1")->get();
+		// 讀取伺服器列表
+		$servers = $this->db->order_by("server_id")->get("servers");
+		// 讀取玩家角色列表
+		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();
+
+		$this->_init_layout()
+			->set("games", $games)
+			->set("servers", $servers)
+			->set("server_id", $server_id)
+			->set("characters", $characters)
+			->add_css_link("login")
+			->add_css_link("money")
+			->add_js_include("api/payment")
+			->api_view();
+	}
+
+	function ui_payment_result()
+	{
+		if(empty($_SESSION['site']))
+		{
+            die("儲值錯誤");
+		}
+
+		$site				= $_SESSION['site'];
+		$payment_game		= $_SESSION['payment_game'];
+		$payment_server		= $_SESSION['payment_server'];
+		$payment_character	= $_SESSION['payment_character'];
+		$payment_type		= $_SESSION['payment_type'];
+		$payment_channel	= $_SESSION['payment_channel'];
+
+		$_SESSION['site']				= '';
+		$_SESSION['payment_game']		= '';
+		$_SESSION['payment_server']		= '';
+		$_SESSION['payment_character']	= '';
+		$_SESSION['payment_type']		= '';
+		$_SESSION['payment_channel']	= '';
+		unset($_SESSION['site']);
+		unset($_SESSION['payment_game']);
+		unset($_SESSION['payment_server']);
+		unset($_SESSION['payment_character']);
+		unset($_SESSION['payment_type']);
+		unset($_SESSION['payment_channel']);
+
+		// 讀取遊戲資料
+		$game = $this->db->from("games")->where("game_id", $payment_game)->get()->row();
+		// 讀取伺服器資料
+		$server = $this->db->from("servers")->where("server_id", $payment_server)->get()->row();
+		// 讀取玩家角色資料
+		$character = $this->db->from("characters")->where("id", $payment_character)->get()->row();
+
+		$this->_init_layout()
+			->set("site", $site)
+			->set("game", $game)
+			->set("server", $server)
+			->set("character", $character)
+			->set("billing_type", $payment_type)
+			->set("pay_type", $payment_channel)
+			->set("status", $this->input->get("status"))
+			->set("message", urldecode($this->input->get("message")))
+			->add_css_link("login")
+			->add_css_link("money")
+			->api_view();
+	}
+
+	// 點數儲值測試
+	function ui_payment_test()
 	{
 		$this->_require_login();
 
@@ -420,7 +564,7 @@ class Api extends MY_Controller
 		// 讀取遊戲列表
 		$games = $this->db->from("games")->where("is_active", "1")->get();
 		// 讀取伺服器列表
-		$servers = $this->db->order_by("id")->get("servers");
+		$servers = $this->db->order_by("server_id")->get("servers");
 		// 讀取玩家角色列表
 		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();
 
@@ -429,43 +573,107 @@ class Api extends MY_Controller
 			->set("servers", $servers)
 			->set("server_id", $server_id)
 			->set("characters", $characters)
-			->add_js_include("api/payment")
+			->add_js_include("api/payment_test")
 			->api_view();
+	}
+
+	function ui_payment_test_result()
+	{
+		header('Content-type:text/html; Charset=UTF-8');
+
+		$game_id = $this->input->post("game");
+		$server_id = $this->input->post("server");
+		$character_id = $this->input->post("character");
+		$billingType = $this->input->post("billing_type");
+		$payType = "";
+		$money = $this->input->post("billing_money");
+		$get_point = $money;
+
+		$character = $this->db->from("characters")->where("id", $character_id)->get()->row();
+
+		//echo "<script type='text/javascript'>LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character->name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10));</script>";
+        echo "\"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\"
+		<script type='text/javascript'>
+	        if (typeof LongeAPI != 'undefined') {
+                LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character->name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10));
+            } else {
+                window.location = \"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\";
+	        }
+		</script>";
 	}
 
 	// 取得伺服器列表
 	function get_server_list()
 	{
+		$partner = $this->input->post("partner");
 		$game = $this->input->post("game");
 
-		if (empty($game))
+		if (empty($partner) || empty($game))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
 		}
 
 		$servers = $this->db->from("servers")->where("game_id", $game)->order_by("id")->get();
 
-		//
-		//
-		//
+		$partner_conf = $this->config->item("partner_api");
+		if ( ! array_key_exists($partner, $partner_conf))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
+		}
+		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"]))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
+		}
+
+		$query = $this->db->from("servers")->where("game_id", $game)->get();
+		$server_list = array();
+		foreach($query->result() as $row)
+		{
+			$server = array("server_id"=>$row->server_id,
+							"name"=>$row->name,
+							"status"=>0);
+			$server_list[] = $server;
+		}
+
+		echo json_encode(array("result"	=> 1, "servers" => $server_list));
+		exit();
 	}
 
 	// 取得伺服器角色列表
 	function get_role_list()
 	{
+		$partner = $this->input->post("partner");
+		$game = $this->input->post("game");
 		$server = $this->input->post("server");
 		$uid = $this->input->post("uid");
 
-		if (empty($uid) || empty($server))
+		if (empty($partner) || empty($game) || empty($uid) || empty($server))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
 		}
 
-		$characters = $this->db->from("characters")->where("server_id", $server)->order_by("id")->get();
+		$partner_conf = $this->config->item("partner_api");
+		if ( ! array_key_exists($partner, $partner_conf))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
+		}
+		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"]))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
+		}
 
-		//
-		//
-		//
+		$query = $this->db->from("characters")->where("server_id", $server)->where("uid", $uid)->order_by("id")->get();
+		$role_list = array();
+		foreach($query->result() as $row)
+		{
+			$role = array(
+						"id"=>$row->id,
+						"character_name"=>$row->name);
+			$role_list[] = $role;
+		}
+
+		echo json_encode(array("result"	=> 1, "roles" => $role_list));
+		exit();
 	}
 
 	// 建立遊戲角色
@@ -492,8 +700,7 @@ class Api extends MY_Controller
 			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
 		}
 
-		$server_id = "{$game}_".sprintf("%02d", $server);
-		$server_info = $this->db->from("servers")->where("server_id", "{$server_id}")->get()->row();
+		$server_info = $this->db->from("servers")->where("server_id", $server)->get()->row();
 
 		if (empty($server_info))
 		{
@@ -501,11 +708,7 @@ class Api extends MY_Controller
 		}
 
 		$query = $this->db->from("users")->where("uid", $uid)->get();
-		if ($query->num_rows() > 0)
-		{
-			$account = $query->row()->account;
-		}
-		else
+		if ($query->num_rows() == 0)
 		{
 			die(json_encode(array("result"=>"0", "error"=>"uid不存在")));
 		}
@@ -520,7 +723,7 @@ class Api extends MY_Controller
 		$insert_id = $this->g_characters->create_role($server_info,
 			array(
 				"uid" => $uid,
-				'character_name' => $character_name,
+				'name' => $character_name,
 			));
 
 		if (empty($insert_id))
@@ -528,10 +731,9 @@ class Api extends MY_Controller
 			die(json_encode(array("result"=>"0", "error"=>"資料庫新增錯誤")));
 		}
 
-		echo json_encode(array("result"				=> "1",
-								"id"				=> $insert_id,
-								"character_name"	=> $character_name,
-								));
+		echo json_encode(array("result"	=> 1,
+								"id" => $insert_id,
+								"character_name" => $character_name));
 		exit();
 	}
 
@@ -580,7 +782,7 @@ class Api extends MY_Controller
 		echo json_encode(array("result"				=> "1",
 								"id"				=> $role->id,
 								"uid"				=> $role->uid,
-								"character_name"	=> $role->character_name,
+								"character_name"	=> $role->name,
 								"server_id"         => $role->server_id,
 								"create_time"       => $role->create_time
 								));

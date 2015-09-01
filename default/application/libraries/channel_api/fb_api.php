@@ -36,16 +36,16 @@ class Fb_Api extends Channel_Api
     {
 	   	$loginUrl = $this->sdk->getLoginUrl(array_merge(array(
    				'scope' => $this->conf["scope"],
-   				'redirect_uri' => 'http://ec2-52-69-89-253.ap-northeast-1.compute.amazonaws.com/member/login_callback/facebook'
+   				//'redirect_uri' => 'http://ec2-52-69-89-253.ap-northeast-1.compute.amazonaws.com/member/login_callback/facebook'
    				//'redirect_uri' => base_url().'/gate/login_callback/facebook'
-   				//'redirect_uri' => 'http://www.longeplay.com.tw/gate/login_callback/facebook'
+   				'redirect_uri' => 'http://game.longeplay.com.tw/member/login_callback/facebook'
 	   		), $params));
 	   	//header("location: {$loginUrl}");
 	   	//exit();
     	echo("
-    			<meta property='og:image' content='".base_url()."/p/upload/tmp.jpg' />
+    			<meta property='og:image' content='{$longe_url}/p/upload/tmp.jpg' />
     			<meta property='og:title' content='龍邑遊戲' />
-    			<meta property='og:description' content='超人氣三國大亂鬥，可愛萌英雄任你挑選！一起萌翻三國歷史吧！'>
+    			<meta property='og:description' content=''>
     			<script> top.location.href='" . $loginUrl . "'</script>
     	");
     }

@@ -58,10 +58,7 @@ $(function()
 				{
 					if (json.status == 'success')
 					{
-						if ($('#redirect_url').val())
-							location.href = $('#redirect_url').val();
-						else
-							location.href = '/member/index?site='+json.site;
+						location.href = '/member/index?site='+json.site;
 						return;
 					}					
 					else

@@ -1,51 +1,38 @@
-<ul class="le_form">
-	<li>回報紀錄</li>
-	<li>
-		<div class="field_name">問題狀態
-		</div><div class="field_input">
-			<select id="filter" style="width:85%;">
-				<option value="">--</option>
-				<?
-				$question_status = $this->config->item("question_status");
-				foreach($question_status as $id => $status):?>
-				<option value="<?=$id?>" <?=$this->input->get("status")==$id ? 'selected="selected"' : ""?>><?=$status?></option>
-				<? endforeach;?>
-			</select>
+<?
+	$question_status = $this->config->item("question_status");
+?>
+<style>
+.field {
+	display:inline-block;
+}
+</style>
+<div id="content-login">
+	<div class="login-ins">
+		<div class="bread cf" typeof="v:Breadcrumb">
+			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>service?site=<?=$site?>" title="客服中心" rel="v:url" property="v:title">客服中心</a> > <a href="<?=$longe_url?>service/listing?site=<?=$site?>" title="線上回報" rel="v:url" property="v:title">線上回報</a>
 		</div>
-	<li>
-	</li>
-		<table style="width:100%">
-		  <thead>
-		  	<tr>
-		  		<th style="width:30%">時間</th><th style="width:15%">編號</th><th style="width:40%">內容</th><th style="width:15%">狀態</th>
-		  	</tr>
-		  </thead>
-		  <tbody>
-		  <? $no = $query->num_rows();
-		  	foreach($query->result() as $row):?>
-		  	<tr class="item" status="<?=$row->status?>">
-		  		<td><?=$row->create_time?></td>
-		  		<td><a href="<?=site_url("service/view/{$row->id}")?>"><?=$no--?></a></td>
-		  		<td><a href="<?=site_url("service/view/{$row->id}")?>"><?=mb_strimwidth(strip_tags($row->content), 0, 28, '...')?></a></td>
-		  		<td><?=$question_status[$row->status]?>
-		  			<? if ($row->status=='2' && $row->is_read=='0') echo '<span style="color:red">(未讀)</span>'?>
-		  		</td>
-		  	</tr>
-		  <? endforeach;?>
-		  </tbody>
-		</table>
+		<div class="login-form">
+			<p class="p1">案件資訊(含編號、回報內容、時間、處理狀態)<br>▼點擊查看案件▼</p>
 		</div>
-	</li>
-</ul>
-
-<script type="text/javascript">
-$(function(){
-	$('#filter').on("change", function(){
-		$('.item').show();
-		if ($(this).val()) {
-			$('.item[status!='+$(this).val()+']').hide();
-			console.log($(this).val());
-		}
-	});
-});
-</script>
+		<ul class="server_case">
+			<? $no = $query->num_rows();
+				foreach($query->result() as $row):?>
+				<a href="<?=$longe_url?>service/view/<?=$row->id?>?site=<?=$site?>")">
+					<li>
+						<table style="width:100%;">
+							<tr>
+								<th style="max-width:5%;width:5%;"><?=$no--?></th>
+								<td style="max-width:35%;min-width:35%;text-overflow:ellipsis;text-align:left;"><?=$row->content?></td>
+								<td style="max-width:35%;min-width:35%;"><?=$row->create_time?></td>
+								<td style="max-width:20%;width:20%;">
+									<?=$question_status[$row->status]?>
+                                    <? if ($row->status=='2' && $row->is_read=='0') echo '<span class="field" style="color:red">(未讀)</span>'?>
+								</td>
+							</tr>
+						</table>
+					</li>
+				</a>
+			<? endforeach;?>
+		</ul>
+	</div>
+</div>

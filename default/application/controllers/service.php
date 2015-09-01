@@ -23,6 +23,8 @@ class Service extends MY_Controller {
 		$this->_init_layout()
 			->set("not_read_cnt", $not_read_cnt)
 			->set("question_cnt", $question_cnt)
+			->add_css_link("login")
+			->add_css_link("server")
 			->standard_view();
 	}
 
@@ -34,8 +36,8 @@ class Service extends MY_Controller {
 			->join("games g", "gi.game_id=g.game_id")->get();
 		
 		$games = $this->db->from("games")->where("is_active", "1")->get();
-		$servers = $this->db->where_in("server_status", array("public", "maintenance"))->order_by("server_id")->get("servers");	
-		
+		$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("server_id")->get("servers");
+
 		// 讀取玩家角色列表
 		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();
 
@@ -44,11 +46,16 @@ class Service extends MY_Controller {
 			->set("games", $games)
 			->set("servers", $servers)
 			->set("characters", $characters)
+			->add_css_link("login")
+			->add_css_link("money")
+			->add_css_link("server")
 			->standard_view();
 	}
 	
 	function question_ajax()
 	{
+		$site = $this->_get_site();
+
 		if ( ! $this->g_user->is_login()) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
 		if ( ! $this->input->post("content")) die(json_encode(array("status"=>"failure", "message"=>"無內文")));
 		
@@ -65,7 +72,7 @@ class Service extends MY_Controller {
 		
 		$this->load->library('upload');
 		$config['upload_path'] = realpath("p/upload");
-		$config['allowed_types'] = 'gif|jpg|bmp';
+		$config['allowed_types'] = 'gif|jpg|bmp|png';
 		$config['max_size']	= '1024'; //1MB
 		$config['max_width'] = '2048';
 		$config['max_height'] = '2048';		
@@ -112,13 +119,13 @@ class Service extends MY_Controller {
 				$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");					
 			}
 		}
-		
+
 		$this->db
 			->set("create_time", "now()", false)
 			->set("update_time", "now()", false)
 			->insert("questions", $data);
-		
-		die(json_encode(array("status"=>"success")));
+
+		die(json_encode(array("status"=>"success", "site"=> $site)));
 	}
 	
 	function listing()
@@ -140,6 +147,8 @@ class Service extends MY_Controller {
 		
 		$this->_init_layout()
 			->set("query", $query)
+			->add_css_link("login")
+			->add_css_link("server")
 			->standard_view();
 	}
 	
@@ -169,6 +178,8 @@ class Service extends MY_Controller {
 		}
 		
 		$this->_init_layout()
+			->add_css_link("login")
+			->add_css_link("server")
 			->add_js_include("service/view")
 			->set("question", $question)
 			->set("replies", $replies)

@@ -2,62 +2,110 @@
 	$email = !empty($this->g_user->email) ? $this->g_user->email : "";
 	$mobile = !empty($this->g_user->mobile) ? $this->g_user->mobile : "";
 	$external_id = !empty($this->g_user->external_id) ? $this->g_user->external_id : "";
+
+	$sex_text = array(
+		0 => "尚未填寫",
+		1 => "男性",
+		2 => "女性"
+	);
+	$sex = !empty($user_info->sex) ? $user_info->sex : 0;
 ?>
-<ul class="le_form">
-	<li>
-		<div>視覺圖片...</div>
-	</li>
-	<li>會員資料</li>
+<div id="content-login">
+	<div class="login-ins">
+		<div class="bread cf" typeof="v:Breadcrumb">
+			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>member?site=<?=$site?>" title="會員資料" rel="v:url" property="v:title">會員資料</a>
+		</div>
+		<div class="login-form">
 <? if(!empty($this->g_user->email) || !empty($this->g_user->mobile)): ?>
-	<li>
-		<div class="field_name">e-mail
-		</div><div class="field_input">&nbsp;<?=$email?></div>
-	</li>
-	<li>
-		<div class="field_name">行動電話
-		</div><div class="field_input">&nbsp;<?=$mobile?></div>
-	</li>
-	<li>
-		<div class="field_name">姓名
-		</div><div class="field_input"></div>
-	</li>
-	<li>
-		<div class="field_name">性別
-		</div><div class="field_input"></div>
-	</li>
-	<li>
-		<div class="field_name">生日
-		</div><div class="field_input"></div>
-	</li>
-	<li>
-		<div class="field_name">住址
-		</div><div class="field_input"></div>
-	</li>
-	<li>
-		<div style="float;left;">
-			<input type="button" value="修改資料" onclick="javascript:location.href='<?=$longe_url?>member/update_profile?site=<?=$site?>'" />
-			<input type="button" value="修改密碼" onclick="javascript:location.href='<?=$longe_url?>member/change_password?site=<?=$site?>'" />
+			<table class="member_info">
+				<tr>
+					<th>帳號類型　|</th>
+					<td>
+					<?
+				  		if(strpos($external_id, "@facebook"))
+						{
+							echo "Facebook 帳號";
+						}
+						else if(strpos($external_id, "@google"))
+						{
+							echo "Google 帳號";
+						}
+						else if(strpos($external_id, "@device"))
+						{
+							echo "行動裝置帳號";
+						}
+						else
+						{
+							echo "龍邑會員";
+						}
+					?>
+					</td>
+				</tr>
+				<tr>
+					<th>姓　　名　|</th><td><?=$user_info->name?></td>
+				</tr>
+				<tr>
+					<th>性　　別　|</th><td><?=$sex_text[$sex]?></td>
+				</tr>
+				<tr>
+					<th>生　　日　|</th><td><?=$user_info->birthday?></td>
+				</tr>
+				<tr>
+					<th>地　　址　|</th><td><?=$user_info->street?></td>
+				</tr>
+				<tr>
+					<th>E-MAIL　|</th><td><?=$email?></td>
+				</tr>
+				<tr>
+					<th>手機號碼　|</th><td><?=$mobile?></td>
+				</tr>
+			</table>
+
+			<div class="login-button">
+				<p>
+					<a href="<?=$longe_url?>member/update_profile?site=<?=$site?>" title="login"><img src="<?=$longe_url?>p/image/member/info.png" class="button_info"></a>&nbsp;
+					<a href="<?=$longe_url?>member/change_password?site=<?=$site?>" title="login"><img src="<?=$longe_url?>p/image/member/password.png" class="button_info"></a>&nbsp;
+					<img style='cursor:pointer;' src="<?=$longe_url?>p/image/member/logout.png" class="button_info" onclick="javascript:location.href='<?=$longe_url?>member/logout?site=<?=$site?>'">
+				</p>
+			</div>
+
+			<ul class="notes">
+				<li>★ 請經常確認您的個人資料是否符合現況，若有變動時請即時進行修正。</li>
+			</ul>
 <? else: ?>
-	<li>
-	<?
-  		if(strpos($external_id, "@facebook"))
-		{
-			echo "透過 Facebook 登入";
-		}
-		else if(strpos($external_id, "@google"))
-		{
-			echo "透過 Google 登入";
-		}
-	?>
-	</li>
-	<li>
-		<div style="float;left;">
-			<input type="button" name="bind" id="bind" value="綁定帳號" onclick="javascript:location.href='<?=$longe_url?>member/bind_account?site=<?=$site?>'" />
+			<table class="member_info">
+				<tr>
+					<th>帳號類型　|</th>
+					<td>
+					<?
+				  		if(strpos($external_id, "@facebook"))
+						{
+							echo "Facebook 帳號";
+						}
+						else if(strpos($external_id, "@google"))
+						{
+							echo "Google 帳號";
+						}
+						else if(strpos($external_id, "@device"))
+						{
+							echo "行動裝置帳號";
+						}
+					?>
+					</td>
+				</tr>
+			</table>
+
+			<div class="login-button">
+				<p>
+					<a href="<?=$longe_url?>member/bind_account?site=<?=$site?>" title="login"><img src="<?=$longe_url?>p/image/member/id.png" class="button_info"></a>&nbsp;
+					<img style='cursor:pointer;' src="<?=$longe_url?>p/image/member/logout.png" class="button_info" onclick="javascript:location.href='<?=$longe_url?>member/logout?site=<?=$site?>'">
+				</p>
+			</div>
+
+			<ul class="notes">
+				<li>★ 您目前為透過第三方或行動裝置直接登入方式進入本系統，建議可進行帳號綁定以確保未來若更換手機或第三方帳號時，仍可使用龍邑之帳密進行登入。</li>
+			</ul>
 <? endif; ?>
 		</div>
-		<div style="float:right;">
-			<input type="button" value="登出" onclick="javascript:location.href='<?=$longe_url?>member/logout?site=<?=$site?>'" />
-		</div>
-		<div style="clear:both;"></div>
-	</li>
-</ul>
+	</div>
+</div>

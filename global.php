@@ -27,7 +27,7 @@ if (empty($a)) {
 	ini_set('session.save_handler', g_conf("session", "save_handler"));
 	ini_set('session.save_path', g_conf("session", "save_path"));
 	ini_set('session.use_cookies', 1);
-	//ini_set('session.cookie_domain', g_conf("session", "cookie_domain"));
+	ini_set('session.cookie_domain', g_conf("session", "cookie_domain"));
 	ini_set('session.gc_maxlifetime', g_conf("session", "gc_maxlifetime")); 
 	session_start();
 }

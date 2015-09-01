@@ -29,120 +29,125 @@ function cancelButton () {
 }
 </script>
 
-<form id="choose_form" class="choose_form" method="post" action="" target="_blank" >
-	<input type="hidden" name="PAID">
-	<input type="hidden" name="CUID">
-	<input type="hidden" name="ERP_ID">
+<div id="content-login">
+	<div class="login-ins">
+		<form id="choose_form" class="choose_form" method="post" action="">
+			<input type="hidden" name="PAID">
+			<input type="hidden" name="CUID">
+			<input type="hidden" name="ERP_ID">
 
-	<input type="hidden" name="pay_type">
-	<input type="hidden" name="subpay_type">
-	<input type="hidden" name="prod_id">
+			<input type="hidden" name="pay_type">
+			<input type="hidden" name="subpay_type">
+			<input type="hidden" name="prod_id">
 
-	<ul class="le_form">
-		<li>儲值中心</li>
-		<li class="game_option line_row">
-			<div class="field_line">
-				<select name="game" class="required" style="width:85%;">
-					<option value="">--請選擇遊戲--</option>
-					<? foreach($games->result() as $row): ?>
-					<option value="<?=$row->game_id?>" rate="<?=$row->exchange_rate?>" goldname="<?=$row->currency?>" <?=($this->input->get("game")==$row->game_id ? 'selected="selected"' : '')?>><?=$row->name?></option>
-					<? endforeach;?>
-				</select>
+			<input type="hidden" name="api_call" value="true" />
+
+			<div class="login-form">
+				<table class="member_info">
+					<tr>
+						<th>遊戲名稱</th>
+						<td>
+							<select name="game" class="required" style="width:85%;">
+								<option value="">--請選擇遊戲--</option>
+								<? foreach($games->result() as $row): ?>
+								<option value="<?=$row->game_id?>" rate="<?=$row->exchange_rate?>" goldname="<?=$row->currency?>" <?=($this->input->get("game")==$row->game_id ? 'selected="selected"' : '')?>><?=$row->name?></option>
+								<? endforeach;?>
+							</select>
+						</td>
+						<input type="hidden" id="cur_game_id" value="<?=$site?>">
+					</tr>
+					<tr>
+						<th>伺服器</th>
+						<td>
+							<select name="server" class="required" style="width:85%;">
+								<option value="">--請先選擇伺服器--</option>
+							</select>
+
+							<select id="server_pool" style="display:none;">
+								<? foreach($servers->result() as $row):
+								if ( IN_OFFICE == false && in_array($row->server_status, array("private", "hide"))) continue;?>
+								<option value="<?=$row->server_id?>" <?=($this->input->get("server")==$row->server_id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?></option>
+								<? endforeach;?>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th>角色名稱</th>
+						<td>
+							<select name="character" class="required" style="width:85%;">
+								<option value="">--請選擇角色--</option>
+							</select>
+							<select id="character_pool" style="display:none;">
+								<? foreach($characters->result() as $row): ?>
+								<option value="<?=$row->id?>" class="<?=$row->server_id?>"><?=$row->name?></option>
+								<? endforeach;?>
+							</select>
+						</td>
+					</tr>
+					<tr>
+						<th>儲值方式</th>
+						<td>
+							<select name="billing_type" class="required" style="width:85%;">
+			                    <option value=''>--請選擇儲值方式--</option>
+
+								<? foreach($options as $tab => $arr):
+									if (array_key_exists("trade", $arr)):
+										$attr_str = '';
+										foreach($arr['trade'] as $attr => $val) $attr_str .= " {$attr}='{$val}'";
+								?>
+								<option pay_type="" maximum="<?=$arr['maximum']?>" minimum="<?=$arr['minimum']?>" <?=$attr_str?>><?=$tab?></option>
+								<? else:?>
+								<option pay_type="<?=$tab?>"><?=$tab?></option>
+								<?
+									endif;
+								endforeach;?>
+							</select>
+						</td>
+					</tr>
+					<tr id="pay_type_block" style="display:none;">
+						<th>支付管道</th>
+						<td>
+							<? foreach($options as $tab => $arr): ?>
+							<select name="billing_channel"  class="pay_type pay_type_<?=$tab?> required" style="width:85%;">
+			                    <option value=''>--請選擇支付管道--</option>
+
+								<? foreach($arr as $opt => $arr2):
+									if (array_key_exists("trade", $arr)) continue;
+									$attr_str = '';
+									foreach($arr2['trade'] as $attr => $val) $attr_str .= " {$attr}='{$val}'";
+								?>
+								<option value="<?=$opt?>" name="gash_channel" class="gash_option" maximum="<?=$arr2['maximum']?>" minimum="<?=$arr2['minimum']?>" <?=$attr_str?>><?=$opt?></option>
+								<? endforeach;?>
+							</select>
+							<? endforeach;?>
+						</td>
+					</tr>
+					<tr>
+						<th></th>
+						<td>
+						</td>
+					</tr>
+					<tr class="amount_row" style="display:none;">
+						<th>儲值金額</th>
+						<td>
+							<select name="billing_money"  class="amount_block required" style="width:85%;">
+			                    <option value=''>--請選擇儲值金額--</option>
+
+							</select>
+						</td>
+					</tr>
+				</table>
+
+				<div class="login-button">
+					<input name="doSubmit" type="submit" id="doSubmit" value="" style="display:none;" />
+                    <p><img style="cursor:pointer;" src="<?=$longe_url?>p/image/money/confirm-btn.png" onclick="javascript:$('#doSubmit').trigger('click')" /></p>
+					<p><img style="cursor:pointer;" src="<?=$longe_url?>p/image/member/clear.png" onclick="javascript:cancelButton();" /></p>
+				</div>
+
+				<ul class="notes">
+					<li id="payment_msg">點數比值與相關訊息...</li>
+				</ul>
 			</div>
-			<input type="hidden" id="cur_game_id" value="<?=$site?>">
-		</li>
-		<li class="game_option line_row">
-			<div class="field_line">
-				<select name="server" class="required" style="width:85%;">
-					<option value="">--請先選擇伺服器--</option>
-				</select>
-
-				<select id="server_pool" style="display:none;">
-					<? foreach($servers->result() as $row):
-					if ( IN_OFFICE == false && in_array($row->server_status, array("private", "hide"))) continue;?>
-					<option value="<?=$row->id?>" <?=($this->input->get("server")==$row->id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?></option>
-					<? endforeach;?>
-				</select>
-			<input type="hidden" id="cur_server_id" value="<?=$server_id?>">
-			</div>
-		</li>
-		<li>
-			<div class="field_line">
-				<select name="character" class="required" style="width:85%;">
-					<option value="">--請選擇角色--</option>
-				</select>
-
-				<select id="character_pool" style="display:none;">
-					<? foreach($characters->result() as $row): ?>
-					<option value="<?=$row->id?>" class="<?=$row->server_id?>"><?=$row->character_name?></option>
-					<? endforeach;?>
-				</select>
-			</div>
-		</li>
-		<li>
-			<div style="height:10px;"></div>
-		</li>
-		<li>
-			<div class="field_line">
-				<select name="billing_type" class="required" style="width:85%;">
-                    <option value=''>--請選擇儲值方式--</option>
-
-					<? foreach($options as $tab => $arr):
-						if (array_key_exists("trade", $arr)):
-							$attr_str = '';
-							foreach($arr['trade'] as $attr => $val) $attr_str .= " {$attr}='{$val}'";
-					?>
-					<option pay_type="" maximum="<?=$arr['maximum']?>" minimum="<?=$arr['minimum']?>" <?=$attr_str?>><?=$tab?></option>
-					<? else:
-					    $currency_list = array();
-					    foreach($arr as $opt => $arr2):
-					        $currency_list[] = $arr2["trade"]["cuid"];
-					    endforeach;
-					    
-                        $currency_list = array_unique($currency_list);
-                        $currency_str = implode(" ", $currency_list);					
-					?>
-					<option class="billing_type_opt <?=$currency_str?>" pay_type="<?=$tab?>"><?=$tab?></option>
-					<?
-						endif;
-					endforeach;?>
-				</select>
-			</div>
-		</li>
-		<li id="pay_type_block" class="line_row" style="display:none;">
-			<div class="field_line" style="display:inline-block;">
-				<? foreach($options as $tab => $arr): ?>
-				<select name="billing_channel"  class="pay_type pay_type_<?=$tab?> required" style="width:85%;">
-                    <option value=''>--請選擇支付管道--</option>
-
-					<? foreach($arr as $opt => $arr2):
-						if (array_key_exists("trade", $arr)) continue;
-						if($is_tablet == true || $is_mobile == true) {
-							if($arr2['mobile']==0) continue;
-						} else {
-							if($arr2['mobile']==1) continue;
-						}
-						
-						$attr_str = '';
-						foreach($arr2['trade'] as $attr => $val) $attr_str .= " {$attr}='{$val}'";
-					?>
-					<option value="<?=$opt?>" name="gash_channel" class="gash_option currency currency_<?=$arr2["trade"]["cuid"]?>" maximum="<?=$arr2['maximum']?>" minimum="<?=$arr2['minimum']?>" <?=$attr_str?>><?=$opt?></option>
-					<? endforeach;?>
-				</select>
-				<? endforeach;?>
-			</div>
-		</li>
-		<li class="line_row amount_row" style="display:none;">
-			<div class="field_line" style="display:inline-block;">
-				<select name="billing_money"  class="amount_block required" style="width:85%;">
-                    <option value=''>--請選擇儲值金額--</option>
-
-				</select>
-			</div>
-		</li>
-		<li>
-			<input tabindex="3" name="send" type="submit" id="send" value="確定" />
-			<input name="cancel" type="button" id="cancel" value="取消" onclick="javascript:cancelButton();" />
-		</li>
-	</ul>
-</form>
+		</form>
+	</div>
+</div>

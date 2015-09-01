@@ -1,49 +1,51 @@
-<script type='text/javascript'>
-	var agreement1 = '<iframe style="width:100%;height:98%;border:0;margin:0padding:0;" src="<?=$longe_url?>p/agreement/doc1.htm"></iframe>';
-	var agreement2 = '<iframe style="width:100%;height:98%;border:0;margin:0padding:0;" src="<?=$longe_url?>p/agreement/doc2.htm"></iframe>';
-	var agreement3 = '<iframe style="width:100%;height:98%;border:0;margin:0padding:0;" src="<?=$longe_url?>p/agreement/doc3.htm"></iframe>';
-</script>
-<form id="register_form" method="post" action="<?=$longe_url?>member/register_json?site=<?=$site?>">
-	<input type="hidden" id="redirect_url" value="<?=$redirect_url?>">
-	<ul class="le_form">
-		<li>會員註冊</li>
-		<li>
-			<div class="field_name">電子信箱：
-			</div><div class="field_input"><input type="text" name="email" class="email" id="email">
-		</li>
-		<li>
-			<div class="field_name">行動電話：
-			</div><div class="field_input"><input type="text" name="mobile" class="mobile isMobile" id="mobile">
-			</div><div class="field_tip">電子信箱與行動電話至少需填寫其中一個。</div>
-		</li>
-		<li>
-			<div class="field_name">會員密碼：
-			</div><div class="field_input"><input type="password" id="pwd" name="pwd" class="required" minlength="6" maxlength="18"></div>
-		</li>
-		<li>
-			<div class="field_name">確認密碼：
-			</div><div class="field_input"><input type="password" name="pwd2" class="required" equalTo='#pwd'>
-			</div><div class="field_tip">6~18碼。</div>
-		</li>
-		<li>
-			<div class="field_name">驗證碼：
-			</div><div class="field_input">
-				<div id="captcha_area"></div>
-				<input class="required" style="width:50%;" type="text" name="captcha" size="5" maxlength="4" minlength="4" value="" />
+<div id="content-login">
+	<div class="login-ins">
+		<div class="bread cf" typeof="v:Breadcrumb">
+			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>member?site=<?=$site?>" title="會員登入" rel="v:url" property="v:title">會員登入</a> > <a href="<?=$longe_url?>member/register?site=<?=$site?>" title="帳號註冊" rel="v:url" property="v:title">帳號註冊</a>
+		</div>
+		<form id="register_form" method="post" action="<?=$longe_url?>member/register_json?site=<?=$site?>">
+			<div class="login-form">
+				<table class="member_info">
+					<tr>
+						<th>E-mail</th>
+						<td><input type="text" name="email" class="email" id="email" size="33"></td>
+					</tr>
+					<tr>
+						 <th>手機號碼</th>
+						 <td><input type="text" name="mobile" class="mobile isMobile" id="mobile" size="33"></td>
+					<tr>
+						 <th></th>
+						 <td>E-mail與手機號碼至少需填寫其中一個</td>
+					</tr>
+					<tr>
+						<th>密　　碼</th><td><input type="password" id="pwd" name="pwd" class="required" minlength="6" maxlength="18" size="33"></td>
+					</tr>
+					<tr>
+						<th>確認密碼</th><td><input type="password" name="pwd2" class="required" equalTo='#pwd' size="33"></td>
+					</tr>
+					<tr>
+						<th>驗證碼</th>
+						<td>
+							<input type="text" name="captcha" class="required" maxlength="4" minlength="4" value="" size="33" style="width:100px;">
+                            <div id="captcha_area" style="display:inline-block;vertical-align:middle;"></div>
+						</td>
+					</tr>
+				</table>
+
+				<div class="login-button">
+					<p>
+						<input type="checkbox" name="chk" class="required" id="check" style="max-width:20px;"> <span style="vertical-align:text-bottom;">我已閱讀並同意</span>
+						<a href="<?=$longe_url?>member/service_agreement?site=<?=$site?>" style="vertical-align:text-bottom;color:#fffb00">會員服務條款</a><span style="vertical-align:text-bottom;">、</span>
+						<a href="<?=$longe_url?>member/member_agreement?site=<?=$site?>" style="vertical-align:text-bottom;color:#fffb00">個資同意書</a><span style="vertical-align:text-bottom;">與</span>
+						<a href="<?=$longe_url?>member/privacy_agreement?site=<?=$site?>"  style="vertical-align:text-bottom;color:#fffb00">隱私權政策</a>
+					</p>
+					<p>
+                    	<input name="doLogin" type="submit" id="doSubmit" value="" class="button_submit" style="display:none;" />
+                        <a href="#" title="確定"><img src="<?=$longe_url?>p/image/member/submit.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')"></a>
+						&nbsp;<a href="<?=$longe_url?>member?site=<?=$site?>" title="取消"><img src="<?=$longe_url?>p/image/member/clear.png" class="button_submit"></a>
+					</p>
+				</div>
 			</div>
-		</li>
-		<li>
-			<input name="chk" type="checkbox" class="required">我已閱讀並同意
-			<div id="btn_agreement" onclick="javascript:leOpenDocumentViewer(agreement1);">『服務條款』</div>、
-			<div id="btn_agreement" onclick="javascript:leOpenDocumentViewer(agreement2);">『個資同意書』</div>及
-			<div id="btn_agreement" onclick="javascript:leOpenDocumentViewer(agreement3);">『隱私權政策』</div>
-		</li>
-		<li>
-			<input tabindex="3" name="doLogin" type="submit" id="doLogin3" value="確定" />&nbsp;
-			<input name="cancel" type="button" value="取消" onclick="javascript:history.back();" />
-		</li>
-		<li>
-			<div></div>
-		</li>
-	</ul>
-</form>
+		</form>
+	</div>
+</div>

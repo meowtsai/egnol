@@ -80,7 +80,7 @@ class G_Layout
     {
     	$str = "";
     	foreach($this->css_link as $item) {
-    		if (strpos($item, "http://") === false) {
+    		if (strpos($item, "https://") === false) {
     	        $href = $this->CI->config->site_url($this->css_path."{$item}.css");
     		} else $href = $item;
     		$str .= "<link rel='stylesheet' type='text/css' href='{$href}'>";
@@ -93,10 +93,10 @@ class G_Layout
 		$rnd = rand(1, 99);
     	$str = "";
     	foreach($this->js_include as $item) {
-    		if (strpos($item, "http://") === false) {
+    		if (strpos($item, "https://") === false) {
     	        $href = $this->CI->config->site_url($this->js_path."{$item}.js");
     		} else $href = $item;    		
-    		$str .= "<script src='{$href}?' + $rnd></script>";
+    		$str .= "<script src='{$href}?{$rnd}'></script>";
     	}
     	return $str;
     }
@@ -168,6 +168,18 @@ class G_Layout
     	$this->template_data['css_link'] = $this->produce_css_link();
     	$this->template_data['js_include'] = $this->produce_js_include();
 
+        $this->CI->load->config('../config/g_tracker');
+		$google_analytics = $this->CI->config->item('google_analytics');
+
+		$track_code = $google_analytics['long_e'];
+
+		if(!empty($this->data['site']) && $this->data['site'] != 'long_e')
+		{
+            $track_code = $track_code.$google_analytics[$this->data['site']];
+		}
+
+        $this->template_data['tracker_code'] = "<script>".$track_code."</script>";
+
     	echo $this->CI->load->view("g_standard_view", $this->template_data, true);
     }
 
@@ -187,5 +199,35 @@ class G_Layout
     	$this->template_data['js_include'] = $this->produce_js_include();
 
     	echo $this->CI->load->view("g_api_view", $this->template_data, true);
+    }
+
+	// 顯示活動用制式畫面
+    function event_view($view="")
+    {
+    	if (empty($view))
+		{
+    		$view = $this->CI->router->directory . $this->CI->router->class."/".$this->CI->router->method;
+    	}
+
+    	$this->data['layout_breadcrumb'] = $this->breadcrumb;
+
+    	$this->template_data['meta'] = $this->meta;
+    	$this->template_data['layout_content'] = $this->CI->load->view($view, $this->data, true);
+    	$this->template_data['css_link'] = $this->produce_css_link();
+    	$this->template_data['js_include'] = $this->produce_js_include();
+
+        $this->CI->load->config('../config/g_tracker');
+		$google_analytics = $this->CI->config->item('google_analytics');
+
+		$track_code = $google_analytics['long_e'];
+
+		if(!empty($this->data['site']) && $this->data['site'] != 'long_e')
+		{
+            $track_code = $track_code.$google_analytics[$this->data['site']];
+		}
+
+        $this->template_data['tracker_code'] = "<script>".$track_code."</script>";
+
+    	echo $this->CI->load->view("g_event_view", $this->template_data, true);
     }
 }

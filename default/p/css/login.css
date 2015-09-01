@@ -1,0 +1,79 @@
+@charset "utf-8";
+/* CSS Document */
+/* For IE 6/7 (trigger hasLayout) */
+
+
+#content-login{background: #110f27 url(/p/image/content/login-bg.jpg) top center no-repeat; -moz-background-size: cover; background-size: cover; margin:0; padding:0; text-align:center; min-height:520px; display:block; z-index:1;}
+#content-login .login-ins{height:80%; margin:0 auto; padding:40px 0; color:#FFF; max-width:1050px; }
+#content-login .login-ins a { color:#FFF; text-decoration: none;}
+#content-login .login-ins a:hover{color:#F09;}
+.login-ins .login-form{ max-width:600px; width:100%; margin:0 auto; padding-top:30px; display:inline-block;}
+
+
+.login-button {	margin-top: 30px; width: 100%; color: #FFF; padding-bottom:50px;}
+.login-button p{ margin-bottom:10px;}
+
+.login-ins .login-other{ padding-top:30px; border-top: 1px solid #F09; }
+.login-ins .login-other img:nth-of-type(1){ margin-right:10px;}
+
+
+.login-ins .notes{ padding:15px 15px 0 15px; border: 2px solid #F09; width:90%; margin:0 auto; text-align:left; margin-bottom:50px; background-color:#99a8b2; filter:alpha(opacity=80); opacity: 0.8;  }
+
+.login-ins .notes li{ margin-left : 2em; text-indent : -1em ; line-height:20px; padding-bottom:15px;}
+
+.login .login_word{color:#fffb00;}
+.login-submit li span{width:70px;}
+.login span.UCode{max-width:300px; width:100%; text-align:left; margin:0px;}
+
+.login-ins .login_box{max-width:725px; width:100%; display:block; margin:20px auto;}
+.login_box .button{width:100%; text-align:right;}
+.login-ins .login_box .login_member{ background: url(/p/image/member/member_bg.png) top center no-repeat; background-size: 100% 100%; margin:50px auto; padding:0px; text-align:left; width:100%; display:block;}
+
+.login_member .login_info{ padding:40px; }
+.login_info .scrollbar{max-height:355px; overflow-x:hidden; line-height:25px;}
+
+.login-form .member_info, .login-form .member_password{ max-width:500px; margin:0 auto; text-align:left; width:90%; line-height:40px;}
+
+.member_info tr > th{ width:30%; text-align:right; padding:5px; vertical-align:middle;}
+.member_info tr > td{ width:70%; color:#fffb00; padding:5px; vertical-align:middle;}
+.login-form input{border-radius:6px; height:26px; font-size:18px; border-width:1px; border-color:#004999; background:-webkit-linear-gradient(top,#ffffff,#c1c2c3); width:90%; max-width:300px;}
+
+
+.member_password tr > th{ width:100%; vertical-align:middle; padding:5px;}
+.member_password .title{ margin-right:10px; width:30%; display:block; text-align:right; float:left;}
+.member_password th > input{ width:60%;}
+/*RWD*/
+
+
+@media only screen and (max-width:1150px){
+
+#content-login .login-ins { width:calc(90% - 50px);}
+}
+@media only screen and (max-width:985px){
+
+#content-login .login-ins { width:calc(100% - 30px);}
+}
+
+@media only screen and (max-width:805px){
+.login_member .login_info{ padding:20px; }
+}
+
+@media only screen and (max-width:650px){
+.login .login_word span{ display:none;}
+.login li span, .login .lgin_word{ max-width:300px; width:90%; text-align:left; margin:0 0 10px 0;}
+.login-ins .login-other img{ width:45%; max-width:145px;}
+.login_box .button{text-align:center;}
+
+.member_password .title{ margin:0px; width:100%; display:block; text-align:left; float:left;}
+.member_password th > input{ width:100%; max-width:500px;}
+
+
+}
+
+@media only screen and (max-width:450px){
+.login-button .button_submit{ width:48%;}
+.login-button .button_info{ width:24%;}
+.member_info tr > th{ width:40%;}
+.member_info tr > td{ width:60%;}
+
+}

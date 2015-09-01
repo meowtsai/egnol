@@ -43,7 +43,7 @@ class MY_Controller extends CI_Controller
 		$this->server = $this->_get_server();
 
 		$this->g_layout->set("site", $this->game_id);
-        $this->g_layout->set("game_url", "/games/".$this->game_id."/");
+        $this->g_layout->set("game_url", "https://".$this->game_id.".longeplay.com.tw/");
         $this->g_layout->set("longe_url", g_conf('url', 'longe'));
 
 		$redirect_url = urldecode($this->input->get("redirect_url", true));
@@ -63,7 +63,7 @@ class MY_Controller extends CI_Controller
 
 		return $this->g_layout
 			->add_js_include(array('jquery.validate.min', 'jquery.metadata', 'jquery.form'))
-			->set_meta("title", "《{$this->game_name}》龍邑遊戲_繁體中文網站")
+			->set_meta("title", "《{$this->game_name}》")
 			->set_meta("keywords", "{$this->game_name}")
 			->set_meta("description", "《{$this->game_name}》");
 	}

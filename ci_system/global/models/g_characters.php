@@ -45,11 +45,11 @@ class G_Characters extends CI_Model {
 		return $this->db->count_all_results() > 0;
 	}
 
-	function get_role($server, $uid, $character_name)
+	function get_role($server, $uid, $name)
 	{
 		$query = $this->db->from("characters")
 							->where("uid", $uid)
-							->where("character_name", $character_name)
+							->where("name", $name)
 							->where("server_id", $server->server_id)
 							->get();
 
