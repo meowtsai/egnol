@@ -4,6 +4,7 @@ puphpet/
 vagrantVM.ppk
 default/application/logs/
 default/admin3/application/logs/
+default/p/captcha/*
 /config.php
 ci_system/global/config/*
 !ci_system/global/config/template/
