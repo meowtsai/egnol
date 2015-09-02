@@ -18,7 +18,8 @@
 ?>
 		} else {
 <?
-			echo "window.location = \"ios://paymentresult-_-{$game->game_id}-_-{$server->server_id}-_-{$character->name}-_-{$billing_type}-_-{$pay_type}-_-{$price}-_-{$get_point}\";";
+            encodedurl = encodeURIComponent("ios://paymentresult-_-{$game->game_id}-_-{$server->server_id}-_-{$character->name}-_-{$billing_type}-_-{$pay_type}-_-{$price}-_-{$get_point}");
+			echo "window.location = \"" + encodedurl + "\";";
 ?>
 		}
 	}

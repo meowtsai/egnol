@@ -79,7 +79,7 @@ function loginSuccessButton (uid, email, mobile, external_id, server_id) {
 					</div>
 				</p>
 <? endif; ?>
-				<input type="button" name="continue" id="continue" value="進入遊戲" onclick="javascript:LongeAPI.onLoginSuccess(<?
+				<input type="button" name="continue" id="continue" value="進入遊戲" onclick="loginSuccessButton(<?
 					if(!empty($servers))
 					{
 			        	echo "'{$this->g_user->uid}','{$email}','{$mobile}','{$external_id}',$('#server_selection').find(':selected').val()";
