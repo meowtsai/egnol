@@ -85,6 +85,21 @@ function cancelButton () {
 						</td>
 					</tr>
 					<tr>
+						<th>幣別</th>
+						<td>
+							<select name="currency"  class="required" style="width:85%;">
+			                    <option value='TWD'>TWD</option>
+			                    <option value='USD'>USD</option>
+			                    <option value='EUR'>EUR</option>
+			                    <option value='HKD'>HKD</option>
+			                    <option value='MYR'>MYR</option>
+			                    <option value='IDR'>IDR</option>
+			                    <option value='THB'>THB</option>
+			                    <option value='VND'>VND</option>
+							</select>
+						</td>
+					</tr>
+					<tr>
 						<th>儲值方式</th>
 						<td>
 							<select name="billing_type" class="required" style="width:85%;">
@@ -96,8 +111,11 @@ function cancelButton () {
 										foreach($arr['trade'] as $attr => $val) $attr_str .= " {$attr}='{$val}'";
 								?>
 								<option pay_type="" maximum="<?=$arr['maximum']?>" minimum="<?=$arr['minimum']?>" <?=$attr_str?>><?=$tab?></option>
-								<? else:?>
-								<option pay_type="<?=$tab?>"><?=$tab?></option>
+								<? else:
+										$class_str = 'billing_type_opt';
+										foreach($arr as $tab2 => $arr2) $class_str .= " ".$arr2['trade']['cuid'];
+								?>
+								<option pay_type="<?=$tab?>" class="<?=$class_str?>"><?=$tab?></option>
 								<?
 									endif;
 								endforeach;?>
@@ -116,7 +134,7 @@ function cancelButton () {
 									$attr_str = '';
 									foreach($arr2['trade'] as $attr => $val) $attr_str .= " {$attr}='{$val}'";
 								?>
-								<option value="<?=$opt?>" name="gash_channel" class="gash_option" maximum="<?=$arr2['maximum']?>" minimum="<?=$arr2['minimum']?>" <?=$attr_str?>><?=$opt?></option>
+								<option value="<?=$opt?>" name="gash_channel" class="gash_option currency currency_<?=$arr2['trade']['cuid']?>" maximum="<?=$arr2['maximum']?>" minimum="<?=$arr2['minimum']?>" <?=$attr_str?>><?=$opt?></option>
 								<? endforeach;?>
 							</select>
 							<? endforeach;?>
