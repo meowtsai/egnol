@@ -35,10 +35,13 @@
 <!-- Header -->
 <div id="header">
 <div id="logo" class="revealOnScroll" data-animation="fadeInUp">
-<a href="<?=$game_url?>" target="_blank"></a></div>
+<a href="
+https://176094.measurementapi.com/serve?action=click&publisher_id=176094&site_id=107644&destination_id=280854&my_campaign=0914_logo_gamewebsite_01&site_id_ios=107646" target="_blank"></a></div>
 <div id="store" class="revealOnScroll" data-animation="fadeInUp"  data-timeout="400">
-<a href="<?=$game_url?>" target="_blank"><img src="<?=$game_url?>p/evt/02/images/appicon.png" alt="App Icon"/></a>
-<span><a class="inline" href="#inline_content"><img src="<?=$game_url?>p/evt/02/images/android.png" alt=""/><img src="<?=$game_url?>p/evt/02/images/apk.png" alt="APK下載"/></a></span></div>
+<a href="
+https://176094.measurementapi.com/serve?action=click&publisher_id=176094&site_id=107644&destination_id=280854&my_campaign=0914_icon_gamewebsite_01&site_id_ios=107646" target="_blank"><img src="<?=$game_url?>p/evt/02/images/appicon.png" alt="App Icon"/></a>
+<span><a class="inline" href="https://176094.measurementapi.com/serve?action=click&publisher_id=176094&site_id=107644&destination_id=271150&my_campaign=0914_DL_googleplay_01&site_id_ios=107646"><img src="<?=$game_url?>p/evt/02/images/android.png" alt=""/></a>
+<a class="inline" href="https://176094.measurementapi.com/serve?action=click&publisher_id=176094&site_id=107644&destination_id=280852&my_campaign=0914_DL_apk_01&site_id_ios=107646"><img src="<?=$game_url?>p/evt/02/images/apk.png" alt="APK下載"/></a></span></div>
 </div>
 <!-- Header End -->
 
@@ -67,8 +70,9 @@
 </div>
 
 <div id="store" class="revealOnScroll" data-animation="fadeInUp"  data-timeout="600">
-<a href="<?=$game_url?>" target="_blank"><img src="<?=$game_url?>p/evt/02/images/appicon.png" alt="App Icon"/></a>
-<span><a class="inline" href="#inline_content"><img src="<?=$game_url?>p/evt/02/images/android.png" alt=""/><img src="<?=$game_url?>p/evt/02/images/apk.png" alt="APK下載"/></a></span></div>
+<a href="https://176094.measurementapi.com/serve?action=click&publisher_id=176094&site_id=107644&destination_id=280854&my_campaign=0914_icon_gamewebsite_01&site_id_ios=107646" target="_blank"><img src="<?=$game_url?>p/evt/02/images/appicon.png" alt="App Icon"/></a>
+<span><a class="inline" href="https://176094.measurementapi.com/serve?action=click&publisher_id=176094&site_id=107644&destination_id=271150&my_campaign=0914_DL_googleplay_01&site_id_ios=107646"><img src="<?=$game_url?>p/evt/02/images/android.png" alt=""/></a>
+<a class="inline" href="https://176094.measurementapi.com/serve?action=click&publisher_id=176094&site_id=107644&destination_id=280852&my_campaign=0914_DL_apk_01&site_id_ios=107646"><img src="<?=$game_url?>p/evt/02/images/apk.png" alt="APK下載"/></a></span></div>
 
 <ul id="notice"  class="revealOnScroll" data-animation="fadeInUp"  data-timeout="800">
 <img src="<?=$game_url?>p/evt/02/images/title-04.png" alt="注意事項"/>

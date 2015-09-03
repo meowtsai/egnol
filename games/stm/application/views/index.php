@@ -10,15 +10,15 @@
 <div id="content">
 	<div class="contenter">
 	<ul class="icon">
-	    <li><a href="#" title="LOGO"><img src="<?=$game_url?>p/image/content-logo.png" /></a></li>
+	    <li><a href="<?=$game_url?>" title="LOGO"><img src="<?=$game_url?>p/image/content-logo.png" /></a></li>
 	    <ul>
 	      <li><a href="<?=$longe_url?>payment?site=<?=$site?>" title="我要儲值"><img src="<?=$game_url?>p/image/content/btn01.png"  /></a></li>
 	      <li><a href="#" title="儲值版APK下載教學"><img src="<?=$game_url?>p/image/content/btn02.png"  /></a></li>
-	      <li><a href="#" title="官方APK下載"><img src="<?=$game_url?>p/image/content/btn03.png"  /></a></li>
+	      <li><a href="https://176094.measurementapi.com/serve?action=click&publisher_id=176094&site_id=107644&destination_id=280870&my_campaign=0914_gamesite_DL_apk_01" title="官方APK下載"><img src="<?=$game_url?>p/image/content/btn03.png"  /></a></li>
 	    </ul>
 	    <ul>
-	        <li><a href="#" title="APP STORE"><img src="<?=$game_url?>p/image/content/btn04.png"  /></a></li>
-	        <li><a href="#" title="GOOGLE PLAY商店"><img src="<?=$game_url?>p/image/content/btn05.png"  /></a></li>
+	        <li><a href="https://176094.measurementapi.com/serve?action=click&publisher_id=176094&site_id=107646&my_campaign=0914_gamesite_DL_appstore_01" title="APP STORE"><img src="<?=$game_url?>p/image/content/btn04.png"  /></a></li>
+	        <li><a href="https://176094.measurementapi.com/serve?action=click&publisher_id=176094&site_id=107644&destination_id=271150&my_campaign=0914_gamesite_DL_googleplay_01" title="GOOGLE PLAY商店"><img src="<?=$game_url?>p/image/content/btn05.png"  /></a></li>
 <?
 // 判斷是否為行動裝置, 電腦版才要顯示 QR Code
 $useragent=$_SERVER['HTTP_USER_AGENT'];
@@ -35,11 +35,11 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 }
 if($is_tablet == true || $is_mobile == true):
 ?>
-	        <li><a href="#" title="時空前線"><img src="<?=$game_url?>p/image/content/btn06.png" /></a></li>
+	        <li><a href="<?=$game_url?>" title="時空前線"><img src="<?=$game_url?>p/image/content/btn06.png" /></a></li>
 <?
 else:
 ?>
-	        <li><a href="#" title="時空前線"><img src="<?=$game_url?>p/image/content/btn07.png" /></a></li>
+	        <li><a href="http://hyperurl.co/fthfe8?IQid=qr" title="時空前線"><img src="<?=$game_url?>p/image/content/btn07.png" /></a></li>
 <?endif;?>
 	    </ul>
 	</ul>
