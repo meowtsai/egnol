@@ -12,3 +12,5 @@ default/application/config/*
 !default/application/config/template/
 default/admin3/application/config/*
 !default/admin3/application/config/template/
+games/*
+!games/_template/
