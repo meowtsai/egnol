@@ -822,7 +822,7 @@ class Api extends MY_Controller
 		$user_row = $query->row();
 
 		$this->load->model("g_characters");
-		$character = $this->g_characters->get_character($server_info, $uid, $character_name);
+		$character = $this->g_characters->get_character($server, $uid, $character_name);
 
 		//
 		// query billing
@@ -882,7 +882,7 @@ class Api extends MY_Controller
 		$game_info = $this->games->get_game($game);
 
 		$this->load->model("g_characters");
-		$character = $this->g_characters->get_character($server_info, $uid, $character_name);
+		$character = $this->g_characters->get_character($server, $uid, $character_name);
 
 		$billing_query = $this->db->from("user_billing")
 									->where("uid", $uid)
@@ -946,7 +946,7 @@ class Api extends MY_Controller
 		$game_info = $this->games->get_game($game);
 
 		$this->load->model("g_characters");
-		$character = $this->g_characters->get_character($server_info, $uid, $character_name);
+		$character = $this->g_characters->get_character($server, $uid, $character_name);
 
 		$billing_query = $this->db->from("user_billing")
 									->where("uid", $uid)
@@ -962,7 +962,7 @@ class Api extends MY_Controller
 			$character_points += floatval($row->amount);
 
 			// 更新訂單狀態
-			$this->g_wallet->complete_order($row->id);
+			$this->g_wallet->complete_order($row);
 		}
 
 		echo json_encode(array("result"				=> "1",
