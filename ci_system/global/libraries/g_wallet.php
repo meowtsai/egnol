@@ -157,7 +157,13 @@ class G_Wallet
     	$balance = $this->get_balance($order->uid);
     	$this->CI->db->where("id", $order->id)->update("user_billing", array("result" => "4", "balance" => $balance, "note" => $note));
 	}		
-	
+
+	// 設定狀態為已完成儲值但尚未被轉入遊戲中
+    function ready_for_game_order($order)
+    {
+    	$this->CI->db->where("id", $order->id)->update("user_billing", array("result" => "5"));
+    }
+
     function update_order_note($order, $note='')
     {
     	$this->CI->db->where("id", $order->id)->update("user_billing", array("note" => $note));

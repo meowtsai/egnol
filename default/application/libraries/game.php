@@ -11,7 +11,7 @@ class Game
     	$this->CI->load->config("api"); 	    	
     }
     
-    function login($server, $user, $ad='')
+    function login($game_id, $server, $uid)
     {	    	
     	$pass_ips = array();    	
     	$partner_conf = $this->CI->config->item("partner_api");
@@ -40,19 +40,13 @@ class Game
 				return $this->_return_error("伺服器不開放");
 			}
 		}
-				
-		if ($this->CI->g_user->is_login() == false) {
-			return $this->_return_error("尚未登入");
-		}		
-		
-		$this->log_game_login($user->uid, $user->account, $server->server_id);
 
-		//$this->CI->load->library("game_api/{$server->game_id}");
-		//$this->CI->{$server->game_id}->login($server, $user, $ad);
-		exit();
+		$this->log_game_login($game_id, $uid, $server->server_id);
+
+		return true;
     }
     
-    function log_game_login($uid, $account, $server_id)
+    function log_game_login($game_id, $uid, $server_id)
     {
 		//log
 		
@@ -72,13 +66,10 @@ class Game
 			->where("is_recent", "1")
 			->update("log_game_logins", array("is_recent" => "0"));
 		
-		$site = $this->CI->input->get('site') ? $this->CI->input->get('site') : (empty($_SESSION['site']) ? 'long_e' : $_SESSION['site']);	
-		$ad = $this->CI->input->get('ad') ? $this->CI->input->get('ad') : (empty($_SESSION['ad']) ? '' : $_SESSION['ad']);
-		
 		$query = $this->db->select("*")
 					->from("log_game_logins")
 					->where("uid", $uid)
-					->where("game_id", $site)->get();	
+					->where("game_id", $game_id)->get();
 					
 		if ($query->num_rows() > 0) {
 			$is_first = 0;
@@ -88,13 +79,11 @@ class Game
 		
 		$this->CI->db->insert("log_game_logins", array(
 					'uid' => $uid,
-					'account' => $account,
 					'ip' => $_SERVER["REMOTE_ADDR"],
 					'create_time' => now(),
 					'is_recent' => '1',
 					'server_id' => $server_id,
-					'ad' => $ad,
-					'game_id' => $site,
+					'game_id' => $game_id,
 					'is_first' => $is_first,
 				));		
     }
@@ -194,9 +183,9 @@ class Game
 		$order = $this->CI->g_wallet->get_order($order_id);
 		
 		//轉入遊戲		
-		$this->CI->load->library("game_api/{$server->game_id}");
-		$re = $this->CI->{$server->game_id}->transfer($server, $order, $game->exchange_rate);
-		$error_message = $this->CI->{$server->game_id}->error_message;
+		$this->CI->load->library("game_api");
+		$re = $this->CI->game_api->transfer($server, $order, $game->exchange_rate);
+		$error_message = $this->CI->game_api->error_message;
 		
 		$this->CI->db->reconnect(); //mysql wait_timeout為10秒，接口可能執行超過10秒
 		

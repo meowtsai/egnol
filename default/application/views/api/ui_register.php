@@ -1,6 +1,6 @@
 <div id="content-login">
 	<div class="login-ins">
-        <form id="register_form" method="post" action="<?=$api_url?>/api/ui_register_json?site=<?=$site?>">
+        <form id="register_form" method="post" action="<?=$api_url?>api/ui_register_json?site=<?=$site?>">
 			<div class="login-form">
 				<table class="member_info">
 					<tr>

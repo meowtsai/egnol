@@ -73,6 +73,30 @@ class Game_Api
     	$this->error_message = $msg;
     	return false;
     }
+
+    function transfer($server, $billing, $rate=1)
+    {
+    	$uid	= $billing->uid;
+    	$uname 	= urlencode($billing->account);
+    	$lgtime = date("YmdHis",time());
+    	$uip 	= $_SERVER['REMOTE_ADDR'];
+    	$type 	= 'long_e';
+    	$price 	= $billing->amount;
+    	$point	= $billing->amount * floatval($rate);
+
+		//
+		//
+
+  		$result = '';
+    	if ($result == 'ok')
+		{
+    		return '1';
+    	}
+    	else
+		{
+	        return $this->_return_error("失敗:{$result}");
+	    }
+    }
 }
 
 /* End of file Template.php */

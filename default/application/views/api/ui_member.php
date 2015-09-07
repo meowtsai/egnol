@@ -60,7 +60,7 @@ function loginSuccessButton (uid, email, mobile, external_id, server_id) {
 					<a href="<?=$api_url?>api/ui_bind_account?site=<?=$site?>" title="login"><img src="<?=$longe_url?>p/image/member/id.png" class="button_info"></a>
 				</p>
 <? endif; ?>
-<? if(!empty($servers)): ?>
+<? if($server_mode == 1): ?>
 				<p class="game_option line_row">
 					<div class="field_line">
 						<select id="server_selection" name="server" class="required" style="width:85%;">
@@ -80,13 +80,14 @@ function loginSuccessButton (uid, email, mobile, external_id, server_id) {
 				</p>
 <? endif; ?>
 				<input type="button" name="continue" id="continue" value="進入遊戲" onclick="loginSuccessButton(<?
-					if(!empty($servers))
+					if($server_mode == 1)
 					{
 			        	echo "'{$this->g_user->uid}','{$email}','{$mobile}','{$external_id}',$('#server_selection').find(':selected').val()";
 					}
 					else
 					{
-			        	echo "'{$this->g_user->uid}','{$email}','{$mobile}','{$external_id}',''";
+						$server_id = $servers->row()->server_id;
+			        	echo "'{$this->g_user->uid}','{$email}','{$mobile}','{$external_id}','{$server_id}'";
 					}
 				?>)" />
 			</div>
