@@ -44,10 +44,10 @@ class Event extends MY_Controller
 	function e02_register()
 	{
 		// 讀取活動資料
-		$event = $this->db->from("events")->where("id", 1)->where("game_id", "stm")->get();
+		//$event = $this->db->from("events")->where("id", 1)->where("game_id", "stm")->get();
 
 		$this->_init_layout()
-				->set("event", $event)
+				//->set("event", $event)
 				->event_view();
 	}
 

@@ -308,7 +308,7 @@ class Pepay extends MY_Controller {
 			}
 			
 			//建單，並扣款
-			$order_id = $this->g_wallet->produce_order($billing->uid, "top_up_account", "2", $billing->AMOUNT, $server->server_id, "");			
+			$order_id = $this->g_wallet->produce_order($billing->uid, "top_up_account", "2", $billing->AMOUNT, $server->server_id, "", $_SESSION['payment_character']);
 			if (empty($order_id)) $go_result ? go_payment_result(1, 0, $billing->AMOUNT, $this->g_wallet->error_message, $args) : '0';
 				
 			$order = $this->g_wallet->get_order($order_id);

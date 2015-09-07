@@ -16,13 +16,13 @@ div.step01, div.step02, div.step03 {
 	height:600px;
 	}
 div.step01 {
-	background-image: url(/p/img/e01_fan_like/bg_01.jpg);
+	background-image: url(/p/evt/01/img/bg_01.jpg);
 	}
 div.step02 {
-	background-image: url(/p/img/e01_fan_like/bg_02.jpg);
+	background-image: url(/p/evt/01/img/bg_02.jpg);
 	}
 div.step03 {
-	background-image: url(/p/img/e01_fan_like/bg_03.jpg);
+	background-image: url(/p/evt/01/img/bg_03.jpg);
 	}
 div.box01, div.box02, div.box03 {
 	display:block;
@@ -32,7 +32,7 @@ div.box01, div.box02, div.box03 {
 	width: 521px;	
 	}	
 div.box01 {
-	background-image: url(/p/img/e01_fan_like/box_01.png);
+	background-image: url(/p/evt/01/img/box_01.png);
 	height:385px;
 	}
 div.box02, div.box03 {
@@ -40,7 +40,7 @@ div.box02, div.box03 {
 	margin-top: 157px;
 	}	
 div.box02 {
-	background-image: url(/p/img/e01_fan_like/box_02.png);
+	background-image: url(/p/evt/01/img/box_02.png);
 	}
 div.box02 img {
 	margin-right:auto;
@@ -51,7 +51,7 @@ div.box02 img {
 	height:56px;
 	}	
 div.box03 {
-	background-image: url(/p/img/e01_fan_like/box_03.png);
+	background-image: url(/p/evt/01/img/box_03.png);
 	text-align:center;
 	}
 div.box03 p{

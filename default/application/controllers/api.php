@@ -94,6 +94,7 @@ class Api extends MY_Controller
 			}
 
 			$this->_init_layout()
+				->set("server_mode", $server_mode)
 				->set("servers", $servers)
 				->add_css_link("login")
 				->api_view("api/ui_member");
@@ -602,6 +603,48 @@ class Api extends MY_Controller
 		</script>";
 	}
 
+	// 設定登入伺服器
+	function set_login_server()
+	{
+		$partner = $this->input->post("partner");
+		$game = $this->input->post("game");
+		$server = $this->input->post("server");
+		$uid = $this->input->post("uid");
+
+		if (empty($partner) || empty($game))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
+		}
+
+		$servers = $this->db->from("servers")->where("game_id", $game)->order_by("id")->get();
+
+		$partner_conf = $this->config->item("partner_api");
+		if ( ! array_key_exists($partner, $partner_conf))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
+		}
+		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"]))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
+		}
+
+		$query = $this->db->from("servers")->where("server_id", $server)->get();
+		if($query->num_rows() == 0)
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
+		}
+
+		// 登入 log
+		$this->load->library("game");
+        if($this->game->login($query->row(), $uid) == false)
+		{
+			die(json_encode(array("result"=>"0", "error"=>$this->game->error_message)));
+		}
+
+		echo json_encode(array("result"	=> 1));
+		exit();
+	}
+
 	// 取得伺服器列表
 	function get_server_list()
 	{
@@ -640,7 +683,7 @@ class Api extends MY_Controller
 	}
 
 	// 取得伺服器角色列表
-	function get_role_list()
+	function get_character_list()
 	{
 		$partner = $this->input->post("partner");
 		$game = $this->input->post("game");
@@ -663,21 +706,25 @@ class Api extends MY_Controller
 		}
 
 		$query = $this->db->from("characters")->where("server_id", $server)->where("uid", $uid)->order_by("id")->get();
-		$role_list = array();
+		$character_list = array();
 		foreach($query->result() as $row)
 		{
-			$role = array(
+			//
+			// query billing
+			//
+
+			$character = array(
 						"id"=>$row->id,
 						"character_name"=>$row->name);
-			$role_list[] = $role;
+			$character_list[] = $character;
 		}
 
-		echo json_encode(array("result"	=> 1, "roles" => $role_list));
+		echo json_encode(array("result"	=> 1, "characters" => $character_list));
 		exit();
 	}
 
 	// 建立遊戲角色
-	function create_role()
+	function create_character()
 	{
 		$partner = $this->input->post("partner");
 		$game = $this->input->post("game");
@@ -715,12 +762,12 @@ class Api extends MY_Controller
 
 		$this->load->model("g_characters");
 
-		if ($this->g_characters->chk_role_exists($server_info, $uid, $character_name))
+		if ($this->g_characters->chk_character_exists($server_info, $uid, $character_name))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"角色已存在")));
 		}
 
-		$insert_id = $this->g_characters->create_role($server_info,
+		$insert_id = $this->g_characters->create_character($server_info,
 			array(
 				"uid" => $uid,
 				'name' => $character_name,
@@ -733,12 +780,13 @@ class Api extends MY_Controller
 
 		echo json_encode(array("result"	=> 1,
 								"id" => $insert_id,
-								"character_name" => $character_name));
+								"character_name" => $character_name,
+								"points" => 0));
 		exit();
 	}
 
 	// 取得遊戲角色資料
-	function get_role()
+	function get_character()
 	{
 		$partner = $this->input->post("partner");
 		$game = $this->input->post("game");
@@ -777,14 +825,155 @@ class Api extends MY_Controller
 		$user_row = $query->row();
 
 		$this->load->model("g_characters");
-		$role = $this->g_characters->get_role($server_info, $uid, $character_name);
+		$character = $this->g_characters->get_character($server_info, $uid, $character_name);
+
+		//
+		// query billing
+		//
+		$character_points = 0;
 
 		echo json_encode(array("result"				=> "1",
-								"id"				=> $role->id,
-								"uid"				=> $role->uid,
-								"character_name"	=> $role->name,
-								"server_id"         => $role->server_id,
-								"create_time"       => $role->create_time
+								"id"				=> $character->id,
+								"uid"				=> $character->uid,
+								"character_name"	=> $character->name,
+								"points"            => $character_points,
+								"server_id"         => $character->server_id,
+								"create_time"       => $character->create_time
+								));
+		exit();
+	}
+
+	// 取得遊戲角色尚未轉進遊戲點數
+	function get_character_points()
+	{
+		$partner = $this->input->post("partner");
+		$game = $this->input->post("game");
+		$server = $this->input->post("server");
+		$uid = $this->input->post("uid");
+		$character_name = $this->input->post("character_name");
+
+		// 檢查參數
+		if (empty($partner) || empty($uid) || empty($game) || empty($server))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
+		}
+
+		$partner_conf = $this->config->item("partner_api");
+		if ( ! array_key_exists($partner, $partner_conf))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
+		}
+		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"]))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
+		}
+
+		$server_id = "{$game}_".sprintf("%02d", $server);
+		$server_row = $this->db->from("servers")->where("server_id", "{$server_id}")->get()->row();
+		if (empty($server_row))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
+		}
+
+		$query = $this->db->where("uid", $uid)->get("users");
+		if($query->num_rows() == 0)
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無此帳號")));
+		}
+		$user_row = $query->row();
+
+		$this->load->model("games");
+		$game_info = $this->games->get_game($game);
+
+		$this->load->model("g_characters");
+		$character = $this->g_characters->get_character($server_info, $uid, $character_name);
+
+		$billing_query = $this->db->from("user_billing")
+									->where("uid", $uid)
+									->where("result", "5")
+									->where("character_id", $character->id)
+									->get();
+		$character_points = 0;
+
+		foreach($billing_query->result() as $row)
+		{
+			$character_points += floatval($row->amount);
+		}
+
+		echo json_encode(array("result"				=> "1",
+								"id"				=> $character->id,
+								"character_name"	=> $character->name,
+								"get_points"        => $character_points * $game_info->exchange_rate
+								));
+		exit();
+	}
+
+	// 提取遊戲角色點數
+	function withdraw_character_points()
+	{
+		$partner = $this->input->post("partner");
+		$game = $this->input->post("game");
+		$server = $this->input->post("server");
+		$uid = $this->input->post("uid");
+		$character_name = $this->input->post("character_name");
+
+		// 檢查參數
+		if (empty($partner) || empty($uid) || empty($game) || empty($server))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
+		}
+
+		$partner_conf = $this->config->item("partner_api");
+		if ( ! array_key_exists($partner, $partner_conf))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
+		}
+		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"]))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
+		}
+
+		$server_id = "{$game}_".sprintf("%02d", $server);
+		$server_row = $this->db->from("servers")->where("server_id", "{$server_id}")->get()->row();
+		if (empty($server_row))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
+		}
+
+		$query = $this->db->where("uid", $uid)->get("users");
+		if($query->num_rows() == 0)
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無此帳號")));
+		}
+		$user_row = $query->row();
+
+		$this->load->model("games");
+		$game_info = $this->games->get_game($game);
+
+		$this->load->model("g_characters");
+		$character = $this->g_characters->get_character($server_info, $uid, $character_name);
+
+		$billing_query = $this->db->from("user_billing")
+									->where("uid", $uid)
+									->where("result", "5")
+									->where("character_id", $character->id)
+									->get();
+		$character_points = 0;
+
+		$this->load->library("g_wallet");
+
+		foreach($billing_query->result() as $row)
+		{
+			$character_points += floatval($row->amount);
+
+			// 更新訂單狀態
+			$this->g_wallet->complete_order($row->id);
+		}
+
+		echo json_encode(array("result"				=> "1",
+								"id"				=> $character->id,
+								"character_name"	=> $character->name,
+								"get_points"        => $character_points * $game_info->exchange_rate
 								));
 		exit();
 	}
