@@ -808,8 +808,7 @@ class Api extends MY_Controller
 			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
 		}
 
-		$server_id = "{$game}_".sprintf("%02d", $server);
-		$server_row = $this->db->from("servers")->where("server_id", "{$server_id}")->get()->row();
+		$server_row = $this->db->from("servers")->where("server_id", "{$server}")->get()->row();
 		if (empty($server_row))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
@@ -866,8 +865,7 @@ class Api extends MY_Controller
 			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
 		}
 
-		$server_id = "{$game}_".sprintf("%02d", $server);
-		$server_row = $this->db->from("servers")->where("server_id", "{$server_id}")->get()->row();
+		$server_row = $this->db->from("servers")->where("server_id", "{$server}")->get()->row();
 		if (empty($server_row))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
@@ -931,8 +929,7 @@ class Api extends MY_Controller
 			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
 		}
 
-		$server_id = "{$game}_".sprintf("%02d", $server);
-		$server_row = $this->db->from("servers")->where("server_id", "{$server_id}")->get()->row();
+		$server_row = $this->db->from("servers")->where("server_id", "{$server}")->get()->row();
 		if (empty($server_row))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
