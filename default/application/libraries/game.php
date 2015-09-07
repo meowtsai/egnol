@@ -181,12 +181,16 @@ class Game
 		if (empty($order_id)) $this->_go_payment_result(1, 0, $amount, $this->CI->g_wallet->error_message, $args);
 			
 		$order = $this->CI->g_wallet->get_order($order_id);
-		
-		//轉入遊戲		
+
+		// 若為遊戲內儲值則完成訂單, 若為官網儲值則設為尚未轉進遊戲訂單
+
+
+/*
+		//轉入遊戲
 		$this->CI->load->library("game_api");
 		$re = $this->CI->game_api->transfer($server, $order, $game->exchange_rate);
 		$error_message = $this->CI->game_api->error_message;
-		
+
 		$this->CI->db->reconnect(); //mysql wait_timeout為10秒，接口可能執行超過10秒
 		
 		if ($re === "1") {
@@ -205,7 +209,8 @@ class Game
 		else {
 			$this->CI->g_wallet->cancel_order($order, $error_message);		
 			$this->_go_payment_result(1, 0, $amount, "{$error_message}", $args);		
-		} 	
+		}
+*/
     }
     
     function _go_payment_result($status, $transfer_status, $price, $message='', $args='')

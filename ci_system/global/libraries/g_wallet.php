@@ -62,7 +62,7 @@ class G_Wallet
     }
             
     //billing_type: 1購買,2轉點,3回補,4贈送
-    function produce_order($uid, $transaction_type, $billing_type, $amount, $pay_server_id='', $order='')
+    function produce_order($uid, $transaction_type, $billing_type, $amount, $pay_server_id='', $order='', $character='')
     {	
     	if ($order) {
 	    	$cnt = $this->CI->db->from("user_billing")->where("order", $order)->where_in("result", array("1","3"))->count_all_results();
@@ -113,7 +113,7 @@ class G_Wallet
     		'transaction_type' => $transaction_type,
     		'billing_type'	=> $billing_type,
     		'amount' 		=> $amount,
-    		'pay_server_id' 		=> $pay_server_id,
+    		'server_id' 		=> $pay_server_id,
     		'ip'		 	=> $_SERVER['REMOTE_ADDR'],
     		'balance' 		=> $calc_balance,
     		'result'		=> '0',
@@ -213,7 +213,7 @@ class G_Wallet
     	return $this->CI->db->insert_id();
     }    
     
-    function produce_gash_order($uid, $gash_billing_id, $amount)
+    function produce_gash_order($uid, $gash_billing_id, $amount, $character_id)
 	{	
 		$cnt = $this->CI->db->from("user_billing")->where("gash_billing_id", $gash_billing_id)->where("result", "1")->count_all_results();
 		if ($cnt > 0)  return $this->_return_error("ID已被使用");			
@@ -241,6 +241,7 @@ class G_Wallet
     			'ip'		 	=> $_SERVER['REMOTE_ADDR'],
     			'result'		=> '1',
     			'gash_billing_id' => $gash_billing_id,
+				'character_id'  => $character_id,
 				'country_code'  => $country_code,
     		);
     	

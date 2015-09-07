@@ -198,7 +198,7 @@ class Gash extends MY_Controller {
 					if (empty($gash_billing->uid)) go_payment_result(0, 0, $money, "用戶資訊遺失");										
 					
 					$this->load->library("g_wallet");
-					$order_id = $this->g_wallet->produce_gash_order($gash_billing->uid, $gash_billing->id, $money);
+					$order_id = $this->g_wallet->produce_gash_order($gash_billing->uid, $gash_billing->id, $money, $_SESSION['payment_character']);
 					if (empty($order_id)) go_payment_result(0, 0, $money, $this->g_wallet->error_message);
 					
 					$this->db->where("COID", $trans->nodes["COID"])->update("gash_billing", array("status" => "2"));					

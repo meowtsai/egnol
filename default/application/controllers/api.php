@@ -843,6 +843,71 @@ class Api extends MY_Controller
 		exit();
 	}
 
+	// 取得遊戲角色尚未轉進遊戲點數
+	function get_character_points()
+	{
+		$partner = $this->input->post("partner");
+		$game = $this->input->post("game");
+		$server = $this->input->post("server");
+		$uid = $this->input->post("uid");
+		$character_name = $this->input->post("character_name");
+
+		// 檢查參數
+		if (empty($partner) || empty($uid) || empty($game) || empty($server))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
+		}
+
+		$partner_conf = $this->config->item("partner_api");
+		if ( ! array_key_exists($partner, $partner_conf))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
+		}
+		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"]))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
+		}
+
+		$server_id = "{$game}_".sprintf("%02d", $server);
+		$server_row = $this->db->from("servers")->where("server_id", "{$server_id}")->get()->row();
+		if (empty($server_row))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
+		}
+
+		$query = $this->db->where("uid", $uid)->get("users");
+		if($query->num_rows() == 0)
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無此帳號")));
+		}
+		$user_row = $query->row();
+
+		$this->load->model("games");
+		$game_info = $this->games->get_game($game);
+
+		$this->load->model("g_characters");
+		$character = $this->g_characters->get_character($server_info, $uid, $character_name);
+
+		$billing_query = $this->db->from("user_billing")
+									->where("uid", $uid)
+									->where("result", "5")
+									->where("character_id", $character->id)
+									->get();
+		$character_points = 0;
+
+		foreach($billing_query->result() as $row)
+		{
+			$character_points += floatval($row->amount);
+		}
+
+		echo json_encode(array("result"				=> "1",
+								"id"				=> $character->id,
+								"character_name"	=> $character->name,
+								"get_points"        => $character_points * $game_info->exchange_rate
+								));
+		exit();
+	}
+
 	// 提取遊戲角色點數
 	function withdraw_character_points()
 	{
@@ -882,22 +947,33 @@ class Api extends MY_Controller
 		}
 		$user_row = $query->row();
 
+		$this->load->model("games");
+		$game_info = $this->games->get_game($game);
+
 		$this->load->model("g_characters");
 		$character = $this->g_characters->get_character($server_info, $uid, $character_name);
 
-		//
-		// query billing
-		//
+		$billing_query = $this->db->from("user_billing")
+									->where("uid", $uid)
+									->where("result", "5")
+									->where("character_id", $character->id)
+									->get();
 		$character_points = 0;
 
-		//
-		// update log
-		//
+		$this->load->library("g_wallet");
+
+		foreach($billing_query->result() as $row)
+		{
+			$character_points += floatval($row->amount);
+
+			// 更新訂單狀態
+			$this->g_wallet->complete_order($row->id);
+		}
 
 		echo json_encode(array("result"				=> "1",
 								"id"				=> $character->id,
 								"character_name"	=> $character->name,
-								"get_points"        => $character_points
+								"get_points"        => $character_points * $game_info->exchange_rate
 								));
 		exit();
 	}
