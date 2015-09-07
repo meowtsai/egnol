@@ -87,11 +87,9 @@ class Api extends MY_Controller
 			// 已登入, 改顯示會員畫面
 			$server_mode = empty($_SESSION['server_mode']) ? 0 : $_SESSION['server_mode'];
 			$servers = null;
-			if($server_mode == 1)
-			{
-				// 讀取伺服器列表
-				$servers = $this->db->from("servers")->where("game_id", $site)->order_by("server_id")->get();
-			}
+			
+			// 讀取伺服器列表
+			$servers = $this->db->from("servers")->where("game_id", $site)->order_by("server_id")->get();
 
 			$this->_init_layout()
 				->set("server_mode", $server_mode)
