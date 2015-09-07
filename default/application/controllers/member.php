@@ -136,7 +136,7 @@ class Member extends MY_Controller
 			$lib = $channel;
 		}
 
-		if ($channel == "facebook")
+		/*if ($channel == "facebook")
 		{
 	    	$fb_app_conf = $this->config->item("fb_app");
 	    	if ( !empty($ad) && array_key_exists($ad, $fb_app_conf))
@@ -147,7 +147,7 @@ class Member extends MY_Controller
 	    		);
 	    		$login_param = array('scope' => '',);
 	    	}
-		}
+		}*/
 
 		$this->load->library("channel_api/{$lib}", $param);
 		$result = $this->{$lib}->login($site, $login_param);
@@ -207,7 +207,7 @@ class Member extends MY_Controller
 
 		if ($result == false)
 		{
-			echo "<script type='text/javascript'>alert('登入失敗!');</script>";
+			echo "<script type='text/javascript'>alert('登入失敗1!');</script>";
 		}
 		else
 		{
@@ -224,13 +224,13 @@ class Member extends MY_Controller
 					}
 					else
 					{
-						echo "<script type='text/javascript'>alert('登入失敗!');</script>";
+						echo "<script type='text/javascript'>alert('登入失敗2!');</script>";
 					}
 				}
 			}
 			else
 			{
-				$msg = '登入失敗!';
+				$msg = '登入失敗3!';
 				if(!empty($result['error']))
 					$msg = $result['error'];
 				echo "<script type='text/javascript'>alert('{$msg}');</script>";

@@ -1,5 +1,6 @@
 <?php
 require_once dirname(__FILE__).'/../global.php';
+require_once dirname(__FILE__).'/application/libraries/channel_api/Facebook/autoload.php';
 
 /*
  *---------------------------------------------------------------
