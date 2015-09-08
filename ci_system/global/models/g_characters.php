@@ -2,7 +2,7 @@
 
 class G_Characters extends CI_Model {
 
-	function create_role($server, $data)
+	function create_character($server, $data)
 	{
 		if (is_array($server)) $server = (object)$server;
 		if ($data["uid"] == "0") return false; 
@@ -35,7 +35,7 @@ class G_Characters extends CI_Model {
 		return $this->db->insert_id();
 	}
 	
-	function chk_role_exists($server, $uid, $name)
+	function chk_character_exists($server, $uid, $name)
 	{
 		$this->db->from("characters")
 			->where("uid", $uid)
@@ -45,12 +45,12 @@ class G_Characters extends CI_Model {
 		return $this->db->count_all_results() > 0;
 	}
 
-	function get_role($server, $uid, $name)
+	function get_character($server, $uid, $name)
 	{
 		$query = $this->db->from("characters")
 							->where("uid", $uid)
 							->where("name", $name)
-							->where("server_id", $server->server_id)
+							->where("server_id", $server)
 							->get();
 
 		return $query->row();
