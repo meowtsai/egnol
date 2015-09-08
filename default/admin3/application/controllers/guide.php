@@ -110,7 +110,7 @@ class Guide extends MY_Controller {
 		if ( ! $this->zacl->check_acl("guide", "delete")) die(json_failure("沒有權限"));
 		
 		$this->guides->delete_guide($id);
-		echo $this->db->affected_rows()>0 ? json_success() : json_failure();
+		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure();
 	}
 	
 	function _chk_game_id()

@@ -2,10 +2,12 @@
 
 class Cron extends CI_Controller {
 	
-	//function __construct() 
-	//{
-	//	parent::__construct();					
-	//}
+	function __construct() 
+	{
+		parent::__construct();	
+		$this->DB1 = $this->load->database('long_e', TRUE);
+        $this->DB2 = $this->load->database('long_e_2', TRUE);			
+	}
 	
 	function generate_nation_by_ip($date="")
 	{
@@ -13,7 +15,7 @@ class Cron extends CI_Controller {
 		
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
 			
-    	$query = $this->CI->db->select("uid")->from("user_info")
+    	$query = $this->DB2->select("uid")->from("user_info")
     		->where("nation", NULL)->get();
 
 		if ($query->num_rows() > 0) {
@@ -54,7 +56,7 @@ class Cron extends CI_Controller {
 				break;
 		}
 
-        $query = $this->db->query("
+        $query = $this->DB2->query("
 			SELECT
 				game_id, COUNT(uid) 'login_count', SUM(first_login) 'new_login_count'
 			FROM
@@ -90,7 +92,7 @@ class Cron extends CI_Controller {
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
 		$stop_time=date("Y-m-d H:i:s", strtotime("+1 days 4 hours", strtotime($date))); 
 			
-        $query = $this->db->query("
+        $query = $this->DB2->query("
 			SELECT 
 				game_id, SUM(new_character) 'character_cnt'
 			FROM
@@ -186,7 +188,7 @@ class Cron extends CI_Controller {
 				break;
 		}
 		
-        $query = $this->db->query("
+        $query = $this->DB2->query("
 			SELECT 
 				game_id, SUM(is_retention) 'retention'
 			FROM
@@ -274,7 +276,7 @@ class Cron extends CI_Controller {
 				break;
 		}
 		
-        $query = $this->db->query("
+        $query = $this->DB2->query("
 			SELECT 
 				lgl.game_id, COUNT(lgl.uid) '{$update_field}'
 			FROM
@@ -324,7 +326,7 @@ class Cron extends CI_Controller {
 		$this->lang->load('db_lang', 'zh-TW');
 		
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
-		$query = $this->db->query("
+		$query = $this->DB2->query("
 			SELECT 
 				game_id,
 				COUNT(uid) 'deposit_user_count',
@@ -383,7 +385,7 @@ class Cron extends CI_Controller {
 		$this->lang->load('db_lang', 'zh-TW');
 		
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
-		$query = $this->db->query("
+		$query = $this->DB2->query("
 			SELECT 
 				game_id,
 				COUNT(uid) 'consume_user_count',
@@ -425,7 +427,7 @@ class Cron extends CI_Controller {
 		
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
 			
-		$query = $this->db->query("
+		$query = $this->DB2->query("
 			SELECT 
 				game_id,
 				COUNT(uid) 'new_consume_user_count'
@@ -464,7 +466,7 @@ class Cron extends CI_Controller {
 		$this->lang->load('db_lang', 'zh-TW');
 		
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
-		$query = $this->db->query("
+		$query = $this->DB2->query("
 			SELECT 
 				game_id,
 				SUM(game_time) 'total_time'
@@ -504,7 +506,7 @@ class Cron extends CI_Controller {
 		
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
 			
-		$query = $this->db->query("
+		$query = $this->DB2->query("
 			SELECT 
 				game_id,
 				SUM(paid_game_time) 'paid_total_time'
@@ -558,7 +560,7 @@ class Cron extends CI_Controller {
 		
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));	
 		
-		$query = $this->db->query("
+		$query = $this->DB2->query("
 			SELECT 
 				game_id,
 				SUM(online_0) 'count_0',
@@ -702,7 +704,7 @@ class Cron extends CI_Controller {
 		
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));			
 		
-			$query = $this->db->query("
+			$query = $this->DB2->query("
 				SELECT new_gt.game_id, new_gt.date,
 					new_login_count,
 					new_login_count_15,
@@ -844,7 +846,7 @@ class Cron extends CI_Controller {
 		
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));			
 		
-			$query = $this->db->query("
+			$query = $this->DB2->query("
 				SELECT game_id, date,
 					login_count_15,
 					login_count_30,
@@ -895,7 +897,7 @@ class Cron extends CI_Controller {
 		
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));			
 		
-			$query = $this->db->query("
+			$query = $this->DB2->query("
 				SELECT game_id, date,
 					new_login_count,
 					new_login_count_15,
@@ -948,7 +950,7 @@ class Cron extends CI_Controller {
 		
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));			
 		
-			$query = $this->db->query("
+			$query = $this->DB2->query("
 				SELECT game_id, date,
 					deposit_login_count,
 					deposit_login_count_15,
@@ -1004,7 +1006,7 @@ class Cron extends CI_Controller {
 		
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));			
 		
-			$query = $this->db->query("
+			$query = $this->DB2->query("
 				SELECT game_id, date,
 					new_deposit_login_count,
 					new_deposit_login_count_15,
@@ -1086,7 +1088,7 @@ class Cron extends CI_Controller {
 				break;
 		}
 		
-		$query = $this->db->query("
+		$query = $this->DB2->query("
 			SELECT lgl.game_id, DATE(lgl.create_time) 'date',
 				SUM(ub.amount) 'life_time_value'
 			FROM log_game_logins lgl
@@ -1118,12 +1120,12 @@ class Cron extends CI_Controller {
 	function save_statistics($data, $save_table="statistics") {
 		$game_id = $data['game_id'];
 		
-		$statistics = $this->db->where("game_id", $data['game_id'])->where("date", $data['date'])->get($save_table);
+		$statistics = $this->DB2->where("game_id", $data['game_id'])->where("date", $data['date'])->get($save_table);
 		
 		if ($statistics->num_rows() > 0) {
-			$this->db->where("game_id", $data['game_id'])->where("date", $data['date'])->update($save_table, $data);
+			$this->DB1->where("game_id", $data['game_id'])->where("date", $data['date'])->update($save_table, $data);
 		} else {
-			$this->db->insert($save_table, $data);
+			$this->DB1->insert($save_table, $data);
 		}
 	}
 	

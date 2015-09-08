@@ -21,7 +21,7 @@ class Home extends MY_Controller {
 		
 	function skybar_banner()
 	{		
-		$query = $this->db->from("skybar_banners")->order_by("order")->get();
+		$query = $this->DB2->from("skybar_banners")->order_by("order")->get();
 		$this->_init_home_layout()
 			->add_breadcrumb("skybar banner")
 			->set("query", $query)
@@ -31,7 +31,7 @@ class Home extends MY_Controller {
 	function modify_skybar_banner($id=0)
 	{
 		if ($id) {
-			$row = $this->db->from("skybar_banners")->where("id", $id)->get()->row();
+			$row = $this->DB2->from("skybar_banners")->where("id", $id)->get()->row();
 		} else $row = false;
 		
 		$this->_init_layout()
@@ -89,10 +89,10 @@ class Home extends MY_Controller {
 		);
 		
 		if ($id = $this->input->post("id")) { //修改
-			$this->db->where('id', $id)->update('skybar_banners', $data);
+			$this->DB1->where('id', $id)->update('skybar_banners', $data);
 		}
 		else { //新增
-			$insert_id = $this->db->insert("skybar_banners", $data);
+			$insert_id = $this->DB1->insert("skybar_banners", $data);
 		}
 		
 		$back_url = $this->input->post("back_url") ?
@@ -106,10 +106,10 @@ class Home extends MY_Controller {
 	{		
 // 		if ( ! $this->zacl->check_acl("picture", "delete")) die(json_failure("沒有權限"));
 		
-// 		$row = $this->db->where('id', $id)->get('skybar_banners')->row();
-		$this->db->where('id', $id)->delete('skybar_banners');		
+// 		$row = $this->DB2->where('id', $id)->get('skybar_banners')->row();
+		$this->DB1->where('id', $id)->delete('skybar_banners');		
 		
-		if ($this->db->affected_rows() > 0) {
+		if ($this->DB1->affected_rows() > 0) {
 			$this->load->model("log_admin_actions");
 			$this->log_admin_actions->insert_log($_SESSION["admin_uid"], 'skybar_banner', 'delete', "刪除skybar_banner #{$id}");
 			echo json_success();

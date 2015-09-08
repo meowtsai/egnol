@@ -24,7 +24,7 @@ class Platform extends MY_Controller {
 			if ($cnt >= 5) $error_message = '登入錯誤超過限制，請稍候再試。';
 			else {
 				
-				$query = $this->db->from("admin_users")
+				$query = $this->DB2->from("admin_users")
 					->where("account", $this->input->post("account"))
 					->where("password", $this->zacl->encode($this->input->post("password")))->get();
 				if ($query->num_rows() > 0) {
@@ -35,7 +35,7 @@ class Platform extends MY_Controller {
 					$_SESSION["admin_name"] = $row->name;
 									
 					$allow_games = array();
-					$query = $this->db->from("admin_permissions")->where("role", $row->role)->where("resource in (select game_id from games)", null, false)->get();
+					$query = $this->DB2->from("admin_permissions")->where("role", $row->role)->where("resource in (select game_id from games)", null, false)->get();
 					foreach($query->result() as $row) {
 						$allow_games[] = $row->resource;
 					}			
@@ -99,14 +99,14 @@ class Platform extends MY_Controller {
 		$uid = $_SESSION["admin_uid"];
 		
 		if ($this->input->post()) {			
-			$this->db->where("uid", $uid)
+			$this->DB1->where("uid", $uid)
 				->update("admin_users", array(
 							"password" => $this->zacl->encode($this->input->post("password")),
 						));
-			$this->g_layout->set("result", $this->db->affected_rows()>0);
+			$this->g_layout->set("result", $this->DB1->affected_rows()>0);
 		}		
 		
-		$row = $this->db->get_where("admin_users", array("uid"=>$uid))->row();
+		$row = $this->DB2->get_where("admin_users", array("uid"=>$uid))->row();
 		
 		$this->g_layout
 			->add_breadcrumb("修改密碼")
@@ -127,14 +127,14 @@ class Platform extends MY_Controller {
 		$this->_init_layout();
 		
 		if ($this->input->post()) {			
-			$this->db->where("uid", $uid)
+			$this->DB1->where("uid", $uid)
 				->update("admin_users", array(
 							"password" => $this->zacl->encode($this->input->post("password")),
 						));
-			$this->g_layout->set("result", $this->db->affected_rows()>0);
+			$this->g_layout->set("result", $this->DB1->affected_rows()>0);
 		}
 		
-		$row = $this->db->get_where("admin_users", array("uid"=>$uid))->row();
+		$row = $this->DB2->get_where("admin_users", array("uid"=>$uid))->row();
 		
 		$this->g_layout
 			->add_breadcrumb("修改密碼")

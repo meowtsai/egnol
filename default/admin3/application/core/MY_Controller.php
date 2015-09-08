@@ -4,6 +4,8 @@ class MY_Controller extends CI_Controller {
 
 	var $global_dir;
 	var $game_id;
+	var $DB1;
+	var $DB2;
 
 	function __construct()
 	{
@@ -15,7 +17,8 @@ class MY_Controller extends CI_Controller {
 		$this->global_dir = BASEPATH.'../global/';
 		$this->load->add_package_path($this->global_dir);
 		$this->load->helper("g_common");
-		$this->load->database('long_e');
+		$this->DB1 = $this->load->database('long_e', TRUE);
+        $this->DB2 = $this->load->database('long_e_2', TRUE);
 		$this->load->library(array("session", "g_user", "FirePHP", "Fb", "zacl"));			
 		
 		$this->game_id = $this->input->get("game_id");
@@ -32,7 +35,7 @@ class MY_Controller extends CI_Controller {
 
 		$allocate_count = 0;
 		if ($this->zacl->check_login()) {
-			$allocate_count = $this->db->from("questions q")->where("q.allocate_admin_uid", $_SESSION['admin_uid'])->where("q.allocate_status", "1")->count_all_results();
+			$allocate_count = $this->DB1->from("questions q")->where("q.allocate_admin_uid", $_SESSION['admin_uid'])->where("q.allocate_status", "1")->count_all_results();
 		}
 		
 		return $this->g_layout

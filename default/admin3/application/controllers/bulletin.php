@@ -46,7 +46,7 @@ class Bulletin extends MY_Controller {
 		
 		$this->_chk_game_id();
 		$this->_init_layout();		
-		$bulletin = $this->db->where("id", $id)->get("bulletins")->row();
+		$bulletin = $this->DB2->where("id", $id)->get("bulletins")->row();
 
 		$this->load->library("user_agent");
 		
@@ -59,7 +59,7 @@ class Bulletin extends MY_Controller {
 			->set("back_url", $this->agent->is_referral() ? $this->agent->referrer() : "")
 			->set("bulletin", $bulletin)
 			->set("bulletin_type_list", $this->config->item('bulletin_type'))
-			->set("server_list", $this->db->where("game_id", $this->game_id)->order_by("server_id")->get("servers"))
+			->set("server_list", $this->DB2->where("game_id", $this->game_id)->order_by("server_id")->get("servers"))
 			->render("bulletin/form");		
 	}
 	
@@ -81,7 +81,7 @@ class Bulletin extends MY_Controller {
 			->set("back_url", $this->agent->is_referral() ? $this->agent->referrer() : "")
 			->set("bulletin", false)
 			->set("bulletin_type_list", $this->config->item('bulletin_type'))
-			->set("server_list", $this->db->where("game_id", $this->game_id)->order_by("server_id")->get("servers"))
+			->set("server_list", $this->DB2->where("game_id", $this->game_id)->order_by("server_id")->get("servers"))
 			->render("bulletin/form");
 	}
 	
@@ -151,8 +151,8 @@ class Bulletin extends MY_Controller {
 	{
 		if ( ! $this->zacl->check_acl("bulletin", "modify")) die(json_failure("沒有權限"));
 		
-		$this->db->where("id", $id)->set("priority", $val)->update("bulletins");
-		echo $this->db->affected_rows()>0 ? json_success() : json_failure("無變更");
+		$this->DB1->where("id", $id)->set("priority", $val)->update("bulletins");
+		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure("無變更");
 	}
 }
 

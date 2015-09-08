@@ -37,7 +37,7 @@ class Picture extends MY_Controller {
 			->add_breadcrumb("圖片管理")
 			->add_js_include("picture/list")
 			->set("category_id", $category_id)
-			->set("category_query", $this->db->where("game_id", $this->game_id)->get("picture_categories"))
+			->set("category_query", $this->DB2->where("game_id", $this->game_id)->get("picture_categories"))
 			->set("query", $this->pictures->get_picture_data($this->game_id, $category_id, 5, $this->input->get("record")))
 			->render();
 	}
@@ -50,7 +50,7 @@ class Picture extends MY_Controller {
 		$this->_init_layout();		
 		
 		$this->load->helper("g_picture_helper");
-		$picture = $this->db->where("id", $id)->get("pictures")->row();
+		$picture = $this->DB2->where("id", $id)->get("pictures")->row();
 		
 		$this->load->library("user_agent");
 		$this->g_layout->set("back_url", $this->agent->is_referral() ? $this->agent->referrer() : "");
@@ -61,7 +61,7 @@ class Picture extends MY_Controller {
 			->add_js_include("picture/form")
 			->add_js_include("ckeditor/ckeditor")
 			->set("picture", $picture)
-			->set("category_query", $this->db->where("game_id", $this->game_id)->get("picture_categories"))
+			->set("category_query", $this->DB2->where("game_id", $this->game_id)->get("picture_categories"))
 			->render("picture/form");		
 	}
 	
@@ -80,7 +80,7 @@ class Picture extends MY_Controller {
 			->add_js_include("picture/form")
 			->add_js_include("ckeditor/ckeditor")
 			->set("picture", false)
-			->set("category_query", $this->db->where("game_id", $this->game_id)->get("picture_categories"))
+			->set("category_query", $this->DB2->where("game_id", $this->game_id)->get("picture_categories"))
 			->render("picture/form");
 	}
 	
@@ -130,7 +130,7 @@ class Picture extends MY_Controller {
 			);
 			
 			if ($picture_id = $this->input->post("picture_id")) { //修改
-				$this->db->where('id', $picture_id)->update('pictures', $data);
+				$this->DB1->where('id', $picture_id)->update('pictures', $data);
 			}
 			else { //新增
 				$insert_id = $this->pictures->insert_picture($data);
@@ -149,10 +149,10 @@ class Picture extends MY_Controller {
 	{		
 		if ( ! $this->zacl->check_acl("picture", "delete")) die(json_failure("沒有權限"));
 		
-		$row = $this->db->where('id', $id)->get('pictures')->row();
-		$this->db->where('id', $id)->delete('pictures');		
+		$row = $this->DB2->where('id', $id)->get('pictures')->row();
+		$this->DB1->where('id', $id)->delete('pictures');		
 		
-		if ($this->db->affected_rows() > 0) {
+		if ($this->DB1->affected_rows() > 0) {
 			$this->load->model("log_admin_actions");
 			$this->log_admin_actions->insert_log($_SESSION["admin_uid"], 'picture', 'delete', "刪除圖片 #{$id}");
 			echo json_success();
@@ -184,7 +184,7 @@ class Picture extends MY_Controller {
 		
 		$this->_chk_game_id();
 		$this->_init_layout();
-		$row = $this->db->where("id", $id)->get("picture_categories")->row();
+		$row = $this->DB2->where("id", $id)->get("picture_categories")->row();
 	
 		$this->g_layout
 			->add_breadcrumb("圖片管理", "picture/get_list?game_id={$this->game_id}")

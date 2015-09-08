@@ -30,59 +30,59 @@ class Log extends MY_Controller {
 		{
 			header("Cache-Control: private");			 
 					
-			$this->db->start_cache();
+			$this->DB2->start_cache();
 			
-			$this->db
+			$this->DB2
 				->from("log_logins ll")
 				->join("games g", "ll.site=g.game_id", "left");
 			
-			$this->input->get("site") && $this->db->where("ll.site", $this->input->get("site"));
-			$this->input->get("uid") && $this->db->where("ll.uid", $this->input->get("uid"));
-			$this->input->get("euid") && $this->db->where("ll.uid", $this->g_user->decode($this->input->get("euid")));
-			$this->input->get("account") && $this->db->like("ll.account", trim($this->input->get("account")));
-			$this->input->get("ip") && $this->db->where("ll.ip", trim($this->input->get("ip")));
-			$this->input->get("ad_channel") && $this->db->where("ll.ad", $this->input->get("ad_channel"));											
+			$this->input->get("site") && $this->DB2->where("ll.site", $this->input->get("site"));
+			$this->input->get("uid") && $this->DB2->where("ll.uid", $this->input->get("uid"));
+			$this->input->get("euid") && $this->DB2->where("ll.uid", $this->g_user->decode($this->input->get("euid")));
+			$this->input->get("account") && $this->DB2->like("ll.account", trim($this->input->get("account")));
+			$this->input->get("ip") && $this->DB2->where("ll.ip", trim($this->input->get("ip")));
+			$this->input->get("ad_channel") && $this->DB2->where("ll.ad", $this->input->get("ad_channel"));											
 			
 			if ($this->zacl->check_acl("all_game", "all") == false) {
 				if ($this->input->get("site")) {				 
 					$this->zacl->check($this->input->get("site"), "read");
 				}
-				else $this->db->where_in("ll.site", $_SESSION["admin_allow_games"]);
+				else $this->DB2->where_in("ll.site", $_SESSION["admin_allow_games"]);
 			}						
 			
 			if ($this->input->get("start_date")) {
-				$start_date = $this->db->escape($this->input->get("start_date"));
+				$start_date = $this->DB2->escape($this->input->get("start_date"));
 				if ($this->input->get("end_date")) {
-					$end_date = $this->db->escape($this->input->get("end_date").":59");
-					$this->db->where("ll.create_time between {$start_date} and {$end_date}", null, false);	
+					$end_date = $this->DB2->escape($this->input->get("end_date").":59");
+					$this->DB2->where("ll.create_time between {$start_date} and {$end_date}", null, false);	
 				}	
-				else $this->db->where("ll.create_time >= {$start_date}", null, false);
+				else $this->DB2->where("ll.create_time >= {$start_date}", null, false);
 			}
 
 			if ($channel = $this->input->get("channel")) {
-				if ($channel == 'long_e') $this->db->not_like("ll.account", "@");
-				else $this->db->where("ll.account like '%@{$channel}'", null, false);
+				if ($channel == 'long_e') $this->DB2->not_like("ll.account", "@");
+				else $this->DB2->where("ll.account like '%@{$channel}'", null, false);
 			}
 			
 			if ($this->input->get("distinct")) 
 			{
-				$this->db->stop_cache();	
+				$this->DB2->stop_cache();	
 				
-				$this->db->select_max("ll.id")->group_by("ll.uid")->get();
-				$sql = $this->db->last_query();
+				$this->DB2->select_max("ll.id")->group_by("ll.uid")->get();
+				$sql = $this->DB2->last_query();
 				
-				$this->db->start_cache();
-				$this->db->join("({$sql}) tmp", "tmp.id=ll.id", "inner");	
+				$this->DB2->start_cache();
+				$this->DB2->join("({$sql}) tmp", "tmp.id=ll.id", "inner");	
 			}
 														
 			switch ($this->input->get("action"))
 			{
 				case "查詢":										
-					$this->db->select("ll.*, IFNULL(IFNULL(g.name, ll.site), '')  as site_name", false)->stop_cache();
+					$this->DB2->select("ll.*, IFNULL(IFNULL(g.name, ll.site), '')  as site_name", false)->stop_cache();
 
-					$total_rows = $this->db->count_all_results();
+					$total_rows = $this->DB2->count_all_results();
 
-					$query = $this->db->select("ll.*")
+					$query = $this->DB2->select("ll.*")
 						->limit(100, $this->input->get("record"))
 						->order_by("create_time desc")->get();
 
@@ -101,7 +101,7 @@ class Log extends MY_Controller {
 					break;
 
 				case "通路統計":				
-					$query = $this->db->select("site as `key`, IFNULL(IFNULL(g.name, ll.site), '')  as name, SUBSTRING(ll.account, INSTR(ll.account, '@'), 20 ) title, count(*) cnt", false)
+					$query = $this->DB2->select("site as `key`, IFNULL(IFNULL(g.name, ll.site), '')  as name, SUBSTRING(ll.account, INSTR(ll.account, '@'), 20 ) title, count(*) cnt", false)
 						->group_by("title, site")
 						->order_by("cnt desc, site")->get();					
 					break;
@@ -114,21 +114,21 @@ class Log extends MY_Controller {
 						case 'year': $len=4; break;
 						default: $len=10;
 					}
-					$query = $this->db->select("site as `key`, IFNULL(IFNULL(g.name, ll.site), '')  as name, LEFT(ll.create_time, {$len}) title, count(*) cnt", false)
+					$query = $this->DB2->select("site as `key`, IFNULL(IFNULL(g.name, ll.site), '')  as name, LEFT(ll.create_time, {$len}) title, count(*) cnt", false)
 						->group_by("title, site")
 						->order_by("title desc, site")->get();
 					break;					
 
 				case "廣告統計":				
-					$query = $this->db->select("site as `key`, IFNULL(IFNULL(g.name, ll.site), '')  as name, ll.ad title, count(*) cnt", false)
+					$query = $this->DB2->select("site as `key`, IFNULL(IFNULL(g.name, ll.site), '')  as name, ll.ad title, count(*) cnt", false)
 						->where('ad <>', '')
 						->group_by("title, site")
 						->order_by("cnt desc, site")->get();					
 					break;								
 			}
 			
-			$this->db->stop_cache();
-			$this->db->flush_cache();
+			$this->DB2->stop_cache();
+			$this->DB2->flush_cache();
 		}
 		else {
 			$default_value = array(
@@ -159,53 +159,53 @@ class Log extends MY_Controller {
 		{
 			header("Cache-Control: private");			 
 					
-			$this->db->start_cache();
+			$this->DB2->start_cache();
 			
-			$this->input->get("uid") && $this->db->where("lgl.uid", $this->input->get("uid"));
-			$this->input->get("euid") && $this->db->where("lgl.uid", $this->g_user->decode($this->input->get("euid")));
-			$this->input->get("account") && $this->db->like("lgl.account", trim($this->input->get("account")));
-			$this->input->get("ip") && $this->db->where("lgl.ip", trim($this->input->get("ip")));
-			$this->input->get("game") && $this->db->where("g.game_id", $this->input->get("game"));
-			$this->input->get("server") && $this->db->where("gi.server_id", $this->input->get("server"));
-			$this->input->get("ad_channel") && $this->db->where("lgl.ad", $this->input->get("ad_channel"));		
+			$this->input->get("uid") && $this->DB2->where("lgl.uid", $this->input->get("uid"));
+			$this->input->get("euid") && $this->DB2->where("lgl.uid", $this->g_user->decode($this->input->get("euid")));
+			$this->input->get("account") && $this->DB2->like("lgl.account", trim($this->input->get("account")));
+			$this->input->get("ip") && $this->DB2->where("lgl.ip", trim($this->input->get("ip")));
+			$this->input->get("game") && $this->DB2->where("g.game_id", $this->input->get("game"));
+			$this->input->get("server") && $this->DB2->where("gi.server_id", $this->input->get("server"));
+			$this->input->get("ad_channel") && $this->DB2->where("lgl.ad", $this->input->get("ad_channel"));		
 			
 			if ($this->zacl->check_acl("all_game", "all") == false) {
 				if ($this->input->get("game")) {				 
 					$this->zacl->check($this->input->get("game"), "read");
 				}
-				else $this->db->where_in("g.game_id", $_SESSION["admin_allow_games"]);
+				else $this->DB2->where_in("g.game_id", $_SESSION["admin_allow_games"]);
 			}
 			
-			$this->db->from("log_game_logins lgl")
+			$this->DB2->from("log_game_logins lgl")
 				->join("servers gi", "gi.server_id=lgl.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left");
 									
 			if ($this->input->get("start_date")) {
-				$start_date = $this->db->escape($this->input->get("start_date"));
+				$start_date = $this->DB2->escape($this->input->get("start_date"));
 				if ($this->input->get("end_date")) {
-					$end_date = $this->db->escape($this->input->get("end_date").":59");
-					$this->db->where("lgl.create_time between {$start_date} and {$end_date}", null, false);	
+					$end_date = $this->DB2->escape($this->input->get("end_date").":59");
+					$this->DB2->where("lgl.create_time between {$start_date} and {$end_date}", null, false);	
 				}	
-				else $this->db->where("lgl.create_time >= {$start_date}", null, false);
+				else $this->DB2->where("lgl.create_time >= {$start_date}", null, false);
 			}
 
 			if ($channel = $this->input->get("channel")) {
-				if ($channel == 'long_e') $this->db->not_like("lgl.account", "@");
-				else $this->db->where("lgl.account like '%@{$channel}'", null, false);
+				if ($channel == 'long_e') $this->DB2->not_like("lgl.account", "@");
+				else $this->DB2->where("lgl.account like '%@{$channel}'", null, false);
 			}
 		
 			if ($this->input->get("role_exist")) {
 				$rule = ($this->input->get("role_exist") == '1' ? 'EXISTS' : 'NOT EXISTS');
-				$this->db->where(" {$rule} (select * from characters where uid=lgl.uid and server_id=lgl.server_id)", null, false);
+				$this->DB2->where(" {$rule} (select * from characters where uid=lgl.uid and server_id=lgl.server_id)", null, false);
 			}											
 						
 			if ($this->input->get("distinct")) 
 			{
-				$this->db->stop_cache();	
+				$this->DB2->stop_cache();	
 				
 				if ($this->input->get("server") || $this->input->get("display_game") == "server") 
-					$this->db->group_by("lgl.uid, lgl.server_id");
-				else $this->db->group_by("lgl.uid");
+					$this->DB2->group_by("lgl.uid, lgl.server_id");
+				else $this->DB2->group_by("lgl.uid");
 				
 				if ($this->input->get("action") == '時段統計') {
 					switch($this->input->get("time_unit")) {
@@ -215,39 +215,39 @@ class Log extends MY_Controller {
 						case 'year': $len=4; break;
 						default: $len=10;
 					}					
-					$this->db->_protect_identifiers = FALSE;
-					$this->db->group_by("LEFT(lgl.create_time, {$len})");
-					$this->db->_protect_identifiers = TRUE;
+					$this->DB2->_protect_identifiers = FALSE;
+					$this->DB2->group_by("LEFT(lgl.create_time, {$len})");
+					$this->DB2->_protect_identifiers = TRUE;
 				}				
 				
-				$this->db->select_max("lgl.id")->get();
-				$sql = $this->db->last_query();
+				$this->DB2->select_max("lgl.id")->get();
+				$sql = $this->DB2->last_query();
 				
-				$this->db->start_cache();
-				$this->db->join("({$sql}) tmp", "tmp.id=lgl.id", "inner");	
+				$this->DB2->start_cache();
+				$this->DB2->join("({$sql}) tmp", "tmp.id=lgl.id", "inner");	
 			}			
 					
 			if ($this->input->get("action") <> "查詢") {
 								
 				if ($this->input->get("display_game") == "server") {
-					$this->db->select("gi.server_id, concat('(', g.abbr, ')', gi.name) as name", false);
+					$this->DB2->select("gi.server_id, concat('(', g.abbr, ')', gi.name) as name", false);
 					$game_key = "gi.server_id";
 				}
 				else {
-					$this->db->select("g.name as name");
+					$this->DB2->select("g.name as name");
 					$game_key = "g.game_id";
 				}
-				$this->db->select("{$game_key} as `key`", false);				
+				$this->DB2->select("{$game_key} as `key`", false);				
 			}			
 			
 			switch ($this->input->get("action"))
 			{
 				case "查詢":								
-					$this->db->stop_cache();	
+					$this->DB2->stop_cache();	
 							
-					$total_rows = $this->db->count_all_results();
+					$total_rows = $this->DB2->count_all_results();
 										
-					$query = $this->db->select("lgl.*, g.abbr as game_name, gi.name as server_name, lgl.uid")
+					$query = $this->DB2->select("lgl.*, g.abbr as game_name, gi.name as server_name, lgl.uid")
 						->limit(100, $this->input->get("record"))
 						->order_by("create_time desc")->get();
 
@@ -268,7 +268,7 @@ class Log extends MY_Controller {
 				case "輸出":
 					ini_set("memory_limit","2048M");
 					
-					$query = $this->db->select("lgl.*, gi.name server_name, g.name game_name, g.abbr game_abbr_name")->get();
+					$query = $this->DB2->select("lgl.*, gi.name server_name, g.name game_name, g.abbr game_abbr_name")->get();
 						
 					$filename = "output.xls";					
 					header("Content-type:application/vnd.ms-excel;");
@@ -285,13 +285,13 @@ class Log extends MY_Controller {
 					break;						
 					
 				case "通路統計":					
-					$query = $this->db->select("SUBSTRING(lgl.account, INSTR(lgl.account, '@'), 20 ) title, count(*) cnt", false)
+					$query = $this->DB2->select("SUBSTRING(lgl.account, INSTR(lgl.account, '@'), 20 ) title, count(*) cnt", false)
 						->group_by("title, {$game_key}")
 						->order_by("cnt desc, {$game_key}")->get();					
 					break;
 					
 				case "廣告統計":					
-					$query = $this->db->select("lgl.ad title, count(*) cnt", false)
+					$query = $this->DB2->select("lgl.ad title, count(*) cnt", false)
 						->where('ad <>', '')
 						->group_by("title, {$game_key}")
 						->order_by("cnt desc, {$game_key}")->get();					
@@ -299,7 +299,7 @@ class Log extends MY_Controller {
 
 				case "IP統計":
 					if ($this->input->get("distinct")) distinct("LEFT(lgl.create_time, {$len})");					
-					$query = $this->db->select("lgl.ip title, count(*) cnt", false)
+					$query = $this->DB2->select("lgl.ip title, count(*) cnt", false)
 						->group_by("title, {$game_key}")
 						->order_by("cnt desc, {$game_key}")->get();					
 					break;		
@@ -312,14 +312,14 @@ class Log extends MY_Controller {
 						case 'year': $len=4; break;
 						default: $len=10;
 					}					
-					$query = $this->db->select("LEFT(lgl.create_time, {$len}) title, count(*) cnt", false)
+					$query = $this->DB2->select("LEFT(lgl.create_time, {$len}) title, count(*) cnt", false)
 						->group_by("title, {$game_key}")
 						->order_by("title desc, {$game_key}")->get();
 					break;
 			}
 			
-			$this->db->stop_cache();
-			$this->db->flush_cache();
+			$this->DB2->stop_cache();
+			$this->DB2->flush_cache();
 		}
 		else {
 			$default_value = array(
@@ -331,8 +331,8 @@ class Log extends MY_Controller {
 			$_GET = $default_value;
 		}
 		
-		$games = $this->db->get("games");
-		$servers = $this->db->order_by("server_id")->get("servers");		
+		$games = $this->DB2->get("games");
+		$servers = $this->DB2->order_by("server_id")->get("servers");		
 			
 		$this->g_layout
 			->add_breadcrumb("遊戲登入")	
@@ -357,19 +357,19 @@ class Log extends MY_Controller {
 		{
 			header("Cache-Control: private");			 
 					
-			$this->db->start_cache();
+			$this->DB2->start_cache();
 			
-			$this->input->get("game") && $this->db->where("g.game_id", $this->input->get("game"));
-			$this->input->get("server") && $this->db->where("gi.server_id", $this->input->get("server"));		
+			$this->input->get("game") && $this->DB2->where("g.game_id", $this->input->get("game"));
+			$this->input->get("server") && $this->DB2->where("gi.server_id", $this->input->get("server"));		
 			
 			if ($this->zacl->check_acl("all_game", "all") == false) {
 				if ($this->input->get("game")) {				 
 					$this->zacl->check($this->input->get("game"), "read");
 				}
-				else $this->db->where_in("g.game_id", $_SESSION["admin_allow_games"]);
+				else $this->DB2->where_in("g.game_id", $_SESSION["admin_allow_games"]);
 			}
 			
-			$this->db->from("log_online_users lou")
+			$this->DB2->from("log_online_users lou")
 				->join("servers gi", "gi.server_id=lou.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
 				->where("online_date > date_sub(now(), interval 15 minute)", null, false);
@@ -377,11 +377,11 @@ class Log extends MY_Controller {
 			switch ($this->input->get("action"))
 			{
 				case "查詢":								
-					$this->db->stop_cache();	
+					$this->DB2->stop_cache();	
 							
-					$total_rows = $this->db->count_all_results();
+					$total_rows = $this->DB2->count_all_results();
 										
-					$query = $this->db->select("lou.*, g.abbr as game_name, gi.name as server_name, lou.uid")
+					$query = $this->DB2->select("lou.*, g.abbr as game_name, gi.name as server_name, lou.uid")
 						->limit(100, $this->input->get("record"))
 						->order_by("online_date desc")->get();
 
@@ -402,23 +402,23 @@ class Log extends MY_Controller {
 				case "人數統計":					
 					
 					if ($this->input->get("display_game") == "server") {
-						$this->db->select("gi.server_id, concat('(', g.abbr, ')', gi.name) as title", false);
+						$this->DB2->select("gi.server_id, concat('(', g.abbr, ')', gi.name) as title", false);
 						$game_key = "gi.server_id";
 					}
 					else {
-						$this->db->select("g.name as title");
+						$this->DB2->select("g.name as title");
 						$game_key = "g.game_id";
 					}					
 					
-					$query = $this->db->select("count(*) cnt", false)
+					$query = $this->DB2->select("count(*) cnt", false)
 						->group_by("{$game_key}")
 						->order_by("cnt desc")->get();					
 					break;		
 					
 			}
 			
-			$this->db->stop_cache();
-			$this->db->flush_cache();
+			$this->DB2->stop_cache();
+			$this->DB2->flush_cache();
 		}
 		else {
 			$default_value = array(
@@ -431,8 +431,8 @@ class Log extends MY_Controller {
 			$_GET = $default_value;
 		}
 		
-		$games = $this->db->get("games");
-		$servers = $this->db->order_by("server_id")->get("servers");		
+		$games = $this->DB2->get("games");
+		$servers = $this->DB2->order_by("server_id")->get("servers");		
 			
 		$this->g_layout
 			->add_breadcrumb("線上會員")	
@@ -457,30 +457,30 @@ class Log extends MY_Controller {
 		{
 			header("Cache-Control: private");			 
 					
-			$this->db->start_cache();
+			$this->DB2->start_cache();
 			
-			$this->input->get("ip") && $this->db->where("laa.ip", trim($this->input->get("ip")));
-			$this->input->get("desc") && $this->db->like("laa.desc", trim($this->input->get("desc")));
+			$this->input->get("ip") && $this->DB2->where("laa.ip", trim($this->input->get("ip")));
+			$this->input->get("desc") && $this->DB2->like("laa.desc", trim($this->input->get("desc")));
 						
-			$this->db->from("log_admin_actions laa")
+			$this->DB2->from("log_admin_actions laa")
 				->join("admin_users au", "laa.admin_uid=au.uid", "left");
 									
 			if ($this->input->get("start_date")) {
-				$start_date = $this->db->escape($this->input->get("start_date"));
+				$start_date = $this->DB2->escape($this->input->get("start_date"));
 				if ($this->input->get("end_date")) {
-					$end_date = $this->db->escape($this->input->get("end_date").":59");
-					$this->db->where("laa.create_time between {$start_date} and {$end_date}", null, false);	
+					$end_date = $this->DB2->escape($this->input->get("end_date").":59");
+					$this->DB2->where("laa.create_time between {$start_date} and {$end_date}", null, false);	
 				}	
-				else $this->db->where("laa.create_time >= {$start_date}", null, false);
+				else $this->DB2->where("laa.create_time >= {$start_date}", null, false);
 			}
 			
 			switch ($this->input->get("action"))
 			{
 				case "查詢":	
-					$this->db->stop_cache();
-					$total_rows = $this->db->count_all_results();
+					$this->DB2->stop_cache();
+					$total_rows = $this->DB2->count_all_results();
 
-					$query = $this->db
+					$query = $this->DB2
 						->limit(100, $this->input->get("record"))
 						->order_by("id desc")->get();
 
@@ -499,8 +499,8 @@ class Log extends MY_Controller {
 					break;
 			}
 			
-			$this->db->stop_cache();
-			$this->db->flush_cache();
+			$this->DB2->stop_cache();
+			$this->DB2->flush_cache();
 		}
 		else {
 			$default_value = array(
@@ -526,23 +526,23 @@ class Log extends MY_Controller {
 		echo "backup_log_game_logins: start...<br>";
 		
 		do {
-			$this->db->reconnect();
+			$this->DB1->reconnect();
 			
-			$row = $this->db->select("id")
+			$row = $this->DB2->select("id")
 				->from("log_game_logins_backup")
 				->order_by("id desc")->limit(1)->get()->row();
 			
 			$now_id = $row->id;
 			echo "backup_log_game_logins: backup from {$now_id}<br>";
 			
-			$this->db->query("insert into log_game_logins_backup
+			$this->DB1->query("insert into log_game_logins_backup
 						select * from log_game_logins where id > {$now_id} order by id limit 4000");
 					
-			$cnt = $this->db->affected_rows();
+			$cnt = $this->DB1->affected_rows();
 			
 			/*
 			if ($cnt > 0) {
-				$this->db->query("delete from log_game_logins_offline 
+				$this->DB2->query("delete from log_game_logins_offline 
 								where create_time <= date_sub(date(now()), interval 1 SECOND) order by id limit 2");
 			}
 			*/
@@ -555,15 +555,15 @@ class Log extends MY_Controller {
 		while ($cnt > 0);
 		
 		do {
-			$this->db->reconnect();			
+			$this->DB1->reconnect();			
 
-			$this->db
+			$this->DB1
 				->where("create_time <", "2013-11-01")
 				->where("is_recent", "0")
 				->limit(1500)
 				->delete("log_game_logins");		
 					
-			$cnt = $this->db->affected_rows();
+			$cnt = $this->DB1->affected_rows();
 			
 			log_message("error", "delete_log_game_logins: count: {$cnt}");
 			echo "delete_log_game_logins: count: {$cnt}<br>";

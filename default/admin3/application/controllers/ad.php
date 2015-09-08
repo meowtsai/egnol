@@ -18,32 +18,32 @@ class Ad extends MY_Controller {
 		{
 			header("Cache-Control: private");			 
 					
-			$this->db->start_cache();
+			$this->DB2->start_cache();
 			
-			$this->db->from("log_logins ll");
+			$this->DB2->from("log_logins ll");
 						
-			$this->input->get("ad_channel") && $this->db->where("ll.ad", $this->input->get("ad_channel"));
+			$this->input->get("ad_channel") && $this->DB2->where("ll.ad", $this->input->get("ad_channel"));
 			
 			if ($this->input->get("start_date")) {
-				$start_date = $this->db->escape($this->input->get("start_date"));
+				$start_date = $this->DB2->escape($this->input->get("start_date"));
 				if ($this->input->get("end_date")) {
-					$end_date = $this->db->escape($this->input->get("end_date").":59");
-					$this->db->where("ll.create_time between {$start_date} and {$end_date}", null, false);	
+					$end_date = $this->DB2->escape($this->input->get("end_date").":59");
+					$this->DB2->where("ll.create_time between {$start_date} and {$end_date}", null, false);	
 				}	
-				else $this->db->where("ll.create_time >= {$start_date}", null, false);
+				else $this->DB2->where("ll.create_time >= {$start_date}", null, false);
 			}
 			
 			switch ($this->input->get("action"))
 			{
 				case "統計":					
-					$this->db->stop_cache();
+					$this->DB2->stop_cache();
 
-					$click_cnt = $this->db->count_all_results();
-					$user_cnt = $this->db->select("uid")->distinct()->get()->num_rows();
+					$click_cnt = $this->DB2->count_all_results();
+					$user_cnt = $this->DB2->select("uid")->distinct()->get()->num_rows();
 					
 					$old_user_cnt = $new_user_cnt = 0;
 					if ($game = $this->input->get("game")) {						
-						$old_user_cnt = $this->db->select("uid")->distinct()->where("exists (select * from characters gsr join servers gi on gi.server_id=gsr.server_id where uid=ll.uid and gi.game_id='{$game}' and create_time<ll.create_time)", null, false)->get()->num_rows();
+						$old_user_cnt = $this->DB2->select("uid")->distinct()->where("exists (select * from characters gsr join servers gi on gi.server_id=gsr.server_id where uid=ll.uid and gi.game_id='{$game}' and create_time<ll.create_time)", null, false)->get()->num_rows();
 						$new_user_cnt = $user_cnt - $old_user_cnt;
 					}
 					
@@ -55,8 +55,8 @@ class Ad extends MY_Controller {
 					break;
 			}		
 			
-			$this->db->stop_cache();
-			$this->db->flush_cache();
+			$this->DB2->stop_cache();
+			$this->DB2->flush_cache();
 		}
 		else {
 			$default_value = array(
@@ -68,7 +68,7 @@ class Ad extends MY_Controller {
 		
 		$this->g_layout
 			->add_breadcrumb("廣告")	
-			->set("games", $this->db->get("games"))
+			->set("games", $this->DB2->get("games"))
 			->set("query", isset($query) ? $query : false)
 			->add_js_include("ad/index")
 			->add_js_include("jquery-ui-timepicker-addon")
@@ -87,7 +87,7 @@ class Ad extends MY_Controller {
 			
 			//$url='http://interface.forgamecenter.com/api_create_role.php?game=dhcq&op=long_e&server='.$server.'&startdate='.$startdate.'&enddate='.$enddate ;
 			
-			$query = $this->db->select("account, min(log_date) as log_date")
+			$query = $this->DB2->select("account, min(log_date) as log_date")
 							->from("event20120717_yahoo")
 							->where("log_date BETWEEN '{$startDate}' AND '{$endDate}'", null, false)
 							->group_by("account")
@@ -112,11 +112,11 @@ class Ad extends MY_Controller {
 				
 		$this->_init_layout();
 		
-		$ad_groups = $this->db->from("ad_groups ag")
+		$ad_groups = $this->DB2->from("ad_groups ag")
 				->join("games", "ag.game=games.game_id")->order_by("ag.id desc")->get()->result();
 		
 		foreach($ad_groups as $row) {
-			$row->ads = $this->db->from("ads")->where("group_id", $row->id)->order_by("ad")->get()->result();	
+			$row->ads = $this->DB2->from("ads")->where("group_id", $row->id)->order_by("ad")->get()->result();	
 		}		
 		
 		$this->g_layout
@@ -138,26 +138,26 @@ class Ad extends MY_Controller {
 		
 			$ad_channel = $this->input->get("ad_channel");
 			
-			$this->db->from("ad_traces adt")
+			$this->DB2->from("ad_traces adt")
 				->join("games g", "g.game_id=adt.game");				
 
-			if ($ad_channel) $this->db->like("adt.ad", $ad_channel);
-			//$this->input->get("order_id") && $this->db->where("gb.order_id", $this->input->get("order_id"));
+			if ($ad_channel) $this->DB2->like("adt.ad", $ad_channel);
+			//$this->input->get("order_id") && $this->DB2->where("gb.order_id", $this->input->get("order_id"));
 			
 			if ($this->input->get("start_date")) {
-				$start_date = $this->db->escape($this->input->get("start_date"));
+				$start_date = $this->DB2->escape($this->input->get("start_date"));
 				if ($this->input->get("end_date")) {
-					$end_date = $this->db->escape($this->input->get("end_date").":59");
+					$end_date = $this->DB2->escape($this->input->get("end_date").":59");
 					$date_query_str = "between {$start_date} and {$end_date}";
 				}	
 				else $date_query_str = ">= {$start_date}";
-				$this->db->where("adt.create_time {$date_query_str}", null, false);
+				$this->DB2->where("adt.create_time {$date_query_str}", null, false);
 			}			
 
 			switch ($this->input->get("action"))
 			{	
 				case "統計":
-					$query = $this->db->select("adt.ad title, count(*) cnt, sum(case when device_id is null then 0 else 1 end) cnt2 ", false)
+					$query = $this->DB2->select("adt.ad title, count(*) cnt, sum(case when device_id is null then 0 else 1 end) cnt2 ", false)
 						->group_by("title")->order_by("title")->get();
 					
 					$where = 'where 1=1 ';
@@ -166,7 +166,7 @@ class Ad extends MY_Controller {
 					}
 					
 					if ( ! empty($date_query_str)) $where .= " and gsr.create_time {$date_query_str}";
-					$query2 = $this->db->query("SELECT gsr.ad title, count(*) cnt FROM characters gsr
+					$query2 = $this->DB2->query("SELECT gsr.ad title, count(*) cnt FROM characters gsr
 						join ads on gsr.ad=ads.ad {$where} group by title");
 					$this->g_layout->set("query2", $query2);
 											
@@ -180,7 +180,7 @@ class Ad extends MY_Controller {
 						case 'year': $len=4; break;
 						default: $len=10;
 					}
-					$query = $this->db->select("LEFT(adt.create_time, {$len}) title, count(*) cnt, sum(case when device_id is null then 0 else 1 end) cnt2 ", false)
+					$query = $this->DB2->select("LEFT(adt.create_time, {$len}) title, count(*) cnt, sum(case when device_id is null then 0 else 1 end) cnt2 ", false)
 						->group_by("title")
 						->order_by("title desc")->get();
 					
@@ -190,7 +190,7 @@ class Ad extends MY_Controller {
 					}
 					
 					if ( ! empty($date_query_str)) $where .= " and gsr.create_time {$date_query_str}";
-					$query2 = $this->db->query("SELECT LEFT(gsr.create_time, {$len}) title, count(*) cnt FROM characters gsr
+					$query2 = $this->DB2->query("SELECT LEFT(gsr.create_time, {$len}) title, count(*) cnt FROM characters gsr
 							join ads on gsr.ad=ads.ad {$where} group by LEFT(create_time, {$len})");
 					$this->g_layout->set("query2", $query2);
 					
@@ -228,7 +228,7 @@ class Ad extends MY_Controller {
 			->add_breadcrumb("新增")
 			->add_js_include("ad/form")
 			->set("back_url", $this->agent->is_referral() ? $this->agent->referrer() : "")
-			->set("games", $this->db->get_where("games", array("is_active" => "1")))
+			->set("games", $this->DB2->get_where("games", array("is_active" => "1")))
 			->set("group_id", $group_id)
 			->set("record", false)
 			->render("ad/form");
@@ -255,11 +255,11 @@ class Ad extends MY_Controller {
 			);
 			
 			
-			if ($this->db->get_where("ads", array("ad" => $data['ad']))->num_rows() > 0) {
+			if ($this->DB2->get_where("ads", array("ad" => $data['ad']))->num_rows() > 0) {
 				die(json_failure("`{$data['ad']}` 廣告已存在."));	
 			}
 
-			$insert_id = $this->db->set("create_time", "now()", false)->insert("ads", $data);
+			$insert_id = $this->DB1->set("create_time", "now()", false)->insert("ads", $data);
 			if (empty($insert_id)) {
 				die(json_failure("db insert error."));					
 			}
@@ -277,9 +277,9 @@ class Ad extends MY_Controller {
 	{
 		if ( ! $this->zacl->check_acl("ad", "delete")) die(json_failure("沒有權限"));
 		
-		$this->db->where("ad", $ad)->delete("ads");
+		$this->DB1->where("ad", $ad)->delete("ads");
 		
-		if ($this->db->affected_rows() > 0) {
+		if ($this->DB1->affected_rows() > 0) {
 			echo json_success();
 		}
 		else echo json_failure();
@@ -297,8 +297,8 @@ class Ad extends MY_Controller {
 			->add_breadcrumb("修改")
 			->add_js_include("ad/form")
 			->set("back_url", $this->agent->is_referral() ? $this->agent->referrer() : "")
-			->set("games", $this->db->get_where("games", array("is_active" => "1")))
-			->set("record", $this->db->get_where("ad_groups", array("id"=>$id))->row())
+			->set("games", $this->DB2->get_where("games", array("is_active" => "1")))
+			->set("record", $this->DB2->get_where("ad_groups", array("id"=>$id))->row())
 			->render("ad/group_form");		
 	}
 	
@@ -315,7 +315,7 @@ class Ad extends MY_Controller {
 			->add_breadcrumb("新增")
 			->add_js_include("ad/form")
 			->set("back_url", $this->agent->is_referral() ? $this->agent->referrer() : "")
-			->set("games", $this->db->get_where("games", array("is_active" => "1")))
+			->set("games", $this->DB2->get_where("games", array("is_active" => "1")))
 			->set("record", false)
 			->render("ad/group_form");
 	}
@@ -342,13 +342,13 @@ class Ad extends MY_Controller {
 			); 			
 			
 			if ($id = $this->input->post("id")) { //修改
-				$this->db->where("id", $id)->update("ad_groups", $data);
-				if ($this->db->affected_rows() == 0) {
+				$this->DB1->where("id", $id)->update("ad_groups", $data);
+				if ($this->DB1->affected_rows() == 0) {
 					die(json_failure("db update error."));					
 				}
 			}
 			else { //新增
-				$insert_id = $this->db->set("create_time", "now()", false)->insert("ad_groups", $data);
+				$insert_id = $this->DB1->set("create_time", "now()", false)->insert("ad_groups", $data);
 				if (empty($insert_id)) {
 					die(json_failure("db insert error."));					
 				}
@@ -367,10 +367,10 @@ class Ad extends MY_Controller {
 	{
 		if ( ! $this->zacl->check_acl("ad", "delete")) die(json_failure("沒有權限"));
 		
-		$this->db->where("id", $id)->delete("ad_groups");
+		$this->DB1->where("id", $id)->delete("ad_groups");
 		
-		if ($this->db->affected_rows() > 0) {
-			$this->db->where("group_id", $id)->delete("ads");
+		if ($this->DB1->affected_rows() > 0) {
+			$this->DB1->where("group_id", $id)->delete("ads");
 			
 			echo json_success();
 		}
