@@ -19,8 +19,6 @@ class MY_Controller extends CI_Controller {
 		$this->load->helper("g_common");
 		$this->DB1 = $this->load->database('long_e', TRUE);
         $this->DB2 = $this->load->database('long_e_2', TRUE);
-		print_r($this->DB1);
-		print_r($this->DB2);
 		$this->load->library(array("session", "g_user", "FirePHP", "Fb", "zacl"));			
 		
 		$this->game_id = $this->input->get("game_id");
