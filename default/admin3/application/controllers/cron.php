@@ -1140,7 +1140,7 @@ class Cron extends CI_Controller {
 		$date_30=date("Y-m-d",strtotime("-30 days", strtotime($date)));
 		
 		$start_time = time();
-		/*$this->generate_login_statistics($date);
+		$this->generate_login_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_new_character_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
@@ -1179,7 +1179,7 @@ class Cron extends CI_Controller {
 		$this->generate_deposit_user_game_length_statistics($date);
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_new_deposit_user_game_length_statistics($date);
-		$start_time = $this->echo_passed_time($start_time);*/
+		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_new_user_lifetime_value_statistics($date, 1);
 		$start_time = $this->echo_passed_time($start_time);
 		$this->generate_new_user_lifetime_value_statistics($date, 7);
@@ -1193,7 +1193,7 @@ class Cron extends CI_Controller {
 		$this->generate_new_user_lifetime_value_statistics($date, 90);
 		$start_time = $this->echo_passed_time($start_time);
 		
-		/*if ("7"==date("N", strtotime($date))) {
+		if ("7"==date("N", strtotime($date))) {
 			$this->generate_login_statistics($date, 'weekly');
 			$start_time = $this->echo_passed_time($start_time);
 			$date_week=date("Y-m-d",strtotime("-1 week", strtotime($date)));
@@ -1215,7 +1215,7 @@ class Cron extends CI_Controller {
 			$start_time = $this->echo_passed_time($start_time);
 			$this->generate_return_statistics($date, 1, 'monthly');
 			$start_time = $this->echo_passed_time($start_time);
-		}*/
+		}
 	}
 	
 	function echo_passed_time($start_time) {
