@@ -82,9 +82,11 @@ class Api extends MY_Controller
 				->set("channel_item", $channel_item)
 				->api_view();
 		}
-		else
+		else if (!isset($_SESSION['server_id']))
 		{
 			// 已登入, 改顯示會員畫面
+			$partner    = $this->input->get("partner");
+			$game_key   = $this->input->get("gamekey");
 			$server_mode = empty($_SESSION['server_mode']) ? 0 : $_SESSION['server_mode'];
 			$servers = null;
 			
@@ -92,10 +94,30 @@ class Api extends MY_Controller
 			$servers = $this->db->from("servers")->where("game_id", $site)->order_by("server_id")->get();
 
 			$this->_init_layout()
+				->set("partner", $partner)
+				->set("game_key", $game_key)
 				->set("server_mode", $server_mode)
 				->set("servers", $servers)
 				->add_css_link("login")
+				->add_js_include("api/login_game")
 				->api_view("api/ui_member");
+		} 
+		else
+		{	
+			$email = !empty($this->g_user->email) ? $this->g_user->email : "";
+			$mobile = !empty($this->g_user->mobile) ? $this->g_user->mobile : "";
+			$external_id = !empty($this->g_user->external_id) ? $this->g_user->external_id : "";
+	
+			header('Content-type:text/html; Charset=UTF-8');
+			//echo "<script type='text/javascript'>LongeAPI.onLogoutSuccess()</script>";
+			$ios_str = $this->g_user->uid."-_-".$email."-_-".$mobile."-_-".$external_id."-_-".$_SESSION['server_id'];
+			echo "<script type='text/javascript'>
+				if (typeof LongeAPI != 'undefined') {
+				    LongeAPI.onLoginSuccess('{$this->g_user->uid}', '{$email}', '{$mobile}', '{$external_id}', '{$_SESSION['server_id']}');
+				} else {
+					window.location = \"ios://loginsuccess-_-\" + encodeURIComponent('{$ios_str}');
+				}
+			</script>";
 		}
 	}
 
@@ -130,7 +152,7 @@ class Api extends MY_Controller
 		{
 			$mobile = $account;
 		}
-
+		
 		if ( $this->g_user->verify_account($email, $mobile, $pwd) === true )
 		{
 			die(json_message(array("message"=>"成功", "site"=>$site), true));
@@ -138,6 +160,58 @@ class Api extends MY_Controller
 		else
 		{
 			die(json_failure($this->g_user->error_message));
+		}
+	}
+
+	function ui_login_game_json()
+	{
+		header('content-type:text/html; charset=utf-8');
+
+		$site = $this->_get_site();
+
+		$server = $this->input->post("server");
+		if(empty($server) && $_SESSION['server_mode'] == 1)
+		{
+			die(json_failure('請選擇伺服器'));
+		}
+
+		$query = $this->db->from("log_game_logins")
+		           ->where("uid", $_SESSION['user_id'])
+				   ->where("is_first", "1")
+				   ->where("server_id", $server)
+				   ->where("game_id", $site)->get();
+		if (empty($query) || $query->num_rows() == 0)
+		{
+			$is_first = '1';
+		} else {
+			$is_first = '0';
+	        $this->db->where("uid", $_SESSION['user_id'])
+			  ->where("is_recent", '1')
+			  ->where("server_id", $server)
+			  ->where("game_id", $site)->update("log_game_logins", array("is_recent" => '0'));
+		}	
+		$ad = $this->input->get('ad') ? $this->input->get('ad') : (empty($_SESSION['ad']) ? '' : $_SESSION['ad']);
+		
+		$data = array(
+			'uid' => $_SESSION['user_id'],
+			'ip' => $_SERVER["REMOTE_ADDR"],
+			'create_time' => now(),
+			'is_recent' => '1',
+			'is_first' => $is_first,
+			'ad' => $ad,
+			'server_id' => $server,
+			'game_id' => $site,
+		);
+
+		$this->db->insert("log_game_logins", $data);	
+		if ( $this->db->insert_id() )
+		{
+		    $_SESSION['server_id'] = $server;
+			die(json_message(array("message"=>"成功", "site"=>$site), true));
+		}
+		else
+		{
+			die(json_failure('登入伺服器錯誤'));
 		}
 	}
 
