@@ -1123,10 +1123,13 @@ class Cron extends CI_Controller {
 		$statistics = $this->DB2->where("game_id", $data['game_id'])->where("date", $data['date'])->get($save_table);
 		
 		if ($statistics->num_rows() > 0) {
+                        echo "[update]";
 			$this->DB1->where("game_id", $data['game_id'])->where("date", $data['date'])->update($save_table, $data);
 		} else {
+                        echo "[insert]";
 			$this->DB1->insert($save_table, $data);
 		}
+                echo "[".$save_table."][".$data['game_id']."][".$data['date']."]";
 	}
 	
 	function cron_bundle($date="") {

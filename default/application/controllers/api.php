@@ -169,10 +169,15 @@ class Api extends MY_Controller
 
 		$site = $this->_get_site();
 
-		$server = $this->input->post("server");
-		if(empty($server) && $_SESSION['server_mode'] == 1)
-		{
-			die(json_failure('請選擇伺服器'));
+		if ($_SESSION['server_mode'] == 1) {
+			$server = $this->input->post("server");
+			if(empty($server))
+			{
+				die(json_failure('請選擇伺服器'));
+			}
+		} else {
+			$single_server = $this->db->from("servers")->where("game_id", $site)->order_by("server_id")->get()->row();
+			$server = $single_server['server_id'];
 		}
 
 		$query = $this->db->from("log_game_logins")
