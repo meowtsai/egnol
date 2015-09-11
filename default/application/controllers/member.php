@@ -495,7 +495,7 @@ class Member extends MY_Controller
 		    $this->db->where("mobile", $mobile)->update("users", array("password" => $md5_new));
 
 			// 手機號碼的話要發送簡訊
-            $msg = "親愛的會員您好：您的新密碼為 {$new}，請妥善保管。龍邑遊戲敬上";
+            $msg = "親愛的龍邑會員您好：您的新密碼為 {$new}，請妥善保管。龍邑遊戲敬上";
 
 			$this->load->library("send_sms");
 			if($this->send_sms->send($site, $mobile, $msg))
