@@ -32,10 +32,6 @@ class Statistics extends MY_Controller {
 		$date[1] = date("Y-m-d",strtotime("-2 days"));
 		$date[2] = date("Y-m-d",strtotime("-8 days"));
 		
-		$date[0] = '2015-01-08';
-		$date[1] = '2015-01-07';
-		$date[2] = '2015-01-01';
-		
 		foreach($date as $k => $d) {
 			$name = 'query'.$k;
 			$$name = $this->DB2->query("
