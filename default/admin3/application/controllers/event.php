@@ -19,19 +19,19 @@ class Event extends MY_Controller {
 	{		
 		$this->_init_layout();
 		
-		$this->db->start_cache();
+		$this->DB2->start_cache();
 		
 		if ($this->input->post()) 
 		{	
-			$this->input->post("code") && $this->db->where("code", $this->input->post("code"));
-			$this->input->post("uid") && $this->db->where("uid", $this->input->post("uid"));
+			$this->input->post("code") && $this->DB2->where("code", $this->input->post("code"));
+			$this->input->post("uid") && $this->DB2->where("uid", $this->input->post("uid"));
 		}
 		
-		$this->db->from("codes")->where("event", $event);
+		$this->DB2->from("codes")->where("event", $event);
 		
-		$this->db->stop_cache();
+		$this->DB2->stop_cache();
 		
-		$total_rows = $this->db->count_all_results();
+		$total_rows = $this->DB2->count_all_results();
 		
 		$this->load->library('pagination');			
 		$this->pagination->initialize(array(
@@ -40,11 +40,11 @@ class Event extends MY_Controller {
 					'per_page'	=> 100
 				));
 
-		$query = $this->db->order_by("id")
+		$query = $this->DB2->order_by("id")
 					->limit(100, $this->input->get("record"))
 					->get();
 				
-		$this->db->flush_cache();
+		$this->DB2->flush_cache();
 
 		$this->g_layout
 			->add_breadcrumb($event)
@@ -58,8 +58,8 @@ class Event extends MY_Controller {
 	{
 		if ( ! $this->zacl->check_acl("event", "delete")) die(json_failure("沒有權限"));
 		
-		$this->db->where("event", $event)->where("uid is null", null, false)->where("lock", "0")->delete("codes");
-		echo $this->db->affected_rows()>0 ? json_success() : json_failure("沒有未發放的序號");
+		$this->DB1->where("event", $event)->where("uid is null", null, false)->where("lock", "0")->delete("codes");
+		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure("沒有未發放的序號");
 	}
 	
 	function add_code($event)
@@ -73,13 +73,13 @@ class Event extends MY_Controller {
 			$i = 0;
 			foreach($spt as $code) {
 				if (empty($code)) continue;
-				$r = $this->db->insert("codes", array("event"=>$event, "code"=>trim($code)));
+				$r = $this->DB1->insert("codes", array("event"=>$event, "code"=>trim($code)));
 				if ($r) {
 					$i++;
 					echo "<div><b>{$code}</b> 已新增</div>";
 				}
 				else {
-					echo "<div style='color:red'><b>{$code}</b> 錯誤: {$this->db->_error_message()}</div>";
+					echo "<div style='color:red'><b>{$code}</b> 錯誤: {$this->DB1->_error_message()}</div>";
 				} 
 			}	
 			echo "<div style='margin:6px 0 0; color:green'>--- 共新增 {$i} 筆</div>";
@@ -101,16 +101,16 @@ class Event extends MY_Controller {
 	{
 		if ( ! $this->zacl->check_acl("event", "delete")) die(json_failure("沒有權限"));
 		
-		$this->db->where("id", $id)->delete("codes");
-		echo $this->db->affected_rows()>0 ? json_success() : json_failure();
+		$this->DB1->where("id", $id)->delete("codes");
+		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure();
 	}
 	
 	function set_code_lock($id, $val)
 	{
 		if ( ! $this->zacl->check_acl("event", "modify")) die(json_failure("沒有權限"));
 		
-		$this->db->where("id", $id)->set("lock", $val)->update("codes");
-		echo $this->db->affected_rows()>0 ? json_success() : json_failure("無變更");
+		$this->DB1->where("id", $id)->set("lock", $val)->update("codes");
+		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure("無變更");
 	}	
 }
 

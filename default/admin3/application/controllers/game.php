@@ -23,7 +23,7 @@ class Game extends MY_Controller {
 	
 	function index()
 	{
-		$query = $this->db->from("games")->order_by("rank")->get();
+		$query = $this->DB2->from("games")->order_by("rank")->get();
 		$this->_init_game_layout()
 			->set("query", $query)
 			->render();	
@@ -31,7 +31,7 @@ class Game extends MY_Controller {
 	
 	function sort()
 	{
-		$query = $this->db->from("games")->order_by("rank")->get();
+		$query = $this->DB2->from("games")->order_by("rank")->get();
 		$this->_init_game_layout()
 			->add_breadcrumb("排序")
 			->set("query", $query)
@@ -44,7 +44,7 @@ class Game extends MY_Controller {
 			$arr = explode(",", $data);
 			$i = 1; 
 			foreach($arr as $game) {
-				$this->db->query("update games set rank=".($i++)." where game_id=".$this->db->escape($game)."; ");
+				$this->DB1->query("update games set rank=".($i++)." where game_id=".$this->DB1->escape($game)."; ");
 			}			
 			die(json_success());
 		}
@@ -67,7 +67,7 @@ class Game extends MY_Controller {
 				$tags = $this->input->post("type");
 			}
 			
-			$this->db->where("game_id", $this->game_id)
+			$this->DB1->where("game_id", $this->game_id)
 				->update("games", array(
 						"name" => $this->input->post("name"),
 						"abbr" => $this->input->post("abbr"),
@@ -139,7 +139,7 @@ class Game extends MY_Controller {
 				}			
 			}				
 			
-			if ($this->db->affected_rows()==0 && $upload_cnt==0) $msg[] = '資料無變更';
+			if ($this->DB1->affected_rows()==0 && $upload_cnt==0) $msg[] = '資料無變更';
 			
 			$this->g_layout->set("msg", $msg);
 		}		
@@ -151,7 +151,7 @@ class Game extends MY_Controller {
 			$where = array("id" => $id);
 		}
 		
-		$query = $this->db->get_where("games", $where);
+		$query = $this->DB2->get_where("games", $where);
 		
 		
 		if ($query->num_rows() == 0) {
@@ -202,7 +202,7 @@ class Game extends MY_Controller {
 						$where .= " and lgl.ad like '{$ad_channel}%' ";
 					}
 			
-					$query = $this->db->query("
+					$query = $this->DB2->query("
 							
 select d, count(*) 'login_cnt', sum(role) 'role_cnt', 
 	round(1-sum(role)/count(*), 3) 'role_p',
@@ -250,26 +250,26 @@ group by d
 					break;
 					
 				case "廣告時段統計":	
-					$query = $this->db->select("ga.ad, LEFT(ga.create_time, {$len}) time, COUNT(*) cnt", false)
+					$query = $this->DB2->select("ga.ad, LEFT(ga.create_time, {$len}) time, COUNT(*) cnt", false)
 						->from('characters ga')
 						->join("servers gi", "ga.server_id=gi.server_id")
 						->group_by("time, ga.ad")
 						->order_by("time desc, ga.ad")->get();
-					//die($this->db->last_query());
+					//die($this->DB2->last_query());
 					break;					
 			}			
 			
 			if (empty($query)) {
 				if ($this->input->get("start_date")) {
-					$start_date = $this->db->escape($this->input->get("start_date"));
+					$start_date = $this->DB2->escape($this->input->get("start_date"));
 					if ($this->input->get("end_date")) {
-						$end_date = $this->db->escape($this->input->get("end_date").":59");
-						$this->db->where("{$date_field} between {$start_date} and {$end_date}", null, false);	
+						$end_date = $this->DB2->escape($this->input->get("end_date").":59");
+						$this->DB2->where("{$date_field} between {$start_date} and {$end_date}", null, false);	
 					}	
-					else $this->db->where("{$date_field} >= {$start_date}", null, false);
+					else $this->DB2->where("{$date_field} >= {$start_date}", null, false);
 				}			
 				
-				$query = $this->db->get();
+				$query = $this->DB2->get();
 			}
 		}
 		else {
@@ -284,7 +284,7 @@ group by d
 		
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
-			->set("servers", $this->db->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
+			->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();

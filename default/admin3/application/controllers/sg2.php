@@ -94,7 +94,7 @@ class Sg2 extends MY_Controller {
 	function delete_guide($id)
 	{
 		$this->model->delete_guide($id);
-		echo $this->db->affected_rows()>0 ? json_success() : json_failure();
+		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure();
 	}
 }
 

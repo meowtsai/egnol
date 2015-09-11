@@ -3,18 +3,13 @@
 	$mobile = !empty($this->g_user->mobile) ? $this->g_user->mobile : "";
 	$external_id = !empty($this->g_user->external_id) ? $this->g_user->external_id : "";
 ?>
-<script type="text/javascript">
-function loginSuccessButton (uid, email, mobile, external_id, server_id) {
-	if (typeof LongeAPI != 'undefined') {
-        LongeAPI.onLoginSuccess(uid, email, mobile, external_id, server_id);
-    } else {
-        window.location = "ios://loginsuccess" + "-_-" + encodeURIComponent(uid + "-_-" + email + "-_-" + mobile + "-_-" + external_id + "-_-" + server_id);
-	}
-}
-</script>
 <div id="content-login">
 	<div class="login-ins">
-		<div class="login-form">
+		<form id="login_form" method="post" action="<?=$api_url?>api/ui_login_game_json?site=<?=$site?>">
+			<input type="hidden" name="partner" value="<?=$partner?>">
+			<input type="hidden" name="game_key" value="<?=$game_key?>">
+			
+		    <div class="login-form">
 			<table class="member_info">
 				<tr>
 					<th>帳號類型　|</th>
@@ -79,18 +74,16 @@ function loginSuccessButton (uid, email, mobile, external_id, server_id) {
 					</div>
 				</p>
 <? endif; ?>
-				<input type="button" name="continue" id="continue" value="進入遊戲" onclick="loginSuccessButton(<?
-					if($server_mode == 1)
-					{
-			        	echo "'{$this->g_user->uid}','{$email}','{$mobile}','{$external_id}',$('#server_selection').find(':selected').val()";
-					}
-					else
-					{
-						$server_id = $servers->row()->server_id;
-			        	echo "'{$this->g_user->uid}','{$email}','{$mobile}','{$external_id}','{$server_id}'";
-					}
-				?>)" />
-			</div>
-		</div>
+				<input name="doLogin" type="submit" id="doSubmit" value="" style="display:none;" />
+			<!--/div>
+		    </div>
+		</form>
+		
+		<form id="login_form" method="post" action="#">
+		    <div-->
+				<input type="button" name="continue" id="continue" value="進入遊戲" onclick="javascript:$('#doSubmit').trigger('click')" />
+		    </div>
+		    </div>
+		</form>
 	</div>
 </div>

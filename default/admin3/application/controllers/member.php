@@ -24,47 +24,47 @@ class Member extends MY_Controller {
 		{
 			header("Cache-Control: private"); 
 					
-			$this->db->start_cache();
+			$this->DB2->start_cache();
 			
-			$this->db->select("u.*, uf.name");
-			$this->db->from("users u");
-			$this->db->join("user_info uf", "uf.uid=u.uid", 'left');
+			$this->DB2->select("u.*, uf.name");
+			$this->DB2->from("users u");
+			$this->DB2->join("user_info uf", "uf.uid=u.uid", 'left');
 			
-			$this->input->get("uid") && $this->db->where("u.uid", trim($this->input->get("uid")));
-			$this->input->get("euid") && $this->db->where("u.uid", $this->g_user->decode(trim($this->input->get("euid"))));			
-			//$this->input->get("account") && $this->db->where("u.account", trim($this->input->get("account")));			
-			$this->input->get("name") && $this->db->where("u.name", trim($this->input->get("name")));			
+			$this->input->get("uid") && $this->DB2->where("u.uid", trim($this->input->get("uid")));
+			$this->input->get("euid") && $this->DB2->where("u.uid", $this->g_user->decode(trim($this->input->get("euid"))));			
+			//$this->input->get("account") && $this->DB2->where("u.account", trim($this->input->get("account")));			
+			$this->input->get("name") && $this->DB2->where("u.name", trim($this->input->get("name")));			
 
 			if ($this->input->get("character_name")) {
-				$this->db->join("characters gsr", "gsr.uid=u.uid")
+				$this->DB2->join("characters gsr", "gsr.uid=u.uid")
 					->where("gsr.name", trim($this->input->get("character_name")))				
 					->where("gsr.id = (select max(id) from characters where uid=gsr.uid and name=gsr.name)", null, false)
 					;
 			}
 			
 			if ($this->input->get("start_date")) {
-				$start_date = $this->db->escape($this->input->get("start_date"));
+				$start_date = $this->DB2->escape($this->input->get("start_date"));
 				if ($this->input->get("end_date")) {
-					$end_date = $this->db->escape($this->input->get("end_date").":59");
-					$this->db->where("u.create_time between {$start_date} and {$end_date}", null, false);	
+					$end_date = $this->DB2->escape($this->input->get("end_date").":59");
+					$this->DB2->where("u.create_time between {$start_date} and {$end_date}", null, false);	
 				}	
-				else $this->db->where("u.create_time >= {$start_date}", null, false);
+				else $this->DB2->where("u.create_time >= {$start_date}", null, false);
 			}
 			
 			
 			if ($channel = $this->input->get("channel")) {				
-				if ($channel == 'long_e') $this->db->not_like("u.account", "@");
-				else $this->db->where("u.account like '%@{$channel}'", null, false);
+				if ($channel == 'long_e') $this->DB2->not_like("u.account", "@");
+				else $this->DB2->where("u.account like '%@{$channel}'", null, false);
 			}
 		
 			switch ($this->input->get("action"))
 			{
 				case "查詢": 
 					
-					$this->db->stop_cache();
+					$this->DB2->stop_cache();
 
-					$total_rows = $this->db->count_all_results();
-					$query = $this->db->limit(10, $this->input->get("record"))->order_by("u.uid desc")->get();					
+					$total_rows = $this->DB2->count_all_results();
+					$query = $this->DB2->limit(10, $this->input->get("record"))->order_by("u.uid desc")->get();					
 
 					$get = $this->input->get();					
 					unset($get["record"]);
@@ -90,14 +90,14 @@ class Member extends MY_Controller {
 						case 'year': $len=4; break;
 						default: $len=10;
 					}
-					$query = $this->db->select("LEFT(u.create_time, {$len}) title, count(*) cnt, '會員數' name, 'key' `key`", false)
+					$query = $this->DB2->select("LEFT(u.create_time, {$len}) title, count(*) cnt, '會員數' name, 'key' `key`", false)
 						->group_by("title")
 						->order_by("title desc")->get();
 					break;
 			}
 			
 			
-			$this->db->flush_cache();
+			$this->DB2->flush_cache();
 		}
 		else {
 			$default_value = array(
@@ -129,23 +129,23 @@ SELECT
 FROM users x
 WHERE x.uid={$uid}";
 		
-		$user = $this->db
+		$user = $this->DB2
 					->select("u.*, lgl.create_time as last_login_date, ui.ident, ui.ban_reason, ui.ban_date")
 					->from("users u")->where("u.uid", $uid)
 					->join("log_game_logins lgl", "u.uid=lgl.uid and is_recent='1'", "left")
 					->join("user_info ui", "u.uid=ui.uid", "left")
 					->order_by("lgl.create_time desc")
 					->get()->row();
-		$balance = $this->db->query($balance_sql)->row();
+		$balance = $this->DB2->query($balance_sql)->row();
 		
 		
-		$role = $this->db->select("gsr.*, g.name as game_name, gi.name as server_name")
+		$role = $this->DB2->select("gsr.*, g.name as game_name, gi.name as server_name")
 			->from("characters gsr")
 			->join("servers gi", "gi.server_id=gsr.server_id")
 			->join("games g", "g.game_id=gi.game_id")
 			->where("gsr.account", $user->account)->order_by("gsr.create_time desc")->get();
 		
-		$bind = $this->db->from("users")->where("bind_uid", $uid)->get()->row();
+		$bind = $this->DB2->from("users")->where("bind_uid", $uid)->get()->row();
 		
 		$this->_init_member_layout()
 			->add_breadcrumb("查看")
@@ -160,7 +160,7 @@ WHERE x.uid={$uid}";
 	{
 		$this->zacl->check("testaccounts", "read");
 		
-		$query = $this->db->from("testaccounts")->order_by("id desc")->get();
+		$query = $this->DB2->from("testaccounts")->order_by("id desc")->get();
 		
 		$this->_init_member_layout()
 			->add_breadcrumb("測試帳號")
@@ -177,15 +177,15 @@ WHERE x.uid={$uid}";
 		if ($this->input->post())
 		{
 			if ($this->input->post("id")) {
-				$this->db->where("id", $this->input->post("id"))
+				$this->DB1->where("id", $this->input->post("id"))
 					->update("testaccounts", array(
 								"note" => $this->input->post("note"),
 								//"update_time" => now(),
 							));
-				$this->g_layout->set("result", $this->db->affected_rows()>0);
+				$this->g_layout->set("result", $this->DB1->affected_rows()>0);
 			}
 			else {
-				$this->db->insert("testaccounts", array(
+				$this->DB1->insert("testaccounts", array(
 								"uid" => $this->input->post("uid"),
 								"account" => $this->input->post("account"),
 								"note" => $this->input->post("note"),
@@ -197,7 +197,7 @@ WHERE x.uid={$uid}";
 		}			
 		
 		if ($id) {
-			$row = $this->db->get_where("testaccounts", array("id"=>$id))->row();
+			$row = $this->DB2->get_where("testaccounts", array("id"=>$id))->row();
 		} else $row = false;
 		
 		$this->g_layout
@@ -211,8 +211,8 @@ WHERE x.uid={$uid}";
 	{
 		if ( ! $this->zacl->check_acl("testaccounts", "delete")) die(json_failure("沒有權限"));
 		
-		$this->db->delete("testaccounts", array("id"=>$id));
-		echo $this->db->affected_rows()>0 ? json_success() : json_failure();
+		$this->DB1->delete("testaccounts", array("id"=>$id));
+		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure();
 	}
 	
 	function set_right($uid, $right)
@@ -220,14 +220,14 @@ WHERE x.uid={$uid}";
 		$right = intval($right); 
 		if ( ! $this->zacl->check_acl("member", "lock")) die(json_failure("沒有權限"));
 		
-		$this->db->where("uid", $uid)
+		$this->DB1->where("uid", $uid)
 			->update("users", array("is_banned" => $right));
 		
-		$this->db->where("uid", $uid)
+		$this->DB1->where("uid", $uid)
 			->set("ban_date", "NOW()", false)
 			->update("user_info", array("ban_reason" => $this->input->post("cause")));
 		
-		if ($this->db->affected_rows()>0) {
+		if ($this->DB1->affected_rows()>0) {
 			$this->load->model("log_admin_actions");
 			$action = ($right == 1 ? '停權' : '解除停權');
 			$this->log_admin_actions->insert_log($_SESSION["admin_uid"], 'member', 'lock', "{$action} #{$uid}");
@@ -278,7 +278,7 @@ WHERE x.uid={$uid}";
 	where x.uid between {$offset} and ".($offset+$limit)." 
 	;				
 				";
-				$query = $this->db->query($sql);
+				$query = $this->DB2->query($sql);
 				$result = array_merge($result, $query->result());
 				//var_dump($query);
 				
@@ -306,7 +306,7 @@ WHERE x.uid={$uid}";
 	{
 		$this->zacl->check("member", "is_banned");
 		
-		$query = $this->db->select("u.*, ui.ban_date, ui.ban_reason")
+		$query = $this->DB2->select("u.*, ui.ban_date, ui.ban_reason")
 		    ->from("users u")
 			->join("user_info ui", "u.uid=ui.uid")
 			->where("is_banned", 1)->get();

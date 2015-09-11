@@ -56,6 +56,14 @@ switch (ENVIRONMENT)
 			'port'		=> '3306',
 			'db_debug'	=> FALSE,
 		);
+		$g_config['db2'] = array(
+			'hostname' 	=> '192.168.2.6',
+			'database' 	=> 'long_e',
+			'username' 	=> 'web',
+			'password' 	=> '54700022',
+			'port'		=> '3306',
+			'db_debug'	=> FALSE,
+		);
 		$g_config['session'] = array(
 			'save_handler' 	=> 'memcache',
 			'save_path' 	=> 'tcp://localhost:11211?persistent=1&weight=1&timeout=1&retry_interval=15',

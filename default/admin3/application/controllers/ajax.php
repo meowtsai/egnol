@@ -11,7 +11,7 @@ class Ajax extends MY_Controller {
 	{
 		$q = $this->input->get("q");
 
-		$query = $this->db->distinct()->select('ad')->from('characters')
+		$query = $this->DB2->distinct()->select('ad')->from('characters')
 			->where("create_time>=date_sub(now(), interval 30 day) and ad is not null and ad <> ''", null, false)
 			->like('ad', $q, 'after')
 			->order_by('ad')->get();
@@ -23,7 +23,7 @@ class Ajax extends MY_Controller {
 
 	function auto_close()
 	{
-		$this->db->where("status", "2")->where("is_read", "1")->where("create_time < DATE_SUB(CURDATE(), INTERVAL 3 DAY)", null, false)->update("questions", array("status"=>"4"));
-		$this->db->where("status", "2")->where("create_time < DATE_SUB(CURDATE(), INTERVAL 7 DAY)", null, false)->update("questions", array("status"=>"4"));
+		$this->DB1->where("status", "2")->where("is_read", "1")->where("create_time < DATE_SUB(CURDATE(), INTERVAL 3 DAY)", null, false)->update("questions", array("status"=>"4"));
+		$this->DB1->where("status", "2")->where("create_time < DATE_SUB(CURDATE(), INTERVAL 7 DAY)", null, false)->update("questions", array("status"=>"4"));
 	}
 }

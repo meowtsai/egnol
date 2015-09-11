@@ -27,7 +27,7 @@ class Server extends MY_Controller {
 		if (empty($this->game_id)) {
 			$query = "";
 		} else {
-			$query = $this->db->where("game_id", $this->game_id)->from("servers")->order_by("server_id", "desc")->get();
+			$query = $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id", "desc")->get();
 		}
 		
 		$this->_init_layout();
@@ -58,7 +58,7 @@ class Server extends MY_Controller {
 		$this->zacl->check("server", "modify");
 		
 		$this->_chk_game_id();
-		$row = $this->db->where("server_id", $server_id)->from("servers")->get()->row();
+		$row = $this->DB2->where("server_id", $server_id)->from("servers")->get()->row();
 		if ($row == false) die("無此記錄");
 		
 		$this->_init_layout();
@@ -103,11 +103,11 @@ class Server extends MY_Controller {
 			);
 				
 			if ($id = $this->input->post("id")) { //修改
-				$this->db->where("server_id", $id)->update("servers", $data);
+				$this->DB1->where("server_id", $id)->update("servers", $data);
 			}
 			else { //新增
 				$data["game_id"] = $this->input->post("game_id");
-				$insert_id = $this->db->insert("servers", $data);
+				$insert_id = $this->DB1->insert("servers", $data);
 			}
 			
 			$this->load->library('upload');
@@ -160,9 +160,9 @@ class Server extends MY_Controller {
 		if ( ! $this->zacl->check_acl("server", "modify")) die(json_failure("沒有權限"));
 		
 		//一次只能有一個新服
-		$this->db->where("game_id", $this->game_id)->where("is_entry_server", "1")
+		$this->DB1->where("game_id", $this->game_id)->where("is_entry_server", "1")
 			->set("is_entry_server", "0")->update("servers"); //清空
-		$this->db->where("game_id", $this->game_id)->where("id", $id)
+		$this->DB1->where("game_id", $this->game_id)->where("id", $id)
 			->set("is_entry_server", "1")->update("servers"); //設定
 		echo json_success();
 		return;
@@ -173,9 +173,9 @@ class Server extends MY_Controller {
 		if ( ! $this->zacl->check_acl("server", "modify")) die(json_failure("沒有權限"));
 		
 		//一次只能有一個新服
-		$this->db->where("game_id", $this->game_id)->where("is_new_server", "1")
+		$this->DB1->where("game_id", $this->game_id)->where("is_new_server", "1")
 				->set("is_new_server", "0")->update("servers"); //清空
-		$this->db->where("game_id", $this->game_id)->where("server_id", $id)
+		$this->DB1->where("game_id", $this->game_id)->where("server_id", $id)
 				->set("is_new_server", "1")->update("servers"); //設定
 		echo json_success();
 		return;		
@@ -185,9 +185,9 @@ class Server extends MY_Controller {
 	{
 		if ( ! $this->zacl->check_acl("server", "modify")) die(json_failure("沒有權限"));
 		
-		$this->db->where("game_id", $this->game_id)->where("server_id", $id)
+		$this->DB1->where("game_id", $this->game_id)->where("server_id", $id)
 		->set("server_status", $status)->update("servers");
-		echo $this->db->affected_rows()>0 ? json_success() : json_failure("無變更");
+		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure("無變更");
 	}
 	
 	function set_muti_status($status)
@@ -195,18 +195,18 @@ class Server extends MY_Controller {
 		if ( ! $this->zacl->check_acl("server", "modify")) die(json_failure("沒有權限"));
 		
 		$ids = $this->input->post("ids");
-		$this->db->where("game_id", $this->game_id)->where_in("server_id", $ids)
+		$this->DB1->where("game_id", $this->game_id)->where_in("server_id", $ids)
 		->set("server_status", $status)->update("servers");
-		echo $this->db->affected_rows()>0 ? json_success() : json_failure("無變更");
+		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure("無變更");
 	}	
 	
 	function set_tran_status($id, $status)
 	{
 		if ( ! $this->zacl->check_acl("server", "modify")) die(json_failure("沒有權限"));
 		
-		$this->db->where("game_id", $this->game_id)->where("server_id", $id)
+		$this->DB1->where("game_id", $this->game_id)->where("server_id", $id)
 			->set("is_transaction_active", $status?"1":"0")->update("servers");
-		echo $this->db->affected_rows()>0 ? json_success() : json_failure("無變更");		
+		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure("無變更");		
 	}
 	
 	function set_muti_tran_status($status)
@@ -214,9 +214,9 @@ class Server extends MY_Controller {
 		if ( ! $this->zacl->check_acl("server", "modify")) die(json_failure("沒有權限"));
 		
 		$ids = $this->input->post("ids");
-		$this->db->where("game_id", $this->game_id)->where_in("server_id", $ids)
+		$this->DB1->where("game_id", $this->game_id)->where_in("server_id", $ids)
 			->set("is_transaction_active", $status?"1":"0")->update("servers");
-		echo $this->db->affected_rows()>0 ? json_success() : json_failure("無變更");
+		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure("無變更");
 	}	
 
 }

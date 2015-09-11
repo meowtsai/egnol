@@ -18,8 +18,8 @@ class Notice extends MY_Controller {
 
 		$this->load->library("user_agent");
 		
-		$games = $this->db->from("games")->get();
-		$servers = $this->db->from("servers")->order_by("server_id desc")->get();	
+		$games = $this->DB2->from("games")->get();
+		$servers = $this->DB2->from("servers")->order_by("server_id desc")->get();	
 			
 		$this->g_layout
 			->add_breadcrumb("通知", "notice/get_list")
@@ -39,7 +39,7 @@ class Notice extends MY_Controller {
 		$notice_id = $this->input->post("notice_id");
 		if (empty($notice_id)) die(json_failure("參數遺失"));
 		
-		$this->db->where("notice_id", $notice_id)->delete("notice_targets");
+		$this->DB1->where("notice_id", $notice_id)->delete("notice_targets");
 				
 		/*
 		 * 
@@ -57,10 +57,10 @@ limit 500000
 			foreach($spt as $uid) {
 				$sql .= "(NOW(), '{$notice_id}', '{$uid}'),";
 			} 
-			$this->db->query(substr($sql,0,strlen($sql)-1));
+			$this->DB1->query(substr($sql,0,strlen($sql)-1));
 		}
 		else if ($this->input->post("action") == "通知三個月內有登入的玩家") {
-			$this->db->query("
+			$this->DB1->query("
 				insert into notice_targets (notice_id, uid, create_time)  
 					select distinct '{$notice_id}', uid, NOW() FROM long_e.log_game_logins where create_time >= DATE_SUB(NOW(), INTERVAL 3 MONTH)
 			");
@@ -77,11 +77,11 @@ limit 500000
 
 			//if ($where == " 1=1 ") die(json_failure("請選擇條件")); 
 			
-			/*$this->db->query("
+			/*$this->DB2->query("
 				delete from notice_targets where uid not in (select uid from log_game_logins lgl join servers gi on lgl.server_id=gi.server_id where {$where})
 					and notice_id='{$notice_id}'				
 			");*/			
-			$this->db->query("
+			$this->DB1->query("
 				insert into notice_targets (notice_id, uid, create_time)  
 					select distinct '{$notice_id}', uid, NOW() from log_game_logins lgl join servers gi on lgl.server_id=gi.server_id where {$where}
 			");
@@ -120,7 +120,7 @@ limit 500000
 		$this->g_layout
 			->add_breadcrumb("通知", "notice/get_list")
 			->add_breadcrumb("檢視玩家")
-			->set("query", $this->db->where("notice_id", $id)->from("notice_targets")->get())
+			->set("query", $this->DB2->where("notice_id", $id)->from("notice_targets")->get())
 			->render();
 	}
 	
@@ -218,8 +218,8 @@ limit 500000
 	{
 		if ( ! $this->zacl->check_acl("notice", "modify")) die(json_failure("沒有權限"));
 		
-		$this->db->where("id", $id)->set("is_active", $val)->update("notices");
-		echo $this->db->affected_rows()>0 ? json_success() : json_failure("無變更");
+		$this->DB1->where("id", $id)->set("is_active", $val)->update("notices");
+		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure("無變更");
 	}
 	
 }
