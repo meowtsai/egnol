@@ -162,14 +162,14 @@ class Api extends MY_Controller
 			die(json_failure($this->g_user->error_message));
 		}
 	}
-
+	
 	function ui_login_game_json()
 	{
 		header('content-type:text/html; charset=utf-8');
 
 		$site = $this->_get_site();
 
-		if ($_SESSION['server_mode'] == 1) {
+		if (isset($_SESSION['server_mode']) && $_SESSION['server_mode'] == 1) {
 			$server = $this->input->post("server");
 			if(empty($server))
 			{
@@ -177,7 +177,8 @@ class Api extends MY_Controller
 			}
 		} else {
 			$single_server = $this->db->from("servers")->where("game_id", $site)->order_by("server_id")->get()->row();
-			$server = $single_server['server_id'];
+			
+			$server = $single_server->server_id;
 		}
 
 		$query = $this->db->from("log_game_logins")
