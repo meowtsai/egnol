@@ -479,9 +479,14 @@ class Member extends MY_Controller
 
 			$this->load->library("send_mail");
 
-			//$this->send_mail->passwdResetMail($email, $account, $new);
-
-			die(json_success("新密碼已發送到信箱。"));
+			if($this->send_mail->passwdResetMail($email, $account, $new))
+			{
+				die(json_success("新密碼已發送到您的 E-Mail 信箱。"));
+			}
+			else
+			{
+				die(json_failure("E-Mail 發送失敗。"));
+			}
 		}
 		else
 		{
