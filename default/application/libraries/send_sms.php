@@ -12,6 +12,23 @@
 		{
         }
 
+		function check_mobile_region($mobile)
+		{
+			// 886 台
+			if(preg_match("/^8869\d{8}$/", $mobile) || preg_match("/^09\d{8}$/", $mobile))
+				return 'tw';
+
+			// 852 港
+			if(preg_match("/^852[5-9]\d{7}$/", $mobile))
+				return 'hk';
+
+			// 853 澳
+			if(preg_match("/^8536\d{7}$/", $mobile))
+				return 'mo';
+
+			return 'undefined';
+		}
+
         function send($product_id, $phone_number, $msg)
 		{
 			$msg_id = time().rand(1,9999);
@@ -26,6 +43,11 @@
 					&SourceProdID={$product_id}
 					&SourceMsgID={$msg_id}
 					";
+
+			if(check_mobile_region($phone_number) != 'tw')
+			{
+				$url = $url."&GlobalSms=Y";
+			}
 
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $url);
