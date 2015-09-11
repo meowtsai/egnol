@@ -1,7 +1,7 @@
 <?php
 require_once dirname(__FILE__).'/config.php';
 
-define('IN_OFFICE', in_array($_SERVER["REMOTE_ADDR"], g_conf("office_ip")) && empty($_GET["lock"]) ? TRUE : FALSE);
+if (isset($_SERVER["REMOTE_ADDR"])) define('IN_OFFICE', in_array($_SERVER["REMOTE_ADDR"], g_conf("office_ip")) && empty($_GET["lock"]) ? TRUE : FALSE);
 
 switch (ENVIRONMENT)
 {
