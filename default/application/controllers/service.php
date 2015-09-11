@@ -220,4 +220,8 @@ class Service extends MY_Controller {
 		$this->db->set("status", "4")->where("id", $id)->update("questions");
 		die(json_encode(array("status"=>"success")));	
 	}
+
+	function sms_result()
+	{
+	}
 }
