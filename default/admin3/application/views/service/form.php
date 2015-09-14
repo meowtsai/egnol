@@ -28,7 +28,7 @@
 							
 				<select id="server_pool" style="display:none;">
 					<? foreach($servers->result() as $row):?>
-					<option value="<?=$row->id?>" <?=($question && $question->server_id==$row->id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?></option>
+					<option value="<?=$row->server_id?>" <?=($question && $question->server_id==$row->server_id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?></option>
 					<? endforeach;?>
 				</select>	
 			</td>
