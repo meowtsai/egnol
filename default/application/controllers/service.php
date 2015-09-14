@@ -181,8 +181,10 @@ class Service extends MY_Controller {
 			->add_css_link("login")
 			->add_css_link("server")
 			->add_js_include("service/view")
-			->set("question", $question)
+			->add_js_include("jquery.blockUI")
+			->add_js_include("default")
 			->set("replies", $replies)
+			->set("question", $question)
 			->standard_view();
 	}
 	
@@ -205,7 +207,7 @@ class Service extends MY_Controller {
 			->set("create_time", "now()", false)
 			->insert("question_replies", $data);
 		
-		$this->db->where("id", $id)->update("questions", array("is_read"=>'0', "status"=>'1'));		
+		$this->db->where("id", $question_id)->update("questions", array("is_read"=>'0', "status"=>'1'));		
 		
 		die(json_encode(array("status"=>"success")));		
 	}
