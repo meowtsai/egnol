@@ -170,12 +170,12 @@
 	</table>
 	
 	<? 
-	$no = $replies->num_rows();
+	$no = 1;
 	foreach($replies->result() as $row):?>
 	<table class="table table-bordered <?=($row->is_official ? 'official' : '') ?>" style="position:relative;">
 		<tr>
 			<td style="width:120px; text-align:center;">
-				NO<?=$no--?>.<?=($row->is_official ? '客服回覆' : '再次提問') ?><br>
+				NO<?=$no++?>.<?=($row->is_official ? '客服回覆' : '再次提問') ?><br>
 				<?=date('Y-m-d H:i', strtotime($row->create_time))?>
 				<? if ($row->admin_uname):?>
 				<div style="font-size:12px; color:#129;">(<?=$row->admin_uname?>)</div>
