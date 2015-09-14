@@ -401,7 +401,7 @@ class Service extends MY_Controller {
 			->select("qt.*, au.name as admin_uname")
 			->from("question_replies qt")
 			->join("admin_users au", "au.uid=qt.admin_uid", "left")
-			->where("question_id", $id)->order_by("qt.id", "desc")->get();
+			->where("question_id", $id)->order_by("qt.id", "asc")->get();
 
 		$allocate_users = $this->DB2->from('admin_users')->where_in('role', array('pm', 'admin', 'cs_master', 'pd_chang', 'RC'))->order_by("role")->get();
 		
