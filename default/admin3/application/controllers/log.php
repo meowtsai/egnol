@@ -34,7 +34,7 @@ class Log extends MY_Controller {
 			
 			$this->DB2
 				->from("log_logins ll")
-				->join("games g", "ll.site=g.game_id", "left");
+				->join("games g", "ll.site=g.game_id", "left")
 				->join("users u", "ll.uid=u.uid", "left");
 			
 			$this->input->get("site") && $this->DB2->where("ll.site", $this->input->get("site"));
@@ -84,7 +84,7 @@ class Log extends MY_Controller {
 
 					$total_rows = $this->DB2->count_all_results();
 
-					$query = $this->DB2->select("ll.*")
+					$query = $this->DB2->select("ll.* ,u.mobile, u.email")
 						->limit(100, $this->input->get("record"))
 						->order_by("create_time desc")->get();
 
@@ -251,7 +251,7 @@ class Log extends MY_Controller {
 							
 					$total_rows = $this->DB2->count_all_results();
 										
-					$query = $this->DB2->select("lgl.*, g.abbr as game_name, gi.name as server_name, lgl.uid")
+					$query = $this->DB2->select("lgl.*, g.abbr as game_name, gi.name as server_name, lgl.uid, u.mobile, u.email")
 						->limit(100, $this->input->get("record"))
 						->order_by("create_time desc")->get();
 
@@ -385,7 +385,7 @@ class Log extends MY_Controller {
 							
 					$total_rows = $this->DB2->count_all_results();
 										
-					$query = $this->DB2->select("lou.*, g.abbr as game_name, gi.name as server_name, lou.uid")
+					$query = $this->DB2->select("lou.*, g.abbr as game_name, gi.name as server_name, lou.uid, u.mobile, u.email")
 						->limit(100, $this->input->get("record"))
 						->order_by("online_date desc")->get();
 
