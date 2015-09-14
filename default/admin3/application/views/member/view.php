@@ -47,8 +47,8 @@
 	<dt>帳號</dt><dd><?=$user->uid?></dd>
 	<dt>姓名</dt><dd><?=$user->name?>&nbsp;</dd>
 	<?
-	if($user->ident==1) {$show_sex = '男';}
-	else if($user->ident==1) {$show_sex = '女';}
+	if($user->sex==1) {$show_sex = '男';}
+	else if($user->sex==2) {$show_sex = '女';}
 	else {$show_sex = '';}
 	?>
 	<dt>性別</dt><dd><?=$show_sex?>&nbsp;</dd>
