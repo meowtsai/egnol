@@ -222,7 +222,7 @@ class Service extends MY_Controller {
 	function add()
 	{		
 		$games = $this->DB2->from("games")->where("is_active", "1")->get();
-		$servers = $this->DB2->where_in("server_status", array("public", "maintenance"))->order_by("id")->get("servers");	
+		$servers = $this->DB2->where_in("server_status", array("public", "maintenance"))->order_by("server_id")->get("servers");	
 		
 		$this->_init_service_layout()
 			->add_breadcrumb("新增電話案件")
