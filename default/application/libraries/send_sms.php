@@ -4,9 +4,10 @@
      *  yoyo8 簡訊系統發送
      *
      */
-    class Send_SMS
+    class Send_sms
     {
-		$member_id  = 'longeplay';
+		var $member_id  = 'longeplay';
+		var $message = '';
 
         function __construct()
 		{
@@ -31,26 +32,27 @@
 
         function send($product_id, $phone_number, $msg)
 		{
+            srand((double)microtime()*1000000);
 			$msg_id = time().rand(1,9999);
-			$pwd = MD5("{$this->member_id}:leru03vmp4:{$product_id}:{$msg_id}");
+			$pwd = MD5("{$this->member_id}:leru03vmp4:YoYoSMS_{$product_id}:{$msg_id}");
 
-			$url = "https://www.yoyo8.com.tw/SMSBridge.php
-					?MemberID={$this->member_id}
-					&Password={$pwd}
-					&MobileNo={$phone_number}
-					&CharSet=U
-					&SMSMessage={$msg}
-					&SourceProdID={$product_id}
-					&SourceMsgID={$msg_id}
-					";
+			$msg = urlencode($msg);
+			$url = "http://www.yoyo8.com.tw/SMSBridge.php"
+					."?MemberID={$this->member_id}"
+					."&Password={$pwd}"
+					."&MobileNo={$phone_number}"
+					."&CharSet=U"
+					."&SMSMessage={$msg}"
+					."&SourceProdID=YoYoSMS_{$product_id}"
+					."&SourceMsgID={$msg_id}";
 
-			if(check_mobile_region($phone_number) != 'tw')
+			if($this->check_mobile_region($phone_number) != 'tw')
 			{
 				$url = $url."&GlobalSms=Y";
 			}
 
 			$ch = curl_init();
-			curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_HEADER, false);
 			curl_setopt($ch, CURLOPT_FRESH_CONNECT, true);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -60,18 +62,23 @@
 			$result = array();
 			parse_str($curl_res, $result);
 
-			if($result['status'] == 0)
+			if($result['status'] == '0')
 			{
 				// 成功
-
+				$this->message = $result['retstr'];
 				return true;
 			}
 			else
 			{
 				// 失敗
-
+				$this->message = "簡訊發送失敗: {$result['status']}";
 				return false;
 			}
         }
+
+		function get_message()
+		{
+			return $this->message;
+		}
     }
 ?>
