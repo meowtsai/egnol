@@ -32,10 +32,10 @@
 .login_member .login_info{ padding:40px; }
 .login_info .scrollbar{max-height:355px; overflow-x:hidden; line-height:25px;}
 
-.login-form .member_info, .login-form .member_password{ max-width:950px; margin:0 auto; text-align:left; width:90%; line-height:40px;}
+.login-form .member_info, .login-form .member_password{ max-width:950px; margin:0 auto; text-align:left; width:100%; line-height:40px;}
 
-.member_info tr > th{ width:30%; text-align:right; padding:5px; vertical-align:middle;}
-.member_info tr > td{ width:70%; color:#fffb00; padding:5px; vertical-align:middle;}
+.member_info tr > th{ width:25%; text-align:right; padding:5px; vertical-align:middle;}
+.member_info tr > td{ width:75%; color:#fffb00; padding:5px; vertical-align:middle;}
 .login-form input{border-radius:6px; height:26px; font-size:18px; border-width:1px; border-color:#004999; background:-webkit-linear-gradient(top,#ffffff,#c1c2c3); width:90%; max-width:300px;}
 
 
@@ -73,9 +73,10 @@
 }
 
 @media only screen and (max-width:450px){
+#content-login .login-ins { width:100%;}
 .login-button .button_submit{ width:48%;}
 .login-button .button_info{ width:24%;}
-.member_info tr > th{ width:40%;}
-.member_info tr > td{ width:60%;}
+.member_info tr > th{ width:30%;}
+.member_info tr > td{ width:70%;}
 
 }
