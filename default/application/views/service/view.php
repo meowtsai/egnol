@@ -74,9 +74,9 @@
 					foreach($replies->result() as $row):?>
 					<table class="reply <?=($row->is_official ? 'official' : '') ?>" style="position:relative;width:100%">
 						<tr>
-							<td style="word-wrap: break-word;">
+							<td style="overflow:visible; text-overflow:clip; white-space:normal; word-wrap: break-word;">
 								<?//=($row->is_official ? '《客服回覆》' : '《再次提問》') ?>
-								<div style="background-color: rgba(255, 255, 255, 0.3);border-radius: 5px; padding:5px;">
+								<div style="background-color: rgba(255, 255, 255, 0.3);border-radius: 5px; padding:5px; word-wrap: break-word;">
 								    <?=$row->content?>
 								</div>
 								<? if ($row->is_official == '1' && $question->status <> '4' && $no == 1):?>
