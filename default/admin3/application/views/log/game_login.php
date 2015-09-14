@@ -67,8 +67,7 @@
 	
 		<input type="text" name="uid" value="<?=$this->input->get("uid")?>" class="input-small" placeholder="uid">		
 		<input type="text" name="euid" value="<?=$this->input->get("euid")?>" class="input-small" placeholder="euid">
-		<input type="text" name="mobile" value="<?=$this->input->get("mobile")?>" class="input-medium" placeholder="手機">
-		<input type="text" name="email" value="<?=$this->input->get("email")?>" class="input-medium" placeholder="信箱">
+		<input type="text" name="account" value="<?=$this->input->get("account")?>" class="input-medium" placeholder="帳號">
 		<input type="text" name="ip" value="<?=$this->input->get("ip")?>" style="width:110px"  placeholder="IP">
 		
 		<span class="sptl"></span>	

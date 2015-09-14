@@ -38,9 +38,11 @@ class Log extends MY_Controller {
 				->join("users u", "ll.uid=u.uid", "left");
 			
 			$this->input->get("site") && $this->DB2->where("ll.site", $this->input->get("site"));
-			$this->input->get("uid") && $this->DB2->where("ll.uid", $this->input->get("uid"));
-			$this->input->get("mobile") && $this->DB2->where("u.mobile", $this->input->get("mobile"));
-			$this->input->get("email") && $this->DB2->where("u.email", $this->input->get("email"));
+			$this->input->get("uid") && $this->DB2->where("ll.uid", $this->input->get("uid"));		
+			if ($this->input->get("account")) {
+				$this->DB2->where("u.email", trim($this->input->get("account")));		
+				$this->DB2->or_where("u.mobile", trim($this->input->get("account")));
+			}			
 			$this->input->get("euid") && $this->DB2->where("ll.uid", $this->g_user->decode($this->input->get("euid")));
 			$this->input->get("ip") && $this->DB2->where("ll.ip", trim($this->input->get("ip")));
 			$this->input->get("ad_channel") && $this->DB2->where("ll.ad", $this->input->get("ad_channel"));											
@@ -164,9 +166,11 @@ class Log extends MY_Controller {
 			$this->DB2->start_cache();
 			
 			$this->input->get("uid") && $this->DB2->where("lgl.uid", $this->input->get("uid"));
-			$this->input->get("euid") && $this->DB2->where("lgl.uid", $this->g_user->decode($this->input->get("euid")));
-			$this->input->get("mobile") && $this->DB2->where("u.mobile", $this->input->get("mobile"));
-			$this->input->get("email") && $this->DB2->where("u.email", $this->input->get("email"));
+			$this->input->get("euid") && $this->DB2->where("lgl.uid", $this->g_user->decode($this->input->get("euid")));		
+			if ($this->input->get("account")) {
+				$this->DB2->where("u.email", trim($this->input->get("account")));		
+				$this->DB2->or_where("u.mobile", trim($this->input->get("account")));
+			}			
 			$this->input->get("ip") && $this->DB2->where("lgl.ip", trim($this->input->get("ip")));
 			$this->input->get("game") && $this->DB2->where("g.game_id", $this->input->get("game"));
 			$this->input->get("server") && $this->DB2->where("gi.server_id", $this->input->get("server"));
