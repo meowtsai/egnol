@@ -457,6 +457,7 @@ class Member extends MY_Controller
 	function reset_password_json()
 	{
 		$email = $this->input->post("email");
+		$site = $this->_get_site();
 
 		header('content-type:text/html; charset=utf-8');
 		if ( empty($email) ) {
@@ -478,27 +479,39 @@ class Member extends MY_Controller
 
 			$this->load->library("send_mail");
 
-			//$this->send_mail->passwdResetMail($email, $account, $new);
-
-			die(json_success("新密碼已發送到信箱。"));
+			if($this->send_mail->passwdResetMail($email, $account, $new))
+			{
+				die(json_message(array("message"=>"新密碼已發送到您的 E-Mail 信箱。", "site"=>$site)));
+			}
+			else
+			{
+				die(json_failure("E-Mail 發送失敗。"));
+			}
 		}
 		else
 		{
 			// 使用手機號碼
-			$cnt = $this->db->from("users")->where("mobile", $email)->count_all_results();
+			$mobile = $email;
+			$cnt = $this->db->from("users")->where("mobile", $mobile)->count_all_results();
 			if ($cnt == 0)
 			{
 				die(json_failure("沒有這位使用者或資料填寫錯誤。"));
 			}
-		    $this->db->where("mobile", $email)->update("users", array("password" => $md5_new));
+		    $this->db->where("mobile", $mobile)->update("users", array("password" => $md5_new));
 
-			//
 			// 手機號碼的話要發送簡訊
-			//
-			//
-			//
+            $msg = "親愛的龍邑會員您好：您的新密碼為 {$new}，請妥善保管。龍邑遊戲敬上";
 
-			die(json_success("新密碼已使用簡訊發送。"));
+			$this->load->library("send_sms");
+
+			if($this->send_sms->send($site, $mobile, $msg))
+			{
+				die(json_message(array("message"=>"已使用簡訊發送新密碼至您的手機。", "site"=>$site)));
+			}
+			else
+			{
+				die(json_failure($this->send_sms->get_message()));
+			}
 		}
 	}
 	
