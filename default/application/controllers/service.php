@@ -171,7 +171,7 @@ class Service extends MY_Controller {
 			if ($question->status == '2' || $question->status == '4') {
 				$this->db->where("id", $id)->update("questions", array("is_read"=>'1'));
 			}		
-			$replies = $this->db->from("question_replies")->where("question_id", $id)->order_by("id", "desc")->get();
+			$replies = $this->db->from("question_replies")->where("question_id", $id)->order_by("id", "asc")->get();
 		}
 		else {
 			$replies = false;
@@ -221,9 +221,5 @@ class Service extends MY_Controller {
 		
 		$this->db->set("status", "4")->where("id", $id)->update("questions");
 		die(json_encode(array("status"=>"success")));	
-	}
-
-	function sms_result()
-	{
 	}
 }
