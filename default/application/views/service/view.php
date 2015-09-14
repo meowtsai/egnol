@@ -66,10 +66,11 @@
 					if ($replies->num_rows() == 0) echo '目前尚在處理中';
 					$no = $replies->num_rows();
 					foreach($replies->result() as $row):?>
-					<table class="reply <?=($row->is_official ? 'official' : '') ?>" style="position:relative;">
+					<table class="reply <?=($row->is_official ? 'official' : '') ?>" style="position:relative;width:100%">
 						<tr>
 							<td style="word-break:break-all">
-								<?=($row->is_official ? '《客服回覆》' : '《再次提問》') ?><?=$row->content?><br>
+								<?//=($row->is_official ? '《客服回覆》' : '《再次提問》') ?>
+								<div style="background-color: rgba(255, 255, 255, 0.3);border-radius: 5px; padding:5px;"><?=$row->content?></div>
 								<? if ($row->is_official == '1' && $question->status <> '4' && $no == 1):?>
 								<div style="float:right; padding:0 0 20px 20px;">
 									<a href="javascript:;" url="<?=site_url("service/close_question/{$question->id}")?>" class="close_question">[我沒問題了]</a>
