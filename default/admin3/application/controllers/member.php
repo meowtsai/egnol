@@ -33,7 +33,7 @@ class Member extends MY_Controller {
 			$this->input->get("uid") && $this->DB2->where("u.uid", trim($this->input->get("uid")));
 			$this->input->get("euid") && $this->DB2->where("u.uid", $this->g_user->decode(trim($this->input->get("euid"))));			
 			//$this->input->get("account") && $this->DB2->where("u.account", trim($this->input->get("account")));			
-			$this->input->get("name") && $this->DB2->where("u.name", trim($this->input->get("name")));			
+			$this->input->get("name") && $this->DB2->where("uf.name", trim($this->input->get("name")));			
 
 			if ($this->input->get("character_name")) {
 				$this->DB2->join("characters gsr", "gsr.uid=u.uid")
