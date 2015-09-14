@@ -178,7 +178,7 @@ class Service extends MY_Controller {
 		}
 		
 		$this->_init_layout()
-			->add_css_link("login")
+			->add_css_link("service")
 			->add_css_link("server")
 			->add_js_include("service/view")
 			->add_js_include("jquery.blockUI")
