@@ -46,7 +46,12 @@
 	<dt>euid</dt><dd><?=$this->g_user->encode($user->uid)?></dd>
 	<dt>帳號</dt><dd><?=$user->uid?></dd>
 	<dt>姓名</dt><dd><?=$user->name?>&nbsp;</dd>
-	<dt>性別</dt><dd><?=$user->sex?>&nbsp;</dd>
+	<?
+	if($user->ident==1) {$show_sex = '男';}
+	else if($user->ident==1) {$show_sex = '女';}
+	else {$show_sex = '';}
+	?>
+	<dt>性別</dt><dd><?=$show_sex?>&nbsp;</dd>
 	<dt>信箱</dt><dd><?=$user->email?>&nbsp;</dd>
 	<dt>手機</dt><dd><?=$user->mobile?>&nbsp;</dd>
 	<dt>身分證</dt><dd><?=$user->ident?>&nbsp;</dd>
