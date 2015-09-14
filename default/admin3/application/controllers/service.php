@@ -473,19 +473,19 @@ class Service extends MY_Controller {
 	function allocate_json()
 	{
 		$result = $this->input->post("allocate_result").date("Y-m-d H:i")." - ".$_SESSION['admin_name']."：".$this->input->post("result")."<br>";		
-		$this->DB1->where("question_id", $this->input->post("question_id"))
+		$this->DB1->where("id", $this->input->post("question_id"))
 			->set('allocate_date', 'NOW()', false)
 			->set('allocate_status', '1')
 			->set('allocate_result', $result)
 			->update("questions", array('allocate_admin_uid' => $this->input->post("allocate_admin_uid")));
-		
+			
 		die(json_success());		
 	}
 	
 	function finish_allocate_json()
 	{
 		$result = $this->input->post("allocate_result").date("Y-m-d H:i")." - ".$_SESSION['admin_name']."：".$this->input->post("result")."<br>";
-		$this->DB1->where("question_id", $this->input->post("question_id"))
+		$this->DB1->where("id", $this->input->post("question_id"))
 			->set('allocate_finish_date', 'NOW()', false)
 			->set('allocate_status', '2')
 			->set('allocate_result', $result)
