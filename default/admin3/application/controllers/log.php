@@ -35,11 +35,11 @@ class Log extends MY_Controller {
 			$this->DB2
 				->from("log_logins ll")
 				->join("games g", "ll.site=g.game_id", "left");
+				->join("users u", "ll.uid=u.uid", "left");
 			
 			$this->input->get("site") && $this->DB2->where("ll.site", $this->input->get("site"));
 			$this->input->get("uid") && $this->DB2->where("ll.uid", $this->input->get("uid"));
 			$this->input->get("euid") && $this->DB2->where("ll.uid", $this->g_user->decode($this->input->get("euid")));
-			$this->input->get("account") && $this->DB2->like("ll.account", trim($this->input->get("account")));
 			$this->input->get("ip") && $this->DB2->where("ll.ip", trim($this->input->get("ip")));
 			$this->input->get("ad_channel") && $this->DB2->where("ll.ad", $this->input->get("ad_channel"));											
 			
@@ -60,8 +60,8 @@ class Log extends MY_Controller {
 			}
 
 			if ($channel = $this->input->get("channel")) {
-				if ($channel == 'long_e') $this->DB2->not_like("ll.account", "@");
-				else $this->DB2->where("ll.account like '%@{$channel}'", null, false);
+				if ($channel == 'long_e') $this->DB2->not_like("u.external_id", "@");
+				else $this->DB2->where("u.external_id like '%@{$channel}'", null, false);
 			}
 			
 			if ($this->input->get("distinct")) 
@@ -101,7 +101,7 @@ class Log extends MY_Controller {
 					break;
 
 				case "通路統計":				
-					$query = $this->DB2->select("site as `key`, IFNULL(IFNULL(g.name, ll.site), '')  as name, SUBSTRING(ll.account, INSTR(ll.account, '@'), 20 ) title, count(*) cnt", false)
+					$query = $this->DB2->select("site as `key`, IFNULL(IFNULL(g.name, ll.site), '')  as name, SUBSTRING(u.external_id, INSTR(u.external_id, '@'), 20 ) title, count(*) cnt", false)
 						->group_by("title, site")
 						->order_by("cnt desc, site")->get();					
 					break;
@@ -163,7 +163,6 @@ class Log extends MY_Controller {
 			
 			$this->input->get("uid") && $this->DB2->where("lgl.uid", $this->input->get("uid"));
 			$this->input->get("euid") && $this->DB2->where("lgl.uid", $this->g_user->decode($this->input->get("euid")));
-			$this->input->get("account") && $this->DB2->like("lgl.account", trim($this->input->get("account")));
 			$this->input->get("ip") && $this->DB2->where("lgl.ip", trim($this->input->get("ip")));
 			$this->input->get("game") && $this->DB2->where("g.game_id", $this->input->get("game"));
 			$this->input->get("server") && $this->DB2->where("gi.server_id", $this->input->get("server"));
@@ -177,6 +176,7 @@ class Log extends MY_Controller {
 			}
 			
 			$this->DB2->from("log_game_logins lgl")
+				->join("users u", "u.uid=lgl.uid", "left")
 				->join("servers gi", "gi.server_id=lgl.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left");
 									
@@ -190,8 +190,8 @@ class Log extends MY_Controller {
 			}
 
 			if ($channel = $this->input->get("channel")) {
-				if ($channel == 'long_e') $this->DB2->not_like("lgl.account", "@");
-				else $this->DB2->where("lgl.account like '%@{$channel}'", null, false);
+				if ($channel == 'long_e') $this->DB2->not_like("u.external_id", "@");
+				else $this->DB2->where("u.external_id like '%@{$channel}'", null, false);
 			}
 		
 			if ($this->input->get("role_exist")) {
@@ -268,15 +268,15 @@ class Log extends MY_Controller {
 				case "輸出":
 					ini_set("memory_limit","2048M");
 					
-					$query = $this->DB2->select("lgl.*, gi.name server_name, g.name game_name, g.abbr game_abbr_name")->get();
+					$query = $this->DB2->select("lgl.*, gi.name server_name, g.name game_name, g.abbr game_abbr_name, u.mobile, u.email")->get();
 						
 					$filename = "output.xls";					
 					header("Content-type:application/vnd.ms-excel;");
 					header("Content-Disposition: filename={$filename};");
 					
-					$content = "會員ID\t會員帳號\tIP位址\t建檔時間\t廣告\t登入遊戲\t\n";
+					$content = "會員ID\t會員手機\t會員信箱\tIP位址\t建檔時間\t廣告\t登入遊戲\t\n";
 					foreach($query->result() as $row) {						
-						$content .= "{$row->uid}\t=\"{$row->account}\"\t{$row->ip}\t{$row->create_time}\t{$row->ad}\t{$row->game_name}_{$row->server_name}\t\n";
+						$content .= "{$row->uid}\t=\"{$row->mobile}\"\t{$row->email}\"\t{$row->ip}\t{$row->create_time}\t{$row->ad}\t{$row->game_name}_{$row->server_name}\t\n";
 					}
 					//echo $content;
 					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
@@ -285,7 +285,7 @@ class Log extends MY_Controller {
 					break;						
 					
 				case "通路統計":					
-					$query = $this->DB2->select("SUBSTRING(lgl.account, INSTR(lgl.account, '@'), 20 ) title, count(*) cnt", false)
+					$query = $this->DB2->select("SUBSTRING(u.external_id, INSTR(u.external_id, '@'), 20 ) title, count(*) cnt", false)
 						->group_by("title, {$game_key}")
 						->order_by("cnt desc, {$game_key}")->get();					
 					break;
