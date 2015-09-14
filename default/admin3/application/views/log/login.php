@@ -53,7 +53,8 @@
 	
 		<input type="text" name="uid" value="<?=$this->input->get("uid")?>" class="input-small" placeholder="uid">		
 		<input type="text" name="euid" value="<?=$this->input->get("euid")?>" class="input-small" placeholder="euid">
-		<input type="text" name="account" value="<?=$this->input->get("account")?>" class="input-medium" placeholder="帳號">
+		<input type="text" name="mobile" value="<?=$this->input->get("mobile")?>" class="input-medium" placeholder="手機">
+		<input type="text" name="email" value="<?=$this->input->get("email")?>" class="input-medium" placeholder="信箱">
 		<input type="text" name="ip" value="<?=$this->input->get("ip")?>" style="width:110px"  placeholder="IP">				
 	
 	
@@ -118,7 +119,8 @@
 			<th style="width:50px;">#</th>
 			<th style="width:70px;">uid
 				<div style="color:#777;">euid</div></th>
-			<th style="width:110px;">帳號</th>					
+			<th style="width:70px;">手機</th>	
+			<th style="width:90px;">信箱</th>					
 			<th style="width:60px;">IP位址</th>		
 			<th style="width:70px;">建檔時間</th>
 			<th style="width:60px;">登入站別</th>			
@@ -135,7 +137,8 @@
 				<a href="<?=site_url("log/login?uid={$row->uid}&action=查詢")?>"><i class="icon-search"></i></a>
 				<div style="color:#777;"><?=$this->g_user->encode($row->uid)?></div>
 			</td>
-			<td><?=$row->account?></td>			
+			<td><?=$row->mobile?></td>	
+			<td><?=$row->email?></td>			
 			<td><?=$row->ip?>
 				<a href="/admin3/log/login?ip=<?=$row->ip?>&action=查詢"><i class="icon-search"></i></a>
 			</td>
