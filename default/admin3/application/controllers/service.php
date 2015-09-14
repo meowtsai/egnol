@@ -236,7 +236,7 @@ class Service extends MY_Controller {
 	function edit($id)
 	{		
 		$games = $this->DB2->from("games")->where("is_active", "1")->get();
-		$servers = $this->DB2->where_in("server_status", array("public", "maintenance"))->order_by("id")->get("servers");
+		$servers = $this->DB2->where_in("server_status", array("public", "maintenance"))->order_by("server_id")->get("servers");
 
 		$query = $this->DB2->from("questions qt")
 			->join("servers gi", "qt.server_id=gi.server_id")
