@@ -12,19 +12,19 @@
 	}
 ?>
 
-<legend><?=$user->account?> (<?=$user->uid?>)</legend>
+<legend><?=$user->uid?> (<?=$user->uid?>)</legend>
 
 <div id="func_bar" style="text-align:right;">
 
 <? if ( ! empty($user->bind_uid)):
 	$u = $this->db->where("uid", $user->bind_uid)->from("users")->get()->row(); 
 ?>
-	<p>此帳號為 <a href="<?=site_url("member/view/{$u->uid}")?>"><?=$u->account?> (<?=$u->uid?>)</a> 的綁定帳號</p>
+	<p>此帳號為 <a href="<?=site_url("member/view/{$u->uid}")?>"><?=$u->uid?> (<?=$u->uid?>)</a> 的綁定帳號</p>
 
 <? else:?>
 	
 	<? if ( ! empty($bind)):?>
-	<p>此帳號綁定在 <a href="<?=site_url("member/view/{$bind->uid}")?>"><?=$bind->account?> (<?=$bind->uid?>)</a></p>
+	<p>此帳號綁定在 <a href="<?=site_url("member/view/{$bind->uid}")?>"><?=$bind->uid?> (<?=$bind->uid?>)</a></p>
 	<? endif;?>
 	
 	<? if ($user->is_banned == 1):?>
@@ -44,7 +44,7 @@
 <dl class="dl-horizontal">
 	<dt>uid</dt><dd><?=$user->uid?></dd>
 	<dt>euid</dt><dd><?=$this->g_user->encode($user->uid)?></dd>
-	<dt>帳號</dt><dd><?=$user->account?></dd>
+	<dt>帳號</dt><dd><?=$user->uid?></dd>
 	<dt>姓名</dt><dd><?=$user->name?>&nbsp;</dd>
 	<dt>信箱</dt><dd><?=$user->email?>&nbsp;</dd>
 	<dt>身分證</dt><dd><?=$user->ident?>&nbsp;</dd>
@@ -112,7 +112,7 @@
 		<? foreach($role->result() as $row): fb($row)?>
 		<tr>
 			<td><?=$row->game_name?> - <?=$row->server_name?></td>
-			<td><?=$row->character_name?></td>
+			<td><?=$row->name?></td>
 			<td><?=array_key_exists($row->ad, $ad_channels) ? $ad_channels[$row->ad] : '無'?></td>
 			<td><?=$row->create_time?></td>
 		</tr>

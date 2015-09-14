@@ -43,19 +43,25 @@
 					<th>截圖　|</th>
 					<td>
 		        	<? if ($question->pic_path1):?>
+					<div>
 						<a href="<?=$question->pic_path1?>" target="_blank">
-							<img src="<?=$question->pic_path1?>" style="max-width:400px;">
+							<img src="<?=$question->pic_path1?>" style="max-width:100%;">
 						</a>
+					</div>
 					<? endif;?>
 					<? if ($question->pic_path2):?>
+					<div>
 						<a href="<?=$question->pic_path2?>" target="_blank">
-							<img src="<?=$question->pic_path2?>" style="max-width:400px;">
+							<img src="<?=$question->pic_path2?>" style="max-width:100%;">
 						</a>
+					</div>
 					<? endif;?>
 					<? if ($question->pic_path3):?>
+					<div>
 						<a href="<?=$question->pic_path3?>" target="_blank">
-							<img src="<?=$question->pic_path3?>" style="max-width:400px;">
+							<img src="<?=$question->pic_path3?>" style="max-width:100%;">
 						</a>
+					</div>
 					<? endif;?>
 					</td>
 				</tr>
@@ -68,9 +74,11 @@
 					foreach($replies->result() as $row):?>
 					<table class="reply <?=($row->is_official ? 'official' : '') ?>" style="position:relative;width:100%">
 						<tr>
-							<td style="word-break:break-all">
+							<td style="word-wrap: break-word;">
 								<?//=($row->is_official ? '《客服回覆》' : '《再次提問》') ?>
-								<div style="background-color: rgba(255, 255, 255, 0.3);border-radius: 5px; padding:5px;"><?=$row->content?></div>
+								<div style="background-color: rgba(255, 255, 255, 0.3);border-radius: 5px; padding:5px;">
+								    <?=$row->content?>
+								</div>
 								<? if ($row->is_official == '1' && $question->status <> '4' && $no == 1):?>
 								<div style="float:right; padding:0 0 20px 20px;">
 									<a href="javascript:;" url="<?=site_url("service/close_question/{$question->id}")?>" class="close_question">[我沒問題了]</a>
