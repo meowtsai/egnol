@@ -18,8 +18,10 @@
 		echo '<div class="none">查無資料</div>'; 
 	else: 
 		$row0 = $query0->result();
-		$row1 = $query1->result();
-		$row2 = $query2->result();
+		if ($query1) $row1 = $query1->result();
+		else $row1 = array();
+		if ($query2) $row2 = $query2->result();
+		else $row2 = array();
 	?>
 	<table class="table table-striped table-bordered" style="width:auto;">
 		<thead>
