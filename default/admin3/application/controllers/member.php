@@ -56,7 +56,7 @@ class Member extends MY_Controller {
 			
 			
 			if ($channel = $this->input->get("channel")) {				
-				if ($channel == 'long_e') $this->DB2->not_like("u.external_id", "@");
+				if ($channel == 'long_e') $this->DB2->where('u.external_id IS NULL', null, false);
 				else $this->DB2->where("u.external_id like '%@{$channel}'", null, false);
 			}
 		
@@ -148,12 +148,9 @@ WHERE x.uid={$uid}";
 			->join("games g", "g.game_id=gi.game_id")
 			->where("gsr.uid", $user->uid)->order_by("gsr.create_time desc")->get();
 		
-		$bind = $this->DB2->from("users")->where("uid", $uid)->get()->row();
-		
 		$this->_init_member_layout()
 			->add_breadcrumb("查看")
 			->set("user", $user)
-			->set("bind", $bind)
 			->set("balance", $balance)
 			->set("role", $role)
 			->render();

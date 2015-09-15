@@ -104,7 +104,16 @@
 		<tr>
 			<th>帳號：</th>
 			<td colspan="3">
-				<?=$question->uid?>
+				<?
+	            if (!$question->email && !$question->mobile) {
+		            $ex_id = explode("@",$question->external_id); 
+		            if ('device' == $ex_id[1]) echo "快速登入";
+		            else echo $ex_id[1];
+	            } else {
+		            if ($question->email) echo $question->email;
+		            echo $question->mobile;
+	            }
+				?>
 			</td>
 		</tr>	
 		<? endif;?>	

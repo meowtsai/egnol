@@ -72,12 +72,13 @@
 <table class="table table-striped">
 	<thead>
 		<tr>
-			<th style="width:50px; text-align:center;">uid</th>
-			<th style="width:50px; text-align:center;">euid</th>
+			<th style="width:45px; text-align:center;">uid</th>
+			<th style="width:45px; text-align:center;">euid</th>
 			<th style="width:70px">手機</th>
-			<th style="width:100px">信箱</th>
+			<th style="width:90px">信箱</th>
+			<th style="width:50px">通路來源</th>
 			<th style="width:120px; text-align:center;">姓名</th>
-			<th style="width:90px; text-align:center;">註冊日期</th>	 	
+			<th style="width:80px; text-align:center;">註冊日期</th>	 	
 		</tr>
 	</thead>
 	<tbody>
@@ -87,6 +88,16 @@
 			<td style="text-align:center"><?=$this->g_user->encode($row->uid)?></td>
 			<td><?=$row->mobile?></td>
 			<td><?=$row->email?></td>
+		    <td><?
+			if ($row->external_id) {
+				$ex_id = explode("@",$row->external_id); 
+				if ('device' == $ex_id[1]) echo "快速登入";
+				else echo $ex_id[1];
+			} else {
+				echo '龍邑會員';
+			}
+			?>
+			</td>
 			<td style="text-align:center"><?=$row->name?></td>
 			<td style="text-align:center"><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>
 		</tr>
