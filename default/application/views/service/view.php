@@ -82,10 +82,10 @@
 								<? if ($row->is_official == '1' && $question->status <> '4' && $no == 1):?>
 								<div style="float:right; padding:0 0 20px 20px;">
 									<a href="javascript:;" url="<?=site_url("service/close_question/{$question->id}")?>" class="close_question">[我沒問題了]</a>
-									<a href="#reply">[我還有疑問]</a>
+									<a href="#go_to_reply">[我還有疑問]</a>
 								</div>
 								<? endif;?>
-								<div style="float:right; font-size: 5px; color: #D8D8D8; font-style: italic;">
+								<div style="float:right; font-size: 8px; color: #D8D8D8; font-style: italic;">
 								<?=date('Y-m-d H:i', strtotime($row->create_time))?>
 								</div>
 							</td>
@@ -97,14 +97,14 @@
 					</td>
 				</tr>
 				<tr>
-					<td colspan="2">
+					<td colspan="2" style="overflow:visible; text-overflow:clip; white-space:normal; word-wrap: break-word;">
 					<? if ($question->status <> '4' && $replies->num_rows() > 0):?>
 					<form method="post" action="<?=site_url("service/insert_reply_json")?>">
 						<input type="hidden" name="question_id" value="<?=$question->id?>">
 
 					<div style="padding:15px;">
-						<a name="reply"></a>
-						再次提問（若與本次提問主題不同，請另開開單方式提問，謝謝）<br>
+						<a name="go_to_reply"></a>
+						再次提問（若與本次提問主題不同，請以另開單方式提問，謝謝）<br>
 						<textarea name="content" rows="6" style="width:100%" class="required"></textarea>
 					</div>
 

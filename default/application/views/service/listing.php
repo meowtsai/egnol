@@ -22,9 +22,9 @@
 						<table style="width:100%;">
 							<tr>
 								<th style="max-width:5%;width:5%;"><?=$no--?></th>
-								<td style="max-width:35%;min-width:35%;text-overflow:ellipsis;text-align:left;"><?=$row->content?></td>
-								<td style="max-width:35%;min-width:35%;"><?=$row->create_time?></td>
-								<td style="max-width:20%;width:20%;">
+								<td style="max-width:35%;min-width:35%;overflow:visible; text-overflow:clip; white-space:normal; word-wrap: break-word;text-align:left;"><?=$row->content?></td>
+								<td style="max-width:35%;min-width:35%;overflow:visible; text-overflow:clip; white-space:normal; word-wrap: break-word;"><?=$row->create_time?></td>
+								<td style="max-width:20%;width:20%;overflow:visible; text-overflow:clip; white-space:normal; word-wrap: break-word;">
 									<?=$question_status[$row->status]?>
                                     <? if ($row->status=='2' && $row->is_read=='0') echo '<span class="field" style="color:red">(未讀)</span>'?>
 								</td>

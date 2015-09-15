@@ -116,7 +116,7 @@ CREATE TABLE `games` (
   `currency` varchar(50) DEFAULT NULL,
   `tags` varchar(255) DEFAULT NULL,
   `rank` tinyint(4) DEFAULT NULL,
-  `is_active` tinyint(1) DEFAULT 0,
+  `is_active` tinyint(1) DEFAULT '0',
   `fanpage` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`game_id`),
   UNIQUE KEY `game_id_UNIQUE` (`game_id`),
@@ -238,6 +238,26 @@ CREATE TABLE `log_logins` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `monthly_statistics`
+--
+
+DROP TABLE IF EXISTS `monthly_statistics`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `monthly_statistics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `game_id` varchar(20) NOT NULL,
+  `date` date NOT NULL,
+  `one_retention_count` varchar(11) DEFAULT NULL,
+  `one_retention_all_count` varchar(11) DEFAULT NULL,
+  `return_count` int(11) DEFAULT NULL,
+  `login_count` int(11) DEFAULT NULL,
+  `new_login_count` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -499,8 +519,42 @@ CREATE TABLE `statistics` (
   `peak_user_count` int(11) DEFAULT NULL,
   `total_time` int(11) DEFAULT NULL,
   `paid_total_time` int(11) DEFAULT NULL,
+  `deposit_login_count` int(11) DEFAULT NULL,
+  `new_deposit_login_count` int(11) DEFAULT NULL,
+  `new_login_count_15` int(11) DEFAULT NULL,
+  `new_login_count_30` int(11) DEFAULT NULL,
+  `new_login_count_60` int(11) DEFAULT NULL,
+  `new_login_count_90` int(11) DEFAULT NULL,
+  `new_login_count_120` int(11) DEFAULT NULL,
+  `new_login_count_more` int(11) DEFAULT NULL,
+  `login_count_15` int(11) DEFAULT NULL,
+  `login_count_30` int(11) DEFAULT NULL,
+  `login_count_60` int(11) DEFAULT NULL,
+  `login_count_90` int(11) DEFAULT NULL,
+  `login_count_120` int(11) DEFAULT NULL,
+  `login_count_more` int(11) DEFAULT NULL,
+  `deposit_login_count_15` int(11) DEFAULT NULL,
+  `deposit_login_count_30` int(11) DEFAULT NULL,
+  `deposit_login_count_60` int(11) DEFAULT NULL,
+  `deposit_login_count_90` int(11) DEFAULT NULL,
+  `deposit_login_count_120` int(11) DEFAULT NULL,
+  `deposit_login_count_more` int(11) DEFAULT NULL,
+  `new_deposit_login_count_15` int(11) DEFAULT NULL,
+  `new_deposit_login_count_30` int(11) DEFAULT NULL,
+  `new_deposit_login_count_60` int(11) DEFAULT NULL,
+  `new_deposit_login_count_90` int(11) DEFAULT NULL,
+  `new_deposit_login_count_120` int(11) DEFAULT NULL,
+  `new_deposit_login_count_more` int(11) DEFAULT NULL,
+  `one_return_count` int(11) DEFAULT NULL,
+  `three_return_count` int(11) DEFAULT NULL,
+  `one_ltv` int(11) DEFAULT NULL,
+  `seven_ltv` int(11) DEFAULT NULL,
+  `fourteen_ltv` int(11) DEFAULT NULL,
+  `thirty_ltv` int(11) DEFAULT NULL,
+  `sixty_ltv` int(11) DEFAULT NULL,
+  `ninety_ltv` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1760 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -563,7 +617,7 @@ DROP TABLE IF EXISTS `user_info`;
 CREATE TABLE `user_info` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
-  `name` varchar(50) NOT NULL,
+  `name` varchar(50) DEFAULT NULL,
   `birthday` date DEFAULT NULL,
   `sex` tinyint(1) DEFAULT NULL,
   `nation` varchar(10) DEFAULT NULL,
@@ -600,6 +654,34 @@ CREATE TABLE `users` (
   UNIQUE KEY `external_id_UNIQUE` (`external_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+--
+-- Table structure for table `weekly_statistics`
+--
+
+DROP TABLE IF EXISTS `weekly_statistics`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `weekly_statistics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `game_id` varchar(20) NOT NULL,
+  `date` date NOT NULL,
+  `one_retention_count` varchar(11) DEFAULT NULL,
+  `one_retention_all_count` varchar(11) DEFAULT NULL,
+  `return_count` int(11) DEFAULT NULL,
+  `login_count` int(11) DEFAULT NULL,
+  `new_login_count` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=367 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 
 CREATE TABLE `events` (
