@@ -37,7 +37,7 @@
 				</tr>
 				<tr>
 					<th>提問描述　|</th>
-					<td><?=$question->content?></td>
+					<td style="overflow:visible; text-overflow:clip; white-space:normal; word-wrap: break-word;"><?=$question->content?></td>
 				</tr>
 				<tr>
 					<th>截圖　|</th>

@@ -147,7 +147,6 @@ class G_User
 		$data = array(
 			'uid' => $uid,
 			'ip' => $_SERVER["REMOTE_ADDR"],
-			'create_time' => now(),
 			'is_recent' => '1',
 			'ad' => $ad,
 			'site' => $site,
