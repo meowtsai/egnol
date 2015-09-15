@@ -428,7 +428,7 @@ class Service extends MY_Controller {
 	function modify_reply_json()
 	{
 		$question_id = $this->input->post("question_id");
-		$id = $this->input->post("d");
+		$id = $this->input->post("reply_id");
 		
 		$data = array(
 			"uid" => 0,
