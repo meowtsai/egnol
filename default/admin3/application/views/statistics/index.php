@@ -76,7 +76,7 @@
 			<tr>
 				<td nowrap="nowrap">峰值在線</td>
 				<td style="text-align:right"><?=number_format($row0[0]->peak_user_count)?></td>
-				<td style="text-align:right"><?=($query1)?number_format(($row1[0]->peak_user_count)?100*$row0[0]->peak_user_count/$row1[0]->peak_user_count:0).'%':""number_format(($row1[0]->peak_user_count)?100*$row0[0]->peak_user_count/$row1[0]->peak_user_count:0).'%'?></td>
+				<td style="text-align:right"><?=($query1)?number_format(($row1[0]->peak_user_count)?100*$row0[0]->peak_user_count/$row1[0]->peak_user_count:0).'%':""?></td>
 				<td style="text-align:right"><?=($query2)?number_format(($row2[0]->peak_user_count)?100*$row0[0]->peak_user_count/$row2[0]->peak_user_count:0).'%':""?></td>																
 			</tr>
 			<tr>
