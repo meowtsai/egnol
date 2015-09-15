@@ -607,7 +607,7 @@ CREATE TABLE `events` (
   `game_id` varchar(20) DEFAULT NULL COMMENT '對應遊戲',
   `event_name` varchar(20) NOT NULL COMMENT '活動名稱',
   `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '活動類型',
-  `serial_limit` int(11) DEFAULT NULL COMMENT '序號發放數量限制',
+  'status' tinyint(4) NOT NULL DEFAULT '0' COMMENT '活動狀態',
   `begin_time` datetime DEFAULT NULL COMMENT '活動開始時間',
   `end_time` datetime DEFAULT NULL COMMENT '活動結束時間',
   `fulfill_time` datetime DEFAULT NULL COMMENT '兌換期限(若有兌換獎勵)',
