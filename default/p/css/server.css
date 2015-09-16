@@ -4,7 +4,22 @@
 #content-login{background: #110f27 url(../image/content/sever-bg.jpg) top center no-repeat; -moz-background-size: cover; background-size: cover; }
 .login-form .p1{ margin:10px 0; width: 100%; color:yellow;line-height:22px;}
 .server_case{max-width:500px; margin:0 auto; text-align:left; width:90%; line-height:40px;}
-.server_case li{ background: url(../image/server/report-btn.png) top center no-repeat; background-size:100% 100%; padding:5px 15px; color:#333; margin:0 0 10px 0;}
+/*.server_case li{ background: url(../image/server/report-btn.png) top center no-repeat; background-size:100% 100%; padding:5px 15px; color:#333; margin:0 0 10px 0;}*/
+.server_case .button {
+  background-color: rgb(255, 255, 255);
+  background-color: rgba(255, 255, 255, 0.3);
+  border-radius: 5px; 
+  padding:5px;
+}
+.wrap_text {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  word-wrap: break-word;
+  text-align: left;
+  display: inline-block;
+}
+
 
 th, td {overflow:hidden;text-overflow:clip;white-space:nowrap;text-align:left;}
 
