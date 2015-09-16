@@ -64,7 +64,7 @@ class Log extends MY_Controller {
 			}
 
 			if ($channel = $this->input->get("channel")) {
-				if ($channel == 'long_e') $this->DB2->not_like("u.external_id", "@");
+				if ($channel == 'long_e') $this->DB2->where("u.external_id IS NULL", null, false);
 				else $this->DB2->where("u.external_id like '%@{$channel}'", null, false);
 			}
 			
@@ -198,7 +198,7 @@ class Log extends MY_Controller {
 			}
 
 			if ($channel = $this->input->get("channel")) {
-				if ($channel == 'long_e') $this->DB2->not_like("u.external_id", "@");
+				if ($channel == 'long_e') $this->DB2->where("u.external_id IS NULL", null, false);
 				else $this->DB2->where("u.external_id like '%@{$channel}'", null, false);
 			}
 		
