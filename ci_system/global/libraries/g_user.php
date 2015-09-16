@@ -214,7 +214,6 @@ class G_User
 		{
 			$data = array(
 				'password'	=> md5(trim($password)),
-				'create_time' => date("YmdHis"),
 				'is_approved'	=> 0
 			);
 
