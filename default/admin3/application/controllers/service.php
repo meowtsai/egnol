@@ -320,7 +320,8 @@ class Service extends MY_Controller {
 						
 			if ($this->input->get("account")) {
 				$this->DB2->join("users u", "u.uid=q.uid", "left")
-					->where("u.account", $this->input->get("account"));
+					->where("u.email", $this->input->get("account"))
+					->or_where("u.mobile", $this->input->get("account"));
 			}
 									
 			if ($this->input->get("start_date")) {
