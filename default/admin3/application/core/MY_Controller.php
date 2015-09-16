@@ -39,8 +39,8 @@ class MY_Controller extends CI_Controller {
 		}
 		
 		return $this->g_layout
-			->add_css_link(array('bootstrap.min', 'jquery.autocomplete'))
-			->add_js_include(array('jquery-1.7.2.min', 'jquery.validate.min', 'jquery.form', 'jquery.blockUI', 'bootstrap.min', 'jquery.placeholder.min', 'jquery.autocomplete.pack', 'default'))
+			->add_css_link(array('bootstrap.min', 'jquery.autocomplete', 'jquery-ui-1.8.22.custom'))
+			->add_js_include(array('jquery-1.7.2.min', 'jquery.validate.min', 'jquery.form', 'jquery.blockUI', 'bootstrap.min', 'jquery.placeholder.min', 'jquery.autocomplete.pack', 'jquery-ui-1.8.22.custom.min', 'default'))
 			->set_meta("title", "龍邑 :: 後端管理平台")
 			->set('allocate_count', $allocate_count);
 	}
