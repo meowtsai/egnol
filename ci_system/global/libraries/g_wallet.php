@@ -115,7 +115,6 @@ class G_Wallet
     		'amount' 		=> $amount,
     		'server_id' 		=> $pay_server_id,
     		'ip'		 	=> $_SERVER['REMOTE_ADDR'],
-    		'balance' 		=> $calc_balance,
     		'result'		=> '0',
     		'note'			=> '',
 			'country_code'  => $country_code,
@@ -155,7 +154,8 @@ class G_Wallet
     function cancel_other_order($order, $note='')
     {
     	$balance = $this->get_balance($order->uid);
-    	$this->CI->db->where("id", $order->id)->update("user_billing", array("result" => "4", "balance" => $balance, "note" => $note));
+    	$this->CI->db->where("id", $order->id)->update("user_billing", array("result" => "4", "note" => $note));
+    	$this->CI->db->where("uid", $order->uid)->update("users", array("balance" => $balance));
 	}		
 
 	// 設定狀態為已完成儲值但尚未被轉入遊戲中
@@ -187,8 +187,8 @@ class G_Wallet
 		$calc_balance = $balance + $amount;
     	
     	$users_data = array(
-    			'balance' => $calc_balance
-    		);
+    		'balance' => $calc_balance
+    	);
     	
     	$this->CI->db
 		    ->set("update_time", "now()", false)
