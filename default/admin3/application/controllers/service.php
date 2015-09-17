@@ -295,7 +295,7 @@ class Service extends MY_Controller {
 
 			$this->DB2->start_cache();
 			
-			$this->input->get("id") && $this->DB2->where("q.id", $this->input->get("id"));
+			$this->input->get("question_id") && $this->DB2->where("q.id", $this->input->get("question_id"));
 			$this->input->get("uid") && $this->DB2->where("q.uid", $this->input->get("uid"));
 			$this->input->get("status")<>'' && $this->DB2->where("q.status", $this->input->get("status"));
 			$this->input->get("type") && $this->DB2->where("q.type", $this->input->get("type"));
