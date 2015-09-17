@@ -382,7 +382,7 @@ class Trade extends MY_Controller {
 			$this->input->get("trade_ok") && $this->DB2->where("mb.trade_ok", substr($this->input->get("trade_ok"),1));
 			
 			$this->DB2
-				->select("mb.*, u.*")
+				->select("mb.*, u.email, u.mobile, u.external_id")
 				->select("coalesce(trade_code, mycard_trade_seq) as mycard_key", false)
 				->from("mycard_billing mb")
 				->join("users u", "u.uid=mb.uid", "left");
@@ -495,6 +495,7 @@ class Trade extends MY_Controller {
 			$this->DB2->start_cache();
 			
 			$this->DB2
+				->select("gb.*, u.email, u.mobile, u.external_id")
 				->from("gash_billing gb")
 				->join("users u", "u.uid=gb.uid", "left");			
 			
@@ -609,6 +610,7 @@ class Trade extends MY_Controller {
 			$this->DB2->start_cache();
 			
 			$this->DB2
+				->select("pb.*, u.email, u.mobile, u.external_id")
 				->from("pepay_billing pb")
 				->join("users u", "u.uid=pb.uid", "left");			
 			
@@ -721,6 +723,7 @@ class Trade extends MY_Controller {
 			$this->DB2->start_cache();
 			
 			$this->DB2
+				->select("gb.*, u.email, u.mobile, u.external_id")
 				->from("google_billing gb")
 				->join("users u", "u.uid=gb.uid", "left");			
 			
@@ -813,6 +816,7 @@ class Trade extends MY_Controller {
 			$this->DB2->start_cache();
 			
 			$this->DB2
+				->select("ib.*, u.email, u.mobile, u.external_id")
 				->from("ios_billing ib")
 				->join("users u", "u.uid=ib.uid", "left");			
 			
