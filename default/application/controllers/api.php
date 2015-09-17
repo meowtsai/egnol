@@ -806,6 +806,11 @@ class Api extends MY_Controller
 	{
 		$partner = $this->input->post("partner");
 		$game = $this->input->post("site");
+		// 暫時增加檢查, 之後須修正 SDK 統一規格
+		if(empty($game))
+		{
+			$game = $this->input->post("game");
+		}
 		$server = $this->input->post("server");
 		$uid = $this->input->post("uid");
 		$character_name = $this->input->post("character_name");
