@@ -20,7 +20,7 @@
 
 <ul id="menu" class="cf" typeof="v:menu">
 <li><a href="<?=$game_url?>" title="回到首頁" rel="v:url" property="v:title">回到首頁</a></li>
-<li><a href="<?=$longe_url?>payment?site=<?=$site?>" title="儲值中心" rel="v:url" property="v:title">儲值中心</a></li>
+<li><a onclick="leOpenDialog('時空前線','敬請期待！',leDialogType.MESSAGE)" title="儲值中心" rel="v:url" property="v:title">儲值中心</a></li>
 <li><a href="<?=$fan_page?>" target="_blank" title="粉絲團NEWS" rel="v:url" property="v:title">粉絲團NEWS</a></li>
 <li><a href="<?=$longe_url?>service?site=<?=$site?>" title="客服中心" rel="v:url" property="v:title">客服中心</a></li>
 <li><a href="<?=$longe_url?>member?site=<?=$site?>&redirect_url=<?=urlencode($redirect_url)?>" title="<?=$member_title?>" rel="v:url" property="v:title"><?=$member_title?></a></li>

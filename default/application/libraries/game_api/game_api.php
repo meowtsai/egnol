@@ -73,6 +73,33 @@ class Game_Api
     	$this->error_message = $msg;
     	return false;
     }
+
+	// 遊戲是否有入點機制
+	function has_billing($site)
+	{
+		$cfg = $this->load_config($site);
+		if(!empty(cfg['billing'])
+		{
+			return true;
+		}
+
+		return false;
+	}
+
+	function ajax_post($url, $data)
+	{
+        $ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+		$curl_res = curl_exec($ch);
+		curl_close($ch);
+
+		$result = array();
+		parse_str($curl_res, $result);
+
+		return $result;
+	}
 }
 
 /* End of file Template.php */

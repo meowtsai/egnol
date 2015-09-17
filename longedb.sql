@@ -89,7 +89,7 @@ DROP TABLE IF EXISTS `characters`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `characters` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
   `name` varchar(50) DEFAULT NULL,
   `server_id` varchar(20) NOT NULL,
@@ -97,7 +97,7 @@ CREATE TABLE `characters` (
   `create_status` char(1) DEFAULT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -689,7 +689,7 @@ CREATE TABLE `events` (
   `game_id` varchar(20) DEFAULT NULL COMMENT '對應遊戲',
   `event_name` varchar(20) NOT NULL COMMENT '活動名稱',
   `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '活動類型',
-  'status' tinyint(4) NOT NULL DEFAULT '0' COMMENT '活動狀態',
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '活動狀態',
   `begin_time` datetime DEFAULT NULL COMMENT '活動開始時間',
   `end_time` datetime DEFAULT NULL COMMENT '活動結束時間',
   `fulfill_time` datetime DEFAULT NULL COMMENT '兌換期限(若有兌換獎勵)',

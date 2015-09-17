@@ -160,7 +160,7 @@ class Game
 		$this->CI->load->library("g_wallet");		
 		$remain = $this->CI->g_wallet->get_balance($uid);
 		$args = "rm={$remain}";
-					
+
 		$this->CI->load->model("games");
 		$server = $this->CI->games->get_server($server_id);
 		if (empty($server)) $this->_go_payment_result(1, 0, $amount, "遊戲伺服器不存在", $args);					
@@ -182,8 +182,49 @@ class Game
 			
 		$order = $this->CI->g_wallet->get_order($order_id);
 
-		// 若為遊戲內儲值則完成訂單, 若為官網儲值則設為尚未轉進遊戲訂單
+		// 若為遊戲內儲值則完成訂單
+		if(!empty($_SESSION['payment_api_call']))
+		{
+			if($_SESSION['payment_api_call'] == 'true')
+			{
+				$this->CI->g_wallet->complete_order($order);
+				$args = "gp=".($amount*$game->exchange_rate)."&sid={$server_id}";
+				$this->_go_payment_result(1, 1, $amount, "", $args);
+			}
+		}
 
+		// 若為官網儲值要先看是否有遊戲入點機制, 若有則轉點, 無則設為尚未轉進遊戲
+		$this->CI->load->library("game_api");
+		if($this->CI->game_api->has_billing($server->game_id))
+		{
+			// 呼叫遊戲入點機制
+			$this->CI->load->library("game_api/{$server->game_id}");
+			$res = $this->CI->{$server->game_id}->transfer($server, $order, $amount, $game->exchange_rate);
+			$error_message = $this->CI->{$server->game_id}->error_message;
+
+			if ($re === "1") {
+				$this->CI->g_wallet->complete_order($order);
+				$args = "gp=".($amount*$game->exchange_rate)."&sid={$server_id}";
+				$this->_go_payment_result(1, 1, $amount, "", $args);
+			}
+			else if ($re === "-1") {
+				$this->CI->g_wallet->cancel_timeout_order($order);
+				$this->_go_payment_result(1, 0, $amount, "遊戲伺服器沒有回應(錯誤代碼: 002)", $args);
+			}
+			else if ($re === "-2") {
+				$this->CI->g_wallet->cancel_other_order($order, $error_message);
+				$this->_go_payment_result(1, 0, $amount, "{$error_message}(錯誤代碼: 003)", $args);
+			}
+			else {
+				$this->CI->g_wallet->cancel_order($order, $error_message);
+				$this->_go_payment_result(1, 0, $amount, "{$error_message}", $args);
+			}
+		}
+
+		// 此時點數雖尚未進入遊戲, 但登入遊戲會自動轉入, 所以要設定為成功
+		$this->CI->g_wallet->ready_for_game_order($order);
+		$args = "gp=".($amount*$game->exchange_rate)."&sid={$server_id}";
+		$this->_go_payment_result(1, 1, $amount, "", $args);
 
 /*
 		//轉入遊戲
