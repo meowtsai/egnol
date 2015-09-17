@@ -370,7 +370,10 @@ class Trade extends MY_Controller {
 			$this->input->get("id") && $this->DB2->where("mb.id", $this->input->get("id"));
 			$this->input->get("uid") && $this->DB2->where("mb.uid", $this->input->get("uid"));
 			$this->input->get("euid") && $this->DB2->where("mb.uid", $this->g_user->decode($this->input->get("euid")));			
-			$this->input->get("account") && $this->DB2->where("u.account", $this->input->get("account"));
+			if ($this->input->get("account")) {
+				$this->DB2->where("u.email", trim($this->input->get("account")));		
+				$this->DB2->or_where("u.mobile", trim($this->input->get("account")));
+			}		
 			
 			
 			$this->input->get("trade_seq") && $this->DB2->where("mb.trade_seq", $this->input->get("trade_seq"));
@@ -499,7 +502,10 @@ class Trade extends MY_Controller {
 			$this->input->get("id") && $this->DB2->where("gb.id", $this->input->get("id"));
 			$this->input->get("uid") && $this->DB2->where("gb.uid", $this->input->get("uid"));
 			$this->input->get("euid") && $this->DB2->where("gb.uid", $this->g_user->decode($this->input->get("euid")));			
-			$this->input->get("account") && $this->DB2->where("u.account", $this->input->get("account"));
+			if ($this->input->get("account")) {
+				$this->DB2->where("u.email", trim($this->input->get("account")));		
+				$this->DB2->or_where("u.mobile", trim($this->input->get("account")));
+			}		
 			
 			if ($status = $this->input->get("PAY_STATUS")) {
 				 if ($status == 'S') $this->DB2->where("gb.status", "2");
@@ -609,7 +615,10 @@ class Trade extends MY_Controller {
 			$this->input->get("id") && $this->DB2->where("pb.id", $this->input->get("id"));
 			$this->input->get("uid") && $this->DB2->where("pb.uid", $this->input->get("uid"));
 			$this->input->get("euid") && $this->DB2->where("pb.uid", $this->g_user->decode($this->input->get("euid")));			
-			$this->input->get("account") && $this->DB2->where("u.account", $this->input->get("account"));
+			if ($this->input->get("account")) {
+				$this->DB2->where("u.email", trim($this->input->get("account")));		
+				$this->DB2->or_where("u.mobile", trim($this->input->get("account")));
+			}		
 			
 			$this->input->get("ORDER_ID") && $this->DB2->where("pb.ORDER_ID", $this->input->get("ORDER_ID"));
 			$this->input->get("PROD_ID") && $this->DB2->where("pb.PROD_ID", $this->input->get("PROD_ID"));
@@ -717,8 +726,11 @@ class Trade extends MY_Controller {
 			
 			$this->input->get("id") && $this->DB2->where("gb.id", $this->input->get("id"));
 			$this->input->get("uid") && $this->DB2->where("gb.uid", $this->input->get("uid"));
-			$this->input->get("euid") && $this->DB2->where("gb.uid", $this->g_user->decode($this->input->get("euid")));			
-			$this->input->get("account") && $this->DB2->where("u.account", $this->input->get("account"));
+			$this->input->get("euid") && $this->DB2->where("gb.uid", $this->g_user->decode($this->input->get("euid")));		
+			if ($this->input->get("account")) {
+				$this->DB2->where("u.email", trim($this->input->get("account")));		
+				$this->DB2->or_where("u.mobile", trim($this->input->get("account")));
+			}		
 			
 			$this->input->get("order_id") && $this->DB2->where("gb.order_id", $this->input->get("order_id"));
 			
@@ -806,8 +818,11 @@ class Trade extends MY_Controller {
 			
 			$this->input->get("id") && $this->DB2->where("ib.id", $this->input->get("id"));
 			$this->input->get("uid") && $this->DB2->where("ib.uid", $this->input->get("uid"));
-			$this->input->get("euid") && $this->DB2->where("ib.uid", $this->g_user->decode($this->input->get("euid")));			
-			$this->input->get("account") && $this->DB2->where("u.account", $this->input->get("account"));
+			$this->input->get("euid") && $this->DB2->where("ib.uid", $this->g_user->decode($this->input->get("euid")));		
+			if ($this->input->get("account")) {
+				$this->DB2->where("u.email", trim($this->input->get("account")));		
+				$this->DB2->or_where("u.mobile", trim($this->input->get("account")));
+			}		
 			
 			$this->input->get("transaction_id") && $this->DB2->where("ib.transaction_id", $this->input->get("transaction_id"));
 			
