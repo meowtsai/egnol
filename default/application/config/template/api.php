@@ -22,7 +22,9 @@ $config["partner_api"] = array(
 	),
 );
 
-$config["game_api"] = array();
+$config["game_api"] = array(
+	'stm' => array('billing' => 'http://203.66.111.18'),
+);
 
 $config["channel_api"] = array(	
 	'facebook' => array(
