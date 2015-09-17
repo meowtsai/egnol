@@ -7,7 +7,7 @@ $(function(){
 		submitHandler: function(form) {
 			$(form).json_ajaxSubmit(function(json){
 				alert('成功!');
-				location.href = location.href;
+				location.reload();
 			});
 		}
 	});
@@ -16,6 +16,5 @@ $(function(){
 		$.json_post($(this).attr("url"), function(){
 			location.href = '/service/listing';
 		});	
-	});	
-	
+	});
 });

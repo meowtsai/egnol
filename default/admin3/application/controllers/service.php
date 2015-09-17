@@ -222,7 +222,7 @@ class Service extends MY_Controller {
 	function add()
 	{		
 		$games = $this->DB2->from("games")->where("is_active", "1")->get();
-		$servers = $this->DB2->where_in("server_status", array("public", "maintenance"))->order_by("id")->get("servers");	
+		$servers = $this->DB2->where_in("server_status", array("public", "maintenance"))->order_by("server_id")->get("servers");	
 		
 		$this->_init_service_layout()
 			->add_breadcrumb("新增電話案件")
@@ -236,7 +236,7 @@ class Service extends MY_Controller {
 	function edit($id)
 	{		
 		$games = $this->DB2->from("games")->where("is_active", "1")->get();
-		$servers = $this->DB2->where_in("server_status", array("public", "maintenance"))->order_by("id")->get("servers");
+		$servers = $this->DB2->where_in("server_status", array("public", "maintenance"))->order_by("server_id")->get("servers");
 
 		$query = $this->DB2->from("questions qt")
 			->join("servers gi", "qt.server_id=gi.server_id")
@@ -295,7 +295,7 @@ class Service extends MY_Controller {
 
 			$this->DB2->start_cache();
 			
-			$this->input->get("id") && $this->DB2->where("q.id", $this->input->get("id"));
+			$this->input->get("question_id") && $this->DB2->where("q.id", $this->input->get("question_id"));
 			$this->input->get("uid") && $this->DB2->where("q.uid", $this->input->get("uid"));
 			$this->input->get("status")<>'' && $this->DB2->where("q.status", $this->input->get("status"));
 			$this->input->get("type") && $this->DB2->where("q.type", $this->input->get("type"));
@@ -320,7 +320,8 @@ class Service extends MY_Controller {
 						
 			if ($this->input->get("account")) {
 				$this->DB2->join("users u", "u.uid=q.uid", "left")
-					->where("u.account", $this->input->get("account"));
+					->where("u.email", $this->input->get("account"))
+					->or_where("u.mobile", $this->input->get("account"));
 			}
 									
 			if ($this->input->get("start_date")) {
@@ -384,7 +385,7 @@ class Service extends MY_Controller {
 	{
 		$this->zacl->check("service", "modify");
 
-		$question = $this->DB2->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email, u.uid, au.name allocate_user_name")
+		$question = $this->DB2->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email, u.external_id, u.uid, au.name allocate_user_name")
 			->where("q.id", $id)
 			->from("questions q")
 			->join("servers gi", "gi.server_id=q.server_id")
@@ -401,7 +402,7 @@ class Service extends MY_Controller {
 			->select("qt.*, au.name as admin_uname")
 			->from("question_replies qt")
 			->join("admin_users au", "au.uid=qt.admin_uid", "left")
-			->where("question_id", $id)->order_by("qt.id", "desc")->get();
+			->where("question_id", $id)->order_by("qt.id", "asc")->get();
 
 		$allocate_users = $this->DB2->from('admin_users')->where_in('role', array('pm', 'admin', 'cs_master', 'pd_chang', 'RC'))->order_by("role")->get();
 		
@@ -428,7 +429,7 @@ class Service extends MY_Controller {
 	function modify_reply_json()
 	{
 		$question_id = $this->input->post("question_id");
-		$id = $this->input->post("d");
+		$id = $this->input->post("reply_id");
 		
 		$data = array(
 			"uid" => 0,
@@ -473,19 +474,19 @@ class Service extends MY_Controller {
 	function allocate_json()
 	{
 		$result = $this->input->post("allocate_result").date("Y-m-d H:i")." - ".$_SESSION['admin_name']."：".$this->input->post("result")."<br>";		
-		$this->DB1->where("question_id", $this->input->post("question_id"))
+		$this->DB1->where("id", $this->input->post("question_id"))
 			->set('allocate_date', 'NOW()', false)
 			->set('allocate_status', '1')
 			->set('allocate_result', $result)
 			->update("questions", array('allocate_admin_uid' => $this->input->post("allocate_admin_uid")));
-		
+			
 		die(json_success());		
 	}
 	
 	function finish_allocate_json()
 	{
 		$result = $this->input->post("allocate_result").date("Y-m-d H:i")." - ".$_SESSION['admin_name']."：".$this->input->post("result")."<br>";
-		$this->DB1->where("question_id", $this->input->post("question_id"))
+		$this->DB1->where("id", $this->input->post("question_id"))
 			->set('allocate_finish_date', 'NOW()', false)
 			->set('allocate_status', '2')
 			->set('allocate_result', $result)

@@ -104,7 +104,16 @@
 		<tr>
 			<th>帳號：</th>
 			<td colspan="3">
-				<?=$question->uid?>
+				<?
+	            if (!$question->email && !$question->mobile) {
+		            $ex_id = explode("@",$question->external_id); 
+		            if ('device' == $ex_id[1]) echo "快速登入";
+		            else echo $ex_id[1];
+	            } else {
+		            if ($question->email) echo $question->email;
+		            echo $question->mobile;
+	            }
+				?>
 			</td>
 		</tr>	
 		<? endif;?>	
@@ -170,12 +179,12 @@
 	</table>
 	
 	<? 
-	$no = $replies->num_rows();
+	$no = 1;
 	foreach($replies->result() as $row):?>
 	<table class="table table-bordered <?=($row->is_official ? 'official' : '') ?>" style="position:relative;">
 		<tr>
 			<td style="width:120px; text-align:center;">
-				NO<?=$no--?>.<?=($row->is_official ? '客服回覆' : '再次提問') ?><br>
+				NO<?=$no++?>.<?=($row->is_official ? '客服回覆' : '再次提問') ?><br>
 				<?=date('Y-m-d H:i', strtotime($row->create_time))?>
 				<? if ($row->admin_uname):?>
 				<div style="font-size:12px; color:#129;">(<?=$row->admin_uname?>)</div>

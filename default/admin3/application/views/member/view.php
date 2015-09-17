@@ -10,22 +10,27 @@
 	foreach($extra_ad_channels as $arr) {
 		$ad_channels = array_merge($ad_channels, $arr);
 	}
+	
+	if (!$user->email && !$user->mobile) {
+		$ex_id = explode("@",$user->external_id); 
+		if ('device' == $ex_id[1]) $account = "快速登入";
+		else $account = $ex_id[1];
+	} else {
+		if ($user->email) $account = $user->email;
+		$account = $user->mobile;
+	}
 ?>
 
-<legend><?=$user->account?> (<?=$user->uid?>)</legend>
+<legend><?=$account?> (<?=$user->uid?>)</legend>
 
 <div id="func_bar" style="text-align:right;">
 
 <? if ( ! empty($user->bind_uid)):
 	$u = $this->db->where("uid", $user->bind_uid)->from("users")->get()->row(); 
 ?>
-	<p>此帳號為 <a href="<?=site_url("member/view/{$u->uid}")?>"><?=$u->account?> (<?=$u->uid?>)</a> 的綁定帳號</p>
+	<p>此帳號為 <a href="<?=site_url("member/view/{$u->uid}")?>"><?=$u->uid?></a> 的綁定帳號</p>
 
 <? else:?>
-	
-	<? if ( ! empty($bind)):?>
-	<p>此帳號綁定在 <a href="<?=site_url("member/view/{$bind->uid}")?>"><?=$bind->account?> (<?=$bind->uid?>)</a></p>
-	<? endif;?>
 	
 	<? if ($user->is_banned == 1):?>
 		<a href="javascript:;" class="btn btn-small json_post_confirm" url="<?=site_url("member/set_right/{$user->uid}/0")?>"><i class="icon icon-ok-circle"></i> 解除停權</a>
@@ -44,10 +49,27 @@
 <dl class="dl-horizontal">
 	<dt>uid</dt><dd><?=$user->uid?></dd>
 	<dt>euid</dt><dd><?=$this->g_user->encode($user->uid)?></dd>
-	<dt>帳號</dt><dd><?=$user->account?></dd>
+	<dt>帳號</dt><dd><?
+		if (!$user->email && !$user->mobile) {
+			$ex_id = explode("@",$user->external_id); 
+			if ('device' == $ex_id[1]) echo "快速登入";
+			else echo $ex_id[1];
+		} else {
+			if ($user->email) echo $user->email;
+			echo $user->mobile;
+		}
+	?></dd>
 	<dt>姓名</dt><dd><?=$user->name?>&nbsp;</dd>
+	<?
+	if($user->sex==1) {$show_sex = '男';}
+	else if($user->sex==2) {$show_sex = '女';}
+	else {$show_sex = '';}
+	?>
+	<dt>性別</dt><dd><?=$show_sex?>&nbsp;</dd>
 	<dt>信箱</dt><dd><?=$user->email?>&nbsp;</dd>
+	<dt>手機</dt><dd><?=$user->mobile?>&nbsp;</dd>
 	<dt>身分證</dt><dd><?=$user->ident?>&nbsp;</dd>
+	<dt>地址</dt><dd><?=$user->street?>&nbsp;</dd>
 	<dt>註冊日期</dt><dd><?=$user->create_time?></dd>
 	<dt>最後登入日期</dt><dd><?=$user->last_login_date?>&nbsp</dd>
 	<dt>帳號狀態</dt><dd>
@@ -112,7 +134,7 @@
 		<? foreach($role->result() as $row): fb($row)?>
 		<tr>
 			<td><?=$row->game_name?> - <?=$row->server_name?></td>
-			<td><?=$row->character_name?></td>
+			<td><?=$row->name?></td>
 			<td><?=array_key_exists($row->ad, $ad_channels) ? $ad_channels[$row->ad] : '無'?></td>
 			<td><?=$row->create_time?></td>
 		</tr>

@@ -805,7 +805,7 @@ class Api extends MY_Controller
 	function create_character()
 	{
 		$partner = $this->input->post("partner");
-		$game = $this->input->post("game");
+		$game = $this->input->post("site");
 		$server = $this->input->post("server");
 		$uid = $this->input->post("uid");
 		$character_name = $this->input->post("character_name");

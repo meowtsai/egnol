@@ -37,25 +37,31 @@
 				</tr>
 				<tr>
 					<th>提問描述　|</th>
-					<td><?=$question->content?></td>
+					<td style="overflow:visible; text-overflow:clip; white-space:normal; word-wrap: break-word;"><?=$question->content?></td>
 				</tr>
 				<tr>
 					<th>截圖　|</th>
 					<td>
 		        	<? if ($question->pic_path1):?>
+					<div>
 						<a href="<?=$question->pic_path1?>" target="_blank">
-							<img src="<?=$question->pic_path1?>" style="max-width:400px;">
+							<img src="<?=$question->pic_path1?>" style="max-width:100%;">
 						</a>
+					</div>
 					<? endif;?>
 					<? if ($question->pic_path2):?>
+					<div>
 						<a href="<?=$question->pic_path2?>" target="_blank">
-							<img src="<?=$question->pic_path2?>" style="max-width:400px;">
+							<img src="<?=$question->pic_path2?>" style="max-width:100%;">
 						</a>
+					</div>
 					<? endif;?>
 					<? if ($question->pic_path3):?>
+					<div>
 						<a href="<?=$question->pic_path3?>" target="_blank">
-							<img src="<?=$question->pic_path3?>" style="max-width:400px;">
+							<img src="<?=$question->pic_path3?>" style="max-width:100%;">
 						</a>
+					</div>
 					<? endif;?>
 					</td>
 				</tr>
@@ -66,20 +72,22 @@
 					if ($replies->num_rows() == 0) echo '目前尚在處理中';
 					$no = $replies->num_rows();
 					foreach($replies->result() as $row):?>
-					<table class="reply <?=($row->is_official ? 'official' : '') ?>" style="position:relative;">
+					<table class="reply <?=($row->is_official ? 'official' : '') ?>" style="position:relative;width:100%">
 						<tr>
-							<td style="width:120px; border-right:6px solid #fff; text-align:center;">
-								NO<?=$no?>.<?=($row->is_official ? '客服回覆' : '再次提問') ?><br>
-								<?=date('Y-m-d H:i', strtotime($row->create_time))?>
-							</td>
-							<td style="word-break:break-all">
-								<? if ($row->is_official == '1' && $question->status <> '4' && $no == $replies->num_rows()):?>
+							<td style="overflow:visible; text-overflow:clip; white-space:normal; word-wrap: break-word;">
+								<?//=($row->is_official ? '《客服回覆》' : '《再次提問》') ?>
+								<div style="background-color: rgba(255, 255, 255, 0.3);border-radius: 5px; padding:5px; word-wrap: break-word;">
+								    <?=$row->content?>
+								</div>
+								<? if ($row->is_official == '1' && $question->status <> '4' && $no == 1):?>
 								<div style="float:right; padding:0 0 20px 20px;">
-									<a href="javascript:;" url="<?=site_url("service/close_question/{$question->id}")?>" class="close_question">我沒問題了</a>
-									<a href="#reply">我還有疑問</a>
+									<a href="javascript:;" url="<?=site_url("service/close_question/{$question->id}")?>" class="close_question">[我沒問題了]</a>
+									<a href="#go_to_reply">[我還有疑問]</a>
 								</div>
 								<? endif;?>
-								<?=$row->content?>
+								<div style="float:right; font-size: 8px; color: #D8D8D8; font-style: italic;">
+								<?=date('Y-m-d H:i', strtotime($row->create_time))?>
+								</div>
 							</td>
 						</tr>
 					</table>
@@ -89,21 +97,19 @@
 					</td>
 				</tr>
 				<tr>
-					<td>
+					<td colspan="2" style="overflow:visible; text-overflow:clip; white-space:normal; word-wrap: break-word;">
 					<? if ($question->status <> '4' && $replies->num_rows() > 0):?>
 					<form method="post" action="<?=site_url("service/insert_reply_json")?>">
 						<input type="hidden" name="question_id" value="<?=$question->id?>">
 
 					<div style="padding:15px;">
-						<a name="reply"></a>
-						<div style="background:#c7ffd5; padding:20px;">
-							再次提問（若與本次提問主題不同，請另開開單方式提問，謝謝）
-							<textarea name="content" rows="6" style="width:100%" class="required"></textarea>
-						</div>
+						<a name="go_to_reply"></a>
+						再次提問（若與本次提問主題不同，請以另開單方式提問，謝謝）<br>
+						<textarea name="content" rows="6" style="width:100%" class="required"></textarea>
 					</div>
 
 					<div style="text-align:center; margin-top:20px;">
-						<a href="javascript:;" onclick="$('form').submit()"><span style="background-position:-480px 0; height:50px; width:227px; display:inline-block;" class="items"></span></a>
+						<a href="javascript:;" onclick="$('form').submit()"><span style="background-position:-480px 0; height:50px; width:227px; display:inline-block;" class="items">填好了，送出!</span></a>
 					</div>
 					</form>
 					<? endif;?>

@@ -118,7 +118,8 @@
 			<th style="width:50px;">#</th>
 			<th style="width:70px;">uid
 				<div style="color:#777;">euid</div></th>
-			<th style="width:110px;">帳號</th>					
+			<th style="width:70px;">手機</th>	
+			<th style="width:90px;">信箱</th>					
 			<th style="width:60px;">IP位址</th>		
 			<th style="width:70px;">建檔時間</th>
 			<th style="width:60px;">登入站別</th>			
@@ -135,7 +136,8 @@
 				<a href="<?=site_url("log/login?uid={$row->uid}&action=查詢")?>"><i class="icon-search"></i></a>
 				<div style="color:#777;"><?=$this->g_user->encode($row->uid)?></div>
 			</td>
-			<td><?=$row->account?></td>			
+			<td><?=$row->mobile?></td>	
+			<td><?=$row->email?></td>			
 			<td><?=$row->ip?>
 				<a href="/admin3/log/login?ip=<?=$row->ip?>&action=查詢"><i class="icon-search"></i></a>
 			</td>

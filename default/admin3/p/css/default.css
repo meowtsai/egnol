@@ -117,4 +117,6 @@ label.error {color:#a30; padding:1px 3px; margin:0 3px; display:inline-block; ba
 	.grey.button, .grey.button:visited			{ background-color: #777; }
 	.grey.button:hover							{ background-color: #aaa; }
 	
+	.official { background-color: #E3F6CE;}
+	
 	

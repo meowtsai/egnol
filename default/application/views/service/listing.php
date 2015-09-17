@@ -18,16 +18,22 @@
 			<? $no = $query->num_rows();
 				foreach($query->result() as $row):?>
 				<a href="<?=$longe_url?>service/view/<?=$row->id?>?site=<?=$site?>")">
-					<li>
+					<li style="margin-top:10px;">
 						<table style="width:100%;">
 							<tr>
-								<th style="max-width:5%;width:5%;"><?=$no--?></th>
-								<td style="max-width:35%;min-width:35%;text-overflow:ellipsis;text-align:left;"><?=$row->content?></td>
-								<td style="max-width:35%;min-width:35%;"><?=$row->create_time?></td>
-								<td style="max-width:20%;width:20%;">
-									<?=$question_status[$row->status]?>
-                                    <? if ($row->status=='2' && $row->is_read=='0') echo '<span class="field" style="color:red">(未讀)</span>'?>
-								</td>
+						        <td class="button">
+								    <div class="wrap_text" style="max-width:70%;min-width:70%;"><?=$row->content?></div>
+								    <div class="wrap_text" style="max-width:3%;min-width:3%;">|</div>
+								    <div class="wrap_text" style="float:right; max-width:23%; width:23%;">
+									    <?=$question_status[$row->status]?>
+                                        <? if ($row->status=='2' && $row->is_read=='0') echo '<span class="field" style="color:red">(未讀)</span>'?>
+								    </div>
+							    </td>
+							</tr>
+							<tr>
+						        <td style="float:right; font-size: 8px; color: #D8D8D8; font-style: italic;overflow:visible;">
+							        <?=date('Y-m-d H:i', strtotime($row->create_time))?>
+						        </td>
 							</tr>
 						</table>
 					</li>

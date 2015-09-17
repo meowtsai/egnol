@@ -32,8 +32,11 @@ class Member extends MY_Controller {
 			
 			$this->input->get("uid") && $this->DB2->where("u.uid", trim($this->input->get("uid")));
 			$this->input->get("euid") && $this->DB2->where("u.uid", $this->g_user->decode(trim($this->input->get("euid"))));			
-			//$this->input->get("account") && $this->DB2->where("u.account", trim($this->input->get("account")));			
-			$this->input->get("name") && $this->DB2->where("u.name", trim($this->input->get("name")));			
+			if ($this->input->get("account")) {
+				$this->DB2->where("u.email", trim($this->input->get("account")));		
+				$this->DB2->or_where("u.mobile", trim($this->input->get("account")));
+			}				
+			$this->input->get("name") && $this->DB2->where("uf.name", trim($this->input->get("name")));			
 
 			if ($this->input->get("character_name")) {
 				$this->DB2->join("characters gsr", "gsr.uid=u.uid")
@@ -53,8 +56,8 @@ class Member extends MY_Controller {
 			
 			
 			if ($channel = $this->input->get("channel")) {				
-				if ($channel == 'long_e') $this->DB2->not_like("u.account", "@");
-				else $this->DB2->where("u.account like '%@{$channel}'", null, false);
+				if ($channel == 'long_e') $this->DB2->where('u.external_id IS NULL', null, false);
+				else $this->DB2->where("u.external_id like '%@{$channel}'", null, false);
 			}
 		
 			switch ($this->input->get("action"))
@@ -130,7 +133,7 @@ FROM users x
 WHERE x.uid={$uid}";
 		
 		$user = $this->DB2
-					->select("u.*, lgl.create_time as last_login_date, ui.ident, ui.ban_reason, ui.ban_date")
+					->select("u.*, lgl.create_time as last_login_date, ui.ident, ui.ban_reason, ui.ban_date, ui.name, ui.sex, ui.street")
 					->from("users u")->where("u.uid", $uid)
 					->join("log_game_logins lgl", "u.uid=lgl.uid and is_recent='1'", "left")
 					->join("user_info ui", "u.uid=ui.uid", "left")
@@ -143,14 +146,11 @@ WHERE x.uid={$uid}";
 			->from("characters gsr")
 			->join("servers gi", "gi.server_id=gsr.server_id")
 			->join("games g", "g.game_id=gi.game_id")
-			->where("gsr.account", $user->account)->order_by("gsr.create_time desc")->get();
-		
-		$bind = $this->DB2->from("users")->where("bind_uid", $uid)->get()->row();
+			->where("gsr.uid", $user->uid)->order_by("gsr.create_time desc")->get();
 		
 		$this->_init_member_layout()
 			->add_breadcrumb("查看")
 			->set("user", $user)
-			->set("bind", $bind)
 			->set("balance", $balance)
 			->set("role", $role)
 			->render();
