@@ -95,8 +95,7 @@ class Game_Api
 		$curl_res = curl_exec($ch);
 		curl_close($ch);
 
-		$result = array();
-		parse_str($curl_res, $result);
+		$result = json_decode($curl_res);
 
 		return $result;
 	}

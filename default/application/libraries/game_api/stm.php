@@ -18,13 +18,13 @@ class Stm extends Game_Api
 		$character = array('id'=>"-1",'name'=>"");
 
         $res = $this->ajax_post($this->conf['billing']."/apilonge-checkuser", array('uid'=>$uid));
-		if($res['status'] == 'E000')
+		if($res->status == 'E000')
 		{
-			$pos = strrpos($res['msg'], ":");
+			$pos = strrpos($res->msg, ":");
 			if($pos != FALSE)
 			{
-				$character['id'] = substr($res['msg'], $pos + 1);
-				$character['name'] = substr($res['msg'], 0, $pos);
+				$character['id'] = substr($res->msg, $pos + 1);
+				$character['name'] = substr($res->msg, 0, $pos);
 			}
 		}
 
@@ -48,13 +48,13 @@ class Stm extends Game_Api
 										'roleid'=>$character['id'],
 										'amount'=>$points,
 										'sig'=>$sig));
-		if($res['status'] == 'E000')
+		if($res->status == 'E000')
 		{
 			return "1";
 		}
 		else
 		{
-            return _return_error("點數轉入錯誤：".$res['status']);
+            return _return_error("點數轉入錯誤：".$res->status);
 		}
     }
 }
