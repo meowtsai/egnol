@@ -111,7 +111,17 @@
 		<? foreach($query->result() as $row):?>
 		<tr class="<?=$row->trade_ok=='1' ? 'success' : ''?>">
 			<td><?=$row->id?></td>
-			<td title="帳號: <?=$row->account?>">
+			<td title="帳號: 
+				<?
+	            if (!$row->email && !$row->mobile) {
+		            $ex_id = explode("@",$row->external_id); 
+		            if ('device' == $ex_id[1]) echo "快速登入";
+		            else echo $ex_id[1];
+	            } else {
+		            if ($row->email) echo $row->email;
+		            echo $row->mobile;
+	            }
+				?>">
 				<a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?></a>
 				<a href="<?=site_url("trade/mycard?uid={$row->uid}&action=查詢")?>"><i class="icon-search"></i></a>
 				<div style="color:#777;"><?=$this->g_user->encode($row->uid)?></div>
