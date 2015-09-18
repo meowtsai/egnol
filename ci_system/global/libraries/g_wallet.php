@@ -30,7 +30,7 @@ SELECT
 FROM users x
 WHERE x.uid={$uid}";
 
-		$balance_result = $this->DB2->query($balance_sql)->row();
+		$balance_result = $this->CI->db->query($balance_sql)->row();
 		
     	$query = $this->CI->db->select("balance")->from("users")
     		->where("uid", $uid)->limit(1)->get();
