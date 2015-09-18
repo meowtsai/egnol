@@ -58,6 +58,7 @@
 			<option value="r2" <?=($this->input->get("result")=='r2' ? 'selected="selected"' : '')?>>失敗</option>
 			<option value="r3" <?=($this->input->get("result")=='r3' ? 'selected="selected"' : '')?>>逾時</option>
 			<option value="r4" <?=($this->input->get("result")=='r4' ? 'selected="selected"' : '')?>>其它</option>
+			<option value="r5" <?=($this->input->get("result")=='r5' ? 'selected="selected"' : '')?>>等候入點</option>
 		</select>	
 
 		<span class="sptl"></span>	

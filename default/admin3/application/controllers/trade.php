@@ -69,6 +69,7 @@ class Trade extends MY_Controller {
 			"2" => array("name" => "失敗", "class" => "warning"),
 			"3" => array("name" => "交易逾時", "class" => "error"),
 			"4" => array("name" => "其它", "class" => "info"),
+			"5" => array("name" => "等候入點", "class" => "success"),
 		);
 		$this->g_layout->set("result_table", $result_table);
 		
