@@ -36,7 +36,7 @@
 						}
 						else if ($status == '1' && $transfer_status == '0')
 						{
-							echo "扣款成功但{$game->currency}尚未轉入角色";
+							echo "扣款成功但{$game->currency}尚未轉入角色({$message})";
                             $tips = "請稍候五至十分鐘於遊戲中確認是否獲得{$game->currency}，若尚未獲得請向<a href='{$longe_url}service?site={$site}'>客服中心</a>反映。";
 						}
 						else if ($status == '0')

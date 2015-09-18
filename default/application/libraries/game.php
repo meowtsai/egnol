@@ -175,7 +175,7 @@ class Game
 		
 		//建單，並扣款
  		$order_id = $this->CI->g_wallet->produce_order($uid, "top_up_account", "2", $amount, $server->server_id, "");			
-		if (empty($order_id)) $this->_go_payment_result(1, 0, $amount, $this->CI->g_wallet->error_message, $args);
+		if (empty($order_id)) $this->_go_payment_result(1, 0, $amount, $this->CI->g_wallet->error_message."!TEST!", $args);
 			
 		$order = $this->CI->g_wallet->get_order($order_id);
 
@@ -199,16 +199,16 @@ class Game
 			$res = $this->CI->{$server->game_id}->transfer($server, $order, $amount, $game->exchange_rate);
 			$error_message = $this->CI->{$server->game_id}->error_message;
 
-			if ($re === "1") {
+			if ($res === "1") {
 				$this->CI->g_wallet->complete_order($order);
 				$args = "gp=".($amount*$game->exchange_rate)."&sid={$server_id}";
 				$this->_go_payment_result(1, 1, $amount, "", $args);
 			}
-			else if ($re === "-1") {
+			else if ($res === "-1") {
 				$this->CI->g_wallet->cancel_timeout_order($order);
 				$this->_go_payment_result(1, 0, $amount, "遊戲伺服器沒有回應(錯誤代碼: 002)", $args);
 			}
-			else if ($re === "-2") {
+			else if ($res === "-2") {
 				$this->CI->g_wallet->cancel_other_order($order, $error_message);
 				$this->_go_payment_result(1, 0, $amount, "{$error_message}(錯誤代碼: 003)", $args);
 			}
