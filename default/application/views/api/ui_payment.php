@@ -88,14 +88,14 @@ function cancelButton () {
 						<th>幣別</th>
 						<td>
 							<select name="currency"  class="required" style="width:85%;">
-			                    <option value='TWD'>TWD</option>
-			                    <option value='USD'>USD</option>
-			                    <option value='EUR'>EUR</option>
-			                    <option value='HKD'>HKD</option>
-			                    <option value='MYR'>MYR</option>
-			                    <option value='IDR'>IDR</option>
-			                    <option value='THB'>THB</option>
-			                    <option value='VND'>VND</option>
+			                    <option value='TWD'>新台幣TWD</option>
+			                    <option value='USD'>美金USD</option>
+			                    <!--option value='EUR'>EUR</option-->
+			                    <option value='HKD'>港幣HKD</option>
+			                    <option value='MYR'>馬來令吉MYR</option>
+			                    <!--option value='IDR'>IDR</option-->
+			                    <!--option value='THB'>THB</option-->
+			                    <!--option value='VND'>VND</option-->
 							</select>
 						</td>
 					</tr>
