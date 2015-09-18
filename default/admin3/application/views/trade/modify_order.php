@@ -1,6 +1,6 @@
 <? 
 	$result_arr = array("0" => array("初始", "#666"), "1" => array("成功", "#0a1"), "2" => array("失敗", "#a10"), 
-			"3" => array("逾時", "804"), "4" => array("其它", "#01a"), "4" => array("等候入點", "#0a1"));
+			"3" => array("逾時", "804"), "4" => array("其它", "#01a"), "5" => array("等候入點", "#0a1"));
 ?>
 <form method="post">
 	<fieldset>
