@@ -12,7 +12,7 @@ class G_Wallet
     
     function get_order($order_id)
     {
-    	return $this->CI->db->select("ub.*")
+    	return $this->CI->db->select("u.*, ub.*")
     				->from("user_billing ub")
     				->join("users u", "ub.uid=u.uid")
     				->where("id", $order_id)->get()->row();
@@ -20,45 +20,25 @@ class G_Wallet
     
     function get_balance($uid)
     {
+		$balance_sql = "
+SELECT 
+	x.uid,
+        COALESCE((SELECT SUM(amount) FROM user_billing WHERE billing_type=1 AND result=1 AND uid=x.uid GROUP BY uid), 0) aq,
+        COALESCE((SELECT SUM(amount) FROM user_billing WHERE billing_type=2 AND result=1 AND uid=x.uid GROUP BY uid), 0) amount,
+        COALESCE((SELECT SUM(amount) FROM user_billing WHERE billing_type=3 AND result=1 AND uid=x.uid GROUP BY uid), 0) rq,
+        COALESCE((SELECT SUM(amount) FROM user_billing WHERE billing_type=4 AND result=1 AND uid=x.uid GROUP BY uid), 0) gq
+FROM users x
+WHERE x.uid={$uid}";
+
+		$balance_result = $this->CI->db->query($balance_sql)->row();
+		
     	$query = $this->CI->db->select("balance")->from("users")
     		->where("uid", $uid)->limit(1)->get();
-    	if ($query->num_rows() > 0) {
-    		return $query->row()->balance;
+    	if ($balance_result) {
+			$balance = $balance_result->aq + $balance_result->rq + $balance_result->gq - $balance_result->amount;
+    		return $balance;
     	} 
     	else return 0;
-    }
-    
-    function get_success_balance($uid)
-    {
-    	$this->CI->db->where("result", "1");
-    	return $this->get_balance($uid);
-    }    
-    
-    function chk_money_enough($uid, $chk_money)
-    {
-    	$balance = $this->get_balance($uid);
-    	return $chk_money > $balance ? false : true; 
-    }
-    
-    function chk_balance($uid)
-    {    	
-    	$sql = "
-    	SELECT 
-			u.uid,
-			COALESCE((SELECT SUM(amount) FROM user_billing WHERE billing_type=1 AND result=1 AND uid=u.uid GROUP BY uid), 0) aq,
-		    COALESCE((SELECT SUM(amount) FROM user_billing WHERE billing_type=2 AND result=1 AND uid=u.uid AND transaction_type not in ('rc_billing') GROUP BY uid), 0) amount,
-		    COALESCE((SELECT SUM(amount) FROM user_billing WHERE billing_type=3 AND result=1 AND uid=u.uid GROUP BY uid), 0) rq,
-		    COALESCE((SELECT SUM(amount) FROM user_billing WHERE billing_type=4 AND result=1 AND uid=u.uid GROUP BY uid), 0) gq,
-		    u.balance
-		FROM users u
-		WHERE u.uid={$uid}";
-    	$query = $this->CI->db->query($sql);
-    	if ($query->num_rows() > 0) {
-    		$row = $query->row();
-    		$total = $row->aq + $row->rq + $row->gq;
-    		if ( $total == ($row->amount + $row->balance)) return true; 
-    		else return $this->_return_error("餘額不平衡");
-    	} else return $this->_return_error('角色不存在');
     }
             
     //billing_type: 1購買,2轉點,3回補,4贈送
@@ -67,43 +47,7 @@ class G_Wallet
     	if ($order) {
 	    	$cnt = $this->CI->db->from("user_billing")->where("order", $order)->where_in("result", array("1","3"))->count_all_results();
 			if ($cnt > 0)  return $this->_return_error("第三方訂單號已被使用");
-    	}	
-    	
-    	$balance = $this->get_balance($uid);
-
-    	switch ($billing_type)
-    	{
-    		/*case 1:
-    			$calc_balance = $balance + $amount;
-    			break;*/
-    		
-    		case 2:    	    	
-		    	if (in_array($transaction_type, array('rc_billing', 'omg_billing', 'kimi_billing', 'beanfun_billing', 'bahamut_billing', 'artsy_billing', 'dtalent_billing', '179game_billing', 'smmo_billing', 'muxplay_billing', 'egame101_billing', '58play_billing', 'nicegame_billing', 'skyler_billing'))) {
-		    		//omg交易從omg方扣款
-		    		$calc_balance = $balance; 
-		    	}
-		    	else {
-    				if ($amount > $balance) return $this->_return_error("餘額不足");
-    				$calc_balance = $balance - $amount;
-		    	}
-    			break;
-    			
-    		case 3:
-    			$calc_balance = $balance + $amount;
-    			break;
-    		
-    		default:
-				return $this->_return_error("billing_type錯誤");
     	}
-    	
-    	$users_data = array(
-    		'balance' => $calc_balance
-    	);    	
-			
-    	$this->CI->db
-    		->set("update_time", "now()", false)
-			->where("uid", $uid)
-    		->update("users", $users_data);
     	
 		$country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
 		$country_code = ($country_code) ? $country_code : null;
@@ -113,7 +57,7 @@ class G_Wallet
     		'transaction_type' => $transaction_type,
     		'billing_type'	=> $billing_type,
     		'amount' 		=> $amount,
-    		'server_id' 		=> $pay_server_id,
+    		'server_id' 	=> $pay_server_id,
     		'ip'		 	=> $_SERVER['REMOTE_ADDR'],
     		'result'		=> '0',
     		'note'			=> '',
@@ -141,21 +85,17 @@ class G_Wallet
     
     function cancel_order($order, $note='')
     {
-    	$balance = $this->get_success_balance($order->uid);
-    	$this->CI->db->where("id", $order->id)->update("user_billing", array("result" => "2", "balance" => $balance, "note" => $note));
+    	$this->CI->db->where("id", $order->id)->update("user_billing", array("result" => "2", "note" => $note));
 	}
 	
     function cancel_timeout_order($order)
     {
-    	$balance = $this->get_balance($order->uid);
-    	$this->CI->db->where("id", $order->id)->update("user_billing", array("result" => "3", "balance" => $balance));
+    	$this->CI->db->where("id", $order->id)->update("user_billing", array("result" => "3"));
 	}	
 	
     function cancel_other_order($order, $note='')
     {
-    	$balance = $this->get_balance($order->uid);
     	$this->CI->db->where("id", $order->id)->update("user_billing", array("result" => "4", "note" => $note));
-    	$this->CI->db->where("uid", $order->uid)->update("users", array("balance" => $balance));
 	}		
 
 	// 設定狀態為已完成儲值但尚未被轉入遊戲中
@@ -182,18 +122,6 @@ class G_Wallet
 		if ( ! in_array($transaction_type, array("mycard_ingame", "mycard_billing"))) return $this->_return_error("transaction_type 錯誤");
 		$cnt = $this->CI->db->from("user_billing")->where("mycard_billing_id", $mycard_billing_id)->where("result", "1")->count_all_results();
 		if ($cnt > 0)  return $this->_return_error("ID已被使用");		
-		
-    	$balance = $this->get_balance($uid);
-		$calc_balance = $balance + $amount;
-    	
-    	$users_data = array(
-    		'balance' => $calc_balance
-    	);
-    	
-    	$this->CI->db
-		    ->set("update_time", "now()", false)
-			->where("uid", $uid)
-			->update("users", $users_data);
     	
 		$country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
 		$country_code = ($country_code) ? $country_code : null;
@@ -217,18 +145,6 @@ class G_Wallet
 	{	
 		$cnt = $this->CI->db->from("user_billing")->where("gash_billing_id", $gash_billing_id)->where("result", "1")->count_all_results();
 		if ($cnt > 0)  return $this->_return_error("ID已被使用");			
-		
-    	$balance = $this->get_balance($uid);
-		$calc_balance = $balance + $amount;
-    	
-    	$users_data = array(
-    			'balance' => $calc_balance
-    		);
-    	
-    	$this->CI->db
-		    ->set("update_time", "now()", false)
-			->where("uid", $uid)
-			->update("users", $users_data);
 			
 		$country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
 		$country_code = ($country_code) ? $country_code : null;
@@ -261,18 +177,7 @@ class G_Wallet
 					->where("transaction_type", $tran_type)->where("transaction_id", $tran_id)
 					->where("result", "1")->count_all_results();
 			if ($cnt > 0) return $this->_return_error("交易ID已被使用");
-		}			
-		
-    	$balance = $this->get_balance($uid);
-    	$calc_balance = $balance + $amount;
-    	
-    	$users_data = array(
-    		'balance' => $calc_balance
-    	);
-    	
-    	$this->CI->db
-    		->set("update_time", "now()", false)
-    		->update("users", $users_data);
+		}
     	
 		$country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
 		$country_code = ($country_code) ? $country_code : null;

@@ -51,7 +51,6 @@ $config['main_menu'] = array(
 	"member" => array('name' => '會員', 'menu' => array(
 		 	array('name' => '查詢', 'path' => 'member'),
 			array('name' => '測試帳號', 'path' => 'member/testaccounts'),
-			array('name' => '不平衡帳號', 'path' => 'member/no_balance'),
 			array('name' => '停權帳號', 'path' => 'member/is_banned'),
 		)
 	),

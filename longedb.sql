@@ -643,7 +643,6 @@ CREATE TABLE `users` (
   `password` char(32) NOT NULL,
   `external_id` varchar(128) DEFAULT NULL,
   `activation_code` varchar(20) DEFAULT NULL,
-  `balance` int(6) DEFAULT NULL,
   `is_approved` tinyint(1) DEFAULT 0,
   `is_banned` tinyint(1) DEFAULT 0,
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
