@@ -172,9 +172,6 @@ class Game
 		if ($this->CI->g_wallet->chk_money_enough($uid, $amount) == false) {
 			$this->_go_payment_result(1, 0, $amount, '餘額不足', $args);
 		}
-		if ($this->CI->g_wallet->chk_balance($uid) == false) { //不平衡
-			$this->_go_payment_result(1, 0, $amount, '錯誤代碼 001', $args);
-		}
 		
 		//建單，並扣款
  		$order_id = $this->CI->g_wallet->produce_order($uid, "top_up_account", "2", $amount, $server->server_id, "");			

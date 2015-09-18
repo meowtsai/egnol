@@ -11,7 +11,16 @@
 			<dl class="dl-horizontal">
 				<dt>uid</dt>
 				<dd><a href="<?=site_url("member/view/{$row->uid}")?>" target="_blank"><?=$row->uid?></a></dd>
-				<dt>帳號</dt><dd><?=$row->account?></dd>
+				<dt>帳號</dt><dd><?
+	            if (!$row->email && !$row->mobile) {
+		            $ex_id = explode("@",$row->external_id); 
+		            if ('device' == $ex_id[1]) echo "快速登入";
+		            else echo $ex_id[1];
+	            } else {
+		            if ($row->email) echo $row->email;
+		            echo $row->mobile;
+	            }
+				?></dd>
 			</dl>
 			<small>
 				<a href="<?=site_url("trade/transfer?uid={$row->uid}&action=查詢")?>" class="btn btn-mini">轉點記錄</a>			
@@ -21,7 +30,7 @@
 			<dl class="dl-horizontal">	
 				<dt>金額</dt><dd><?=$row->amount?></dd>				
 				<dt>交易管道</dt><dd><?=$row->transaction_type?></dd>
-				<dt>交易伺服器</dt><dd><?=$row->pay_server_id?></dd>
+				<dt>交易伺服器</dt><dd><?=$row->server_id?></dd>
 				<dt>建立日期</dt><dd><?=$row->create_time?></dd>
 				<dt>結果</dt><dd style="color:<?=$result_arr[$row->result][1]?>; font-weight:bold;"><?=$result_arr[$row->result][0]?></dd>
 				<dt>備註</dt><dd><?=$row->note?></dd>

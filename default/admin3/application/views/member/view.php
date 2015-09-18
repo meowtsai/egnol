@@ -1,5 +1,4 @@
 <? 
-	$chk_balance = ($balance->aq+$balance->rq+$balance->gq)==($balance->amount+$balance->balance);
 	$enable = $this->config->item("enable");
 	$enable[0]['color'] = "#600";
 	$enable[1]['color'] = "#006";
@@ -104,7 +103,6 @@
 			<th style="color:#060">回補總額</th>
 			<th style="color:#060">贈點總額</th>
 			<th style="color:#600">目前餘額</th>
-			<th>是否平衡</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -113,8 +111,7 @@
 			<td style="color:#600"><?=$balance->amount?></td>
 			<td style="color:#060"><?=$balance->rq?></td>
 			<td style="color:#060"><?=$balance->gq?></td>
-			<td style="color:#600"><?=$balance->balance?></td>			
-			<td style="color:<?=$enable[$chk_balance]["color"]?>"><?=$enable[$chk_balance]["name"]?></td>
+			<td style="color:#600"><?=$balance->aq+$balance->rq+$balance->gq-$balance->amount?></td>		
 		</tr>
 	</tbody>
 </table>
