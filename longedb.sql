@@ -703,8 +703,10 @@ CREATE TABLE `event_serial` (
   `event_id` int(11) NOT NULL,
   `serial` varchar(20) NOT NULL,
   `uid` int(11) DEFAULT NULL,
+  `personal_id` varchar(128) DEFAULT NULL,
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `serial_UNIQUE` (`serial`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/* personal_id 欄位為使用在發獎勵給非會員時用來辨認使用者身分 */;
