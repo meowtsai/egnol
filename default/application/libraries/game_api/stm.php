@@ -40,19 +40,13 @@ class Stm extends Game_Api
 			return _return_error("角色尚未建立！");
 		}
 
-		// gash test point
-		if(intval($amount) == 1)
-		{
-			$amount = 60;
-		}
-
-		$points = $amount * $rate;
+		$points = $amount;
 		$str = "{$order->id}{$order->uid}{$character['id']}{$points}r1g4284gj94ek";
         $sig = MD5($str);
 
         $res = $this->curl_post($this->conf['billing']."/apilonge-billing",
 								array('orderid'=>$order->id,
-										'account'=>$order->uid,
+										'uid'=>$order->uid,
 										'roleid'=>$character['id'],
 										'amount'=>$points,
 										'sig'=>$sig));

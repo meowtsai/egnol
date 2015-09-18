@@ -169,13 +169,10 @@ class Game
 		if ( $server->is_transaction_active == 0) {
 			$this->_go_payment_result(1, 0, $amount, "遊戲伺服器目前暫停轉點服務", $args);
     	}
-		if ($this->CI->g_wallet->chk_money_enough($uid, $amount) == false) {
-			$this->_go_payment_result(1, 0, $amount, '餘額不足', $args);
-		}
-		
+
 		//建單，並扣款
  		$order_id = $this->CI->g_wallet->produce_order($uid, "top_up_account", "2", $amount, $server->server_id, "");			
-		if (empty($order_id)) $this->_go_payment_result(1, 0, $amount, $this->CI->g_wallet->error_message."!TEST!", $args);
+		if (empty($order_id)) $this->_go_payment_result(1, 0, $amount, $this->CI->g_wallet->error_message, $args);
 			
 		$order = $this->CI->g_wallet->get_order($order_id);
 
