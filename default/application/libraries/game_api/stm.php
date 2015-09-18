@@ -17,7 +17,7 @@ class Stm extends Game_Api
 	{
 		$character = array('id'=>"-1",'name'=>"");
 
-        $res = $this->ajax_post($this->conf['billing']."/apilonge-checkuser", array('uid'=>$uid));
+        $res = $this->curl_post($this->conf['billing']."/apilonge-checkuser", array('uid'=>$uid));
 		if($res->status == 'E000')
 		{
 			$pos = strrpos($res->msg, ":");
@@ -40,21 +40,30 @@ class Stm extends Game_Api
 			return _return_error("角色尚未建立！");
 		}
 
+		// gash test point
+		if(intval($amount) == 1)
+		{
+			$amount = 60;
+		}
+
 		$points = $amount * $rate;
-        $sig = MD5("{$order->id}{$order->uid}{$character['id']}{$points}r1g4284gj94ek");
-        $res = $this->ajax_post($this->conf['billing']."/apilonge-billing",
+		$str = "{$order->id}{$order->uid}{$character['id']}{$points}r1g4284gj94ek";
+        $sig = MD5($str);
+
+        $res = $this->curl_post($this->conf['billing']."/apilonge-billing",
 								array('orderid'=>$order->id,
 										'account'=>$order->uid,
 										'roleid'=>$character['id'],
 										'amount'=>$points,
 										'sig'=>$sig));
+
 		if($res->status == 'E000')
 		{
 			return "1";
 		}
 		else
 		{
-            return _return_error("點數轉入錯誤：".$res->status);
+            return $this->_return_error("點數轉入錯誤：".$res->status);
 		}
-    }
+	}
 }
