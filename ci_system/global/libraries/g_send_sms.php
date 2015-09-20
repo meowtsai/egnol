@@ -4,7 +4,7 @@
      *  yoyo8 簡訊系統發送
      *
      */
-    class Send_sms
+    class G_Send_sms
     {
 		var $member_id  = 'longeplay';
 		var $message = '';

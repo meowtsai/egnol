@@ -477,9 +477,9 @@ class Member extends MY_Controller
 			}
 		    $this->db->where("email", $email)->update("users", array("password" => $md5_new));
 
-			$this->load->library("send_mail");
+			$this->load->library("g_send_mail");
 
-			if($this->send_mail->passwdResetMail($email, $account, $new))
+			if($this->g_send_mail->passwdResetMail($email, $new))
 			{
 				die(json_message(array("message"=>"新密碼已發送到您的 E-Mail 信箱。", "site"=>$site)));
 			}
@@ -502,15 +502,15 @@ class Member extends MY_Controller
 			// 手機號碼的話要發送簡訊
             $msg = "親愛的龍邑會員您好：您的新密碼為 {$new}，請妥善保管。龍邑遊戲敬上";
 
-			$this->load->library("send_sms");
+			$this->load->library("g_send_sms");
 
-			if($this->send_sms->send($site, $mobile, $msg))
+			if($this->g_send_sms->send($site, $mobile, $msg))
 			{
 				die(json_message(array("message"=>"已使用簡訊發送新密碼至您的手機。", "site"=>$site)));
 			}
 			else
 			{
-				die(json_failure($this->send_sms->get_message()));
+				die(json_failure($this->g_send_sms->get_message()));
 			}
 		}
 	}
