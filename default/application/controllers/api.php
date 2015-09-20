@@ -459,7 +459,7 @@ class Api extends MY_Controller
 
 			$this->load->library("g_send_mail");
 
-			if($this->g_send_mail->passwdResetMail($email, $account, $new))
+			if($this->g_send_mail->passwdResetMail($email, $new))
 			{
 				die(json_message(array("message"=>"新密碼已發送到您的 E-Mail 信箱。", "site"=>$site)));
 			}
