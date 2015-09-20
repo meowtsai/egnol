@@ -73,7 +73,7 @@ class Api extends MY_Controller
 			}
 
 			$this->_init_layout()
-				->add_css_link("login")
+				->add_css_link("login_api")
 				->add_js_include("api/login")
 				->set("partner", $partner)
 				->set("game_key", $game_key)
@@ -333,7 +333,7 @@ class Api extends MY_Controller
 	function ui_register()
 	{
 		$this->_init_layout()
-			->add_css_link("login")
+			->add_css_link("login_api")
 			->add_js_include("api/register")
 			->api_view();
 	}
@@ -382,7 +382,7 @@ class Api extends MY_Controller
 	function ui_bind_account()
 	{
 		$this->_init_layout()
-			->add_css_link("login")
+			->add_css_link("login_api")
 			->add_js_include("api/bind_account")
 			->api_view();
 	}
@@ -426,7 +426,7 @@ class Api extends MY_Controller
 	function ui_forgot_password()
 	{
 		$this->_init_layout()
-			->add_css_link("login")
+			->add_css_link("login_api")
 			->add_js_include("api/forgot_password")
 			->api_view();
 	}
@@ -501,7 +501,7 @@ class Api extends MY_Controller
 		$this->_require_login();
 
 		$this->_init_layout()
-			->add_css_link("login")
+			->add_css_link("login_api")
 			->add_js_include("api/change_password")
 			->api_view();
 	}
@@ -551,7 +551,7 @@ class Api extends MY_Controller
 	function ui_service_agreement()
 	{
 		$this->_init_layout()
-			->add_css_link("login")
+			->add_css_link("login_api")
 			->api_view('member/service_agreement');
 	}
 
@@ -559,7 +559,7 @@ class Api extends MY_Controller
 	function ui_privacy_agreement()
 	{
 		$this->_init_layout()
-			->add_css_link("login")
+			->add_css_link("login_api")
 			->api_view('member/privacy_agreement');
 	}
 
@@ -567,7 +567,7 @@ class Api extends MY_Controller
 	function ui_member_agreement()
 	{
 		$this->_init_layout()
-			->add_css_link("login")
+			->add_css_link("login_api")
 			->api_view('member/member_agreement');
 	}
 
@@ -594,7 +594,7 @@ class Api extends MY_Controller
 			->set("servers", $servers)
 			->set("server_id", $server_id)
 			->set("characters", $characters)
-			->add_css_link("login")
+			->add_css_link("login_api")
 			->add_css_link("money")
 			->add_js_include("api/payment")
 			->api_view();
@@ -643,7 +643,7 @@ class Api extends MY_Controller
 			->set("pay_type", $payment_channel)
 			->set("status", $this->input->get("status"))
 			->set("message", urldecode($this->input->get("message")))
-			->add_css_link("login")
+			->add_css_link("login_api")
 			->add_css_link("money")
 			->api_view();
 	}
