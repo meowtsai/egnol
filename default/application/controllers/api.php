@@ -439,7 +439,7 @@ class Api extends MY_Controller
 		$email = $this->input->post("account");
 
 		// 檢查 e-mail or mobile
-		if(empty($account))
+		if(empty($email))
 		{
 			die(json_failure('Email或手機號碼未填寫'));
 		}

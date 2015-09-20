@@ -8,6 +8,8 @@
 
     class G_Send_Mail extends PHPMailer
     {
+        var $CI;
+        
         /** 環境 **/
         public $smtp_host = "edm.longeplay.com.tw";
         public $smtp_user= "no-reply";  // SMTP username
@@ -18,6 +20,7 @@
 
         function __construct()
 		{
+            $this->CI =& get_instance();  
         }
         
         function mailVerify()
@@ -63,7 +66,7 @@
 									"龍邑會員密碼通知信[".date("Y/m/d H:i:s")."]",
 									"g_pwd_reset_mail",
 									array("password" => $newPassword),
-									array("headerimg" => dirname(__FILE__)."/header.jpg"));
+									array("headerimg" => FCPATH."/p/image/mail/header.jpg"));
         }
     }
 ?>
