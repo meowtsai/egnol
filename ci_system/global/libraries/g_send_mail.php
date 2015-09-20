@@ -6,7 +6,7 @@
      */
     require_once(dirname(__FILE__).'/class.phpmailer.php');
 
-    class Send_Mail extends PHPMailer
+    class G_Send_Mail extends PHPMailer
     {
         /** 環境 **/
         public $smtp_host = "edm.longeplay.com.tw";
@@ -122,21 +122,6 @@ table  {max-width:100%; width:100%;}
 			$this->IsHTML(true);
 
 			$this->AddEmbeddedImage(dirname(__FILE__)."/header.jpg", "headerimg");
-/*
-            $body = "親愛的龍邑會員您好：\n<br />
-
-                    以下為您的密碼資料，請妥善保管：<br />
-                    -------------------------------------------------------------------------------<br />
-                    ※ 新密碼 : $newPassword (請注意：原密碼已失效)<br />
-                    -------------------------------------------------------------------------------<br />
-                    如果您並未查詢且要求郵寄密碼，請立即回到【會員專區】檢視您的會員資料並<br />
-                    變更密碼，以防止您的帳號遭濫用。<br />
-                    <br />
-                    龍邑遊戲敬上<br />
-                    -------------------------------------------------------------------------------<br />
-                    ＊此為系統發出信件，請勿直接回覆；若您對本信函有疑問，請至客服中心留言<br />
-                    ";
-*/
 			$this->Body = $this->body1.$newPassword.$this->body2;
             $this->AltBody = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
 

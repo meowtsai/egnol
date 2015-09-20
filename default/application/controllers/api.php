@@ -435,13 +435,8 @@ class Api extends MY_Controller
 	{
 		header('content-type:text/html; charset=utf-8');
 
-		$account = $this->input->post("account");
-		$captcha = $this->input->post("captcha");
-
-		if (empty($_SESSION['captcha']) || $captcha != $_SESSION['captcha'])
-		{
-			die(json_failure("驗證碼錯誤"));
-		}
+		$site = $this->_get_site();
+		$email = $this->input->post("account");
 
 		// 檢查 e-mail or mobile
 		if(empty($account))
@@ -449,32 +444,55 @@ class Api extends MY_Controller
 			die(json_failure('Email或手機號碼未填寫'));
 		}
 
-		$query = null;
-		$send_to = 'email 信箱';
-		if(filter_var($account, FILTER_VALIDATE_EMAIL))
-		{
-			$query = $this->db->from("users")->where("email", $account)->get();
-		}
-		else
-		{
-			$query = $this->db->from("users")->where("mobile", $account)->get();
-			$send_to = '手機簡訊';
-		}
-
-		if (empty($query) || $query->num_rows() == 0)
-		{
-			die(json_failure("沒有這位使用者。"));
-		}
-
 	    $new = rand(100000, 999999);
 	    $md5_new = md5($new);
 
-	    $this->db->where("uid", $query->row()->uid)->update("users", array("password" => $md5_new));
-/*
-		$this->load->library("long_e_mailer");
-		$this->long_e_mailer->passwdResetMail($email, $account, $new, $account);
-*/
-		die(json_message(array("message"=>"新密碼已發送到您的".$send_to."。", "site"=>$site)));
+		if(filter_var($email, FILTER_VALIDATE_EMAIL))
+		{
+			// 使用 email
+			$cnt = $this->db->from("users")->where("email", $email)->count_all_results();
+			if ($cnt == 0)
+			{
+				die(json_failure("沒有這位使用者或資料填寫錯誤。"));
+			}
+		    $this->db->where("email", $email)->update("users", array("password" => $md5_new));
+
+			$this->load->library("g_send_mail");
+
+			if($this->g_send_mail->passwdResetMail($email, $account, $new))
+			{
+				die(json_message(array("message"=>"新密碼已發送到您的 E-Mail 信箱。", "site"=>$site)));
+			}
+			else
+			{
+				die(json_failure("E-Mail 發送失敗。"));
+			}
+		}
+		else
+		{
+			// 使用手機號碼
+			$mobile = $email;
+			$cnt = $this->db->from("users")->where("mobile", $mobile)->count_all_results();
+			if ($cnt == 0)
+			{
+				die(json_failure("沒有這位使用者或資料填寫錯誤。"));
+			}
+		    $this->db->where("mobile", $mobile)->update("users", array("password" => $md5_new));
+
+			// 手機號碼的話要發送簡訊
+            $msg = "親愛的龍邑會員您好：您的新密碼為 {$new}，請妥善保管。龍邑遊戲敬上";
+
+			$this->load->library("g_send_sms");
+
+			if($this->g_send_sms->send($site, $mobile, $msg))
+			{
+				die(json_message(array("message"=>"已使用簡訊發送新密碼至您的手機。", "site"=>$site)));
+			}
+			else
+			{
+				die(json_failure($this->g_send_sms->get_message()));
+			}
+		}
 	}
 
 	// 修改密碼
