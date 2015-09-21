@@ -201,7 +201,7 @@ class Api extends MY_Controller
 		$data = array(
 			'uid' => $_SESSION['user_id'],
 			'ip' => $_SERVER["REMOTE_ADDR"],
-			'create_time' => now(),
+			//'create_time' => now(),
 			'is_recent' => '1',
 			'is_first' => $is_first,
 			'ad' => $ad,
