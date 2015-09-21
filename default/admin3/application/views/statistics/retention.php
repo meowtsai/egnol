@@ -24,7 +24,7 @@
 	<div class="control-group">
 		
 		<select name="game_id">
-		    <option value="">--</option>
+		    <option value="">--請選擇遊戲--</option>
 			<?
 			foreach($c_game_menu as $category => $c_menu):?>
 				<option value=""> -------- <?=$category?> --------</option>
@@ -36,7 +36,7 @@
 	    </select>
 		
 		時間
-		<input type="text" name="start_date" class="date required" value="<?=$this->input->get("start_date")?>" style="width:120px"> 至
+		<input type="text" name="start_date" class="date required" value="<?=($this->input->get("start_date"))?$this->input->get("start_date"):date("Y-m-d",strtotime("-8 days"))?>" style="width:120px"> 至
 		<input type="text" name="end_date" class="date" value="<?=$this->input->get("end_date")?>" style="width:120px" placeholder="現在">
 		<a href="javascript:;" class="clear_date"><i class="icon-remove-circle" title="清除"></i></a>
 		

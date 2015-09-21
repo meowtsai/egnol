@@ -24,7 +24,7 @@
 	<div class="control-group">
 		
 		<select name="game_id">
-		    <option value="">--</option>
+		    <option value="">--請選擇遊戲--</option>
 			<?
 			foreach($c_game_menu as $category => $c_menu):?>
 				<option value=""> -------- <?=$category?> --------</option>

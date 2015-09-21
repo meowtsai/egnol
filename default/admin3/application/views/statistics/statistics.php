@@ -12,7 +12,7 @@
 		
 		伺服器
 		<select name="server" style="width:90px">
-			<option value="">--</option>
+			<option value="">--請選擇伺服器--</option>
 			<? foreach($servers->result() as $row):?>
 			<option value="<?=$row->id?>" <?=($this->input->get("server")==$row->id ? 'selected="selected"' : '')?>><?=$row->name?></option>
 			<? endforeach;?>
@@ -22,7 +22,7 @@
 		
 		通路來源 
 		<select name="channel" style="width:120px">
-			<option value="">--</option>
+			<option value="">--請選擇通路--</option>
 			<? foreach($channels as $key => $channel):?>
 			<option value="<?=$key?>" <?=($this->input->get("channel")==$key ? 'selected="selected"' : '')?>><?=$channel?></option>
 			<? endforeach;?>
@@ -33,7 +33,7 @@
 		<span class="sptl"></span> 
 		
 		時間
-		<input type="text" name="start_date" class="date required" value="<?=$this->input->get("start_date")?>" style="width:120px"> 至
+		<input type="text" name="start_date" class="date required" value="<?=($this->input->get("start_date"))?$this->input->get("start_date"):date("Y-m-d",strtotime("-8 days"))?>" style="width:120px"> 至
 		<input type="text" name="end_date" class="date" value="<?=$this->input->get("end_date")?>" style="width:120px" placeholder="現在">
 		<a href="javascript:;" class="clear_date"><i class="icon-remove-circle" title="清除"></i></a>
 		
