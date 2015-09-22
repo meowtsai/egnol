@@ -74,7 +74,7 @@
 		<? $color = array('00aa00', '448800', '776600', 'aa4400', 'dd2200', 'ff0000');
 			foreach($query->result() as $row):
 				$startdate = strtotime($row->date);
-				$enddate = date();
+				$enddate = strtotime(date("Y-m-d"));
 				$days = round(($enddate-$startdate)/3600/24) ;
                 $new_character_p = (($row->new_login_count>0)?$row->new_character_count/$row->new_login_count:0)*100;	
                 $one_retention_p = (($row->one_retention_count>0)?$row->one_retention_count/$row->new_login_count:0)*100;
