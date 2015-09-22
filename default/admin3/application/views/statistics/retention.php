@@ -90,24 +90,24 @@
 				<td style="text-align:right; color:#<?=$color[intval($new_character_p/18)]?>">
 				    <?=round($new_character_p, 2)."%"?>
 				</td>
-				<td style="text-align:right; <?=$days<0 ? 'background:#ddd;' : ''?>"><?=number_format($row->one_retention_count)?></td>
-				<td style="text-align:right; color:#<?=$color[intval($one_retention_p/18)]?>; <?=$days<0 ? 'background:#ddd;' : ''?>">
+				<td style="text-align:right; <?=$days<1 ? 'background:#ddd;' : ''?>"><?=number_format($row->one_retention_count)?></td>
+				<td style="text-align:right; color:#<?=$color[intval($one_retention_p/18)]?>; <?=$days<1 ? 'background:#ddd;' : ''?>">
 				    <?=round($one_retention_p, 2)."%"?>
 				</td>
-				<td style="text-align:right; <?=$days<2 ? 'background:#ddd;' : ''?>"><?=number_format($row->three_retention_count)?></td>
-				<td style="text-align:right; color:#<?=$color[intval($three_retention_p/18)]?>; <?=$days<2 ? 'background:#ddd;' : ''?>">
+				<td style="text-align:right; <?=$days<3 ? 'background:#ddd;' : ''?>"><?=number_format($row->three_retention_count)?></td>
+				<td style="text-align:right; color:#<?=$color[intval($three_retention_p/18)]?>; <?=$days<3 ? 'background:#ddd;' : ''?>">
 				    <?=round($three_retention_p, 2)."%"?>
 				</td>
-				<td style="text-align:right; <?=$days<6 ? 'background:#ddd;' : ''?>"><?=number_format($row->seven_retention_count)?></td>
-				<td style="text-align:right; color:#<?=$color[intval($seven_retention_p/18)]?>; <?=$days<6 ? 'background:#ddd;' : ''?>">
+				<td style="text-align:right; <?=$days<7 ? 'background:#ddd;' : ''?>"><?=number_format($row->seven_retention_count)?></td>
+				<td style="text-align:right; color:#<?=$color[intval($seven_retention_p/18)]?>; <?=$days<7 ? 'background:#ddd;' : ''?>">
 				    <?=round($seven_retention_p, 2)."%"?>
 				</td>
-				<td style="text-align:right; <?=$days<13 ? 'background:#ddd;' : ''?>"><?=number_format($row->fourteen_retention_count)?></td>
-				<td style="text-align:right; color:#<?=$color[intval($fourteen_retention_p/18)]?>; <?=$days<13 ? 'background:#ddd;' : ''?>">
+				<td style="text-align:right; <?=$days<14 ? 'background:#ddd;' : ''?>"><?=number_format($row->fourteen_retention_count)?></td>
+				<td style="text-align:right; color:#<?=$color[intval($fourteen_retention_p/18)]?>; <?=$days<14 ? 'background:#ddd;' : ''?>">
 				    <?=round($fourteen_retention_p, 2)."%"?>
 				</td>	
-				<td style="text-align:right; <?=$days<29 ? 'background:#ddd;' : ''?>"><?=number_format($row->thirty_retention_count)?></td>
-				<td style="text-align:right; color:#<?=$color[intval($thirty_retention_p/18)]?>; <?=$days<29 ? 'background:#ddd;' : ''?>">
+				<td style="text-align:right; <?=$days<30 ? 'background:#ddd;' : ''?>"><?=number_format($row->thirty_retention_count)?></td>
+				<td style="text-align:right; color:#<?=$color[intval($thirty_retention_p/18)]?>; <?=$days<30 ? 'background:#ddd;' : ''?>">
 				    <?=round($thirty_retention_p, 2)."%"?>
 				</td>																		
 			</tr>
