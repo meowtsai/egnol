@@ -75,7 +75,7 @@
 			foreach($query->result() as $row):
 				$startdate = strtotime($row->date);
 				$enddate = strtotime(date("Y-m-d"));
-				$days = round(($enddate-$startdate)/3600/24) ;
+				$days = floor(($enddate-$startdate)/3600/24) ;
                 $new_character_p = (($row->new_login_count>0)?$row->new_character_count/$row->new_login_count:0)*100;	
                 $one_retention_p = (($row->one_retention_count>0)?$row->one_retention_count/$row->new_login_count:0)*100;
                 $three_retention_p = (($row->three_retention_count>0)?$row->three_retention_count/$row->new_login_count:0)*100;
