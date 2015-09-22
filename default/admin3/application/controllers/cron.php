@@ -1135,89 +1135,63 @@ class Cron extends CI_Controller {
 	function cron_bundle($date="") {
 		ini_set('max_execution_time', 9999);
 		
-		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));	
-		$date_1=date("Y-m-d",strtotime("-1 days", strtotime($date)));
-		$date_3=date("Y-m-d",strtotime("-3 days", strtotime($date)));
-		$date_7=date("Y-m-d",strtotime("-7 days", strtotime($date)));
-		$date_14=date("Y-m-d",strtotime("-14 days", strtotime($date)));
-		$date_30=date("Y-m-d",strtotime("-30 days", strtotime($date)));
-		
-		$start_time = time();
-		$this->generate_login_statistics($date);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_new_character_statistics($date);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_retention_statistics($date, 1);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_retention_statistics($date, 3);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_retention_statistics($date, 7);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_retention_statistics($date, 14);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_retention_statistics($date, 30);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_retention_statistics($date, 1, 'daily', FALSE);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_return_statistics($date, 1);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_return_statistics($date, 3);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_billing_statistics($date);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_consume_statistics($date);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_new_consume_statistics($date);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_game_time_statistics($date);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_paid_game_time_statistics($date);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_peak_statistics($date);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_user_game_length_statistics($date);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_new_user_game_length_statistics($date);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_deposit_user_game_length_statistics($date);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_new_deposit_user_game_length_statistics($date);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_new_user_lifetime_value_statistics($date, 1);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_new_user_lifetime_value_statistics($date, 7);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_new_user_lifetime_value_statistics($date, 14);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_new_user_lifetime_value_statistics($date, 30);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_new_user_lifetime_value_statistics($date, 60);
-		$start_time = $this->echo_passed_time($start_time);
-		$this->generate_new_user_lifetime_value_statistics($date, 90);
-		$start_time = $this->echo_passed_time($start_time);
-		
-		if ("7"==date("N", strtotime($date))) {
-			$this->generate_login_statistics($date, 'weekly');
-			$start_time = $this->echo_passed_time($start_time);
-			$date_week=date("Y-m-d",strtotime("-1 week", strtotime($date)));
-			$this->generate_retention_statistics($date_week, 1, 'weekly');
-			$start_time = $this->echo_passed_time($start_time);
-			$this->generate_retention_statistics($date_week, 1, 'weekly', FALSE);
-			$start_time = $this->echo_passed_time($start_time);
-			$this->generate_return_statistics($date, 1, 'weekly');
-			$start_time = $this->echo_passed_time($start_time);
+		if (empty($date)) {
+			$check_date=date("Y-m-d",strtotime("-1 days"));
+		    $date_1="";
+		    $date_3="";
+		    $date_7="";
+		    $date_14="";
+		    $date_30="";
+	    } else {
+			$check_date=$date;
+		    $date_1=date("Y-m-d",strtotime("-1 days", strtotime($date)));
+		    $date_3=date("Y-m-d",strtotime("-3 days", strtotime($date)));
+		    $date_7=date("Y-m-d",strtotime("-7 days", strtotime($date)));
+		    $date_14=date("Y-m-d",strtotime("-14 days", strtotime($date)));
+		    $date_30=date("Y-m-d",strtotime("-30 days", strtotime($date)));
 		}
 		
-		if ($date==date("Y-m-t", strtotime($date))) {
+		$this->generate_login_statistics($date);
+		$this->generate_new_character_statistics($date);
+		$this->generate_retention_statistics($date_1, 1);
+		$this->generate_retention_statistics($date_3, 3);
+		$this->generate_retention_statistics($date_7, 7);
+		$this->generate_retention_statistics($date_14, 14);
+		$this->generate_retention_statistics($date_30, 30);
+		$this->generate_retention_statistics($date_1, 1, 'daily', FALSE);
+		$this->generate_return_statistics($date, 1);
+		$this->generate_return_statistics($date, 3);
+		$this->generate_billing_statistics($date);
+		$this->generate_consume_statistics($date);
+		$this->generate_new_consume_statistics($date);
+		$this->generate_game_time_statistics($date);
+		$this->generate_paid_game_time_statistics($date);
+		$this->generate_peak_statistics($date);
+		$this->generate_user_game_length_statistics($date);
+		$this->generate_new_user_game_length_statistics($date);
+		$this->generate_deposit_user_game_length_statistics($date);
+		$this->generate_new_deposit_user_game_length_statistics($date);
+		$this->generate_new_user_lifetime_value_statistics($date, 1);
+		$this->generate_new_user_lifetime_value_statistics($date, 7);
+		$this->generate_new_user_lifetime_value_statistics($date, 14);
+		$this->generate_new_user_lifetime_value_statistics($date, 30);
+		$this->generate_new_user_lifetime_value_statistics($date, 60);
+		$this->generate_new_user_lifetime_value_statistics($date, 90);
+		
+		if ("7"==date("N", strtotime($check_date))) {
+			$this->generate_login_statistics($date, 'weekly');
+			$date_week=date("Y-m-d",strtotime("-1 week", strtotime($check_date)));
+			$this->generate_retention_statistics($date_week, 1, 'weekly');
+			$this->generate_retention_statistics($date_week, 1, 'weekly', FALSE);
+			$this->generate_return_statistics($date, 1, 'weekly');
+		}
+		
+		if ($date==date("Y-m-t", strtotime($check_date))) {
 			$this->generate_login_statistics($date, 'monthly');
-			$start_time = $this->echo_passed_time($start_time);
-			$date_month=date("Y-m-t",strtotime("-31 days", strtotime($date)));
+			$date_month=date("Y-m-t",strtotime("-31 days", strtotime($check_date)));
 			$this->generate_retention_statistics($date_month, 1, 'monthly');
-			$start_time = $this->echo_passed_time($start_time);
 			$this->generate_retention_statistics($date_month, 1, 'monthly', FALSE);
-			$start_time = $this->echo_passed_time($start_time);
 			$this->generate_return_statistics($date, 1, 'monthly');
-			$start_time = $this->echo_passed_time($start_time);
 		}
 	}
 	
