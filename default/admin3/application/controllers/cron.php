@@ -49,12 +49,12 @@ class Cron extends CI_Controller {
 					
 			        $date_blanks = date("Y-m-d",strtotime("-32 days"));
 		            for ($i=$date_blanks;$i <= $date;$i = date("Y-m-d",strtotime("+1 day", strtotime($i)))) {
-			            $data = array(
+			            $data2 = array(
 				            'game_id' => $row->game_id,
 				            'date' => $i
 			            );
 			
-			            $this->save_statistics($data, $save_table);
+			            $this->save_statistics($data2, $save_table);
 		            }
 		        }
 		    }
@@ -1172,18 +1172,17 @@ class Cron extends CI_Controller {
 	}
 	
 	function save_statistics($data, $save_table="statistics") {
-		$game_id = $data['game_id'];
 		
 		$statistics = $this->DB2->where("game_id", $data['game_id'])->where("date", $data['date'])->get($save_table);
 		
 		if ($statistics->num_rows() > 0) {
-                        echo "[update]";
+            echo "[update]";
 			$this->DB1->where("game_id", $data['game_id'])->where("date", $data['date'])->update($save_table, $data);
 		} else {
-                        echo "[insert]";
+            echo "[insert]";
 			$this->DB1->insert($save_table, $data);
 		}
-                echo "[".$save_table."][".$data['game_id']."][".$data['date']."]";
+        echo "[".$save_table."][".$data['game_id']."][".$data['date']."]";
 	}
 	
 	function cron_bundle($date="") {

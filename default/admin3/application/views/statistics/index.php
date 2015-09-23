@@ -51,15 +51,15 @@
 			</tr>
 			<tr>
 				<td nowrap="nowrap">次日留存</td>
-				<td style="text-align:right"><?=number_format($row0[0]->one_retention_count)?></td>
-				<td style="text-align:right"><?=(isset($row1[0]))?number_format(($row1[0]->one_retention_count)?100*$row0[0]->one_retention_count/$row1[0]->one_retention_count:0).'%':""?></td>
-				<td style="text-align:right"><?=(isset($row2[0]))?number_format(($row2[0]->one_retention_count)?100*$row0[0]->one_retention_count/$row2[0]->one_retention_count:0).'%':""?></td>																
+				<td style="text-align:right"><?=number_format(($row0[0]->new_login_count_1)?$row0[0]->one_retention_count/$row0[0]->new_login_count_1:0)?></td>
+				<td style="text-align:right"><?=(isset($row1[0]))?number_format(($row1[0]->one_retention_count&&$row0[0]->new_login_count_1&&$row1[0]->new_login_count_1)?100*($row0[0]->one_retention_count/$row0[0]->new_login_count_1)/($row1[0]->one_retention_count/$row1[0]->new_login_count_1):0).'%':""?></td>
+				<td style="text-align:right"><?=(isset($row2[0]))?number_format(($row2[0]->one_retention_count&&$row0[0]->new_login_count_1&&$row2[0]->new_login_count_1)?100*($row0[0]->one_retention_count/$row0[0]->new_login_count_1)/($row2[0]->one_retention_count/$row2[0]->new_login_count_1):0).'%':""?></td>																
 			</tr>
 			<tr>
 				<td nowrap="nowrap">7日留存</td>
-				<td style="text-align:right"><?=number_format($row0[0]->seven_retention_count)?></td>
-				<td style="text-align:right"><?=(isset($row1[0]))?number_format(($row1[0]->seven_retention_count)?100*$row0[0]->seven_retention_count/$row1[0]->seven_retention_count:0).'%':""?></td>
-				<td style="text-align:right"><?=(isset($row2[0]))?number_format(($row2[0]->seven_retention_count)?100*$row0[0]->seven_retention_count/$row2[0]->seven_retention_count:0).'%':""?></td>																
+				<td style="text-align:right"><?=number_format(($row0[0]->new_login_count_7)?$row0[0]->seven_retention_count/$row0[0]->new_login_count_7:0)?></td>
+				<td style="text-align:right"><?=(isset($row1[0]))?number_format(($row1[0]->seven_retention_count&&$row0[0]->new_login_count_7&&$row1[0]->new_login_count_7)?100*($row0[0]->seven_retention_count/$row0[0]->new_login_count_7)/($row1[0]->seven_retention_count/$row1[0]->new_login_count_7):0).'%':""?></td>
+				<td style="text-align:right"><?=(isset($row2[0]))?number_format(($row2[0]->seven_retention_count&&$row0[0]->new_login_count_7&&$row2[0]->new_login_count_7)?100*($row0[0]->seven_retention_count/$row0[0]->new_login_count_7)/($row2[0]->seven_retention_count/$row2[0]->new_login_count_7):0).'%':""?></td>																
 			</tr>
 			<tr>
 				<td nowrap="nowrap">登入設備</td>
