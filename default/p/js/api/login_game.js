@@ -16,6 +16,7 @@ $(function()
 		   });
 		   if (err)
 		   {
+		        $('#continue').show();
 				leOpenDialog('µn¤J¿ù»~', err, leDialogType.MESSAGE);
 		   }
 		},
@@ -32,6 +33,7 @@ $(function()
 					}
 					else
 					{
+		                $('#continue').show();
 						leOpenDialog('µn¤J¿ù»~', json.message, leDialogType.MESSAGE);
 					}
 				}		

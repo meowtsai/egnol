@@ -81,7 +81,7 @@
 		
 		<form id="login_form" method="post" action="#">
 		    <div-->
-				<input type="button" name="continue" id="continue" value="進入遊戲" onclick="javascript:$('#doSubmit').trigger('click')" />
+				<input type="button" name="continue" id="continue" value="進入遊戲" onclick="javascript:$('#doSubmit').trigger('click');$(this).hide();" />
 		    </div>
 		    </div>
 		</form>
