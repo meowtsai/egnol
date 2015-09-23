@@ -456,8 +456,6 @@ class Statistics extends MY_Controller {
 		    FROM statistics stc
 		    RIGHT JOIN statistics stc2 ON stc.game_id=stc2.game_id AND stc.date=DATE_ADD(stc2.date, interval 1 day)
 		    WHERE stc.game_id = '{$game_id}'
-		    AND stc.date >= '{$start_date}'
-		    AND stc.date <= '{$end_date}'
 		    AND stc.date BETWEEN '{$start_date}' AND '{$end_date}')
 		    ORDER BY date DESC
 		    ");

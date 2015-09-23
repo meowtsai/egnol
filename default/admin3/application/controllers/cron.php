@@ -9,6 +9,60 @@ class Cron extends CI_Controller {
         $this->DB2 = $this->load->database('long_e_2', TRUE);			
 	}
 	
+	function generate_statistics_blank($date="", $span="daily")
+	{
+		$this->lang->load('db_lang', 'zh-TW');
+		
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
+		
+        switch($span) {
+			case "weekly":
+				$save_table = "weekly_statistics";
+				break;
+			
+			case "monthly":
+				$save_table = "monthly_statistics";
+				break;
+				
+			default:
+				$save_table = "statistics";
+				break;
+		}
+
+        $query = $this->DB2->from("games")->where("is_active", 1)->get();
+
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+				
+                $query2 = $this->DB2->from($save_table)->where("game_id", $row->game_id)->limit(1)->get();
+
+		        if ($query2->num_rows() > 0) {
+					
+			        $data = array(
+			            'game_id' => $row->game_id,
+			            'date' => $date
+			        );
+			
+			        $this->save_statistics($data, $save_table);
+					
+		        } elseif($span=="daily") {
+					
+			        $date_blanks = date("Y-m-d",strtotime("-32 days"));
+		            for ($i=$date_blanks;$i <= $date;$i = date("Y-m-d",strtotime("+1 day", strtotime($i)))) {
+			            $data = array(
+				            'game_id' => $row->game_id,
+				            'date' => $i
+			            );
+			
+			            $this->save_statistics($data, $save_table);
+		            }
+		        }
+		    }
+		}
+		
+		echo "generate_".$span."_statistics_blank done - ".$date.PHP_EOL;
+	}
+	
 	function generate_nation_by_ip($date="")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
@@ -1150,7 +1204,7 @@ class Cron extends CI_Controller {
 		    $date_14=date("Y-m-d",strtotime("-14 days", strtotime($date)));
 		    $date_30=date("Y-m-d",strtotime("-30 days", strtotime($date)));
 		}
-		
+		$this->generate_statistics_blank($date);
 		$this->generate_login_statistics($date);
 		$this->generate_new_character_statistics($date);
 		$this->generate_retention_statistics($date_1, 1);
@@ -1179,6 +1233,7 @@ class Cron extends CI_Controller {
 		$this->generate_new_user_lifetime_value_statistics($date, 90);
 		
 		if ("7"==date("N", strtotime($check_date))) {
+		    $this->generate_statistics_blank($date, 'weekly');
 			$this->generate_login_statistics($date, 'weekly');
 			$date_week=date("Y-m-d",strtotime("-1 week", strtotime($check_date)));
 			$this->generate_retention_statistics($date_week, 1, 'weekly');
@@ -1187,6 +1242,7 @@ class Cron extends CI_Controller {
 		}
 		
 		if ($date==date("Y-m-t", strtotime($check_date))) {
+		    $this->generate_statistics_blank($date, 'monthly');
 			$this->generate_login_statistics($date, 'monthly');
 			$date_month=date("Y-m-t",strtotime("-31 days", strtotime($check_date)));
 			$this->generate_retention_statistics($date_month, 1, 'monthly');
