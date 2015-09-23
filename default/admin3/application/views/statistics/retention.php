@@ -83,6 +83,7 @@
                 $fourteen_retention_p = (($row->fourteen_retention_count>0)?$row->fourteen_retention_count/$row->new_login_count:0)*100;
                 $thirty_retention_p = (($row->thirty_retention_count>0)?$row->thirty_retention_count/$row->new_login_count:0)*100;	
 		?>
+		<!--<?=$startdate?> <?=$enddate?> <?=$days?>-->
 			<tr>			
 				<td nowrap="nowrap"><?=$row->date?></td>
 				<td style="text-align:right"><?=number_format($row->new_login_count)?></td>
