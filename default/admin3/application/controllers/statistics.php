@@ -232,7 +232,7 @@ class Statistics extends MY_Controller {
 		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
 		$game_id = $this->input->get("game_id");
 					
-		$query = $this->DB2->where("game_id", $game_id)->where("date >=", $start_date)->where("date <=", $end_date)->order_by("date", "asc")->get("statistics");
+		$query = $this->DB2->where("game_id", $game_id)->where("date >=", $start_date)->where("date <=", $end_date)->order_by("date", "desc")->get("statistics");
         
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
