@@ -314,6 +314,7 @@ class Api extends MY_Controller
 
 		$_SESSION['site'] = '';
 		$_SESSION['server_mode'] = '';
+		$_SESSION['server_id'] = '';
 
 		unset($_SESSION['site']);
 		unset($_SESSION['server_mode']);
