@@ -15,7 +15,7 @@
 		<select name="site" style="width:90px;">
 			<option value="">--</option>
 			<? foreach($servers as $site => $arr):?>
-			<option value="<?=$site?>" <?=($this->input->get("site")==$site ? 'selected="selected"' : '')?>><?=$site?></option>
+			<option value="<?=$site?>" <?=($this->input->get("site")==$site ? 'selected="selected"' : '')?>><?=$arr['name']?></option>
 			<? endforeach;?>
 		</select>
 		

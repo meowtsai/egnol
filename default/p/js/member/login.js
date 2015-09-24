@@ -1,5 +1,5 @@
-$(function()
-{
+$(document).ready(function()
+{	
 	$("#login_form").validate({
 		onfocusout: false,
 		onkeyup: false,
@@ -24,6 +24,7 @@ $(function()
 		   });
 		   if (err)
 		   {
+		        $('.login-button img').show();
 				leOpenDialog('登入錯誤', err, leDialogType.MESSAGE);
 		   }
 		},
@@ -39,15 +40,22 @@ $(function()
 							location.href = $('#redirect_url').val();
 						else
 							location.href = '/member/index?site='+json.site;
+						
 						return;
 					}
 					else
 					{
+		                $('.login-button img').show();
 						leOpenDialog('登入錯誤', json.message, leDialogType.MESSAGE);
 					}
 				}		
 			});
 		}
 	});
+	
+    $('.login-button img').on('click',function(event){
+		$(this).hide();
+		$('#doSubmit').trigger('click');
+    });
 });
 

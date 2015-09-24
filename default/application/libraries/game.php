@@ -80,7 +80,7 @@ class Game
 		$this->CI->db->insert("log_game_logins", array(
 					'uid' => $uid,
 					'ip' => $_SERVER["REMOTE_ADDR"],
-					'create_time' => now(),
+					//'create_time' => now(),
 					'is_recent' => '1',
 					'server_id' => $server_id,
 					'game_id' => $game_id,
@@ -142,7 +142,7 @@ class Game
 					'uid' => $user->uid,
 					'account' => $user->account,
 					'ip' => $_SERVER["REMOTE_ADDR"],
-					'create_time' => now(),
+					//'create_time' => now(),
 					'is_recent' => '1',
 					'server_id' => $server->server_id,
 					'ad' => empty($ad) ? '' : $ad,

@@ -1,4 +1,4 @@
-$(function()
+$(document).ready(function()
 {
 	$("#login_form").validate({
 		onfocusout: false,
@@ -24,6 +24,7 @@ $(function()
 		   });
 		   if (err)
 		   {
+		        $('.login-button img').show();
 				leOpenDialog('登入錯誤', err, leDialogType.MESSAGE);
 		   }
 		},
@@ -40,12 +41,18 @@ $(function()
 					}
 					else
 					{
+		                $('.login-button img').show();
 						leOpenDialog('登入錯誤', json.message, leDialogType.MESSAGE);
 					}
 				}		
 			});
 		}
 	});
+	
+    $('.login-button img').on('click',function(event){
+		$(this).hide();
+		$('#doSubmit').trigger('click');
+    });
 });
 
 function OnQuickLogin(deviceId, gameId)

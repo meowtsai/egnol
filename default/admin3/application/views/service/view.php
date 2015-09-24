@@ -211,7 +211,6 @@
 
 
 
-龍邑科技感謝您的支持！祝您遊戲愉快！
 ***龍邑科技客服中心敬上***</textarea>
 		
 		<div class="form-actions">

@@ -33,6 +33,9 @@ class Statistics extends MY_Controller {
 		$date[2] = date("Y-m-d",strtotime("-8 days"));
 		
 		foreach($date as $k => $d) {
+			$d_1=date("Y-m-d",strtotime("-1 days", strtotime($d)));
+			$d_7=date("Y-m-d",strtotime("-7 days", strtotime($d)));
+			
 			$name = 'query'.$k;
 			$$name = $this->DB2->query("
 				SELECT
@@ -50,14 +53,28 @@ class Statistics extends MY_Controller {
 						SUM(consume_total) 'consume_total',
 						SUM(peak_user_count) 'peak_user_count',
 						SUM(total_time) 'total_time',
-						SUM(one_retention_all_count) 'one_retention_all_count',
-						SUM(one_retention_count) 'one_retention_count',
-						SUM(seven_retention_count) 'seven_retention_count',
 						SUM(one_ltv) 'one_ltv'
 					FROM statistics
 					WHERE date = '{$d}'
 					GROUP by date
-				) a,
+				) main,
+				(
+					SELECT 
+						SUM(new_login_count) 'new_login_count_1',
+						SUM(one_retention_all_count) 'one_retention_all_count',
+						SUM(one_retention_count) 'one_retention_count'
+					FROM statistics
+					WHERE date = '{$d_1}'
+					GROUP by date
+				) main_1,
+				(
+					SELECT 
+						SUM(new_login_count) 'new_login_count_7',
+						SUM(seven_retention_count) 'seven_retention_count'
+					FROM statistics
+					WHERE date = '{$d_7}'
+					GROUP by date
+				) main_7,
 				(
 					SELECT
 						SUM(new_login_count) 'total_users',
@@ -215,7 +232,7 @@ class Statistics extends MY_Controller {
 		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
 		$game_id = $this->input->get("game_id");
 					
-		$query = $this->DB2->where("game_id", $game_id)->where("date >=", $start_date)->where("date <=", $end_date)->get("statistics");
+		$query = $this->DB2->where("game_id", $game_id)->where("date >=", $start_date)->where("date <=", $end_date)->order_by("date", "desc")->get("statistics");
         
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
@@ -456,8 +473,6 @@ class Statistics extends MY_Controller {
 		    FROM statistics stc
 		    RIGHT JOIN statistics stc2 ON stc.game_id=stc2.game_id AND stc.date=DATE_ADD(stc2.date, interval 1 day)
 		    WHERE stc.game_id = '{$game_id}'
-		    AND stc.date >= '{$start_date}'
-		    AND stc.date <= '{$end_date}'
 		    AND stc.date BETWEEN '{$start_date}' AND '{$end_date}')
 		    ORDER BY date DESC
 		    ");

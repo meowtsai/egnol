@@ -16,6 +16,7 @@ $(function()
 		   });
 		   if (err)
 		   {
+		        $('#continue').show();
 				leOpenDialog('登入錯誤', err, leDialogType.MESSAGE);
 		   }
 		},
@@ -32,6 +33,7 @@ $(function()
 					}
 					else
 					{
+		                $('#continue').show();
 						leOpenDialog('登入錯誤', json.message, leDialogType.MESSAGE);
 					}
 				}		

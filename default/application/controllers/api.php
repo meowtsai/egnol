@@ -201,7 +201,7 @@ class Api extends MY_Controller
 		$data = array(
 			'uid' => $_SESSION['user_id'],
 			'ip' => $_SERVER["REMOTE_ADDR"],
-			'create_time' => now(),
+			//'create_time' => now(),
 			'is_recent' => '1',
 			'is_first' => $is_first,
 			'ad' => $ad,
@@ -327,9 +327,11 @@ class Api extends MY_Controller
 
 		$_SESSION['site'] = '';
 		$_SESSION['server_mode'] = '';
+		$_SESSION['server_id'] = '';
 
 		unset($_SESSION['site']);
 		unset($_SESSION['server_mode']);
+		unset($_SESSION['server_id']);
 
 		header('Content-type:text/html; Charset=UTF-8');
 		//echo "<script type='text/javascript'>LongeAPI.onLogoutSuccess()</script>";

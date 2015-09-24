@@ -24,7 +24,7 @@
 	<div class="control-group">
 		
 		<select name="game_id">
-		    <option value="">--</option>
+		    <option value="">--請選擇遊戲--</option>
 			<?
 			foreach($c_game_menu as $category => $c_menu):?>
 				<option value=""> -------- <?=$category?> --------</option>
@@ -36,7 +36,7 @@
 	    </select>
 		
 		時間
-		<input type="text" name="start_date" class="date required" value="<?=$this->input->get("start_date")?>" style="width:120px"> 至
+		<input type="text" name="start_date" class="date required" value="<?=($this->input->get("start_date"))?$this->input->get("start_date"):date("Y-m-d",strtotime("-8 days"))?>" style="width:120px"> 至
 		<input type="text" name="end_date" class="date" value="<?=$this->input->get("end_date")?>" style="width:120px" placeholder="現在">
 		<a href="javascript:;" class="clear_date"><i class="icon-remove-circle" title="清除"></i></a>
 		
@@ -57,7 +57,7 @@
 		<thead>
 			<tr>
 				<th nowrap="nowrap" rowspan="2">日期</th>
-				<th style="width:70px" rowspan="2">登入數</th>
+				<th style="width:70px" rowspan="2">新增用戶</th>
 				<th style="width:70px" rowspan="2">創角數</th>
 				<th style="width:70px" rowspan="2">創角<Br>留存率</th>
 				<th style="width:140px" colspan="2">次日</th>
@@ -71,11 +71,11 @@
 			</tr>
 		</thead>
 		<tbody>
-		<? $color = array('00aa00', '448800', '776600', 'aa4400', 'dd2200', 'ff0000');
+		<? $color = array('dd2200', 'aa4400', 'aa4400', 'aa4400', '448800', '448800', '448800', '448800', '00aa00', '00aa00', '00aa00');
 			foreach($query->result() as $row):
 				$startdate = strtotime($row->date);
-				$enddate = time();
-				$days = round(($enddate-$startdate)/3600/24) ;
+				$enddate = strtotime(date("Y-m-d"));
+				$days = floor(($enddate-$startdate)/3600/24) ;
                 $new_character_p = (($row->new_login_count>0)?$row->new_character_count/$row->new_login_count:0)*100;	
                 $one_retention_p = (($row->one_retention_count>0)?$row->one_retention_count/$row->new_login_count:0)*100;
                 $three_retention_p = (($row->three_retention_count>0)?$row->three_retention_count/$row->new_login_count:0)*100;
@@ -83,31 +83,32 @@
                 $fourteen_retention_p = (($row->fourteen_retention_count>0)?$row->fourteen_retention_count/$row->new_login_count:0)*100;
                 $thirty_retention_p = (($row->thirty_retention_count>0)?$row->thirty_retention_count/$row->new_login_count:0)*100;	
 		?>
+		<!--<?=$startdate?> <?=$enddate?> <?=$days?>-->
 			<tr>			
 				<td nowrap="nowrap"><?=$row->date?></td>
 				<td style="text-align:right"><?=number_format($row->new_login_count)?></td>
 				<td style="text-align:right"><?=number_format($row->new_character_count)?></td>
-				<td style="text-align:right; color:#<?=$color[intval($new_character_p/18)]?>">
+				<td style="text-align:right; color:#<?=$color[intval($new_character_p/10)]?>">
 				    <?=round($new_character_p, 2)."%"?>
 				</td>
-				<td style="text-align:right; <?=$days<2 ? 'background:#ddd;' : ''?>"><?=number_format($row->one_retention_count)?></td>
-				<td style="text-align:right; color:#<?=$color[intval($one_retention_p/18)]?>; <?=$days<2 ? 'background:#ddd;' : ''?>">
+				<td style="text-align:right; <?=$days<2 ? 'background:#ddd;color:#ddd;' : ''?>"><?=number_format($row->one_retention_count)?></td>
+				<td style="text-align:right; color:#<?=$days<2?'ddd':$color[intval($one_retention_p/10)]?>; <?=$days<2 ? 'background:#ddd;' : ''?>">
 				    <?=round($one_retention_p, 2)."%"?>
 				</td>
-				<td style="text-align:right; <?=$days<2 ? 'background:#ddd;' : ''?>"><?=number_format($row->three_retention_count)?></td>
-				<td style="text-align:right; color:#<?=$color[intval($three_retention_p/18)]?>; <?=$days<3 ? 'background:#ddd;' : ''?>">
+				<td style="text-align:right; <?=$days<4 ? 'background:#ddd;color:#ddd;' : ''?>"><?=number_format($row->three_retention_count)?></td>
+				<td style="text-align:right; color:#<?=$days<4?'ddd':$color[intval($three_retention_p/10)]?>; <?=$days<4 ? 'background:#ddd;' : ''?>">
 				    <?=round($three_retention_p, 2)."%"?>
 				</td>
-				<td style="text-align:right; <?=$days<7 ? 'background:#ddd;' : ''?>"><?=number_format($row->seven_retention_count)?></td>
-				<td style="text-align:right; color:#<?=$color[intval($seven_retention_p/18)]?>; <?=$days<7 ? 'background:#ddd;' : ''?>">
+				<td style="text-align:right; <?=$days<8 ? 'background:#ddd;color:#ddd;' : ''?>"><?=number_format($row->seven_retention_count)?></td>
+				<td style="text-align:right; color:#<?=$days<8?'ddd':$color[intval($seven_retention_p/10)]?>; <?=$days<8 ? 'background:#ddd;' : ''?>">
 				    <?=round($seven_retention_p, 2)."%"?>
 				</td>
-				<td style="text-align:right; <?=$days<15 ? 'background:#ddd;' : ''?>"><?=number_format($row->fourteen_retention_count)?></td>
-				<td style="text-align:right; color:#<?=$color[intval($fourteen_retention_p/18)]?>; <?=$days<14 ? 'background:#ddd;' : ''?>">
+				<td style="text-align:right; <?=$days<15 ? 'background:#ddd;color:#ddd;' : ''?>"><?=number_format($row->fourteen_retention_count)?></td>
+				<td style="text-align:right; color:#<?=$days<15?'ddd':$color[intval($fourteen_retention_p/10)]?>; <?=$days<15 ? 'background:#ddd;' : ''?>">
 				    <?=round($fourteen_retention_p, 2)."%"?>
 				</td>	
-				<td style="text-align:right; <?=$days<30 ? 'background:#ddd;' : ''?>"><?=number_format($row->thirty_retention_count)?></td>
-				<td style="text-align:right; color:#<?=$color[intval($thirty_retention_p/18)]?>; <?=$days<30 ? 'background:#ddd;' : ''?>">
+				<td style="text-align:right; <?=$days<31 ? 'background:#ddd;color:#ddd;' : ''?>"><?=number_format($row->thirty_retention_count)?></td>
+				<td style="text-align:right; color:#<?=$days<31?'ddd':$color[intval($thirty_retention_p/10)]?>; <?=$days<31 ? 'background:#ddd;' : ''?>">
 				    <?=round($thirty_retention_p, 2)."%"?>
 				</td>																		
 			</tr>
