@@ -16,7 +16,7 @@ $(function()
 		   });
 		   if (err)
 		   {
-				leOpenDialog('µn¤J¿ù»~', err, leDialogType.MESSAGE);
+				leOpenDialog('ç™»å…¥éŒ¯èª¤', err, leDialogType.MESSAGE);
 		   }
 		},
 		submitHandler: function(form)
@@ -32,7 +32,7 @@ $(function()
 					}
 					else
 					{
-						leOpenDialog('µn¤J¿ù»~', json.message, leDialogType.MESSAGE);
+						leOpenDialog('ç™»å…¥éŒ¯èª¤', json.message, leDialogType.MESSAGE);
 					}
 				}		
 			});
