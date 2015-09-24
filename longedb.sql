@@ -709,3 +709,12 @@ CREATE TABLE `event_serial` (
   UNIQUE KEY `serial_UNIQUE` (`serial`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /* personal_id 欄位為使用在發獎勵給非會員時用來辨認使用者身分 */;
+
+
+CREATE TABLE `log_event_serial` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `event_id` int(11) NOT NULL,
+  `count` int(11) NOT NULL,
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

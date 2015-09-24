@@ -50,12 +50,12 @@ class Api extends MY_Controller
 		if(!$this->g_user->is_login())
 		{
 			// 未登入, 直接進入登入畫面
-			$partner    = $this->input->get("partner");
-			$game_key   = $this->input->get("gamekey");
-			$device_id	= $this->input->get("deviceid");
+			$partner    = $this->input->get_post("partner");
+			$game_key   = $this->input->get_post("gamekey");
+			$device_id	= $this->input->get_post("deviceid");
 
 			// server 登入選擇模式, 0 = 不選擇(default), 1 = 登入後選擇
-			$server_mode = $this->input->get("servermode");
+			$server_mode = $this->input->get_post("servermode");
 			if(empty($server_mode))
 			{
 				$server_mode = 0;
@@ -85,8 +85,8 @@ class Api extends MY_Controller
 		else if (!isset($_SESSION['server_id']))
 		{
 			// 已登入, 改顯示會員畫面
-			$partner    = $this->input->get("partner");
-			$game_key   = $this->input->get("gamekey");
+			$partner    = $this->input->get_post("partner");
+			$game_key   = $this->input->get_post("gamekey");
 			$server_mode = empty($_SESSION['server_mode']) ? 0 : $_SESSION['server_mode'];
 			$servers = null;
 			
@@ -307,6 +307,19 @@ class Api extends MY_Controller
 		}
 	}
 
+	// 更換帳號
+	function ui_change_account()
+	{
+		// 登出然後跳回登入畫面
+		header('content-type:text/html; charset=utf-8');
+
+		$site = $this->_get_site();
+		
+		$this->g_user->logout();
+		
+        echo "<script type='text/javascript'>location.href='/api/ui_login?site={$site}'</script>";
+	}
+	
 	// 帳號登出
 	function ui_logout()
 	{
@@ -576,13 +589,45 @@ class Api extends MY_Controller
 	// 點數儲值
 	function ui_payment()
 	{
-		$this->_require_login();
+		$site = $this->_get_site();
+		$server_id = $this->input->get_post("serverid");
+		
+		if(!$this->g_user->is_login())
+		{
+			if(!empty($this->input->get_post("pcode")))
+			{
+				// 免輸入登入機制(Session 失效時使用)
+				$partner		= $this->input->get_post("partner");
+				$email			= $this->input->get_post("email");
+				$mobile			= $this->input->get_post("mobile");
+				$external_id	= $this->input->get_post("device_id")."@device";
+				$pcode			= $this->input->get_post("pcode");
+				
+				$this->load->config("api");
+				$partner_conf = $this->config->item("partner_api");
+				if(!array_key_exists($partner, $partner_conf))
+				{
+					die();
+				}
+				if(!array_key_exists($site, $partner_conf[$partner]["sites"]))
+				{
+					die();
+				}
+				$partner_game = $partner_api[$partner]["sites"][$site];
+
+				$chk_code = md5($partner.$email.$server_id.$mobile.$partner_game['key']);
+				if($chk_code != $pcode)
+					die();
+				
+				if(!$this->g_user->verify_account($email, $mobile, '', $external_id))
+					die();
+			}
+			else
+				$this->_require_login();
+		}
 
 		$this->load->config("g_gash");
 		$this->load->config("payment");
-
-		$site = $this->_get_site();
-		$server_id = $this->input->get("serverid");
 
 		// 讀取遊戲列表
 		$games = $this->db->from("games")->where("is_active", "1")->get();

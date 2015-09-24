@@ -45,14 +45,16 @@
 
 			<div class="login-button">
 				<p>
-					<a href="<?=$api_url?>api/ui_change_password?site=<?=$site?>" title="login"><img src="<?=$longe_url?>p/image/member/password.png" class="button_info"></a>&nbsp;
+					<a href="<?=$api_url?>api/ui_change_account?site=<?=$site?>" title="更換帳號"><img src="<?=$longe_url?>p/image/member/change_usr.png" class="button_info"></a>&nbsp;
+					<a href="<?=$api_url?>api/ui_change_password?site=<?=$site?>" title="修改密碼"><img src="<?=$longe_url?>p/image/member/password.png" class="button_info"></a>
 				</p>
 <? else: ?>
 			</table>
 
 			<div class="login-button">
 				<p>
-					<a href="<?=$api_url?>api/ui_bind_account?site=<?=$site?>" title="login"><img src="<?=$longe_url?>p/image/member/id.png" class="button_info"></a>
+					<a href="<?=$api_url?>api/ui_change_account?site=<?=$site?>" title="更換帳號"><img src="<?=$longe_url?>p/image/member/change_usr.png" class="button_info"></a>&nbsp;
+					<a href="<?=$api_url?>api/ui_bind_account?site=<?=$site?>" title="綁定帳號"><img src="<?=$longe_url?>p/image/member/id.png" class="button_info"></a>
 				</p>
 <? endif; ?>
 <? if($server_mode == 1): ?>
@@ -81,7 +83,7 @@
 		
 		<form id="login_form" method="post" action="#">
 		    <div-->
-				<input type="button" name="continue" id="continue" value="進入遊戲" onclick="javascript:$('#doSubmit').trigger('click');$(this).hide();" />
+				<img id="continue" style="cursor:pointer;" src="<?=$longe_url?>p/image/member/enter.png" onclick="javascript:$('#doSubmit').trigger('click')" />
 		    </div>
 		    </div>
 		</form>
