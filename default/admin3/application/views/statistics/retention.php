@@ -57,7 +57,7 @@
 		<thead>
 			<tr>
 				<th nowrap="nowrap" rowspan="2">日期</th>
-				<th style="width:70px" rowspan="2">登入數</th>
+				<th style="width:70px" rowspan="2">新增用戶</th>
 				<th style="width:70px" rowspan="2">創角數</th>
 				<th style="width:70px" rowspan="2">創角<Br>留存率</th>
 				<th style="width:140px" colspan="2">次日</th>
