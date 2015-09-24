@@ -318,6 +318,7 @@ class Api extends MY_Controller
 
 		unset($_SESSION['site']);
 		unset($_SESSION['server_mode']);
+		unset($_SESSION['server_id']);
 
 		header('Content-type:text/html; Charset=UTF-8');
 		//echo "<script type='text/javascript'>LongeAPI.onLogoutSuccess()</script>";
