@@ -51,6 +51,20 @@ class Game extends MY_Controller {
 		else die(json_failure("缺少參數"));
 	}
 	
+	function add()
+	{
+		$this->zacl->check("game_setting", "modify");
+		
+		//$this->_chk_game_id();
+		
+		$this->_init_layout();
+		$this->g_layout
+			->add_breadcrumb("遊戲管理", "game")
+			->add_breadcrumb("新增遊戲")
+			->set("row", false)
+			->render("game/modify");
+	}
+	
 	function modify()
 	{	
 		$this->_init_game_layout();			
@@ -66,16 +80,22 @@ class Game extends MY_Controller {
 			else {
 				$tags = $this->input->post("type");
 			}
-			
-			$this->DB1->where("game_id", $this->game_id)
-				->update("games", array(
-						"name" => $this->input->post("name"),
-						"abbr" => $this->input->post("abbr"),
-						"exchange_rate" => $this->input->post("exchange_rate"),
-						"currency" => $this->input->post("currency"),
-						"is_active" => $this->input->post("is_active"),
-						"tags" => $tags,						
-					));			
+						
+			$data = array(
+				"name" => $this->input->post("name"),
+				"abbr" => $this->input->post("abbr"),
+				"exchange_rate" => $this->input->post("exchange_rate"),
+				"currency" => $this->input->post("currency"),
+				"is_active" => $this->input->post("is_active"),
+				"tags" => $tags,						
+			);
+				
+			if ($id = $this->input->post("id")) { //修改
+				$this->DB1->where("game_id", $id)->update("games", $data);
+			} else { //新增
+				$data["game_id"] = $this->input->post("game_id");
+				$this->DB1->insert("games", $data);
+			}		
 			
 			$this->load->library('upload');
 			$config['upload_path'] = g_conf("http_document_root")."long_e/p/img/game/";
@@ -144,21 +164,19 @@ class Game extends MY_Controller {
 			$this->g_layout->set("msg", $msg);
 		}		
 		
-		if ($this->game_id) {
-			$where = array("game_id" => $this->game_id);
-		}
-		else {
-			$where = array("id" => $id);
-		}
+		($this->input->post("game_id"))?$show_game_id=$this->input->post("game_id"):$show_game_id=$this->game_id;
 		
-		$query = $this->DB2->get_where("games", $where);
-		
-		
-		if ($query->num_rows() == 0) {
-			die("無此遊戲");
-		}
-		else {
-			$row = $query->row();
+		if ($show_game_id) {
+		    $query = $this->DB2->get_where("games", array("game_id" => $show_game_id));
+			
+			if ($query->num_rows() == 0) {
+				die("無此遊戲");
+			}
+			else {
+				$row = $query->row();
+			}
+		} else {
+			$row = "";
 		}
 		
 		$this->g_layout
