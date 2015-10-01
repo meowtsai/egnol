@@ -23,7 +23,8 @@ $config["partner_api"] = array(
 );
 
 $config["game_api"] = array(
-	'stm' => array('billing' => 'http://203.66.111.18'),
+	'stm' => array('billing' => 'http://203.66.111.18',
+				  'alive_check' => true),
 );
 
 $config["channel_api"] = array(	

@@ -50,9 +50,14 @@ class Api extends MY_Controller
 		if(!$this->g_user->is_login())
 		{
 			// 未登入, 直接進入登入畫面
-			$partner    = $this->input->get_post("partner");
-			$game_key   = $this->input->get_post("gamekey");
-			$device_id	= $this->input->get_post("deviceid");
+			$partner    = !empty($_SESSION['login_partner']) ? $_SESSION['login_partner'] : $this->input->get_post("partner");
+			$game_key   = !empty($_SESSION['login_gamekey']) ? $_SESSION['login_gamekey'] : $this->input->get_post("gamekey");
+			$device_id	= !empty($_SESSION['login_deviceid']) ? $_SESSION['login_deviceid'] : $this->input->get_post("deviceid");
+			$login_key	= !empty($_SESSION['login_key']) ? $_SESSION['login_key'] : $this->input->get_post("loginkey");
+			$_SESSION['login_partner']	= $partner;
+			$_SESSION['login_gamekey']	= $game_key;
+			$_SESSION['login_deviceid']	= $device_id;
+			$_SESSION['login_key']		= $login_key;
 
 			// server 登入選擇模式, 0 = 不選擇(default), 1 = 登入後選擇
 			$server_mode = $this->input->get_post("servermode");
@@ -62,6 +67,35 @@ class Api extends MY_Controller
 			}
 			$_SESSION['server_mode'] = $server_mode;
 
+			// 免輸入登入機制(Session 失效時使用)
+			if(!empty($login_key))
+			{
+				$keys = explode(",", $login_key);
+				if(count($keys) == 5)
+				{
+					$check_key = md5($partner.$keys[1].$keys[2].$keys[3].$game_key.$device_id);
+					$new_check = "";
+					for($cnt1 = 0; $cnt1 < 16; $cnt1++)
+					{
+						$ch = substr($check_key, $cnt1 * 2, 1);
+						if($ch != "0")
+							$new_check .= substr($check_key, $cnt1 * 2, 1);
+						
+						$new_check .= substr($check_key, $cnt1 * 2 + 1, 1);
+					}
+					if($new_check == $keys[0])
+					{
+						// 登入資訊正確, 自動登入
+						if($this->g_user->verify_account($keys[1], $keys[2], '', $keys[3]))
+						{
+							$_SESSION['site'] = $site;
+							$this->_ui_member();
+							return;
+						}
+					}
+				}
+			}
+			
 			// 載入第三方登入通道種類
 			$this->load->config("api");
 			$channel_api = $this->config->item("channel_api");
@@ -82,12 +116,23 @@ class Api extends MY_Controller
 				->set("channel_item", $channel_item)
 				->api_view();
 		}
-		else if (!isset($_SESSION['server_id']))
+		else
+		{
+			$this->_ui_member();
+		}
+	}
+	
+	function _ui_member()
+	{
+		$site	= $this->_get_site();
+
+		if (!isset($_SESSION['server_id']))
 		{
 			// 已登入, 改顯示會員畫面
-			$partner    = $this->input->get_post("partner");
-			$game_key   = $this->input->get_post("gamekey");
-			$server_mode = empty($_SESSION['server_mode']) ? 0 : $_SESSION['server_mode'];
+			$partner    = !empty($_SESSION['login_partner']) ? $_SESSION['login_partner'] : $this->input->get_post("partner");
+			$game_key   = !empty($_SESSION['login_gamekey']) ? $_SESSION['login_gamekey'] : $this->input->get_post("gamekey");
+			$device_id	= !empty($_SESSION['login_deviceid']) ? $_SESSION['login_deviceid'] : $this->input->get_post("deviceid");
+			$server_mode = !empty($_SESSION['server_mode']) ? $_SESSION['server_mode'] : 0;
 			$servers = null;
 			
 			// 讀取伺服器列表
@@ -96,6 +141,7 @@ class Api extends MY_Controller
 			$this->_init_layout()
 				->set("partner", $partner)
 				->set("game_key", $game_key)
+				->set("device_id", $device_id)
 				->set("server_mode", $server_mode)
 				->set("servers", $servers)
 				->add_css_link("login")
@@ -594,15 +640,18 @@ class Api extends MY_Controller
 		
 		if(!$this->g_user->is_login())
 		{
+			$_SESSION['site'] = $site;
+			
 			if(!empty($this->input->get_post("pcode")))
 			{
 				// 免輸入登入機制(Session 失效時使用)
 				$partner		= $this->input->get_post("partner");
 				$email			= $this->input->get_post("email");
 				$mobile			= $this->input->get_post("mobile");
-				$external_id	= $this->input->get_post("device_id")."@device";
+				$device_id		= $this->input->get_post("deviceid");
+				$external_id	= $this->input->get_post("externalid");
 				$pcode			= $this->input->get_post("pcode");
-				
+				/*
 				$this->load->config("api");
 				$partner_conf = $this->config->item("partner_api");
 				if(!array_key_exists($partner, $partner_conf))
@@ -615,10 +664,10 @@ class Api extends MY_Controller
 				}
 				$partner_game = $partner_api[$partner]["sites"][$site];
 
-				$chk_code = md5($partner.$email.$server_id.$mobile.$partner_game['key']);
-				if($chk_code != $pcode)
-					die();
-				
+				//$chk_code = md5($partner.$email.$server_id.$mobile.$partner_game['key'].$device_id);
+				//if($chk_code != $pcode)
+				//	die();
+				*/
 				if(!$this->g_user->verify_account($email, $mobile, '', $external_id))
 					die();
 			}
@@ -1123,6 +1172,14 @@ class Api extends MY_Controller
 		exit();
 	}
 
+	// 檢查伺服器是否存活
+	function check_server_alive($server_id)
+	{
+		$this->load->library("game");
+		$res = $this->game->check_server_alive($server_id);
+		die("Res:".($res == true ? 'true' : 'false'));
+	}
+	
 	// 儲值後自動執行轉點, 玩家不用自行操作
 	function _transfer()
 	{
