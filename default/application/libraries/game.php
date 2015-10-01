@@ -11,6 +11,21 @@ class Game
     	$this->CI->load->config("api"); 	    	
     }
     
+	function check_server_alive($server_id)
+	{
+		$this->CI->load->model("games");
+		$server = $this->CI->games->get_server($server_id);
+		
+		$this->CI->load->library("game_api");
+		if($this->CI->game_api->has_alive_check($server->game_id))
+		{
+			$this->CI->load->library("game_api/{$server->game_id}");
+			return ($this->CI->{$server->game_id}->check_server_alive($server) == 0);
+		}
+		else
+			return false;
+	}
+	
     function login($game_id, $server, $uid)
     {	    	
     	$pass_ips = array();    	

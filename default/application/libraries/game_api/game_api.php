@@ -4,6 +4,7 @@ class Game_Api
 {
     var $CI;
     var $error_message = '';
+	var	$curl_error = 0;
 
     function __construct()
     {    
@@ -74,6 +75,18 @@ class Game_Api
     	return false;
     }
 
+	// 遊戲是否有伺服器存活檢查機制
+	function has_alive_check($site)
+	{
+		$cfg = $this->load_config($site);
+		if(!empty($cfg['alive_check']))
+		{
+			return $cfg['alive_check'];
+		}
+
+		return false;
+	}
+
 	// 遊戲是否有入點機制
 	function has_billing($site)
 	{
@@ -94,6 +107,7 @@ class Game_Api
 		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		$curl_res = curl_exec($ch);
+		$curl_error = curl_errno($ch);
 		curl_close($ch);
 
 		$result = json_decode($curl_res);
