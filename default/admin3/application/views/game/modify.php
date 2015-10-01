@@ -3,9 +3,15 @@
 	
 	if (isset($msg)) output_result($msg);
 ?>
-<form method="post" class="validation" enctype="multipart/form-data">
+<form method="post" class="validation" enctype="multipart/form-data" action="<?=site_url("game/modify")?>">
 	<fieldset>
-					
+	    <?if(isset($row->game_id)):?>
+		<input type="hidden" name="id" value="<?=$row ? $row->game_id : ''?>">
+		<?else:?>
+		<label>遊戲代號</label>
+		<input type="text" name="game_id" value="" class="required" style="width:50px">
+		<?endif;?>
+		
 		<label>遊戲名稱</label>
 		<input type="text" name="name" value="<?=$row ? $row->name : ''?>" class="required" style="width:200px">
 		

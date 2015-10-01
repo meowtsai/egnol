@@ -1,5 +1,6 @@
 <div id="func_bar">
 	<a href="<?=site_url("game/sort")?>" class="btn btn-info">排序</a>
+	<a class="btn btn-primary" href="<?=site_url("game/add")?>">新增</a>
 </div>
 
 <table class="table table-striped table-bordered" style="width:auto;">
