@@ -91,13 +91,13 @@ $(function()
 		}
 		else
 		{
+            var currency = $("select[name='currency']").val();
+			
 			$("#pay_type_block").show();
 			$(".pay_type").hide();
-			$(".pay_type_" + option.attr("pay_type")).show();
+			$(".pay_type option").prop("selected", false);
+			$(".pay_type_" + option.attr("pay_type") + "." + currency).show();
 			
-            var currency = $("select[name='currency']").val();
-		    $(".currency").hide();
-		    $(".currency_" + currency).show();
 			return;
 		}
 
@@ -109,8 +109,10 @@ $(function()
 		$('#pay_type_block').hide();
 		
         var currency = $("select[name='currency']").val();
-		$(".billing_type_opt").show();
-		$(".billing_type_opt").not("." + currency).hide();
+		$(".billing_type").show();
+		$(".billing_type option").prop("selected", false);
+		$(".billing_type").not("." + currency).hide();
+		
 		return;
 	});
 
@@ -154,7 +156,7 @@ $(function()
 			html += '<option name="payment_amount" value="'+amount+'" nt='+val+' >'+amount+'</option> ';
 		});
 
-		if (opt.attr("PAID") == 'COPGAM02')
+		if (opt.attr("PAID") == 'COPGAM02' || opt.attr("PAID") == 'COPGAM05')
 		{
 			$('#choose_form .amount_row').hide();
 		}

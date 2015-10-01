@@ -15,6 +15,17 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 {
 	$is_mobile = true;
 }
+
+$currency_array = array(
+    "TWD" => "新台幣TWD",
+    "USD" => "美金USD",
+    //"EUR" => "EUR",
+    "HKD" => "港幣HKD",
+    "MYR" => "馬來西亞令吉MYR",
+    //"IDR" => "IDR",
+    //"THB" => "THB",
+    //"THB" => "THB"
+);
 ?>
 
 <script type="text/javascript">
@@ -83,21 +94,17 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 						<th>幣別</th>
 						<td>
 							<select name="currency"  class="required" style="width:85%;">
-			                    <option value='TWD'>新台幣TWD</option>
-			                    <option value='USD'>美金USD</option>
-			                    <!--option value='EUR'>EUR</option-->
-			                    <option value='HKD'>港幣HKD</option>
-			                    <option value='MYR'>馬來令吉MYR</option>
-			                    <!--option value='IDR'>IDR</option-->
-			                    <!--option value='THB'>THB</option-->
-			                    <!--option value='VND'>VND</option-->
+								<? foreach($currency_array as $key => $val):?>
+			                    <option value='<?=$key?>'><?=$val?></option>
+								<?endforeach;?>
 							</select>
 						</td>
 					</tr>
 					<tr>
 						<th>儲值方式</th>
 						<td>
-							<select name="billing_type" class="required" style="width:85%;">
+						<? foreach($currency_array as $key => $val):?>
+							<select name="billing_type" class="billing_type required <?=$key?>" style="width:85%;<?=($key=='TWD')?"":"display:none;"?>">
 			                    <option value=''>--請選擇儲值方式--</option>
 
 								<? foreach($options as $tab => $arr):
@@ -105,34 +112,50 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 										$attr_str = '';
 										foreach($arr['trade'] as $attr => $val) $attr_str .= " {$attr}='{$val}'";
 								?>
-								<option pay_type="" class="currency currency_<?=$arr['trade']['cuid']?>" maximum="<?=$arr['maximum']?>" minimum="<?=$arr['minimum']?>" <?=$attr_str?>><?=$tab?></option>
+								<option pay_type="" maximum="<?=$arr['maximum']?>" minimum="<?=$arr['minimum']?>" <?=$attr_str?>><?=$tab?></option>
 								<? else:
 										$class_str = 'billing_type_opt';
-										foreach($arr as $tab2 => $arr2) $class_str .= " ".$arr2['trade']['cuid'];
+										foreach($arr as $tab2 => $arr2) {
+											if($key == $arr2['trade']['cuid']):
 								?>
 								<option pay_type="<?=$tab?>" class="<?=$class_str?>"><?=$tab?></option>
 								<?
+												break;
+											endif;
+										}
 									endif;
 								endforeach;?>
 							</select>
+						<?endforeach;?>
 						</td>
 					</tr>
 					<tr id="pay_type_block" style="display:none;">
 						<th>支付管道</th>
 						<td>
+						<? foreach($currency_array as $key => $val):?>
 							<? foreach($options as $tab => $arr): ?>
-							<select name="billing_channel"  class="pay_type pay_type_<?=$tab?> required" style="width:85%;">
+							<select name="billing_channel"  class="pay_type pay_type_<?=$tab?> <?=$key?> required" style="width:85%;">
 			                    <option value=''>--請選擇支付管道--</option>
 
 								<? foreach($arr as $opt => $arr2):
-									if (array_key_exists("trade", $arr)) continue;
+									if (array_key_exists("trade", $arr)) continue;									
+									if ($is_mobile || $is_tablet) {
+										if ($arr2['mobile'] == "0") continue;
+									} else {
+										if ($arr2['mobile'] == "1") continue;
+									}
+									
 									$attr_str = '';
 									foreach($arr2['trade'] as $attr => $val) $attr_str .= " {$attr}='{$val}'";
+									
+									if($key == $arr2['trade']['cuid']):
 								?>
-								<option value="<?=$opt?>" name="gash_channel" class="gash_option currency currency_<?=$arr2['trade']['cuid']?>" maximum="<?=$arr2['maximum']?>" minimum="<?=$arr2['minimum']?>" <?=$attr_str?>><?=$opt?></option>
-								<? endforeach;?>
+								<option value="<?=$opt?>" name="gash_channel" class="gash_option currency" maximum="<?=$arr2['maximum']?>" minimum="<?=$arr2['minimum']?>" <?=$attr_str?>><?=$opt?></option>
+								<? endif;
+								endforeach;?>
 							</select>
 							<? endforeach;?>
+						<?endforeach;?>
 						</td>
 					</tr>
 					<tr>
