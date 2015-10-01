@@ -13,7 +13,7 @@ class Stm extends Game_Api
 	{
 		$this->check_user($server->address."/apilonge-checkuser", 10000);
 		
-		return $this->curl_error;
+		return $this->post_curl_error;
 	}
 	
 	// 檢查並取得帳號角色

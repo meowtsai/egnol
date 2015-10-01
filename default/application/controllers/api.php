@@ -67,8 +67,10 @@ class Api extends MY_Controller
 			}
 			$_SESSION['server_mode'] = $server_mode;
 
+			$change_account = !empty($this->input->get("change_account")) ? $this->input->get("change_account") : 0;
+			
 			// 免輸入登入機制(Session 失效時使用)
-			if(!empty($login_key))
+			if(!empty($login_key) && $change_account != 1)
 			{
 				$keys = explode(",", $login_key);
 				if(count($keys) == 5)
@@ -363,7 +365,7 @@ class Api extends MY_Controller
 		
 		$this->g_user->logout();
 		
-        echo "<script type='text/javascript'>location.href='/api/ui_login?site={$site}'</script>";
+        die("<script type='text/javascript'>location.href='/api/ui_login?site={$site}&change_account=1'</script>");
 	}
 	
 	// 帳號登出
