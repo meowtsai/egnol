@@ -161,7 +161,7 @@ $(function()
 			html += '<option name="payment_amount" value="'+amount+'" nt='+val+' >'+amount+'</option> ';
 		});
 
-		if (opt.attr("PAID") == 'COPGAM02')
+		if (opt.attr("PAID") == 'COPGAM02' || opt.attr("PAID") == 'COPGAM05')
 		{
 			$('#choose_form .amount_row').hide();
 		}
