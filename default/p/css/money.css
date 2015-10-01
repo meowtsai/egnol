@@ -7,6 +7,8 @@
 .member_info .pic_btn{ margin-top:7px;}
 .member_info .pic_input{ width:60%;}
 
+.member_info option:disabled{ color:#D8D8D8;}
+
 @media only screen and (max-width:450px){ 
 .member_info tr > th{ width:30%;}
 .member_info tr > td{ width:70%;}
