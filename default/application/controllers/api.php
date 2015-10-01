@@ -692,7 +692,7 @@ class Api extends MY_Controller
 			->set("characters", $characters)
 			->add_css_link("login_api")
 			->add_css_link("money")
-			->add_js_include("api/payment")
+			->add_js_include("payment/index")
 			->api_view();
 	}
 
