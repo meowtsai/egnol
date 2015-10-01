@@ -95,13 +95,9 @@ $(function()
 			
 			$("#pay_type_block").show();
 			$(".pay_type").hide();
+			$(".pay_type option").prop("selected", false);
 			$(".pay_type_" + option.attr("pay_type") + "." + currency).show();
 			
-            //var currency = $("select[name='currency']").val();
-			//$(".currency").prop('disabled', true);
-		    //$(".currency").hide();
-			//$(".currency_" + currency).prop('disabled', false);
-		    //$(".currency_" + currency).show();
 			return;
 		}
 
@@ -113,11 +109,10 @@ $(function()
 		$('#pay_type_block').hide();
 		
         var currency = $("select[name='currency']").val();
-		//$(".billing_type_opt").prop('disabled', false);
 		$(".billing_type").show();
-		//$(".billing_type_opt").not("." + currency).prop('disabled', true);
+		$(".billing_type option").prop("selected", false);
 		$(".billing_type").not("." + currency).hide();
-        //$('select[disabled="disabled"]').css({ 'color': '#993333', 'background-color': '#ffffcc' });
+		
 		return;
 	});
 
