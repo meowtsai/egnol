@@ -41,7 +41,7 @@ class Stm extends Game_Api
 		$character = $this->check_user($server->address, $order->uid);
 		if($character['id'] == "-1")
 		{
-			return _return_error("角色尚未建立！");
+			return $this->_return_error("角色尚未建立！");
 		}
 
 		$points = $amount;

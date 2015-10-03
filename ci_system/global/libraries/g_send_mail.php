@@ -30,6 +30,10 @@
 
         function send_view($toAddress, $subject, $view, $data, $imgs=null)
 		{
+			$this->ClearAddresses();
+			$this->ClearReplyTos();
+			$this->ClearAttachments();
+			
             $this->IsSMTP();
             $this->SMTPAuth = true;
             $this->Host = $this->smtp_host;

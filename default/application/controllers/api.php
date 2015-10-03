@@ -88,7 +88,7 @@ class Api extends MY_Controller
 					if($new_check == $keys[0])
 					{
 						// 登入資訊正確, 自動登入
-						if($this->g_user->verify_account($keys[1], $keys[2], '', $keys[3]))
+						if($this->g_user->verify_account($keys[1], $keys[2], '', $keys[3]) == true)
 						{
 							$_SESSION['site'] = $site;
 							$this->_ui_member();
@@ -165,7 +165,10 @@ class Api extends MY_Controller
 				} else {
 					window.location = \"ios://loginsuccess-_-\" + encodeURIComponent('{$ios_str}');
 				}
-			</script>";
+			</script>EC:001";
+			
+			$_SESSION['server_id'] = '';
+			unset($_SESSION['server_id']);
 		}
 	}
 
@@ -364,6 +367,9 @@ class Api extends MY_Controller
 		$site = $this->_get_site();
 		
 		$this->g_user->logout();
+		
+		$_SESSION['server_id'] = '';
+		unset($_SESSION['server_id']);
 		
         die("<script type='text/javascript'>location.href='/api/ui_login?site={$site}&change_account=1'</script>");
 	}
@@ -670,7 +676,7 @@ class Api extends MY_Controller
 				//if($chk_code != $pcode)
 				//	die();
 				*/
-				if(!$this->g_user->verify_account($email, $mobile, '', $external_id))
+				if($this->g_user->verify_account($email, $mobile, '', $external_id) != true)
 					die();
 			}
 			else
@@ -1239,7 +1245,7 @@ class Api extends MY_Controller
 		{
 			 die(json_encode(array("result"=>"0", "error"=>"帳號不存在")));
 		}
-		if ( ! $this->g_user->verify_account($user_row->email, $user_row->mobile, '', $user_row->external_id))
+		if ($this->g_user->verify_account($user_row->email, $user_row->mobile, '', $user_row->external_id) != true)
 		{
 			 die(json_encode(array("result"=>"0", "error"=>"帳號不存在")));
 		}

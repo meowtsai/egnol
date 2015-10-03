@@ -190,7 +190,7 @@ class Game
 		if (empty($order_id)) $this->_go_payment_result(1, 0, $amount, $this->CI->g_wallet->error_message, $args);
 			
 		$order = $this->CI->g_wallet->get_order($order_id);
-
+/*
 		// 若為遊戲內儲值則完成訂單
 		if(!empty($_SESSION['payment_api_call']))
 		{
@@ -201,7 +201,7 @@ class Game
 				$this->_go_payment_result(1, 1, $amount, "", $args);
 			}
 		}
-
+*/
 		// 若為官網儲值要先看是否有遊戲入點機制, 若有則轉點, 無則設為尚未轉進遊戲
 		$this->CI->load->library("game_api");
 		if($this->CI->game_api->has_billing($server->game_id))
@@ -265,6 +265,16 @@ class Game
     
     function _go_payment_result($status, $transfer_status, $price, $message='', $args='')
     {
+		// 若為遊戲內儲值則進入API頁面
+		if(!empty($_SESSION['payment_api_call']))
+		{
+			if($_SESSION['payment_api_call'] == 'true')
+			{
+				header('location: '.site_url("api/ui_payment_result?s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args);
+				exit();
+			}
+		}
+		
 		header('location: '.site_url("payment/result?s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args));
 		exit();
     } 
