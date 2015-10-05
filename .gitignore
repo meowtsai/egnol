@@ -15,3 +15,5 @@ default/admin3/application/config/*
 !default/admin3/application/config/template/
 games/**
 !games/_template/
+default/p/deposit_count_graph
+default/p/region_count_graph
