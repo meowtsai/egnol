@@ -148,7 +148,7 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 									$attr_str = '';
 									foreach($arr2['trade'] as $attr => $val) $attr_str .= " {$attr}='{$val}'";
 									
-									if($key == $arr2['trade']['cuid']):
+									if(!isset($arr2['trade']['cuid']) || $key == $arr2['trade']['cuid']):
 								?>
 								<option value="<?=$opt?>" name="gash_channel" class="gash_option currency" maximum="<?=$arr2['maximum']?>" minimum="<?=$arr2['minimum']?>" <?=$attr_str?>><?=$opt?></option>
 								<? endif;
