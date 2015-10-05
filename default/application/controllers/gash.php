@@ -62,7 +62,7 @@ class Gash extends MY_Controller {
 		$gash_conf = $this->config->item("gash");
 					
 		$money = floor($payment_amount / $gash_conf["converter"][$CUID]);
-		if ($PAID <> "COPGAM02" && $money < 100 && ! IN_OFFICE) die("儲值金額須大於100");
+		if ($PAID <> "COPGAM02" && $PAID <> "COPGAM05" && $money < 100 && ! IN_OFFICE) die("儲值金額須大於100");
 		if ($PAID == "COPGAM02") $payment_amount = 0;
 				
 		$trans->nodes = array(
