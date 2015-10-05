@@ -9,7 +9,7 @@
     $tips = "若您儲值遇到任何問題，請向<a href='{$longe_url}service?site={$site}'>客服中心</a>反映。";
 ?>
 <script type='text/javascript'>
-	function onClickOK()
+	function onClickPaymentOK()
 	{
 		if (typeof LongeAPI != 'undefined')
 		{
@@ -17,10 +17,8 @@
 			echo "LongeAPI.onPaymentSuccess('{$game->game_id}','{$server->server_id}','{$character->name}','{$billing_type}','{$pay_type}',parseInt('{$price}',10),parseInt('{$get_point}',10));";
 ?>
 		} else {
-<?
-            encodedurl = encodeURIComponent("ios://paymentresult-_-{$game->game_id}-_-{$server->server_id}-_-{$character->name}-_-{$billing_type}-_-{$pay_type}-_-{$price}-_-{$get_point}");
-			echo "window.location = \"" + encodedurl + "\";";
-?>
+            encodedurl = encodeURIComponent("<? echo "ios://paymentresult-_-{$game->game_id}-_-{$server->server_id}-_-{$character->name}-_-{$billing_type}-_-{$pay_type}-_-{$price}-_-{$get_point}" ?>");
+			window.location = encodedurl;
 		}
 	}
 </script>
@@ -65,7 +63,7 @@
 
 			<div class="login-button">
 				<p>
-                    <img src="<?=$longe_url?>p/image/member/submit.png" class="button_submit" onclick="onClickOK()">
+                    <img src="<?=$longe_url?>p/image/member/submit.png" class="button_submit" onclick="javascript:onClickPaymentOK();" />
 				</p>
 			</div>
 

@@ -270,7 +270,7 @@ class Game
 		{
 			if($_SESSION['payment_api_call'] == 'true')
 			{
-				header('location: '.site_url("api/ui_payment_result?s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args);
+				header('location: '.site_url("api/ui_payment_result?s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args));
 				exit();
 			}
 		}
