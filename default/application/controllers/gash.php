@@ -77,7 +77,7 @@ class Gash extends MY_Controller {
 			"ORDER_TYPE"	=> "M", // 是否指定付款代收業者_ 請固定填 M
 			"MEMO"			=> "", // 交易備註 ( 此為選填 )
 			"ERP_ID"		=> $ERP_ID, // 樂點卡ERP商品代碼 ( 此為選填 )
-			"PRODUCT_NAME"	=> "", // 商家商品名稱 ( 此為選填 )
+			"PRODUCT_NAME"	=> $_SESSION['payment_game']." ".$_SESSION['payment_server'], // 商家商品名稱 ( 此為選填 )
 			"PRODUCT_ID"	=> "", // 商家商品代碼 ( 此為選填 )
 			"USER_ACCTID"	=> $this->g_user->uid, // 玩家帳號 ( 此為選填 )
 		);
