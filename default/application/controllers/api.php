@@ -1257,7 +1257,7 @@ class Api extends MY_Controller
 			'note'			=> $product_id,
 			'country_code'  => $country_code,
 			'order_no'		=> $order_id,
-			'character_id'	=> $character.id;
+			'character_id'	=> $character.id
 		);    	
 
 		// 寫入資料庫
