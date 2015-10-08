@@ -389,9 +389,9 @@ class Api extends MY_Controller
 
 		header('Content-type:text/html; Charset=UTF-8');
 		//echo "<script type='text/javascript'>LongeAPI.onLogoutSuccess()</script>";
-        echo "<script type='text/javascript'>
-	        if (typeof LongeAPI != 'undefined') {
-                LongeAPI.onLogoutSuccess()
+		echo "<script type='text/javascript'>
+	        if (typeof LongeAPI != 'undefined') { 
+                LongeAPI.onLogoutSuccess();
             } else {
                 window.location = \"ios://logoutsuccess\";
 	        }
@@ -792,51 +792,70 @@ class Api extends MY_Controller
 
 		$character = $this->db->from("characters")->where("id", $character_id)->get()->row();
 
-		//echo "<script type='text/javascript'>LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character->name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10));</script>";
-        echo "\"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\"
+		echo "\"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\"
 		<script type='text/javascript'>
-	        if (typeof LongeAPI != 'undefined') {
-                LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character->name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10));
+	        if (typeof LongeAPI != 'undefined') { 
+                LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character->name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10)); 
             } else {
                 window.location = \"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\";
 	        }
 		</script>";
+	}
+	
+	// 檢查合作廠商與串接遊戲
+	function _check_partner_game($partner, $game_id)
+	{
+		$partner_conf = $this->config->item("partner_api");
+		if ( ! array_key_exists($partner, $partner_conf))
+		{
+			return "無串接此partner";
+		}
+		if ( ! array_key_exists($game_id, $partner_conf[$partner]["sites"]))
+		{
+			return "無串接此遊戲";
+		}
+		
+		return '1';
 	}
 
 	// 設定登入伺服器
 	function set_login_server()
 	{
 		$partner = $this->input->post("partner");
-		$game = $this->input->post("game");
-		$server = $this->input->post("server");
+		$game_id = $this->input->post("site");
+		// 暫時增加檢查, 之後須修正 SDK 統一規格
+		if(empty($game_id))
+		{
+			$game_id = $this->input->post("game");
+		}
+		$server_id = $this->input->post("server");
 		$uid = $this->input->post("uid");
 
-		if (empty($partner) || empty($game))
+		if (empty($partner) || empty($game_id))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
 		}
 
-		$servers = $this->db->from("servers")->where("game_id", $game)->order_by("id")->get();
-
-		$partner_conf = $this->config->item("partner_api");
-		if ( ! array_key_exists($partner, $partner_conf))
+		$msg = $this->_check_partner_game($partner, $game_id);
+		if($msg != '1')
 		{
-			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
+			die(json_encode(array("result"=>"0", "error"=>$msg)));
 		}
-		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"]))
-		{
-			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
-		}
-
-		$query = $this->db->from("servers")->where("server_id", $server)->get();
+		
+		$query = $this->db->from("servers")->where("server_id", $server_id)->get();
 		if($query->num_rows() == 0)
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
+		}
+		$server = $query->row();
+		if($server->game_id != $game_id)
 		{
 			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
 		}
 
 		// 登入 log
 		$this->load->library("game");
-        if($this->game->login($query->row(), $uid) == false)
+        if($this->game->login($server, $uid) == false)
 		{
 			die(json_encode(array("result"=>"0", "error"=>$this->game->error_message)));
 		}
@@ -849,26 +868,25 @@ class Api extends MY_Controller
 	function get_server_list()
 	{
 		$partner = $this->input->post("partner");
-		$game = $this->input->post("game");
+		$game_id = $this->input->post("site");
+		// 暫時增加檢查, 之後須修正 SDK 統一規格
+		if(empty($game_id))
+		{
+			$game_id = $this->input->post("game");
+		}
 
-		if (empty($partner) || empty($game))
+		if (empty($partner) || empty($game_id))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
 		}
 
-		$servers = $this->db->from("servers")->where("game_id", $game)->order_by("id")->get();
-
-		$partner_conf = $this->config->item("partner_api");
-		if ( ! array_key_exists($partner, $partner_conf))
+		$msg = $this->_check_partner_game($partner, $game_id);
+		if($msg != '1')
 		{
-			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
-		}
-		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"]))
-		{
-			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
+			die(json_encode(array("result"=>"0", "error"=>$msg)));
 		}
 
-		$query = $this->db->from("servers")->where("game_id", $game)->get();
+		$query = $this->db->from("servers")->where("game_id", $game_id)->get();
 		$server_list = array();
 		foreach($query->result() as $row)
 		{
@@ -886,26 +904,27 @@ class Api extends MY_Controller
 	function get_character_list()
 	{
 		$partner = $this->input->post("partner");
-		$game = $this->input->post("game");
-		$server = $this->input->post("server");
+		$game_id = $this->input->post("site");
+		// 暫時增加檢查, 之後須修正 SDK 統一規格
+		if(empty($game_id))
+		{
+			$game_id = $this->input->post("game");
+		}
+		$server_id = $this->input->post("server");
 		$uid = $this->input->post("uid");
 
-		if (empty($partner) || empty($game) || empty($uid) || empty($server))
+		if (empty($partner) || empty($game_id) || empty($uid) || empty($server_id))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
 		}
 
-		$partner_conf = $this->config->item("partner_api");
-		if ( ! array_key_exists($partner, $partner_conf))
+		$msg = $this->_check_partner_game($partner, $game_id);
+		if($msg != '1')
 		{
-			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
-		}
-		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"]))
-		{
-			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
+			die(json_encode(array("result"=>"0", "error"=>$msg)));
 		}
 
-		$query = $this->db->from("characters")->where("server_id", $server)->where("uid", $uid)->order_by("id")->get();
+		$query = $this->db->from("characters")->where("server_id", $server_id)->where("uid", $uid)->order_by("id")->get();
 		$character_list = array();
 		foreach($query->result() as $row)
 		{
@@ -927,33 +946,28 @@ class Api extends MY_Controller
 	function create_character()
 	{
 		$partner = $this->input->post("partner");
-		$game = $this->input->post("site");
+		$game_id = $this->input->post("site");
 		// 暫時增加檢查, 之後須修正 SDK 統一規格
-		if(empty($game))
+		if(empty($game_id))
 		{
-			$game = $this->input->post("game");
+			$game_id = $this->input->post("game");
 		}
-		$server = $this->input->post("server");
+		$server_id = $this->input->post("server");
 		$uid = $this->input->post("uid");
 		$character_name = $this->input->post("character_name");
 
-		if (empty($uid) || empty($server) || empty($game) || empty($character_name))
+		if (empty($uid) || empty($server_id) || empty($game_id) || empty($character_name))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
 		}
 
-		$partner_conf = $this->config->item("partner_api");
-		if ( ! array_key_exists($partner, $partner_conf))
+		$msg = $this->_check_partner_game($partner, $game_id);
+		if($msg != '1')
 		{
-			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
-		}
-		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"]))
-		{
-			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
+			die(json_encode(array("result"=>"0", "error"=>$msg)));
 		}
 
-		$server_info = $this->db->from("servers")->where("server_id", $server)->get()->row();
-
+		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
 		if (empty($server_info))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"伺服器不存在")));
@@ -966,7 +980,6 @@ class Api extends MY_Controller
 		}
 
 		$this->load->model("g_characters");
-
 		if ($this->g_characters->chk_character_exists($server_info, $uid, $character_name))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"角色已存在")));
@@ -994,28 +1007,29 @@ class Api extends MY_Controller
 	function get_character()
 	{
 		$partner = $this->input->post("partner");
-		$game = $this->input->post("game");
-		$server = $this->input->post("server");
+		$game_id = $this->input->post("site");
+		// 暫時增加檢查, 之後須修正 SDK 統一規格
+		if(empty($game_id))
+		{
+			$game_id = $this->input->post("game");
+		}
+		$server_id = $this->input->post("server");
 		$uid = $this->input->post("uid");
 		$character_name = $this->input->post("character_name");
 
 		// 檢查參數
-		if (empty($partner) || empty($uid) || empty($game) || empty($server))
+		if (empty($partner) || empty($uid) || empty($game_id) || empty($server_id))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
 		}
 
-		$partner_conf = $this->config->item("partner_api");
-		if ( ! array_key_exists($partner, $partner_conf))
+		$msg = $this->_check_partner_game($partner, $game_id);
+		if($msg != '1')
 		{
-			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
-		}
-		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"]))
-		{
-			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
+			die(json_encode(array("result"=>"0", "error"=>$msg)));
 		}
 
-		$server_row = $this->db->from("servers")->where("server_id", "{$server}")->get()->row();
+		$server_row = $this->db->from("servers")->where("server_id", "{$server_id}")->get()->row();
 		if (empty($server_row))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
@@ -1026,10 +1040,9 @@ class Api extends MY_Controller
 		{
 			die(json_encode(array("result"=>"0", "error"=>"無此帳號")));
 		}
-		$user_row = $query->row();
 
 		$this->load->model("g_characters");
-		$character = $this->g_characters->get_character($server, $uid, $character_name);
+		$character = $this->g_characters->get_character($server_id, $uid, $character_name);
 
 		//
 		// query billing
@@ -1051,28 +1064,29 @@ class Api extends MY_Controller
 	function get_character_points()
 	{
 		$partner = $this->input->post("partner");
-		$game = $this->input->post("game");
-		$server = $this->input->post("server");
+		$game_id = $this->input->post("site");
+		// 暫時增加檢查, 之後須修正 SDK 統一規格
+		if(empty($game_id))
+		{
+			$game_id = $this->input->post("game");
+		}
+		$server_id = $this->input->post("server");
 		$uid = $this->input->post("uid");
 		$character_name = $this->input->post("character_name");
 
 		// 檢查參數
-		if (empty($partner) || empty($uid) || empty($game) || empty($server))
+		if (empty($partner) || empty($uid) || empty($game_id) || empty($server_id))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
 		}
 
-		$partner_conf = $this->config->item("partner_api");
-		if ( ! array_key_exists($partner, $partner_conf))
+		$msg = $this->_check_partner_game($partner, $game_id);
+		if($msg != '1')
 		{
-			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
-		}
-		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"]))
-		{
-			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
+			die(json_encode(array("result"=>"0", "error"=>$msg)));
 		}
 
-		$server_row = $this->db->from("servers")->where("server_id", "{$server}")->get()->row();
+		$server_row = $this->db->from("servers")->where("server_id", "{$server_id}")->get()->row();
 		if (empty($server_row))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
@@ -1083,13 +1097,12 @@ class Api extends MY_Controller
 		{
 			die(json_encode(array("result"=>"0", "error"=>"無此帳號")));
 		}
-		$user_row = $query->row();
 
 		$this->load->model("games");
-		$game_info = $this->games->get_game($game);
+		$game_info = $this->games->get_game($game_id);
 
 		$this->load->model("g_characters");
-		$character = $this->g_characters->get_character($server, $uid, $character_name);
+		$character = $this->g_characters->get_character($server_id, $uid, $character_name);
 
 		$billing_query = $this->db->from("user_billing")
 									->where("uid", $uid)
@@ -1115,28 +1128,29 @@ class Api extends MY_Controller
 	function withdraw_character_points()
 	{
 		$partner = $this->input->post("partner");
-		$game = $this->input->post("game");
-		$server = $this->input->post("server");
+		$game_id = $this->input->post("site");
+		// 暫時增加檢查, 之後須修正 SDK 統一規格
+		if(empty($game_id))
+		{
+			$game_id = $this->input->post("game");
+		}
+		$server_id = $this->input->post("server");
 		$uid = $this->input->post("uid");
 		$character_name = $this->input->post("character_name");
 
 		// 檢查參數
-		if (empty($partner) || empty($uid) || empty($game) || empty($server))
+		if (empty($partner) || empty($uid) || empty($game_id) || empty($server_id))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
 		}
 
-		$partner_conf = $this->config->item("partner_api");
-		if ( ! array_key_exists($partner, $partner_conf))
+		$msg = $this->_check_partner_game($partner, $game_id);
+		if($msg != '1')
 		{
-			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
-		}
-		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"]))
-		{
-			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
+			die(json_encode(array("result"=>"0", "error"=>$msg)));
 		}
 
-		$server_row = $this->db->from("servers")->where("server_id", "{$server}")->get()->row();
+		$server_row = $this->db->from("servers")->where("server_id", "{$server_id}")->get()->row();
 		if (empty($server_row))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
@@ -1147,13 +1161,12 @@ class Api extends MY_Controller
 		{
 			die(json_encode(array("result"=>"0", "error"=>"無此帳號")));
 		}
-		$user_row = $query->row();
 
 		$this->load->model("games");
-		$game_info = $this->games->get_game($game);
+		$game_info = $this->games->get_game($game_id);
 
 		$this->load->model("g_characters");
-		$character = $this->g_characters->get_character($server, $uid, $character_name);
+		$character = $this->g_characters->get_character($server_id, $uid, $character_name);
 
 		$billing_query = $this->db->from("user_billing")
 									->where("uid", $uid)
@@ -1180,6 +1193,82 @@ class Api extends MY_Controller
 		exit();
 	}
 
+	// 紀錄遊戲內儲值(AppStore, GooglePlay inapp payment)
+	function log_inapp_billing()
+	{
+		$partner = $this->input->post("partner");
+		$game_id = $this->input->post("site");
+		$server_id = $this->input->post("server");
+		$uid = $this->input->post("uid");
+		$character_name = $this->input->post("character_name");
+		$channel = $this->input->post("channel");
+		
+		$msg = $this->_check_partner_game($partner, $game_id);
+		if($msg != '1')
+		{
+			die(json_encode(array("result"=>"0", "error"=>$msg)));
+		}
+
+		$server_row = $this->db->from("servers")->where("server_id", "{$server_id}")->get()->row();
+		if (empty($server_row))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
+		}
+
+		$query = $this->db->where("uid", $uid)->get("users");
+		if($query->num_rows() == 0)
+		{
+			die(json_encode(array("result"=>"0", "error"=>"無此帳號")));
+		}
+
+		// 檢查參數
+		if (empty($partner) || empty($uid) || empty($game_id) || empty($server_id) || empty($channel))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
+		}
+
+		$this->load->model("games");
+		$game_info = $this->games->get_game($game_id);
+
+		// 若角色名稱為空字串, 表示遊戲固定每個帳號只能有一個角色
+		$this->load->model("g_characters");
+		if($character_name != null && $character_name != "")
+		{
+			$character = $this->g_characters->get_character($server_id, $uid, $character_name);
+		}
+		else
+		{
+			$character = $this->g_characters->get_latest_character($server_id, $uid);
+		}
+
+		$order_id = $this->input->post("order_id");
+		$product_id = $this->input->post("product_id");
+		$money = $this->input->post("money");
+
+		// 設定紀錄資料
+		$user_billing_data = array(
+			'uid' 			=> $uid,
+			'transaction_type' => "inapp_billing_".$channel,
+			'billing_type'	=> '1',
+			'amount' 		=> $money,
+			'server_id' 	=> $server_id,
+			'ip'		 	=> $_SERVER['REMOTE_ADDR'],
+			'result'		=> '1',
+			'note'			=> $product_id,
+			'country_code'  => $country_code,
+			'order_no'		=> $order_id,
+			'character_id'	=> $character.id
+		);    	
+
+		// 寫入資料庫
+		$this->db
+			->set("create_time", "now()", false)
+			->set("update_time", "now()", false)
+			->insert("user_billing", $user_billing_data);
+
+		die(json_encode(array("result" => "1")));
+	}
+	
 	// 檢查伺服器是否存活
 	function check_server_alive($server_id)
 	{
@@ -1187,229 +1276,4 @@ class Api extends MY_Controller
 		$res = $this->game->check_server_alive($server_id);
 		die("Res:".($res == true ? 'true' : 'false'));
 	}
-	
-	// 儲值後自動執行轉點, 玩家不用自行操作
-	function _transfer()
-	{
-		$partner = $this->input->get("partner");
-		$uid = $this->input->get("uid");
-		$game = $this->input->get("game");
-		$server = $this->input->get("server");
-		$order = $this->input->get("order");
-		$money = $this->input->get("money");
-		$time = $this->input->get("time");
-		$hash = $this->input->get("hash");
-
-		//s1.檢查參數
-		if (empty($partner) || empty($uid) || empty($game) || empty($server) || empty($order) || empty($money) || empty($time))
-		{
-			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
-		}
-		$partner_conf = $this->config->item("partner_api");
-		if ( ! array_key_exists($partner, $partner_conf))
-		{
-			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
-		}
-		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"]))
-		{
-			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
-		}
-		$key = $partner_conf[$partner]["sites"][$game]['key'];
-		if ($hash <> md5($partner . $uid . $game . $server . $order .  $money . $time . $key))
-		{
-			die(json_encode(array("result"=>"0", "error"=>"認證碼錯誤")));
-		}
-
-		$server_id = "{$game}_".sprintf("%02d", $server);
-		$server_row = $this->db->from("servers")->where("server_id", "{$server_id}")->get()->row();
-		if (empty($server_row))
-		{
-			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
-		}
-		if ($money < 0)
-		{
-			die(json_encode(array("result"=>"0", "error"=>"金額設定錯誤")));
-		}
-
-		//開ip
-		$pass_ips = array();
-    	if (isset($partner_conf[$partner]["ips"]))
-		{
-    		$pass_ips = array_merge($pass_ips, $partner_conf[$partner]["ips"]);
-    	}
-    	$pass = in_array($_SERVER["REMOTE_ADDR"], $pass_ips);
-
-		//s2.檢查帳號
-		$user_row = $this->g_user->get_user_data($uid);
-		if(empty($user_row))
-		{
-			 die(json_encode(array("result"=>"0", "error"=>"帳號不存在")));
-		}
-		if ($this->g_user->verify_account($user_row->email, $user_row->mobile, '', $user_row->external_id) != true)
-		{
-			 die(json_encode(array("result"=>"0", "error"=>"帳號不存在")));
-		}
-
-		//s3.檢查訂單狀況
-		$chk_billing = $this->db->from("user_billing ub")->where("order", $order)->where("transaction_type", "{$partner}_billing")->get()->row();
-		if ( ! empty($chk_billing))
-		{
-			//if ($chk_billing->result <> "0")
-			die(json_encode(array("result"=>"-2", "error"=>"該訂單已結案")));
-		}
-
-		//s4.轉進遊戲
-		$this->load->helper("transfer");
-		$this->load->model("games");
-		$game = $this->games->get_game($server_row->game_id);
-
-		if ( $server_row->is_transaction_active == 0 && ! (IN_OFFICE || $pass) )
-		{
-			die(json_encode(array("result"=>"0", "error"=>'遊戲伺服器目前暫停轉點服務，詳情請參閱遊戲官網公告。')));
-    	}
-
-		//s4-1.建單
-		$this->load->library("g_wallet");
-		$billing_id = $this->g_wallet->produce_order($this->g_user->uid, "{$partner}_billing", "2", $money, $server_row->server_id, $order);
-		if (empty($billing_id)) {
-			die(json_encode(array("result"=>"0", "error"=>$this->g_wallet->error_message)));
-		}
-		$order_row = $this->g_wallet->get_order($billing_id);
-
-		//s4-2.轉入
-		$this->load->library("game_api/{$server_row->game_id}");
-		$re = $this->{$server_row->game_id}->transfer($server_row, $order_row, $game->exchange_rate);
-
-		//s4-3.回傳結果
-		if ($re === "1") {
-			$this->g_wallet->complete_order($order_row);
-			die(json_encode(array("result"=>"1", "order_id"=>$order_row->id)));
-		}
-		else if ($re === "-1") {
-			$this->g_wallet->cancel_timeout_order($order_row);
-			die(json_encode(array("result"=>"-1", "error"=>"遊戲伺服器無回應")));
-		}
-		else {
-			$error_message = $this->{$server_row->game_id}->error_message;
-			$this->g_wallet->cancel_order($order_row, $error_message);
-			die(json_encode(array("result"=>"0", "error"=>$error_message)));
-		}
-		/*
-		$partner = $this->input->get("partner");
-		$uid = $this->input->get("uid");
-		$game = $this->input->get("game");
-		$server = $this->input->get("server");
-		$order = $this->input->get("order");
-		$money = $this->input->get("money");
-		$time = $this->input->get("time");
-		$hash = $this->input->get("hash");
-		
-		//s1.檢查參數
-		if (empty($partner) || empty($uid) || empty($game) || empty($server) || empty($order) || empty($money) || empty($time)) {
-			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
-		}
-		$partner_conf = $this->config->item("partner_api");
-		if ( ! array_key_exists($partner, $partner_conf)) {
-			die(json_encode(array("result"=>"0", "error"=>"無串接此partner")));
-		}
-		if ( ! array_key_exists($game, $partner_conf[$partner]["sites"])) {
-			die(json_encode(array("result"=>"0", "error"=>"無串接此遊戲")));
-		}
-		$key = $partner_conf[$partner]["sites"][$game]['key'];		
-		if ($hash <> md5($partner . $uid . $game . $server . $order .  $money . $time . $key)) {
-			die(json_encode(array("result"=>"0", "error"=>"認證碼錯誤")));
-		}	
-		if ($game == 'xj') {
-			$server_id = $game.intval($server);
-		}
-		else if ($game == 'sg2') {
-			$server_id = "{$game}_".sprintf("%02d", ($server+1));
-		}
-		else {
-			$server_id = "{$game}_".sprintf("%02d", $server);
-		}					
-		$server_row = $this->db->from("servers")->where("server_id", "{$server_id}")->get()->row();
-		if (empty($server_row)) {
-			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
-		}
-		if ($money < 0) {
-			die(json_encode(array("result"=>"0", "error"=>"金額設定錯誤")));
-		}	
-		
-		//開ip
-		$pass_ips = array();    	
-    	if (isset($partner_conf[$partner]["ips"])) {
-    		$pass_ips = array_merge($pass_ips, $partner_conf[$partner]["ips"]);
-    	}
-    	$pass = in_array($_SERVER["REMOTE_ADDR"], $pass_ips);
-		
-		//s2.檢查帳號
-		$account = "{$uid}@{$partner}";
-		if ( ! $this->g_user->verify_account($account)) {
-			 die(json_encode(array("result"=>"0", "error"=>"帳號不存在")));
-		}
-		
-		//s3.檢查訂單狀況
-		$chk_billing = $this->db->from("user_billing ub")->where("order", $order)->where("transaction_type", "{$partner}_billing")->get()->row();
-		if ( ! empty($chk_billing)) {
-			//if ($chk_billing->result <> "0") 
-			die(json_encode(array("result"=>"-2", "error"=>"該訂單已結案")));
-		}
-		
-		//s4.轉進遊戲
-		$this->load->helper("transfer");		
-		$this->load->model("games");
-		$game = $this->games->get_game($server_row->game_id);		    			
-		
-		if ( $server_row->is_transaction_active == 0 && ! (IN_OFFICE || $pass) ) {
-			die(json_encode(array("result"=>"0", "error"=>'遊戲伺服器目前暫停轉點服務，詳情請參閱遊戲官網公告。')));
-    	}
-
-		//s4-1.建單
-		$this->load->library("g_wallet");
-		$billing_id = $this->g_wallet->produce_order($this->g_user->uid, "{$partner}_billing", "2", $money, $server_row->server_id, $order);
-		if (empty($billing_id)) {
-			die(json_encode(array("result"=>"0", "error"=>$this->g_wallet->error_message)));
-		}
-		$order_row = $this->g_wallet->get_order($billing_id);
-		
-		//s4-2.轉入		
-		$this->load->library("game_api/{$server_row->game_id}");		
-		$re = $this->{$server_row->game_id}->transfer($server_row, $order_row, $game->exchange_rate);
-		
-		//s4-3.回傳結果	
-		if ($re === "1") {
-			$this->g_wallet->complete_order($order_row);
-			die(json_encode(array("result"=>"1", "order_id"=>$order_row->id)));
-		}
-		else if ($re === "-1") {
-			$this->g_wallet->cancel_timeout_order($order_row);			
-			die(json_encode(array("result"=>"-1", "error"=>"遊戲伺服器無回應")));	
-		}
-		else {
-			$error_message = $this->{$server_row->game_id}->error_message;
-			$this->g_wallet->cancel_order($order_row, $error_message);			
-			die(json_encode(array("result"=>"0", "error"=>$error_message)));		
-		}
-		*/
-	}
-
-	function _chk_partner()
-	{
-		$this->partner = $this->input->get_post("partner");
-		$this->game = $this->input->get_post("game");		
-		$this->time = $this->input->get_post("time");
-		$this->hash = $this->input->get_post("hash");
-		
-		if (empty($this->partner) || empty($this->game) || empty($this->time) || empty($this->hash)) 
-			$this->_output_json(RESPONSE_FAILD, "缺少參數");
-		
-		if ( ! array_key_exists($this->partner, $this->partner_conf)) 
-			$this->_output_json(RESPONSE_FAILD, "無串接此partner");
-		
-		if ( ! array_key_exists($this->game, $this->partner_conf[$this->partner]["sites"])) 
-			$this->_output_json(RESPONSE_FAILD, "無串接此遊戲");
-		
-		$this->key = $this->partner_conf[$this->partner]["sites"][$this->game]['key'];
-	}	
 }
