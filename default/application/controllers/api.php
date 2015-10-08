@@ -1231,23 +1231,41 @@ class Api extends MY_Controller
 		$this->load->model("games");
 		$game_info = $this->games->get_game($game_id);
 
+		// 若角色名稱為空字串, 表示遊戲固定每個帳號只能有一個角色
 		$this->load->model("g_characters");
-		$character = $this->g_characters->get_character($server_id, $uid, $character_name);
-
-		if($channel == "google")
+		if($character_name != null && $character_name != "")
 		{
-			$order_id = $this->input->post("order_id");
-			$product_id = $this->input->post("product_id");
-			$money = $this->input->post("money");
-
-			// 寫入 user_billing
-			//
-			//
-			//
+			$character = $this->g_characters->get_character($server_id, $uid, $character_name);
 		}
-		else if($channel == "apple")
+		else
 		{
+			$character = $this->g_characters->get_latest_character($server_id, $uid);
 		}
+
+		$order_id = $this->input->post("order_id");
+		$product_id = $this->input->post("product_id");
+		$money = $this->input->post("money");
+
+		// 設定紀錄資料
+		$user_billing_data = array(
+			'uid' 			=> $uid,
+			'transaction_type' => "inapp_billing_".$channel,
+			'billing_type'	=> '1',
+			'amount' 		=> $money,
+			'server_id' 	=> $server_id,
+			'ip'		 	=> $_SERVER['REMOTE_ADDR'],
+			'result'		=> '1',
+			'note'			=> $product_id,
+			'country_code'  => $country_code,
+			'order_no'		=> $order_id,
+			'character_id'	=> $character.id;
+		);    	
+
+		// 寫入資料庫
+		$this->db
+			->set("create_time", "now()", false)
+			->set("update_time", "now()", false)
+			->insert("user_billing", $user_billing_data);
 
 		die(json_encode(array("result" => "1")));
 	}

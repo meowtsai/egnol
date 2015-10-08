@@ -55,4 +55,16 @@ class G_Characters extends CI_Model {
 
 		return $query->row();
 	}
+
+	function get_latest_character($server, $uid, $name)
+	{
+		$query = $this->db->from("characters")
+							->where("uid", $uid)
+							->where("server_id", $server)
+							->order_by("create_time")
+							->limit(1)
+							->get();
+
+		return $query->row();
+	}
 }
