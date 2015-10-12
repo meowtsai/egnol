@@ -139,7 +139,7 @@
 			<td><?=$row->mobile?></td>	
 			<td><?=$row->email?></td>			
 			<td><?=$row->ip?>
-				<a href="/admin3/log/login?ip=<?=$row->ip?>&action=查詢"><i class="icon-search"></i></a>
+				<a href="<?=site_url("/log/login?ip={$row->ip}&action=查詢")?>"><i class="icon-search"></i></a>
 			</td>
 			<td><?=$row->create_time?></td>
 			<td><?=$row->site_name?></td>
