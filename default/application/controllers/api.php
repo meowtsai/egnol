@@ -1265,6 +1265,27 @@ class Api extends MY_Controller
 			->set("create_time", "now()", false)
 			->set("update_time", "now()", false)
 			->insert("user_billing", $user_billing_data);
+			
+		// 設定紀錄資料
+		$user_billing_transfer_data = array(
+			'uid' 			=> $uid,
+			'transaction_type' => "inapp_billing_".$channel,
+			'billing_type'	=> '2',
+			'amount' 		=> $money,
+			'server_id' 	=> $server_id,
+			'ip'		 	=> $_SERVER['REMOTE_ADDR'],
+			'result'		=> '1',
+			'note'			=> $product_id,
+			'country_code'  => $country_code,
+			'order_no'		=> $order_id,
+			'character_id'	=> $character.id
+		);    	
+
+		// 寫入資料庫
+		$this->db
+			->set("create_time", "now()", false)
+			->set("update_time", "now()", false)
+			->insert("user_billing", $user_billing_transfer_data);
 
 		die(json_encode(array("result" => "1")));
 	}

@@ -7,10 +7,10 @@
 	<div class="control-group">	
 		
 		交易結果
-		<select name="transaction_state" style="width:75px">
+		<select name="result" style="width:75px">
 			<option value="">--</option>
-			<option value="N" <?=($this->input->get("transaction_state")=='N' ? 'selected="selected"' : '')?>>失敗</option>
-			<option value="Y" <?=($this->input->get("transaction_state")=='Y' ? 'selected="selected"' : '')?>>成功</option>
+			<option value="N" <?=($this->input->get("result")=='N' ? 'selected="selected"' : '')?>>失敗</option>
+			<option value="Y" <?=($this->input->get("result")=='Y' ? 'selected="selected"' : '')?>>成功</option>
 		</select>	
 
 		<span class="sptl"></span>	
@@ -40,7 +40,7 @@
 		
 		<span class="sptl"></span>	
 		
-		<input type="text" name="transaction_id" value="<?=$this->input->get("transaction_id")?>" style="width:220px" placeholder="ios訂單號">			
+		<input type="text" name="order_no" value="<?=$this->input->get("order_no")?>" style="width:220px" placeholder="ios訂單號">			
 	
 		<input type="submit" class="btn btn-small btn-inverse" name="action" value="查詢">
 		<!-- <input type="submit" class="btn btn-small btn-warning" name="action" value="輸出"> -->		
@@ -79,15 +79,15 @@
 				<div style="color:#777;">euid</div></th>	
 			<th style="width:100px;">訂單號</th>					
 			<th style="width:35px;">金額</th>
+			<th style="width:80px;">遊戲伺服器</th>
 			<th style="width:50px;">結果</th>
 			<th style="width:120px;">訊息</th>
-			<th style="width:70px;">建立日期</th>	
-			<th style="width:22px;"></th>
+			<th style="width:70px;">建立日期</th>
 		</tr>
 	</thead>
 	<tbody>
 		<? foreach($query->result() as $row):?>
-		<tr class="<?=$row->transaction_state=='1' ? 'success' : ''?>">
+		<tr class="<?=$row->result=='1' ? 'success' : ''?>">
 			<td><?=$row->id?></td>
 			<td title="帳號: 
 				<?
@@ -104,12 +104,12 @@
 				<a href="<?=site_url("trade/google?uid={$row->uid}&action=查詢")?>"><i class="icon-search"></i></a>
 				<div style="color:#777;"><?=$this->g_user->encode($row->uid)?></div>
 			</td>
-			<td><?=$row->transaction_id?></td>
-			<td><?=$row->price?></td>
-			<td><?=$row->transaction_state=='1' ? '成功' : '失敗'?></td>
+			<td><?=$row->order_no?></td>
+			<td><?=$row->amount?></td>
+			<td><?= "({$row->game_abbr_name}){$row->server_name}" ?></td>
+			<td><?=$row->result=='1' ? '成功' : '失敗'?></td>
 			<td><?=$row->note?></td>
 			<td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>
-			<td>
 				<!-- 
 				<div class="btn-group">
 					<button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
@@ -119,8 +119,7 @@
 						<li><a href="javascript:;" class="json_post_alert" url="http://www.longeplay.com.tw/ajax/resend_gash_billing/<?=$row->COID?>"></i> 重送交易</a></li>
 					</ul>
 				</div>			
-				 -->
-			</td>								
+				 -->							
 		</tr>
 		<? endforeach;?>
 	</tbody>
