@@ -211,7 +211,7 @@
 
 
 
-***龍邑科技客服中心敬上***</textarea>
+***龍邑客服中心敬上***</textarea>
 		
 		<div class="form-actions">
 	  		<button type="submit" class="btn ">確認送出</button>

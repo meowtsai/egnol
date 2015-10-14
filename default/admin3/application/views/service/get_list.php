@@ -178,7 +178,7 @@
 		</tr>
 		<? endforeach;?>
 
-<? if ($_SERVER['REQUEST_URI'] == '/admin3/service/todo'):?>
+<? if ($_SERVER['REQUEST_URI'] == '/service/todo'):?>
 <script language="JavaScript">
 title_tmp1 = document.title;
 if (title_tmp1.indexOf(">>")!=-1) {
