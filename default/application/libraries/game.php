@@ -265,6 +265,8 @@ class Game
     
     function _go_payment_result($status, $transfer_status, $price, $message='', $args='')
     {
+		$site = $_SESSION['site'];
+		
 		// 若為遊戲內儲值則進入API頁面
 		if(!empty($_SESSION['payment_api_call']))
 		{
@@ -275,7 +277,7 @@ class Game
 			}
 		}
 		
-		header('location: '.site_url("payment/result?s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args));
+		header('location: '.site_url("payment/result?site={$site}&s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args));
 		exit();
     } 
     
