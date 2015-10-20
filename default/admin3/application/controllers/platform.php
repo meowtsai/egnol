@@ -43,7 +43,7 @@ class Platform extends MY_Controller {
 					
 					header("location:".$this->input->post("redirect_url"));
 					exit();
-				} else {
+				} else if ($this->input->post("password")) {
 					
 					// connect to ldap server
 					$this->config->load('ldap');
@@ -124,6 +124,8 @@ class Platform extends MY_Controller {
 					    $this->log_admin_actions->insert_log(0, 'login', '', "登入帳號 {$this->input->post("account")} 失敗");
 					}
 					ldap_close($ldapconn);
+				} else {		
+					$error_message = '請輸入密碼';
 				}
 			}
 		}
