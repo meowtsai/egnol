@@ -51,8 +51,9 @@ class Platform extends MY_Controller {
 						
                     $ldapconn = ldap_connect($ldap_connect['host'], $ldap_connect['port'])  or die("Could not connect to LDAP server.");
                     $set = ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
+					
+					$ldap_bd = @ldap_bind($ldapconn, $this->input->post("account").$ldap_connect['domain'], $this->input->post("password"));
 
-                    $ldap_bd = ldap_bind($ldapconn, $this->input->post("account").$ldap_connect['domain'], $this->input->post("password"));
 					if($ldap_bd) {
                         $result = ldap_search($ldapconn,"dc=".$ldap_connect['dc1'].",dc=".$ldap_connect['dc2'],"(sAMAccountName=".$this->input->post("account").")") or die ("Error in query");
 
