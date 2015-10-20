@@ -250,7 +250,7 @@ class Trade extends MY_Controller {
 				}
 			}
 			else {
-				$this->DB2->select("g.name as name");
+				$this->DB2->select("ub.*, g.name as name");
 				$game_key = "g.game_id";
 			}
 			$this->DB2->select("{$game_key} as `key`");
@@ -724,9 +724,13 @@ class Trade extends MY_Controller {
 			$this->DB2->start_cache();
 			
 			$this->DB2
-				->select("gb.*, u.email, u.mobile, u.external_id")
-				->from("google_billing gb")
-				->join("users u", "u.uid=gb.uid", "left");			
+				->select("gb.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name")
+				->from("user_billing gb")
+				->join("servers gi", "gi.server_id=gb.server_id", "left")
+				->join("games g", "g.game_id=gi.game_id", "left")
+				->join("users u", "u.uid=gb.uid", "left")
+				->where("gb.transaction_type", "inapp_billing_google")
+				->where("gb.billing_type", "1");		
 			
 			$this->input->get("id") && $this->DB2->where("gb.id", $this->input->get("id"));
 			$this->input->get("uid") && $this->DB2->where("gb.uid", $this->input->get("uid"));
@@ -736,12 +740,12 @@ class Trade extends MY_Controller {
 				$this->DB2->or_where("u.mobile", trim($this->input->get("account")));
 			}		
 			
-			$this->input->get("order_id") && $this->DB2->where("gb.order_id", $this->input->get("order_id"));
+			$this->input->get("order_no") && $this->DB2->where("gb.order_no", $this->input->get("order_no"));
 			
-			if ($this->input->get("purchase_state") == 'Y')
-				$this->DB2->where("gb.purchase_state", '0');
-			else if ($this->input->get("purchase_state") == 'N')
-				$this->DB2->where("(gb.purchase_state is null or gb.purchase_state <> '0')", null, false);
+			if ($this->input->get("result") == 'Y')
+				$this->DB2->where("gb.result", '0');
+			else if ($this->input->get("result") == 'N')
+				$this->DB2->where("(gb.result is null or gb.result <> '0')", null, false);
 			
 			if ($this->input->get("start_date")) {
 				$start_date = $this->DB2->escape($this->input->get("start_date"));
@@ -817,9 +821,13 @@ class Trade extends MY_Controller {
 			$this->DB2->start_cache();
 			
 			$this->DB2
-				->select("ib.*, u.email, u.mobile, u.external_id")
-				->from("ios_billing ib")
-				->join("users u", "u.uid=ib.uid", "left");			
+				->select("ib.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name")
+				->from("user_billing ib")
+				->join("servers gi", "gi.server_id=ib.server_id", "left")
+				->join("games g", "g.game_id=gi.game_id", "left")
+				->join("users u", "u.uid=ib.uid", "left")
+				->where("ib.transaction_type", "inapp_billing_ios")
+				->where("ib.billing_type", "1");
 			
 			$this->input->get("id") && $this->DB2->where("ib.id", $this->input->get("id"));
 			$this->input->get("uid") && $this->DB2->where("ib.uid", $this->input->get("uid"));
@@ -829,12 +837,12 @@ class Trade extends MY_Controller {
 				$this->DB2->or_where("u.mobile", trim($this->input->get("account")));
 			}		
 			
-			$this->input->get("transaction_id") && $this->DB2->where("ib.transaction_id", $this->input->get("transaction_id"));
+			$this->input->get("order_no") && $this->DB2->where("ib.order_no", $this->input->get("order_no"));
 			
-			if ($this->input->get("transaction_state") == 'Y')
-				$this->DB2->where("ib.transaction_state", '1');
-			else if ($this->input->get("transaction_state") == 'N')
-				$this->DB2->where("(ib.transaction_state is null or ib.transaction_state <> '1')", null, false);
+			if ($this->input->get("result") == 'Y')
+				$this->DB2->where("ib.result", '1');
+			else if ($this->input->get("result") == 'N')
+				$this->DB2->where("(ib.result is null or ib.result <> '1')", null, false);
 			
 			if ($this->input->get("start_date")) {
 				$start_date = $this->DB2->escape($this->input->get("start_date"));
@@ -1139,13 +1147,15 @@ class Trade extends MY_Controller {
 		{
 			header("Cache-Control: private");		
 		
-			$this->DB2->from("google_billing gb")
+		
+			$this->DB2->from("user_billing gb")
 				->join("users u", "u.uid=gb.uid", "left")
 				->join("servers gi", "gb.server_id=gi.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
-				->where("purchase_state", "0")
+				->where("result", "1")
 				->where("gb.uid not in (select uid from testaccounts)")	
-				;				
+				->where("gb.transaction_type", "inapp_billing_google")
+				->where("gb.billing_type", "1");			
 									
 			$this->input->get("order_id") && $this->DB2->where("gb.order_id", $this->input->get("order_id"));
 			
@@ -1172,7 +1182,7 @@ class Trade extends MY_Controller {
 						case 'year': $len=4; break;
 						default: $len=10;
 					}
-					$query = $this->DB2->select("LEFT(gb.create_time, {$len}) title, g.name, sum(gb.price) cnt", false)
+					$query = $this->DB2->select("LEFT(gb.create_time, {$len}) title, g.name, sum(gb.amount) cnt", false)
 						->group_by("title, g.name")
 						->order_by("title desc, g.name")->get();
 					break;
@@ -1210,13 +1220,14 @@ class Trade extends MY_Controller {
 		{
 			header("Cache-Control: private");		
 		
-			$this->DB2->from("ios_billing ib")
+			$this->DB2->from("user_billing ib")
 				->join("users u", "u.uid=ib.uid", "left")
 				->join("servers gi", "ib.server_id=gi.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
-				->where("transaction_state", "1")
+				->where("result", "1")
 				->where("ib.uid not in (select uid from testaccounts)")	
-				;													
+				->where("ib.transaction_type", "inapp_billing_ios")
+				->where("ib.billing_type", "1");				
 			
 			if ($this->input->get("start_date")) {
 				$start_date = $this->DB2->escape($this->input->get("start_date"));
@@ -1237,7 +1248,7 @@ class Trade extends MY_Controller {
 						case 'year': $len=4; break;
 						default: $len=10;
 					}
-					$query = $this->DB2->select("LEFT(ib.create_time, {$len}) title, g.name, sum(ib.price) cnt", false)
+					$query = $this->DB2->select("LEFT(ib.create_time, {$len}) title, g.name, sum(ib.amount) cnt", false)
 						->group_by("title, g.name")
 						->order_by("title desc, g.name")->get();
 					break;

@@ -7,10 +7,10 @@
 	<div class="control-group">	
 		
 		交易結果
-		<select name="purchase_state" style="width:75px">
+		<select name="result" style="width:75px">
 			<option value="">--</option>
-			<option value="N" <?=($this->input->get("purchase_state")=='N' ? 'selected="selected"' : '')?>>失敗</option>
-			<option value="Y" <?=($this->input->get("purchase_state")=='Y' ? 'selected="selected"' : '')?>>成功</option>
+			<option value="N" <?=($this->input->get("result")=='N' ? 'selected="selected"' : '')?>>失敗</option>
+			<option value="Y" <?=($this->input->get("result")=='Y' ? 'selected="selected"' : '')?>>成功</option>
 		</select>	
 
 		<span class="sptl"></span>	
@@ -40,7 +40,7 @@
 		
 		<span class="sptl"></span>	
 		
-		<input type="text" name="order_id" value="<?=$this->input->get("order_id")?>" style="width:300px" placeholder="Google訂單號">			
+		<input type="text" name="order_no" value="<?=$this->input->get("order_no")?>" style="width:300px" placeholder="Google訂單號">			
 	
 		<input type="submit" class="btn btn-small btn-inverse" name="action" value="查詢">
 		<!-- <input type="submit" class="btn btn-small btn-warning" name="action" value="輸出"> -->		
@@ -79,15 +79,16 @@
 				<div style="color:#777;">euid</div></th>	
 			<th style="width:100px;">訂單號</th>					
 			<th style="width:35px;">金額</th>
+			<th style="width:80px;">遊戲伺服器</th>
 			<th style="width:50px;">結果</th>
 			<th style="width:120px;">訊息</th>
 			<th style="width:70px;">建立日期</th>	
-			<th style="width:22px;"></th>
+			<!--th style="width:22px;"></th-->
 		</tr>
 	</thead>
 	<tbody>
 		<? foreach($query->result() as $row):?>
-		<tr class="<?=$row->purchase_state=='0' ? 'success' : ''?>">
+		<tr class="<?=$row->result=='0' ? 'success' : ''?>">
 			<td><?=$row->id?></td>
 			<td title="帳號: 
 				<?
@@ -104,9 +105,10 @@
 				<a href="<?=site_url("trade/google?uid={$row->uid}&action=查詢")?>"><i class="icon-search"></i></a>
 				<div style="color:#777;"><?=$this->g_user->encode($row->uid)?></div>
 			</td>
-			<td><?=$row->order_id?></td>
-			<td><?=$row->price?></td>
-			<td><? if ($row->purchase_state == '0') {
+			<td><?=$row->order_no?></td>
+			<td><?=$row->amount?></td>
+			<td><?= "({$row->game_abbr_name}){$row->server_name}" ?></td>
+			<td><? if ($row->result == '0') {
 						echo '成功';
 						if ($row->is_confirmed == '') {
 							echo ' <div style="color:red; font-size:12px;">(未請款!!)</div>';
@@ -117,18 +119,18 @@
 			</td>
 			<td><?=$row->note?></td>
 			<td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>
-			<td>
+			<!--td>
 				<div class="btn-group">
 					<button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
 						<span class="caret"></span>
 					</button>	
 					<ul class="dropdown-menu pull-right">
-						<? if ($row->purchase_state == '0' && $row->is_confirmed == '0'):?>
+						<? if ($row->result == '0' && $row->is_confirmed == '0'):?>
 						<li><a href="javascript:;" class="json_post_alert" url="/ajax/confirm_google_billing/<?=$row->id?>">請款</a></li>
 						<? endif;?>
 					</ul>
 				</div>			
-			</td>								
+			</td-->								
 		</tr>
 		<? endforeach;?>
 	</tbody>
