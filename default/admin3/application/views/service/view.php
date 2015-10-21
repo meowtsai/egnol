@@ -217,8 +217,14 @@
 	  		<button type="submit" class="btn ">確認送出</button>
 	  		<a href="javascript:;" url="<?=site_url("service/close_question/{$question->id}")?>" class="json_post pull-right btn btn-danger">結案</a>
 	  	</div>
-	</form>  	
-	
+	</form> 
+    <? else: ?> 
+
+	<form id="reply_form" method="post" action="<?=site_url("service/modify_reply_json")?>">
+		<div class="form-actions">
+	  		<a href="javascript:;" url="<?=site_url("service/show_question/{$question->id}")?>" class="json_post pull-right btn btn-danger">調回處理中</a>
+	  	</div>
+	</form>
 	<? endif;?>
 	
 </div>	
