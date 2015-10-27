@@ -88,7 +88,7 @@
 	</thead>
 	<tbody>
 		<? foreach($query->result() as $row):?>
-		<tr class="<?=$row->result=='0' ? 'success' : ''?>">
+		<tr class="<?=$row->result=='1' ? 'success' : ''?>">
 			<td><?=$row->id?></td>
 			<td title="帳號: 
 				<?
