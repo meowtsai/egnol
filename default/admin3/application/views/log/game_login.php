@@ -73,11 +73,16 @@
 		<span class="sptl"></span>	
 		
 		是否創角
-		<select name="role_exist" style="width:66px">
+		<select name="character_exist" style="width:66px">
 			<option value="">--</option>
-			<option value="1" <?=($this->input->get("role_exist")=='1' ? 'selected="selected"' : '')?>>是</option>
-			<option value="2" <?=($this->input->get("role_exist")=='2' ? 'selected="selected"' : '')?>>否</option>
+			<option value="1" <?=($this->input->get("character_exist")=='1' ? 'selected="selected"' : '')?>>是</option>
+			<option value="2" <?=($this->input->get("character_exist")=='2' ? 'selected="selected"' : '')?>>否</option>
 		</select>
+		
+		<span class="sptl"></span>		
+		
+		<input type="checkbox" id="show_character" name="show_character" value="1" <?=$this->input->get("show_character") ? 'checked="checked"' : ''?>>
+		<label for="show_character">顯示角色</label>
 		
 		<span class="sptl"></span>		
 		
@@ -150,13 +155,14 @@
 	<thead>
 		<tr>			
 			<th style="width:50px;">#</th>
-			<th style="width:70px;">uid
+			<th style="width:55px;">uid
 				<div style="color:#777;">euid</div></th>
-			<th style="width:70px;">手機</th>	
+			<th style="width:65px;">手機</th>	
 			<th style="width:90px;">信箱</th>				
-			<th style="width:60px;">IP位址</th>		
-			<th style="width:70px;">建檔時間</th>
-			<th style="width:60px;">登入遊戲</th>			
+			<th style="width:50px;">IP位址</th>		
+			<th style="width:60px;">建檔時間</th>
+			<th style="width:60px;">登入遊戲</th>	
+			<?=$this->input->get("show_character") ? '<th style="width:60px;">角色</th>' : ''?>	
 			<th style="width:60px;">廣告</th>			
 		</tr>
 	</thead>
@@ -173,7 +179,8 @@
 				<a href="<?=site_url("/log/game_login?ip={$row->ip}&action=查詢")?>"><i class="icon-search"></i></a>
 			</td>
 			<td><?=$row->create_time?></td>
-			<td><?=$row->game_name."_".$row->server_name?></td>			
+			<td><?=$row->game_name."_".$row->server_name?></td>	
+			<?=$this->input->get("show_character") ? '<td>'.$row->character_name.'</td>' : ''?>	
 			<td><?=$row->ad?></td>
 		</tr>
 		<? endforeach;?>

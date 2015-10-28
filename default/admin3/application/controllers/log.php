@@ -186,7 +186,12 @@ class Log extends MY_Controller {
 			$this->DB2->from("log_game_logins lgl")
 				->join("users u", "u.uid=lgl.uid", "left")
 				->join("servers gi", "gi.server_id=lgl.server_id", "left")
+				//->join("characters ch", "ch.server_id=lgl.server_id and ch.uid=lgl.uid", "left")
 				->join("games g", "g.game_id=gi.game_id", "left");
+			
+			if ($this->input->get("show_character")) {
+				$this->DB2->join("characters ch", "ch.server_id=lgl.server_id and ch.uid=lgl.uid", "left");
+			}
 									
 			if ($this->input->get("start_date")) {
 				$start_date = $this->DB2->escape($this->input->get("start_date"));
@@ -202,8 +207,8 @@ class Log extends MY_Controller {
 				else $this->DB2->where("u.external_id like '%@{$channel}'", null, false);
 			}
 		
-			if ($this->input->get("role_exist")) {
-				$rule = ($this->input->get("role_exist") == '1' ? 'EXISTS' : 'NOT EXISTS');
+			if ($this->input->get("character_exist")) {
+				$rule = ($this->input->get("character_exist") == '1' ? 'EXISTS' : 'NOT EXISTS');
 				$this->DB2->where(" {$rule} (select * from characters where uid=lgl.uid and server_id=lgl.server_id)", null, false);
 			}											
 						
@@ -254,8 +259,15 @@ class Log extends MY_Controller {
 					$this->DB2->stop_cache();	
 							
 					$total_rows = $this->DB2->count_all_results();
+					
+					$select_str;
+					if ($this->input->get("show_character")) {
+						$select_str="lgl.*, g.abbr as game_name, gi.name as server_name, lgl.uid, u.mobile, u.email, ch.name character_name";
+					} else {
+						$select_str="lgl.*, g.abbr as game_name, gi.name as server_name, lgl.uid, u.mobile, u.email";
+					}
 										
-					$query = $this->DB2->select("lgl.*, g.abbr as game_name, gi.name as server_name, lgl.uid, u.mobile, u.email")
+					$query = $this->DB2->select($select_str)
 						->limit(100, $this->input->get("record"))
 						->order_by("create_time desc")->get();
 
@@ -276,15 +288,27 @@ class Log extends MY_Controller {
 				case "輸出":
 					ini_set("memory_limit","2048M");
 					
-					$query = $this->DB2->select("lgl.*, gi.name server_name, g.name game_name, g.abbr game_abbr_name, u.mobile, u.email")->get();
+					$select_str;
+					if ($this->input->get("show_character")) {
+						$content = "會員ID\t會員手機\t會員信箱\tIP位址\t建檔時間\t廣告\t登入遊戲\t角色\t\n";
+						$select_str="lgl.*, gi.name server_name, g.name game_name, g.abbr game_abbr_name, u.mobile, u.email, ch.name character_name";
+					} else {
+					$content = "會員ID\t會員手機\t會員信箱\tIP位址\t建檔時間\t廣告\t登入遊戲\t\n";
+						$select_str="lgl.*, gi.name server_name, g.name game_name, g.abbr game_abbr_name, u.mobile, u.email";
+					}
+					
+					$query = $this->DB2->select($select_str)->get();
 						
 					$filename = "output.xls";					
 					header("Content-type:application/vnd.ms-excel;");
 					header("Content-Disposition: filename={$filename};");
 					
-					$content = "會員ID\t會員手機\t會員信箱\tIP位址\t建檔時間\t廣告\t登入遊戲\t\n";
-					foreach($query->result() as $row) {						
-						$content .= "{$row->uid}\t=\"{$row->mobile}\"\t{$row->email}\"\t{$row->ip}\t{$row->create_time}\t{$row->ad}\t{$row->game_name}_{$row->server_name}\t\n";
+					foreach($query->result() as $row) {		
+						if ($this->input->get("show_character")) {				
+							$content .= "{$row->uid}\t=\"{$row->mobile}\"\t{$row->email}\"\t{$row->ip}\t{$row->create_time}\t{$row->ad}\t{$row->game_name}_{$row->server_name}\t{$row->character_name}\t\n";
+						} else {
+							$content .= "{$row->uid}\t=\"{$row->mobile}\"\t{$row->email}\"\t{$row->ip}\t{$row->create_time}\t{$row->ad}\t{$row->game_name}_{$row->server_name}\t\n";
+						}
 					}
 					//echo $content;
 					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
