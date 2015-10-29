@@ -69,6 +69,7 @@
 	<dt>手機</dt><dd><?=$user->mobile?>&nbsp;</dd>
 	<dt>身分證</dt><dd><?=$user->ident?>&nbsp;</dd>
 	<dt>地址</dt><dd><?=$user->street?>&nbsp;</dd>
+	<dt>生日</dt><dd><?=$user->birthday?>&nbsp;</dd>
 	<dt>註冊日期</dt><dd><?=$user->create_time?></dd>
 	<dt>最後登入日期</dt><dd><?=$user->last_login_date?>&nbsp</dd>
 	<dt>帳號狀態</dt><dd>
