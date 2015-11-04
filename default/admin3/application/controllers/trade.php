@@ -743,9 +743,9 @@ class Trade extends MY_Controller {
 			$this->input->get("order_no") && $this->DB2->where("gb.order_no", $this->input->get("order_no"));
 			
 			if ($this->input->get("result") == 'Y')
-				$this->DB2->where("gb.result", '0');
+				$this->DB2->where("gb.result", '1');
 			else if ($this->input->get("result") == 'N')
-				$this->DB2->where("(gb.result is null or gb.result <> '0')", null, false);
+				$this->DB2->where("(gb.result is null or gb.result <> '1')", null, false);
 			
 			if ($this->input->get("start_date")) {
 				$start_date = $this->DB2->escape($this->input->get("start_date"));

@@ -72,7 +72,7 @@ DROP TABLE IF EXISTS `admin_users`;
 CREATE TABLE `admin_users` (
   `uid` int(11) NOT NULL AUTO_INCREMENT,
   `account` varchar(50) NOT NULL,
-  `password` varchar(50) NOT NULL,
+  `password` varchar(50) NULL,
   `name` varchar(255) NOT NULL,
   `role` varchar(50) NOT NULL,
   `admin_userscol` varchar(45) DEFAULT NULL,

@@ -132,7 +132,7 @@ FROM users x
 WHERE x.uid={$uid}";
 		
 		$user = $this->DB2
-					->select("u.*, lgl.create_time as last_login_date, ui.ident, ui.ban_reason, ui.ban_date, ui.name, ui.sex, ui.street")
+					->select("u.*, lgl.create_time as last_login_date, ui.ident, ui.ban_reason, ui.ban_date, ui.name, ui.sex, ui.street, ui.birthday")
 					->from("users u")->where("u.uid", $uid)
 					->join("log_game_logins lgl", "u.uid=lgl.uid and is_recent='1'", "left")
 					->join("user_info ui", "u.uid=ui.uid", "left")

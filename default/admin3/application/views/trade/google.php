@@ -88,7 +88,7 @@
 	</thead>
 	<tbody>
 		<? foreach($query->result() as $row):?>
-		<tr class="<?=$row->result=='0' ? 'success' : ''?>">
+		<tr class="<?=$row->result=='1' ? 'success' : ''?>">
 			<td><?=$row->id?></td>
 			<td title="帳號: 
 				<?
@@ -108,7 +108,7 @@
 			<td><?=$row->order_no?></td>
 			<td><?=$row->amount?></td>
 			<td><?= "({$row->game_abbr_name}){$row->server_name}" ?></td>
-			<td><? if ($row->result == '0') {
+			<td><? if ($row->result == '1') {
 						echo '成功';
 						if ($row->is_confirmed == '') {
 							echo ' <div style="color:red; font-size:12px;">(未請款!!)</div>';

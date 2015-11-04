@@ -43,17 +43,90 @@ class Platform extends MY_Controller {
 					
 					header("location:".$this->input->post("redirect_url"));
 					exit();
-				}
-				else {
+				} else if ($this->input->post("password")) {
 					
-					if (empty($cnt)) $cnt = 1;
-					else $cnt++;
+					// connect to ldap server
+					$this->config->load('ldap');
+					$ldap_connect = $this->config->item('ldap_connect');
+						
+                    $ldapconn = ldap_connect($ldap_connect['host'], $ldap_connect['port'])  or die("Could not connect to LDAP server.");
+                    $set = ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 					
-					$this->input->set_cookie('login_cnt', $cnt, '180', '', '/', '');					
-					$error_message = '帳號或密碼錯誤';
+					$ldap_bd = @ldap_bind($ldapconn, $this->input->post("account").$ldap_connect['domain'], $this->input->post("password"));
+
+					if($ldap_bd) {
+                        $result = ldap_search($ldapconn,"dc=".$ldap_connect['dc1'].",dc=".$ldap_connect['dc2'],"(sAMAccountName=".$this->input->post("account").")") or die ("Error in query");
+
+                        $data = ldap_get_entries($ldapconn,$result);
+						
+				        $query = $this->DB2->from("admin_users")
+					        ->where("account", $this->input->post("account"))->get();
+							
+					    $ldap_title = "";
+						foreach ($data[0]["memberof"] as $title) {
+							if (strpos($title, "職務_")) {
+								$title_explode = explode(',', $title);
+								$title_explode2 = explode('_', $title_explode[0]);
+								
+								$ldap_title = $title_explode2[1];
+								break;
+							}
+						}
+							
+						$ldap_roles = $this->config->item('ldap_roles');
+						
+						$ldap_role = ($ldap_roles[$ldap_title])?$ldap_roles[$ldap_title]:"op";
+						
+						if ($query->num_rows() > 0) {
+					        $row = $query->row();
+							
+					        $_SESSION["admin_uid"] = $row->uid;
+					        $_SESSION["admin_account"] = $row->account;
+					        $_SESSION["admin_role"] = $ldap_role;
+					        $_SESSION["admin_name"] = $data[0]["name"][0];
+							
+							if ($row->name <> $data[0]["name"][0] || $row->role <> $ldap_role) {
+				                $this->DB1->where("uid", $this->input->post("key"))
+					                ->update("admin_users", array(
+								         "name" => $data[0]["name"][0],
+								         "role" => $ldap_role,
+							        ));
+							}
+						} else {
+				            $this->DB1->insert("admin_users", array(
+								"account" => $this->input->post("account"),
+								"name" => $data[0]["name"][0],
+								"role" => $ldap_role,
+							));
+							
+					        $_SESSION["admin_uid"] = $this->DB1->insert_id();
+					        $_SESSION["admin_account"] = $row->account;
+					        $_SESSION["admin_role"] = $ldap_role;
+					        $_SESSION["admin_name"] = $data[0]["name"][0];
+						}
+									
+					    $allow_games = array();
+					    $query = $this->DB2->from("admin_permissions")->where("role", $ldap_role)->where("resource in (select game_id from games)", null, false)->get();
+					    foreach($query->result() as $row) {
+						    $allow_games[] = $row->resource;
+					    }			
+					    $_SESSION["admin_allow_games"] = $allow_games;
 					
-					$this->load->model("log_admin_actions");
-					$this->log_admin_actions->insert_log(0, 'login', '', "登入帳號 {$this->input->post("account")} 失敗");
+					    header("location:".$this->input->post("redirect_url"));
+					    exit();
+					} else {
+					    if (empty($cnt)) $cnt = 1;
+					    else $cnt++;
+					
+					    $this->input->set_cookie('login_cnt', $cnt, '180', '', '/', '');					
+					    $error_message = '帳號或密碼錯誤';
+					
+					    $this->load->model("log_admin_actions");
+					    $this->log_admin_actions->insert_log(0, 'login', '', "登入帳號 {$this->input->post("account")} 失敗");
+					}
+					ldap_close($ldapconn);
+				} else {		
+					$error_message = '請輸入密碼';
 				}
 			}
 		}

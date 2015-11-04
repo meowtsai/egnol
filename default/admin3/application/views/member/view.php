@@ -69,6 +69,7 @@
 	<dt>手機</dt><dd><?=$user->mobile?>&nbsp;</dd>
 	<dt>身分證</dt><dd><?=$user->ident?>&nbsp;</dd>
 	<dt>地址</dt><dd><?=$user->street?>&nbsp;</dd>
+	<dt>生日</dt><dd><?=$user->birthday?>&nbsp;</dd>
 	<dt>註冊日期</dt><dd><?=$user->create_time?></dd>
 	<dt>最後登入日期</dt><dd><?=$user->last_login_date?>&nbsp</dd>
 	<dt>帳號狀態</dt><dd>
@@ -86,7 +87,7 @@
 <a href="<?=site_url("trade/gash?uid={$user->uid}&action=查詢")?>">Gash+</a> |
 <a href="<?=site_url("trade/pepay?uid={$user->uid}&action=查詢")?>">Pepay</a> |
 <a href="<?=site_url("trade/google?uid={$user->uid}&action=查詢")?>">Google</a> |
-<a href="<?=site_url("trade/mycard?uid={$user->uid}&action=查詢")?>">MyCard</a>)
+<a href="<?=site_url("trade/ios?uid={$user->uid}&action=查詢")?>">IOS</a>)
 <a href="<?=site_url("trade/transfer?uid={$user->uid}&action=查詢")?>" class="btn btn-link btn-small">轉點記錄</a>
 <a href="<?=site_url("log/login?uid={$user->uid}&action=查詢")?>" class="btn btn-link btn-small">平台登入記錄</a>
 <a href="<?=site_url("log/game_login?uid={$user->uid}&action=查詢")?>" class="btn btn-link btn-small">遊戲登入記錄</a>
