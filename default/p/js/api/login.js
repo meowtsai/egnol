@@ -44,7 +44,17 @@ $(document).ready(function()
 		                $('.login-button img').show();
 						leOpenDialog('登入錯誤', json.message, leDialogType.MESSAGE);
 					}
-				}		
+				},
+				error: function(xhr, status, err)
+				{
+					if(status == 'timeout' || status == 'abort')
+					{
+						leOpenDialog('登入錯誤', '連線逾時或網路錯誤，請按確定返回登入畫面重新登入。', leDialogType.MESSAGE, function()
+						{
+							location.reload();
+						});
+					}
+				}
 			});
 		}
 	});

@@ -17,7 +17,7 @@
 				<input name="doLogin" type="submit" id="doSubmit" value="" style="display:none;" />
 				<p><a href="#" title="login"><img src="<?=$longe_url?>p/image/member/login-btn.png" onclick="javascript:$('#doSubmit').trigger('click')"></a></p>
 				<p><a href="<?=$api_url?>api/ui_register?site=<?=$site?>" title="login">註冊帳號</a>&nbsp;│&nbsp;<a href="<?=$api_url?>api/ui_forgot_password?site=<?=$site?>" title="login">忘記密碼</a></p>
-				<p><img src="<?=$longe_url?>p/image/member/try-btn.png" style="cursor:pointer;" onclick="OnQuickLogin('<?=$device_id?>','<?=$site?>');" /></p>
+				<p><img src="<?=$longe_url?>p/image/member/play-btn.png" style="cursor:pointer;" onclick="OnQuickLogin('<?=$device_id?>','<?=$site?>');" /></p>
 			</div>
 
 			<div class="login-other">
