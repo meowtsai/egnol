@@ -21,9 +21,6 @@
 		<label>uid</label>
 		<input type="text" name="uid" value="" class="required number">
 		
-		<label>account</label>
-		<input type="text" name="account" value="" class="required">
-		
 		<? endif;?>
 						
 		<label>備註</label>

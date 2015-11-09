@@ -10,7 +10,6 @@
 		<tr>
 			<th style="width:60px;">#</th>
 			<th style="width:70px;">uid</th>
-			<th style="width:100px">帳號</th>
 			<th style="width:160px">備註</th>			
 			<!-- <th style="width:90px;">建立日期</th> -->	 	
 			<th></th>
@@ -21,7 +20,6 @@
 		<tr>
 			<td><?=$row->id?></td>
 			<td><a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?></a></td>
-			<td><?=$row->account?></td>
 			<td><?=$row->note?></td>
 			<!-- <td><?=date("Y-m-d", strtotime($row->create_time))?></td> -->
 			<td>

@@ -186,7 +186,6 @@ WHERE x.uid={$uid}";
 			else {
 				$this->DB1->insert("testaccounts", array(
 								"uid" => $this->input->post("uid"),
-								"account" => $this->input->post("account"),
 								"note" => $this->input->post("note"),
 								//"create_time" => now(),
 							));		

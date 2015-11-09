@@ -6,7 +6,20 @@ class Cron extends CI_Controller {
 	{
 		parent::__construct();	
 		$this->DB1 = $this->load->database('long_e', TRUE);
-        $this->DB2 = $this->load->database('long_e_2', TRUE);			
+        $this->DB2 = $this->load->database('long_e_2', TRUE);
+			
+    	$query = $this->DB2->select("uid")->from("testaccounts")->get();
+
+        $testaccounts = array();
+        
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+			    $testaccounts[] = $row->uid;
+		    }
+		}
+        
+        $testaccounts_str = implode(",", $testaccounts);
+        $this->testaccounts = $testaccounts_str;
 	}
 	
 	function generate_statistics_blank($date="", $span="daily")
@@ -120,6 +133,7 @@ class Cron extends CI_Controller {
 					log_game_logins
 				WHERE
 					".$span_query."
+                        ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
 				GROUP BY game_id, uid) tmp
 			GROUP BY game_id");	
 
@@ -166,9 +180,10 @@ class Cron extends CI_Controller {
 				) AS new_characters
 				WHERE
 					DATE(lgl.create_time) = '{$date}'
-						AND lgl.is_first = 1
-						AND new_characters.uid = lgl.uid
-						AND new_characters.game_id = lgl.game_id
+                        AND lgl.is_first = 1
+                        ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
+                        AND new_characters.uid = lgl.uid
+                        AND new_characters.game_id = lgl.game_id
 						AND new_characters.create_time >= lgl.create_time
 				GROUP BY lgl.game_id , lgl.uid
 			) AS tmp
@@ -272,6 +287,7 @@ class Cron extends CI_Controller {
 				WHERE
 					lgl2.uid = lgl.uid
 						AND lgl2.game_id = lgl.game_id
+                        ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
 			) AS tmp
 			GROUP BY game_id");	
 
@@ -342,6 +358,7 @@ class Cron extends CI_Controller {
 				WHERE
 					".$span_query1."
 						AND is_first <> 1
+                        ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
 				GROUP BY uid, game_id
 			) AS lgl
 				LEFT JOIN
@@ -413,6 +430,7 @@ class Cron extends CI_Controller {
 					DATE(ub.create_time) = '{$date}'
 						AND ub.billing_type = 2
 						AND ub.result = 1
+                        ".(($this->testaccounts)?" AND ub.uid NOT IN (".$this->testaccounts.") ":"")."
 				GROUP BY ub.uid , sv.game_id
 			) tmp
 			GROUP BY game_id");
@@ -454,6 +472,7 @@ class Cron extends CI_Controller {
 					log_game_consumes lgc
 				WHERE
 					DATE(lgc.create_time) = '{$date}'
+                        ".(($this->testaccounts)?" AND lgc.uid NOT IN (".$this->testaccounts.") ":"")."
 				GROUP BY lgc.uid , lgc.game_id
 			) tmp
 			GROUP BY game_id");	
@@ -493,6 +512,7 @@ class Cron extends CI_Controller {
 					log_game_consumes
 				WHERE
 					DATE(create_time) <= '{$date}'
+                        ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
 				GROUP BY uid, game_id
 			) AS lgc
 			WHERE
@@ -535,6 +555,7 @@ class Cron extends CI_Controller {
 				WHERE
 					DATE(lgl.create_time) = '{$date}'
 						AND lgl.logout_time IS NOT NULL
+                        ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
 				GROUP BY lgl.uid , lgl.game_id
 			) tmp
 			GROUP BY game_id");		
@@ -587,6 +608,7 @@ class Cron extends CI_Controller {
 				WHERE
 					DATE(lgl.create_time) = '{$date}'
 						AND lgl.logout_time IS NOT NULL
+                        ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
 						AND lgl.uid = paid_users.uid
 						AND lgl.game_id = paid_users.game_id
 				GROUP BY lgl.uid , lgl.game_id
@@ -698,6 +720,7 @@ class Cron extends CI_Controller {
 				WHERE
 					DATE(create_time) = '{$date}'
 						OR DATE(logout_time) = '{$date}'
+                        ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
 			) tmp
 			GROUP BY game_id");	
 
@@ -800,6 +823,7 @@ class Cron extends CI_Controller {
 						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 120 THEN 1 ELSE NULL END) 'login_count_more'
 					FROM log_game_logins
 					WHERE create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
+                        ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
 					GROUP BY game_id, DATE(create_time)
 				) AS all_gt
 					LEFT JOIN
@@ -815,6 +839,7 @@ class Cron extends CI_Controller {
 					FROM log_game_logins
 					WHERE create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
 						AND is_first = 1
+                        ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
 					GROUP BY game_id, DATE(create_time)
 				) AS new_gt ON all_gt.game_id=new_gt.game_id AND all_gt.date=new_gt.date
 					LEFT JOIN
@@ -832,6 +857,7 @@ class Cron extends CI_Controller {
 					WHERE lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
 						AND ub.billing_type = 2 
 						AND ub.result = 1
+                        ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
 					GROUP BY lgl.game_id, DATE(lgl.create_time)
 				) AS deposit_gt ON all_gt.game_id=deposit_gt.game_id AND all_gt.date=deposit_gt.date
 					LEFT JOIN
@@ -849,6 +875,7 @@ class Cron extends CI_Controller {
 					WHERE lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
 						AND ub.billing_type = 2 
 						AND ub.result = 1
+                        ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
 					GROUP BY lgl.game_id, DATE(lgl.create_time)
 				) AS new_deposit_gt ON all_gt.game_id=new_deposit_gt.game_id AND all_gt.date=new_deposit_gt.date
 			");
@@ -920,6 +947,7 @@ class Cron extends CI_Controller {
 						COUNT(CASE WHEN TIMESTAMPDIFF(MINUTE, create_time, logout_time) >= 120 THEN 1 ELSE NULL END) 'login_count_more'
 					FROM log_game_logins
 					WHERE create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
+                        ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
 					GROUP BY game_id, DATE(create_time)
 				) AS all_gt
 			");
@@ -973,6 +1001,7 @@ class Cron extends CI_Controller {
 					FROM log_game_logins
 					WHERE create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
 						AND is_first = 1
+                        ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
 					GROUP BY game_id, DATE(create_time)
 				) AS new_gt
 			");
@@ -1028,6 +1057,7 @@ class Cron extends CI_Controller {
 					WHERE lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
 						AND ub.billing_type = 2 
 						AND ub.result = 1
+                        ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
 					GROUP BY lgl.game_id, DATE(lgl.create_time)
 				) AS deposit_gt
 			");
@@ -1084,6 +1114,7 @@ class Cron extends CI_Controller {
 					WHERE lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
 						AND ub.billing_type = 2 
 						AND ub.result = 1
+                        ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
 					GROUP BY lgl.game_id, DATE(lgl.create_time)
 				) AS new_deposit_gt
 			");
@@ -1152,6 +1183,7 @@ class Cron extends CI_Controller {
 				AND ub.billing_type = 2 
 				AND ub.result = 1
 				AND ub.create_time BETWEEN '{$date} 00:00:00' AND '{$end_date} 00:00:00'
+                ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
 			GROUP BY lgl.game_id, DATE(lgl.create_time)
 		");
 
