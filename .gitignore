@@ -6,6 +6,7 @@ default/application/logs/
 default/admin3/application/logs/
 default/p/captcha/*
 default/p/upload/*
+default/admin3/p/upload/*
 /config.php
 ci_system/global/config/*
 !ci_system/global/config/template/
