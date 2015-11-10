@@ -718,3 +718,12 @@ CREATE TABLE `log_event_serial` (
   `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `user_facebook` (
+  `fb_id` varchar(50) DEFAULT NULL COMMENT 'Facebook 使用者 id for App',
+  `app_id` varchar(50) DEFAULT NULL COMMENT 'Facebook AppID',
+  `uid` varchar(20) DEFAULT NULL COMMENT '龍邑會員 id',
+  `create_time` datetime DEFAULT NULL COMMENT '建立時間',
+  PRIMARY KEY (`fb_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

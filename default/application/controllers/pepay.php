@@ -344,6 +344,7 @@ class Pepay extends MY_Controller {
 
 function go_payment_result($status, $transfer_status, $price, $message='', $args='') 
 {
+	$site = $_SESSION['site'];
 	$api_call = $_SESSION['payment_api_call'];
 
     $_SESSION['payment_api_call'] = '';
@@ -352,7 +353,7 @@ function go_payment_result($status, $transfer_status, $price, $message='', $args
 	if($api_call == 'true')
 		header('location: '.g_conf('url', 'api')."api/ui_payment_result?s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args);
 	else
-		header('location: '.g_conf('url', 'longe')."payment/result?s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args);
+		header('location: '.g_conf('url', 'longe')."payment/result?site={$site}&s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args);
 	exit();
 }
 
