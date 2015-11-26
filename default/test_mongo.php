@@ -1,3 +1,0 @@
-<?
-$m = new MongoClient();
-?>
