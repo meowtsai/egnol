@@ -49,16 +49,16 @@ class Api2 extends MY_Controller
 	{
 		$site	= $this->_get_site();
 
-		$log_game_logins = $this->db->from("log_game_logins")
-            ->where("uid", $this->g_user->uid)
-            ->where("game_id", $site)
-            ->where('logout_time', '0000-00-00 00:00:00')->get()->row();
-            
-        if (isset($log_game_logins->device_id) && $_SESSION['login_deviceid']==$log_game_logins->device_id) $is_duplicate_login=true;
-        else $is_duplicate_login=false;
-                
-		if(!$this->g_user->is_login() || $is_duplicate_login)
+		if(!$this->g_user->is_login())
 		{
+            $log_game_logins = $this->db->from("log_game_logins")
+                ->where("uid", $this->g_user->uid)
+                ->where("game_id", $site)
+                ->where('logout_time', '0000-00-00 00:00:00')->get()->row();
+            
+            if (isset($log_game_logins->device_id) && $_SESSION['login_deviceid']==$log_game_logins->device_id) $is_duplicate_login=true;
+            else $is_duplicate_login=false;
+        
 			// 未登入, 直接進入登入畫面
 			$partner    = !empty($_SESSION['login_partner']) ? $_SESSION['login_partner'] : $this->input->get_post("partner");
 			$game_key   = !empty($_SESSION['login_gamekey']) ? $_SESSION['login_gamekey'] : $this->input->get_post("gamekey");
