@@ -51,14 +51,8 @@ class Api2 extends MY_Controller
 
 		if(!$this->g_user->is_login())
 		{
-            $log_game_logins = $this->db->from("log_game_logins")
-                ->where("uid", $this->g_user->uid)
-                ->where("game_id", $site)
-                ->where('logout_time', '0000-00-00 00:00:00')->get()->row();
+            $is_duplicate_login = $this->_check_duplicate_login();
             
-            if (isset($log_game_logins->device_id) && $_SESSION['login_deviceid']==$log_game_logins->device_id) $is_duplicate_login=true;
-            else $is_duplicate_login=false;
-        
 			// 未登入, 直接進入登入畫面
 			$partner    = !empty($_SESSION['login_partner']) ? $_SESSION['login_partner'] : $this->input->get_post("partner");
 			$game_key   = !empty($_SESSION['login_gamekey']) ? $_SESSION['login_gamekey'] : $this->input->get_post("gamekey");
@@ -229,16 +223,10 @@ class Api2 extends MY_Controller
 	{
 		header('content-type:text/html; charset=utf-8');
 
+        $is_duplicate_login = $this->_check_duplicate_login();
+        if ($is_duplicate_login) die(json_failure('此帳號已於其他裝置進行遊戲中，請先將其登出。'));
+        
 		$site = $this->_get_site();
-
-		$log_game_logins = $this->db->from("log_game_logins")
-            ->where("uid", $this->g_user->uid)
-            ->where("game_id", $site)
-            ->where('logout_time', '0000-00-00 00:00:00')->get()->row();
-                
-        if (isset($log_game_logins->device_id) && $_SESSION['login_deviceid']==$log_game_logins->device_id) {
-            die(json_failure('此帳號已於其他裝置進行遊戲中，請先將其登出。'));
-        }
 
 		if (isset($_SESSION['server_mode']) && $_SESSION['server_mode'] == 1) {
 			$server = $this->input->post("server");
@@ -282,14 +270,15 @@ class Api2 extends MY_Controller
 			'token' => $this->g_user->token
 		);
 
+        $this->_set_logout_time();
+            
 		$this->db->insert("log_game_logins", $data);	
+        
 		if ( $this->db->insert_id() )
 		{
             $mongo = new Mongo_db(array("activate" => "default"));
             
-            $mongo->where(array("uid" => $this->g_user->uid))->delete('users');
-            
-            $mongo->insert('users', array("uid" => $this->g_user->uid, "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token));
+            $mongo->insert('users', array("uid" => $this->g_user->uid, "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "latest_update_time" => time()));
             
 		    $_SESSION['server_id'] = $server;
 			die(json_message(array("message"=>"成功", "site"=>$site, "token"=>$this->g_user->token), true));
@@ -389,12 +378,7 @@ class Api2 extends MY_Controller
 	// 更換帳號
 	function ui_change_account()
 	{
-	    $this->db->where("uid", $this->g_user->uid)
-		  ->where("game_id", $site)
-		  ->where("logout_time", "0000-00-00 00:00")->update("log_game_logins", array("logout_time" => now()));
-              
-        $mongo = new Mongo_db(array("activate" => "default"));
-        $mongo->where(array("uid" => $this->g_user->uid))->delete('users');
+	    $this->_set_logout_time();
         
 		// 登出然後跳回登入畫面
 		header('content-type:text/html; charset=utf-8');
@@ -412,12 +396,7 @@ class Api2 extends MY_Controller
 	// 帳號登出
 	function ui_logout()
 	{
-	    $this->db->where("uid", $this->g_user->uid)
-		  ->where("game_id", $site)
-		  ->where("logout_time", "0000-00-00 00:00")->update("log_game_logins", array("logout_time" => now()));
-              
-        $mongo = new Mongo_db(array("activate" => "default"));
-        $mongo->where(array("uid" => $this->g_user->uid))->delete('users');
+	    $this->_set_logout_time();
         
 		$this->g_user->logout();
 
@@ -1339,4 +1318,58 @@ class Api2 extends MY_Controller
 		$res = $this->game->check_server_alive($server_id);
 		die("Res:".($res == true ? 'true' : 'false'));
 	}
+    
+    function _check_duplicate_login()
+    {
+		$site = $this->_get_site();
+        
+		$log_game_logins = $this->db->from("log_game_logins")
+            ->where("uid", $this->g_user->uid)
+            ->where("game_id", $site)
+            ->where('logout_time', '0000-00-00 00:00:00')->get()->row();
+                
+        if (isset($log_game_logins->device_id) && $_SESSION['login_deviceid']<>$log_game_logins->device_id) {
+            $mongo = new Mongo_db(array("activate" => "default"));
+            
+            $log_user = $mongo->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->select(array('latest_update_time'))->get('users');
+            
+            if ($log_user[0]['latest_update_time']) {
+                $idle_time = time() - $log_user[0]['latest_update_time'];
+                
+                if ($idle_time < 12*60*60) return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    function _set_logout_time()
+    { 
+		$site = $this->_get_site();
+        
+        $this->db->where("uid", $this->g_user->uid)
+          ->where("game_id", $site)
+          ->where("logout_time", "0000-00-00 00:00")->update("log_game_logins", array("logout_time" => now()));
+              
+        $mongo = new Mongo_db(array("activate" => "default"));
+        $mongo->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->delete_all('users');
+    }
+    
+    function test_mongo() {
+        $mongo = new Mongo_db(array("activate" => "default"));
+        
+        $log_user = $mongo->where(array("uid" => '10002', "game_id" => 'stm'))->select(array('latest_update_time'))->get('users');
+        
+        var_dump($log_user);
+        
+        /*if ($log_user[0]['latest_update_time']) {
+            $idle_time = time() - $log_user[0]['latest_update_time'];
+            
+            if ($idle_time > 12*60*60) {
+                $this->_set_logout_time();
+            } else {
+                return true;
+            }
+        }*/
+    }
 }
