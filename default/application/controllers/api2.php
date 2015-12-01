@@ -14,13 +14,15 @@ class Api2 extends MY_Controller
 	
 	var $partner, $game, $time, $hash, $key;
     
-    var $longe_log;
+    var $mongo_log;
 	
 	function __construct()
 	{
 		parent::__construct();
 		$this->load->config('api');		
 		$this->partner_conf = $this->config->item("partner_api");
+        
+        $this->mongo_log = new Mongo_db(array("activate" => "default"));
 	}
 
 	// AJAX 回應 function 檢查是否已登入
@@ -276,9 +278,7 @@ class Api2 extends MY_Controller
         
 		if ( $this->db->insert_id() )
 		{
-            $mongo = new Mongo_db(array("activate" => "default"));
-            
-            $mongo->insert('users', array("uid" => $this->g_user->uid, "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "latest_update_time" => time()));
+            $this->mongo_log->insert('users', array("uid" => $this->g_user->uid, "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "latest_update_time" => time()));
             
 		    $_SESSION['server_id'] = $server;
 			die(json_message(array("message"=>"成功", "site"=>$site, "token"=>$this->g_user->token), true));
@@ -1331,9 +1331,8 @@ class Api2 extends MY_Controller
                 ->where('logout_time', '0000-00-00 00:00:00')->get()->row();
                     
             if (isset($log_game_logins->device_id) && $_SESSION['login_deviceid']<>$log_game_logins->device_id) {
-                $mongo = new Mongo_db(array("activate" => "default"));
-                
-                $log_user = $mongo->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->select(array('latest_update_time'))->get('users');
+
+                $log_user = $this->mongo_log->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->select(array('latest_update_time'))->get('users');
                 
                 if ($log_user[0]['latest_update_time']) {
                     $idle_time = time() - $log_user[0]['latest_update_time'];
@@ -1354,7 +1353,6 @@ class Api2 extends MY_Controller
           ->where("game_id", $site)
           ->where("logout_time", "0000-00-00 00:00")->update("log_game_logins", array("logout_time" => now()));
               
-        $mongo = new Mongo_db(array("activate" => "default"));
-        $mongo->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->delete_all('users');
+        $this->mongo_log->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->delete_all('users');
     }
 }
