@@ -48,11 +48,11 @@ class Api2 extends MY_Controller
 	function ui_login()
 	{
 		$site	= $this->_get_site();
+        
+        $is_duplicate_login = $this->_check_duplicate_login();
 
-		if(!$this->g_user->is_login())
+		if(!$this->g_user->is_login() || $is_duplicate_login)
 		{
-            $is_duplicate_login = $this->_check_duplicate_login();
-            
 			// 未登入, 直接進入登入畫面
 			$partner    = !empty($_SESSION['login_partner']) ? $_SESSION['login_partner'] : $this->input->get_post("partner");
 			$game_key   = !empty($_SESSION['login_gamekey']) ? $_SESSION['login_gamekey'] : $this->input->get_post("gamekey");
@@ -1323,20 +1323,23 @@ class Api2 extends MY_Controller
     {
 		$site = $this->_get_site();
         
-		$log_game_logins = $this->db->from("log_game_logins")
-            ->where("uid", $this->g_user->uid)
-            ->where("game_id", $site)
-            ->where('logout_time', '0000-00-00 00:00:00')->get()->row();
-                
-        if (isset($log_game_logins->device_id) && $_SESSION['login_deviceid']<>$log_game_logins->device_id) {
-            $mongo = new Mongo_db(array("activate" => "default"));
+        if ($this->g_user->uid) {
             
-            $log_user = $mongo->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->select(array('latest_update_time'))->get('users');
-            
-            if ($log_user[0]['latest_update_time']) {
-                $idle_time = time() - $log_user[0]['latest_update_time'];
+            $log_game_logins = $this->db->from("log_game_logins")
+                ->where("uid", $this->g_user->uid)
+                ->where("game_id", $site)
+                ->where('logout_time', '0000-00-00 00:00:00')->get()->row();
+                    
+            if (isset($log_game_logins->device_id) && $_SESSION['login_deviceid']<>$log_game_logins->device_id) {
+                $mongo = new Mongo_db(array("activate" => "default"));
                 
-                if ($idle_time < 12*60*60) return true;
+                $log_user = $mongo->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->select(array('latest_update_time'))->get('users');
+                
+                if ($log_user[0]['latest_update_time']) {
+                    $idle_time = time() - $log_user[0]['latest_update_time'];
+                    
+                    if ($idle_time < 12*60*60) return true;
+                }
             }
         }
         
@@ -1353,23 +1356,5 @@ class Api2 extends MY_Controller
               
         $mongo = new Mongo_db(array("activate" => "default"));
         $mongo->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->delete_all('users');
-    }
-    
-    function test_mongo() {
-        $mongo = new Mongo_db(array("activate" => "default"));
-        
-        $log_user = $mongo->where(array("uid" => '10002', "game_id" => 'stm'))->select(array('latest_update_time'))->get('users');
-        
-        var_dump($log_user);
-        
-        /*if ($log_user[0]['latest_update_time']) {
-            $idle_time = time() - $log_user[0]['latest_update_time'];
-            
-            if ($idle_time > 12*60*60) {
-                $this->_set_logout_time();
-            } else {
-                return true;
-            }
-        }*/
     }
 }
