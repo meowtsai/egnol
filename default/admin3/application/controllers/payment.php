@@ -36,7 +36,6 @@ class Payment extends MY_Controller {
             
             $ch = curl_init();
             
-            $this->load->config("g_payment");
             curl_setopt($ch, CURLOPT_URL,$this->config->item("payment_frontend_url")."payment/update_payment_disable_list");
             curl_setopt($ch, CURLOPT_POST, TRUE);
             curl_setopt($ch, CURLOPT_POSTFIELDS,
