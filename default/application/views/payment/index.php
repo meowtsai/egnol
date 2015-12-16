@@ -26,6 +26,12 @@ $currency_array = array(
     //"THB" => "THB",
     //"THB" => "THB"
 );
+    
+$filename = "./p/payment_disable_list";
+$handle = fopen($filename, "r");
+$payment_disable_list = fread($handle, filesize($filename));
+$payment_disable_array = explode(",", $payment_disable_list);
+fclose($handle);
 ?>
 
 <script type="text/javascript">
@@ -138,6 +144,7 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 			                    <option value=''>--請選擇支付管道--</option>
 
 								<? foreach($arr as $opt => $arr2):
+                                    if (in_array($opt, $payment_disable_array)) continue;
 									if (array_key_exists("trade", $arr)) continue;									
 									if ($is_mobile || $is_tablet) {
 										if ($arr2['mobile'] == "0") continue;
