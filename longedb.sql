@@ -215,6 +215,8 @@ CREATE TABLE `log_game_logins` (
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `logout_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `is_first` tinyint(1) DEFAULT 0,
+  `device_id` varchar(50) DEFAULT NULL,
+  `token` varchar(60) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
