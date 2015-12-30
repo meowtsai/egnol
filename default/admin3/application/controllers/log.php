@@ -145,6 +145,7 @@ class Log extends MY_Controller {
 		$this->g_layout
 			->add_breadcrumb("平台登入")	
 			->set("query", isset($query) ? $query : false)
+			->set("game_list", $this->DB2->order_by("game_id")->get("games"))
 			->add_js_include("log/game_login")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();	
