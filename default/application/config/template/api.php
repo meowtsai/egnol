@@ -20,6 +20,14 @@ $config["partner_api"] = array(
 			'stm' => array('key'=>'d2e3b7998ac3c3405956dbfb5fe584d4'),
 		),
 	),
+
+	'netease' => array(
+		'name' => '網易',
+		'ips' => array('0.0.0.0'),
+		'sites' => array(
+			'r2g' => array('key'=>'85cb5665a2a868410cf740a3c537ab09'),
+		),
+	),
 );
 
 $config["game_api"] = array(
