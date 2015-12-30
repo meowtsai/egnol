@@ -77,7 +77,7 @@ li.dropdown li a {line-height:25px;}
 				<? endforeach;?>
 				</ul>
 			</li>
-            <? else:
+            <? elseif ($this->game_id):
 					$row = $c_game[$this->game_id];?>
 			<li class="<?=($this->game_id && $this->game_id<>'long_e' ? 'active' : '')?> dropdown">
 				<a href="#" style="white-space:nowrap" class="dropdown-toggle" data-toggle="dropdown"><span style="padding-right:10px"><?=$row->name?><b class="caret"></b></span></a>
