@@ -21,6 +21,7 @@ class Api2 extends MY_Controller
 		parent::__construct();
 		$this->load->config('api');		
 		$this->partner_conf = $this->config->item("partner_api");
+		$this->load->library(array("Mongo_db"));		
         
         $this->mongo_log = new Mongo_db(array("activate" => "default"));
 	}

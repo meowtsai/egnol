@@ -3,7 +3,6 @@
 	$bulletin && $arr = explode(",", strval($bulletin->target));
 	
 	$games = $this->db->from("games")->where("is_active", "1")->get();
-	$servers = $this->config->item("servers");
 ?>
 
 <form action="<?=site_url('bulletin/modify')?>" method="POST">
