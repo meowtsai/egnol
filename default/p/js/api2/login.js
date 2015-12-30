@@ -59,3 +59,52 @@ function OnQuickLogin(deviceId, gameId)
 {
     location.href='/api2/ui_quick_login?deviceid=' + deviceId + '&site=' + gameId;
 }
+
+function OnClickFacebookLogin()
+{
+	if(typeof LongeAPI != 'undefined')
+	{
+		LongeAPI.onFacebookLogin();
+	}
+	else
+	{
+		window.location = "ios://facebooklogin-_-";
+	}
+}
+
+function onFacebookLoginSuccess(fbuid, email, accessToken)
+{
+	
+}
+
+function onFacebookLoginFail(errorCode, param1, param2)
+{
+	switch(errorCode)
+	{
+	case -1:
+		leOpenDialog('登入錯誤', "Facebook 登入錯誤: " + param1 + ", " + param2, leDialogType.MESSAGE);
+		break;
+	case -2:
+		leOpenDialog('登入錯誤', "Facebook 回傳資料錯誤!", leDialogType.MESSAGE);
+		break;
+	case -3:
+		leOpenDialog('登入錯誤', "Facebook 異常: " + param1, leDialogType.MESSAGE);
+		break;
+	}
+}
+
+function onFacebookLoginCancel()
+{
+}
+
+function OnClickGoogleLogin()
+{
+	if(typeof LongeAPI != 'undefined')
+	{
+		LongeAPI.onGoogleLogin();
+	}
+	else
+	{
+		window.location = "ios://googlelogin-_-";
+	}
+}
