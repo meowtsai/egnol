@@ -52,6 +52,9 @@ class Api2 extends MY_Controller
 	{
 		$site	= $this->_get_site();
         
+		$device_id	= !empty($_SESSION['login_deviceid']) ? $_SESSION['login_deviceid'] : $this->input->get_post("deviceid");
+		$_SESSION['login_deviceid']	= $device_id;
+            
         $is_duplicate_login = $this->_check_duplicate_login();
 
 		if(!$this->g_user->is_login() || $is_duplicate_login)
@@ -59,11 +62,9 @@ class Api2 extends MY_Controller
 			// 未登入, 直接進入登入畫面
 			$partner    = !empty($_SESSION['login_partner']) ? $_SESSION['login_partner'] : $this->input->get_post("partner");
 			$game_key   = !empty($_SESSION['login_gamekey']) ? $_SESSION['login_gamekey'] : $this->input->get_post("gamekey");
-			$device_id	= !empty($_SESSION['login_deviceid']) ? $_SESSION['login_deviceid'] : $this->input->get_post("deviceid");
 			$login_key	= !empty($_SESSION['login_key']) ? $_SESSION['login_key'] : $this->input->get_post("loginkey");
 			$_SESSION['login_partner']	= $partner;
 			$_SESSION['login_gamekey']	= $game_key;
-			$_SESSION['login_deviceid']	= $device_id;
 			$_SESSION['login_key']		= $login_key;
 
 			// server 登入選擇模式, 0 = 不選擇(default), 1 = 登入後選擇
