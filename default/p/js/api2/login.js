@@ -68,13 +68,13 @@ function OnClickFacebookLogin()
 	}
 	else
 	{
-		window.location = "ios://facebooklogin-_-";
+		window.location = "ios://facebooklogin-_-\";
 	}
 }
 
-function onFacebookLoginSuccess(fbuid, email, accessToken)
+function onFacebookLoginSuccess(uid, email, accessToken)
 {
-	
+	location.href='/api2/ui_facebook_login?uid=' + uid + '&email=' + email + '&token=' + accessToken;
 }
 
 function onFacebookLoginFail(errorCode, param1, param2)
@@ -93,11 +93,7 @@ function onFacebookLoginFail(errorCode, param1, param2)
 	}
 }
 
-function onFacebookLoginCancel()
-{
-}
-
-function OnClickGoogleLogin()
+function OnClickGoogleLogin(webVersionLogin)
 {
 	if(typeof LongeAPI != 'undefined')
 	{
@@ -105,6 +101,16 @@ function OnClickGoogleLogin()
 	}
 	else
 	{
-		window.location = "ios://googlelogin-_-";
+		location.href = webVersionLogin;
 	}
+}
+
+function onGoogleLoginSuccess(uid, email, accessToken)
+{
+	location.href='/api2/ui_google_login?uid=' + uid + '&email=' + email + '&token=' + accessToken;
+}
+
+function onGoogleLoginFail(errorCode, param)
+{
+	leOpenDialog('登入錯誤', "Google 登入錯誤: " + param, leDialogType.MESSAGE);
 }

@@ -35,7 +35,9 @@
 					}
 					else if($channel['channel'] == "google")
 					{
-						echo "<img style='cursor:pointer;' src='{$longe_url}p/image/member/login-btn-google.png' onclick='javascript:OnClickGoogleLogin()' />";
+						echo "<img style='cursor:pointer;' src='{$longe_url}p/image/member/login-btn-google.png' onclick='javascript:OnClickGoogleLogin(";
+						echo "'{$api_url}api2/ui_channel_login?site={$site}&channel={$channel['channel']}'";
+						echo ")' />";
 					}
 				}
 			?>
