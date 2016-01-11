@@ -9,6 +9,11 @@ $config["partner_api"] = array(
 		'ips' => array('61.220.44.200', '203.73.59.138'),
 		'sites' => array(
 			'leg1' => array('key'=>'12345678901234567890123456789012'),
+			'test' => array('key' => '12345678901234567890123456789012',
+				'Google' => array('Analytics' => array('ID' => 'UA-66673104-3', 'Enable' => '1')),
+				'Facebook' => array('ID' => '1691157641127869', 'EventTracking' => '1'),
+				'AppsFlyer' => array('DevKey' => 'RgFZmTS3qoYGsPrfPsaq8c', 'Enable' => '1'),
+			),
 		),
 	),
 
@@ -25,7 +30,12 @@ $config["partner_api"] = array(
 		'name' => '網易',
 		'ips' => array('0.0.0.0'),
 		'sites' => array(
-			'r2g' => array('key'=>'85cb5665a2a868410cf740a3c537ab09'),
+			'r2g' => array(
+				'key' => '85cb5665a2a868410cf740a3c537ab09',
+				'Google' => array('Analytics' => array('ID' => 'UA-66673104-2', 'Enable' => '1')),
+				'Facebook' => array('ID' => '152562051774453', 'EventTracking' => '1'),
+				'AppsFlyer' => array('DevKey' => 'RgFZmTS3qoYGsPrfPsaq8c', 'Enable' => '1'),
+			),
 		),
 	),
 );
