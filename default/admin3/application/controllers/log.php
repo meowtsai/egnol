@@ -145,11 +145,73 @@ class Log extends MY_Controller {
 		$this->g_layout
 			->add_breadcrumb("平台登入")	
 			->set("query", isset($query) ? $query : false)
+			->set("game_list", $this->DB2->order_by("game_id")->get("games"))
 			->add_js_include("log/game_login")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();	
 	}
 	
+    function game_events()
+    {	
+		$this->zacl->check_login(true);		
+		
+		$this->zacl->check("game_login", "read");
+		
+		$this->_init_log_layout();
+		$this->load->helper("output_table");
+				
+		if ($this->input->get("action") && $this->input->get("game_event")) 
+		{
+			header("Cache-Control: private");	
+            $this->load->library(array("Mongo_db"));
+            
+            $this->mongo_log = new Mongo_db(array("activate" => "default"));
+
+            $game_events = $this->config->item("game_events");
+            
+            $include = array();
+			foreach($game_events[$this->input->get("game_event")]['fields'] as $key => $val) {
+                $include[] = $key;
+            }
+            
+			$start_date = ($this->input->get("start_date"))?strtotime($this->input->get("start_date")):0;
+			$end_date = ($this->input->get("end_date"))?strtotime($this->input->get("end_date")):time();
+            
+            $query = $this->mongo_log->where(array("game_id" => $this->input->get("game")))
+                ->where_gte('latest_update_time', $start_date)
+                ->where_lte('latest_update_time', $end_date)
+                ->select($include)->get($this->input->get("game_event"));
+					
+            $this->load->library('pagination');
+            $this->pagination->initialize(array(
+                    'base_url'	=> site_url("log/game_events"),
+                    'total_rows'=> count($query),
+                    'per_page'	=> 100
+                ));			
+		}
+		else {
+			$default_value = array(
+				'use_default' => true,
+				'start_date' => date('Y-m-d')." 00:00",
+				'time_unit' => 'day',
+				'display_game' => 'game',
+			);
+			$_GET = $default_value;
+		}
+		
+		$games = $this->DB2->get("games");
+		$servers = $this->DB2->order_by("server_id")->get("servers");		
+			
+		$this->g_layout
+			->add_breadcrumb("遊戲事件")	
+			->set("games", $games)
+			->set("servers", $servers)	
+			->set("query", isset($query) ? $query : false)
+			->add_js_include("log/game_events")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();	
+    }
+    
 	function game_login()
 	{			
 		$this->zacl->check_login(true);		

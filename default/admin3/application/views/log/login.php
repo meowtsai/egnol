@@ -1,6 +1,6 @@
 <?php
 	$channels = $this->config->item('channels');	 
-	$servers = $this->config->item('servers');
+	//$servers = $this->config->item('servers');
 ?>
 
 <form method="get" action="<?=site_url("log/login")?>" class="form-search">
@@ -14,8 +14,9 @@
 		登入站別
 		<select name="site" style="width:90px;">
 			<option value="">--</option>
-			<? foreach($servers as $site => $arr):?>
-			<option value="<?=$site?>" <?=($this->input->get("site")==$site ? 'selected="selected"' : '')?>><?=$arr['name']?></option>
+			<option value="long_e" <?=($this->input->get("site")=='long_e' ? 'selected="selected"' : '')?>>官網</option>
+			<? foreach($game_list->result() as $row):?>
+			<option value="<?=$row->game_id?>" <?=($this->input->get("site")==$row->game_id ? 'selected="selected"' : '')?>><?=$row->name?></option>
 			<? endforeach;?>
 		</select>
 		

@@ -13,7 +13,6 @@
 		$c_game_menu["獨代"][] = $row;
 	}
 	
-	
 ?>
 <!DOCTYPE HTML>
 <html lang="zh-tw">
@@ -78,6 +77,18 @@ li.dropdown li a {line-height:25px;}
 				<? endforeach;?>
 				</ul>
 			</li>
+            <? elseif ($this->game_id):
+					$row = $c_game[$this->game_id];?>
+			<li class="<?=($this->game_id && $this->game_id<>'long_e' ? 'active' : '')?> dropdown">
+				<a href="#" style="white-space:nowrap" class="dropdown-toggle" data-toggle="dropdown"><span style="padding-right:10px"><?=$row->name?><b class="caret"></b></span></a>
+				<ul class="dropdown-menu">
+				<? foreach($servers['default']['menu'] as $arr): ?>			
+					<li class="<?=strpos($this->uri->uri_string, $arr['path']) !== false ? 'active' : ''?>">
+						<a href="<?=site_url($arr['path'].(strpos($arr['path'],"?")===false?"?":"&")."game_id=".$this->game_id)?>">
+							<?=$arr['name']?></a></li>			
+				<? endforeach;?>
+				</ul>
+			</li>
 			<? endif;?>
 	    </ul>
 	    
@@ -106,16 +117,17 @@ li.dropdown li a {line-height:25px;}
 	
 		<? if (empty($full)):?>   
 		<div class="span2">
-			<? if ($this->uri->segment(1)<>"statistics" && $this->game_id && array_key_exists($this->game_id, $servers)):?>
+			<? if ($this->uri->segment(1)<>"statistics" && $this->game_id):?>
 			<ul class="nav nav-tabs nav-stacked">
 		
-				<? foreach($servers[$this->game_id]['menu'] as $arr): ?>			
+				<? $server_menu = (isset($servers[$this->game_id])) ? $this->game_id : 'default';
+                foreach($servers[$server_menu]['menu'] as $arr): ?>			
 					<li class="<?=strpos($this->uri->uri_string, $arr['path']) !== false ? 'active' : ''?>">
 						<a href="<?=site_url($arr['path'].(strpos($arr['path'],"?")===false?"?":"&")."game_id=".$this->game_id)?>">
 							<?=$arr['name']?></a></li>			
 				<? endforeach;?>
 				
-				<? if (array_key_exists('extra_menu', $servers[$this->game_id])):?>
+				<? if (isset($servers[$this->game_id]) && array_key_exists('extra_menu', $servers[$this->game_id])):?>
 					<? foreach($servers[$this->game_id]['extra_menu'] as $arr):?>			
 					<li><a href="<?=$arr['url']?>" target="_blank">
 							<? if ( ! empty($arr["icon"])) echo '<i class="'.$arr["icon"].'"></i>';?>

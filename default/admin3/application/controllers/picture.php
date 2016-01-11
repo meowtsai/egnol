@@ -17,7 +17,7 @@ class Picture extends MY_Controller {
 	function index() 
 	{
 		$this->_init_layout();
-		$this->g_layout->set("path", "picture/get_list")->render("server/menu");
+		//$this->g_layout->set("path", "picture/get_list")->render("server/menu");
 	}
 
 	function get_list($category_id=0)
