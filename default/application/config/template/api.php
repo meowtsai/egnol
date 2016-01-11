@@ -6,7 +6,7 @@ $config["partner_api"] = array(
 	// 自己測試用
 	'longe' => array(
 		'name' => '龍邑遊戲',
-		'ips' => array('61.220.44.200'),
+		'ips' => array('61.220.44.200', '203.73.59.138'),
 		'sites' => array(
 			'leg1' => array('key'=>'12345678901234567890123456789012'),
 		),
@@ -43,7 +43,7 @@ $config["channel_api"] = array(
 		'appId' => '599788076790753',
 		'secret' => '9fd9c4900793f62ad9346a154c66cdb6',
 		'scope' => 'email', //publish_stream
-	),		
+	),
 	'google' => array(
 		'name' => 'Google',
 		'status' => '2',
