@@ -693,7 +693,7 @@ class Api2 extends MY_Controller
 				{
 					die();
 				}
-				$partner_game = $partner_api[$partner]["sites"][$site];
+				$partner_game = $partner_conf[$partner]["sites"][$site];
 
 				//$chk_code = md5($partner.$email.$server_id.$mobile.$partner_game['key'].$device_id);
 				//if($chk_code != $pcode)
@@ -1357,4 +1357,33 @@ class Api2 extends MY_Controller
               
         $this->mongo_log->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->delete_all('users');
     }
+	
+	function get_app_info()
+	{
+		$partner_id = $this->input->get_post("pid");
+		$app_id = $this->input->get_post("app");
+		$app_key = $this->input->get_post("key");
+		
+		if(empty($partner_id) || empty($app_id) || empty($app_key))
+		{
+			die('1');
+		}
+		
+		$partner_conf = $this->config->item("partner_api");
+		if(!array_key_exists($partner_id, $partner_conf))
+		{
+			die('2');
+		}
+		if(!array_key_exists($app_id, $partner_conf[$partner_id]["sites"]))
+		{
+			die('3');
+		}
+		
+		if($partner_conf[$partner_id]["sites"][$app_id]["key"] == $app_key)
+		{
+			die(json_encode($partner_conf[$partner_id]["sites"][$app_id]));
+		}
+		
+		die('4');
+	}
 }

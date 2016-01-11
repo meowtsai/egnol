@@ -29,15 +29,16 @@
 				$back_url = urlencode($redirect_url);
 				foreach($channel_item as $channel)
 				{
-					if($channel['channel'] != "facebook" && $channel['channel'] != "google")
-						continue;
-
 					if($channel['channel'] == "facebook")
-						echo "<img style='cursor:pointer;' src='{$longe_url}p/image/member/login-btn-fb.png' onclick='javascript:location.href=\"";
-					if($channel['channel'] == "google")
-						echo "<img style='cursor:pointer;' src='{$longe_url}p/image/member/login-btn-google.png' onclick='javascript:location.href=\"";
-
-					echo "{$api_url}api2/ui_channel_login?site={$site}&channel={$channel['channel']}\"'>";
+					{
+						echo "<img style='cursor:pointer;' src='{$longe_url}p/image/member/login-btn-fb.png' onclick='javascript:OnClickFacebookLogin()' />";
+					}
+					else if($channel['channel'] == "google")
+					{
+						echo "<img style='cursor:pointer;' src='{$longe_url}p/image/member/login-btn-google.png' onclick='javascript:OnClickGoogleLogin(";
+						echo "\"{$api_url}api2/ui_channel_login?site={$site}&channel={$channel['channel']}\"";
+						echo ")' />";
+					}
 				}
 			?>
 			</div>

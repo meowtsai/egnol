@@ -59,3 +59,58 @@ function OnQuickLogin(deviceId, gameId)
 {
     location.href='/api2/ui_quick_login?deviceid=' + deviceId + '&site=' + gameId;
 }
+
+function OnClickFacebookLogin()
+{
+	if(typeof LongeAPI != 'undefined')
+	{
+		LongeAPI.onFacebookLogin();
+	}
+	else
+	{
+		window.location = "ios://facebooklogin-_-\"";
+	}
+}
+
+function onFacebookLoginSuccess(uid, email, accessToken)
+{
+	location.href='/api2/ui_facebook_login?uid=' + uid + '&email=' + email + '&token=' + accessToken;
+}
+
+function onFacebookLoginFail(errorCode, param1, param2)
+{
+	switch(errorCode)
+	{
+	case -1:
+		leOpenDialog('登入錯誤', "Facebook 登入錯誤: " + param1 + ", " + param2, leDialogType.MESSAGE);
+		break;
+	case -2:
+		leOpenDialog('登入錯誤', "Facebook 回傳資料錯誤!", leDialogType.MESSAGE);
+		break;
+	case -3:
+		leOpenDialog('登入錯誤', "Facebook 異常: " + param1, leDialogType.MESSAGE);
+		break;
+	}
+}
+
+function OnClickGoogleLogin(webVersionLogin)
+{
+	if(typeof LongeAPI != 'undefined')
+	{
+		LongeAPI.onGoogleLogin();
+	}
+	else
+	{
+		location.href = webVersionLogin;
+	}
+}
+
+function onGoogleLoginSuccess(uid, email, accessToken)
+{
+	location.href='/api2/ui_google_login?uid=' + uid + '&email=' + email + '&token=' + accessToken;
+}
+
+function onGoogleLoginFail(errorCode, param)
+{
+	leOpenDialog('登入錯誤', "Google 登入錯誤: " + param, leDialogType.MESSAGE);
+}
