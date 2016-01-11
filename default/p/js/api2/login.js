@@ -68,7 +68,7 @@ function OnClickFacebookLogin()
 	}
 	else
 	{
-		window.location = "ios://facebooklogin-_-\";
+		window.location = "ios://facebooklogin-_-\"";
 	}
 }
 
