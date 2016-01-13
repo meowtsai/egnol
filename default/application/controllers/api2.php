@@ -172,7 +172,12 @@ class Api2 extends MY_Controller
 				if (typeof LongeAPI != 'undefined') {
 				    LongeAPI.onLoginSuccess('{$this->g_user->uid}', '{$email}', '{$mobile}', '{$external_id}', '{$_SESSION['server_id']}');
 				} else {
-					window.location = \"ios://loginsuccess-_-\" + encodeURIComponent('{$ios_str}');
+					//window.location = \"ios://loginsuccess-_-\" + encodeURIComponent('{$ios_str}');
+					var iframe = document.createElement('IFRAME');
+					iframe.setAttribute('src', \"ios://loginsuccess-_-\" + encodeURIComponent('{$ios_str}'));
+					document.documentElement.appendChild(iframe);
+					iframe.parentNode.removeChild(iframe);
+					iframe = null;
 				}
 			</script>EC:001";
 			
