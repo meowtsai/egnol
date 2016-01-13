@@ -68,7 +68,12 @@ function OnClickFacebookLogin()
 	}
 	else
 	{
-		window.location = "ios://facebooklogin-_-\"";
+		//window.location = "ios://facebooklogin-_-\"";
+		var iframe = document.createElement("IFRAME");
+		iframe.setAttribute("src", "ios://facebooklogin-_-\"");
+		document.documentElement.appendChild(iframe);
+		iframe.parentNode.removeChild(iframe);
+		iframe = null;
 	}
 }
 
