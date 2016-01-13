@@ -148,7 +148,7 @@ class Api2 extends MY_Controller
 			
 			// 讀取伺服器列表
 			$servers = $this->db->from("servers")->where("game_id", $site)->order_by("server_id")->get();
-
+			
 			$this->_init_layout()
 				->set("partner", $partner)
 				->set("game_key", $game_key)
@@ -179,7 +179,7 @@ class Api2 extends MY_Controller
 					iframe.parentNode.removeChild(iframe);
 					iframe = null;
 				}
-			</script>EC:001";
+			</script>";
 			
 			$_SESSION['server_id'] = '';
 			unset($_SESSION['server_id']);
