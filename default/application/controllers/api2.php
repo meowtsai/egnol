@@ -148,7 +148,7 @@ class Api2 extends MY_Controller
 			
 			// 讀取伺服器列表
 			$servers = $this->db->from("servers")->where("game_id", $site)->order_by("server_id")->get();
-
+			
 			$this->_init_layout()
 				->set("partner", $partner)
 				->set("game_key", $game_key)
@@ -179,7 +179,7 @@ class Api2 extends MY_Controller
 					iframe.parentNode.removeChild(iframe);
 					iframe = null;
 				}
-			</script>EC:001";
+			</script>";
 			
 			$_SESSION['server_id'] = '';
 			unset($_SESSION['server_id']);
@@ -421,7 +421,12 @@ class Api2 extends MY_Controller
 	        if (typeof LongeAPI != 'undefined') { 
                 LongeAPI.onLogoutSuccess();
             } else {
-                window.location = \"ios://logoutsuccess\";
+                //window.location = \"ios://logoutsuccess\";
+				var iframe = document.createElement('IFRAME');
+				iframe.setAttribute('src', \"ios://logoutsuccess\");
+				document.documentElement.appendChild(iframe);
+				iframe.parentNode.removeChild(iframe);
+				iframe = null;
 	        }
 		</script>";
 	}
@@ -825,7 +830,11 @@ class Api2 extends MY_Controller
 	        if (typeof LongeAPI != 'undefined') { 
                 LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character->name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10)); 
             } else {
-                window.location = \"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\";
+                //window.location = \"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\";
+				var iframe = document.createElement('IFRAME');
+				iframe.setAttribute('src', \"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\");
+				document.documentElement.appendChild(iframe);
+				iframe.parentNode.removeChild(iframe);
 	        }
 		</script>";
 	}

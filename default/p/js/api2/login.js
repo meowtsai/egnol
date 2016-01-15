@@ -107,6 +107,13 @@ function OnClickGoogleLogin(webVersionLogin)
 	else
 	{
 		location.href = webVersionLogin;
+		/*
+		var iframe = document.createElement("IFRAME");
+		iframe.setAttribute("src", "ios://googlelogin-_-\"");
+		document.documentElement.appendChild(iframe);
+		iframe.parentNode.removeChild(iframe);
+		iframe = null;
+		*/
 	}
 }
 

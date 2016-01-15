@@ -163,7 +163,12 @@ class Api extends MY_Controller
 				if (typeof LongeAPI != 'undefined') {
 				    LongeAPI.onLoginSuccess('{$this->g_user->uid}', '{$email}', '{$mobile}', '{$external_id}', '{$_SESSION['server_id']}');
 				} else {
-					window.location = \"ios://loginsuccess-_-\" + encodeURIComponent('{$ios_str}');
+					//window.location = \"ios://loginsuccess-_-\" + encodeURIComponent('{$ios_str}');
+					var iframe = document.createElement('IFRAME');
+					iframe.setAttribute('src', \"ios://loginsuccess-_-\" + encodeURIComponent('{$ios_str}'));
+					document.documentElement.appendChild(iframe);
+					iframe.parentNode.removeChild(iframe);
+					iframe = null;
 				}
 			</script>EC:001";
 			
@@ -393,7 +398,11 @@ class Api extends MY_Controller
 	        if (typeof LongeAPI != 'undefined') { 
                 LongeAPI.onLogoutSuccess();
             } else {
-                window.location = \"ios://logoutsuccess\";
+                //window.location = \"ios://logoutsuccess\";
+				var iframe = document.createElement('IFRAME');
+				iframe.setAttribute('src', \"ios://logoutsuccess\");
+				document.documentElement.appendChild(iframe);
+				iframe.parentNode.removeChild(iframe);
 	        }
 		</script>";
 	}
@@ -797,7 +806,11 @@ class Api extends MY_Controller
 	        if (typeof LongeAPI != 'undefined') { 
                 LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character->name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10)); 
             } else {
-                window.location = \"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\";
+                //window.location = \"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\";
+				var iframe = document.createElement('IFRAME');
+				iframe.setAttribute('src', \"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\");
+				document.documentElement.appendChild(iframe);
+				iframe.parentNode.removeChild(iframe);
 	        }
 		</script>";
 	}

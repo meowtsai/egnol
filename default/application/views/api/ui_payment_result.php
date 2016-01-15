@@ -18,7 +18,12 @@
 ?>
 		} else {
             encodedurl = encodeURIComponent("<? echo "ios://paymentresult-_-{$game->game_id}-_-{$server->server_id}-_-{$character->name}-_-{$billing_type}-_-{$pay_type}-_-{$price}-_-{$get_point}" ?>");
-			window.location = encodedurl;
+			//window.location = encodedurl;
+			var iframe = document.createElement('IFRAME');
+			iframe.setAttribute('src', encodedurl);
+			document.documentElement.appendChild(iframe);
+			iframe.parentNode.removeChild(iframe);
+			iframe = null;
 		}
 	}
 </script>
