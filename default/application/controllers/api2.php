@@ -167,10 +167,10 @@ class Api2 extends MY_Controller
 	
 			header('Content-type:text/html; Charset=UTF-8');
 			//echo "<script type='text/javascript'>LongeAPI.onLogoutSuccess()</script>";
-			$ios_str = $this->g_user->uid."-_-".$email."-_-".$mobile."-_-".$external_id."-_-".$_SESSION['server_id'];
+			$ios_str = $this->g_user->uid."-_-".$email."-_-".$mobile."-_-".$external_id."-_-".$_SESSION['server_id']."-_-".$this->g_user->token."-_-".$_SESSION['login_type'];
 			echo "<script type='text/javascript'>
 				if (typeof LongeAPI != 'undefined') {
-				    LongeAPI.onLoginSuccess('{$this->g_user->uid}', '{$email}', '{$mobile}', '{$external_id}', '{$_SESSION['server_id']}');
+				    LongeAPI.onLoginSuccess('{$this->g_user->uid}', '{$email}', '{$mobile}', '{$external_id}', '{$_SESSION['server_id']}', '{$this->g_user->token}', {$_SESSION['login_type']});
 				} else {
 					//window.location = \"ios://loginsuccess-_-\" + encodeURIComponent('{$ios_str}');
 					var iframe = document.createElement('IFRAME');
@@ -220,6 +220,8 @@ class Api2 extends MY_Controller
 		
 		if ( $this->g_user->verify_account($email, $mobile, $pwd) === true )
 		{
+			$_SESSION['login_channel'] = 1; // 帳密登入
+			
 			die(json_message(array("message"=>"成功", "site"=>$site), true));
 		}
 		else
@@ -331,6 +333,7 @@ class Api2 extends MY_Controller
 			echo "<script type='text/javascript'>alert('無法取得行動裝置資訊，登入失敗!');</script>";
 		}
 
+		$_SESSION['login_channel'] = 2; // 裝置直接登入
 		echo "<script type='text/javascript'>location.href='/api2/ui_login?site={$site}';</script>";
 	}
 
@@ -372,6 +375,11 @@ class Api2 extends MY_Controller
 	    		);
 	    		$login_param = array('scope' => '',);
 	    	}
+			$_SESSION['login_channel'] = 3; // 網頁 Facebook 登入
+		}
+		else if($channel == "google")
+		{
+			$_SESSION['login_channel'] = 4; // 網頁 Google 登入
 		}
 
 		$this->load->library("channel_api/{$lib}", $param);
@@ -380,6 +388,88 @@ class Api2 extends MY_Controller
 		{
 			die($this->{$lib}->error_message);
 		}
+	}
+	
+	// 行動裝置 Facebook SDK 登入成功後續銜接
+	function ui_mobile_facebook_login()
+	{
+		header('Content-type:text/html; Charset=UTF-8');
+
+		$site = $this->_get_site();
+        $facebook_uid = $this->input->get('uid');
+		//
+		// 還需要轉換對應
+		//
+		//
+		$external_id = $facebook_uid."@facebook";
+
+		if(!empty($facebook_uid))
+		{
+			$server_mode = empty($_SESSION['server_mode']) ? 0 : $_SESSION['server_mode'];
+
+			$_SESSION['site'] = $site;
+
+			$boolResult = $this->g_user->verify_account('', '', '', $external_id);
+			if ($boolResult != true)
+			{
+				$boolResult = $this->g_user->create_account('', '', '', $external_id);
+			}
+
+			if ($boolResult==true)
+			{
+				$this->g_user->verify_account('', '', '', $external_id);
+			}
+			else
+			{
+				echo "<script type='text/javascript'>alert('登入失敗!');</script>";
+			}
+		}
+		else
+		{
+			echo "<script type='text/javascript'>alert('無法取得 Facebook 帳號資訊，登入失敗!');</script>";
+		}
+
+		$_SESSION['login_channel'] = 3; // 行動裝置 Facebook 登入
+		echo "<script type='text/javascript'>location.href='/api2/ui_login?site={$site}';</script>";
+	}
+	
+	// 行動裝置 Google SDK 登入成功後續銜接
+	function ui_mobile_google_login()
+	{
+		header('Content-type:text/html; Charset=UTF-8');
+
+		$site = $this->_get_site();
+        $google_uid = $this->input->get('uid');
+		$external_id = $google_uid."@google";
+
+		if(!empty($google_uid))
+		{
+			$server_mode = empty($_SESSION['server_mode']) ? 0 : $_SESSION['server_mode'];
+
+			$_SESSION['site'] = $site;
+
+			$boolResult = $this->g_user->verify_account('', '', '', $external_id);
+			if ($boolResult != true)
+			{
+				$boolResult = $this->g_user->create_account('', '', '', $external_id);
+			}
+
+			if ($boolResult==true)
+			{
+				$this->g_user->verify_account('', '', '', $external_id);
+			}
+			else
+			{
+				echo "<script type='text/javascript'>alert('登入失敗!');</script>";
+			}
+		}
+		else
+		{
+			echo "<script type='text/javascript'>alert('無法取得 Google 帳號資訊，登入失敗!');</script>";
+		}
+
+		$_SESSION['login_channel'] = 4; // 行動裝置 Google 登入
+		echo "<script type='text/javascript'>location.href='/api2/ui_login?site={$site}';</script>";
 	}
 
 	// 更換帳號
