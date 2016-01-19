@@ -79,7 +79,7 @@ function OnClickFacebookLogin()
 
 function onFacebookLoginSuccess(uid, email, accessToken)
 {
-	location.href='/api2/ui_facebook_login?uid=' + uid + '&email=' + email + '&token=' + accessToken;
+	location.href='/api2/ui_mobile_facebook_login?uid=' + uid + '&email=' + email + '&token=' + accessToken;
 }
 
 function onFacebookLoginFail(errorCode, param1, param2)
@@ -117,9 +117,9 @@ function OnClickGoogleLogin(webVersionLogin)
 	}
 }
 
-function onGoogleLoginSuccess(uid, email, accessToken)
+function onGoogleLoginSuccess(uid, email)
 {
-	location.href='/api2/ui_google_login?uid=' + uid + '&email=' + email + '&token=' + accessToken;
+	location.href='/api2/ui_mobile_google_login?uid=' + uid + '&email=' + email;
 }
 
 function onGoogleLoginFail(errorCode, param)
