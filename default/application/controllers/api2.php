@@ -167,10 +167,10 @@ class Api2 extends MY_Controller
 	
 			header('Content-type:text/html; Charset=UTF-8');
 			//echo "<script type='text/javascript'>LongeAPI.onLogoutSuccess()</script>";
-			$ios_str = $this->g_user->uid."-_-".$email."-_-".$mobile."-_-".$external_id."-_-".$_SESSION['server_id']."-_-".$this->g_user->token."-_-".$_SESSION['login_type'];
+			$ios_str = $this->g_user->uid."-_-".$email."-_-".$mobile."-_-".$external_id."-_-".$_SESSION['server_id']."-_-".$this->g_user->token."-_-".$_SESSION['login_channel'];
 			echo "<script type='text/javascript'>
 				if (typeof LongeAPI != 'undefined') {
-				    LongeAPI.onLoginSuccess('{$this->g_user->uid}', '{$email}', '{$mobile}', '{$external_id}', '{$_SESSION['server_id']}', '{$this->g_user->token}', {$_SESSION['login_type']});
+				    LongeAPI.onLoginSuccess('{$this->g_user->uid}', '{$email}', '{$mobile}', '{$external_id}', '{$_SESSION['server_id']}', '{$this->g_user->token}', {$_SESSION['login_channel']});
 				} else {
 					//window.location = \"ios://loginsuccess-_-\" + encodeURIComponent('{$ios_str}');
 					var iframe = document.createElement('IFRAME');
@@ -397,10 +397,6 @@ class Api2 extends MY_Controller
 
 		$site = $this->_get_site();
         $facebook_uid = $this->input->get('uid');
-		//
-		// 還需要轉換對應
-		//
-		//
 		$external_id = $facebook_uid."@facebook";
 
 		if(!empty($facebook_uid))
@@ -431,6 +427,23 @@ class Api2 extends MY_Controller
 
 		$_SESSION['login_channel'] = 3; // 行動裝置 Facebook 登入
 		echo "<script type='text/javascript'>location.href='/api2/ui_login?site={$site}';</script>";
+	}
+	
+	// 檢查同一個 facebook 使用者的 facebook id 列表中是否已有紀錄
+	function check_facebook_uid()
+	{
+		$uid_list = $this->input->post('uid_list');
+		$uids = explode(",", $uid_list);
+		
+		foreach($uids as $uid)
+		{
+			if($this->g_user->verify_account('', '', '', $uid."@facebook")==true)
+			{
+				die($uid);
+			}
+		}
+		
+		die('0');
 	}
 	
 	// 行動裝置 Google SDK 登入成功後續銜接
