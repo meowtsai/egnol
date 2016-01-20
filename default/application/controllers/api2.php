@@ -148,7 +148,7 @@ class Api2 extends MY_Controller
 			
 			// 讀取伺服器列表
 			$servers = $this->db->from("servers")->where("game_id", $site)->order_by("server_id")->get();
-
+			
 			$this->_init_layout()
 				->set("partner", $partner)
 				->set("game_key", $game_key)
@@ -167,14 +167,19 @@ class Api2 extends MY_Controller
 	
 			header('Content-type:text/html; Charset=UTF-8');
 			//echo "<script type='text/javascript'>LongeAPI.onLogoutSuccess()</script>";
-			$ios_str = $this->g_user->uid."-_-".$email."-_-".$mobile."-_-".$external_id."-_-".$_SESSION['server_id'];
+			$ios_str = $this->g_user->uid."-_-".$email."-_-".$mobile."-_-".$external_id."-_-".$_SESSION['server_id']."-_-".$this->g_user->token."-_-".$_SESSION['login_channel'];
 			echo "<script type='text/javascript'>
 				if (typeof LongeAPI != 'undefined') {
-				    LongeAPI.onLoginSuccess('{$this->g_user->uid}', '{$email}', '{$mobile}', '{$external_id}', '{$_SESSION['server_id']}');
+				    LongeAPI.onLoginSuccess('{$this->g_user->uid}', '{$email}', '{$mobile}', '{$external_id}', '{$_SESSION['server_id']}', '{$this->g_user->token}', {$_SESSION['login_channel']});
 				} else {
-					window.location = \"ios://loginsuccess-_-\" + encodeURIComponent('{$ios_str}');
+					//window.location = \"ios://loginsuccess-_-\" + encodeURIComponent('{$ios_str}');
+					var iframe = document.createElement('IFRAME');
+					iframe.setAttribute('src', \"ios://loginsuccess-_-\" + encodeURIComponent('{$ios_str}'));
+					document.documentElement.appendChild(iframe);
+					iframe.parentNode.removeChild(iframe);
+					iframe = null;
 				}
-			</script>EC:001";
+			</script>";
 			
 			$_SESSION['server_id'] = '';
 			unset($_SESSION['server_id']);
@@ -215,6 +220,8 @@ class Api2 extends MY_Controller
 		
 		if ( $this->g_user->verify_account($email, $mobile, $pwd) === true )
 		{
+			$_SESSION['login_channel'] = 1; // 帳密登入
+			
 			die(json_message(array("message"=>"成功", "site"=>$site), true));
 		}
 		else
@@ -326,6 +333,7 @@ class Api2 extends MY_Controller
 			echo "<script type='text/javascript'>alert('無法取得行動裝置資訊，登入失敗!');</script>";
 		}
 
+		$_SESSION['login_channel'] = 2; // 裝置直接登入
 		echo "<script type='text/javascript'>location.href='/api2/ui_login?site={$site}';</script>";
 	}
 
@@ -367,6 +375,11 @@ class Api2 extends MY_Controller
 	    		);
 	    		$login_param = array('scope' => '',);
 	    	}
+			$_SESSION['login_channel'] = 3; // 網頁 Facebook 登入
+		}
+		else if($channel == "google")
+		{
+			$_SESSION['login_channel'] = 4; // 網頁 Google 登入
 		}
 
 		$this->load->library("channel_api/{$lib}", $param);
@@ -375,6 +388,101 @@ class Api2 extends MY_Controller
 		{
 			die($this->{$lib}->error_message);
 		}
+	}
+	
+	// 行動裝置 Facebook SDK 登入成功後續銜接
+	function ui_mobile_facebook_login()
+	{
+		header('Content-type:text/html; Charset=UTF-8');
+
+		$site = $this->_get_site();
+        $facebook_uid = $this->input->get('uid');
+		$external_id = $facebook_uid."@facebook";
+
+		if(!empty($facebook_uid))
+		{
+			$server_mode = empty($_SESSION['server_mode']) ? 0 : $_SESSION['server_mode'];
+
+			$_SESSION['site'] = $site;
+
+			$boolResult = $this->g_user->verify_account('', '', '', $external_id);
+			if ($boolResult != true)
+			{
+				$boolResult = $this->g_user->create_account('', '', '', $external_id);
+			}
+
+			if ($boolResult==true)
+			{
+				$this->g_user->verify_account('', '', '', $external_id);
+			}
+			else
+			{
+				echo "<script type='text/javascript'>alert('登入失敗!');</script>";
+			}
+		}
+		else
+		{
+			echo "<script type='text/javascript'>alert('無法取得 Facebook 帳號資訊，登入失敗!');</script>";
+		}
+
+		$_SESSION['login_channel'] = 3; // 行動裝置 Facebook 登入
+		echo "<script type='text/javascript'>location.href='/api2/ui_login?site={$site}';</script>";
+	}
+	
+	// 檢查同一個 facebook 使用者的 facebook id 列表中是否已有紀錄
+	function check_facebook_uid()
+	{
+		$uid_list = $this->input->post('uid_list');
+		$uids = explode(",", $uid_list);
+		
+		foreach($uids as $uid)
+		{
+			if($this->g_user->verify_account('', '', '', $uid."@facebook")==true)
+			{
+				die($uid);
+			}
+		}
+		
+		die('0');
+	}
+	
+	// 行動裝置 Google SDK 登入成功後續銜接
+	function ui_mobile_google_login()
+	{
+		header('Content-type:text/html; Charset=UTF-8');
+
+		$site = $this->_get_site();
+        $google_uid = $this->input->get('uid');
+		$external_id = $google_uid."@google";
+
+		if(!empty($google_uid))
+		{
+			$server_mode = empty($_SESSION['server_mode']) ? 0 : $_SESSION['server_mode'];
+
+			$_SESSION['site'] = $site;
+
+			$boolResult = $this->g_user->verify_account('', '', '', $external_id);
+			if ($boolResult != true)
+			{
+				$boolResult = $this->g_user->create_account('', '', '', $external_id);
+			}
+
+			if ($boolResult==true)
+			{
+				$this->g_user->verify_account('', '', '', $external_id);
+			}
+			else
+			{
+				echo "<script type='text/javascript'>alert('登入失敗!');</script>";
+			}
+		}
+		else
+		{
+			echo "<script type='text/javascript'>alert('無法取得 Google 帳號資訊，登入失敗!');</script>";
+		}
+
+		$_SESSION['login_channel'] = 4; // 行動裝置 Google 登入
+		echo "<script type='text/javascript'>location.href='/api2/ui_login?site={$site}';</script>";
 	}
 
 	// 更換帳號
@@ -416,7 +524,12 @@ class Api2 extends MY_Controller
 	        if (typeof LongeAPI != 'undefined') { 
                 LongeAPI.onLogoutSuccess();
             } else {
-                window.location = \"ios://logoutsuccess\";
+                //window.location = \"ios://logoutsuccess\";
+				var iframe = document.createElement('IFRAME');
+				iframe.setAttribute('src', \"ios://logoutsuccess\");
+				document.documentElement.appendChild(iframe);
+				iframe.parentNode.removeChild(iframe);
+				iframe = null;
 	        }
 		</script>";
 	}
@@ -693,7 +806,7 @@ class Api2 extends MY_Controller
 				{
 					die();
 				}
-				$partner_game = $partner_api[$partner]["sites"][$site];
+				$partner_game = $partner_conf[$partner]["sites"][$site];
 
 				//$chk_code = md5($partner.$email.$server_id.$mobile.$partner_game['key'].$device_id);
 				//if($chk_code != $pcode)
@@ -820,7 +933,11 @@ class Api2 extends MY_Controller
 	        if (typeof LongeAPI != 'undefined') { 
                 LongeAPI.onPaymentSuccess('{$game_id}','{$server_id}','{$character->name}','{$billingType}','{$payType}',parseInt('{$money}',10),parseInt('{$get_point}',10)); 
             } else {
-                window.location = \"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\";
+                //window.location = \"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\";
+				var iframe = document.createElement('IFRAME');
+				iframe.setAttribute('src', \"ios://paymentresult-_-{$game_id}-_-{$server_id}-_-{$character->name}-_-{$billingType}-_-{$payType}-_-{$money}-_-{$get_point}\");
+				document.documentElement.appendChild(iframe);
+				iframe.parentNode.removeChild(iframe);
 	        }
 		</script>";
 	}
@@ -1357,4 +1474,33 @@ class Api2 extends MY_Controller
               
         $this->mongo_log->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->delete_all('users');
     }
+	
+	function get_app_info()
+	{
+		$partner_id = $this->input->get_post("pid");
+		$app_id = $this->input->get_post("app");
+		$app_key = $this->input->get_post("key");
+		
+		if(empty($partner_id) || empty($app_id) || empty($app_key))
+		{
+			die('1');
+		}
+		
+		$partner_conf = $this->config->item("partner_api");
+		if(!array_key_exists($partner_id, $partner_conf))
+		{
+			die('2');
+		}
+		if(!array_key_exists($app_id, $partner_conf[$partner_id]["sites"]))
+		{
+			die('3');
+		}
+		
+		if($partner_conf[$partner_id]["sites"][$app_id]["key"] == $app_key)
+		{
+			die(json_encode($partner_conf[$partner_id]["sites"][$app_id]));
+		}
+		
+		die('4');
+	}
 }

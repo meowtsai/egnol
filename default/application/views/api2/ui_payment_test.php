@@ -130,7 +130,12 @@ function cancelButton () {
 	if (typeof LongeAPI != 'undefined') { 
         LongeAPI.onPaymentCancel();  
     } else {
-        window.location = "ios://cancelbutton";
+        //window.location = "ios://cancelbutton";
+		var iframe = document.createElement('IFRAME');
+		iframe.setAttribute('src', "ios://cancelbutton");
+		document.documentElement.appendChild(iframe);
+		iframe.parentNode.removeChild(iframe);
+		iframe = null;
 	}
 }
 </script>
