@@ -77,9 +77,18 @@ function OnClickFacebookLogin()
 	}
 }
 
-function onFacebookLoginSuccess(uid, email, accessToken)
+function onFacebookLoginSuccess(appId, uid)
 {
-	location.href='/api2/ui_mobile_facebook_login?uid=' + uid + '&email=' + email + '&token=' + accessToken;
+	$.post("/api2/check_facebook_uid", { uid_list: uid }, function(result)
+	{
+		if(result == '0')
+		{
+			var uids = uid.split(',');
+			location.href='/api2/ui_mobile_facebook_login?site=' + appId + '&uid=' + uids[0];
+		}
+		else
+			location.href='/api2/ui_mobile_facebook_login?site=' + appId + '&uid=' + result;
+	});
 }
 
 function onFacebookLoginFail(errorCode, param1, param2)
@@ -117,9 +126,9 @@ function OnClickGoogleLogin(webVersionLogin)
 	}
 }
 
-function onGoogleLoginSuccess(uid, email)
+function onGoogleLoginSuccess(appId, uid, email)
 {
-	location.href='/api2/ui_mobile_google_login?uid=' + uid + '&email=' + email;
+	location.href='/api2/ui_mobile_google_login?site=' + appId + '&uid=' + uid + '&email=' + email;
 }
 
 function onGoogleLoginFail(errorCode, param)
