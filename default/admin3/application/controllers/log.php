@@ -177,9 +177,11 @@ class Log extends MY_Controller {
 			$start_date = ($this->input->get("start_date"))?strtotime($this->input->get("start_date")):0;
 			$end_date = ($this->input->get("end_date"))?strtotime($this->input->get("end_date")):time();
             
+            $query_time = ($game_events[$this->input->get("game_event")]['query_time']) ? $game_events[$this->input->get("game_event")]['query_time'] : 'create_time';
+            
             $query = $this->mongo_log->where(array("game_id" => $this->input->get("game")))
-                ->where_gte('latest_update_time', $start_date)
-                ->where_lte('latest_update_time', $end_date)
+                ->where_gte($query_time, $start_date)
+                ->where_lte($query_time, $end_date)
                 ->select($include)->get($this->input->get("game_event"));
 					
             $this->load->library('pagination');
