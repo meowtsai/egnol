@@ -287,7 +287,13 @@ class Api2 extends MY_Controller
         
 		if ( $this->db->insert_id() )
 		{
-            $this->mongo_log->insert('users', array("uid" => $this->g_user->uid, "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "latest_update_time" => time()));
+            $this->mongo_log->insert('users', array("uid" => $this->g_user->uid, "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "device_id" => $_SESSION['login_deviceid'], "latest_update_time" => time()));
+            
+            $this->mongo_log->where(array('device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null))->set('uid', $this->g_user->uid)->update('le_AppPause');
+            $this->mongo_log->where(array('device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null))->set('uid', $this->g_user->uid)->update('le_AppResume');
+            $this->mongo_log->where(array('device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null))->set('uid', $this->g_user->uid)->update('le_AppStart');
+            $this->mongo_log->where(array('device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null))->set('uid', $this->g_user->uid)->update('le_AppViewEnter');
+            $this->mongo_log->where(array('device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null))->set('uid', $this->g_user->uid)->update('test_simplepost');
             
 		    $_SESSION['server_id'] = $server;
 			die(json_message(array("message"=>"成功", "site"=>$site, "token"=>$this->g_user->token), true));
