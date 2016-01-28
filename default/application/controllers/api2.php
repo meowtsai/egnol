@@ -54,7 +54,7 @@ class Api2 extends MY_Controller
         
 		$device_id	= !empty($_SESSION['login_deviceid']) ? $_SESSION['login_deviceid'] : $this->input->get_post("deviceid");
 		$_SESSION['login_deviceid']	= $device_id;
-            
+
         $is_duplicate_login = $this->_check_duplicate_login();
 
 		if(!$this->g_user->is_login() || $is_duplicate_login)
@@ -947,6 +947,15 @@ class Api2 extends MY_Controller
 	        }
 		</script>";
 	}
+
+	// 客服頁面
+	function ui_service()
+	{
+	}
+
+	function ui_service_result()
+	{
+	}
 	
 	// 檢查合作廠商與串接遊戲
 	function _check_partner_game($partner, $game_id)
@@ -998,14 +1007,14 @@ class Api2 extends MY_Controller
 		{
 			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
 		}
-
+/*
 		// 登入 log
 		$this->load->library("game");
         if($this->game->login($server, $uid) == false)
 		{
 			die(json_encode(array("result"=>"0", "error"=>$this->game->error_message)));
 		}
-
+*/
 		echo json_encode(array("result"	=> 1));
 		exit();
 	}
@@ -1489,17 +1498,17 @@ class Api2 extends MY_Controller
 		
 		if(empty($partner_id) || empty($app_id) || empty($app_key))
 		{
-			die('1');
+			die('');
 		}
 		
 		$partner_conf = $this->config->item("partner_api");
 		if(!array_key_exists($partner_id, $partner_conf))
 		{
-			die('2');
+			die('');
 		}
 		if(!array_key_exists($app_id, $partner_conf[$partner_id]["sites"]))
 		{
-			die('3');
+			die('');
 		}
 		
 		if($partner_conf[$partner_id]["sites"][$app_id]["key"] == $app_key)
@@ -1507,6 +1516,37 @@ class Api2 extends MY_Controller
 			die(json_encode($partner_conf[$partner_id]["sites"][$app_id]));
 		}
 		
-		die('4');
+		die('');
+	}
+	
+	function set_app_resume()
+	{
+		$partner_id = $this->input->get_post("partner");
+		$app_id = $this->input->get_post("site");
+		$uid = $this->input->get_post("uid");
+		$token = $this->input->get_post("token");
+		
+		if(empty($partner_id) || empty($app_id) || empty($uid) || empty($token))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"參數錯誤!")));
+		}
+		
+		die(json_encode(array("result"=>"0", "error"=>"參數錯誤!")));
+		//die(json_encode(array("result"=>"1")));
+	}
+	
+	function set_app_pause()
+	{
+		$partner_id = $this->input->get_post("partner");
+		$app_id = $this->input->get_post("site");
+		$uid = $this->input->get_post("uid");
+		$token = $this->input->get_post("token");
+		
+		if(empty($partner_id) || empty($app_id) || empty($uid) || empty($token))
+		{
+			die(json_encode(array("result"=>"0", "error"=>"參數錯誤!")));
+		}
+		
+		die(json_encode(array("result"=>"1")));
 	}
 }
