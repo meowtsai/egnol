@@ -12,6 +12,7 @@ $config["partner_api"] = array(
 			'test' => array(
 				'name' => '測試 App',
 				'key' => '12345678901234567890123456789012',
+				'LongE' => array('EnableTracking' => '1'),
 				'Google' => array('Analytics' => array('ID' => 'UA-66673104-3', 'Enable' => '1')),
 				'Facebook' => array('ID' => '1691157641127869', 'EventTracking' => '1'),
 				'Apple' => array('ID' => '1005400992'),
@@ -36,6 +37,7 @@ $config["partner_api"] = array(
 			'r2g' => array(
 				'name' => '絕代雙驕',
 				'key' => '85cb5665a2a868410cf740a3c537ab09',
+				'LongE' => array('EnableTracking' => '1'),
 				'Google' => array('Analytics' => array('ID' => 'UA-66673104-2', 'Enable' => '1')),
 				'Facebook' => array('ID' => '152562051774453', 'EventTracking' => '1'),
 				'Apple' => array('ID' => '1014250566'),
