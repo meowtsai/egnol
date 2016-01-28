@@ -5,6 +5,10 @@ class Cron extends CI_Controller {
 	function __construct() 
 	{
 		parent::__construct();	
+		$this->global_dir = BASEPATH.'../global/';
+		$this->load->add_package_path($this->global_dir);
+		$this->load->helper("g_common");
+        
 		$this->DB1 = $this->load->database('long_e', TRUE);
         $this->DB2 = $this->load->database('long_e_2', TRUE);
 			
@@ -1301,6 +1305,30 @@ class Cron extends CI_Controller {
 			$this->cron_bundle($run_date);
 		}
 	}
+    
+    function mongo_log_data($date="") {
+        
+        $this->load->library(array("Mongo_db"));
+        
+        $mongo_log = new Mongo_db(array("activate" => "default"));
+        
+		if (empty($date)) $date=date("Y-m-d",strtotime("-2 days"));
+        
+        $le_AppStart = $mongo_log->where(array("uid" => null))
+            ->where_gte('le_logTime', $date)
+            ->select(array("uid", "le_deviceType"))->get("le_AppStart");
+            
+        foreach ($le_AppStart as $row) {
+            $user_info = $this->db->from("user_info")
+                ->where("uid", $row['uid'])->get()->row();
+                
+            if (strcasecmp($row['le_deviceType'], 'Android') == 0 && !$user_info->is_android_device) {
+                $this->db->where("uid", $row['uid'])->update("user_info", array("is_android_device" => 1));
+            } elseif(strcasecmp($row['le_deviceType'], 'iOS') == 0 && !$user_info->is_ios_device) {
+                $this->db->where("uid", $row['uid'])->update("user_info", array("is_ios_device" => 1));
+            }
+        }
+    }
 }
 
 /* End of file search.php */

@@ -629,6 +629,8 @@ CREATE TABLE `user_info` (
   `street` varchar(250) DEFAULT NULL,
   `ban_reason` mediumtext,
   `ban_date` timestamp NULL DEFAULT NULL,
+  `is_android_device` tinyint(1) DEFAULT NULL,
+  `is_ios_device` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uid_UNIQUE` (`uid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
