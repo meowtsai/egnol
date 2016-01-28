@@ -698,7 +698,7 @@ class Api extends MY_Controller
 		// 讀取遊戲列表
 		$games = $this->db->from("games")->where("is_active", "1")->get();
 		// 讀取伺服器列表
-		$servers = $this->db->order_by("server_id")->get("servers");
+		$servers = $this->db->where("is_transaction_active", "1")->order_by("server_id")->get("servers");
 		// 讀取玩家角色列表
 		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();
 
