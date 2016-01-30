@@ -18,9 +18,13 @@
 		if ($user->email) $account = $user->email;
 		$account = $user->mobile;
 	}
+    
+	$this->load->config("g_service");
+	$question_type = $this->config->item('question_type');
+	$question_status = $this->config->item('question_status');
 ?>
 
-<legend><?=$account?> (<?=$user->uid?>)</legend>
+<legend><?=$account?> (<?=$user->uid?>)&nbsp;基本資料</legend>
 
 <div id="func_bar" style="text-align:right;">
 
@@ -45,43 +49,73 @@
 
 </div>
 	
-<dl class="dl-horizontal">
-	<dt>uid</dt><dd><?=$user->uid?></dd>
-	<dt>euid</dt><dd><?=$this->g_user->encode($user->uid)?></dd>
-	<dt>帳號</dt><dd><?
-		if (!$user->email && !$user->mobile) {
-			$ex_id = explode("@",$user->external_id); 
-			if ('device' == $ex_id[1]) echo "快速登入";
-			else echo $ex_id[1];
-		} else {
-			if ($user->email) echo $user->email;
-			echo $user->mobile;
-		}
-	?></dd>
-	<dt>姓名</dt><dd><?=$user->name?>&nbsp;</dd>
-	<?
-	if($user->sex==1) {$show_sex = '男';}
-	else if($user->sex==2) {$show_sex = '女';}
-	else {$show_sex = '';}
-	?>
-	<dt>性別</dt><dd><?=$show_sex?>&nbsp;</dd>
-	<dt>信箱</dt><dd><?=$user->email?>&nbsp;</dd>
-	<dt>手機</dt><dd><?=$user->mobile?>&nbsp;</dd>
-	<dt>身分證</dt><dd><?=$user->ident?>&nbsp;</dd>
-	<dt>地址</dt><dd><?=$user->street?>&nbsp;</dd>
-	<dt>生日</dt><dd><?=$user->birthday?>&nbsp;</dd>
-	<dt>註冊日期</dt><dd><?=$user->create_time?></dd>
-	<dt>最後登入日期</dt><dd><?=$user->last_login_date?>&nbsp</dd>
-	<dt>帳號狀態</dt><dd>
-		<? if ($user->is_banned == 1):?>
-			<span style="color:red">停權</span> 
-			<div><?=$user->ban_date?></div>
-			<div><?=$user->ban_reason?></div>
-		<? else:?>
-			<span style="color:#006900">正常</span><br>
-		<? endif;?>
-	</dd>
-</dl>
+<table class="table table-bordered" style="width:750px">
+	<tbody>
+		<tr>
+            <th>帳號</th>
+            <td><?
+                if (!$user->email && !$user->mobile) {
+                    $ex_id = explode("@",$user->external_id); 
+                    if ('device' == $ex_id[1]) echo "快速登入";
+                    else echo $ex_id[1];
+                } else {
+                    if ($user->email) echo $user->email;
+                    else echo $user->mobile;
+                }
+            ?></td>
+            <th>VIP</th>
+            <td> </td>
+		</tr>
+		<tr>
+            <th>uid</th>
+            <td><?=$user->uid?></td>
+            <th>euid</th>
+            <td><?=$this->g_user->encode($user->uid)?></td>
+		</tr>
+		<tr>
+            <th>姓名</th>
+            <td><?=$user->name?>&nbsp;</td>
+            <th>身分證</th>
+            <td><?=$user->ident?></td>
+		</tr>
+		<tr>
+            <th>性別</th>
+            <td><?
+            if($user->sex==1) {echo '男';}
+            else if($user->sex==2) {echo '女';}
+            else {echo '';}
+            ?></td>
+            <th>生日</th>
+            <td><?=$user->birthday?>&nbsp;</td>
+		</tr>
+		<tr>
+            <th>信箱</th>
+            <td><?=$user->email?>&nbsp;</td>
+            <th>地址</th>
+            <td><?=$user->street?>&nbsp;</td>
+		</tr>
+		<tr>
+            <th>手機</th>
+            <td><?=$user->mobile?>&nbsp;</td>
+            <th>帳號狀態</th>
+            <td>
+            <? if ($user->is_banned == 1):?>
+                <span style="color:red">停權</span> 
+                <div><?=$user->ban_date?></div>
+                <div><?=$user->ban_reason?></div>
+            <? else:?>
+                <span style="color:#006900">正常</span><br>
+            <? endif;?>
+            </td>
+		</tr>
+		<tr>
+            <th>註冊時間</th>
+            <td><?=$user->create_time?></td>
+            <th>最後登入時間</th>
+            <td><?=$user->last_login_date?>&nbsp;</td>
+		</tr>
+	</tbody>
+</table>
 
 儲值記錄(
 <a href="<?=site_url("trade/gash?uid={$user->uid}&action=查詢")?>">Gash+</a> |
@@ -95,54 +129,164 @@
 
 <br><br>
 
-<table class="table table-striped table-bordered" style="width:560px">
-	<caption>交易統計</caption>
-	<thead>
-		<tr>
-			<th style="color:#060">儲值總額</th>
-			<th style="color:#600">轉點總額</th>
-			<th style="color:#060">回補總額</th>
-			<th style="color:#060">贈點總額</th>
-			<th style="color:#600">目前餘額</th>
-		</tr>
-	</thead>
-	<tbody>
-		<tr>
-			<td style="color:#060"><?=$balance->aq?></td>
-			<td style="color:#600"><?=$balance->amount?></td>
-			<td style="color:#060"><?=$balance->rq?></td>
-			<td style="color:#060"><?=$balance->gq?></td>
-			<td style="color:#600"><?=$balance->aq+$balance->rq+$balance->gq-$balance->amount?></td>		
-		</tr>
-	</tbody>
-</table>
+<legend>客服詢問記錄</legend>
 
-<table class="table table-striped table-bordered" style="width:560px">
-	<caption>遊戲角色</caption>
+<table class="table table-striped table-bordered" style="width:750px">
 	<thead>
 		<tr>
-			<th>遊戲</th>
-			<th>角色名稱</th>
-			<th>廣告來源</th>
-			<th>創建時間</th>
+			<th style="width:60px;">#</th>
+			<th style="width:80px">伺服器</th>
+			<th style="width:400px">描述</th>
+			<th style="width:80px;">狀態</th>
+			<th style="width:100px;">日期</th>
 		</tr>
 	</thead>
 	<tbody>
-	  <? if ($role->num_rows() > 0):?>
-		<? foreach($role->result() as $row): fb($row)?>
+		<? if ($questions->num_rows() == 0):?>
+				
 		<tr>
-			<td><?=$row->game_name?> - <?=$row->server_name?></td>
-			<td><?=$row->name?></td>
-			<td><?=array_key_exists($row->ad, $ad_channels) ? $ad_channels[$row->ad] : '無'?></td>
-			<td><?=$row->create_time?></td>
+			<td colspan="10">
+				<div style="padding:10px; color:#777;">查無記錄</div>
+			</td>
+		</tr>
+
+		<? else:?>
+		
+		<? foreach($questions->result() as $row):?>
+		<tr>
+			<td><a href="<?=site_url("service/view/{$row->id}")?>"><?=$row->id?></a></td>
+			<td><?=$row->server_id?></td>
+			<? if ($row->type == '9'):?>
+			<td colspan="3">
+				<span style="font-size:12px;">【<?=$question_type[$row->type]?>】</span>
+				<a href="<?=site_url("service/view/{$row->id}")?>"><?=mb_strimwidth(strip_tags($row->content), 0, 98, '...', 'utf-8')?></a>
+			</td>
+			<td><?=$question_status[$row->status]?>
+				<div style="font-size:11px;"> 
+				<?  if ($row->allocate_status == '1'):?>
+					<span style="color:#999">(後送中)</span>
+				<? elseif ($row->allocate_status == '2'):?>
+					<span style="color:#090">(後送完成)</span>
+				<? endif;?>
+				</div>
+			</td>						
+			<? else:?>
+			<td style="word-break: break-all">
+				<span style="font-size:12px;">【<?=$question_type[$row->type]?>】</span>
+				<a href="<?=site_url("service/view/{$row->id}")?>"><?=mb_strimwidth(strip_tags($row->content), 0, 66, '...', 'utf-8')?></a>
+			</td>
+			<td><?=$question_status[$row->status]?>
+			</td>			
+			<? endif;?>			
+			<td><?=date("Y-m-d", strtotime($row->create_time))?></td>
 		</tr>
 		<? endforeach;?>
-	  <? else:?>
-	  	<tr>
-	  		<td colspan="4">尚無角色</td>
-	  	</tr>
-	  <? endif;?>
+		<? endif;?>
+		
 	</tbody>
 </table>
 
+<legend>遊戲資料</legend>
 
+<table style="width:750px">
+    <tr>
+        <td style="width:250px">
+            <form id="choose_form" class="choose_form" method="post" action="<?=site_url("member/view/{$user->uid}")?>">
+                <table class="member_info">
+                    <tr>
+                        <td>
+                            <select name="game" class="required" style="">
+                                <option value="">--請選擇遊戲--</option>
+                                <?$exchange_rate=1;?>
+                                <? foreach($games->result() as $row): ?>
+                                <?if($this->input->post("game")==$row->game_id) $exchange_rate=$row->exchange_rate?>
+                                <option value="<?=$row->game_id?>" rate="<?=$row->exchange_rate?>" goldname="<?=$row->currency?>" <?=($this->input->post("game")==$row->game_id ? 'selected="selected"' : '')?>><?=$row->name?></option>
+                                <? endforeach;?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select name="server" class="required" style="">
+                                <option value="">--請先選擇伺服器--</option>
+                            </select>
+                            <select id="server_pool" style="display:none;">
+                                <? foreach($servers->result() as $row):
+                                if ( IN_OFFICE == false && in_array($row->server_status, array("private", "hide"))) continue;?>
+                                <option value="<?=$row->server_id?>" <?=($this->input->post("server")==$row->server_id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?></option>
+                                <? endforeach;?>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <select name="character" class="required" style="">
+                                <option value="">--請選擇角色--</option>
+                            </select>
+
+                            <select id="character_pool" style="display:none;">
+                                <? foreach($characters->result() as $row): ?>
+                                <option value="<?=$row->id?>" <?=($this->input->post("character")==$row->id ? 'selected="selected"' : '')?> class="<?=$row->server_id?>"><?=$row->name?></option>
+                                <? endforeach;?>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+            </form>
+
+            <?if ($balance):?>
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>累積儲值金額</th>
+                        <th>儲值獲得</th>
+                        <th>活動贈與</th>
+                        <th>遊戲內剩餘點數</th>
+                        <th>遊戲內VIP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><?=$balance->aq?></td>
+                        <td><?=$exchange_rate*$balance->aq?></td>
+                        <td><?=$balance->gq?></td>
+                        <td></td>
+                        <td></td>		
+                    </tr>
+                </tbody>
+            </table>
+            <?endif;?>
+        </td>
+        <td style="width:450px;vertical-align:top;">   
+            <table class="table table-striped table-bordered">
+                <caption>遊戲角色</caption>
+                <thead>
+                    <tr>
+                        <th>遊戲</th>
+                        <th>角色名稱</th>
+                        <th>廣告來源</th>
+                        <th>創建時間</th>
+                        <th>最後登入時間</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <? if ($role->num_rows() > 0):?>
+                    <? foreach($role->result() as $row): fb($row)?>
+                    <tr>
+                        <td><?=$row->game_name?> - <?=$row->server_name?></td>
+                        <td><?=$row->name?></td>
+                        <td><?=array_key_exists($row->ad, $ad_channels) ? $ad_channels[$row->ad] : '無'?></td>
+                        <td><?=$row->create_time?></td>
+                        <td><?=$row->last_login_time?></td>
+                    </tr>
+                    <? endforeach;?>
+                  <? else:?>
+                    <tr>
+                        <td colspan="4">尚無角色</td>
+                    </tr>
+                  <? endif;?>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+</table>

@@ -121,16 +121,6 @@ class Member extends MY_Controller {
 	
 	function view($uid) 
 	{
-		$balance_sql = "
-SELECT 
-	x.uid,
-        COALESCE((SELECT SUM(amount) FROM user_billing WHERE billing_type=1 AND result=1 AND uid=x.uid GROUP BY uid), 0) aq,
-        COALESCE((SELECT SUM(amount) FROM user_billing WHERE billing_type=2 AND result=1 AND uid=x.uid GROUP BY uid), 0) amount,
-        COALESCE((SELECT SUM(amount) FROM user_billing WHERE billing_type=3 AND result=1 AND uid=x.uid GROUP BY uid), 0) rq,
-        COALESCE((SELECT SUM(amount) FROM user_billing WHERE billing_type=4 AND result=1 AND uid=x.uid GROUP BY uid), 0) gq
-FROM users x
-WHERE x.uid={$uid}";
-		
 		$user = $this->DB2
 					->select("u.*, lgl.create_time as last_login_date, ui.ident, ui.ban_reason, ui.ban_date, ui.name, ui.sex, ui.street, ui.birthday")
 					->from("users u")->where("u.uid", $uid)
@@ -138,20 +128,55 @@ WHERE x.uid={$uid}";
 					->join("user_info ui", "u.uid=ui.uid", "left")
 					->order_by("lgl.create_time desc")
 					->get()->row();
-		$balance = $this->DB2->query($balance_sql)->row();
+        
+        $game = $this->input->post("game");
+        $server = $this->input->post("server");
+        $character = $this->input->post("character");
+        
+        if ($character) {
+            
+            $balance_sql = "
+    SELECT 
+        x.uid,
+            COALESCE((SELECT SUM(amount) FROM user_billing WHERE billing_type=1 AND result=1 AND character_id={$character} AND uid=x.uid GROUP BY uid), 0) aq,
+            COALESCE((SELECT SUM(amount) FROM user_billing WHERE billing_type=2 AND result=1 AND character_id={$character} AND uid=x.uid GROUP BY uid), 0) amount,
+            COALESCE((SELECT SUM(amount) FROM user_billing WHERE billing_type=3 AND result=1 AND character_id={$character} AND uid=x.uid GROUP BY uid), 0) rq,
+            COALESCE((SELECT SUM(amount) FROM user_billing WHERE billing_type=4 AND result=1 AND character_id={$character} AND uid=x.uid GROUP BY uid), 0) gq
+    FROM users x
+    WHERE x.uid={$uid}";
+
+            $balance = $this->DB2->query($balance_sql)->row();
+        } else {
+            $balance = "";
+        }
 		
 		
-		$role = $this->DB2->select("gsr.*, g.name as game_name, gi.name as server_name")
+		$role = $this->DB2->select("gsr.*, g.name as game_name, gi.name as server_name, lgl.create_time as last_login_time")
 			->from("characters gsr")
 			->join("servers gi", "gi.server_id=gsr.server_id")
 			->join("games g", "g.game_id=gi.game_id")
+			->join("log_game_logins lgl", "lgl.server_id=gsr.server_id and lgl.uid=gsr.uid and lgl.is_recent=1")
 			->where("gsr.uid", $user->uid)->order_by("gsr.create_time desc")->get();
+            
+		$questions = $this->DB2->from('questions')->where('uid', $uid)->order_by("create_time desc")->limit(10)->get();
+        
+		$games = $this->db->from("games")->where("is_active", "1")->get();
+		$servers = $this->db->where("is_transaction_active", "1")->order_by("server_id")->get("servers");
+		$characters = $this->db->from("characters")->where("uid", $uid)->get();
 		
 		$this->_init_member_layout()
 			->add_breadcrumb("查看")
 			->set("user", $user)
 			->set("balance", $balance)
 			->set("role", $role)
+			->set("questions", $questions)
+			->set("games", $games)
+			->set("servers", $servers)
+			->set("characters", $characters)
+			->set("game", $game)
+			->set("server", $server)
+			->set("character", $character)
+			->add_js_include("member/view")
 			->render();
 	}
 	
