@@ -160,6 +160,8 @@ class Member extends MY_Controller {
             
 		$questions = $this->DB2->from('questions')->where('uid', $uid)->order_by("create_time desc")->limit(10)->get();
         
+		$user_billing = $this->DB2->from('user_billing')->where('uid', $uid)->where('billing_type', 2)->where('result', 1)->order_by("create_time desc")->limit(10)->get();
+        
 		$games = $this->db->from("games")->where("is_active", "1")->get();
 		$servers = $this->db->where("is_transaction_active", "1")->order_by("server_id")->get("servers");
 		$characters = $this->db->from("characters")->where("uid", $uid)->get();
@@ -173,6 +175,7 @@ class Member extends MY_Controller {
 			->set("games", $games)
 			->set("servers", $servers)
 			->set("characters", $characters)
+			->set("user_billing", $user_billing)
 			->set("game", $game)
 			->set("server", $server)
 			->set("character", $character)

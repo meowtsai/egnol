@@ -22,6 +22,15 @@
 	$this->load->config("g_service");
 	$question_type = $this->config->item('question_type');
 	$question_status = $this->config->item('question_status');
+    
+    $result_table = array(
+        "0" => array("name" => "初始", "class" => "error"), 
+        "1" => array("name" => "成功", "class" => "success"), 
+        "2" => array("name" => "失敗", "class" => "warning"),
+        "3" => array("name" => "交易逾時", "class" => "error"),
+        "4" => array("name" => "其它", "class" => "info"),
+        "5" => array("name" => "等候入點", "class" => "success"),
+    );
 ?>
 
 <legend><?=$account?> (<?=$user->uid?>)&nbsp;基本資料</legend>
@@ -117,19 +126,7 @@
 	</tbody>
 </table>
 
-儲值記錄(
-<a href="<?=site_url("trade/gash?uid={$user->uid}&action=查詢")?>">Gash+</a> |
-<a href="<?=site_url("trade/pepay?uid={$user->uid}&action=查詢")?>">Pepay</a> |
-<a href="<?=site_url("trade/google?uid={$user->uid}&action=查詢")?>">Google</a> |
-<a href="<?=site_url("trade/ios?uid={$user->uid}&action=查詢")?>">IOS</a>)
-<a href="<?=site_url("trade/transfer?uid={$user->uid}&action=查詢")?>" class="btn btn-link btn-small">轉點記錄</a>
-<a href="<?=site_url("log/login?uid={$user->uid}&action=查詢")?>" class="btn btn-link btn-small">平台登入記錄</a>
-<a href="<?=site_url("log/game_login?uid={$user->uid}&action=查詢")?>" class="btn btn-link btn-small">遊戲登入記錄</a>
-<a href="<?=site_url("service/get_list?uid={$user->uid}&action=查詢")?>" class="btn btn-link btn-small">客服記錄</a>
-
-<br><br>
-
-<legend>客服詢問記錄</legend>
+<legend>客服近期詢問記錄</legend>
 
 <table class="table table-striped table-bordered" style="width:750px">
 	<thead>
@@ -185,6 +182,10 @@
 		
 	</tbody>
 </table>
+
+<a href="<?=site_url("service/get_list?uid={$user->uid}&action=查詢")?>" class="btn btn-link btn-small">完整客服記錄</a>
+
+<br><br>
 
 <legend>遊戲資料</legend>
 
@@ -290,3 +291,52 @@
         </td>
     </tr>
 </table>
+
+<a href="<?=site_url("log/login?uid={$user->uid}&action=查詢")?>" class="btn btn-link btn-small">平台登入記錄</a>
+<a href="<?=site_url("log/game_login?uid={$user->uid}&action=查詢")?>" class="btn btn-link btn-small">遊戲登入記錄</a>
+
+<br><br>
+
+<legend>近期儲值記錄</legend>
+
+<table class="table table-striped table-bordered" style="width:750px">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>伺服器</th>
+			<th>金額</th>
+			<th>狀態</th>
+			<th>日期</th>
+		</tr>
+	</thead>
+	<tbody>
+		<? if ($user_billing->num_rows() == 0):?>
+				
+		<tr>
+			<td colspan="10">
+				<div style="padding:10px; color:#777;">查無記錄</div>
+			</td>
+		</tr>
+
+		<? else:?>
+		
+		<? foreach($user_billing->result() as $row):?>
+		<tr>
+			<td><?=$row->id?></td>
+			<td><?=$row->server_id?></td>
+			<td><?=$row->amount?></td>
+			<td><?=$result_table[$row->result]["name"]?>
+			<td><?=date("Y-m-d", strtotime($row->create_time))?></td>
+		</tr>
+		<? endforeach;?>
+		<? endif;?>
+		
+	</tbody>
+</table>
+
+儲值記錄(
+<a href="<?=site_url("trade/gash?uid={$user->uid}&action=查詢")?>">Gash+</a> |
+<a href="<?=site_url("trade/pepay?uid={$user->uid}&action=查詢")?>">Pepay</a> |
+<a href="<?=site_url("trade/google?uid={$user->uid}&action=查詢")?>">Google</a> |
+<a href="<?=site_url("trade/ios?uid={$user->uid}&action=查詢")?>">IOS</a>)
+<a href="<?=site_url("trade/transfer?uid={$user->uid}&action=查詢")?>" class="btn btn-link btn-small">轉點記錄</a>
