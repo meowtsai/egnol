@@ -297,42 +297,59 @@
 
 <br><br>
 
-<legend>近期儲值記錄</legend>
+<legend>玩家儲值分析</legend>
 
-<table class="table table-striped table-bordered" style="width:750px">
-	<thead>
-		<tr>
-			<th>#</th>
-			<th>伺服器</th>
-			<th>金額</th>
-			<th>狀態</th>
-			<th>日期</th>
-		</tr>
-	</thead>
-	<tbody>
-		<? if ($user_billing->num_rows() == 0):?>
-				
-		<tr>
-			<td colspan="10">
-				<div style="padding:10px; color:#777;">查無記錄</div>
-			</td>
-		</tr>
-
-		<? else:?>
-		
-		<? foreach($user_billing->result() as $row):?>
-		<tr>
-			<td><?=$row->id?></td>
-			<td><?=$row->server_id?></td>
-			<td><?=$row->amount?></td>
-			<td><?=$result_table[$row->result]["name"]?>
-			<td><?=date("Y-m-d", strtotime($row->create_time))?></td>
-		</tr>
-		<? endforeach;?>
-		<? endif;?>
-		
-	</tbody>
+<?if ($user_billing):?>
+<table style="width:750px">
+    <tr>
+        <td style="width:250px">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>儲值等級</th><th>次數</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>LVL1($60~$599)</td><td><?=$user_billing->lvl1?></td>
+                    </tr><tr>
+                        <td>LVL2($600~$1499)</td><td><?=$user_billing->lvl2?></td>
+                    </tr><tr>
+                        <td>LVL3($1500~$4999)</td><td><?=$user_billing->lvl3?></td>
+                    </tr><tr>
+                        <td>LVL4($5000~$19999)</td><td><?=$user_billing->lvl4?></td>
+                    </tr><tr>
+                        <td>LVL5($20000~$99999)</td><td><?=$user_billing->lvl5?></td>
+                    </tr><tr>
+                        <td>LVL6($100000+)</td><td><?=$user_billing->lvl6?></td>
+                    </tr>
+                </tbody>
+                <thead>
+                    <tr>
+                        <th colspan="2">玩家終身價值(LTV)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="2"><?=$user_billing->ltv?></td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+        <td>
+            <img src="<?=base_url()?>/p/jpgraphs/deposit_pie_chart_<?=$user->uid?>" alt="">
+        <?
+            /*$this->load->library('jpgraph');
+            $jgraph_data = array($user_billing->lvl1,$user_billing->lvl2,$user_billing->lvl3,$user_billing->lvl4,$user_billing->lvl5,$user_billing->lvl6);
+            $jgraph_labels = array();
+            
+            $region_graph = $this->jpgraph->pie_chart($jgraph_data, "pie");
+            */
+        ?>
+        </td>
+    </tr>
 </table>
+<?endif;?>
 
 儲值記錄(
 <a href="<?=site_url("trade/gash?uid={$user->uid}&action=查詢")?>">Gash+</a> |

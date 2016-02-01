@@ -744,7 +744,7 @@ class Statistics extends MY_Controller {
 			array_unshift($jgraph_labels, "10+");
 		}
 		
-		$deposit_count_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/deposit_count_graph');
+		$deposit_count_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/deposit_count_graph');
 		
 		$region_count_query = $this->DB2->query("
 			SELECT 
@@ -767,7 +767,7 @@ class Statistics extends MY_Controller {
 			$jgraph_labels[] = (string)$row->country_code;
 		}
 		
-		$region_count_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/region_count_graph');
+		$region_count_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/region_count_graph');
 		
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
@@ -912,7 +912,7 @@ class Statistics extends MY_Controller {
 			$jgraph_labels[] = $row->nation;
 		}
 		
-		$region_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/region_graph');
+		$region_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/region_graph');
 		
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)

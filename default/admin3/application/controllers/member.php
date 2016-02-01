@@ -160,11 +160,36 @@ class Member extends MY_Controller {
             
 		$questions = $this->DB2->from('questions')->where('uid', $uid)->order_by("create_time desc")->limit(10)->get();
         
-		$user_billing = $this->DB2->from('user_billing')->where('uid', $uid)->where('billing_type', 2)->where('result', 1)->order_by("create_time desc")->limit(10)->get();
+		//$user_billing = $this->DB2->from('user_billing')->where('uid', $uid)->where('billing_type', 2)->where('result', 1)->order_by("create_time desc")->limit(10)->get();
+        
+        $user_billing = $this->DB2->query("
+            SELECT
+                COUNT(CASE WHEN amount BETWEEN 60 AND 599 THEN 1 ELSE NULL END) as lvl1,
+                COUNT(CASE WHEN amount BETWEEN 600 AND 1499 THEN 1 ELSE NULL END) as lvl2,
+                COUNT(CASE WHEN amount BETWEEN 1500 AND 4999 THEN 1 ELSE NULL END) as lvl3,
+                COUNT(CASE WHEN amount BETWEEN 5000 AND 19999 THEN 1 ELSE NULL END) as lvl4,
+                COUNT(CASE WHEN amount BETWEEN 20000 AND 99999 THEN 1 ELSE NULL END) as lvl5,
+                COUNT(CASE WHEN amount >=100000 THEN 1 ELSE NULL END) as lvl6,
+                SUM(amount) as ltv
+            FROM user_billing 
+            WHERE uid={$uid} AND billing_type=2 AND result=1
+        ")->row();
         
 		$games = $this->db->from("games")->where("is_active", "1")->get();
 		$servers = $this->db->order_by("server_id")->get("servers");
 		$characters = $this->db->from("characters")->where("uid", $uid)->get();
+        
+        $this->load->library('jpgraph');
+        $jgraph_data = array();
+        $jgraph_labels = array();
+        if ($user_billing->lvl1){$jgraph_data[]=($user_billing->lvl1); $jgraph_labels[]="LV1\n(%.1f%%)";}
+        if ($user_billing->lvl2){$jgraph_data[]=($user_billing->lvl2); $jgraph_labels[]="LV2\n(%.1f%%)";}
+        if ($user_billing->lvl3){$jgraph_data[]=($user_billing->lvl3); $jgraph_labels[]="LV3\n(%.1f%%)";}
+        if ($user_billing->lvl4){$jgraph_data[]=($user_billing->lvl4); $jgraph_labels[]="LV4\n(%.1f%%)";}
+        if ($user_billing->lvl5){$jgraph_data[]=($user_billing->lvl5); $jgraph_labels[]="LV5\n(%.1f%%)";}
+        if ($user_billing->lvl6){$jgraph_data[]=($user_billing->lvl6); $jgraph_labels[]="LV6\n(%.1f%%)";}
+        
+        $deposit_pie_chart = $this->jpgraph->pie_chart($jgraph_data, $jgraph_labels, "", dirname(__FILE__).'/../../p/jpgraphs/deposit_pie_chart_'.$uid);
 		
 		$this->_init_member_layout()
 			->add_breadcrumb("查看")
