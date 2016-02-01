@@ -214,7 +214,7 @@
                             <select id="server_pool" style="display:none;">
                                 <? foreach($servers->result() as $row):
                                 if ( IN_OFFICE == false && in_array($row->server_status, array("private", "hide"))) continue;?>
-                                <option value="<?=$row->server_id?>" <?=($this->input->post("server")==$row->server_id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?></option>
+                                <option value="<?=$row->server_id?>" <?=($this->input->post("server")==$row->server_id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?><?=($row->is_transaction_active)?"":"(伺服器金流已關閉)"?></option>
                                 <? endforeach;?>
                             </select>
                         </td>

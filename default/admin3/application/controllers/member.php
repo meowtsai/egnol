@@ -163,7 +163,7 @@ class Member extends MY_Controller {
 		$user_billing = $this->DB2->from('user_billing')->where('uid', $uid)->where('billing_type', 2)->where('result', 1)->order_by("create_time desc")->limit(10)->get();
         
 		$games = $this->db->from("games")->where("is_active", "1")->get();
-		$servers = $this->db->where("is_transaction_active", "1")->order_by("server_id")->get("servers");
+		$servers = $this->db->order_by("server_id")->get("servers");
 		$characters = $this->db->from("characters")->where("uid", $uid)->get();
 		
 		$this->_init_member_layout()
