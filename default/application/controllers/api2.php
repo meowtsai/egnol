@@ -1424,7 +1424,7 @@ class Api2 extends MY_Controller
 		// 設定紀錄資料
 		$user_billing_transfer_data = array(
 			'uid' 			=> $uid,
-			'transaction_type' => "inapp_billing_".$channel,
+			'transaction_type' => "top_up_account",
 			'billing_type'	=> '2',
 			'amount' 		=> $money,
 			'server_id' 	=> $server_id,
