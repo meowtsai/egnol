@@ -50,13 +50,6 @@
 				<th style="width:70px">iOS</th>
 				<th style="width:70px">Android</th>
 				<th style="width:70px">GASH</th>
-				<th style="width:70px">MyCard</th>
-				<th style="width:70px">PayPal</th>
-				<th style="width:70px">ATM</th>
-				<th style="width:70px">電信小額付費-中華電信</th>
-				<th style="width:70px">電信小額付費-台灣大哥大</th>
-				<th style="width:70px">電信小額付費-遠傳</th>
-				<th style="width:70px">電信小額付費-威寶</th>
 				<th style="width:70px">其他儲點</th>
 				<th style="width:70px">儲值地區-台灣</th>
 				<th style="width:70px">儲值地區-香港</th>
@@ -74,13 +67,6 @@
 				<td style="text-align:right"><?=number_format($row->ios_sum)?></td>
 				<td style="text-align:right"><?=number_format($row->android_sum)?></td>
 				<td style="text-align:right"><?=number_format($row->gash_sum)?></td>
-				<td style="text-align:right"><?=number_format($row->mycard_sum)?></td>
-				<td style="text-align:right"><?=number_format($row->paypal_sum)?></td>
-				<td style="text-align:right"><?=number_format($row->atm_sum)?></td>
-				<td style="text-align:right"><?=number_format($row->cht_sum)?></td>
-				<td style="text-align:right"><?=number_format($row->twm_sum)?></td>
-				<td style="text-align:right"><?=number_format($row->fet_sum)?></td>
-				<td style="text-align:right"><?=number_format($row->vibo_sum)?></td>
 				<td style="text-align:right"><?=number_format($row->other_billing_sum)?></td>
 				<td style="text-align:right"><?=number_format($row->twn_sum)?></td>
 				<td style="text-align:right"><?=number_format($row->hkg_sum)?></td>

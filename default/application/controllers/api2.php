@@ -1399,6 +1399,9 @@ class Api2 extends MY_Controller
 		$order_id = $this->input->post("order_id");
 		$product_id = $this->input->post("product_id");
 		$money = $this->input->post("money");
+        
+		$country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
+		$country_code = ($country_code) ? $country_code : null;
 
 		// 設定紀錄資料
 		$user_billing_data = array(
