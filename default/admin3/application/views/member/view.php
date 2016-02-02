@@ -331,13 +331,15 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td colspan="2"><?=$user_billing->ltv?></td>
+                        <td colspan="2"><?=($user_billing->ltv)?$user_billing->ltv:0?></td>
                     </tr>
                 </tbody>
             </table>
         </td>
         <td>
+        <?if ($user_billing->ltv):?>
             <img src="<?=base_url()?>/p/jpgraphs/deposit_pie_chart_<?=$user->uid?>" alt="">
+        <?endif;?>
         <?
             /*$this->load->library('jpgraph');
             $jgraph_data = array($user_billing->lvl1,$user_billing->lvl2,$user_billing->lvl3,$user_billing->lvl4,$user_billing->lvl5,$user_billing->lvl6);
