@@ -36,11 +36,20 @@
 		<input type="submit" class="btn btn-small btn-inverse" name="action" value="營收統計">	
 	
 	</div>
-		
-</form>
 
 <? if ($query):?>
 	<? if ($query->num_rows() == 0): echo '<div class="none">查無資料</div>'; else: ?>
+    
+    <div><img src="<?=base_url()?>/p/jpgraphs/<?=$span?>_revenue_graph" alt=""></div>
+    <div>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='總儲點' || $this->input->get("action")=='營收統計')?'btn-inverse':''?>" name="action" value="總儲點">
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='iOS')?'btn-inverse':''?>" name="action" value="iOS">
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='Android')?'btn-inverse':''?>" name="action" value="Android">
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='GASH')?'btn-inverse':''?>" name="action" value="GASH">
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='其他儲點')?'btn-inverse':''?>" name="action" value="其他儲點">
+    </div>
+    <div>&nbsp;</div>
 
 	<table class="table table-striped table-bordered" style="width:auto;">
 		<thead>
@@ -60,7 +69,36 @@
 			</tr>
 		</thead>
 		<tbody>
-		<? foreach($query->result() as $row):?>
+		<?
+        $expected_date;
+        $row_cnt = 0; 
+        foreach($query->result() as $row):
+            $row_cnt++;
+            if (empty($span)){
+                if ($row_cnt>1) {
+                    for($next_date=strtotime((string)$row->date); $next_date<$expected_date; $expected_date=strtotime('-1 day', $expected_date)) {
+                        $row_cnt++;
+                    ?>
+			<tr>			
+				<td nowrap="nowrap"><?=date('Y-m-d', $expected_date)?></td>
+				<td style="text-align:right">0</td>
+				<td style="text-align:right">0</td>
+				<td style="text-align:right">0</td>
+				<td style="text-align:right">0</td>
+				<td style="text-align:right">0</td>
+				<td style="text-align:right">0</td>
+				<td style="text-align:right">0</td>
+				<td style="text-align:right">0</td>
+				<td style="text-align:right">0</td>
+				<td style="text-align:right">0</td>
+				<td style="text-align:right">0</td>
+			</tr>
+                    <?
+                    }
+                }
+                $expected_date = strtotime('-1 day', strtotime((string)$row->date));       
+            }
+        ?>
 			<tr>			
 				<td nowrap="nowrap"><?=$row->date?></td>
 				<td style="text-align:right"><?=number_format($row->sum)?></td>
@@ -75,8 +113,11 @@
 				<td style="text-align:right"><?=number_format($row->mys_sum)?></td>
 				<td style="text-align:right"><?=number_format($row->other_country_sum)?></td>
 			</tr>
-		<? endforeach;?>
+		<? 
+        endforeach;?>
 		</tbody>
 	</table>
 	<? endif;?>
 <? endif;?>
+		
+</form>

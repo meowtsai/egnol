@@ -6,21 +6,27 @@ require_once 'jpgraph/src/jpgraph_pie.php';
   
 class Jpgraph
 {  
-	public function bar_chart($data, $labels, $save_file="", $settings="") {
+	public function bar_chart($data, $labels, $save_file="", $settings=array()) {
 
 		if ($save_file && file_exists($save_file)) unlink($save_file);
 		if ($data == array()) return 0;		
 		if ($labels == array()) return 0;		
 		
 		// Create the graph. These two calls are always required
-		$graph = new Graph(720,300,'auto');
+        $width = (isset($settings['width']) && $settings['width'])?$settings['width']:720;
+        $height = (isset($settings['height']) && $settings['height'])?$settings['height']:300;
+		$graph = new Graph($width,$height,'auto');
 		$graph->SetScale("textlin");
 
 		$theme_class=new UniversalTheme;
 		$graph->SetTheme($theme_class);
 
-		$graph->Set90AndMargin(50,40,40,40);
-		$graph->img->SetAngle(90); 
+        if (isset($settings['horizontal']) && $settings['horizontal']) {
+            $graph->Set90AndMargin(50,0,40,40);
+            $graph->img->SetAngle(90); 
+        } else {
+            $graph->SetMargin(50,0,40,40);
+        }
 
 		// set major and minor tick positions manually
 		$graph->SetBox(false);

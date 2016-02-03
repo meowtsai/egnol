@@ -674,6 +674,56 @@ class Statistics extends MY_Controller {
 			GROUP BY YEAR(create_time), {$date_group}(create_time)
 		    ORDER BY YEAR(create_time) DESC, {$date_group}(create_time) DESC
 		");
+        
+		$this->load->library('jpgraph');
+		$jgraph_data = array();
+		$jgraph_labels = array();
+        
+        $expected_date;
+        $row_cnt = 0;
+        $sum_type;
+										
+        switch ($this->input->get("action"))
+        {
+            case "iOS":
+                $sum_type = 'ios_sum';
+                break;
+            case "Android":
+                $sum_type = 'android_sum';
+                break;
+            case "GASH":
+                $sum_type = 'gash_sum';
+                break;
+            case "其他儲點":
+                $sum_type = 'other_billing_sum';
+                break;
+            default:
+                $sum_type = 'sum';
+                break;
+        }
+        
+		foreach($query->result() as $row) {
+            $row_cnt++;
+            if ($date_group == 'DATE') {
+                if ($row_cnt>1) {
+                    for($next_date=strtotime((string)$row->date); $next_date<$expected_date; $expected_date=strtotime('-1 day', $expected_date)) {
+                        $row_cnt++;
+                        $jgraph_data[] = 0;
+                        $jgraph_labels[] = date('m/d', $expected_date);
+                    }
+                }
+                $expected_date = strtotime('-1 day', strtotime((string)$row->date));
+                $jgraph_labels[] = date('m/d', strtotime((string)$row->date));
+            } else {
+                $jgraph_labels[] = (string)$row->date;
+            }
+            
+            $jgraph_data[] = $row->$sum_type;
+		}
+        
+		$settings = array('width' => $row_cnt*35+50);
+        
+		$revenue_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/'.$span.'_revenue_graph', $settings);
 		
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
@@ -736,8 +786,10 @@ class Statistics extends MY_Controller {
 			array_unshift($jgraph_data, $deposit_great_count);
 			array_unshift($jgraph_labels, "10+");
 		}
-		
-		$deposit_count_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/deposit_count_graph');
+        
+		$settings = array('horizontal' => true);
+        
+		$deposit_count_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/deposit_count_graph', $settings);
 		
 		$region_count_query = $this->DB2->query("
 			SELECT 
@@ -760,7 +812,7 @@ class Statistics extends MY_Controller {
 			$jgraph_labels[] = (string)$row->country_code;
 		}
 		
-		$region_count_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/region_count_graph');
+		$region_count_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/region_count_graph', $settings);
 		
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
