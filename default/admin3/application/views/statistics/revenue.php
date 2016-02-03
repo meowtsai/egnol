@@ -54,7 +54,7 @@
 	<table class="table table-striped table-bordered" style="width:auto;">
 		<thead>
 			<tr>
-				<th nowrap="nowrap">日期</th>
+				<th nowrap="nowrap">日期<?=($span=='weekly')?"(顯示週一)":""?></th>
 				<th style="width:70px">總儲點</th>
 				<th style="width:70px">iOS</th>
 				<th style="width:70px">Android</th>
@@ -100,7 +100,7 @@
             }
         ?>
 			<tr>			
-				<td nowrap="nowrap"><?=$row->date?></td>
+				<td nowrap="nowrap"><?=($span=='weekly')?date('Y-m-d', strtotime(sprintf("%4dW%02d", (string)$row->year, (string)$row->date))):$row->date?></td>
 				<td style="text-align:right"><?=number_format($row->sum)?></td>
 				<td style="text-align:right"><?=number_format($row->ios_sum)?></td>
 				<td style="text-align:right"><?=number_format($row->android_sum)?></td>

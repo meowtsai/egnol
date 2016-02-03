@@ -654,6 +654,7 @@ class Statistics extends MY_Controller {
 		
 		$query = $this->DB2->query("
 			SELECT
+				YEAR(create_time) 'year',
 				{$date_group}(create_time) 'date',
 				SUM(amount) 'sum',
 				SUM(CASE WHEN transaction_type='inapp_billing_ios' THEN amount ELSE 0 END) 'ios_sum',
@@ -714,6 +715,8 @@ class Statistics extends MY_Controller {
                 }
                 $expected_date = strtotime('-1 day', strtotime((string)$row->date));
                 $jgraph_labels[] = date('m/d', strtotime((string)$row->date));
+            } else if ($date_group == 'WEEK') {
+                $jgraph_labels[] = date('m/d', strtotime(sprintf("%4dW%02d", (string)$row->year, (string)$row->date)));
             } else {
                 $jgraph_labels[] = (string)$row->date;
             }
