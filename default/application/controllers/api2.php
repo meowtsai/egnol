@@ -54,6 +54,7 @@ class Api2 extends MY_Controller
         
 		$device_id	= !empty($_SESSION['login_deviceid']) ? $_SESSION['login_deviceid'] : $this->input->get_post("deviceid");
 		$_SESSION['login_deviceid']	= $device_id;
+		$_SESSION['old_deviceid'] = $this->input->get_post("old_deviceid");
 
         $is_duplicate_login = $this->_check_duplicate_login();
 
@@ -1460,14 +1461,16 @@ class Api2 extends MY_Controller
     {
 		$site = $this->_get_site();
         
-        if ($this->g_user->uid) {
+        if ($this->g_user->uid && !$_SESSION['old_deviceid']) {
             
             $log_game_logins = $this->db->from("log_game_logins")
                 ->where("uid", $this->g_user->uid)
                 ->where("game_id", $site)
                 ->where('logout_time', '0000-00-00 00:00:00')->get()->row();
-                    
-            if (isset($log_game_logins->device_id) && $_SESSION['login_deviceid']<>$log_game_logins->device_id) {
+                
+            $check_deviceid = ($_SESSION['old_deviceid'])?$_SESSION['old_deviceid']:$_SESSION['login_deviceid'];
+                
+            if (isset($log_game_logins->device_id) && $check_deviceid <> $log_game_logins->device_id) {
 
                 $log_user = $this->mongo_log->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->select(array('latest_update_time'))->get('users');
                 
