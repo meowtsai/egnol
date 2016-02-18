@@ -751,6 +751,30 @@ class Statistics extends MY_Controller {
 			$end_date = date("Y-m-d",strtotime("-8 days"));
 		} 
 		
+		$deposit_amount_query = $this->DB2->query("
+            SELECT 
+				SUM(CASE WHEN amount>=100001 THEN 1 ELSE 0 END) 'lvl6',
+				SUM(CASE WHEN amount BETWEEN 20000 AND 100000 THEN 1 ELSE 0 END) 'lvl5',
+				SUM(CASE WHEN amount BETWEEN 5000 AND 19999 THEN 1 ELSE 0 END) 'lvl4',
+				SUM(CASE WHEN amount BETWEEN 1500 AND 4999 THEN 1 ELSE 0 END) 'lvl3',
+				SUM(CASE WHEN amount BETWEEN 600 AND 1499 THEN 1 ELSE 0 END) 'lvl2',
+				SUM(CASE WHEN amount BETWEEN 60 AND 599 THEN 1 ELSE 0 END) 'lvl1'
+            FROM
+                user_billing
+            WHERE
+                create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
+                AND billing_type = 1
+                AND result = 1
+		")->row();
+		
+		$this->load->library('jpgraph');
+		$jgraph_data = array($deposit_amount_query->lvl6, $deposit_amount_query->lvl5, $deposit_amount_query->lvl4, $deposit_amount_query->lvl3, $deposit_amount_query->lvl2, $deposit_amount_query->lvl1);
+		$jgraph_labels = array('LV6($100,001+)', 'LV5($20,000~$100,000)', 'LV4($5,000~$19,999)', 'LV3($1,500~$4,999)', 'LV2($600~$1,499)', 'LV1($60~$599)');
+        
+		$settings = array('horizontal' => true , 'y_label_width' => 150);
+        
+		$deposit_amount_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/deposit_amount_graph', $settings);
+		
 		$deposit_count_query = $this->DB2->query("
 			SELECT
 				deposit_count, COUNT(deposit_count) 'deposit_count_rate'
@@ -770,7 +794,7 @@ class Statistics extends MY_Controller {
 			ORDER BY deposit_count DESC
 		");
 		
-		$this->load->library('jpgraph');
+		//$this->load->library('jpgraph');
 		$jgraph_data = array();
 		$jgraph_labels = array();
 		
@@ -789,8 +813,6 @@ class Statistics extends MY_Controller {
 			array_unshift($jgraph_data, $deposit_great_count);
 			array_unshift($jgraph_labels, "10+");
 		}
-        
-		$settings = array('horizontal' => true);
         
 		$deposit_count_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/deposit_count_graph', $settings);
 		

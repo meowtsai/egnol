@@ -20,12 +20,14 @@ class Jpgraph
 
 		$theme_class=new UniversalTheme;
 		$graph->SetTheme($theme_class);
+        
+        $y_label_width = (isset($settings['y_label_width']) && $settings['y_label_width'])?$settings['y_label_width']:50;
 
         if (isset($settings['horizontal']) && $settings['horizontal']) {
-            $graph->Set90AndMargin(50,0,40,40);
+            $graph->Set90AndMargin($y_label_width,0,40,40);
             $graph->img->SetAngle(90); 
         } else {
-            $graph->SetMargin(50,0,40,40);
+            $graph->SetMargin($y_label_width,0,40,40);
         }
 
 		// set major and minor tick positions manually

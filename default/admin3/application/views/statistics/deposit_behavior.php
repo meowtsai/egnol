@@ -39,6 +39,9 @@
 		
 </form>
 
+<h4>儲值額度區分</h4>
+<div><img src="<?=base_url()?>/p/jpgraphs/deposit_amount_graph" alt=""></div>
+
 <h4>儲值次數區分</h4>
 <div><img src="<?=base_url()?>/p/jpgraphs/deposit_count_graph" alt=""></div>
 
