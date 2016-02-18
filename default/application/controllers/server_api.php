@@ -30,9 +30,9 @@ class Server_api extends MY_Controller
     
     function validate_token() {
         
-        $uid = $this->input->get_post("uid");
-        $game_id = $this->input->get_post("game_id");
-        $token = $this->input->get_post("token");
+        ($this->input->get_post("uid"))     ? $uid = $this->input->get_post("uid")         : return $this->_return_error("欄位不齊全");
+        ($this->input->get_post("game_id")) ? $game_id = $this->input->get_post("game_id") : return $this->_return_error("欄位不齊全");
+        ($this->input->get_post("token"))   ? $token = $this->input->get_post("token")     : return $this->_return_error("欄位不齊全");
         
     	$pass_ips = array();    	
     	foreach($this->partner_conf as $partner => $item)
