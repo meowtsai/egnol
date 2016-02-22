@@ -44,7 +44,7 @@ $(document).ready(function()
 		                $('.login-button img').show();
 						leOpenDialog('登入錯誤', json.message, leDialogType.MESSAGE);
 					}
-				}		
+				}
 			});
 		}
 	});
@@ -79,6 +79,12 @@ function OnClickFacebookLogin()
 
 function onFacebookLoginSuccess(appId, uid)
 {
+    if(uid == "")
+    {
+		leOpenDialog('登入錯誤', "Facebook 回傳資料錯誤!", leDialogType.MESSAGE);
+        return;
+    }
+    
 	$.post("/api2/check_facebook_uid", { uid_list: uid }, function(result)
 	{
 		if(result == '0')
