@@ -4,8 +4,6 @@ require_once dirname(__FILE__).'/config.php';
 //define('IN_OFFICE', in_array($_SERVER["REMOTE_ADDR"], g_conf("office_ip")) && empty($_GET["lock"]) ? TRUE : FALSE);
 if (isset($_SERVER["REMOTE_ADDR"])) {
     
-    define('IN_OFFICE', FALSE);
-    
     if(empty($_GET["lock"])) {
         
         $whitelist = g_conf("office_ip");
@@ -25,6 +23,8 @@ if (isset($_SERVER["REMOTE_ADDR"])) {
             }
         } 
     }
+    
+    if(!IN_OFFICE) define('IN_OFFICE', FALSE);
 }
 
 switch (ENVIRONMENT)

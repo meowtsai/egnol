@@ -53,9 +53,13 @@ class Server_api extends MY_Controller
 
         $log_user = $this->mongo_log->where(array("uid" => (string)$uid, "game_id" => $game_id))->select(array('token'))->get('users');
         
-        if ($log_user[0]['token'] && $log_user[0]['token'] == $token) return true;
-
-		return false;
+        if ($log_user[0]['token'] && $log_user[0]['token'] == $token) {
+            echo 1;
+            return true;
+        } else {
+            echo 0;
+            return false;
+        }
     }
     
     function _return_error($msg) 
