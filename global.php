@@ -24,7 +24,7 @@ if (isset($_SERVER["REMOTE_ADDR"])) {
         } 
     }
     
-    if(!IN_OFFICE) define('IN_OFFICE', FALSE);
+    if(!defined('IN_OFFICE')) define('IN_OFFICE', FALSE);
 }
 
 switch (ENVIRONMENT)
