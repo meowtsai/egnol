@@ -54,6 +54,7 @@ class Api2 extends MY_Controller
         
 		$device_id	= !empty($_SESSION['login_deviceid']) ? $_SESSION['login_deviceid'] : $this->input->get_post("deviceid");
 		$_SESSION['login_deviceid']	= $device_id;
+		$_SESSION['old_deviceid'] = $this->input->get_post("old_deviceid");
 
         $is_duplicate_login = $this->_check_duplicate_login();
 
@@ -287,7 +288,13 @@ class Api2 extends MY_Controller
         
 		if ( $this->db->insert_id() )
 		{
-            $this->mongo_log->insert('users', array("uid" => $this->g_user->uid, "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "latest_update_time" => time()));
+            $this->mongo_log->insert('users', array("uid" => $this->g_user->uid, "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "device_id" => $_SESSION['login_deviceid'], "latest_update_time" => time()));
+            
+            $this->mongo_log->where(array('device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null))->set('uid', $this->g_user->uid)->update('le_AppPause');
+            $this->mongo_log->where(array('device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null))->set('uid', $this->g_user->uid)->update('le_AppResume');
+            $this->mongo_log->where(array('device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null))->set('uid', $this->g_user->uid)->update('le_AppStart');
+            $this->mongo_log->where(array('device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null))->set('uid', $this->g_user->uid)->update('le_AppViewEnter');
+            $this->mongo_log->where(array('device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null))->set('uid', $this->g_user->uid)->update('test_simplepost');
             
 		    $_SESSION['server_id'] = $server;
 			die(json_message(array("message"=>"成功", "site"=>$site, "token"=>$this->g_user->token), true));
@@ -825,7 +832,7 @@ class Api2 extends MY_Controller
 		// 讀取遊戲列表
 		$games = $this->db->from("games")->where("is_active", "1")->get();
 		// 讀取伺服器列表
-		$servers = $this->db->order_by("server_id")->get("servers");
+		$servers = $this->db->where("is_transaction_active", "1")->order_by("server_id")->get("servers");
 		// 讀取玩家角色列表
 		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();
 
@@ -940,6 +947,51 @@ class Api2 extends MY_Controller
 				iframe.parentNode.removeChild(iframe);
 	        }
 		</script>";
+	}
+
+	// iOS in-app 儲值選擇畫面
+	function ui_ios_iap_view()
+	{
+		$this->_init_layout()
+			->add_css_link("login_api")
+			->add_css_link("money")
+			->api_view();
+	}
+	
+	function _send_ios_verify($url, $data)
+	{
+        $ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		$curl_res = curl_exec($ch);
+		curl_close($ch);
+
+		return json_decode($curl_res);
+	}
+	
+	// 向 App Store 驗證訂單
+	function ios_verify_receipt()
+	{
+		$receipt_data = $this->input->post("receipt_data");
+		$product_id = $this->input->post("product_id");
+		$transaction_id = $this->input->post("transaction_id");
+		
+		$url = "https://sandbox.itunes.apple.com/verifyReceipt";
+		$result = $this->_send_ios_verify($url, json_encode(array("receipt-data"=>$receipt_data)));
+		
+		if($result->status == 21008)
+		{
+			$url = "https://buy.itunes.apple.com/verifyReceipt";
+			$result = $this->_send_ios_verify($url, json_encode(array("receipt-data"=>$receipt_data)));
+		}
+		
+		if($result->status != 0)
+			die(json_encode(array("result"=>0, "status"=>$result->status, "receipt"=>$receipt_data)));
+		else
+			die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
 	}
 
 	// 客服頁面
@@ -1393,6 +1445,9 @@ class Api2 extends MY_Controller
 		$order_id = $this->input->post("order_id");
 		$product_id = $this->input->post("product_id");
 		$money = $this->input->post("money");
+        
+		$country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
+		$country_code = ($country_code) ? $country_code : null;
 
 		// 設定紀錄資料
 		$user_billing_data = array(
@@ -1418,7 +1473,7 @@ class Api2 extends MY_Controller
 		// 設定紀錄資料
 		$user_billing_transfer_data = array(
 			'uid' 			=> $uid,
-			'transaction_type' => "inapp_billing_".$channel,
+			'transaction_type' => "top_up_account",
 			'billing_type'	=> '2',
 			'amount' 		=> $money,
 			'server_id' 	=> $server_id,
@@ -1451,14 +1506,16 @@ class Api2 extends MY_Controller
     {
 		$site = $this->_get_site();
         
-        if ($this->g_user->uid) {
+        if ($this->g_user->uid && !$_SESSION['old_deviceid']) {
             
             $log_game_logins = $this->db->from("log_game_logins")
                 ->where("uid", $this->g_user->uid)
                 ->where("game_id", $site)
                 ->where('logout_time', '0000-00-00 00:00:00')->get()->row();
-                    
-            if (isset($log_game_logins->device_id) && $_SESSION['login_deviceid']<>$log_game_logins->device_id) {
+                
+            $check_deviceid = ($_SESSION['old_deviceid'])?$_SESSION['old_deviceid']:$_SESSION['login_deviceid'];
+                
+            if (isset($log_game_logins->device_id) && $check_deviceid <> $log_game_logins->device_id) {
 
                 $log_user = $this->mongo_log->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->select(array('latest_update_time'))->get('users');
                 
