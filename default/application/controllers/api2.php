@@ -22,6 +22,7 @@ class Api2 extends MY_Controller
 		$this->load->config('api');		
 		$this->partner_conf = $this->config->item("partner_api");
         
+        $this->load->config('g_mongodb');
         $g_mongodb = $this->config->item('mongo_db');
         $this->mongo_log = new MongoDB\Driver\Manager($g_mongodb['url']);
 	}

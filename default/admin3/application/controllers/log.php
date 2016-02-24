@@ -176,6 +176,7 @@ class Log extends MY_Controller {
             
             $query_time = ($game_events[$this->input->get("game_event")]['query_time']) ? $game_events[$this->input->get("game_event")]['query_time'] : 'create_time';
             
+            $this->load->config('g_mongodb');
             $g_mongodb = $this->config->item('mongo_db');
             
             $manager = new MongoDB\Driver\Manager($g_mongodb['url']);

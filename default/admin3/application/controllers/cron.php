@@ -1308,6 +1308,7 @@ class Cron extends CI_Controller {
     
     function mongo_log_data($date="") {
         
+        $this->load->config('g_mongodb');
         $g_mongodb = $this->config->item('mongo_db');
         
         $manager = new MongoDB\Driver\Manager($g_mongodb['url']);
