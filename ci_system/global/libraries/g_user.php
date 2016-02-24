@@ -49,6 +49,8 @@ class G_User
 		$_SESSION['mobile'] = '';
 		$_SESSION['external_id'] = '';
 		$_SESSION['token'] = '';
+		$_SESSION['login_deviceid'] = '';
+		$_SESSION['old_deviceid'] = '';
 		$_SERVER['REMOTE_ADDR'] = '';
 		
 		unset($_SESSION['user_id']);
@@ -57,6 +59,8 @@ class G_User
 		unset($_SESSION['mobile']);
 		unset($_SESSION['external_id']);
 		unset($_SESSION['token']);
+		unset($_SESSION['login_deviceid']);
+		unset($_SESSION['old_deviceid']);
 		
 		//setcookie('PHPSESSID', '', time()-3600);
 		//session_destroy();

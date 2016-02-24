@@ -82,4 +82,4 @@
 <? endif;?>
 
 <h4>帳號地區分析</h4>
-<div><img src="<?=base_url()?>/p/region_graph" alt=""></div>
+<div><img src="<?=base_url()?>/p/jpgraphs/region_graph" alt=""></div>

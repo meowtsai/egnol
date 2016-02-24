@@ -1,7 +1,31 @@
 <?php
 require_once dirname(__FILE__).'/config.php';
 
-if (isset($_SERVER["REMOTE_ADDR"])) define('IN_OFFICE', in_array($_SERVER["REMOTE_ADDR"], g_conf("office_ip")) && empty($_GET["lock"]) ? TRUE : FALSE);
+//define('IN_OFFICE', in_array($_SERVER["REMOTE_ADDR"], g_conf("office_ip")) && empty($_GET["lock"]) ? TRUE : FALSE);
+if (isset($_SERVER["REMOTE_ADDR"])) {
+    
+    define('IN_OFFICE', FALSE);
+    
+    if(empty($_GET["lock"])) {
+        
+        $whitelist = g_conf("office_ip");
+        $count = count($whitelist); 
+        for ($i = 0; $i < $count; $i++) { 
+            if ($whitelist[$i]==$_SERVER["REMOTE_ADDR"]) {
+                define('IN_OFFICE', TRUE);
+                break;
+            }
+            
+            if (strpos($whitelist[$i], '/')) {
+                list($net, $mask) = explode('/', $whitelist[$i]); 
+                if ((ip2long($_SERVER["REMOTE_ADDR"]) & ~((1 << (32 - $mask)) - 1)) == ip2long($net)) {
+                    define('IN_OFFICE', TRUE);
+                    break;
+                } 
+            }
+        } 
+    }
+}
 
 switch (ENVIRONMENT)
 {

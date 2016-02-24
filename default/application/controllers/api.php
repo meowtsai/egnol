@@ -698,7 +698,7 @@ class Api extends MY_Controller
 		// 讀取遊戲列表
 		$games = $this->db->from("games")->where("is_active", "1")->get();
 		// 讀取伺服器列表
-		$servers = $this->db->order_by("server_id")->get("servers");
+		$servers = $this->db->where("is_transaction_active", "1")->order_by("server_id")->get("servers");
 		// 讀取玩家角色列表
 		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();
 
@@ -1257,6 +1257,9 @@ class Api extends MY_Controller
 		$order_id = $this->input->post("order_id");
 		$product_id = $this->input->post("product_id");
 		$money = $this->input->post("money");
+        
+		$country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
+		$country_code = ($country_code) ? $country_code : null;
 
 		// 設定紀錄資料
 		$user_billing_data = array(
@@ -1282,7 +1285,7 @@ class Api extends MY_Controller
 		// 設定紀錄資料
 		$user_billing_transfer_data = array(
 			'uid' 			=> $uid,
-			'transaction_type' => "inapp_billing_".$channel,
+			'transaction_type' => "top_up_account",
 			'billing_type'	=> '2',
 			'amount' 		=> $money,
 			'server_id' 	=> $server_id,

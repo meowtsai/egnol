@@ -654,19 +654,13 @@ class Statistics extends MY_Controller {
 		
 		$query = $this->DB2->query("
 			SELECT
+				YEAR(create_time) 'year',
 				{$date_group}(create_time) 'date',
 				SUM(amount) 'sum',
-				SUM(CASE WHEN transaction_type='ios_billing' THEN amount ELSE 0 END) 'ios_sum',
-				SUM(CASE WHEN transaction_type='android_billing' THEN amount ELSE 0 END) 'android_sum',
+				SUM(CASE WHEN transaction_type='inapp_billing_ios' THEN amount ELSE 0 END) 'ios_sum',
+				SUM(CASE WHEN transaction_type='inapp_billing_google' THEN amount ELSE 0 END) 'android_sum',
 				SUM(CASE WHEN transaction_type='gash_billing' THEN amount ELSE 0 END) 'gash_sum',
-				SUM(CASE WHEN transaction_type='mycard_billing' THEN amount ELSE 0 END) 'mycard_sum',
-				SUM(CASE WHEN transaction_type='paypal_billing' THEN amount ELSE 0 END) 'paypal_sum',
-				SUM(CASE WHEN transaction_type='atm_billing' THEN amount ELSE 0 END) 'atm_sum',
-				SUM(CASE WHEN transaction_type='cht_billing' THEN amount ELSE 0 END) 'cht_sum',
-				SUM(CASE WHEN transaction_type='twm_billing' THEN amount ELSE 0 END) 'twm_sum',
-				SUM(CASE WHEN transaction_type='fet_billing' THEN amount ELSE 0 END) 'fet_sum',
-				SUM(CASE WHEN transaction_type='vibo_billing' THEN amount ELSE 0 END) 'vibo_sum',
-				SUM(CASE WHEN transaction_type not in ('ios_billing','android_billing','gash_billing','mycard_billing','paypal_billing','atm_billing','cht_billing','twm_billing','fet_billing','vibo_billing') THEN amount ELSE 0 END) 'other_billing_sum',
+				SUM(CASE WHEN transaction_type not in ('inapp_billing_ios','inapp_billing_google','gash_billing') THEN amount ELSE 0 END) 'other_billing_sum',
 				SUM(CASE WHEN country_code='TWN' THEN amount ELSE 0 END) 'twn_sum',
 				SUM(CASE WHEN country_code='HKG' THEN amount ELSE 0 END) 'hkg_sum',
 				SUM(CASE WHEN country_code='MAC' THEN amount ELSE 0 END) 'mac_sum',
@@ -681,6 +675,58 @@ class Statistics extends MY_Controller {
 			GROUP BY YEAR(create_time), {$date_group}(create_time)
 		    ORDER BY YEAR(create_time) DESC, {$date_group}(create_time) DESC
 		");
+        
+		$this->load->library('jpgraph');
+		$jgraph_data = array();
+		$jgraph_labels = array();
+        
+        $expected_date;
+        $row_cnt = 0;
+        $sum_type;
+										
+        switch ($this->input->get("action"))
+        {
+            case "iOS":
+                $sum_type = 'ios_sum';
+                break;
+            case "Android":
+                $sum_type = 'android_sum';
+                break;
+            case "GASH":
+                $sum_type = 'gash_sum';
+                break;
+            case "其他儲點":
+                $sum_type = 'other_billing_sum';
+                break;
+            default:
+                $sum_type = 'sum';
+                break;
+        }
+        
+		foreach($query->result() as $row) {
+            $row_cnt++;
+            if ($date_group == 'DATE') {
+                if ($row_cnt>1) {
+                    for($next_date=strtotime((string)$row->date); $next_date<$expected_date; $expected_date=strtotime('-1 day', $expected_date)) {
+                        $row_cnt++;
+                        $jgraph_data[] = 0;
+                        $jgraph_labels[] = date('m/d', $expected_date);
+                    }
+                }
+                $expected_date = strtotime('-1 day', strtotime((string)$row->date));
+                $jgraph_labels[] = date('m/d', strtotime((string)$row->date));
+            } else if ($date_group == 'WEEK') {
+                $jgraph_labels[] = date('m/d', strtotime(sprintf("%4dW%02d", (string)$row->year, (string)$row->date)));
+            } else {
+                $jgraph_labels[] = (string)$row->date;
+            }
+            
+            $jgraph_data[] = $row->$sum_type;
+		}
+        
+		$settings = array('width' => $row_cnt*35+50);
+        
+		$revenue_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/'.$span.'_revenue_graph', $settings);
 		
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
@@ -705,6 +751,30 @@ class Statistics extends MY_Controller {
 			$end_date = date("Y-m-d",strtotime("-8 days"));
 		} 
 		
+		$deposit_amount_query = $this->DB2->query("
+            SELECT 
+				SUM(CASE WHEN amount>=100001 THEN 1 ELSE 0 END) 'lvl6',
+				SUM(CASE WHEN amount BETWEEN 20000 AND 100000 THEN 1 ELSE 0 END) 'lvl5',
+				SUM(CASE WHEN amount BETWEEN 5000 AND 19999 THEN 1 ELSE 0 END) 'lvl4',
+				SUM(CASE WHEN amount BETWEEN 1500 AND 4999 THEN 1 ELSE 0 END) 'lvl3',
+				SUM(CASE WHEN amount BETWEEN 600 AND 1499 THEN 1 ELSE 0 END) 'lvl2',
+				SUM(CASE WHEN amount BETWEEN 60 AND 599 THEN 1 ELSE 0 END) 'lvl1'
+            FROM
+                user_billing
+            WHERE
+                create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
+                AND billing_type = 1
+                AND result = 1
+		")->row();
+		
+		$this->load->library('jpgraph');
+		$jgraph_data = array($deposit_amount_query->lvl6, $deposit_amount_query->lvl5, $deposit_amount_query->lvl4, $deposit_amount_query->lvl3, $deposit_amount_query->lvl2, $deposit_amount_query->lvl1);
+		$jgraph_labels = array('LV6($100,001+)', 'LV5($20,000~$100,000)', 'LV4($5,000~$19,999)', 'LV3($1,500~$4,999)', 'LV2($600~$1,499)', 'LV1($60~$599)');
+        
+		$settings = array('horizontal' => true , 'y_label_width' => 150);
+        
+		$deposit_amount_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/deposit_amount_graph', $settings);
+		
 		$deposit_count_query = $this->DB2->query("
 			SELECT
 				deposit_count, COUNT(deposit_count) 'deposit_count_rate'
@@ -724,7 +794,7 @@ class Statistics extends MY_Controller {
 			ORDER BY deposit_count DESC
 		");
 		
-		$this->load->library('jpgraph');
+		//$this->load->library('jpgraph');
 		$jgraph_data = array();
 		$jgraph_labels = array();
 		
@@ -743,8 +813,8 @@ class Statistics extends MY_Controller {
 			array_unshift($jgraph_data, $deposit_great_count);
 			array_unshift($jgraph_labels, "10+");
 		}
-		
-		$deposit_count_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/deposit_count_graph');
+        
+		$deposit_count_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/deposit_count_graph', $settings);
 		
 		$region_count_query = $this->DB2->query("
 			SELECT 
@@ -767,7 +837,7 @@ class Statistics extends MY_Controller {
 			$jgraph_labels[] = (string)$row->country_code;
 		}
 		
-		$region_count_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/region_count_graph');
+		$region_count_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/region_count_graph', $settings);
 		
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
@@ -912,7 +982,7 @@ class Statistics extends MY_Controller {
 			$jgraph_labels[] = $row->nation;
 		}
 		
-		$region_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/region_graph');
+		$region_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/region_graph');
 		
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
