@@ -163,10 +163,7 @@ class Log extends MY_Controller {
 		if ($this->input->get("action") && $this->input->get("game_event")) 
 		{
 			header("Cache-Control: private");	
-            $this->load->library(array("Mongo_db"));
             
-            $this->mongo_log = new Mongo_db(array("activate" => "default"));
-
             $game_events = $this->config->item("game_events");
             
             $include = array();
@@ -179,15 +176,30 @@ class Log extends MY_Controller {
             
             $query_time = ($game_events[$this->input->get("game_event")]['query_time']) ? $game_events[$this->input->get("game_event")]['query_time'] : 'create_time';
             
-            $query = $this->mongo_log->where(array("game_id" => $this->input->get("game")))
-                ->where_gte($query_time, $start_date)
-                ->where_lte($query_time, $end_date)
-                ->select($include)->get($this->input->get("game_event"));
+            $g_mongodb = $this->config->item('mongo_db');
+            
+            $manager = new MongoDB\Driver\Manager($g_mongodb['url']);
+            $query = new MongoDB\Driver\Query([
+                "game_id" => $this->input->get("game"),
+                $query_time => ['$gte' => $start_date, '$lte' => $end_date]
+            ]);
+            
+            try {
+                $cursor = $manager->executeQuery("longe_log.users", $query);
+
+                $result = [];
+                
+                foreach ($cursor as $document) {
+                    $result[] = $document;
+                }
+            } catch (MongoDB\Driver\Exception\Exception $e) {
+                echo $e->getMessage(), "\n";
+            }
 					
             $this->load->library('pagination');
             $this->pagination->initialize(array(
                     'base_url'	=> site_url("log/game_events"),
-                    'total_rows'=> count($query),
+                    'total_rows'=> count($result),
                     'per_page'	=> 100
                 ));			
 		}
@@ -208,7 +220,7 @@ class Log extends MY_Controller {
 			->add_breadcrumb("遊戲事件")	
 			->set("games", $games)
 			->set("servers", $servers)	
-			->set("query", isset($query) ? $query : false)
+			->set("query", isset($result) ? $result : false)
 			->add_js_include("log/game_events")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();	

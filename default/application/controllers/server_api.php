@@ -23,9 +23,9 @@ class Server_api extends MY_Controller
 		parent::__construct();
 		$this->load->config('api');		
 		$this->partner_conf = $this->config->item("partner_api");
-		$this->load->library(array("Mongo_db"));		
         
-        $this->mongo_log = new Mongo_db(array("activate" => "default"));
+        $g_mongodb = $this->config->item('mongo_db');
+        $this->mongo_log = new MongoDB\Driver\Manager($g_mongodb['url']);
 	}
     
     function validate_token() {
@@ -51,9 +51,20 @@ class Server_api extends MY_Controller
             return $this->_return_error("伺服器不開放");
         }
 
-        $log_user = $this->mongo_log->where(array("uid" => (string)$uid, "game_id" => $game_id))->select(array('token'))->get('users');
+        $query = new MongoDB\Driver\Query([
+            "uid" => (string)$uid,
+            "game_id" => $game_id
+        ]);
+    
+        $cursor = $this->mongo_log->executeQuery("longe_log.users", $query);
+
+        $result = [];
         
-        if ($log_user[0]['token'] && $log_user[0]['token'] == $token) {
+        foreach ($cursor as $document) {
+            $result[] = $document;
+        }
+        
+        if (isset($result[0]['token']) && $result[0]['token'] == $token) {
             echo 1;
             return true;
         } else {
