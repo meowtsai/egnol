@@ -973,6 +973,51 @@ class Api2 extends MY_Controller
 		</script>";
 	}
 
+	// iOS in-app 儲值選擇畫面
+	function ui_ios_iap_view()
+	{
+		$this->_init_layout()
+			->add_css_link("login_api")
+			->add_css_link("money")
+			->api_view();
+	}
+	
+	function _send_ios_verify($url, $data)
+	{
+        $ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		$curl_res = curl_exec($ch);
+		curl_close($ch);
+
+		return json_decode($curl_res);
+	}
+	
+	// 向 App Store 驗證訂單
+	function ios_verify_receipt()
+	{
+		$receipt_data = $this->input->post("receipt_data");
+		$product_id = $this->input->post("product_id");
+		$transaction_id = $this->input->post("transaction_id");
+		
+		$url = "https://sandbox.itunes.apple.com/verifyReceipt";
+		$result = $this->_send_ios_verify($url, json_encode(array("receipt-data"=>$receipt_data)));
+		
+		if($result->status == 21008)
+		{
+			$url = "https://buy.itunes.apple.com/verifyReceipt";
+			$result = $this->_send_ios_verify($url, json_encode(array("receipt-data"=>$receipt_data)));
+		}
+		
+		if($result->status != 0)
+			die(json_encode(array("result"=>0, "status"=>$result->status, "receipt"=>$receipt_data)));
+		else
+			die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
+	}
+
 	// 客服頁面
 	function ui_service()
 	{
