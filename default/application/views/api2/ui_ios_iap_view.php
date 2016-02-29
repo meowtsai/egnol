@@ -28,6 +28,10 @@
 		$('#items').append("<option value='" + itemId + "' desc='" + desc + "' price='" + price + "'>" + itemName + "</option>");
 	}
 	
+	function SetStatus(status)
+	{
+	}
+	
 	$(function ()
 	{
 		$("#items").change(function()
