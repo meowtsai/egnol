@@ -1007,7 +1007,7 @@ class Api2 extends MY_Controller
 		//
 		//
 
-		die(json_encode(array("result"=>1));
+		die(json_encode(array("result"=>1)));
 	}
 	
 	function _send_ios_verify($url, $data)
