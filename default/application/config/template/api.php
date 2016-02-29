@@ -13,9 +13,20 @@ $config["partner_api"] = array(
 				'name' => '測試 App',
 				'key' => '12345678901234567890123456789012',
 				'LongE' => array('EnableTracking' => '1'),
-				'Google' => array('Analytics' => array('ID' => 'UA-66673104-3', 'Enable' => '1')),
+				'Google' => array(
+					'Analytics' => array(
+						'ID' => 'UA-66673104-3',
+						'Enable' => '1'
+					)
+				),
+				'Apple' => array(
+					'ID' => '1005400992',
+					'AppStoreProducts' => array(
+						'longe_test_gold_100',
+						'longe_test_gold_200'
+					)
+				),
 				'Facebook' => array('ID' => '1691157641127869', 'EventTracking' => '1'),
-				'Apple' => array('ID' => '1005400992'),
 				'AppsFlyer' => array('DevKey' => 'RgFZmTS3qoYGsPrfPsaq8c', 'Enable' => '1'),
 			),
 		),
@@ -39,8 +50,8 @@ $config["partner_api"] = array(
 				'key' => '85cb5665a2a868410cf740a3c537ab09',
 				'LongE' => array('EnableTracking' => '1'),
 				'Google' => array('Analytics' => array('ID' => 'UA-66673104-2', 'Enable' => '1')),
-				'Facebook' => array('ID' => '152562051774453', 'EventTracking' => '1'),
 				'Apple' => array('ID' => '1014250566'),
+				'Facebook' => array('ID' => '152562051774453', 'EventTracking' => '1'),
 				'AppsFlyer' => array('DevKey' => 'RgFZmTS3qoYGsPrfPsaq8c', 'Enable' => '1'),
 			),
 		),
