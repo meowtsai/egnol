@@ -1308,17 +1308,24 @@ class Cron extends CI_Controller {
     
     function mongo_log_data($date="") {
         
-        $this->load->library(array("Mongo_db"));
+        $this->load->config('g_mongodb');
+        $g_mongodb = $this->config->item('mongo_db');
         
-        $mongo_log = new Mongo_db(array("activate" => "default"));
+        $manager = new MongoDB\Driver\Manager($g_mongodb['url']);
+        $query = new MongoDB\Driver\Query([
+            "uid" => null,
+            $query_time => ['$gte' => $date]
+        ]);
         
-		if (empty($date)) $date=date("Y-m-d",strtotime("-2 days"));
+        $cursor = $manager->executeQuery("longe_log.le_AppStart", $query);
+
+        $result = [];
         
-        $le_AppStart = $mongo_log->where(array("uid" => null))
-            ->where_gte('le_logTime', $date)
-            ->select(array("uid", "le_deviceType"))->get("le_AppStart");
+        foreach ($cursor as $document) {
+            $result[] = $document;
+        }
             
-        foreach ($le_AppStart as $row) {
+        foreach($result as $row) {
             $user_info = $this->db->from("user_info")
                 ->where("uid", $row['uid'])->get()->row();
                 

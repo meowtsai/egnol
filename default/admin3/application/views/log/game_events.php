@@ -83,7 +83,7 @@
 		<? foreach($query as $row): ?>
 		<tr>
 			<? foreach($game_events[$this->input->get("game_event")]['fields'] as $key => $val):?>
-			<td><?=(strpos($key, '_time'))?date("Y-m-d h:i:sa", $row[$key]):$row[$key]?></td>
+			<td><?=(strpos($key, '_time'))?date("Y-m-d h:i:sa", $row->$key):$row->$key?></td>
 			<? endforeach;?>
 		</tr>
 		<? endforeach;?>

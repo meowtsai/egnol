@@ -21,9 +21,10 @@ class Api2 extends MY_Controller
 		parent::__construct();
 		$this->load->config('api');		
 		$this->partner_conf = $this->config->item("partner_api");
-		$this->load->library(array("Mongo_db"));		
         
-        $this->mongo_log = new Mongo_db(array("activate" => "default"));
+        $this->load->config('g_mongodb');
+        $g_mongodb = $this->config->item('mongo_db');
+        $this->mongo_log = new MongoDB\Driver\Manager($g_mongodb['url']);
 	}
 
 	// AJAX 回應 function 檢查是否已登入
@@ -288,6 +289,28 @@ class Api2 extends MY_Controller
         
 		if ( $this->db->insert_id() )
 		{
+            $bulk = new MongoDB\Driver\BulkWrite;
+            $bulk->insert(["uid" => $this->g_user->uid, "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "device_id" => $_SESSION['login_deviceid'], "latest_update_time" => time()]);
+            
+            $this->mongo_log->executeBulkWrite("longe_log.users", $bulk);
+            
+            unset($bulk);
+            
+            $filter = ['device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null];
+            $newObj = ['$set' => ['uid' => $this->g_user->uid]];
+            
+            $options = ["multi" => true, "upsert" => false];
+            
+            $bulk = new MongoDB\Driver\BulkWrite;
+            $bulk->update($filter, $newObj, $options);
+
+            $this->mongo_log->executeBulkWrite("longe_log.le_AppPause", $bulk);
+            $this->mongo_log->executeBulkWrite("longe_log.le_AppResume", $bulk);
+            $this->mongo_log->executeBulkWrite("longe_log.le_AppStart", $bulk);
+            $this->mongo_log->executeBulkWrite("longe_log.le_AppViewEnter", $bulk);
+            $this->mongo_log->executeBulkWrite("longe_log.test_simplepost", $bulk);
+
+            /*
             $this->mongo_log->insert('users', array("uid" => $this->g_user->uid, "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "device_id" => $_SESSION['login_deviceid'], "latest_update_time" => time()));
             
             $this->mongo_log->where(array('device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null))->set('uid', $this->g_user->uid)->update('le_AppPause');
@@ -295,6 +318,7 @@ class Api2 extends MY_Controller
             $this->mongo_log->where(array('device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null))->set('uid', $this->g_user->uid)->update('le_AppStart');
             $this->mongo_log->where(array('device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null))->set('uid', $this->g_user->uid)->update('le_AppViewEnter');
             $this->mongo_log->where(array('device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null))->set('uid', $this->g_user->uid)->update('test_simplepost');
+            */
             
 		    $_SESSION['server_id'] = $server;
 			die(json_message(array("message"=>"成功", "site"=>$site, "token"=>$this->g_user->token), true));
@@ -1566,10 +1590,22 @@ class Api2 extends MY_Controller
                 
             if (isset($log_game_logins->device_id) && $check_deviceid <> $log_game_logins->device_id) {
 
-                $log_user = $this->mongo_log->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->select(array('latest_update_time'))->get('users');
+                //$log_user = $this->mongo_log->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->select(array('latest_update_time'))->get('users');
+                $query = new MongoDB\Driver\Query([
+                    "uid" => (string)$this->g_user->uid,
+                    "game_id" => $site
+                ]);
+            
+                $cursor = $this->mongo_log->executeQuery("longe_log.users", $query);
+
+                $result = [];
                 
-                if ($log_user[0]['latest_update_time']) {
-                    $idle_time = time() - $log_user[0]['latest_update_time'];
+                foreach ($cursor as $document) {
+                    $result[] = $document;
+                }
+                
+                if (isset($result[0]['latest_update_time'])) {
+                    $idle_time = time() - $result[0]['latest_update_time'];
                     
                     if ($idle_time < 12*60*60) return true;
                 }
@@ -1587,7 +1623,14 @@ class Api2 extends MY_Controller
           ->where("game_id", $site)
           ->where("logout_time", "0000-00-00 00:00")->update("log_game_logins", array("logout_time" => now()));
               
-        $this->mongo_log->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->delete_all('users');
+        //$this->mongo_log->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->delete_all('users');
+        $filter = ["uid" => (string)$this->g_user->uid, "game_id" => $site];
+        $options = ["limit" => 0];
+
+        $bulk = new MongoDB\Driver\BulkWrite;
+        $bulk->delete($filter, $options);
+
+        $result = $this->mongo_log->executeBulkWrite("longe_log.users", $bulk);
     }
 	
 	function get_app_info()
