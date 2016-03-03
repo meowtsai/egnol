@@ -17,6 +17,11 @@ $config = array(
 		'stm' => 	" ga('create', 'UA-65559425-1', 'auto', {'name': 'stmTracker'});
 					  ga('stmTracker.send', 'pageview');
 					",
+        
+		// 絕代雙驕
+		'r2g' => 	" ga('create', 'UA-65559425-4', 'auto', {'name': 'r2gTracker'});
+					  ga('r2gTracker.send', 'pageview');
+					",
 	),
 );
 ?>

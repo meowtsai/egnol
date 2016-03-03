@@ -1,4 +1,4 @@
-$(function()
+$(document).ready(function()
 {
 	$("#login_form").validate({
 		onfocusout: false,
@@ -40,4 +40,9 @@ $(function()
 			});
 		}
 	});
+	
+    $('#continue').on('click',function(event){
+		$(this).hide();
+		$('#doSubmit').trigger('click');
+    });
 });

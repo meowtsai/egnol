@@ -875,7 +875,7 @@ class Api2 extends MY_Controller
 	{
 		if(empty($_SESSION['site']))
 		{
-            die("儲值錯誤");
+			die("儲值錯誤");
 		}
 
 		$site				= $_SESSION['site'];
@@ -973,6 +973,100 @@ class Api2 extends MY_Controller
 		</script>";
 	}
 
+	// iOS IAP 儲值選擇畫面
+	function ui_ios_iap_view()
+	{
+		$this->_init_layout()
+			->add_css_link("login_api")
+			->add_css_link("money")
+			->api_view();
+	}
+	
+	// 開始 iOS IAP 訂單
+	function ios_iap_start()
+	{
+		$product_id = $this->input->post("product_id");
+		$verify_code = $this->input->post("verify_code");
+		
+		$order_id = 9999;	// 測試用
+		//
+		//
+		//
+		
+		die(json_encode(array("result"=>1, "productId"=>$product_id, "orderId"=>$order_id)));
+	}
+	
+	// 取消 iOS IAP 訂單
+	function ios_iap_cancel()
+	{
+		$order_id = $this->input->post("order_id");
+		$product_id = $this->input->post("product_id");
+		$verify_code = $this->input->post("verify_code");
+		
+		//
+		//
+		//
+
+		die(json_encode(array("result"=>1));
+	}
+	
+	function _send_ios_verify($url, $data)
+	{
+        $ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		$curl_res = curl_exec($ch);
+		curl_close($ch);
+
+		return json_decode($curl_res);
+	}
+	
+	// 驗證並完成訂單
+	function ios_verify_receipt()
+	{
+		$receipt_data = $this->input->post("receipt_data");
+		$order_id = $this->input->post("order_id");
+		$product_id = $this->input->post("product_id");
+		$transaction_id = $this->input->post("transaction_id");
+		$uid = $this->input->post("uid");
+		$server_id = $this->input->post("server_id");
+		$character_id = $this->input->post("character_id");
+
+		// 要先驗證資料庫的訂單
+		// 1. 檢查 Product ID
+		// 2. 檢查資料庫紀錄是否符合
+		//
+		
+		// 再向 AppStore 驗證
+		$url = "https://buy.itunes.apple.com/verifyReceipt";
+		$result = $this->_send_ios_verify($url, json_encode(array("receipt-data"=>$receipt_data)));
+		
+		if($result->status == 21007)
+		{
+			// Sandbox 模式
+			$url = "https://sandbox.itunes.apple.com/verifyReceipt";
+			$result = $this->_send_ios_verify($url, json_encode(array("receipt-data"=>$receipt_data)));
+		}
+
+		if($result->status != 0)
+		{
+			// 未通過 AppStore 驗證, 關閉訂單
+			//
+			//
+			
+			die(json_encode(array("result"=>0, "status"=>$result->status)));
+		}
+		
+		// 驗證成功, 結掉訂單
+		//
+		//
+		
+		die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
+	}
+	
 	// 客服頁面
 	function ui_service()
 	{
