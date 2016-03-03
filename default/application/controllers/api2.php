@@ -290,7 +290,7 @@ class Api2 extends MY_Controller
 		if ( $this->db->insert_id() )
 		{
             $bulk = new MongoDB\Driver\BulkWrite;
-            $bulk->insert(["uid" => $this->g_user->uid, "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "device_id" => $_SESSION['login_deviceid'], "latest_update_time" => time()]);
+            $bulk->insert(["uid" => intval($this->g_user->uid), "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "device_id" => $_SESSION['login_deviceid'], "latest_update_time" => time()]);
             
             $this->mongo_log->executeBulkWrite("longe_log.users", $bulk);
             
@@ -1498,7 +1498,7 @@ class Api2 extends MY_Controller
 
                 //$log_user = $this->mongo_log->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->select(array('latest_update_time'))->get('users');
                 $query = new MongoDB\Driver\Query([
-                    "uid" => (string)$this->g_user->uid,
+                    "uid" => intval($this->g_user->uid),
                     "game_id" => $site
                 ]);
             
@@ -1530,7 +1530,7 @@ class Api2 extends MY_Controller
           ->where("logout_time", "0000-00-00 00:00")->update("log_game_logins", array("logout_time" => now()));
               
         //$this->mongo_log->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->delete_all('users');
-        $filter = ["uid" => (string)$this->g_user->uid, "game_id" => $site];
+        $filter = ["uid" => intval($this->g_user->uid), "game_id" => $site];
         $options = ["limit" => 0];
 
         $bulk = new MongoDB\Driver\BulkWrite;

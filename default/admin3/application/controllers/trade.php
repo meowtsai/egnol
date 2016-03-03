@@ -1493,6 +1493,92 @@ class Trade extends MY_Controller {
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render("", "partner");
 	}
+    
+    function game_consumes() {
+		$this->zacl->check_login(true);		
+		
+		$this->zacl->check("game_consumes", "read");
+		
+		$this->_init_layout();	
+		//$this->_init_log_layout();
+		$this->load->helper("output_table");
+				
+		if ($this->input->get("action") && $this->input->get("game")) 
+		{
+			header("Cache-Control: private");	
+            
+            $game = $this->config->item("game");
+            
+			$start_date = ($this->input->get("start_date"))?strtotime($this->input->get("start_date")):0;
+			$end_date = ($this->input->get("end_date"))?strtotime($this->input->get("end_date")):time();
+            
+            $this->load->config('g_mongodb');
+            $g_mongodb = $this->config->item('mongo_db');
+            
+            $manager = new MongoDB\Driver\Manager($g_mongodb['url']);
+            
+            /*
+            $query = new MongoDB\Driver\Query([
+                "game_id" => $this->input->get("game"),
+                "le_logTime" => ['$gte' => $start_date, '$lte' => $end_date]
+            ]);
+            */
+            
+            $command = new MongoDB\Driver\Command([
+                'aggregate' => 'le_UserItemGet',
+                'pipeline' => [
+                    ['$group' => ['_id' => ['game_id' => '$game_id', 'le_contentId' => '$le_contentId'], 'sum' => ['$sum' => '$le_count']]],
+                ],
+                'cursor' => new stdClass,
+            ]);
+            $cursor = $manager->executeCommand('longe_log', $command);
+            
+            foreach ($cursor as $document) {
+                var_dump($document);
+            } 
+            die;
+            
+            try {
+                $cursor = $manager->executeQuery("longe_log.le_UserItemGet", $query);
+
+                $result = [];
+                
+                foreach ($cursor as $document) {
+                    $result[] = $document;
+                }
+            } catch (MongoDB\Driver\Exception\Exception $e) {
+                echo $e->getMessage(), "\n";
+            }
+					
+            $this->load->library('pagination');
+            $this->pagination->initialize(array(
+                    'base_url'	=> site_url("trade/game_consumes"),
+                    'total_rows'=> count($result),
+                    'per_page'	=> 100
+                ));			
+		}
+		else {
+			$default_value = array(
+				'use_default' => true,
+				'start_date' => date('Y-m-d')." 00:00",
+				'time_unit' => 'day',
+				'display_game' => 'game',
+			);
+			$_GET = $default_value;
+		}
+		
+		$games = $this->DB2->get("games");
+		$servers = $this->DB2->order_by("server_id")->get("servers");		
+			
+		$this->g_layout
+			->add_breadcrumb("消費分析")	
+			->set("games", $games)
+			->set("servers", $servers)	
+			->set("query", isset($result) ? $result : false)
+			->add_js_include("trade/game_consumes")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();	
+    }
 }
 
 /* End of file welcome.php */
