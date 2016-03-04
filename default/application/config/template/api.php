@@ -17,6 +17,11 @@ $config["partner_api"] = array(
 					'Analytics' => array(
 						'ID' => 'UA-66673104-3',
 						'Enable' => '1'
+					),
+					'GooglePlay' => array(
+						'LicenseKey' => 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyhQESbfjx7ZLKHjfqPr9dbW50GYNf8rB+RvsKw/oIPe9gc05GZZS+Iayq/EVZujHIsdSQZ5llshHbaD1XzWINzwOtXrfmGIlTyWKZgeWvs2TELZ+fnUW5bFD+sR8UF73UMt8Tt+ROf45fwZ0GIyXhtSK3xWo1CNgHy0++Bj8FehULdDLrJVn2u3rey0v9Yy4cg7Az2SsodtQwBVMgI705YCvRx8dATc1EcWtVXOI7YGG74ZLLhsx0WlyNtpWNf1JpV1kmyGNuEBH2XBw0abcEJaEx7t0rzoBG3HG9S8CW3bkFZ47eWPvqrTnAqhOiN/IravB5i7L+eeco0bWad6EZwIDAQAB',
+						'Products' => array(
+						)
 					)
 				),
 				'Apple' => array(
