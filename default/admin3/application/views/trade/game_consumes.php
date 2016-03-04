@@ -78,12 +78,12 @@
 	<tbody>
 		<? foreach($query as $row): ?>
 		<tr>
-			<td><?=$row->le_contentType?></td>
-			<td><?=$row->le_contentId?></td>
+			<td><?=$row->_id->le_contentType?></td>
+			<td><?=$row->_id->le_contentId?></td>
 			<td><?=$row->le_count?></td>
-			<td><?=$row->le_price?></td>
-			<td><?//=$row->used?></td>
-			<td><?//=$row->unused?></td>
+			<td><?=$row->_id->le_price?></td>
+			<td><?=$row->used?></td>
+			<td><?=($row->le_count-$row->used)?></td>
 		</tr>
 		<? endforeach;?>
 	</tbody>
