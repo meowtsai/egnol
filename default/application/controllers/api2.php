@@ -1684,7 +1684,7 @@ class Api2 extends MY_Controller
                     $result[] = $document;
                 }
                 
-                if (isset($result[0]['latest_update_time'])) {
+                if (isset($result[0]->latest_update_time)) {
                     $idle_time = time() - $result[0]['latest_update_time'];
                     
                     if ($idle_time < 12*60*60) return true;
