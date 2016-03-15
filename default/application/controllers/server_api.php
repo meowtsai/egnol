@@ -53,7 +53,7 @@ class Server_api extends MY_Controller
         }
 
         $query = new MongoDB\Driver\Query([
-            "uid" => $uid,
+            "uid" => intval($uid),
             "game_id" => $game_id
         ]);
     
