@@ -297,7 +297,7 @@ class Api2 extends MY_Controller
             unset($bulk);
             
             $filter = ['device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null];
-            $newObj = ['$set' => ['uid' => $this->g_user->uid]];
+            $newObj = ['$set' => ['uid' => intval($this->g_user->uid)]];
             
             $options = ["multi" => true, "upsert" => false];
             
