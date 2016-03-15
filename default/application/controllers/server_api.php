@@ -4,9 +4,9 @@ define("RESPONSE_OK", "1");
 define("RESPONSE_FAILD", "0");
 
 //
-// ·|­û¨t²Î¼t°Ó¨ó§@¥\¯à API
-//  - ui «e¸mªº function ¬°¦³´£¨Ñ web µe­±ªº API
-//  - ¸Ì­±¦³°õ¦æ Javascript ªº LongeAPI.* function ¬°©I¥s SDK ªº¦ê±µ¥\¯à
+// æœƒå“¡ç³»çµ±å» å•†å”ä½œåŠŸèƒ½ API
+//  - ui å‰ç½®çš„ function ç‚ºæœ‰æä¾› web ç•«é¢çš„ API
+//  - è£¡é¢æœ‰åŸ·è¡Œ Javascript çš„ LongeAPI.* function ç‚ºå‘¼å« SDK çš„ä¸²æ¥åŠŸèƒ½
 //
 class Server_api extends MY_Controller
 {
@@ -32,11 +32,11 @@ class Server_api extends MY_Controller
     function validate_token() {
         
         if ($this->input->get_post("uid")) $uid = $this->input->get_post("uid");
-        else return $this->_return_error("Äæ¦ì¤£»ô¥ş");
+        else return $this->_return_error("æ¬„ä½ä¸é½Šå…¨");
         if ($this->input->get_post("game_id")) $game_id = $this->input->get_post("game_id");
-        else return $this->_return_error("Äæ¦ì¤£»ô¥ş");
+        else return $this->_return_error("æ¬„ä½ä¸é½Šå…¨");
         if ($this->input->get_post("token")) $token = $this->input->get_post("token");
-        else return $this->_return_error("Äæ¦ì¤£»ô¥ş");
+        else return $this->_return_error("æ¬„ä½ä¸é½Šå…¨");
         
     	$pass_ips = array();    	
     	foreach($this->partner_conf as $partner => $item)
@@ -49,7 +49,7 @@ class Server_api extends MY_Controller
     	$pass = in_array($_SERVER["REMOTE_ADDR"], $pass_ips);
         
         if ( ! (IN_OFFICE || $pass)) {
-            return $this->_return_error("¦øªA¾¹¤£¶}©ñ");
+            return $this->_return_error("ä¼ºæœå™¨ä¸é–‹æ”¾");
         }
 
         $query = new MongoDB\Driver\Query([

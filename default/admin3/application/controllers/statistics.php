@@ -992,7 +992,106 @@ class Statistics extends MY_Controller {
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
 	}
-	
+	    
+    function level_analysis() {
+		$this->zacl->check_login(true);
+		
+		$this->zacl->check("level_analysis", "read");
+		
+		$this->_init_layout();
+		$this->load->helper("output_table");
+				
+		if ($this->input->get("action") && $this->input->get("game")) 
+		{
+			header("Cache-Control: private");	
+            
+            $game = $this->config->item("game");
+            
+			$start_date = ($this->input->get("start_date"))?strtotime($this->input->get("start_date")):0;
+			$end_date = ($this->input->get("end_date"))?strtotime($this->input->get("end_date")):time();
+            
+            $this->load->config('g_mongodb');
+            $g_mongodb = $this->config->item('mongo_db');
+            
+            $manager = new MongoDB\Driver\Manager($g_mongodb['url']);
+            
+            try {
+            
+                $itemuse_command = new MongoDB\Driver\Command([
+                    'aggregate' => 'le_UserItemUse',
+                    'pipeline' => [
+                        [
+                            '$match' => ['game_id' => $this->input->get("game"), 'le_logTime' => ['$gte' => $start_date, '$lte' => $end_date]],
+                        ],
+                        [
+                            '$group' => [
+                                '_id' => ['game_id' => '$game_id', 'le_contentId' => '$le_contentId', 'le_contentType' => '$le_contentType'],
+                                'le_count' => ['$sum' => '$le_count']
+                            ]
+                        ],
+                    ],
+                    'cursor' => new stdClass,
+                ]);
+                $itemuse_cursor = $manager->executeCommand('longe_log', $itemuse_command);
+                
+                $itemget_command = new MongoDB\Driver\Command([
+                    'aggregate' => 'le_UserItemGet',
+                    'pipeline' => [
+                        [
+                            '$match' => ['game_id' => $this->input->get("game"), 'le_logTime' => ['$gte' => $start_date, '$lte' => $end_date]],
+                        ],
+                        [
+                            '$group' => [
+                                '_id' => ['game_id' => '$game_id', 'le_contentId' => '$le_contentId', 'le_contentType' => '$le_contentType', 'le_price' => '$le_price'],
+                                'le_count' => ['$sum' => '$le_count']
+                            ]
+                        ],
+                    ],
+                    'cursor' => new stdClass,
+                ]);
+                $itemget_cursor = $manager->executeCommand('longe_log', $itemget_command);
+
+                $itemget_result = [];
+                
+                foreach ($itemget_cursor as $itemget_document) {
+                    $itemget_document->used=0;
+                    foreach ($itemuse_cursor as $itemuse_document) {
+                        if ($itemuse_document->_id->le_contentId==$itemget_document->_id->le_contentId) $itemget_document->used=$itemuse_document->le_count;
+                    }
+                    $itemget_result[] = $itemget_document;
+                }
+            } catch (MongoDB\Driver\Exception\Exception $e) {
+                echo $e->getMessage(), "\n";
+            }
+					
+            $this->load->library('pagination');
+            $this->pagination->initialize(array(
+                    'base_url'	=> site_url("statistics/level_analysis"),
+                    'total_rows'=> isset($itemget_result) ? count($itemget_result) : 0,
+                    'per_page'	=> 100
+                ));			
+		}
+		else {
+			$default_value = array(
+				'use_default' => true,
+				'time_unit' => 'day',
+				'display_game' => 'game',
+			);
+			$_GET = $default_value;
+		}
+		
+		$games = $this->DB2->get("games");
+		$servers = $this->DB2->order_by("server_id")->get("servers");		
+			
+		$this->g_layout
+			->add_breadcrumb("等級分析")	
+			->set("games", $games)
+			->set("servers", $servers)	
+			->set("query", isset($itemget_result) ? $itemget_result : false)
+			->add_js_include("statistics/level_analysis")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();	
+    }
 }
 
 /* End of file search.php */
