@@ -22,7 +22,7 @@
 			</td>
 			<td>通知其他人員：</td>
 			<td>
-				<select name="cc_admin" class="required" style="width:150px;">
+				<select name="cc_admin" style="width:150px;">
 					<option value="">--請選擇--</option>
 					<? foreach($admin_users->result() as $row):?>
 					<option value="<?=$row->uid?>" <?=($ticket && $ticket->cc_admin_uid==$row->uid ? 'selected="selected"' : '')?>><?=$row->name?> (<?=$row->role_desc?>)</option>
