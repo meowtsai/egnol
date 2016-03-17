@@ -464,42 +464,6 @@ CREATE TABLE `questions` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `ticket_assignees`
---
-
-DROP TABLE IF EXISTS `ticket_assignees`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ticket_assignees` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `ticket_assign_id` int(11) NOT NULL,
-  `admin_uid` int(11) NOT NULL,
-  `is_read` tinyint(1) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `ticket_assigns`
---
-
-DROP TABLE IF EXISTS `ticket_assigns`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `ticket_assigns` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `update_time` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
-  `source` varchar(45) NOT NULL,
-  `admin_uid` varchar(45) NOT NULL,
-  `desc` text NOT NULL,
-  `result` text,
-  `status` char(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `ticket_replies`
 --
 
@@ -531,19 +495,16 @@ CREATE TABLE `tickets` (
   `title` varchar(60) NOT NULL,
   `content` text NOT NULL,
   `game_id` varchar(20) DEFAULT NULL,
-  `pic_path1` varchar(300) DEFAULT NULL,
-  `pic_path2` varchar(300) DEFAULT NULL,
-  `pic_path3` varchar(300) DEFAULT NULL,
+  `file_path1` varchar(300) DEFAULT NULL,
+  `file_path2` varchar(300) DEFAULT NULL,
+  `file_path3` varchar(300) DEFAULT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` char(1) NOT NULL DEFAULT '1',
   `is_read` char(1) NOT NULL DEFAULT '0',
-  `note` text,
   `admin_uid` int(11) DEFAULT NULL,
   `update_time` datetime NOT NULL,
   `allocate_admin_uid` int(11) DEFAULT NULL,
   `allocate_date` datetime DEFAULT NULL,
-  `allocate_status` char(1) NOT NULL DEFAULT '0',
-  `allocate_finish_date` datetime DEFAULT NULL,
   `allocate_result` text,
   `cc_admin_uid` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)

@@ -36,172 +36,30 @@ class Ticket extends MY_Controller {
 		$this->get_list();
 	}
 	
-	function assign($type='')
-	{
-		$this->_init_ticket_layout();
-		
-		header("Cache-Control: private");
-
-		$this->DB2->start_cache();		
-		
-		$this->DB2
-			->from("ticket_assigns dlv")
-			->join("admin_users au", "au.uid=dlv.admin_uid", "left");
-		
-		if ($type == 'not') {
-			$this->DB2->where("id in (select ticket_assign_id from ticket_assignees where admin_uid=".$_SESSION['admin_uid']." and `is_read`=0)", null, false);
-		}	
-					
-		$this->input->get("source") && $this->DB2->where("dlv.source", $this->input->get("source"));
-		$this->input->get("admin_uid") && $this->DB2->where("dlv.admin_uid", $this->input->get("admin_uid"));
-		$this->input->get("desc") && $this->DB2->like("dlv.desc", $this->input->get("desc"));
-		$this->input->get("result") && $this->DB2->like("dlv.result", $this->input->get("result"));
-		$this->input->get("status") && $this->DB2->like("dlv.status", $this->input->get("status"));		
-		
-		if ($date = $this->input->get("date")) {
-			$this->DB2->where("dlv.create_time between '{$date} 00:00:00' and '{$date} 23:59:59'", null, false);	
-		}
-					
-		$this->DB2->stop_cache();
-
-		$total_rows = $this->DB2->count_all_results();
-		
-		$query = $this->DB2->limit(10, $this->input->get("record"))->get();					
-
-		$get = $this->input->get();	
-		$query_string = '';			
-		if ($get) {	
-			unset($get["record"]);
-			$query_string = http_build_query($get);
-		}
-		
-		$this->load->library('pagination');
-		$this->pagination->initialize(array(
-				'base_url'	=> site_url("ticket/assign?".$query_string),
-				'total_rows'=> $total_rows,
-				'per_page'	=> 10
-			));				
-		
-		$this->g_layout->set("total_rows", $total_rows);
-				
-		$this->DB2->flush_cache();
-					
-		$cs_user = $this->DB2->from("admin_users")->like("role", "cs", "after")->get();
-		
-		$this->g_layout
-			->add_breadcrumb("交接項目")	
-			->set("query", isset($query) ? $query : false)
-			->set("type", $type)
-			->set("cs_user", $cs_user)			
-			->add_js_include("ticket/assign")
-			->add_js_include("jquery-ui-timepicker-addon")
-			->render();
-	}
-	
-	function modify_assign($id=0)
-	{		
-		$this->load->library("user_agent");
-		
-		$ticket_assigns = false; 
-		$target_arr = array();
-		if ($id) {
-			$ticket_assigns = $this->DB2->from("ticket_assigns")->where("id", $id)->get()->row();
-			$targets = $this->DB2->from("ticket_assignees")->where("ticket_assign_id", $id)->get();
-			foreach($targets->result() as $row) {
-				$target_arr[] = $row->admin_uid; 
-			}
-		}
-		 
-		$users = $this->DB2->like("role", "cs", "after")->from("admin_users")->get();
-		
-		$this->_init_ticket_layout()
-			->add_breadcrumb(($id?"修改":"新增")."交接事項")
-			->add_js_include("ticket/modify_assign")
-			->set("ticket_assigns", $ticket_assigns)
-			->set("back_url", $this->agent->is_referral() ? $this->agent->referrer() : "")
-			->set("target_arr", $target_arr)
-			->set("users", $users)
-			->render();
-	}
-	
-	function modify_assign_json()
-	{
-		$id = $this->input->post("id");
-		
-		$data = array(
-			"source" => $this->input->post("source"),
-			'desc' => nl2br(htmlspecialchars($this->input->post("desc"))),
-			'result' => nl2br(htmlspecialchars($this->input->post("result"))),
-			'admin_uid' => $_SESSION['admin_uid'],
-			"status" => $this->input->post("status"),
-		);				
-		
-		if ($id) {			
-			$this->DB1
-				->where("id", $id)
-				->update("ticket_assigns", $data);
-			
-			if ($this->input->post('targets')) $this->DB1->where("ticket_assign_id", $id)->delete("ticket_assignees");
-		}
-		else {
-			$this->DB1
-				->set("create_time", "now()", false)
-				->set("update_time", "now()", false)
-				->insert("ticket_assigns", $data);	
-			$id = $this->DB1->insert_id();			
-		}
-		if ($this->input->post('targets')) {
-			foreach($this->input->post('targets') as $uid) {
-				$this->DB1->insert("ticket_assignees", array("ticket_assign_id" => $id, "admin_uid" => $uid));
-			}
-		}
-		
-		die(json_message(array("id"=>$id, "back_url"=>$this->input->post("back_url")), true));		
-	}
-	
-	function delete_assign_json()
-	{
-		$id = $this->input->get("id");	
-				
-		$this->DB1
-			->where("id", $id)
-			->where("admin_uid", $_SESSION['admin_uid'])
-			->delete("ticket_assigns");
-			
-		if ($this->DB1->affected_rows() > 0) echo json_success();
-		else echo json_failure("資料庫刪除失敗或沒有權限".$this->DB1->last_query());
-	}
-	
-	function read_assign_json()
-	{
-		$id = $this->input->get("id");
-		
-		$this->DB1
-			->set("read", "1")
-			->where("id", $id)
-			->where("admin_uid", $_SESSION['admin_uid'])
-			->update("ticket_assignees");	
-		
-		if ($this->DB1->affected_rows() > 0) echo json_success();
-		else echo json_failure();
-	}
-	
 	function index()
 	{
         $admin_uid = $_SESSION['admin_uid'];
-		
+            
 		$requester = $this->DB2->query("
-			SELECT * FROM 
-                tickets
-            WHERE admin_uid='$admin_uid'
-                AND status IN (\"1\", \"2\", \"3\")
+			SELECT t.*, g.name as game_name, u.name, au.name allocate_user_name, ccu.name cc_user_name FROM 
+                tickets t
+            JOIN admin_users u ON u.uid=t.admin_uid
+            LEFT JOIN games g ON g.game_id=t.game_id
+            LEFT JOIN admin_users au ON au.uid=t.allocate_admin_uid
+            LEFT JOIN admin_users ccu ON ccu.uid=t.cc_admin_uid
+            WHERE t.admin_uid='$admin_uid'
+                AND t.status IN (\"1\", \"2\", \"3\")
 		");	
         
 		$allocated = $this->DB2->query("
-			SELECT * FROM 
-                tickets
-            WHERE (allocate_admin_uid='$admin_uid' OR cc_admin_uid='$admin_uid')
-                AND status IN (\"1\", \"2\", \"3\")
+			SELECT t.*, g.name as game_name, u.name, au.name allocate_user_name, ccu.name cc_user_name FROM 
+                tickets t
+            JOIN admin_users u ON u.uid=t.admin_uid
+            LEFT JOIN games g ON g.game_id=t.game_id
+            LEFT JOIN admin_users au ON au.uid=t.allocate_admin_uid
+            LEFT JOIN admin_users ccu ON ccu.uid=t.cc_admin_uid
+            WHERE (t.allocate_admin_uid='$admin_uid' OR t.cc_admin_uid='$admin_uid')
+                AND t.status IN (\"1\", \"2\", \"3\")
 		");
 		
 		$this->_init_ticket_layout()
@@ -212,10 +70,11 @@ class Ticket extends MY_Controller {
 	
 	function add()
 	{		
-		$games = $this->DB2->from("games")->where("is_active", "1")->get();
-		$admin_users = $this->DB2->from("admin_users")->get();
-		//$servers = $this->DB2->where_in("server_status", array("public", "maintenance"))->order_by("server_id")->get("servers");	
-		
+		$games = $this->DB2->from("games")->order_by("is_active", "desc")->get();
+		$admin_users = $this->DB2->select("u.*, ar.role_desc")
+            ->from('admin_users u')
+			->join("admin_roles ar", "ar.role=u.role")->order_by("u.role")->get();
+        
 		$this->_init_ticket_layout()
 			->add_breadcrumb("新增工作申請&回報單")
 			->add_js_include("ticket/form")
@@ -227,27 +86,29 @@ class Ticket extends MY_Controller {
 	
 	function edit($id)
 	{		
-		$games = $this->DB2->from("games")->where("is_active", "1")->get();
-		$servers = $this->DB2->where_in("server_status", array("public", "maintenance"))->order_by("server_id")->get("servers");
+		$games = $this->DB2->from("games")->order_by("is_active", "desc")->get();
+		$admin_users = $this->DB2->select("u.*, ar.role_desc")
+            ->from('admin_users u')
+			->join("admin_roles ar", "ar.role=u.role")->order_by("u.role")->get();
 
-		$query = $this->DB2->from("tickets qt")
-			->join("servers gi", "qt.server_id=gi.server_id")
-			->where("type", "9")->where("id", $id)->get();
+		$query = $this->DB2->from("tickets qt")->where("id", $id)->get();
 		if ($query->num_rows() == 0) die('無此單號');
 		
 		$ticket = $query->row();
 		
 		$this->_init_ticket_layout()
-			->add_breadcrumb("編輯電話案件")
+			->add_breadcrumb("編輯工作申請&回報單")
 			->add_js_include("ticket/form")
 			->set("games", $games)
-			->set("servers", $servers)
+			->set("admin_users", $admin_users)
 			->set("ticket", $ticket)
 			->render("ticket/form");
 	}
 	
 	function modify_json()
 	{
+        $this->load->helper('path');
+        
 		$ticket_id = $this->input->post("ticket_id");
 		
 		$data = array(
@@ -260,7 +121,59 @@ class Ticket extends MY_Controller {
 			'admin_uid' => $_SESSION['admin_uid'],
 			'allocate_admin_uid' => $this->input->post("allocate_admin"),
 			'cc_admin_uid' => $this->input->post("cc_admin"),
-		);				
+		);
+        
+        if (!is_dir(set_realpath("p/upload/ticket{$ticket_id}"))) {
+            mkdir(set_realpath("p/upload/ticket{$ticket_id}"), 0777, TRUE);
+        }
+        
+		$this->load->library('upload');
+		$config['upload_path'] = set_realpath("p/upload/ticket{$ticket_id}");
+		$config['allowed_types'] = '*';
+		$config['max_size']	= '10240'; //10MB
+		$config['encrypt_name'] = false;
+		
+		$upload_cnt = 0;
+		if ( ! empty($_FILES["file01"]["name"]))
+		{
+			$this->upload->initialize($config);
+			if ( ! $this->upload->do_upload("file01"))
+			{
+				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+			}
+			else
+			{
+				$upload_data = $this->upload->data();
+				$data['file_path'.(++$upload_cnt)] = site_url("p/upload/ticket{$ticket_id}/{$upload_data['file_name']}");					
+			}
+		}
+		
+		if ( ! empty($_FILES["file02"]["name"]))
+		{
+			$this->upload->initialize($config);
+			if ( ! $this->upload->do_upload("file02"))
+			{
+				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+			}
+			else
+			{
+				$upload_data = $this->upload->data();
+				$data['file_path'.(++$upload_cnt)] = site_url("p/upload/ticket{$ticket_id}/{$upload_data['file_name']}");					
+			}
+		}
+		if ( ! empty($_FILES["file03"]["name"]))
+		{
+			$this->upload->initialize($config);
+			if ( ! $this->upload->do_upload("file03"))
+			{
+				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+			}
+			else
+			{
+				$upload_data = $this->upload->data();
+				$data['file_path'.(++$upload_cnt)] = site_url("p/upload/ticket{$ticket_id}/{$upload_data['file_name']}");					
+			}
+		}		
 		
 		if ($ticket_id) {			
 			$this->DB1
@@ -275,7 +188,7 @@ class Ticket extends MY_Controller {
 			$ticket_id = $this->DB1->insert_id();			
 		}
 		
-		die(json_message(array("id"=>$ticket_id), true));		
+		die(json_message(array("redirect_url"=> base_url("ticket/view/".$ticket_id), "id"=>$ticket_id), true));		
 	}
 		
 	function get_list()
@@ -288,42 +201,34 @@ class Ticket extends MY_Controller {
 
 			$this->DB2->start_cache();
 			
-			$this->input->get("ticket_id") && $this->DB2->where("q.id", $this->input->get("ticket_id"));
-			$this->input->get("uid") && $this->DB2->where("q.uid", $this->input->get("uid"));
-			$this->input->get("status")<>'' && $this->DB2->where("q.status", $this->input->get("status"));
-			$this->input->get("type") && $this->DB2->where("q.type", $this->input->get("type"));
-			$this->input->get("game") && $this->DB2->where("gi.game_id", $this->input->get("game"));
-			$this->input->get("character_name") && $this->DB2->where("q.character_name", $this->input->get("character_name"));			
-			$this->input->get("email") && $this->DB2->where("u.email", $this->input->get("email"));
-			$this->input->get("content") && $this->DB2->like("q.content", $this->input->get("content"));
-			
-			$this->input->get("allocate_auid") && $this->DB2->where("q.allocate_admin_uid", $this->input->get("allocate_auid"));
-			$this->input->get("allocate_status") && $this->DB2->where("q.allocate_status", $this->input->get("allocate_status"));
+			$this->input->get("ticket_id") && $this->DB2->where("t.id", $this->input->get("ticket_id"));
+			$this->input->get("admin") && $this->DB2->where("t.admin_uid", $this->input->get("admin"));
+			$this->input->get("allocate_admin") && $this->DB2->where("t.allocate_admin_uid", $this->input->get("allocate_admin"));
+			$this->input->get("cc_admin") && $this->DB2->where("t.cc_admin_uid", $this->input->get("cc_admin"));
+			$this->input->get("status")<>'' && $this->DB2->where("t.status", $this->input->get("status"));
+			$this->input->get("type") && $this->DB2->where("t.type", $this->input->get("type"));
+			$this->input->get("game") && $this->DB2->where("g.game_id", $this->input->get("game"));
+			$this->input->get("urgency") && $this->DB2->where("t.urgency", $this->input->get("urgency"));			
+			$this->input->get("title") && $this->DB2->like("t.title", $this->input->get("title"));
+			$this->input->get("content") && $this->DB2->like("t.content", $this->input->get("content"));
 					
-			$this->input->get("todo") && $this->DB2->where("(q.status=1 or q.allocate_status=2 and q.status<>4)", null, false);
+			$this->input->get("todo") && $this->DB2->where("(t.status<>\"0\" and t.status<>\"4\")", null, false);
 			
 			$this->DB2
-				->select("q.*, g.name as game_name, au.name as admin_uname")
-				->select("(select sum(amount) from user_billing where uid=q.uid and billing_type=2 and result=1) as expense")
-				->from("tickets q")
-				->join("servers gi", "gi.server_id=q.server_id", "left")
-				->join("games g", "g.game_id=gi.game_id", "left")
-				->join("users u", "u.uid=q.uid", "left")
-				->join("admin_users au", "au.uid=q.admin_uid", "left");
-						
-			if ($this->input->get("account")) {
-				$this->DB2->join("users u", "u.uid=q.uid", "left")
-					->where("u.email", $this->input->get("account"))
-					->or_where("u.mobile", $this->input->get("account"));
-			}
+				->select("t.*, g.name as game_name, u.name, au.name allocate_user_name, ccu.name cc_user_name")
+				->from("tickets t")
+                ->join("admin_users u", "u.uid=t.admin_uid")
+                ->join("games g", "g.game_id=t.game_id", "left")
+                ->join("admin_users au", "au.uid=t.allocate_admin_uid", "left")
+                ->join("admin_users ccu", "ccu.uid=t.cc_admin_uid", "left");
 									
 			if ($this->input->get("start_date")) {
 				$start_date = $this->DB2->escape($this->input->get("start_date"));
 				if ($this->input->get("end_date")) {
 					$end_date = $this->DB2->escape($this->input->get("end_date").":59");
-					$this->DB2->where("q.create_time between {$start_date} and {$end_date}", null, false);	
+					$this->DB2->where("t.create_time between {$start_date} and {$end_date}", null, false);	
 				}	
-				else $this->DB2->where("q.create_time >= {$start_date}", null, false);
+				else $this->DB2->where("t.create_time >= {$start_date}", null, false);
 			}
 		
 			switch ($this->input->get("action"))
@@ -363,12 +268,17 @@ class Ticket extends MY_Controller {
 			$_GET = $default_value;			
 		}
 					
-		$games = $this->DB2->from("games")->get();
+		$games = $this->DB2->from("games")->order_by("is_active", "desc")->get();
+        
+		$admin_users = $this->DB2->select("u.*, ar.role_desc")
+            ->from('admin_users u')
+			->join("admin_roles ar", "ar.role=u.role")->order_by("u.role")->get();
 		
 		$this->g_layout
 			->add_breadcrumb("查詢")	
 			->set("query", isset($query) ? $query : false)
 			->set("games", $games)
+			->set("admin_users", $admin_users)
 			->add_js_include("ticket/get_list")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
@@ -378,12 +288,13 @@ class Ticket extends MY_Controller {
 	{
 		$this->zacl->check("ticket", "modify");
 
-		$ticket = $this->DB2->select("t.*, g.name as game_name, u.name, au.name allocate_user_name")
+		$ticket = $this->DB2->select("t.*, g.name as game_name, u.name, au.name allocate_user_name, ccu.name cc_user_name")
 			->where("t.id", $id)
 			->from("tickets t")
-			->join("games g", "g.game_id=t.game_id")
 			->join("admin_users u", "u.uid=t.admin_uid")
+			->join("games g", "g.game_id=t.game_id", "left")
 			->join("admin_users au", "au.uid=t.allocate_admin_uid", "left")
+			->join("admin_users ccu", "ccu.uid=t.cc_admin_uid", "left")
 			->get()->row();
 		
 		if ($ticket->status == '1') {
@@ -396,7 +307,9 @@ class Ticket extends MY_Controller {
 			->join("admin_users au", "au.uid=tr.admin_uid", "left")
 			->where("ticket_id", $id)->order_by("tr.id", "asc")->get();
 
-		$allocate_users = $this->DB2->from('admin_users')->where_in('role', array('pm', 'admin', 'cs_master', 'pd_chang', 'RC'))->order_by("role")->get();
+		$allocate_users = $this->DB2->select("u.*, ar.role_desc")
+            ->from('admin_users u')
+			->join("admin_roles ar", "ar.role=u.role")->order_by("u.role")->get();
 		
 		$this->_init_ticket_layout()
 			->add_breadcrumb("檢視")
@@ -456,71 +369,34 @@ class Ticket extends MY_Controller {
 
 	function update_note_json()
 	{
-		$this->DB1->where("id", $this->input->post("question_id"))
-			->update("questions", array('note' => $this->input->post("note")));
+		$this->DB1->where("id", $this->input->post("ticket_id"))
+			->update("tickets", array('note' => $this->input->post("note")));
 		
 		die(json_success());		
 	}		
 	
 	function allocate_json()
 	{
-		$result = $this->input->post("allocate_result").date("Y-m-d H:i")." - ".$_SESSION['admin_name']."：".$this->input->post("result")."<br>";		
-		$this->DB1->where("id", $this->input->post("question_id"))
+		$result = $this->input->post("allocate_result").date("Y-m-d H:i")." - ".$_SESSION['admin_name']."轉交：".$this->input->post("result")."<br>";		
+		$this->DB1->where("id", $this->input->post("ticket_id"))
 			->set('allocate_date', 'NOW()', false)
-			->set('allocate_status', '1')
 			->set('allocate_result', $result)
-			->update("questions", array('allocate_admin_uid' => $this->input->post("allocate_admin_uid")));
+			->update("tickets", array('allocate_admin_uid' => $this->input->post("allocate_admin_uid")));
 			
 		die(json_success());		
 	}
-	
-	function finish_allocate_json()
+		
+	function move_ticket($id)
 	{
-		$result = $this->input->post("allocate_result").date("Y-m-d H:i")." - ".$_SESSION['admin_name']."：".$this->input->post("result")."<br>";
-		$this->DB1->where("id", $this->input->post("question_id"))
-			->set('allocate_finish_date', 'NOW()', false)
-			->set('allocate_status', '2')
-			->set('allocate_result', $result)
-			->set('allocate_admin_uid', $_SESSION['admin_uid'])
-			->update("questions");
-		
-		die(json_success());		
-	}
-		
-	function close_question($id)
-	{				
-		if ( ! $this->zacl->check_acl("ticket", "modify")) die(json_failure("沒有權限"));
-		
-		$this->DB1->set("status", "4")->where("admin_uid is not null", null, false)->where("id", $id)->update("questions");
+		$status = $this->input->get_post("status", TRUE);
+        
+		$this->DB1->set("status", $status)->where("id", $id)->update("tickets");
 		if ($this->DB1->affected_rows() > 0) {
 			die(json_success());	
 		}
 		else {
 			die(json_failure("問題尚未處理"));
 		}
-	}
-	
-		
-	function hide_question($id)
-	{				
-		if ( ! $this->zacl->check_acl("ticket", "delete")) die(json_failure("沒有權限"));
-		
-		$this->DB1->set("update_time", "now()", false)->where("id", $id)->update("questions", array("status"=>"0", 'admin_uid'=>$_SESSION['admin_uid']));
-		if ($this->DB1->affected_rows()>0) 
-		{
-			$this->load->model("log_admin_actions");
-			$this->log_admin_actions->insert_log($_SESSION["admin_uid"], 'question', 'hide', "隱藏提問 #{$id}");
-			die(json_success());
-		}
-		else die(json_failure());
-	}
-	
-	function show_question($id)
-	{				
-		if ( ! $this->zacl->check_acl("ticket", "delete")) die(json_failure("沒有權限"));
-		
-		$this->DB1->set("update_time", "now()", false)->where("id", $id)->update("questions", array("status"=>"1", 'admin_uid'=>$_SESSION['admin_uid']));
-		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure();
 	}
 	
 }
