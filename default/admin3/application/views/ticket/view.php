@@ -113,7 +113,7 @@ else if (($ticket->status==2 || $ticket->status==3) && $ticket->admin_uid==$_SES
                     </a>
                     <? else:?>
                     <a href="<?=$ticket->file_path1?>" target="_blank">
-                        <?=basename($ticket->file_path1)?>
+                        <?=preg_replace('/^.+[\\\\\\/]/', '', $ticket->file_path1)?>
                     </a>
                     <? endif;?>
 				<? endif;?>
@@ -125,7 +125,7 @@ else if (($ticket->status==2 || $ticket->status==3) && $ticket->admin_uid==$_SES
                     </a>
                     <? else:?>
                     <a href="<?=$ticket->file_path2?>" target="_blank">
-                        <?=basename($ticket->file_path2)?>
+                        <?=preg_replace('/^.+[\\\\\\/]/', '', $ticket->file_path2)?>
                     </a>
                     <? endif;?>
 				<? endif;?>
@@ -137,7 +137,7 @@ else if (($ticket->status==2 || $ticket->status==3) && $ticket->admin_uid==$_SES
                     </a>
                     <? else:?>
                     <a href="<?=$ticket->file_path3?>" target="_blank">
-                        <?=basename($ticket->file_path3)?>
+                        <?=preg_replace('/^.+[\\\\\\/]/', '', $ticket->file_path3)?>
                     </a>
                     <? endif;?>
 				<? endif;?>								
