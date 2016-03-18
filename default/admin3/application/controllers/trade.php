@@ -1589,7 +1589,7 @@ class Trade extends MY_Controller {
 			->set("games", $games)
 			->set("servers", $servers)	
 			->set("query", isset($itemget_result) ? $itemget_result : false)
-			->add_js_include("trade/game_consumes")
+			->add_js_include("trade/payment")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();	
     }
