@@ -358,10 +358,6 @@ class Ticket extends MY_Controller {
 			$this->DB1
 				->set("create_time", "now()", false)
 				->insert("ticket_replies", $data);	
-		
-			$this->DB1->set("update_time", "now()", false)
-				->where("id", $ticket_id)->update("tickets", 
-					array("is_read"=>'0', "status"=>'2', 'admin_uid'=>$_SESSION['admin_uid']));			
 		}
 		
 		die(json_success());		
