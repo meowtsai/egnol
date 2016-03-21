@@ -267,17 +267,17 @@ class Statistics extends MY_Controller {
 			->render();
 	}
 	
-	function game_length()
+	function game_length_new()
 	{			
 		$this->_init_statistics_layout();			
 		$this->load->helper("output_table");
 		
 		$this->zacl->check("game_statistics", "read");
 		
-		$span = $this->input->get("span");
-		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
-		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
-		$game_id = $this->input->get("game_id");
+		$span = $this->input->get_post("span");
+		$start_date = $this->input->get_post("start_date") ? $this->input->get_post("start_date") : date("Y-m-d");
+		$end_date = $this->input->get_post("end_date") ? $this->input->get_post("end_date") : date("Y-m-d");
+		$game_id = $this->input->get_post("game_id");
 
         switch($span) {
 			case "weekly":
@@ -297,34 +297,13 @@ class Statistics extends MY_Controller {
 			$query = $this->DB2->query("
 				SELECT
 					date,
-					new_login_count,
-					new_login_count_15,
-					new_login_count_30,
-					new_login_count_60,
-					new_login_count_90,
-					new_login_count_120,
-					new_login_count_more,
-					login_count,
-					login_count_15,
-					login_count_30,
-					login_count_60,
-					login_count_90,
-					login_count_120,
-					login_count_more,
-					deposit_login_count,
-					deposit_login_count_15,
-					deposit_login_count_30,
-					deposit_login_count_60,
-					deposit_login_count_90,
-					deposit_login_count_120,
-					deposit_login_count_more,
-					new_deposit_login_count,
-					new_deposit_login_count_15,
-					new_deposit_login_count_30,
-					new_deposit_login_count_60,
-					new_deposit_login_count_90,
-					new_deposit_login_count_120,
-					new_deposit_login_count_more
+					new_login_count 'login_count',
+					new_login_count_15 'login_count_15',
+					new_login_count_30 'login_count_30',
+					new_login_count_60 'login_count_60',
+					new_login_count_90 'login_count_90',
+					new_login_count_120 'login_count_120',
+					new_login_count_more 'login_count_more'
 				FROM statistics
 				WHERE game_id = '{$game_id}'
 				AND date BETWEEN '{$start_date}' AND '{$end_date}'
@@ -335,34 +314,13 @@ class Statistics extends MY_Controller {
 				SELECT
 					YEAR(date) 'year',
 					{$date_group} 'date',
-					SUM(new_login_count) 'new_login_count',
-					SUM(new_login_count_15) 'new_login_count_15',
-					SUM(new_login_count_30) 'new_login_count_30',
-					SUM(new_login_count_60) 'new_login_count_60',
-					SUM(new_login_count_90) 'new_login_count_90',
-					SUM(new_login_count_120) 'new_login_count_120',
-					SUM(new_login_count_more) 'new_login_count_more',
-					SUM(login_count) 'login_count',
-					SUM(login_count_15) 'login_count_15',
-					SUM(login_count_30) 'login_count_30',
-					SUM(login_count_60) 'login_count_60',
-					SUM(login_count_90) 'login_count_90',
-					SUM(login_count_120) 'login_count_120',
-					SUM(login_count_more) 'login_count_more',
-					SUM(deposit_login_count) 'deposit_login_count',
-					SUM(deposit_login_count_15) 'deposit_login_count_15',
-					SUM(deposit_login_count_30) 'deposit_login_count_30',
-					SUM(deposit_login_count_60) 'deposit_login_count_60',
-					SUM(deposit_login_count_90) 'deposit_login_count_90',
-					SUM(deposit_login_count_120) 'deposit_login_count_120',
-					SUM(deposit_login_count_more) 'deposit_login_count_more',
-					SUM(new_deposit_login_count) 'new_deposit_login_count',
-					SUM(new_deposit_login_count_15) 'new_deposit_login_count_15',
-					SUM(new_deposit_login_count_30) 'new_deposit_login_count_30',
-					SUM(new_deposit_login_count_60) 'new_deposit_login_count_60',
-					SUM(new_deposit_login_count_90) 'new_deposit_login_count_90',
-					SUM(new_deposit_login_count_120) 'new_deposit_login_count_120',
-					SUM(new_deposit_login_count_more) 'new_deposit_login_count_more'
+					SUM(new_login_count) 'login_count',
+					SUM(new_login_count_15) 'login_count_15',
+					SUM(new_login_count_30) 'login_count_30',
+					SUM(new_login_count_60) 'login_count_60',
+					SUM(new_login_count_90) 'login_count_90',
+					SUM(new_login_count_120) 'login_count_120',
+					SUM(new_login_count_more) 'login_count_more'
 				FROM statistics
 				WHERE game_id = '{$game_id}'
 				AND date BETWEEN '{$start_date}' AND '{$end_date}'
@@ -372,14 +330,249 @@ class Statistics extends MY_Controller {
 		}
         
 		$this->g_layout
+			->add_breadcrumb("在線時長")
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("end_date", $end_date)
+			->set("type", "新增用戶")
 			->set("span", $span)
 		
 		->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
-			->render();
+			->render("statistics/game_length");
+	}
+	
+	function game_length_all()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		$span = $this->input->get_post("span");
+		$start_date = $this->input->get_post("start_date") ? $this->input->get_post("start_date") : date("Y-m-d");
+		$end_date = $this->input->get_post("end_date") ? $this->input->get_post("end_date") : date("Y-m-d");
+		$game_id = $this->input->get_post("game_id");
+
+        switch($span) {
+			case "weekly":
+			    $date_group = 'YEARWEEK(date, 3)';
+				break;
+			
+			case "monthly":
+			    $date_group = 'MONTH(date)';
+				break;
+				
+			default:
+			    $date_group = 'DATE(date)';
+				break;
+		}		
+		
+		if (!$span){
+			$query = $this->DB2->query("
+				SELECT
+					date,
+					login_count,
+					login_count_15,
+					login_count_30,
+					login_count_60,
+					login_count_90,
+					login_count_120,
+					login_count_more
+				FROM statistics
+				WHERE game_id = '{$game_id}'
+				AND date BETWEEN '{$start_date}' AND '{$end_date}'
+				ORDER BY date DESC
+			");
+		} else {
+			$query = $this->DB2->query("
+				SELECT
+					YEAR(date) 'year',
+					{$date_group} 'date',
+					SUM(login_count) 'login_count',
+					SUM(login_count_15) 'login_count_15',
+					SUM(login_count_30) 'login_count_30',
+					SUM(login_count_60) 'login_count_60',
+					SUM(login_count_90) 'login_count_90',
+					SUM(login_count_120) 'login_count_120',
+					SUM(login_count_more) 'login_count_more'
+				FROM statistics
+				WHERE game_id = '{$game_id}'
+				AND date BETWEEN '{$start_date}' AND '{$end_date}'
+				GROUP BY game_id, YEAR(date), {$date_group}
+				ORDER BY YEAR(date) DESC, {$date_group} DESC
+			");
+		}
+        
+		$this->g_layout
+			->add_breadcrumb("在線時長")
+			->set("query", isset($query) ? $query : false)
+			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("end_date", $end_date)
+			->set("type", "所有用戶")
+			->set("span", $span)
+		
+		->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render("statistics/game_length");
+	}
+	
+	function game_length_deposit()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		$span = $this->input->get_post("span");
+		$start_date = $this->input->get_post("start_date") ? $this->input->get_post("start_date") : date("Y-m-d");
+		$end_date = $this->input->get_post("end_date") ? $this->input->get_post("end_date") : date("Y-m-d");
+		$game_id = $this->input->get_post("game_id");
+
+        switch($span) {
+			case "weekly":
+			    $date_group = 'YEARWEEK(date, 3)';
+				break;
+			
+			case "monthly":
+			    $date_group = 'MONTH(date)';
+				break;
+				
+			default:
+			    $date_group = 'DATE(date)';
+				break;
+		}		
+		
+		if (!$span){
+			$query = $this->DB2->query("
+				SELECT
+					date,
+					deposit_login_count 'login_count',
+					deposit_login_count_15 'login_count_15',
+					deposit_login_count_30 'login_count_30',
+					deposit_login_count_60 'login_count_60',
+					deposit_login_count_90 'login_count_90',
+					deposit_login_count_120 'login_count_120',
+					deposit_login_count_more 'login_count_more'
+				FROM statistics
+				WHERE game_id = '{$game_id}'
+				AND date BETWEEN '{$start_date}' AND '{$end_date}'
+				ORDER BY date DESC
+			");
+		} else {
+			$query = $this->DB2->query("
+				SELECT
+					YEAR(date) 'year',
+					{$date_group} 'date',
+					SUM(deposit_login_count) 'login_count',
+					SUM(deposit_login_count_15) 'login_count_15',
+					SUM(deposit_login_count_30) 'login_count_30',
+					SUM(deposit_login_count_60) 'login_count_60',
+					SUM(deposit_login_count_90) 'login_count_90',
+					SUM(deposit_login_count_120) 'login_count_120',
+					SUM(deposit_login_count_more) 'login_count_more'
+				FROM statistics
+				WHERE game_id = '{$game_id}'
+				AND date BETWEEN '{$start_date}' AND '{$end_date}'
+				GROUP BY game_id, YEAR(date), {$date_group}
+				ORDER BY YEAR(date) DESC, {$date_group} DESC
+			");
+		}
+        
+		$this->g_layout
+			->add_breadcrumb("在線時長")
+			->set("query", isset($query) ? $query : false)
+			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("end_date", $end_date)
+			->set("type", "儲值用戶")
+			->set("span", $span)
+		
+		->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render("statistics/game_length");
+	}
+	
+	function game_length_new_deposit()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		$span = $this->input->get_post("span");
+		$start_date = $this->input->get_post("start_date") ? $this->input->get_post("start_date") : date("Y-m-d");
+		$end_date = $this->input->get_post("end_date") ? $this->input->get_post("end_date") : date("Y-m-d");
+		$game_id = $this->input->get_post("game_id");
+
+        switch($span) {
+			case "weekly":
+			    $date_group = 'YEARWEEK(date, 3)';
+				break;
+			
+			case "monthly":
+			    $date_group = 'MONTH(date)';
+				break;
+				
+			default:
+			    $date_group = 'DATE(date)';
+				break;
+		}		
+		
+		if (!$span){
+			$query = $this->DB2->query("
+				SELECT
+					date,
+					new_deposit_login_count 'login_count',
+					new_deposit_login_count_15 'login_count_15',
+					new_deposit_login_count_30 'login_count_30',
+					new_deposit_login_count_60 'login_count_60',
+					new_deposit_login_count_90 'login_count_90',
+					new_deposit_login_count_120 'login_count_120',
+					new_deposit_login_count_more 'login_count_more'
+				FROM statistics
+				WHERE game_id = '{$game_id}'
+				AND date BETWEEN '{$start_date}' AND '{$end_date}'
+				ORDER BY date DESC
+			");
+		} else {
+			$query = $this->DB2->query("
+				SELECT
+					YEAR(date) 'year',
+					{$date_group} 'date',
+					SUM(new_deposit_login_count) 'login_count',
+					SUM(new_deposit_login_count_15) 'login_count_15',
+					SUM(new_deposit_login_count_30) 'login_count_30',
+					SUM(new_deposit_login_count_60) 'login_count_60',
+					SUM(new_deposit_login_count_90) 'login_count_90',
+					SUM(new_deposit_login_count_120) 'login_count_120',
+					SUM(new_deposit_login_count_more) 'login_count_more'
+				FROM statistics
+				WHERE game_id = '{$game_id}'
+				AND date BETWEEN '{$start_date}' AND '{$end_date}'
+				GROUP BY game_id, YEAR(date), {$date_group}
+				ORDER BY YEAR(date) DESC, {$date_group} DESC
+			");
+		}
+        
+		$this->g_layout
+			->add_breadcrumb("在線時長")
+			->set("query", isset($query) ? $query : false)
+			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("end_date", $end_date)
+			->set("type", "新增儲值用戶")
+			->set("span", $span)
+		
+		->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render("statistics/game_length");
 	}
 	
 	function operation()
