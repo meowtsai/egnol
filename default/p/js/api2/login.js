@@ -49,33 +49,55 @@ $(document).ready(function()
 		}
 	});
 	
-    $('.login-button img').on('click',function(event){
+    $('.login-button img').on('click', function(event)
+	{
 		$(this).hide();
 		$('#doSubmit').trigger('click');
     });
+
+	var quickBtn = $('#login-btn-quick');
+    quickBtn.on('click', { deviceId: quickBtn.attr('parm1'), gameId: quickBtn.attr('parm2') }, function(event)
+	{
+		location.href='/api2/ui_quick_login?deviceid=' + event.data.deviceId + '&site=' + event.data.gameId;
+	});
+	
+    $('#login-btn-facebook').on('click', function(event)
+	{
+		if(typeof LongeAPI != 'undefined')
+		{
+			LongeAPI.onFacebookLogin();
+		}
+		else
+		{
+			//window.location = "ios://facebooklogin-_-\"";
+			var iframe = document.createElement("IFRAME");
+			iframe.setAttribute("src", "ios://facebooklogin-_-\"");
+			document.documentElement.appendChild(iframe);
+			iframe.parentNode.removeChild(iframe);
+			iframe = null;
+		}
+	});
+
+	var googleBtn = $('#login-btn-google');
+    googleBtn.on('click', { webVersionLogin: googleBtn.attr('parm') }, function(event)
+	{
+		if(typeof LongeAPI != 'undefined')
+		{
+			LongeAPI.onGoogleLogin();
+		}
+		else
+		{
+			location.href = event.data.webVersionLogin;
+			/*
+			var iframe = document.createElement("IFRAME");
+			iframe.setAttribute("src", "ios://googlelogin-_-\"");
+			document.documentElement.appendChild(iframe);
+			iframe.parentNode.removeChild(iframe);
+			iframe = null;
+			*/
+		}
+	});
 });
-
-function OnQuickLogin(deviceId, gameId)
-{
-    location.href='/api2/ui_quick_login?deviceid=' + deviceId + '&site=' + gameId;
-}
-
-function OnClickFacebookLogin()
-{
-	if(typeof LongeAPI != 'undefined')
-	{
-		LongeAPI.onFacebookLogin();
-	}
-	else
-	{
-		//window.location = "ios://facebooklogin-_-\"";
-		var iframe = document.createElement("IFRAME");
-		iframe.setAttribute("src", "ios://facebooklogin-_-\"");
-		document.documentElement.appendChild(iframe);
-		iframe.parentNode.removeChild(iframe);
-		iframe = null;
-	}
-}
 
 function onFacebookLoginSuccess(appId, uid)
 {

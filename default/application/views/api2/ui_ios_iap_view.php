@@ -23,7 +23,7 @@
 		$('.login-button').css('display', 'none');
 	}
 	
-	function AddItem(itemId, itemName, desc, price)
+	function AddItem(itemId, itemName, desc, price, currency)
 	{
 		$('#items').append("<option value='" + itemId + "' desc='" + desc + "' price='" + price + "'>" + itemName + "</option>");
 	}
@@ -61,7 +61,7 @@
 				</tr>
 			</table>
 			<ul class="notes">
-				<li id="payment_msg" style="height:200px;overflow-y:auto;"></li>
+				<li id="payment_msg" style="height:140px;overflow-y:auto;"></li>
 			</ul>
 			<div class="login-button">
 				<p><img style="cursor:pointer;" src="<?=$longe_url?>p/image/money/confirm-btn.png" onclick="javascript:OnClickConfirm()" /></p>
