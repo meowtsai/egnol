@@ -38,6 +38,12 @@ $config['main_menu'] = array(
 			array('name' => 'MyCard交易API查詢', 'path' => 'trade/mycard_api'),			
 		)
 	),	
+	"ticket" => array('name' => '工作申請&回報單', 'menu' => array(
+			array('name' => '總覽', 'path' => 'ticket'),
+			array('name' => '查詢', 'path' => 'ticket/get_list?status=1&action=%E6%9F%A5%E8%A9%A2'),	
+			array('name' => '+新增', 'path' => 'ticket/add'),
+		)
+	),
 	"service" => array('name' => '客服', 'menu' => array(
 			array('name' => '總覽', 'path' => 'service'),
 		 	array('name' => '待處理案件 (自動重整)', 'path' => 'service/todo'),

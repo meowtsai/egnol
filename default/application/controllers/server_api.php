@@ -53,7 +53,7 @@ class Server_api extends MY_Controller
         }
 
         $query = new MongoDB\Driver\Query([
-            "uid" => (string)$uid,
+            "uid" => intval($uid),
             "game_id" => $game_id
         ]);
     
@@ -65,7 +65,7 @@ class Server_api extends MY_Controller
             $result[] = $document;
         }
         
-        if (isset($result[0]['token']) && $result[0]['token'] == $token) {
+        if (isset($result[0]->token) && $result[0]->token == $token) {
             echo 1;
             return true;
         } else {
