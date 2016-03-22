@@ -6,7 +6,7 @@ $config["partner_api"] = array(
 	// 自己測試用
 	'longe' => array(
 		'name' => '龍邑遊戲',
-		'ips' => array('61.220.44.200', '203.73.59.138'),
+		'ips' => array('61.220.44.200', '203.73.59.138', '54.169.43.10', '106.2.49.177', '106.2.49.211', '106.2.49.225'),
 		'sites' => array(
 			'leg1' => array('key'=>'12345678901234567890123456789012'),
 			'test' => array(
@@ -50,7 +50,7 @@ $config["partner_api"] = array(
 
 	'netease' => array(
 		'name' => '網易',
-		'ips' => array('0.0.0.0'),
+		'ips' => array('54.169.43.10', '106.2.49.177', '106.2.49.211', '106.2.49.225'),
 		'sites' => array(
 			'r2g' => array(
 				'name' => '絕代雙驕',
@@ -94,8 +94,10 @@ $config["partner_api"] = array(
 );
 
 $config["game_api"] = array(
+	'test' => array('billing' => 'http://mp.game.netease.com:8660/mp/mplongeplay_pay_notify_process_g0_ad'),
 	'stm' => array('billing' => 'http://203.66.111.18',
 				  'alive_check' => true),
+	'r2g' => array('billing' => 'http://mp.game.netease.com:8660/mp/mplongeplay_pay_notify_process_g0_ad'),
 );
 
 $config["channel_api"] = array(	
