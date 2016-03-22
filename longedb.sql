@@ -92,6 +92,7 @@ CREATE TABLE `characters` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
   `name` varchar(50) DEFAULT NULL,
+  `in_game_id` varchar(20) DEFAULT NULL,
   `server_id` varchar(20) NOT NULL,
   `ad` varchar(50) DEFAULT NULL,
   `create_status` char(1) DEFAULT NULL,

@@ -290,14 +290,14 @@ class Api2 extends MY_Controller
 		if ( $this->db->insert_id() )
 		{
             $bulk = new MongoDB\Driver\BulkWrite;
-            $bulk->insert(["uid" => $this->g_user->uid, "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "device_id" => $_SESSION['login_deviceid'], "latest_update_time" => time()]);
+            $bulk->insert(["uid" => intval($this->g_user->uid), "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "device_id" => $_SESSION['login_deviceid'], "latest_update_time" => time()]);
             
             $this->mongo_log->executeBulkWrite("longe_log.users", $bulk);
             
             unset($bulk);
             
             $filter = ['device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null];
-            $newObj = ['$set' => ['uid' => $this->g_user->uid]];
+            $newObj = ['$set' => ['uid' => intval($this->g_user->uid)]];
             
             $options = ["multi" => true, "upsert" => false];
             
@@ -986,12 +986,31 @@ class Api2 extends MY_Controller
 	function ios_iap_start()
 	{
 		$product_id = $this->input->post("product_id");
+		$uid = $this->input->post("uid");
+		$app_id = $this->input->post("app_id");
+		$server_id = $this->input->post("server_id");
 		$verify_code = $this->input->post("verify_code");
+		$partner_order_id = $this->input->post("partner_order_id");
 		
-		$order_id = 9999;	// 測試用
-		//
-		//
-		//
+		// 設定紀錄資料
+		$user_billing_data = array(
+			'uid' 			=> $uid,
+			'transaction_type' => "inapp_billing_ios",
+			'billing_type'	=> '1',
+			'server_id' 	=> $server_id,
+			'ip'		 	=> $_SERVER['REMOTE_ADDR'],
+			'result'		=> '1',
+			'note'			=> $product_id . "_" . $verify_code,
+			'partner_order_id' => $partner_order_id
+		);
+
+		// 寫入資料庫
+		$this->db
+			->set("create_time", "now()", false)
+			->set("update_time", "now()", false)
+			->insert("user_billing", $user_billing_data);
+
+		$order_id = $this->db->insert_id();
 		
 		die(json_encode(array("result"=>1, "productId"=>$product_id, "orderId"=>$order_id)));
 	}
@@ -1023,6 +1042,22 @@ class Api2 extends MY_Controller
 
 		return json_decode($curl_res);
 	}
+
+	function _curl_post($url, $data)
+	{
+        $ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		curl_setopt($ch, CURLOPT_POST, true);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		$curl_res = curl_exec($ch);
+		$this->post_curl_error = curl_errno($ch);
+		curl_close($ch);
+
+		$result = json_decode($curl_res);
+
+		return $result;
+	}
 	
 	// 驗證並完成訂單
 	function ios_verify_receipt()
@@ -1030,14 +1065,66 @@ class Api2 extends MY_Controller
 		$receipt_data = $this->input->post("receipt_data");
 		$order_id = $this->input->post("order_id");
 		$product_id = $this->input->post("product_id");
+		$price = $this->input->post("price");
+		$currency = $this->input->post("currency");
 		$transaction_id = $this->input->post("transaction_id");
+		$partner_order_id = $this->input->post("partner_order_id");
 		$uid = $this->input->post("uid");
 		$server_id = $this->input->post("server_id");
 		$character_id = $this->input->post("character_id");
+		$verify_code = $this->input->post("verify_code");
 
 		// 要先驗證資料庫的訂單
 		// 1. 檢查 Product ID
 		// 2. 檢查資料庫紀錄是否符合
+/*
+		// 要先驗證資料庫的訂單
+		$billing_query = $this->db->from("user_billing")
+									->where("id", $order_id)
+									->get();
+		if(empty($billing_query))
+			die(json_encode(array("result"=>0, "msg"=>"Order ID not found.")));
+
+		$billing_row = $billing_query->row();
+		if(empty($billing_row))
+			die(json_encode(array("result"=>0, "msg"=>"Order ID not found.")));
+
+		$vc = $product_id . "_" . $verify_code;
+
+		if($billing_row->uid !== $uid ||
+			$billing_row->server_id !== $server_id ||
+			$billing_row->note !== $vc ||
+			$billing_row->partner_order_id !== $partner_order_id)
+		{
+			die(json_encode(array("result"=>0, "msg"=>"Order information not match.")));
+		}
+		
+		// 驗證成功, 結掉訂單
+		$user_billing_transfer_data = array(
+			'uid' 			=> $uid,
+			'transaction_type' => "top_up_account",
+			'billing_type'	=> '2',
+			'amount' 		=> $price,
+			'server_id' 	=> $server_id,
+			'ip'		 	=> $_SERVER['REMOTE_ADDR'],
+			'result'		=> '1',
+			'note'			=> $product_id,
+			'order_no'		=> $order_id,
+			'character_id'	=> $character.id
+		);    	
+
+		// 寫入資料庫
+		$this->db
+			->set("create_time", "now()", false)
+			->set("update_time", "now()", false)
+			->insert("user_billing", $user_billing_transfer_data);
+		
+		
+		// 通知個別 App Server 儲值入點
+		// 絕代 Server API 返回結果 JSON - { code: 200, msg: "OK" }
+		//    code 200 = 成功, 其他值為失敗, 要隔一段時間重試
+		//
+*/		
 		//
 		
 		// 再向 AppStore 驗證
@@ -1054,17 +1141,58 @@ class Api2 extends MY_Controller
 		if($result->status != 0)
 		{
 			// 未通過 AppStore 驗證, 關閉訂單
-			//
-			//
-			
-			die(json_encode(array("result"=>0, "status"=>$result->status)));
+			die(json_encode(array("result"=>0, "msg"=>"Receipt data not match!")));
 		}
 		
 		// 驗證成功, 結掉訂單
-		//
-		//
+		$partner_api = $this->config->item("partner_api");
+		$game_api = $this->config->item("game_api");
 		
-		die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
+		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
+		if (empty($server_info))
+		{
+			die(json_encode(array("result"=>0, "msg"=>"App server not exist.")));
+		}
+		$app_id = $server_info->game_id;
+		$app_key = "";
+		foreach($partner_api as $key => $value)
+		{
+			foreach($value['sites'] as $site => $site_data)
+			{
+				if($site === $app_id)
+				{
+					$app_key = $site_data['key'];
+					break;
+				}
+			}
+			if($app_key !== "")
+				break;
+		}
+		if($app_key === "")
+			die(json_encode(array("result"=>0, "msg"=>"App key not found.")));
+		
+		$time = time();
+		$rand = strval(rand());
+		
+		$str = "{$order_id}{$time}{$price}{$rand}{$product_id}{$app_key}{$transaction_id}{$currency}{$partner_order_id}";
+        $verify = MD5($str) . $rand;
+
+        $res = $this->_curl_post($game_api[$app_id]['billing'], array(
+													'order_id'=>$order_id,
+													'transaction_id'=>$transaction_id,
+													'partner_order_id'=>$partner_order_id,
+													'product_id'=>$product_id,
+													'price'=>$price,
+													'currency'=>$currency,
+													'verify'=>$verify,
+													'time'=>$time));
+
+		if($res->code == 200)
+			die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
+		else
+			die(json_encode(array("result"=>0, "msg"=>$res->msg)));
+		
+//		die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
 	}
 
 	// Android IAP 儲值選擇畫面
@@ -1080,13 +1208,32 @@ class Api2 extends MY_Controller
 	function android_iap_start()
 	{
 		$product_id = $this->input->post("product_id");
+		$uid = $this->input->post("uid");
+		$app_id = $this->input->post("app_id");
+		$server_id = $this->input->post("server_id");
 		$verify_code = $this->input->post("verify_code");
+		$partner_order_id = $this->input->post("partner_order_id");
 		
-		$order_id = 9999;	// 測試用
-		//
-		//
-		//
-		
+		// 設定紀錄資料
+		$user_billing_data = array(
+			'uid' 			=> $uid,
+			'transaction_type' => "inapp_billing_google",
+			'billing_type'	=> '1',
+			'server_id' 	=> $server_id,
+			'ip'		 	=> $_SERVER['REMOTE_ADDR'],
+			'result'		=> '1',
+			'note'			=> $product_id . "_" . $verify_code,
+			'partner_order_id' => $partner_order_id
+		);
+
+		// 寫入資料庫
+		$this->db
+			->set("create_time", "now()", false)
+			->set("update_time", "now()", false)
+			->insert("user_billing", $user_billing_data);
+
+		$order_id = $this->db->insert_id();
+
 		die(json_encode(array("result"=>1, "productId"=>$product_id, "orderId"=>$order_id)));
 	}
 	
@@ -1107,49 +1254,84 @@ class Api2 extends MY_Controller
 	// 驗證並完成訂單
 	function Android_verify_receipt()
 	{
-//		$receipt_data = $this->input->post("receipt_data");
 		$order_id = $this->input->post("order_id");
 		$product_id = $this->input->post("product_id");
+		$price = $this->input->post("price");
+		$currency = $this->input->post("currency");
 		$transaction_id = $this->input->post("transaction_id");
+		$partner_order_id = $this->input->post("partner_order_id");
 		$uid = $this->input->post("uid");
 		$server_id = $this->input->post("server_id");
 		$character_id = $this->input->post("character_id");
+		$verify_code = $this->input->post("verify_code");
+		
 /*
 		// 要先驗證資料庫的訂單
 		// 1. 檢查 Product ID
 		// 2. 檢查資料庫紀錄是否符合
 		//
 		
-		// 再向 AppStore 驗證
-		$url = "https://buy.itunes.apple.com/verifyReceipt";
-		$result = $this->_send_ios_verify($url, json_encode(array("receipt-data"=>$receipt_data)));
-		
-		if($result->status == 21007)
-		{
-			// Sandbox 模式
-			$url = "https://sandbox.itunes.apple.com/verifyReceipt";
-			$result = $this->_send_ios_verify($url, json_encode(array("receipt-data"=>$receipt_data)));
-		}
-
-		if($result->status != 0)
-		{
-			// 未通過 AppStore 驗證, 關閉訂單
-			//
-			//
-			
-			die(json_encode(array("result"=>0, "status"=>$result->status)));
-		}
-		
 		// 驗證成功, 結掉訂單
 		//
 		//
 */		
-		die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
+		$partner_api = $this->config->item("partner_api");
+		$game_api = $this->config->item("game_api");
+		
+		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
+		if (empty($server_info))
+		{
+			die(json_encode(array("result"=>0, "msg"=>"App server not exist.")));
+		}
+		$app_id = $server_info->game_id;
+		$app_key = "";
+		foreach($partner_api as $key => $value)
+		{
+			foreach($value['sites'] as $site => $site_data)
+			{
+				if($site === $app_id)
+				{
+					$app_key = $site_data['key'];
+					break;
+				}
+			}
+			if($app_key !== "")
+				break;
+		}
+		if($app_key === "")
+			die(json_encode(array("result"=>0, "msg"=>"App key not found.")));
+		
+		$time = time();
+		$rand = strval(rand());
+		
+		$str = "{$order_id}{$time}{$price}{$rand}{$product_id}{$app_key}{$transaction_id}{$currency}{$partner_order_id}";
+        $verify = MD5($str) . $rand;
+
+        $res = $this->_curl_post($game_api[$app_id]['billing'], array(
+													'order_id'=>$order_id,
+													'transaction_id'=>$transaction_id,
+													'partner_order_id'=>$partner_order_id,
+													'product_id'=>$product_id,
+													'price'=>$price,
+													'currency'=>$currency,
+													'verify'=>$verify,
+													'time'=>$time));
+
+		if($res->code == 200)
+			die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
+		else
+			die(json_encode(array("result"=>0, "msg"=>$res->msg)));
+		
+//		die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
 	}
 	
 	// 客服頁面
 	function ui_service()
 	{
+		$this->_init_layout()
+			->add_css_link("login_api")
+			->add_css_link("money")
+			->api_view();
 	}
 
 	function ui_service_result()
@@ -1308,6 +1490,7 @@ class Api2 extends MY_Controller
 		}
 		$server_id = $this->input->post("server");
 		$uid = $this->input->post("uid");
+		$character_id = $this->input->post("character_id");
 		$character_name = $this->input->post("character_name");
 
 		if (empty($uid) || empty($server_id) || empty($game_id) || empty($character_name))
@@ -1343,6 +1526,7 @@ class Api2 extends MY_Controller
 			array(
 				"uid" => $uid,
 				'name' => $character_name,
+				'in_game_id' => $character_id
 			));
 
 		if (empty($insert_id))
@@ -1672,7 +1856,7 @@ class Api2 extends MY_Controller
 
                 //$log_user = $this->mongo_log->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->select(array('latest_update_time'))->get('users');
                 $query = new MongoDB\Driver\Query([
-                    "uid" => (string)$this->g_user->uid,
+                    "uid" => intval($this->g_user->uid),
                     "game_id" => $site
                 ]);
             
@@ -1684,7 +1868,7 @@ class Api2 extends MY_Controller
                     $result[] = $document;
                 }
                 
-                if (isset($result[0]['latest_update_time'])) {
+                if (isset($result[0]->latest_update_time)) {
                     $idle_time = time() - $result[0]['latest_update_time'];
                     
                     if ($idle_time < 12*60*60) return true;
@@ -1704,7 +1888,7 @@ class Api2 extends MY_Controller
           ->where("logout_time", "0000-00-00 00:00")->update("log_game_logins", array("logout_time" => now()));
               
         //$this->mongo_log->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->delete_all('users');
-        $filter = ["uid" => (string)$this->g_user->uid, "game_id" => $site];
+        $filter = ["uid" => intval($this->g_user->uid), "game_id" => $site];
         $options = ["limit" => 0];
 
         $bulk = new MongoDB\Driver\BulkWrite;
