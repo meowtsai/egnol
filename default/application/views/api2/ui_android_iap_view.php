@@ -1,12 +1,13 @@
 <script type='text/javascript'>
+	
 	function OnClickConfirm()
 	{
 		var itemId = $('#items').val();
 		if(itemId != "")
 		{
-			LongeAPI.onIapConfirm(itemId);
+			//$('.login-button').css('display', 'none');
 			
-			$('.login-button').css('display', 'none');
+			LongeAPI.onIapConfirm(itemId);
 		}
 	}
 	
@@ -17,9 +18,11 @@
 		$('.login-button').css('display', 'none');
 	}
 	
-	function AddItem(itemId, itemName, desc, price)
+	function AddItem(itemId, itemName, desc, price, currency)
 	{
 		$('#items').append("<option value='" + itemId + "' desc='" + desc + "' price='" + price + "'>" + itemName + "</option>");
+		
+		$('.login-button').css('display', 'block');
 	}
 	
 	function SetStatus(status)
@@ -60,10 +63,10 @@
 				</tr>
 			</table>
 			<ul class="notes">
-				<li id="payment_msg" style="height:200px;overflow-y:auto;"></li>
+				<li id="payment_msg" style="height:140px;overflow-y:auto;"></li>
 			</ul>
-			<div class="login-button">
-				<p><img style="cursor:pointer;" src="<?=$longe_url?>p/image/money/confirm-btn.png" onclick="javascript:OnClickConfirm()" /></p>
+			<div class="login-button" style="display:none;">
+				<p><img style="cursor:pointer;" src="<?=$longe_url?>p/image/money/confirm-btn.png" onclick="javascript:OnClickConfirm();" /></p>
 				<p><img style="cursor:pointer;" src="<?=$longe_url?>p/image/member/clear.png" onclick="javascript:OnClickCancel();" /></p>
 			</div>
 		</div>

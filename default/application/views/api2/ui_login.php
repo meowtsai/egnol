@@ -20,7 +20,7 @@
 				<input name="doLogin" type="submit" id="doSubmit" value="" style="display:none;" />
 				<p><a href="#" title="login"><img src="<?=$longe_url?>p/image/member/login-btn.png" onclick="javascript:$('#doSubmit').trigger('click')"></a></p>
 				<p><a href="<?=$api_url?>api2/ui_register?site=<?=$site?>" title="login">註冊帳號</a>&nbsp;│&nbsp;<a href="<?=$api_url?>api2/ui_forgot_password?site=<?=$site?>" title="login">忘記密碼</a></p>
-				<p><img src="<?=$longe_url?>p/image/member/play-btn.png" style="cursor:pointer;" onclick="OnQuickLogin('<?=$device_id?>','<?=$site?>');" /></p>
+				<p><img id="login-btn-quick" src="<?=$longe_url?>p/image/member/play-btn.png" style="cursor:pointer;" parm1="<?=$device_id?>" parm2="<?=$site?>" /></p>
 			</div>
 
 			<div class="login-other">
@@ -31,13 +31,12 @@
 				{
 					if($channel['channel'] == "facebook")
 					{
-						echo "<img style='cursor:pointer;' src='{$longe_url}p/image/member/login-btn-fb.png' onclick='javascript:OnClickFacebookLogin()' />";
+						echo "<img id='login-btn-facebook' style='cursor:pointer;' src='{$longe_url}p/image/member/login-btn-fb.png' />";
 					}
 					else if($channel['channel'] == "google")
 					{
-						echo "<img style='cursor:pointer;' src='{$longe_url}p/image/member/login-btn-google.png' onclick='javascript:OnClickGoogleLogin(";
-						echo "\"{$api_url}api2/ui_channel_login?site={$site}&channel={$channel['channel']}\"";
-						echo ")' />";
+						echo "<img id='login-btn-google' style='cursor:pointer;' src='{$longe_url}p/image/member/login-btn-google.png' ";
+						echo "parm=\"{$api_url}api2/ui_channel_login?site={$site}&channel={$channel['channel']}\" />";
 					}
 				}
 			?>
