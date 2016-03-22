@@ -56,7 +56,7 @@ $(function()
 	});
     server_selector.trigger("change");
     
-    $("select[name='character']").click(function() {
+    $("select[name='character']").on('change', function() {
         $("#choose_form").submit();
     });
 });

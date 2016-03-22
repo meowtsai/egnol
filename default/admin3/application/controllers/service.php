@@ -469,6 +469,14 @@ class Service extends MY_Controller {
 			->update("questions", array('note' => $this->input->post("note")));
 		
 		die(json_success());		
+	}	
+
+	function update_type_json()
+	{
+		$this->DB1->where("id", $this->input->post("question_id"))
+			->update("questions", array('type' => $this->input->post("type")));
+		
+		die(json_success());		
 	}		
 	
 	function allocate_json()
