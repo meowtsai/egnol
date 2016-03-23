@@ -1078,8 +1078,8 @@ class Statistics extends MY_Controller {
 						AND svr.game_id = '{$game_id}'
 						AND ta.uid IS NULL
 					GROUP BY ub.uid
+                    HAVING SUM(ub.amount) >= 5000
 					ORDER BY SUM(ub.amount) DESC
-					LIMIT 20
 				) whales
 					JOIN games gm ON whales.game_id = gm.game_id
 					LEFT JOIN 

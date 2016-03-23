@@ -123,6 +123,16 @@
             <th>最後登入時間</th>
             <td><?=$user->last_login_date?>&nbsp;</td>
 		</tr>
+		<tr>
+			<th>備註：</th>
+			<td colspan="3">
+				<form id="note_form" method="post" action="<?=site_url("member/update_note_json")?>" style="margin:0">
+					<input type="hidden" name="uid" value="<?=$user->uid?>">	
+					<textarea name="note" rows="3" style="width:80%" ><?=$user->note?></textarea>
+					<button type="submit" class="btn" style="vertical-align:top;">儲存</button>
+				</form>  			
+			</td>
+		</tr>
 	</tbody>
 </table>
 
