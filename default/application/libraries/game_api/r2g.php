@@ -23,18 +23,24 @@ class R2g extends Game_Api
 		
 		$app_key = $partner_api['netease']['sites']['r2g']['key'];
 		$time = time();
-		$rand = strval(rand());
 		
-		$str = "{$order_id}{$time}{$price}{$rand}{$product_id}{$app_key}{$transaction_id}{$currency}{$partner_order_id}";
-        $verify = MD5($str) . $rand;
-
-        $res = $this->curl_post($server->address, array(
+		$server_num = 0;
+		$partner_character_id = "";
+		$pay_type = 'web';
+		
+		$str = "{$currency}{$order_id}{$pay_type}{$price}{$product_id}{$partner_character_id}{$server_num}{$time}{$transaction_id}{$uid}{$app_key}";
+        $verify = MD5($str);
+		
+        $res = $this->_curl_post($game_api['r2g']['billing'], array(
 													'order_id'=>$order_id,
 													'transaction_id'=>$transaction_id,
-													'partner_order_id'=>$partner_order_id,
 													'product_id'=>$product_id,
 													'price'=>$price,
 													'currency'=>$currency,
+													'uid'=>$uid,
+													'role_id'=>$partner_character_id,
+													'server_id'=>$server_num,
+													'pay_type'=>$pay_type,
 													'verify'=>$verify,
 													'time'=>$time));
 
@@ -49,27 +55,33 @@ class R2g extends Game_Api
 	}
 	
 	// In-App Purchase 入點
-    function iap_transfer($order_id, $product_id, $price, $currency, $transaction_id, $partner_order_id, $uid, $server_id, $character_id, $verify_code)
+    function iap_transfer($order_id, $product_id, $price, $currency, $transaction_id, $partner_order_id, $uid, $server_id, $partner_character_id)
     {
 		$partner_api = $this->CI->config->item("partner_api");
 		$game_api = $this->CI->config->item("game_api");
-		
 		$app_key = $partner_api['netease']['sites']['r2g']['key'];
 		$time = time();
-		$rand = strval(rand());
+		$pay_type = 'inapp';
+
+		// 由 server_id 轉換
+		$server_num = 0;
 		
-		$str = "{$order_id}{$time}{$price}{$rand}{$product_id}{$app_key}{$transaction_id}{$currency}{$partner_order_id}";
-        $verify = MD5($str) . $rand;
-		
+		$str = "{$currency}{$order_id}{$partner_order_id}{$pay_type}{$price}{$product_id}{$partner_character_id}{$server_num}{$time}{$transaction_id}{$uid}{$app_key}";
+        $verify = MD5($str);
+
         $res = $this->_curl_post($game_api['r2g']['billing'], array(
-													'order_id'			=> $order_id,
-													'transaction_id'	=> $transaction_id,
-													'partner_order_id'	=> $partner_order_id,
-													'product_id'		=> $product_id,
-													'price'				=> $price,
-													'currency'			=> $currency,
-													'verify'			=> $verify,
-													'time'				=> $time));
+													'order_id'=>$order_id,
+													'transaction_id'=>$transaction_id,
+													'partner_order_id'=>$partner_order_id,
+													'product_id'=>$product_id,
+													'price'=>$price,
+													'currency'=>$currency,
+													'uid'=>$uid,
+													'role_id'=>$partner_character_id,
+													'server_id'=>$server_num,
+													'pay_type'=>$pay_type,
+													'verify'=>$verify,
+													'time'=>$time));
 
 		if($res->code == 200)
 		{
@@ -77,7 +89,7 @@ class R2g extends Game_Api
 		}
 		else
 		{
-            return $this->_return_error("點數轉入錯誤：" . $res->msg);
+            return $this->_return_error($res->msg);
 		}
 	}
 }
