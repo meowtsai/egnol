@@ -81,7 +81,7 @@
 		<tr>
 			<th>提問類型：</th>
 			<td colspan="3">
-                <form id="type_form" method="post" action="<?=site_url("service/update_type_json")?>" style="margin:0;">
+                <form id="type_form" method="post" action="<?=site_url("service/edit_type_json")?>" style="margin:0;">
 					<input type="hidden" name="question_id" value="<?=$question->id?>">	
                     <select name="type" class="required" style="width:150px;">
                         <option value="">--請選擇--</option>
@@ -113,10 +113,8 @@
 				<?
 	            if (!$question->email && !$question->mobile) {
 		            $ex_id = explode("@",$question->external_id); 
-                    if (isset($ex_id[1])) {
-                        if ('device' == $ex_id[1]) echo "快速登入";
-                        else echo $ex_id[1];
-                    }
+		            if ('device' == $ex_id[1]) echo "快速登入";
+		            else echo $ex_id[1];
 	            } else {
 		            if ($question->email) echo $question->email;
 		            echo $question->mobile;

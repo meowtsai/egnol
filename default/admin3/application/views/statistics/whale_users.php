@@ -65,7 +65,7 @@
 		?>
 			<tr>			
 				<td nowrap="nowrap"><?=$seq++?></td>
-				<td style="text-align:right"><?=$row->uid?></td>
+				<td style="text-align:right"><a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?></a></td>
 				<td style="text-align:right"><?=$row->character_name?></td>
 				<td style="text-align:right"><?=$row->server_name?></td>
 				<td style="text-align:right"><?=number_format($row->deposit_total)?></td>
