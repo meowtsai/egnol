@@ -747,6 +747,7 @@ CREATE TABLE `events` (
   `begin_time` datetime DEFAULT NULL COMMENT '活動開始時間',
   `end_time` datetime DEFAULT NULL COMMENT '活動結束時間',
   `fulfill_time` datetime DEFAULT NULL COMMENT '兌換期限(若有兌換獎勵)',
+  `url` varchar(255) DEFAULT NULL COMMENT '活動官網或說明頁',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /* type=0, 序號發放活動 */
