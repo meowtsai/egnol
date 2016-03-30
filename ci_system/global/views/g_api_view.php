@@ -37,12 +37,12 @@
 	}
 	echo $css_link;
 ?>
+<script src='<?=$longe_url?>p/js/default.js'></script>
+<?
+	echo $js_include;
+?>
 </head>
 <body>
 <?=$layout_content?>
 </body>
 </html>
-<?
-	echo $js_include;
-?>
-<script src='<?=$longe_url?>p/js/default.js'></script>
