@@ -912,7 +912,7 @@ class Statistics extends MY_Controller {
                     JOIN servers sr ON ub.server_id=sr.server_id
                 WHERE sr.game_id = '{$game_id}'
                     AND ub.create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-                    AND ub.billing_type = 1
+                    AND ub.billing_type = 2
                     AND ub.result = 1
                 GROUP BY ub.uid
             ) tmp
@@ -1020,7 +1020,7 @@ class Statistics extends MY_Controller {
 			FROM user_billing
 				JOIN servers ON user_billing.server_id=servers.server_id
 			WHERE create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-				AND billing_type = 1
+				AND billing_type = 2
 				AND result = 1
 			GROUP BY YEAR(create_time), {$date_group}(create_time)
 		    ORDER BY YEAR(create_time) DESC, {$date_group}(create_time) DESC
@@ -1242,7 +1242,7 @@ class Statistics extends MY_Controller {
                 user_billing
             WHERE
                 create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-                AND billing_type = 1
+                AND billing_type = 2
                 AND result = 1
 		")->row();
 		
@@ -1265,7 +1265,7 @@ class Statistics extends MY_Controller {
 					user_billing
 				WHERE
 					create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-					AND billing_type = 1
+					AND billing_type = 2
 					AND result = 1
 				GROUP BY uid
 			) tmp
@@ -1302,7 +1302,7 @@ class Statistics extends MY_Controller {
 				user_billing
 			WHERE
 				create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-				AND billing_type = 1
+				AND billing_type = 2
 				AND result = 1
 			GROUP BY country_code
 		");

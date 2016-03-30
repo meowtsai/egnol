@@ -476,7 +476,7 @@ class Cron extends CI_Controller {
 							user_billing.uid = ub.uid
 								AND servers.game_id = sv.game_id
 								AND user_billing.create_time < ub.create_time
-								AND user_billing.billing_type = 1
+								AND user_billing.billing_type = 2
 								AND user_billing.result = 1
 						LIMIT 1
 					) 'is_first'
@@ -485,7 +485,7 @@ class Cron extends CI_Controller {
 				JOIN servers sv ON ub.server_id = sv.server_id
 				WHERE
 					DATE(ub.create_time) = '{$date}'
-						AND ub.billing_type = 1
+						AND ub.billing_type = 2
 						AND ub.result = 1
                         ".(($this->testaccounts)?" AND ub.uid NOT IN (".$this->testaccounts.") ":"")."
 				GROUP BY ub.uid , sv.game_id
@@ -552,7 +552,7 @@ class Cron extends CI_Controller {
 				WHERE 
                     lgl.is_first = 1
                         AND {$span_query2}
-						AND ub.billing_type = 1
+						AND ub.billing_type = 2
 						AND ub.result = 1
                         ".(($this->testaccounts)?" AND ub.uid NOT IN (".$this->testaccounts.") ":"")."
 				GROUP BY ub.uid , sv.game_id
@@ -723,7 +723,7 @@ class Cron extends CI_Controller {
 							user_billing
 							JOIN servers ON user_billing.server_id=servers.server_id
 						WHERE
-							billing_type = 1
+							billing_type = 2
 								AND result = 1
 								AND DATE(create_time) = '{$date}'
 						GROUP BY uid, game_id
@@ -1045,7 +1045,7 @@ class Cron extends CI_Controller {
                             log_game_logins lgl
                         JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id AND lgl.create_time >= ub.create_time
                         WHERE lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
-                            AND ub.billing_type = 1 
+                            AND ub.billing_type = 2 
                             AND ub.result = 1
                             ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
                         GROUP BY lgl.game_id, DATE(lgl.create_time), lgl.uid
@@ -1107,7 +1107,7 @@ class Cron extends CI_Controller {
                             log_game_logins lgl
                         JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id AND DATE(lgl.create_time) = DATE(ub.create_time)
                         WHERE lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
-                            AND ub.billing_type = 1 
+                            AND ub.billing_type = 2 
                             AND ub.result = 1
                             ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
                         GROUP BY lgl.game_id, DATE(lgl.create_time), lgl.uid
@@ -1192,7 +1192,7 @@ class Cron extends CI_Controller {
 			JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id
 			WHERE lgl.is_first = 1
 				AND lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
-				AND ub.billing_type = 1 
+				AND ub.billing_type = 2 
 				AND ub.result = 1
 				AND ub.create_time BETWEEN '{$date} 00:00:00' AND '{$end_date} 00:00:00'
                 ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
@@ -1248,7 +1248,8 @@ class Cron extends CI_Controller {
 		    $date_30=date("Y-m-d",strtotime("-30 days", strtotime($date)));
 		}
         
-		/*$this->generate_statistics_blank($date);
+		/*
+        $this->generate_statistics_blank($date);
 		$this->generate_login_statistics($date);
 		$this->generate_new_character_statistics($date);
 		$this->generate_device_statistics($date);
@@ -1270,7 +1271,10 @@ class Cron extends CI_Controller {
 		$this->generate_user_game_length_statistics($date);
 		$this->generate_new_user_game_length_statistics($date);
 		$this->generate_deposit_user_game_length_statistics($date);
-		$this->generate_new_deposit_user_game_length_statistics($date);*/
+		$this->generate_new_deposit_user_game_length_statistics($date);
+        */
+		$this->generate_new_user_billing_statistics($date);
+		$this->generate_device_statistics($date);
 		$this->generate_new_user_lifetime_value_statistics($date, 1);
 		$this->generate_new_user_lifetime_value_statistics($date, 2);
 		$this->generate_new_user_lifetime_value_statistics($date, 3);
@@ -1283,28 +1287,31 @@ class Cron extends CI_Controller {
 		$this->generate_new_user_lifetime_value_statistics($date, 60);
 		$this->generate_new_user_lifetime_value_statistics($date, 90);
 		
-		/*if ("7"==date("N", strtotime($check_date))) {
+		if ("7"==date("N", strtotime($check_date))) {
             $this->generate_device_statistics($date, 'weekly');
-		    $this->generate_statistics_blank($date, 'weekly');
+		    /*
+            $this->generate_statistics_blank($date, 'weekly');
 			$this->generate_login_statistics($date, 'weekly');
 			$date_week=date("Y-m-d",strtotime("-1 week", strtotime($check_date)));
 			$this->generate_retention_statistics($date_week, 1, 'weekly');
 			$this->generate_retention_statistics($date_week, 1, 'weekly', FALSE);
 			$this->generate_return_statistics($date, 1, 'weekly');
+            */
             $this->generate_new_user_billing_statistics($date, 'weekly');
 		}
 		
 		if ($date==date("Y-m-t", strtotime($check_date))) {
             $this->generate_device_statistics($date, 'monthly');
+		    /*
 		    $this->generate_statistics_blank($date, 'monthly');
 			$this->generate_login_statistics($date, 'monthly');
 			$date_month=date("Y-m-t",strtotime("-31 days", strtotime($check_date)));
 			$this->generate_retention_statistics($date_month, 1, 'monthly');
 			$this->generate_retention_statistics($date_month, 1, 'monthly', FALSE);
 			$this->generate_return_statistics($date, 1, 'monthly');
+            */
             $this->generate_new_user_billing_statistics($date, 'monthly');
 		}
-        */
 	}
 	
 	function echo_passed_time($start_time) {
