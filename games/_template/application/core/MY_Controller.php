@@ -43,7 +43,7 @@ class MY_Controller extends CI_Controller
 		$this->server = $this->_get_server();
 
 		$this->g_layout->set("site", $this->game_id);
-        $this->g_layout->set("game_url", "http://".$this->game_id.".longeplay.com.tw/");
+        $this->g_layout->set("game_url", "https://".$this->game_id.".longeplay.com.tw/");
         $this->g_layout->set("longe_url", g_conf('url', 'longe'));
 
 		$redirect_url = urldecode($this->input->get("redirect_url", true));
@@ -60,6 +60,20 @@ class MY_Controller extends CI_Controller
 				$fan_page = "not set!";
 		}
 		$this->g_layout->set("fan_page", $fan_page);
+
+		// 讀取活動資料
+		$game_events = array();
+		$query = $this->db->from("events")
+			->where("game_id", $this->game_id)
+			->where("status", "1")
+			->where("begin_time <=", date("Y-m-d H:i:s"))
+			->where("end_time >", date("Y-m-d H:i:s"))
+			->get();
+		foreach($query->result() as $row)
+		{
+			array_push($game_events, $row);
+		}
+		$this->g_layout->set("game_events", $game_events);
 
 		return $this->g_layout
 			->add_js_include(array('jquery.validate.min', 'jquery.metadata', 'jquery.form'))
