@@ -208,6 +208,59 @@ class Cron extends CI_Controller {
 		echo "generate_new_character_statistics done - ".$date.PHP_EOL;
 	}
 	
+	function generate_device_statistics($date="", $span="daily")
+	{
+		$this->lang->load('db_lang', 'zh-TW');
+		
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
+		
+        switch($span) {
+			case "weekly":
+			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND WEEKOFYEAR(create_time) = WEEKOFYEAR('{$date}')";
+				$save_table = "weekly_statistics";
+				break;
+			
+			case "monthly":
+			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}')";
+				$save_table = "monthly_statistics";
+				break;
+				
+			default:
+				$span_query = "DATE(create_time) = '{$date}'";
+				$save_table = "statistics";
+				break;
+		}
+            
+        $query = $this->DB2->query("
+			SELECT
+				game_id, COUNT(device_id) 'device_count'
+			FROM
+				(SELECT
+					game_id, device_id
+				FROM
+					log_game_logins
+				WHERE
+					".$span_query."
+                    AND device_id IS NOT NULL
+                        ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
+				GROUP BY game_id, device_id) tmp
+			GROUP BY game_id");	
+
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+			    $data = array(
+				    'game_id' => $row->game_id,
+				    'date' => $date,
+				    'device_count' => $row->device_count
+			    );
+			
+			    $this->save_statistics($data, $save_table);
+		    }
+		}
+		
+		echo "generate_device_".$span."_statistics done - ".$date.PHP_EOL;
+	}
+	
 	function generate_retention_statistics($date="", $interval=1, $span="daily", $is_first=TRUE)
 	{
 		$this->lang->load('db_lang', 'zh-TW');
@@ -423,7 +476,7 @@ class Cron extends CI_Controller {
 							user_billing.uid = ub.uid
 								AND servers.game_id = sv.game_id
 								AND user_billing.create_time < ub.create_time
-								AND user_billing.billing_type = 2
+								AND user_billing.billing_type = 1
 								AND user_billing.result = 1
 						LIMIT 1
 					) 'is_first'
@@ -432,7 +485,7 @@ class Cron extends CI_Controller {
 				JOIN servers sv ON ub.server_id = sv.server_id
 				WHERE
 					DATE(ub.create_time) = '{$date}'
-						AND ub.billing_type = 2
+						AND ub.billing_type = 1
 						AND ub.result = 1
                         ".(($this->testaccounts)?" AND ub.uid NOT IN (".$this->testaccounts.") ":"")."
 				GROUP BY ub.uid , sv.game_id
@@ -452,8 +505,74 @@ class Cron extends CI_Controller {
 			    $this->save_statistics($data);
 		    }
 		}
-		
 		echo "generate_billing_statistics done - ".$date.PHP_EOL;
+	}
+	
+	function generate_new_user_billing_statistics($date="", $span="daily")
+	{
+		$this->lang->load('db_lang', 'zh-TW');
+		
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
+		
+        switch($span) {
+			case "weekly":
+			    $span_query1 = "YEAR(lgl.create_time) = YEAR(ub.create_time) AND WEEKOFYEAR(lgl.create_time) = WEEKOFYEAR(ub.create_time)";
+			    $span_query2 = "YEAR(ub.create_time) = YEAR('{$date}') AND WEEKOFYEAR(ub.create_time) = WEEKOFYEAR('{$date}')";
+				$save_table = "weekly_statistics";
+				break;
+			
+			case "monthly":
+			    $span_query1 = "YEAR(lgl.create_time)=YEAR(ub.create_time) AND MONTH(lgl.create_time)=MONTH(ub.create_time)";
+			    $span_query2 = "YEAR(ub.create_time) = YEAR('{$date}') AND MONTH(ub.create_time) = MONTH('{$date}')";
+				$save_table = "monthly_statistics";
+				break;
+				
+			default:
+				$span_query1 = "DATE(lgl.create_time)=DATE(ub.create_time)";
+				$span_query2 = "DATE(ub.create_time) = '{$date}'";
+				$save_table = "statistics";
+				break;
+		}
+		
+		$query = $this->DB2->query("
+			SELECT 
+				game_id,
+				COUNT(uid) 'new_user_deposit_count',
+				SUM(amount_total) 'new_user_deposit_total'
+			FROM
+			(   
+				SELECT 
+					ub.uid,
+					sv.game_id,
+					SUM(ub.amount) 'amount_total'
+				FROM
+					user_billing ub
+				JOIN servers sv ON ub.server_id = sv.server_id
+                JOIN log_game_logins lgl ON {$span_query1} AND sv.game_id=lgl.game_id AND ub.uid=lgl.uid
+				WHERE 
+                    lgl.is_first = 1
+                        AND {$span_query2}
+						AND ub.billing_type = 1
+						AND ub.result = 1
+                        ".(($this->testaccounts)?" AND ub.uid NOT IN (".$this->testaccounts.") ":"")."
+				GROUP BY ub.uid , sv.game_id
+			) tmp
+			GROUP BY game_id");
+
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+			    $data = array(
+				    'game_id' => $row->game_id,
+				    'date' => $date,
+				    'new_user_deposit_count' => $row->new_user_deposit_count,
+				    'new_user_deposit_total' => $row->new_user_deposit_total,
+			    );
+				
+			    $this->save_statistics($data, $save_table);
+		    }
+		}
+		
+		echo "generate_new_user_billing_{$span}_statistics done - ".$date.PHP_EOL;
 	}
 	
 	function generate_consume_statistics($date="")
@@ -604,7 +723,7 @@ class Cron extends CI_Controller {
 							user_billing
 							JOIN servers ON user_billing.server_id=servers.server_id
 						WHERE
-							billing_type = 2
+							billing_type = 1
 								AND result = 1
 								AND DATE(create_time) = '{$date}'
 						GROUP BY uid, game_id
@@ -926,7 +1045,7 @@ class Cron extends CI_Controller {
                             log_game_logins lgl
                         JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id AND lgl.create_time >= ub.create_time
                         WHERE lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
-                            AND ub.billing_type = 2 
+                            AND ub.billing_type = 1 
                             AND ub.result = 1
                             ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
                         GROUP BY lgl.game_id, DATE(lgl.create_time), lgl.uid
@@ -988,7 +1107,7 @@ class Cron extends CI_Controller {
                             log_game_logins lgl
                         JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id AND DATE(lgl.create_time) = DATE(ub.create_time)
                         WHERE lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
-                            AND ub.billing_type = 2 
+                            AND ub.billing_type = 1 
                             AND ub.result = 1
                             ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
                         GROUP BY lgl.game_id, DATE(lgl.create_time), lgl.uid
@@ -1030,6 +1149,21 @@ class Cron extends CI_Controller {
 			case 1:
 			    $update_field = 'one_ltv';
 				break;
+			case 2:
+			    $update_field = 'two_ltv';
+				break;
+			case 3:
+			    $update_field = 'three_ltv';
+				break;
+			case 4:
+			    $update_field = 'four_ltv';
+				break;
+			case 5:
+			    $update_field = 'five_ltv';
+				break;
+			case 6:
+			    $update_field = 'six_ltv';
+				break;
 			case 7:
 			    $update_field = 'seven_ltv';
 				break;
@@ -1046,7 +1180,7 @@ class Cron extends CI_Controller {
 			    $update_field = 'ninety_ltv';
 				break;
 			default:
-			    echo "Only 1,7,14,30,60,90 allowed for second parameter!";
+			    echo "Only 1,2,3,4,5,6,7,14,30,60,90 allowed for second parameter!";
 				return 0;
 				break;
 		}
@@ -1058,7 +1192,7 @@ class Cron extends CI_Controller {
 			JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id
 			WHERE lgl.is_first = 1
 				AND lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
-				AND ub.billing_type = 2 
+				AND ub.billing_type = 1 
 				AND ub.result = 1
 				AND ub.create_time BETWEEN '{$date} 00:00:00' AND '{$end_date} 00:00:00'
                 ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
@@ -1113,9 +1247,11 @@ class Cron extends CI_Controller {
 		    $date_14=date("Y-m-d",strtotime("-14 days", strtotime($date)));
 		    $date_30=date("Y-m-d",strtotime("-30 days", strtotime($date)));
 		}
-		$this->generate_statistics_blank($date);
+        
+		/*$this->generate_statistics_blank($date);
 		$this->generate_login_statistics($date);
 		$this->generate_new_character_statistics($date);
+		$this->generate_device_statistics($date);
 		$this->generate_retention_statistics($date_1, 1);
 		$this->generate_retention_statistics($date_3, 3);
 		$this->generate_retention_statistics($date_7, 7);
@@ -1125,6 +1261,7 @@ class Cron extends CI_Controller {
 		$this->generate_return_statistics($date, 1);
 		$this->generate_return_statistics($date, 3);
 		$this->generate_billing_statistics($date);
+		$this->generate_new_user_billing_statistics($date);
 		$this->generate_consume_statistics($date);
 		$this->generate_new_consume_statistics($date);
 		$this->generate_game_time_statistics($date);
@@ -1133,31 +1270,41 @@ class Cron extends CI_Controller {
 		$this->generate_user_game_length_statistics($date);
 		$this->generate_new_user_game_length_statistics($date);
 		$this->generate_deposit_user_game_length_statistics($date);
-		$this->generate_new_deposit_user_game_length_statistics($date);
+		$this->generate_new_deposit_user_game_length_statistics($date);*/
 		$this->generate_new_user_lifetime_value_statistics($date, 1);
+		$this->generate_new_user_lifetime_value_statistics($date, 2);
+		$this->generate_new_user_lifetime_value_statistics($date, 3);
+		$this->generate_new_user_lifetime_value_statistics($date, 4);
+		$this->generate_new_user_lifetime_value_statistics($date, 5);
+		$this->generate_new_user_lifetime_value_statistics($date, 6);
 		$this->generate_new_user_lifetime_value_statistics($date, 7);
 		$this->generate_new_user_lifetime_value_statistics($date, 14);
 		$this->generate_new_user_lifetime_value_statistics($date, 30);
 		$this->generate_new_user_lifetime_value_statistics($date, 60);
 		$this->generate_new_user_lifetime_value_statistics($date, 90);
 		
-		if ("7"==date("N", strtotime($check_date))) {
+		/*if ("7"==date("N", strtotime($check_date))) {
+            $this->generate_device_statistics($date, 'weekly');
 		    $this->generate_statistics_blank($date, 'weekly');
 			$this->generate_login_statistics($date, 'weekly');
 			$date_week=date("Y-m-d",strtotime("-1 week", strtotime($check_date)));
 			$this->generate_retention_statistics($date_week, 1, 'weekly');
 			$this->generate_retention_statistics($date_week, 1, 'weekly', FALSE);
 			$this->generate_return_statistics($date, 1, 'weekly');
+            $this->generate_new_user_billing_statistics($date, 'weekly');
 		}
 		
 		if ($date==date("Y-m-t", strtotime($check_date))) {
+            $this->generate_device_statistics($date, 'monthly');
 		    $this->generate_statistics_blank($date, 'monthly');
 			$this->generate_login_statistics($date, 'monthly');
 			$date_month=date("Y-m-t",strtotime("-31 days", strtotime($check_date)));
 			$this->generate_retention_statistics($date_month, 1, 'monthly');
 			$this->generate_retention_statistics($date_month, 1, 'monthly', FALSE);
 			$this->generate_return_statistics($date, 1, 'monthly');
+            $this->generate_new_user_billing_statistics($date, 'monthly');
 		}
+        */
 	}
 	
 	function echo_passed_time($start_time) {
@@ -1210,6 +1357,51 @@ class Cron extends CI_Controller {
             }
         }
     }
+    
+    function appannie_data($date="", $device="ios") {
+        
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
+        $product_id = "328855";
+        $countries = array("", "TW", "HK", "MO", "SG", "MY");
+        
+        foreach ($countries as $country_code) {
+            
+            $authorization = "Authorization: Bearer 8b042668428cc0edda9b57e34af139c953e6a587";
+            $url = "https://api.appannie.com/v1.2/accounts/{$product_id}/sales?start_date={$date}&end_date={$date}";
+            
+            $url .= ($country_code)?"&countries={$country_code}":"";
+            $ch = curl_init();
+            
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $authorization));
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+            $result = curl_exec($ch);
+            $result_json = json_decode($result);
+            curl_close($ch);
+            
+            $update_field = ($country_code)?"{$device}_".strtolower($country_code)."_download_count":"{$device}_download_count";
+            
+            $data = array(
+                'game_id' => 'stm',
+                'date' => $date,
+                $update_field => (isset($result_json->sales_list[0]->units->product->downloads))?$result_json->sales_list[0]->units->product->downloads:0
+            );
+        
+            $this->save_statistics($data);
+        }
+    }
+	
+	function appannie_que($date) {
+		ini_set('max_execution_time', 99999);
+		
+		$run_date = $date;
+		
+		for ($run_date; $run_date <= date('Y-m-d'); $run_date=date("Y-m-d",strtotime('+1 day', strtotime($run_date)))) {
+			echo '['.$run_date.']'.PHP_EOL;
+			$this->appannie_data($run_date);
+		}
+	}
 }
 
 /* End of file search.php */

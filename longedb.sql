@@ -243,6 +243,155 @@ CREATE TABLE `log_logins` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `statistics`
+--
+
+DROP TABLE IF EXISTS `statistics`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `statistics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date` date NOT NULL,
+  `game_id` varchar(20) DEFAULT NULL,
+  `login_count` int(11) DEFAULT NULL,
+  `apk_login_count` int(11) DEFAULT NULL,
+  `ios_login_count` int(11) DEFAULT NULL,
+  `google_login_count` int(11) DEFAULT NULL,
+  `new_login_count` int(11) DEFAULT NULL,
+  `new_character_count` int(11) DEFAULT NULL,
+  `device_count` int(11) DEFAULT NULL,
+  `one_retention_all_count` int(11) DEFAULT NULL,
+  `one_retention_count` int(11) DEFAULT NULL,
+  `three_retention_count` int(11) DEFAULT NULL,
+  `seven_retention_count` int(11) DEFAULT NULL,
+  `fourteen_retention_count` int(11) DEFAULT NULL,
+  `thirty_retention_count` int(11) DEFAULT NULL,
+  `deposit_user_count` int(11) DEFAULT NULL,
+  `new_deposit_user_count` int(11) DEFAULT NULL,
+  `consume_user_count` int(11) DEFAULT NULL,
+  `new_consume_user_count` int(11) DEFAULT NULL,
+  `currency_total` float DEFAULT NULL,
+  `paid_currency_total` float DEFAULT NULL,
+  `deposit_total` float DEFAULT NULL,
+  `consume_total` float DEFAULT NULL,
+  `peak_user_count` int(11) DEFAULT NULL,
+  `total_time` int(11) DEFAULT NULL,
+  `paid_total_time` int(11) DEFAULT NULL,
+  `deposit_login_count` int(11) DEFAULT NULL,
+  `new_deposit_login_count` int(11) DEFAULT NULL,
+  `new_user_deposit_count` int(11) DEFAULT NULL,
+  `new_user_deposit_total` int(11) DEFAULT NULL,
+  `new_login_count_15` int(11) DEFAULT NULL,
+  `new_login_count_30` int(11) DEFAULT NULL,
+  `new_login_count_60` int(11) DEFAULT NULL,
+  `new_login_count_90` int(11) DEFAULT NULL,
+  `new_login_count_120` int(11) DEFAULT NULL,
+  `new_login_count_more` int(11) DEFAULT NULL,
+  `login_count_15` int(11) DEFAULT NULL,
+  `login_count_30` int(11) DEFAULT NULL,
+  `login_count_60` int(11) DEFAULT NULL,
+  `login_count_90` int(11) DEFAULT NULL,
+  `login_count_120` int(11) DEFAULT NULL,
+  `login_count_more` int(11) DEFAULT NULL,
+  `deposit_login_count_15` int(11) DEFAULT NULL,
+  `deposit_login_count_30` int(11) DEFAULT NULL,
+  `deposit_login_count_60` int(11) DEFAULT NULL,
+  `deposit_login_count_90` int(11) DEFAULT NULL,
+  `deposit_login_count_120` int(11) DEFAULT NULL,
+  `deposit_login_count_more` int(11) DEFAULT NULL,
+  `new_deposit_login_count_15` int(11) DEFAULT NULL,
+  `new_deposit_login_count_30` int(11) DEFAULT NULL,
+  `new_deposit_login_count_60` int(11) DEFAULT NULL,
+  `new_deposit_login_count_90` int(11) DEFAULT NULL,
+  `new_deposit_login_count_120` int(11) DEFAULT NULL,
+  `new_deposit_login_count_more` int(11) DEFAULT NULL,
+  `ios_download_count` int(8) DEFAULT NULL,
+  `ios_tw_download_count` int(8) DEFAULT NULL,
+  `ios_hk_download_count` int(8) DEFAULT NULL,
+  `ios_mo_download_count` int(8) DEFAULT NULL,
+  `ios_sg_download_count` int(8) DEFAULT NULL,
+  `ios_my_download_count` int(8) DEFAULT NULL,
+  `google_download_count` int(8) DEFAULT NULL,
+  `google_tw_download_count` int(8) DEFAULT NULL,
+  `google_hk_download_count` int(8) DEFAULT NULL,
+  `google_mo_download_count` int(8) DEFAULT NULL,
+  `google_sg_download_count` int(8) DEFAULT NULL,
+  `google_my_download_count` int(8) DEFAULT NULL,
+  `apk_download_count` int(8) DEFAULT NULL,
+  `apk_tw_download_count` int(8) DEFAULT NULL,
+  `apk_hk_download_count` int(8) DEFAULT NULL,
+  `apk_mo_download_count` int(8) DEFAULT NULL,
+  `apk_sg_download_count` int(8) DEFAULT NULL,
+  `apk_my_download_count` int(8) DEFAULT NULL,
+  `one_return_count` int(11) DEFAULT NULL,
+  `three_return_count` int(11) DEFAULT NULL,
+  `one_ltv` int(11) DEFAULT NULL,
+  `two_ltv` int(11) DEFAULT NULL,
+  `three_ltv` int(11) DEFAULT NULL,
+  `four_ltv` int(11) DEFAULT NULL,
+  `five_ltv` int(11) DEFAULT NULL,
+  `six_ltv` int(11) DEFAULT NULL,
+  `seven_ltv` int(11) DEFAULT NULL,
+  `fourteen_ltv` int(11) DEFAULT NULL,
+  `thirty_ltv` int(11) DEFAULT NULL,
+  `sixty_ltv` int(11) DEFAULT NULL,
+  `ninety_ltv` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `weekly_statistics`
+--
+
+DROP TABLE IF EXISTS `weekly_statistics`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `weekly_statistics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `game_id` varchar(20) NOT NULL,
+  `date` date NOT NULL,
+  `one_retention_count` varchar(11) DEFAULT NULL,
+  `one_retention_all_count` varchar(11) DEFAULT NULL,
+  `return_count` int(11) DEFAULT NULL,
+  `login_count` int(11) DEFAULT NULL,
+  `apk_login_count` int(11) DEFAULT NULL,
+  `ios_login_count` int(11) DEFAULT NULL,
+  `google_login_count` int(11) DEFAULT NULL,
+  `new_login_count` int(11) DEFAULT NULL,
+  `device_count` int(11) DEFAULT NULL,
+  `ios_download_count` int(8) DEFAULT NULL,
+  `ios_tw_download_count` int(8) DEFAULT NULL,
+  `ios_hk_download_count` int(8) DEFAULT NULL,
+  `ios_mo_download_count` int(8) DEFAULT NULL,
+  `ios_sg_download_count` int(8) DEFAULT NULL,
+  `ios_my_download_count` int(8) DEFAULT NULL,
+  `google_download_count` int(8) DEFAULT NULL,
+  `google_tw_download_count` int(8) DEFAULT NULL,
+  `google_hk_download_count` int(8) DEFAULT NULL,
+  `google_mo_download_count` int(8) DEFAULT NULL,
+  `google_sg_download_count` int(8) DEFAULT NULL,
+  `google_my_download_count` int(8) DEFAULT NULL,
+  `apk_download_count` int(8) DEFAULT NULL,
+  `apk_tw_download_count` int(8) DEFAULT NULL,
+  `apk_hk_download_count` int(8) DEFAULT NULL,
+  `apk_mo_download_count` int(8) DEFAULT NULL,
+  `apk_sg_download_count` int(8) DEFAULT NULL,
+  `apk_my_download_count` int(8) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+--
 -- Table structure for table `monthly_statistics`
 --
 
@@ -257,9 +406,52 @@ CREATE TABLE `monthly_statistics` (
   `one_retention_all_count` varchar(11) DEFAULT NULL,
   `return_count` int(11) DEFAULT NULL,
   `login_count` int(11) DEFAULT NULL,
+  `apk_login_count` int(11) DEFAULT NULL,
+  `ios_login_count` int(11) DEFAULT NULL,
+  `google_login_count` int(11) DEFAULT NULL,
   `new_login_count` int(11) DEFAULT NULL,
+  `ios_download_count` int(9) DEFAULT NULL,
+  `device_count` int(11) DEFAULT NULL,
+  `ios_tw_download_count` int(9) DEFAULT NULL,
+  `ios_hk_download_count` int(9) DEFAULT NULL,
+  `ios_mo_download_count` int(9) DEFAULT NULL,
+  `ios_sg_download_count` int(9) DEFAULT NULL,
+  `ios_my_download_count` int(9) DEFAULT NULL,
+  `google_download_count` int(9) DEFAULT NULL,
+  `google_tw_download_count` int(9) DEFAULT NULL,
+  `google_hk_download_count` int(9) DEFAULT NULL,
+  `google_mo_download_count` int(9) DEFAULT NULL,
+  `google_sg_download_count` int(9) DEFAULT NULL,
+  `google_my_download_count` int(9) DEFAULT NULL,
+  `apk_download_count` int(9) DEFAULT NULL,
+  `apk_tw_download_count` int(9) DEFAULT NULL,
+  `apk_hk_download_count` int(9) DEFAULT NULL,
+  `apk_mo_download_count` int(9) DEFAULT NULL,
+  `apk_sg_download_count` int(9) DEFAULT NULL,
+  `apk_my_download_count` int(9) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+--
+-- Table structure for table `marketing_statistics`
+--
+
+DROP TABLE IF EXISTS `marketing_statistics`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `statistics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date` date NOT NULL,
+  `game_id` varchar(20) NOT NULL,
+  `platform` varchar(9) NOT NULL,
+  `media` varchar(20) NOT NULL,
+  `country_code` varchar(3) DEFAULT NULL,
+  `click_count` int(8) DEFAULT NULL,
+  `install_count` int(8) DEFAULT NULL,
+  `pay_user_count` int(8) DEFAULT NULL,
+  `pay_amount` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -538,76 +730,6 @@ CREATE TABLE `servers` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `statistics`
---
-
-DROP TABLE IF EXISTS `statistics`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `statistics` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `date` date NOT NULL,
-  `game_id` varchar(20) DEFAULT NULL,
-  `login_count` int(11) DEFAULT NULL,
-  `new_login_count` int(11) DEFAULT NULL,
-  `new_character_count` int(11) DEFAULT NULL,
-  `device_count` int(11) DEFAULT NULL,
-  `one_retention_all_count` int(11) DEFAULT NULL,
-  `one_retention_count` int(11) DEFAULT NULL,
-  `three_retention_count` int(11) DEFAULT NULL,
-  `seven_retention_count` int(11) DEFAULT NULL,
-  `fourteen_retention_count` int(11) DEFAULT NULL,
-  `thirty_retention_count` int(11) DEFAULT NULL,
-  `deposit_user_count` int(11) DEFAULT NULL,
-  `new_deposit_user_count` int(11) DEFAULT NULL,
-  `consume_user_count` int(11) DEFAULT NULL,
-  `new_consume_user_count` int(11) DEFAULT NULL,
-  `currency_total` float DEFAULT NULL,
-  `paid_currency_total` float DEFAULT NULL,
-  `deposit_total` float DEFAULT NULL,
-  `consume_total` float DEFAULT NULL,
-  `peak_user_count` int(11) DEFAULT NULL,
-  `total_time` int(11) DEFAULT NULL,
-  `paid_total_time` int(11) DEFAULT NULL,
-  `deposit_login_count` int(11) DEFAULT NULL,
-  `new_deposit_login_count` int(11) DEFAULT NULL,
-  `new_login_count_15` int(11) DEFAULT NULL,
-  `new_login_count_30` int(11) DEFAULT NULL,
-  `new_login_count_60` int(11) DEFAULT NULL,
-  `new_login_count_90` int(11) DEFAULT NULL,
-  `new_login_count_120` int(11) DEFAULT NULL,
-  `new_login_count_more` int(11) DEFAULT NULL,
-  `login_count_15` int(11) DEFAULT NULL,
-  `login_count_30` int(11) DEFAULT NULL,
-  `login_count_60` int(11) DEFAULT NULL,
-  `login_count_90` int(11) DEFAULT NULL,
-  `login_count_120` int(11) DEFAULT NULL,
-  `login_count_more` int(11) DEFAULT NULL,
-  `deposit_login_count_15` int(11) DEFAULT NULL,
-  `deposit_login_count_30` int(11) DEFAULT NULL,
-  `deposit_login_count_60` int(11) DEFAULT NULL,
-  `deposit_login_count_90` int(11) DEFAULT NULL,
-  `deposit_login_count_120` int(11) DEFAULT NULL,
-  `deposit_login_count_more` int(11) DEFAULT NULL,
-  `new_deposit_login_count_15` int(11) DEFAULT NULL,
-  `new_deposit_login_count_30` int(11) DEFAULT NULL,
-  `new_deposit_login_count_60` int(11) DEFAULT NULL,
-  `new_deposit_login_count_90` int(11) DEFAULT NULL,
-  `new_deposit_login_count_120` int(11) DEFAULT NULL,
-  `new_deposit_login_count_more` int(11) DEFAULT NULL,
-  `one_return_count` int(11) DEFAULT NULL,
-  `three_return_count` int(11) DEFAULT NULL,
-  `one_ltv` int(11) DEFAULT NULL,
-  `seven_ltv` int(11) DEFAULT NULL,
-  `fourteen_ltv` int(11) DEFAULT NULL,
-  `thirty_ltv` int(11) DEFAULT NULL,
-  `sixty_ltv` int(11) DEFAULT NULL,
-  `ninety_ltv` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1760 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `testaccounts`
 --
 
@@ -706,36 +828,6 @@ CREATE TABLE `users` (
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `external_id_UNIQUE` (`external_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-
---
--- Table structure for table `weekly_statistics`
---
-
-DROP TABLE IF EXISTS `weekly_statistics`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `weekly_statistics` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `game_id` varchar(20) NOT NULL,
-  `date` date NOT NULL,
-  `one_retention_count` varchar(11) DEFAULT NULL,
-  `one_retention_all_count` varchar(11) DEFAULT NULL,
-  `return_count` int(11) DEFAULT NULL,
-  `login_count` int(11) DEFAULT NULL,
-  `new_login_count` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=367 DEFAULT CHARSET=latin1;
-/*!40101 SET character_set_client = @saved_cs_client */;
-/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
-
-/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
-/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
 
 CREATE TABLE `events` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '活動編號',
