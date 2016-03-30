@@ -1,3 +1,4 @@
+
 $(function()
 {
 	if (typeof $.validator != "undefined")
@@ -386,6 +387,17 @@ function leOpenDialog(n, i, e, o)
 		});
 		break;
 	}
+	var s = ($(window).width()-$(u).width())/2,r=($(window).height()-$(u).height())/3+$(document).scrollTop();
+	$(u).css("left",s),$(u).css("top",r);
+}
+
+function leLoading()
+{
+    var t = leShowScreenMask(.3);
+	var u = leAppend(t,"img",{"class":"le_loading_frm"});
+
+	$(u).attr('src', 'https://game.longeplay.com.tw/p/image/loading.gif');
+	
 	var s = ($(window).width()-$(u).width())/2,r=($(window).height()-$(u).height())/3+$(document).scrollTop();
 	$(u).css("left",s),$(u).css("top",r);
 }
