@@ -117,3 +117,10 @@
 	background-color:#e0e0e0;
 	background:linear-gradient(to bottom,#e0e0e0,#e0e0e0);
 }
+.le_loading_frm {
+	position:absolute;
+	width:50%;
+	min-width:240px;
+	max-width:240px;
+	border-radius:8px;
+}

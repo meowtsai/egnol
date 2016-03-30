@@ -761,6 +761,7 @@ CREATE TABLE `user_billing` (
   `uid` int(11) NOT NULL,
   `transaction_type` varchar(20) DEFAULT NULL,
   `transaction_id` int(11) DEFAULT NULL,
+  `partner_order_id` varchar(40) DEFAULT NULL,
   `billing_type` tinyint(3) DEFAULT NULL,
   `amount` int(6) DEFAULT NULL,
   `result` tinyint(3) DEFAULT NULL,
@@ -835,13 +836,16 @@ CREATE TABLE `events` (
   `event_name` varchar(20) NOT NULL COMMENT '活動名稱',
   `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '活動類型',
   `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '活動狀態',
+  `priority` tinyint(4) NOT NULL DEFAULT '0' COMMENT '顯示優先次序',
   `begin_time` datetime DEFAULT NULL COMMENT '活動開始時間',
   `end_time` datetime DEFAULT NULL COMMENT '活動結束時間',
   `fulfill_time` datetime DEFAULT NULL COMMENT '兌換期限(若有兌換獎勵)',
+  `url` varchar(255) DEFAULT NULL COMMENT '活動官網或說明頁',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
+/* type=0, 序號發放活動 */
+/* status=0, 關閉 */
+/* status=1, 開啟 */
 
 CREATE TABLE `event_serial` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -857,19 +861,13 @@ CREATE TABLE `event_serial` (
 /* personal_id 欄位為使用在發獎勵給非會員時用來辨認使用者身分 */;
 
 
-CREATE TABLE `log_event_serial` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `event_id` int(11) NOT NULL,
-  `count` int(11) NOT NULL,
-  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-
-CREATE TABLE `user_facebook` (
-  `fb_id` varchar(50) DEFAULT NULL COMMENT 'Facebook 使用者 id for App',
-  `app_id` varchar(50) DEFAULT NULL COMMENT 'Facebook AppID',
-  `uid` varchar(20) DEFAULT NULL COMMENT '龍邑會員 id',
-  `create_time` datetime DEFAULT NULL COMMENT '建立時間',
-  PRIMARY KEY (`fb_id`)
+CREATE TABLE `news` (
+  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '編號',
+  `game_id` varchar(20) DEFAULT NULL COMMENT '對應遊戲',
+  `title` varchar(20) NOT NULL COMMENT '標題',
+  `type` tinyint(4) NOT NULL DEFAULT '0' COMMENT '類型',
+  `content` varchar(1000) NOT NULL COMMENT '公告內容',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `link` varchar(255) DEFAULT NULL COMMENT '連結',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

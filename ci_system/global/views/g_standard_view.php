@@ -27,6 +27,10 @@
 <script type="text/javascript" src="<?=$longe_url?>p/js/background_size_emu.js"></script>
 <![endif]-->
 
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+<link rel="stylesheet" type="text/css" href="<?=$longe_url?>p/css/default.css"/>
+<script src='<?=$longe_url?>p/js/default.js'></script>
 
 <script src="https://s3.amazonaws.com/nwapi/nwmatcher/nwmatcher-1.2.5-min.js"></script>
 <?
@@ -37,22 +41,32 @@
 	}
 	echo $css_link;
 ?>
-</head>
-
-<body>
-<?=$tracker_code?>
-<? $this->load->view("g_top_bar"); ?>
-<?=$layout_content?>
-<? $this->load->view("g_copyright")?>
-</body>
-</html>
-
-<!--slider -->
 <link rel="stylesheet" type="text/css" href="<?=$longe_url?>p/css/slick.css"/>
 <link rel="stylesheet" type="text/css" href="<?=$longe_url?>p/css/slick-theme.css"/>
-<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
-<script type="text/javascript" src="https://code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
 <script type="text/javascript" src="<?=$longe_url?>p/js/slick.min.js"></script>
+
+<script src="/p/js/jquery.slicknav.min.js" type="text/javascript"></script>
+<link href="/p/css/slicknav.css" rel="stylesheet" type="text/css" />
+<?
+	echo $js_include;
+?>
+</head>
+<body>
+<?=$tracker_code?>
+<?
+	$this->load->view("g_top_bar");
+	
+	if(isset($game_events))
+		$this->load->view("g_banner");
+?>
+<?=$layout_content?>
+<?
+	if(!empty($is_system_page))
+		$this->load->view("g_copyright");
+?>
+</body>
+
+<!--slider -->
 <script>
 $(document).ready(function(){
   $('.game-slider').slick({
@@ -65,17 +79,10 @@ $(document).ready(function(){
 });
 </script>
 
-
 <!--nav -->
-<script src="<?=$longe_url?>p/js/jquery.slicknav.min.js" type="text/javascript"></script>
-<link href="<?=$longe_url?>p/css/slicknav.css" rel="stylesheet" type="text/css" />
 <script>
 $('#menu').slicknav({
 		label:'',
 });
 </script>
-
-<?
-	echo $js_include;
-?>
-<script src='<?=$longe_url?>p/js/default.js'></script>
+</html>

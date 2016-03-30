@@ -1168,14 +1168,18 @@ class Api2 extends MY_Controller
 			if($app_key !== "")
 				break;
 		}
+		
 		if($app_key === "")
 			die(json_encode(array("result"=>0, "msg"=>"App key not found.")));
 		
 		$time = time();
 		$rand = strval(rand());
 		
-		$str = "{$order_id}{$time}{$price}{$rand}{$product_id}{$app_key}{$transaction_id}{$currency}{$partner_order_id}";
-        $verify = MD5($str) . $rand;
+		$server_num = 0;
+		$paytype = 'inapp';
+		
+		$str = "{$currency}{$order_id}{$partner_order_id}{$paytype}{$price}{$product_id}{$character_id}{$server_num}{$time}{$transaction_id}{$uid}{$app_key}";
+        $verify = MD5($str);
 
         $res = $this->_curl_post($game_api[$app_id]['billing'], array(
 													'order_id'=>$order_id,
@@ -1184,6 +1188,10 @@ class Api2 extends MY_Controller
 													'product_id'=>$product_id,
 													'price'=>$price,
 													'currency'=>$currency,
+													'uid'=>$uid,
+													'role_id'=>$character_id,
+													'server_id'=>$server_num,
+													'pay_type'=>$paytype,
 													'verify'=>$verify,
 													'time'=>$time));
 
@@ -1191,8 +1199,6 @@ class Api2 extends MY_Controller
 			die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
 		else
 			die(json_encode(array("result"=>0, "msg"=>$res->msg)));
-		
-//		die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
 	}
 
 	// Android IAP 儲值選擇畫面
@@ -1269,11 +1275,8 @@ class Api2 extends MY_Controller
 		// 要先驗證資料庫的訂單
 		// 1. 檢查 Product ID
 		// 2. 檢查資料庫紀錄是否符合
-		//
 		
 		// 驗證成功, 結掉訂單
-		//
-		//
 */		
 		$partner_api = $this->config->item("partner_api");
 		$game_api = $this->config->item("game_api");
@@ -1304,8 +1307,11 @@ class Api2 extends MY_Controller
 		$time = time();
 		$rand = strval(rand());
 		
-		$str = "{$order_id}{$time}{$price}{$rand}{$product_id}{$app_key}{$transaction_id}{$currency}{$partner_order_id}";
-        $verify = MD5($str) . $rand;
+		$server_num = 0;
+		$paytype = 'inapp';
+		
+		$str = "{$currency}{$order_id}{$partner_order_id}{$paytype}{$price}{$product_id}{$character_id}{$server_num}{$time}{$transaction_id}{$uid}{$app_key}";
+        $verify = MD5($str);
 
         $res = $this->_curl_post($game_api[$app_id]['billing'], array(
 													'order_id'=>$order_id,
@@ -1314,6 +1320,10 @@ class Api2 extends MY_Controller
 													'product_id'=>$product_id,
 													'price'=>$price,
 													'currency'=>$currency,
+													'uid'=>$uid,
+													'role_id'=>$character_id,
+													'server_id'=>$server_num,
+													'pay_type'=>$paytype,
 													'verify'=>$verify,
 													'time'=>$time));
 
@@ -1321,8 +1331,6 @@ class Api2 extends MY_Controller
 			die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
 		else
 			die(json_encode(array("result"=>0, "msg"=>$res->msg)));
-		
-//		die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
 	}
 	
 	// 客服頁面
@@ -1492,6 +1500,8 @@ class Api2 extends MY_Controller
 		$uid = $this->input->post("uid");
 		$character_id = $this->input->post("character_id");
 		$character_name = $this->input->post("character_name");
+		if(empty($character_name))
+			$character_name = $this->input->post("caracter_name");
 
 		if (empty($uid) || empty($server_id) || empty($game_id) || empty($character_name))
 		{
