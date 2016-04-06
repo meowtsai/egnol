@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?=$meta["title"]?></title>
 
-<link rel="shortcut icon" href="<?=$game_url?>p/img/favicon.png"/>
+<link rel="shortcut icon" href="<?=$longe_url?>p/img/favicon.png"/>
 <link rel="Bookmark" href=""/>
 <meta name="keywords" content="">
 <meta name="description" content="" />
