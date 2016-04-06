@@ -41,8 +41,12 @@ $(document).ready(function()
 		}
 	});
 	
-    $('#continue').on('click',function(event){
-		$(this).hide();
-		$('#doSubmit').trigger('click');
-    });
+	setTimeout(function()
+	{
+		$('#continue').on('click',function(event)
+		{
+			$(this).hide();
+			$('#doSubmit').trigger('click');
+		});
+	}, 500);
 });
