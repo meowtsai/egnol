@@ -211,7 +211,7 @@
                                 <?$exchange_rate=1;?>
                                 <? foreach($games->result() as $row): ?>
                                 <?if($this->input->post("game")==$row->game_id) $exchange_rate=$row->exchange_rate?>
-                                <option value="<?=$row->game_id?>" rate="<?=$row->exchange_rate?>" goldname="<?=$row->currency?>" <?=($this->input->post("game")==$row->game_id ? 'selected="selected"' : '')?>><?=$row->name?></option>
+                                <option value="<?=$row->game_id?>" rate="<?=$row->exchange_rate?>" goldname="<?=$row->currency?>" <?=($this->input->post("game")==$row->game_id ? 'selected="selected"' : '')?>><?=$row->name?><?=($row->is_active)?"":"(已關閉)"?></option>
                                 <? endforeach;?>
                             </select>
                         </td>

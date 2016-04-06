@@ -114,22 +114,40 @@ class Cron extends CI_Controller {
 			case "weekly":
 			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND WEEKOFYEAR(create_time) = WEEKOFYEAR('{$date}')";
 				$save_table = "weekly_statistics";
+                $span_select= "
+                    COUNT(CASE WHEN u.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'login_facebook_count',
+                    COUNT(CASE WHEN u.external_id LIKE '%google' THEN 1 ELSE NULL END) 'login_google_count',
+                    COUNT(CASE WHEN u.external_id IS NULL THEN 1 ELSE NULL END) 'login_longe_count',
+                    COUNT(CASE WHEN u.external_id LIKE '%device' THEN 1 ELSE NULL END) 'login_quick_count'";
 				break;
 			
 			case "monthly":
 			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}')";
 				$save_table = "monthly_statistics";
+                $span_select= "
+                    COUNT(CASE WHEN u.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'login_facebook_count',
+                    COUNT(CASE WHEN u.external_id LIKE '%google' THEN 1 ELSE NULL END) 'login_google_count',
+                    COUNT(CASE WHEN u.external_id IS NULL THEN 1 ELSE NULL END) 'login_longe_count',
+                    COUNT(CASE WHEN u.external_id LIKE '%device' THEN 1 ELSE NULL END) 'login_quick_count'";
 				break;
 				
 			default:
 				$span_query = "DATE(create_time) = '{$date}'";
 				$save_table = "statistics";
+                $span_select= "
+                    COUNT(CASE WHEN tmp.first_login=1 AND u.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'new_login_facebook_count',
+                    COUNT(CASE WHEN tmp.first_login=1 AND u.external_id LIKE '%google' THEN 1 ELSE NULL END) 'new_login_google_count',
+                    COUNT(CASE WHEN tmp.first_login=1 AND u.external_id IS NULL THEN 1 ELSE NULL END) 'new_login_longe_count',
+                    COUNT(CASE WHEN tmp.first_login=1 AND u.external_id LIKE '%device' THEN 1 ELSE NULL END) 'new_login_quick_count'";
 				break;
 		}
             
         $query = $this->DB2->query("
 			SELECT
-				game_id, COUNT(uid) 'login_count', SUM(first_login) 'new_login_count'
+				tmp.game_id, 
+                COUNT(tmp.uid) 'login_count', 
+                SUM(tmp.first_login) 'new_login_count',
+				{$span_select}
 			FROM
 				(SELECT
 					game_id, uid, SUM(is_first) 'first_login'
@@ -139,7 +157,8 @@ class Cron extends CI_Controller {
 					".$span_query."
                         ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
 				GROUP BY game_id, uid) tmp
-			GROUP BY game_id");	
+            JOIN users u ON tmp.uid=u.uid
+			GROUP BY tmp.game_id");	
 
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
@@ -149,7 +168,19 @@ class Cron extends CI_Controller {
 				    'login_count' => $row->login_count,
 				    'new_login_count' => $row->new_login_count
 			    );
-			
+                
+                if ($span=='weekly' || $span=='monthly') {
+                    $data['login_facebook_count'] = $row->login_facebook_count;
+                    $data['login_google_count'] = $row->login_google_count;
+                    $data['login_longe_count'] = $row->login_longe_count;
+                    $data['login_quick_count'] = $row->login_quick_count;
+                } else {
+                    $data['new_login_facebook_count'] = $row->new_login_facebook_count;
+                    $data['new_login_google_count'] = $row->new_login_google_count;
+                    $data['new_login_longe_count'] = $row->new_login_longe_count;
+                    $data['new_login_quick_count'] = $row->new_login_quick_count;
+                }
+                
 			    $this->save_statistics($data, $save_table);
 		    }
 		}
@@ -227,6 +258,7 @@ class Cron extends CI_Controller {
 				
 			default:
 				$span_query = "DATE(create_time) = '{$date}'";
+				$span_new_query = "DATE(l.create_time) <= '{$date}'";
 				$save_table = "statistics";
 				break;
 		}
@@ -257,6 +289,52 @@ class Cron extends CI_Controller {
 			    $this->save_statistics($data, $save_table);
 		    }
 		}
+        
+        if ($span=="daily") {
+            $new_query = $this->DB2->query("
+                SELECT
+                    game_id, 
+                    COUNT(device_id) 'new_device_count',
+                    COUNT(CASE WHEN external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'new_device_facebook_count',
+                    COUNT(CASE WHEN external_id LIKE '%google' THEN 1 ELSE NULL END) 'new_device_google_count',
+                    COUNT(CASE WHEN external_id IS NULL THEN 1 ELSE NULL END) 'new_device_longe_count',
+                    COUNT(CASE WHEN external_id LIKE '%device' THEN 1 ELSE NULL END) 'new_device_quick_count'
+                FROM
+                    (SELECT
+                        game_id, device_id, external_id
+                    FROM
+                        (SELECT
+                            l.game_id, l.device_id, MIN(l.create_time) 'create_time', MIN(u.external_id) 'external_id'
+                        FROM
+                            log_game_logins l
+                        JOIN users u ON l.uid=u.uid
+                        WHERE
+                            ".$span_new_query."
+                            AND l.device_id IS NOT NULL
+                                ".(($this->testaccounts)?" AND l.uid NOT IN (".$this->testaccounts.") ":"")."
+                        GROUP BY l.game_id, l.device_id) first
+                    WHERE
+                        ".$span_query."
+                        AND device_id IS NOT NULL
+                    GROUP BY game_id, device_id) tmp
+                GROUP BY game_id");
+
+            if ($new_query->num_rows() > 0) {
+                foreach ($new_query->result() as $row) {
+                    $data = array(
+                        'game_id' => $row->game_id,
+                        'date' => $date,
+                        'new_device_count' => $row->new_device_count,
+                        'new_device_facebook_count' => $row->new_device_facebook_count,
+                        'new_device_google_count' => $row->new_device_google_count,
+                        'new_device_longe_count' => $row->new_device_longe_count,
+                        'new_device_quick_count' => $row->new_device_quick_count
+                    );
+                
+                    $this->save_statistics($data, $save_table);
+                }
+            }
+        }
 		
 		echo "generate_device_".$span."_statistics done - ".$date.PHP_EOL;
 	}
@@ -269,26 +347,26 @@ class Cron extends CI_Controller {
 		
 		switch ($interval) {
 			case 1:
-			    $update_field = 'one_retention';
+			    $retention_text = 'one_retention';
 				break;
 			case 3:
-			    $update_field = 'three_retention';
+			    $retention_text = 'three_retention';
 				break;
 			case 7:
-			    $update_field = 'seven_retention';
+			    $retention_text = 'seven_retention';
 				break;
 			case 14:
-			    $update_field = 'fourteen_retention';
+			    $retention_text = 'fourteen_retention';
 				break;
 			case 30:
-			    $update_field = 'thirty_retention';
+			    $retention_text = 'thirty_retention';
 				break;
 			default:
 			    echo "Only 1,3,7,14,30 allowed for second parameter!";
 				return 0;
 		}
 		
-		$update_field = ($is_first) ?  $update_field.'_count' : $update_field.'_all_count';
+		$update_field = ($is_first) ?  $retention_text.'_count' : $retention_text.'_all_count';
 
         switch($span) {
 			case "weekly":
@@ -313,53 +391,124 @@ class Cron extends CI_Controller {
 				$save_table = "statistics";
 				break;
 		}
-		
-        $query = $this->DB2->query("
-			SELECT 
-				game_id, SUM(is_retention) 'retention'
-			FROM
-			(
-				SELECT 
-					lgl2.game_id, 1 'is_retention'
-				FROM
-				(
-					SELECT 
-						uid, game_id, MIN(create_time)
-					FROM
-						log_game_logins
-					WHERE
-						".$span_query1."
-							".(($is_first) ? " AND is_first = 1 " : "")."
-					GROUP BY uid, game_id
-				) AS lgl,
-				(
-					SELECT 
-						uid, game_id, MIN(create_time)
-					FROM
-						log_game_logins
-					WHERE
-						".$span_query2."
-					GROUP BY uid, game_id
-				) AS lgl2
-				WHERE
-					lgl2.uid = lgl.uid
-						AND lgl2.game_id = lgl.game_id
-                        ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
-			) AS tmp
-			GROUP BY game_id");	
+        
+		if ($span=="daily") {
+            $query = $this->DB2->query("
+                SELECT 
+                    game_id,
+                    SUM(is_retention) 'retention',
+                    COUNT(facebook_login) 'facebook_count',
+                    COUNT(google_login) 'google_count',
+                    COUNT(longe_login) 'longe_count',
+                    COUNT(quick_login) 'quick_count'
+                FROM
+                (
+                    SELECT 
+                        lgl2.game_id,
+                        1 'is_retention',
+                        CASE WHEN lgl.external_id LIKE '%facebook' THEN 1 ELSE NULL END 'facebook_login',
+                        CASE WHEN lgl.external_id LIKE '%google' THEN 1 ELSE NULL END 'google_login',
+                        CASE WHEN lgl.external_id IS NULL THEN 1 ELSE NULL END 'longe_login',
+                        CASE WHEN lgl.external_id LIKE '%device' THEN 1 ELSE NULL END 'quick_login'
+                    FROM
+                    (
+                        SELECT 
+                            l.uid, l.game_id, MIN(l.create_time), MIN(u.external_id) 'external_id'
+                        FROM
+                            log_game_logins l
+                        JOIN users u ON l.uid=u.uid
+                        WHERE
+                            DATE(l.create_time) = '{$date}'
+                                ".(($is_first) ? " AND l.is_first = 1 " : "")."
+                        GROUP BY l.uid, l.game_id
+                    ) AS lgl,
+                    (
+                        SELECT 
+                            uid, game_id, MIN(create_time)
+                        FROM
+                            log_game_logins l
+                        WHERE
+                            ".$span_query2."
+                        GROUP BY uid, game_id
+                    ) AS lgl2
+                    WHERE
+                        lgl2.uid = lgl.uid
+                            AND lgl2.game_id = lgl.game_id
+                            ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
+                ) AS tmp
+                GROUP BY game_id");	
 
-		if ($query->num_rows() > 0) {
-		    foreach ($query->result() as $row) {
-		
-				$data = array(
-					'game_id' => $row->game_id,
-					'date' => $date,
-					$update_field => $row->retention
-				);
-				
-			    $this->save_statistics($data, $save_table);
-		    }
-		}
+            if ($query->num_rows() > 0) {
+                foreach ($query->result() as $row) {
+                    if ($is_first) {
+                        $data = array(
+                            'game_id' => $row->game_id,
+                            'date' => $date,
+                            $update_field => $row->retention,
+                            $retention_text.'_facebook_count' => $row->facebook_count,
+                            $retention_text.'_google_count' => $row->google_count,
+                            $retention_text.'_longe_count' => $row->longe_count,
+                            $retention_text.'_quick_count' => $row->quick_count
+                        );
+                    } else {
+                        $data = array(
+                            'game_id' => $row->game_id,
+                            'date' => $date,
+                            $update_field => $row->retention
+                        );
+                    }
+                    
+                    $this->save_statistics($data, $save_table);
+                }
+            }
+        } else {
+            $query = $this->DB2->query("
+                SELECT 
+                    game_id, SUM(is_retention) 'retention'
+                FROM
+                (
+                    SELECT 
+                        lgl2.game_id, 1 'is_retention'
+                    FROM
+                    (
+                        SELECT 
+                            uid, game_id, MIN(create_time)
+                        FROM
+                            log_game_logins
+                        WHERE
+                            ".$span_query1."
+                                ".(($is_first) ? " AND is_first = 1 " : "")."
+                        GROUP BY uid, game_id
+                    ) AS lgl,
+                    (
+                        SELECT 
+                            uid, game_id, MIN(create_time)
+                        FROM
+                            log_game_logins
+                        WHERE
+                            ".$span_query2."
+                        GROUP BY uid, game_id
+                    ) AS lgl2
+                    WHERE
+                        lgl2.uid = lgl.uid
+                            AND lgl2.game_id = lgl.game_id
+                            ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
+                ) AS tmp
+                GROUP BY game_id");	
+
+            if ($query->num_rows() > 0) {
+                foreach ($query->result() as $row) {
+            
+                    $data = array(
+                        'game_id' => $row->game_id,
+                        'date' => $date,
+                        $update_field => $row->retention
+                    );
+                    
+                    $this->save_statistics($data, $save_table);
+                }
+            }
+        }
 		
 		echo "generate_".$interval."_retention_".$span."_statistics(".(($is_first) ? "first" : "all").") done - ".$date.PHP_EOL;
 	}
@@ -372,16 +521,18 @@ class Cron extends CI_Controller {
 		
         switch($span) {
 			case "weekly":
+                $return_text = 'return';
 				$update_field = 'return_count';
-			    $span_query1 = "YEAR(create_time) = YEAR('{$date}') AND WEEKOFYEAR(create_time) = WEEKOFYEAR('{$date}')";
+			    $span_query1 = "YEAR(l.create_time) = YEAR('{$date}') AND WEEKOFYEAR(l.create_time) = WEEKOFYEAR('{$date}')";
 				$span_query2 = "YEAR(create_time) = YEAR(DATE_SUB(DATE('{$date}'), INTERVAL 1 WEEK))
 				                AND WEEKOFYEAR(create_time) = WEEKOFYEAR(DATE_SUB(DATE('{$date}'), INTERVAL 1 WEEK))";
 				$save_table = "weekly_statistics";
 				break;
 			
 			case "monthly":
+                $return_text = 'return';
 				$update_field = 'return_count';
-			    $span_query1 = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}')";
+			    $span_query1 = "YEAR(l.create_time) = YEAR('{$date}') AND MONTH(l.create_time) = MONTH('{$date}')";
 			    $span_query2 = "YEAR(log_game_logins.create_time) = YEAR(DATE_ADD(DATE('{$date}'), INTERVAL 1 MONTH))
 				               AND MONTH(log_game_logins.create_time) = MONTH(DATE_ADD(DATE('{$date}'), INTERVAL 1 MONTH))";
 				$save_table = "monthly_statistics";
@@ -390,33 +541,41 @@ class Cron extends CI_Controller {
 			default:
 				switch ($interval) {
 					case 1:
+                        $return_text = 'one_return';
 						$update_field = 'one_return_count';
 						$span_query2 = "DATE(create_time) = DATE_SUB(DATE('{$date}'), INTERVAL 1 DAY)";
 						break;
 					case 3:
+                        $return_text = 'three_return';
 						$update_field = 'three_return_count';
 						$span_query2 = "DATE(create_time) BETWEEN DATE_SUB(DATE('{$date}'), INTERVAL 3 DAY) AND DATE_SUB(DATE('{$date}'), INTERVAL 1 DAY)";
 						break;
 				}
-				$span_query1 = "DATE(create_time) = '{$date}'";
+				$span_query1 = "DATE(l.create_time) = '{$date}'";
 				$save_table = "statistics";
 				break;
 		}
 		
         $query = $this->DB2->query("
 			SELECT 
-				lgl.game_id, COUNT(lgl.uid) '{$update_field}'
+				lgl.game_id,
+                COUNT(lgl.uid) '{$update_field}',
+                COUNT(CASE WHEN lgl.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'facebook_count',
+                COUNT(CASE WHEN lgl.external_id LIKE '%google' THEN 1 ELSE NULL END) 'google_count',
+                COUNT(CASE WHEN lgl.external_id IS NULL THEN 1 ELSE NULL END) 'longe_count',
+                COUNT(CASE WHEN lgl.external_id LIKE '%device' THEN 1 ELSE NULL END) 'quick_count'
 			FROM
 			(
 				SELECT 
-					uid, game_id, MIN(create_time)
+					l.uid, l.game_id, MIN(l.create_time), MIN(u.external_id) 'external_id'
 				FROM
-					log_game_logins lgl
+					log_game_logins l
+                JOIN users u ON l.uid=u.uid
 				WHERE
 					".$span_query1."
-						AND is_first <> 1
-                        ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
-				GROUP BY uid, game_id
+						AND l.is_first <> 1
+                        ".(($this->testaccounts)?" AND l.uid NOT IN (".$this->testaccounts.") ":"")."
+				GROUP BY l.uid, l.game_id
 			) AS lgl
 				LEFT JOIN
 			(
@@ -439,7 +598,11 @@ class Cron extends CI_Controller {
 				$data = array(
 					'game_id' => $row->game_id,
 					'date' => $date,
-					$update_field => $row->$update_field 
+					$update_field => $row->$update_field,
+                    $return_text.'_facebook_count' => $row->facebook_count,
+                    $return_text.'_google_count' => $row->google_count,
+                    $return_text.'_longe_count' => $row->longe_count,
+                    $return_text.'_quick_count' => $row->quick_count,
 				);
 				
 			    $this->save_statistics($data, $save_table);
@@ -1248,6 +1411,16 @@ class Cron extends CI_Controller {
 		    $date_30=date("Y-m-d",strtotime("-30 days", strtotime($date)));
 		}
         
+		$this->generate_login_statistics($date);
+		$this->generate_device_statistics($date);
+		$this->generate_retention_statistics($date_1, 1);
+		$this->generate_retention_statistics($date_3, 3);
+		$this->generate_retention_statistics($date_7, 7);
+		$this->generate_retention_statistics($date_14, 14);
+		$this->generate_retention_statistics($date_30, 30);
+		$this->generate_retention_statistics($date_1, 1, 'daily', FALSE);
+		$this->generate_return_statistics($date, 1);
+		$this->generate_return_statistics($date, 3);
 		/*
         $this->generate_statistics_blank($date);
 		$this->generate_login_statistics($date);
@@ -1272,9 +1445,6 @@ class Cron extends CI_Controller {
 		$this->generate_new_user_game_length_statistics($date);
 		$this->generate_deposit_user_game_length_statistics($date);
 		$this->generate_new_deposit_user_game_length_statistics($date);
-        */
-		$this->generate_new_user_billing_statistics($date);
-		$this->generate_device_statistics($date);
 		$this->generate_new_user_lifetime_value_statistics($date, 1);
 		$this->generate_new_user_lifetime_value_statistics($date, 2);
 		$this->generate_new_user_lifetime_value_statistics($date, 3);
@@ -1286,31 +1456,42 @@ class Cron extends CI_Controller {
 		$this->generate_new_user_lifetime_value_statistics($date, 30);
 		$this->generate_new_user_lifetime_value_statistics($date, 60);
 		$this->generate_new_user_lifetime_value_statistics($date, 90);
+        */
 		
 		if ("7"==date("N", strtotime($check_date))) {
-            $this->generate_device_statistics($date, 'weekly');
+			$this->generate_login_statistics($date, 'weekly');
+			$date_week=date("Y-m-d",strtotime("-1 week", strtotime($check_date)));
+			$this->generate_retention_statistics($date_week, 1, 'weekly');
+			$this->generate_retention_statistics($date_week, 1, 'weekly', FALSE);
+			$this->generate_return_statistics($date, 1, 'weekly');
 		    /*
+            $this->generate_device_statistics($date, 'weekly');
             $this->generate_statistics_blank($date, 'weekly');
 			$this->generate_login_statistics($date, 'weekly');
 			$date_week=date("Y-m-d",strtotime("-1 week", strtotime($check_date)));
 			$this->generate_retention_statistics($date_week, 1, 'weekly');
 			$this->generate_retention_statistics($date_week, 1, 'weekly', FALSE);
 			$this->generate_return_statistics($date, 1, 'weekly');
-            */
             $this->generate_new_user_billing_statistics($date, 'weekly');
+            */
 		}
 		
 		if ($date==date("Y-m-t", strtotime($check_date))) {
-            $this->generate_device_statistics($date, 'monthly');
+			$this->generate_login_statistics($date, 'monthly');
+			$date_month=date("Y-m-t",strtotime("-31 days", strtotime($check_date)));
+			$this->generate_retention_statistics($date_month, 1, 'monthly');
+			$this->generate_retention_statistics($date_month, 1, 'monthly', FALSE);
+			$this->generate_return_statistics($date, 1, 'monthly');
 		    /*
+            $this->generate_device_statistics($date, 'monthly');
 		    $this->generate_statistics_blank($date, 'monthly');
 			$this->generate_login_statistics($date, 'monthly');
 			$date_month=date("Y-m-t",strtotime("-31 days", strtotime($check_date)));
 			$this->generate_retention_statistics($date_month, 1, 'monthly');
 			$this->generate_retention_statistics($date_month, 1, 'monthly', FALSE);
 			$this->generate_return_statistics($date, 1, 'monthly');
-            */
             $this->generate_new_user_billing_statistics($date, 'monthly');
+            */
 		}
 	}
 	
