@@ -17,20 +17,34 @@
 		
 		if ($row->game_id == $game_id) $exchange_rate = $row->exchange_rate;
 	}
+    
+    if (empty($action)) $action='營運數據';
 ?>
 <div id="func_bar">
 	
 </div>
 
 <ul class="nav nav-tabs">
-    <li class="<?=empty($span) ? "active" : ""?>">
-        <a href="<?=site_url("statistics/operation?game_id={$this->game_id}")?>">日報表</a>
+    <li class="<?=(empty($span)) ? "active" : ""?>">
+        <a href="<?=site_url("statistics/operation?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">日報表</a>
     </li>
     <li class="<?=($span=='weekly') ? "active" : ""?>">
-        <a href="<?=site_url("statistics/operation?game_id={$this->game_id}&span=weekly")?>">週報表</a>
+        <a href="<?=site_url("statistics/operation?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}&span=weekly")?>">週報表</a>
     </li>
     <li class="<?=($span=='monthly') ? "active" : ""?>">
-        <a href="<?=site_url("statistics/operation?game_id={$this->game_id}&span=monthly")?>">月報表</a>
+        <a href="<?=site_url("statistics/operation?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}&span=monthly")?>">月報表</a>
+    </li>
+    <li class="">
+        <a href="<?=site_url("statistics/deposit_level?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">儲值區間分析</a>
+    </li>
+    <li class="">
+        <a href="<?=site_url("statistics/deposit_analysis?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">會員儲值分析</a>
+    </li>
+    <li class="">
+        <a href="<?=site_url("statistics/lifetime_value?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">LTV分析</a>
+    </li>
+    <li class="">
+        <a href="<?=site_url("statistics/game_consumes?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">消費分析</a>
     </li>
 </ul>
 
@@ -59,66 +73,26 @@
 		<input type="submit" class="btn btn-small btn-inverse" name="action" value="營運數據">	
 	
 	</div>
-	
-	<p class="text-info">
-			<span class="label label-info">欄位說明</span>
-			廣告參數是使用like, 規則為 like '廣告%'
-		</p>	
 		
 </form>
 
-<?
-    switch ($this->input->get("span")) {
-		case "weekly":
-			$retention_string          = "前1週新增用戶週回訪數";
-			$retention_rate_string     = "前1週新增用戶週回訪率";
-			$retention_all_string      = "前1週登入用戶週回訪數";
-			$retention_all_rate_string = "前1週登入用戶週回訪率";
-			break;
-			
-		case "monthly":
-			$retention_string          = "前1月新增用戶月回訪數";
-			$retention_rate_string     = "前1月新增用戶月回訪率";
-			$retention_all_string      = "前1月登入用戶月回訪數";
-			$retention_all_rate_string = "前1月登入用戶月回訪率";
-			break;
-			
-		default:
-			$retention_string          = "前1日新增用戶次日留存";
-			$retention_rate_string     = "前1日新增用戶次日留存率";
-			$retention_all_string      = "前1日登入用戶次日留存";
-			$retention_all_rate_string = "前1日登入用戶次日留存率";
-			break;
-	}
-    if ($query):?>
+<?if ($query):?>
 	<? if ($query->num_rows() == 0): echo '<div class="none">查無資料</div>'; else: ?>
 	<table class="table table-striped table-bordered" style="width:auto;">
 		<thead>
 			<tr>
 				<th nowrap="nowrap">日期</th>
-				<th style="width:70px">新增用戶</th>
+				<th style="width:70px">註冊</th>
 				<th style="width:70px">登入用戶</th>
-				<th style="width:70px">登入設備</th>
-				<th style="width:70px"><?=$retention_string?></th>
-				<th style="width:70px"><?=$retention_rate_string?></th>
-				<th style="width:70px"><?=$retention_all_string?></th>
-				<th style="width:70px"><?=$retention_all_rate_string?></th>
-				<th style="width:70px">新增儲值用戶</th>	
-				<th style="width:70px">儲值用戶</th>
 				<th style="width:70px">付費比</th>
-				<th style="width:70px">新增消費用戶</th>
-				<th style="width:70px">消費用戶</th>
-				<th style="width:70px">商城幣總金額</th>
-				<th style="width:70px">商城幣儲值金額</th>
-				<th style="width:70px">儲值台幣</th>
-				<th style="width:70px">消費台幣</th>
-				<th style="width:70px">儲值金額ARPU</th>
-				<th style="width:70px">儲值金額ARPPU</th>
-				<th style="width:70px">消費金額ARPU</th>
-				<th style="width:70px">峰值在線</th>
-				<th style="width:70px">全用戶平均在線時長(H)</th>
-				<th style="width:70px">儲值用戶平均在線時長(H)</th>
-				<th style="width:70px">千人日登入用戶收益</th>				 	
+				<th style="width:70px">儲值人數</th>
+				<th style="width:70px">ARPPU</th>
+				<th style="width:70px">日營收</th>
+				<th style="width:70px">註冊留存</th>
+				<th style="width:70px">行銷花費</th>
+				<th style="width:70px">新用戶付費</th>
+				<th style="width:70px">付費ROI</th>
+				<th style="width:70px">整體ROI</th>			 	
 			</tr>
 		</thead>
 		<tbody>
@@ -146,33 +120,20 @@
 				}
 				
 				$y_one_retention_p = (($row->y_new_login_count)?$row->y_one_retention_count/$row->y_new_login_count*100:0);
-				$y_one_retention_all_p = (($row->y_login_count)?$row->y_one_retention_all_count/$row->y_login_count*100:0);
 		?>
 			<tr>			
 				<td nowrap="nowrap"><?=$show_date?></td>
 				<td style="text-align:right"><?=number_format($row->new_login_count)?></td>
 				<td style="text-align:right"><?=number_format($row->login_count)?></td>
-				<td style="text-align:right"><?=number_format($row->device_count)?></td>
-				<td style="text-align:right"><?=number_format($row->y_one_retention_count)?></td>
-				<td style="text-align:right"><?=number_format($y_one_retention_p, 2)."%"?></td>
-				<td style="text-align:right"><?=number_format($row->y_one_retention_all_count)?></td>
-				<td style="text-align:right"><?=number_format($y_one_retention_all_p, 2)."%"?></td>
-				<td style="text-align:right"><?=number_format($row->new_deposit_user_count)?></td>
-				<td style="text-align:right"><?=number_format($row->deposit_user_count)?></td>
 				<td style="text-align:right"><?=number_format(($row->login_count)?$row->deposit_user_count/$row->login_count*100:0, 2)."%"?></td>
-				<td style="text-align:right"><?=number_format($row->new_consume_user_count)?></td>
-				<td style="text-align:right"><?=number_format($row->consume_user_count)?></td>
-				<td style="text-align:right"><?=number_format($row->currency_total)?></td>
-				<td style="text-align:right"><?=number_format($exchange_rate*$row->deposit_total)?></td>
-				<td style="text-align:right"><?=number_format($row->deposit_total)?></td>
-				<td style="text-align:right"><?=number_format($row->consume_total)?></td>
-				<td style="text-align:right"><?=number_format(($row->login_count)?$row->deposit_total/$row->login_count:0, 2)?></td>
+				<td style="text-align:right"><?=number_format($row->deposit_user_count)?></td>
 				<td style="text-align:right"><?=number_format(($row->deposit_user_count)?$row->deposit_total/$row->deposit_user_count:0, 2)?></td>
-				<td style="text-align:right"><?=number_format(($row->consume_user_count)?$row->consume_total/$row->consume_user_count:0, 2)?></td>
-				<td style="text-align:right"><?=number_format($row->peak_user_count)?></td>
-				<td style="text-align:right"><?=number_format(($row->login_count)?$row->total_time/$row->login_count/3600:0, 2)?></td>
-				<td style="text-align:right"><?=number_format(($row->deposit_user_count)?$row->paid_total_time/$row->deposit_user_count/3600:0, 2)?></td>
-				<td style="text-align:right"><?=number_format(($row->login_count)?$row->deposit_total/$row->login_count*1000:0, 2)?></td>																
+				<td style="text-align:right"><?=number_format($row->deposit_total)?></td>
+				<td style="text-align:right"><?=number_format($y_one_retention_p, 2)."%"?></td>
+				<td style="text-align:right"><?=number_format(0)?></td>
+				<td style="text-align:right"><?=number_format($row->new_user_deposit_total)?></td>
+				<td style="text-align:right"><?=number_format(0)?></td>
+				<td style="text-align:right"><?=number_format(0)?></td>														
 			</tr>
 		<? endforeach;?>
 		</tbody>

@@ -175,7 +175,7 @@ class Member extends MY_Controller {
             WHERE uid={$uid} AND billing_type=2 AND result=1
         ")->row();
         
-		$games = $this->db->from("games")->where("is_active", "1")->get();
+		$games = $this->db->from("games")->get();
 		$servers = $this->db->order_by("server_id")->get("servers");
 		$characters = $this->db->from("characters")->where("uid", $uid)->get();
         

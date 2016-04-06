@@ -260,12 +260,115 @@ class Statistics extends MY_Controller {
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("end_date", $end_date)
 			->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
 			->set("span", $span)
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
 	}
+    
+    function game_consumes() {
+		$this->zacl->check_login(true);		
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		$this->_init_statistics_layout();
+		$this->load->helper("output_table");
+            
+		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
+		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
+		$game_id = $this->input->get("game_id");
+            
+		if ($this->input->get("action") && $game_id) 
+		{
+			header("Cache-Control: private");	
+            
+            $game = $this->config->item("game");
+            $start_timestamp = strtotime($start_date);
+            $end_timestamp = strtotime($end_date);
+            
+            $this->load->config('g_mongodb');
+            $g_mongodb = $this->config->item('mongo_db');
+            
+            $manager = new MongoDB\Driver\Manager($g_mongodb['url']);
+            
+            try {
+            
+                $itemuse_command = new MongoDB\Driver\Command([
+                    'aggregate' => 'le_UserItemUse',
+                    'pipeline' => [
+                        [
+                            '$match' => ['game_id' => $game_id, 'le_logTime' => ['$gte' => $start_timestamp, '$lte' => $end_timestamp]],
+                        ],
+                        [
+                            '$group' => [
+                                '_id' => ['game_id' => '$game_id', 'le_contentId' => '$le_contentId', 'le_contentType' => '$le_contentType'],
+                                'le_count' => ['$sum' => '$le_count']
+                            ]
+                        ],
+                    ],
+                    'cursor' => new stdClass,
+                ]);
+                $itemuse_cursor = $manager->executeCommand('longe_log', $itemuse_command);
+                
+                $itemget_command = new MongoDB\Driver\Command([
+                    'aggregate' => 'le_UserItemGet',
+                    'pipeline' => [
+                        [
+                            '$match' => ['game_id' => $game_id, 'le_logTime' => ['$gte' => $start_timestamp, '$lte' => $end_timestamp]],
+                        ],
+                        [
+                            '$group' => [
+                                '_id' => ['game_id' => '$game_id', 'le_contentId' => '$le_contentId', 'le_contentType' => '$le_contentType', 'le_price' => '$le_price'],
+                                'le_count' => ['$sum' => '$le_count']
+                            ]
+                        ],
+                    ],
+                    'cursor' => new stdClass,
+                ]);
+                $itemget_cursor = $manager->executeCommand('longe_log', $itemget_command);
+
+                $itemget_result = [];
+                
+                foreach ($itemget_cursor as $itemget_document) {
+                    $itemget_document->used=0;
+                    foreach ($itemuse_cursor as $itemuse_document) {
+                        if ($itemuse_document->_id->le_contentId==$itemget_document->_id->le_contentId) $itemget_document->used=$itemuse_document->le_count;
+                    }
+                    $itemget_result[] = $itemget_document;
+                }
+            } catch (MongoDB\Driver\Exception\Exception $e) {
+                echo $e->getMessage(), "\n";
+            }
+					
+            $this->load->library('pagination');
+            $this->pagination->initialize(array(
+                    'base_url'	=> site_url("trade/game_consumes"),
+                    'total_rows'=> isset($itemget_result) ? count($itemget_result) : 0,
+                    'per_page'	=> 100
+                ));			
+		}
+		else {
+			$default_value = array(
+				'use_default' => true,
+				'time_unit' => 'day',
+				'display_game' => 'game',
+			);
+			$_GET = $default_value;
+		}	
+			
+		$this->g_layout
+			->add_breadcrumb("消費分析")	
+			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("end_date", $end_date)
+			->set("query", isset($itemget_result) ? $itemget_result : false)
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();	
+    }
 	
 	function game_length_new()
 	{			
@@ -586,8 +689,8 @@ class Statistics extends MY_Controller {
 		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
 		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
 		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
-			$start_date = date("Y-m-d",strtotime("-1 days"));
-			$end_date = date("Y-m-d",strtotime("-8 days"));
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
 		} 
 		$game_id = $this->input->get("game_id");
 		
@@ -617,23 +720,13 @@ class Statistics extends MY_Controller {
 			    stc.game_id 'game_id',
 			    stc.login_count 'login_count',
 			    stc.new_login_count 'new_login_count',
-			    stc.new_character_count 'new_character_count',
-			    stc.device_count 'device_count',
 			    stc2.login_count 'y_login_count',
 			    stc2.new_login_count 'y_new_login_count',
-			    stc2.one_retention_all_count 'y_one_retention_all_count',
                 stc2.one_retention_count 'y_one_retention_count',
                 stc.deposit_user_count 'deposit_user_count',
-                stc.new_deposit_user_count 'new_deposit_user_count',
-                stc.consume_user_count 'consume_user_count',
-                stc.new_consume_user_count 'new_consume_user_count',
-                stc.currency_total 'currency_total',
-                stc.paid_currency_total 'paid_currency_total',
                 stc.deposit_total 'deposit_total',
-                stc.consume_total 'consume_total',
-                stc.peak_user_count 'peak_user_count',
-                stc.total_time 'total_time',
-                stc.paid_total_time 'paid_total_time'
+                stc.new_deposit_user_count 'new_user_deposit_count',
+                stc.new_user_deposit_total 'new_user_deposit_total'
 		    FROM statistics stc
 		    LEFT JOIN statistics stc2 ON stc.game_id=stc2.game_id AND stc.date=DATE_ADD(stc2.date, interval 1 day)
 		    WHERE stc.game_id = '{$game_id}'
@@ -646,23 +739,13 @@ class Statistics extends MY_Controller {
 			    stc.game_id 'game_id',
 			    stc.login_count 'login_count',
 			    stc.new_login_count 'new_login_count',
-			    stc.new_character_count 'new_character_count',
-			    stc.device_count 'device_count',
 			    stc2.login_count 'y_login_count',
 			    stc2.new_login_count 'y_new_login_count',
-			    stc2.one_retention_all_count 'y_one_retention_all_count',
                 stc2.one_retention_count 'y_one_retention_count',
                 stc.deposit_user_count 'deposit_user_count',
-                stc.new_deposit_user_count 'new_deposit_user_count',
-                stc.consume_user_count 'consume_user_count',
-                stc.new_consume_user_count 'new_consume_user_count',
-                stc.currency_total 'currency_total',
-                stc.paid_currency_total 'paid_currency_total',
                 stc.deposit_total 'deposit_total',
-                stc.consume_total 'consume_total',
-                stc.peak_user_count 'peak_user_count',
-                stc.total_time 'total_time',
-                stc.paid_total_time 'paid_total_time'
+                stc.new_deposit_user_count 'new_user_deposit_count',
+                stc.new_user_deposit_total 'new_user_deposit_total'
 		    FROM statistics stc
 		    RIGHT JOIN statistics stc2 ON stc.game_id=stc2.game_id AND stc.date=DATE_ADD(stc2.date, interval 1 day)
 		    WHERE stc.game_id = '{$game_id}'
@@ -678,23 +761,13 @@ class Statistics extends MY_Controller {
 			    stc.game_id 'game_id',
 			    SUM(stc.login_count) 'login_count',
 			    SUM(stc.new_login_count) 'new_login_count',
-			    SUM(stc.new_character_count) 'new_character_count',
-			    SUM(stc.device_count) 'device_count',
 			    SUM(stc2.login_count) 'y_login_count',
 			    SUM(stc2.new_login_count) 'y_new_login_count',
-			    SUM(stc3.one_retention_all_count) 'y_one_retention_all_count',
                 SUM(stc3.one_retention_count) 'y_one_retention_count',
                 SUM(stc.deposit_user_count) 'deposit_user_count',
-                SUM(stc.new_deposit_user_count) 'new_deposit_user_count',
-                SUM(stc.consume_user_count) 'consume_user_count',
-                SUM(stc.new_consume_user_count) 'new_consume_user_count',
-                SUM(stc.currency_total) 'currency_total',
-                SUM(stc.paid_currency_total) 'paid_currency_total',
                 SUM(stc.deposit_total) 'deposit_total',
-                SUM(stc.consume_total) 'consume_total',
-                SUM(stc.peak_user_count) 'peak_user_count',
-                SUM(stc.total_time) 'total_time',
-                SUM(stc.paid_total_time) 'paid_total_time'
+			    SUM(stc3.new_user_deposit_count) 'new_user_deposit_count',
+                SUM(stc3.new_user_deposit_total) 'new_user_deposit_total'
 		    FROM statistics stc
 		    LEFT JOIN statistics stc2 ON stc.game_id=stc2.game_id 
 				AND stc.date=DATE_ADD(stc2.date, interval 1 week)
@@ -710,25 +783,15 @@ class Statistics extends MY_Controller {
 		    (SELECT 
 		        YEARWEEK((stc.date),3) 'date',
 			    stc.game_id 'game_id',
-		    	SUM(stc.login_count) 'login_count',
+			    SUM(stc.login_count) 'login_count',
 			    SUM(stc.new_login_count) 'new_login_count',
-			    SUM(stc.new_character_count) 'new_character_count',
-			    SUM(stc.device_count) 'device_count',
 			    SUM(stc2.login_count) 'y_login_count',
 			    SUM(stc2.new_login_count) 'y_new_login_count',
-			    SUM(stc3.one_retention_all_count) 'y_one_retention_all_count',
                 SUM(stc3.one_retention_count) 'y_one_retention_count',
                 SUM(stc.deposit_user_count) 'deposit_user_count',
-                SUM(stc.new_deposit_user_count) 'new_deposit_user_count',
-                SUM(stc.consume_user_count) 'consume_user_count',
-                SUM(stc.new_consume_user_count) 'new_consume_user_count',
-                SUM(stc.currency_total) 'currency_total',
-                SUM(stc.paid_currency_total) 'paid_currency_total',
                 SUM(stc.deposit_total) 'deposit_total',
-                SUM(stc.consume_total) 'consume_total',
-                SUM(stc.peak_user_count) 'peak_user_count',
-                SUM(stc.total_time) 'total_time',
-                SUM(stc.paid_total_time) 'paid_total_time'
+			    SUM(stc3.new_user_deposit_count) 'new_user_deposit_count',
+                SUM(stc3.new_user_deposit_total) 'new_user_deposit_total'
 		    FROM statistics stc
 		    RIGHT JOIN statistics stc2 ON stc.game_id=stc2.game_id 
 				AND stc.date=DATE_ADD(stc2.date, interval 1 week)
@@ -751,8 +814,9 @@ class Statistics extends MY_Controller {
 					stc.*,
 					stc2.y_login_count,
 					stc2.y_new_login_count,
-					stc3.one_retention_all_count 'y_one_retention_all_count',
-					stc3.one_retention_count 'y_one_retention_count'
+					stc3.one_retention_count 'y_one_retention_count',
+					stc3.new_user_deposit_count 'new_user_deposit_count',
+					stc3.new_user_deposit_total 'new_user_deposit_total'
 				FROM
 					(
 						SELECT 
@@ -761,19 +825,8 @@ class Statistics extends MY_Controller {
 							stc.game_id 'game_id',
 							SUM(stc.login_count) 'login_count',
 							SUM(stc.new_login_count) 'new_login_count',
-							SUM(stc.new_character_count) 'new_character_count',
-							SUM(stc.device_count) 'device_count',
 							SUM(stc.deposit_user_count) 'deposit_user_count',
-							SUM(stc.new_deposit_user_count) 'new_deposit_user_count',
-							SUM(stc.consume_user_count) 'consume_user_count',
-							SUM(stc.new_consume_user_count) 'new_consume_user_count',
-							SUM(stc.currency_total) 'currency_total',
-							SUM(stc.paid_currency_total) 'paid_currency_total',
-							SUM(stc.deposit_total) 'deposit_total',
-							SUM(stc.consume_total) 'consume_total',
-							SUM(stc.peak_user_count) 'peak_user_count',
-							SUM(stc.total_time) 'total_time',
-							SUM(stc.paid_total_time) 'paid_total_time'
+							SUM(stc.deposit_total) 'deposit_total'
 						FROM
 							statistics stc
 						WHERE
@@ -809,7 +862,111 @@ class Statistics extends MY_Controller {
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("end_date", $end_date)
 			->set("span", $span)
+			->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+	
+	function deposit_level()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		//$span = $this->input->get("span");
+		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
+		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
+		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
+		} 
+		$game_id = $this->input->get("game_id");
+    
+        $query = $this->DB2->query("
+            SELECT
+                COUNT(uid) 'user_count',
+                SUM(amount) 'total',
+				SUM(CASE WHEN amount>=10001 THEN 1 ELSE 0 END) 'lvl6',
+				SUM(CASE WHEN amount BETWEEN 5000 AND 10000 THEN 1 ELSE 0 END) 'lvl5',
+				SUM(CASE WHEN amount BETWEEN 2000 AND 4999 THEN 1 ELSE 0 END) 'lvl4',
+				SUM(CASE WHEN amount BETWEEN 1000 AND 1999 THEN 1 ELSE 0 END) 'lvl3',
+				SUM(CASE WHEN amount BETWEEN 500 AND 999 THEN 1 ELSE 0 END) 'lvl2',
+				SUM(CASE WHEN amount<=499 THEN 1 ELSE 0 END) 'lvl1',
+				SUM(CASE WHEN amount>=10001 THEN amount ELSE 0 END) 'lvl6_sum',
+				SUM(CASE WHEN amount BETWEEN 5000 AND 10000 THEN amount ELSE 0 END) 'lvl5_sum',
+				SUM(CASE WHEN amount BETWEEN 2000 AND 4999 THEN amount ELSE 0 END) 'lvl4_sum',
+				SUM(CASE WHEN amount BETWEEN 1000 AND 1999 THEN amount ELSE 0 END) 'lvl3_sum',
+				SUM(CASE WHEN amount BETWEEN 500 AND 999 THEN amount ELSE 0 END) 'lvl2_sum',
+				SUM(CASE WHEN amount<=499 THEN amount ELSE 0 END) 'lvl1_sum'
+            FROM
+            (
+                SELECT
+                    ub.uid 'uid',
+                    SUM(ub.amount) 'amount'
+                FROM user_billing ub
+                    JOIN servers sr ON ub.server_id=sr.server_id
+                WHERE sr.game_id = '{$game_id}'
+                    AND ub.create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
+                    AND ub.billing_type = 2
+                    AND ub.result = 1
+                GROUP BY ub.uid
+            ) tmp
+        ");
+		
+		$this->g_layout
+			->set("query", isset($query) ? $query : false)
+			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("end_date", $end_date)
+			//->set("span", $span)
+			->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+	
+	function deposit_analysis()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		//$span = $this->input->get("span");
+		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
+		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
+		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
+		} 
+		$game_id = $this->input->get("game_id");
+    
+        $query = $this->DB2->query("
+            SELECT 
+		        date,
+			    game_id,
+			    login_count 'login_count',
+			    new_login_count 'new_login_count',
+                deposit_user_count 'deposit_user_count',
+                deposit_total 'deposit_total',
+                new_deposit_user_count 'new_user_deposit_count',
+                new_user_deposit_total 'new_user_deposit_total'
+		    FROM statistics 
+		    WHERE game_id = '{$game_id}'
+		    AND date BETWEEN '{$start_date}' AND '{$end_date}'
+        ");
+		
+		$this->g_layout
+			->set("query", isset($query) ? $query : false)
+			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("end_date", $end_date)
+			//->set("span", $span)
 			->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
@@ -827,8 +984,8 @@ class Statistics extends MY_Controller {
 		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
 		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
 		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
-			$start_date = date("Y-m-d",strtotime("-1 days"));
-			$end_date = date("Y-m-d",strtotime("-8 days"));
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
 		} 
 		
         switch($span) {
@@ -863,7 +1020,7 @@ class Statistics extends MY_Controller {
 			FROM user_billing
 				JOIN servers ON user_billing.server_id=servers.server_id
 			WHERE create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-				AND billing_type = 1
+				AND billing_type = 2
 				AND result = 1
 			GROUP BY YEAR(create_time), {$date_group}(create_time)
 		    ORDER BY YEAR(create_time) DESC, {$date_group}(create_time) DESC
@@ -929,6 +1086,135 @@ class Statistics extends MY_Controller {
 			->render();
 	}
 	
+	function marketing()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		$span = $this->input->get_post("span");
+		$start_date = $this->input->get_post("start_date") ? $this->input->get_post("start_date") : date("Y-m-d");
+		$end_date = $this->input->get_post("end_date") ? $this->input->get_post("end_date") : date("Y-m-d");
+		$game_id = $this->input->get_post("game_id");
+		if (empty($this->input->get_post("start_date")) && empty($this->input->get_post("end_date"))) {
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
+		} 
+		
+        switch($span) {
+			case "weekly":
+			    $date_group = 'YEARWEEK';
+			    $interval = 'WEEK';
+				$stc3 = 'weekly_statistics';
+				break;
+			
+			case "monthly":
+			    $date_group = 'MONTH';
+				$interval = 'MONTH';
+				$stc3 = 'monthly_statistics';
+				break;
+				
+			default:
+			    $date_group = 'DATE';
+				$interval = 'DATE';
+				break;
+		}
+		
+		if (!$span) {
+		    $query = $this->DB2->query("
+		    SELECT 
+		        date,
+			    game_id,
+			    login_count,
+			    new_login_count,
+			    device_count,
+			    apk_login_count,
+                ios_download_count,
+                ios_tw_download_count,
+                ios_hk_download_count,
+                ios_mo_download_count,
+                ios_sg_download_count,
+                ios_my_download_count,
+                google_download_count,
+                google_tw_download_count,
+                google_hk_download_count,
+                google_mo_download_count,
+                google_sg_download_count,
+                google_my_download_count,
+                apk_download_count,
+                apk_tw_download_count,
+                apk_hk_download_count,
+                apk_mo_download_count,
+                apk_sg_download_count,
+                apk_my_download_count
+		    FROM statistics
+		    WHERE game_id = '{$game_id}'
+		    AND date BETWEEN '{$start_date}' AND '{$end_date}'
+		    ORDER BY date DESC
+		    ");
+		}
+		else
+		{
+            if ('weekly'==$span) {
+                $select = "YEARWEEK((date),3) 'date'";
+                $group = "YEARWEEK((date),3)";
+                $order = "YEARWEEK((date),3)";
+            } else {
+                $select = "YEAR(date) 'year',
+						   MONTH(date) 'date'";
+                $group = "YEAR(date),
+						  MONTH(date)";
+                $order = "YEAR(date) DESC,
+						  MONTH(date) DESC";
+            }
+            
+		    $query = $this->DB2->query("
+		    SELECT 
+                {$select},
+			    game_id,
+			    SUM(login_count) 'login_count',
+			    SUM(new_login_count) 'new_login_count',
+			    SUM(device_count) 'device_count',
+			    SUM(apk_login_count) 'apk_login_count',
+                SUM(ios_download_count) 'ios_download_count',
+                SUM(ios_tw_download_count) 'ios_tw_download_count',
+                SUM(ios_hk_download_count) 'ios_hk_download_count',
+                SUM(ios_mo_download_count) 'ios_mo_download_count',
+                SUM(ios_sg_download_count) 'ios_sg_download_count',
+                SUM(ios_my_download_count) 'ios_my_download_count',
+                SUM(google_download_count) 'google_download_count',
+                SUM(google_tw_download_count) 'google_tw_download_count',
+                SUM(google_hk_download_count) 'google_hk_download_count',
+                SUM(google_mo_download_count) 'google_mo_download_count',
+                SUM(google_sg_download_count) 'google_sg_download_count',
+                SUM(google_my_download_count) 'google_my_download_count',
+                SUM(apk_download_count) 'apk_download_count',
+                SUM(apk_tw_download_count) 'apk_tw_download_count',
+                SUM(apk_hk_download_count) 'apk_hk_download_count',
+                SUM(apk_mo_download_count) 'apk_mo_download_count',
+                SUM(apk_sg_download_count) 'apk_sg_download_count',
+                SUM(apk_my_download_count) 'apk_my_download_count'
+		    FROM statistics
+		    WHERE 
+				date BETWEEN '{$start_date}' AND '{$end_date}'
+					AND game_id = '{$game_id}'
+		    GROUP BY {$group}
+		    ORDER BY {$group}
+		    ");
+		}
+		
+		$this->g_layout
+			->set("query", isset($query) ? $query : false)
+			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("end_date", $end_date)
+			->set("span", $span)
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+	
 	function deposit_behavior()
 	{			
 		$this->_init_statistics_layout();			
@@ -940,8 +1226,8 @@ class Statistics extends MY_Controller {
 		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
 		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
 		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
-			$start_date = date("Y-m-d",strtotime("-1 days"));
-			$end_date = date("Y-m-d",strtotime("-8 days"));
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
 		} 
 		
 		$deposit_amount_query = $this->DB2->query("
@@ -956,7 +1242,7 @@ class Statistics extends MY_Controller {
                 user_billing
             WHERE
                 create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-                AND billing_type = 1
+                AND billing_type = 2
                 AND result = 1
 		")->row();
 		
@@ -979,7 +1265,7 @@ class Statistics extends MY_Controller {
 					user_billing
 				WHERE
 					create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-					AND billing_type = 1
+					AND billing_type = 2
 					AND result = 1
 				GROUP BY uid
 			) tmp
@@ -1016,7 +1302,7 @@ class Statistics extends MY_Controller {
 				user_billing
 			WHERE
 				create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-				AND billing_type = 1
+				AND billing_type = 2
 				AND result = 1
 			GROUP BY country_code
 		");
@@ -1126,8 +1412,8 @@ class Statistics extends MY_Controller {
 		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
 		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
 		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
-			$start_date = date("Y-m-d",strtotime("-1 days"));
-			$end_date = date("Y-m-d",strtotime("-8 days"));
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
 		} 
 		$game_id = $this->input->get("game_id");
 		
