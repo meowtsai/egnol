@@ -689,8 +689,8 @@ class Statistics extends MY_Controller {
 		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
 		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
 		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
-			$start_date = date("Y-m-d",strtotime("-1 days"));
-			$end_date = date("Y-m-d",strtotime("-8 days"));
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
 		} 
 		$game_id = $this->input->get("game_id");
 		
@@ -882,8 +882,8 @@ class Statistics extends MY_Controller {
 		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
 		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
 		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
-			$start_date = date("Y-m-d",strtotime("-1 days"));
-			$end_date = date("Y-m-d",strtotime("-8 days"));
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
 		} 
 		$game_id = $this->input->get("game_id");
     
@@ -941,8 +941,8 @@ class Statistics extends MY_Controller {
 		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
 		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
 		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
-			$start_date = date("Y-m-d",strtotime("-1 days"));
-			$end_date = date("Y-m-d",strtotime("-8 days"));
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
 		} 
 		$game_id = $this->input->get("game_id");
     
@@ -984,8 +984,8 @@ class Statistics extends MY_Controller {
 		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
 		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
 		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
-			$start_date = date("Y-m-d",strtotime("-1 days"));
-			$end_date = date("Y-m-d",strtotime("-8 days"));
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
 		} 
 		
         switch($span) {
@@ -1098,8 +1098,8 @@ class Statistics extends MY_Controller {
 		$end_date = $this->input->get_post("end_date") ? $this->input->get_post("end_date") : date("Y-m-d");
 		$game_id = $this->input->get_post("game_id");
 		if (empty($this->input->get_post("start_date")) && empty($this->input->get_post("end_date"))) {
-			$start_date = date("Y-m-d",strtotime("-1 days"));
-			$end_date = date("Y-m-d",strtotime("-8 days"));
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
 		} 
 		
         switch($span) {
@@ -1226,8 +1226,8 @@ class Statistics extends MY_Controller {
 		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
 		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
 		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
-			$start_date = date("Y-m-d",strtotime("-1 days"));
-			$end_date = date("Y-m-d",strtotime("-8 days"));
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
 		} 
 		
 		$deposit_amount_query = $this->DB2->query("
@@ -1412,8 +1412,8 @@ class Statistics extends MY_Controller {
 		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
 		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
 		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
-			$start_date = date("Y-m-d",strtotime("-1 days"));
-			$end_date = date("Y-m-d",strtotime("-8 days"));
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
 		} 
 		$game_id = $this->input->get("game_id");
 		
