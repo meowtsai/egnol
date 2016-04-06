@@ -57,7 +57,8 @@ class Api2 extends MY_Controller
 		$_SESSION['login_deviceid']	= $device_id;
 		$_SESSION['old_deviceid'] = $this->input->get_post("old_deviceid");
 
-        $is_duplicate_login = $this->_check_duplicate_login();
+        //$is_duplicate_login = $this->_check_duplicate_login();
+		$is_duplicate_login = false;
 
 		if(!$this->g_user->is_login() || $is_duplicate_login)
 		{
@@ -83,7 +84,7 @@ class Api2 extends MY_Controller
 			if(!empty($login_key) && $change_account != 1)
 			{
 				$keys = explode(",", $login_key);
-				if(count($keys) == 5)
+				if(count($keys) == 6)
 				{
 					$check_key = md5($partner.$keys[1].$keys[2].$keys[3].$game_key.$device_id);
 					$new_check = "";
@@ -101,6 +102,7 @@ class Api2 extends MY_Controller
 						if($this->g_user->verify_account($keys[1], $keys[2], '', $keys[3]) == true)
 						{
 							$_SESSION['site'] = $site;
+							$_SESSION['login_channel'] = (int)$keys[4];
 							$this->_ui_member();
 							return;
 						}
@@ -520,7 +522,9 @@ class Api2 extends MY_Controller
 	function ui_change_account()
 	{
 	    $this->_set_logout_time();
-        
+
+		$device_id	= $_SESSION['login_deviceid'];
+		
 		// 登出然後跳回登入畫面
 		header('content-type:text/html; charset=utf-8');
 
@@ -531,7 +535,7 @@ class Api2 extends MY_Controller
 		$_SESSION['server_id'] = '';
 		unset($_SESSION['server_id']);
 		
-        die("<script type='text/javascript'>location.href='/api2/ui_login?site={$site}&change_account=1'</script>");
+        die("<script type='text/javascript'>location.href='/api2/ui_login?deviceid={$device_id}&site={$site}&change_account=1'</script>");
 	}
 	
 	// 帳號登出
@@ -1258,7 +1262,7 @@ class Api2 extends MY_Controller
 	}
 	
 	// 驗證並完成訂單
-	function Android_verify_receipt()
+	function android_verify_receipt()
 	{
 		$order_id = $this->input->post("order_id");
 		$product_id = $this->input->post("product_id");
@@ -1342,8 +1346,188 @@ class Api2 extends MY_Controller
 			->api_view();
 	}
 
-	function ui_service_result()
+	function ui_service_question()
 	{
+		$this->load->config("service");
+		
+		$server = $this->db->from("servers gi")
+			->join("games g", "gi.game_id=g.game_id")->get();
+		
+		$games = $this->db->from("games")->where("is_active", "1")->get();
+		$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("server_id")->get("servers");
+
+		// 讀取玩家角色列表
+		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();
+
+		$this->_init_layout()
+			->add_js_include("api2/question")
+			->set("games", $games)
+			->set("servers", $servers)
+			->set("characters", $characters)
+			->add_css_link("login_api")
+			->add_css_link("money")
+			->add_css_link("server")
+			->api_view();
+	}
+
+	function ui_service_list()
+	{
+		$this->db->select("q.*")
+			->where("q.uid", $this->g_user->uid)->from("questions q")
+			->order_by("id", "desc");
+		
+		if ($this->input->get("status")) {
+			$this->db->where("status", $this->input->get("status"));
+		}
+		else {
+			$this->db->where("status >", "0");
+		} 
+		
+		$query = $this->db->get();
+		
+		$this->_init_layout()
+			->set("query", $query)
+			->add_css_link("login_api")
+			->add_css_link("server")
+			->api_view();
+	}
+	
+	function service_question_ajax()
+	{
+		if ( ! $this->input->post("content")) die(json_encode(array("status"=>"failure", "message"=>"無內文")));
+/*		
+		$query = $this->db->query("SELECT count(*) > (3-1) as chk FROM questions WHERE uid={$this->g_user->uid} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");		
+		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問，若有未說明問題，請以原提問進行補述!")));
+
+		$data = array(
+			"uid" => $this->g_user->uid,				
+			'type' => $this->input->post("question_type"),
+			'server_id' => $this->input->post("server"),
+			'character_name' => htmlspecialchars($this->input->post("character_name")),
+			'content' => nl2br(htmlspecialchars($this->input->post("content"))),
+		);
+		
+		$this->load->library('upload');
+		$config['upload_path'] = realpath("p/upload");
+		$config['allowed_types'] = 'gif|jpg|bmp|png';
+		$config['max_size']	= '6144'; //1MB
+		$config['max_width'] = '6144';
+		$config['max_height'] = '6144';
+		$config['encrypt_name'] = true;
+		
+		$upload_cnt = 0;
+		if ( ! empty($_FILES["file01"]["name"]))
+		{
+			$this->upload->initialize($config);
+			if ( ! $this->upload->do_upload("file01"))
+			{
+				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+			}
+			else
+			{
+				$upload_data = $this->upload->data();
+				$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");					
+			}
+		}
+		
+		if ( ! empty($_FILES["file02"]["name"]))
+		{
+			$this->upload->initialize($config);
+			if ( ! $this->upload->do_upload("file02"))
+			{
+				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+			}
+			else
+			{
+				$upload_data = $this->upload->data();
+				$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");					
+			}
+		}
+		if ( ! empty($_FILES["file03"]["name"]))
+		{
+			$this->upload->initialize($config);
+			if ( ! $this->upload->do_upload("file03"))
+			{
+				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+			}
+			else
+			{
+				$upload_data = $this->upload->data();
+				$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");					
+			}
+		}
+
+		$this->db
+			->set("create_time", "now()", false)
+			->set("update_time", "now()", false)
+			->insert("questions", $data);
+*/
+		die(json_encode(array("status"=>"success", "site"=> $site)));
+	}
+	
+	function ui_service_view($id)
+	{
+		$question = $this->db->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email")
+					->where("q.uid", $this->g_user->uid)
+					->where("q.id", $id)
+					->where("q.status >", "0")
+					->from("questions q")
+					->join("servers gi", "gi.server_id=q.server_id")
+					->join("games g", "g.game_id=gi.game_id")
+					->join("users u", "u.uid=q.uid")
+					->get()->row();
+		
+		if ($question)
+		{
+			if ($question->status == '2' || $question->status == '4') {
+				$this->db->where("id", $id)->update("questions", array("is_read"=>'1'));
+			}		
+			$replies = $this->db->from("question_replies")->where("question_id", $id)->order_by("id", "asc")->get();
+		}
+		else {
+			$replies = false;
+		}
+		
+		$this->_init_layout()
+			->add_css_link("service")
+			->add_css_link("server")
+			->add_js_include("api2/view")
+			->add_js_include("jquery.blockUI")
+			->add_js_include("default")
+			->set("replies", $replies)
+			->set("question", $question)
+			->api_view();
+	}
+	
+	function service_reply_json()
+	{
+		$query = $this->db->query("SELECT count(*) > (3-1) as chk FROM question_replies WHERE uid={$this->g_user->uid} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");		
+		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問!")));		
+		
+		$question_id = $this->input->post("question_id");
+		
+		$data = array(
+			"uid" => $this->g_user->uid,
+			"question_id" => $question_id,
+			'content' => nl2br(htmlspecialchars($this->input->post("content"))),
+		);		
+		
+		$this->db
+			->set("create_time", "now()", false)
+			->insert("question_replies", $data);
+		
+		$this->db->where("id", $question_id)->update("questions", array("is_read"=>'0', "status"=>'1'));		
+		
+		die(json_encode(array("status"=>"success")));		
+	}
+	
+	function service_close($id)
+	{
+		$question = $this->db->where("id", $id)->from("questions q")->get()->row();
+		if ($question->uid <> $this->g_user->uid) die(json_encode(array("status"=>"failure", "message"=>"權限不足")));
+		
+		$this->db->set("status", "4")->where("id", $id)->update("questions");
+		die(json_encode(array("status"=>"success")));	
 	}
 	
 	// 檢查合作廠商與串接遊戲
@@ -1436,6 +1620,7 @@ class Api2 extends MY_Controller
 		{
 			$server = array("server_id"=>$row->server_id,
 							"name"=>$row->name,
+							"key"=>$row->server_connection_key,
 							"status"=>0);
 			$server_list[] = $server;
 		}
@@ -1517,7 +1702,13 @@ class Api2 extends MY_Controller
 		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
 		if (empty($server_info))
 		{
-			die(json_encode(array("result"=>"0", "error"=>"伺服器不存在")));
+			$server_info = $this->db->from("servers")->where("server_connection_key", $server_id)->get()->row();
+			if (empty($server_info))
+			{
+				die(json_encode(array("result"=>"0", "error"=>"伺服器不存在")));
+			}
+			
+			$server_id = $server_info->server_id;
 		}
 
 		$query = $this->db->from("users")->where("uid", $uid)->get();

@@ -94,10 +94,10 @@ $config["partner_api"] = array(
 );
 
 $config["game_api"] = array(
-	'test' => array('billing' => 'http://mp.game.netease.com:8660/mp/mplongeplay_pay_notify_process_g0_ad'),
+	'test' => array('billing' => 'http://203.66.111.26:8670/mp/mplongeplay_pay_notify_process_l7tw_ad'),
 	'stm' => array('billing' => 'http://203.66.111.18',
 				  'alive_check' => true),
-	'r2g' => array('billing' => 'http://mp.game.netease.com:8660/mp/mplongeplay_pay_notify_process_g0_ad'),
+	'r2g' => array('billing' => 'http://203.66.111.26:8670/mp/mplongeplay_pay_notify_process_l7tw_ad'),
 );
 
 $config["channel_api"] = array(	
