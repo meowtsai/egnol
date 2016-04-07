@@ -1592,6 +1592,72 @@ class Statistics extends MY_Controller {
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
 	}
+	    
+    function user_online() {
+		$this->zacl->check_login(true);
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		$this->_init_layout();
+		$this->load->helper("output_table");
+				
+        header("Cache-Control: private");	
+        
+		$start_date = $this->input->get_post("start_date") ? $this->input->get_post("start_date") : date("Y-m-d");
+		$game_id = $this->input->get_post("game_id");
+        
+        $prev_date = date("Y-m-d", strtotime($start_date-24*60*60));
+        
+        $this->load->config('g_mongodb');
+        $g_mongodb = $this->config->item('mongo_db');
+        
+        $manager = new MongoDB\Driver\Manager($g_mongodb['url']);
+        
+        $online_query = new MongoDB\Driver\Query(['game_id' => $game_id, 'date' => ['$gte' => $prev_date, '$lte' => $start_date]]);
+        
+        $online_cursor = $manager->executeQuery("longe_log.user_online", $online_query);
+
+        $sharp = [];
+        $peak = [];
+        
+        foreach ($online_cursor as $document) {
+            if (!isset($sharp[$document->date][$document->hour])) $sharp[$document->date][$document->hour] = 0;
+            if (!isset($peak[$document->date][$document->hour])) $peak[$document->date][$document->hour] = 0;
+            if (isset($document->sharp)) $sharp[$document->date][$document->hour] += $document->sharp;
+            if (isset($document->peak)) $peak[$document->date][$document->hour] += $document->peak;
+        }
+        
+        $high_peak = 0;
+        
+        if (isset($peak[$start_date])) {
+            foreach ($peak[$start_date] as $peak) {
+                if ($peak > $high_peak) $high_peak = $peak;
+            }
+        }
+        
+        $count_query = new MongoDB\Driver\Query(['game_id' => $game_id]);
+        
+        $count_cursor = $manager->executeQuery("longe_log.user_count", $count_query);
+        
+        $user_count = 0;
+        
+        foreach ($count_cursor as $document) {
+            $user_count += $document->count;
+        }
+			
+		$this->g_layout
+			->add_breadcrumb("即時在線")	
+			->set("sharp", $sharp)
+			->set("peak", $peak)
+			->set("high_peak", $high_peak)
+			->set("user_count", $user_count)
+			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("prev_date", $prev_date)
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();	
+    }
 	
 	function whale_users()
 	{			
