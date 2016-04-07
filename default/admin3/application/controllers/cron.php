@@ -1595,6 +1595,87 @@ class Cron extends CI_Controller {
             }
         }
     }
+            
+    function mongo_user_online_sharp() {
+        $date = date('Y-m-d', time()); 
+        $hour = date('G', time());
+        
+        $this->load->config('g_mongodb');
+        $g_mongodb = $this->config->item('mongo_db');
+        
+        $manager = new MongoDB\Driver\Manager($g_mongodb['url']);
+        $query = new MongoDB\Driver\Query([]);
+        
+        $cursor = $manager->executeQuery("longe_log.user_count", $query);
+
+        $result = [];
+        
+        foreach ($cursor as $document) {
+            $result[] = $document;
+        }
+        
+        foreach($result as $row) {
+            $filter = ['game_id' => $row->game_id, "server_id" => $row->server_id, "date" => $date, "hour" => intval($hour)];
+            $newObj = ['$set' => ['sharp' => $row->count]];
+            
+            $options = ["multi" => false, "upsert" => true];
+            
+            $bulk = new MongoDB\Driver\BulkWrite;
+            $bulk->update($filter, $newObj, $options);
+
+            $manager->executeBulkWrite("longe_log.user_online", $bulk);
+            unset($bulk);
+        }
+    }
+            
+    function mongo_user_recount() {
+        
+        $this->load->config('g_mongodb');
+        $g_mongodb = $this->config->item('mongo_db');
+        
+        $manager = new MongoDB\Driver\Manager($g_mongodb['url']);
+        $bulk = new MongoDB\Driver\BulkWrite;
+        $bulk->delete([], ["limit" => 0]);
+
+        $deleteresult = $manager->executeBulkWrite("longe_log.user_count", $bulk);
+        unset($bulk);
+        
+        
+        $query = new MongoDB\Driver\Query([]);
+        
+        $cursor = $manager->executeQuery("longe_log.users", $query);
+
+        $result = [];
+        
+        foreach ($cursor as $document) {
+            $result[] = $document;
+        }
+        
+        $user_online = array();
+        
+        foreach($result as $row) {
+            if (!isset($user_online[$row->game_id][$row->server_id])) $user_online[$row->game_id][$row->server_id] = 0;
+            
+            $idle_time = time() - $row->latest_update_time;
+            
+            if ($idle_time < 3*60*60) $user_online[$row->game_id][$row->server_id]+=1;
+        }
+        
+        foreach($user_online as $game => $servers) {
+            foreach($servers as $server => $new_count) {
+                $filter = ['game_id' => $game, "server_id" => $server];
+                $newObj = ['$set' => ['count' => $new_count]];
+                
+                $options = ["multi" => false, "upsert" => true];
+                
+                $bulk = new MongoDB\Driver\BulkWrite;
+                $bulk->update($filter, $newObj, $options);
+
+                $manager->executeBulkWrite("longe_log.user_count", $bulk);
+                unset($bulk);
+            }
+        }
+    }
     
     function appannie_data($date="", $device="ios") {
         
