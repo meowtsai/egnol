@@ -35,9 +35,9 @@
 				<div class="login-button">
 					<p>
 						<input type="checkbox" name="chk" class="required" id="check" style="max-width:20px;"> <span style="vertical-align:text-bottom;">我已閱讀並同意</span>
-						<a href="<?=$longe_url?>member/service_agreement?site=<?=$site?>" style="vertical-align:text-bottom;color:#fffb00">會員服務條款</a><span style="vertical-align:text-bottom;">、</span>
-						<a href="<?=$longe_url?>member/member_agreement?site=<?=$site?>" style="vertical-align:text-bottom;color:#fffb00">個資同意書</a><span style="vertical-align:text-bottom;">與</span>
-						<a href="<?=$longe_url?>member/privacy_agreement?site=<?=$site?>"  style="vertical-align:text-bottom;color:#fffb00">隱私權政策</a>
+						<a href="<?=$longe_url?>member/service_agreement?site=<?=$site?>" style="vertical-align:text-bottom;color:#a50000">會員服務條款</a><span style="vertical-align:text-bottom;">、</span>
+						<a href="<?=$longe_url?>member/member_agreement?site=<?=$site?>" style="vertical-align:text-bottom;color:##a50000">個資同意書</a><span style="vertical-align:text-bottom;">與</span>
+						<a href="<?=$longe_url?>member/privacy_agreement?site=<?=$site?>"  style="vertical-align:text-bottom;color:##a50000">隱私權政策</a>
 					</p>
 					<p>
                     	<input name="doLogin" type="submit" id="doSubmit" value="" class="button_submit" style="display:none;" />
