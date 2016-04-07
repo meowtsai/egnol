@@ -17,6 +17,9 @@
 		
 		if ($row->game_id == $game_id) $exchange_rate = $row->exchange_rate;
 	}
+    
+    $current_hour = date('G', time());
+    $is_today = (date("Y-m-d",time())==$start_date)?true:false;
 ?>
 <div id="func_bar">
 	
@@ -75,50 +78,50 @@
 			<tr>
 				<th><?=$user_count;?></th>
 				<th>今日</th>
-				<th><?=(isset($sharp[$start_date][0]))?$sharp[$start_date][0]:""?></th>	
-				<th><?=(isset($sharp[$start_date][2]))?$sharp[$start_date][2]:""?></th>	
-				<th><?=(isset($sharp[$start_date][4]))?$sharp[$start_date][4]:""?></th>	
-				<th><?=(isset($sharp[$start_date][6]))?$sharp[$start_date][6]:""?></th>	
-				<th><?=(isset($sharp[$start_date][8]))?$sharp[$start_date][8]:""?></th>	
-				<th><?=(isset($sharp[$start_date][10]))?$sharp[$start_date][10]:""?></th>	
-				<th><?=(isset($sharp[$start_date][12]))?$sharp[$start_date][12]:""?></th>	
-				<th><?=(isset($sharp[$start_date][14]))?$sharp[$start_date][14]:""?></th>	
-				<th><?=(isset($sharp[$start_date][16]))?$sharp[$start_date][16]:""?></th>	
-				<th><?=(isset($sharp[$start_date][18]))?$sharp[$start_date][18]:""?></th>	
-				<th><?=(isset($sharp[$start_date][20]))?$sharp[$start_date][20]:""?></th>	
-				<th><?=(isset($sharp[$start_date][22]))?$sharp[$start_date][22]:""?></th>	
+				<th><?=(isset($sharp[$start_date][0]))?$sharp[$start_date][0]:0?></th>	
+				<th><?=($is_today && $current_hour<2)?"":((isset($sharp[$start_date][2]))?$sharp[$start_date][2]:0)?></th>	
+				<th><?=($is_today && $current_hour<4)?"":((isset($sharp[$start_date][4]))?$sharp[$start_date][4]:0)?></th>	
+				<th><?=($is_today && $current_hour<6)?"":((isset($sharp[$start_date][6]))?$sharp[$start_date][6]:0)?></th>	
+				<th><?=($is_today && $current_hour<8)?"":((isset($sharp[$start_date][8]))?$sharp[$start_date][8]:0)?></th>	
+				<th><?=($is_today && $current_hour<10)?"":((isset($sharp[$start_date][10]))?$sharp[$start_date][10]:0)?></th>	
+				<th><?=($is_today && $current_hour<12)?"":((isset($sharp[$start_date][12]))?$sharp[$start_date][12]:0)?></th>	
+				<th><?=($is_today && $current_hour<14)?"":((isset($sharp[$start_date][14]))?$sharp[$start_date][14]:0)?></th>	
+				<th><?=($is_today && $current_hour<16)?"":((isset($sharp[$start_date][16]))?$sharp[$start_date][16]:0)?></th>	
+				<th><?=($is_today && $current_hour<18)?"":((isset($sharp[$start_date][18]))?$sharp[$start_date][18]:0)?></th>	
+				<th><?=($is_today && $current_hour<20)?"":((isset($sharp[$start_date][20]))?$sharp[$start_date][20]:0)?></th>	
+				<th><?=($is_today && $current_hour<22)?"":((isset($sharp[$start_date][22]))?$sharp[$start_date][22]:0)?></th>	
 			</tr>
 			<tr>
 				<th>今日峰值</th>
 				<th>昨日</th>
-				<th><?=(isset($sharp[$prev_date][0]))?$sharp[$prev_date][0]:""?></th>	
-				<th><?=(isset($sharp[$prev_date][2]))?$sharp[$prev_date][2]:""?></th>	
-				<th><?=(isset($sharp[$prev_date][4]))?$sharp[$prev_date][4]:""?></th>	
-				<th><?=(isset($sharp[$prev_date][6]))?$sharp[$prev_date][6]:""?></th>	
-				<th><?=(isset($sharp[$prev_date][8]))?$sharp[$prev_date][8]:""?></th>	
-				<th><?=(isset($sharp[$prev_date][10]))?$sharp[$prev_date][10]:""?></th>	
-				<th><?=(isset($sharp[$prev_date][12]))?$sharp[$prev_date][12]:""?></th>	
-				<th><?=(isset($sharp[$prev_date][14]))?$sharp[$prev_date][14]:""?></th>	
-				<th><?=(isset($sharp[$prev_date][16]))?$sharp[$prev_date][16]:""?></th>	
-				<th><?=(isset($sharp[$prev_date][18]))?$sharp[$prev_date][18]:""?></th>	
-				<th><?=(isset($sharp[$prev_date][20]))?$sharp[$prev_date][20]:""?></th>	
-				<th><?=(isset($sharp[$prev_date][22]))?$sharp[$prev_date][22]:""?></th>
+				<th><?=(isset($sharp[$prev_date][0]))?$sharp[$prev_date][0]:0?></th>	
+				<th><?=(isset($sharp[$prev_date][2]))?$sharp[$prev_date][2]:0?></th>	
+				<th><?=(isset($sharp[$prev_date][4]))?$sharp[$prev_date][4]:0?></th>	
+				<th><?=(isset($sharp[$prev_date][6]))?$sharp[$prev_date][6]:0?></th>	
+				<th><?=(isset($sharp[$prev_date][8]))?$sharp[$prev_date][8]:0?></th>	
+				<th><?=(isset($sharp[$prev_date][10]))?$sharp[$prev_date][10]:0?></th>	
+				<th><?=(isset($sharp[$prev_date][12]))?$sharp[$prev_date][12]:0?></th>	
+				<th><?=(isset($sharp[$prev_date][14]))?$sharp[$prev_date][14]:0?></th>	
+				<th><?=(isset($sharp[$prev_date][16]))?$sharp[$prev_date][16]:0?></th>	
+				<th><?=(isset($sharp[$prev_date][18]))?$sharp[$prev_date][18]:0?></th>	
+				<th><?=(isset($sharp[$prev_date][20]))?$sharp[$prev_date][20]:0?></th>	
+				<th><?=(isset($sharp[$prev_date][22]))?$sharp[$prev_date][22]:0?></th>
 			</tr>
 			<tr>
 				<th><?=$high_peak;?></th>
 				<th>時段峰值(今)</th>
 				<th><?=$bi_peak[0]?></th>	
-				<th><?=$bi_peak[2]?></th>	
-				<th><?=$bi_peak[4]?></th>	
-				<th><?=$bi_peak[6]?></th>	
-				<th><?=$bi_peak[8]?></th>	
-				<th><?=$bi_peak[10]?></th>	
-				<th><?=$bi_peak[12]?></th>	
-				<th><?=$bi_peak[14]?></th>	
-				<th><?=$bi_peak[16]?></th>	
-				<th><?=$bi_peak[18]?></th>	
-				<th><?=$bi_peak[20]?></th>	
-				<th><?=$bi_peak[22]?></th>	
+				<th><?=($is_today && $current_hour<2)?"":($bi_peak[2])?></th>	
+				<th><?=($is_today && $current_hour<4)?"":($bi_peak[4])?></th>	
+				<th><?=($is_today && $current_hour<6)?"":($bi_peak[6])?></th>	
+				<th><?=($is_today && $current_hour<8)?"":($bi_peak[8])?></th>	
+				<th><?=($is_today && $current_hour<10)?"":($bi_peak[10])?></th>	
+				<th><?=($is_today && $current_hour<12)?"":($bi_peak[12])?></th>	
+				<th><?=($is_today && $current_hour<14)?"":($bi_peak[14])?></th>	
+				<th><?=($is_today && $current_hour<16)?"":($bi_peak[16])?></th>	
+				<th><?=($is_today && $current_hour<18)?"":($bi_peak[18])?></th>	
+				<th><?=($is_today && $current_hour<20)?"":($bi_peak[20])?></th>	
+				<th><?=($is_today && $current_hour<22)?"":($bi_peak[22])?></th>	
 			</tr>
 		</tbody>
 	</table>
