@@ -5,14 +5,14 @@ class News extends MY_Controller {
 	function __construct()
 	{
 		parent::__construct();
-//		$this->load->config("service");
 	}
 
 	function index()
 	{
 		$this->_init_layout()
 			->add_css_link("login")
-			->add_css_link("server")
+			->add_css_link("news")
+			->add_css_link("jquery.mCustomScrollbar.css")
 			->standard_view();
 	}
 	
