@@ -19,7 +19,28 @@
 	
 </div>
 
-<form method="get" action="<?=site_url("statistics/retention")?>" class="form-search">
+<ul class="nav nav-tabs">
+    <li class="">
+        <a href="<?=site_url("statistics/user_new?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">新增分析</a>
+    </li>
+    <li class="">
+        <a href="<?=site_url("statistics/user_new_by_login?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">新增分析(依登入)</a>
+    </li>
+    <li class="active">
+        <a href="<?=site_url("statistics/user_retention?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">留存率</a>
+    </li>
+    <li class="">
+        <a href="<?=site_url("statistics/user_retention_by_login?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">留存率(依登入)</a>
+    </li>
+    <li class="">
+        <a href="<?=site_url("statistics/user_return?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">回流率</a>
+    </li>
+    <li class="">
+        <a href="<?=site_url("statistics/user_return_by_login?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">回流率(依登入)</a>
+    </li>
+</ul>
+
+<form method="get" action="<?=site_url("statistics/user_retention")?>" class="form-search">
 	<!--input type="hidden" name="game_id" value="<?=$this->game_id?>"-->
 	<div class="control-group">
 		

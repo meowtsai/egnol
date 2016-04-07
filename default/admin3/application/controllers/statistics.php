@@ -221,28 +221,6 @@ class Statistics extends MY_Controller {
 			->render();
 	}
 	
-	function retention()
-	{			
-		$this->_init_statistics_layout();			
-		$this->load->helper("output_table");
-		
-		$this->zacl->check("game_statistics", "read");
-		
-		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
-		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
-		$game_id = $this->input->get("game_id");
-					
-		$query = $this->DB2->where("game_id", $game_id)->where("date >=", $start_date)->where("date <=", $end_date)->order_by("date", "desc")->get("statistics");
-        
-		$this->g_layout
-			->set("query", isset($query) ? $query : false)
-			->set("game_id", $game_id)
-			->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
-			->add_js_include("game/statistics")
-			->add_js_include("jquery-ui-timepicker-addon")
-			->render();
-	}
-	
 	function lifetime_value()
 	{			
 		$this->_init_statistics_layout();			
@@ -277,9 +255,9 @@ class Statistics extends MY_Controller {
 		$this->_init_statistics_layout();
 		$this->load->helper("output_table");
             
-		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
-		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
-		$game_id = $this->input->get("game_id");
+		$start_date = $this->input->get_post("start_date") ? $this->input->get_post("start_date") : date("Y-m-d");
+		$end_date = $this->input->get_post("end_date") ? $this->input->get_post("end_date") : date("Y-m-d");
+		$game_id = $this->input->get_post("game_id");
             
 		if ($this->input->get("action") && $game_id) 
 		{
@@ -1086,6 +1064,293 @@ class Statistics extends MY_Controller {
 			->render();
 	}
 	
+	function user_new()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		//$span = $this->input->get("span");
+		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
+		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
+		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
+		} 
+		$game_id = $this->input->get("game_id");
+    
+        $query = $this->DB2->query("
+            SELECT 
+		        date,
+			    game_id,
+			    new_login_count,
+                new_device_count
+		    FROM statistics 
+		    WHERE game_id = '{$game_id}'
+		    AND date BETWEEN '{$start_date}' AND '{$end_date}'
+        ");
+		
+		$this->g_layout
+			->set("query", isset($query) ? $query : false)
+			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("end_date", $end_date)
+			//->set("span", $span)
+			->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+	
+	function user_new_by_login()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		//$span = $this->input->get("span");
+		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
+		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
+		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
+		} 
+		$game_id = $this->input->get("game_id");
+    
+        $query = $this->DB2->query("
+            SELECT 
+		        date,
+			    game_id,
+			    new_login_count,
+                new_login_facebook_count,
+                new_login_google_count,
+                new_login_longe_count,
+                new_login_quick_count,
+                new_device_count,
+                new_device_facebook_count,
+                new_device_google_count,
+                new_device_longe_count,
+                new_device_quick_count
+		    FROM statistics 
+		    WHERE game_id = '{$game_id}'
+		    AND date BETWEEN '{$start_date}' AND '{$end_date}'
+        ");
+		
+		$this->g_layout
+			->set("query", isset($query) ? $query : false)
+			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("end_date", $end_date)
+			//->set("span", $span)
+			->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+	
+	function user_retention()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
+		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
+		$game_id = $this->input->get("game_id");
+					
+		$query = $this->DB2->where("game_id", $game_id)->where("date >=", $start_date)->where("date <=", $end_date)->order_by("date", "desc")->get("statistics");
+        
+		$this->g_layout
+			->set("query", isset($query) ? $query : false)
+			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("end_date", $end_date)
+			->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+	
+	function user_retention_by_login()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
+		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
+		$game_id = $this->input->get("game_id");
+					
+		$query = $this->DB2->where("game_id", $game_id)->where("date >=", $start_date)->where("date <=", $end_date)->order_by("date", "desc")->get("statistics");
+        
+		$this->g_layout
+			->set("query", isset($query) ? $query : false)
+			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("end_date", $end_date)
+			->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+	
+	function user_return()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
+		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
+		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
+		} 
+		$game_id = $this->input->get("game_id");
+		
+		$query = $this->DB2->query("
+			SELECT
+				statistics.date,
+				statistics.game_id,
+				statistics.one_return_count 'one_return_count',
+				statistics.one_return_rate 'one_return_rate',
+				statistics.three_return_count 'three_return_count',
+				statistics.three_return_rate 'three_return_rate',
+				weekly_statistics.return_count 'weekly_return_count',
+				weekly_statistics.return_rate 'weekly_return_rate',
+				monthly_statistics.return_count 'monthly_return_count',
+				monthly_statistics.return_rate 'monthly_return_rate'
+			FROM statistics
+			LEFT JOIN weekly_statistics 
+				ON statistics.game_id = weekly_statistics.game_id 
+				AND statistics.date = weekly_statistics.date 
+			LEFT JOIN monthly_statistics 
+				ON statistics.game_id = monthly_statistics.game_id 
+				AND statistics.date = monthly_statistics.date 
+			WHERE statistics.date BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
+				AND statistics.game_id = '{$game_id}'
+		    ORDER BY statistics.date DESC
+		");
+		
+		$region_query = $this->DB2->query("
+			SELECT 
+				user_info.nation, COUNT(user_info.uid) 'user_count'
+			FROM
+				users
+				LEFT JOIN user_info ON users.uid=user_info.uid
+			WHERE
+				users.create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
+			GROUP BY user_info.nation
+		");
+		
+		$this->load->library('jpgraph');
+		$jgraph_data = array();
+		$jgraph_labels = array();
+		
+		foreach($region_query->result() as $row) {
+			$jgraph_data[] = $row->user_count;
+			$jgraph_labels[] = $row->nation;
+		}
+		
+		$region_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/region_graph');
+		
+		$this->g_layout
+			->set("query", isset($query) ? $query : false)
+			->set("region_graph",  isset($region_graph) ? $region_graph : false)
+			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("end_date", $end_date)
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+	
+	function user_return_by_login()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
+		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
+		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
+		} 
+		$game_id = $this->input->get("game_id");
+		
+		$query = $this->DB2->query("
+			SELECT
+				statistics.date,
+				statistics.game_id,
+				statistics.one_return_facebook_count 'one_return_facebook_count',
+				statistics.one_return_google_count 'one_return_google_count',
+				statistics.one_return_longe_count 'one_return_longe_count',
+				statistics.one_return_quick_count 'one_return_quick_count',
+				statistics.one_return_count 'one_return_count',
+				statistics.one_return_facebook_rate 'one_return_facebook_rate',
+				statistics.one_return_google_rate 'one_return_google_rate',
+				statistics.one_return_longe_rate 'one_return_longe_rate',
+				statistics.one_return_quick_rate 'one_return_quick_rate',
+				statistics.one_return_rate 'one_return_rate',
+				statistics.three_return_facebook_count 'three_return_facebook_count',
+				statistics.three_return_google_count 'three_return_google_count',
+				statistics.three_return_longe_count 'three_return_longe_count',
+				statistics.three_return_quick_count 'three_return_quick_count',
+				statistics.three_return_count 'three_return_count',
+				statistics.three_return_facebook_rate 'three_return_facebook_rate',
+				statistics.three_return_google_rate 'three_return_google_rate',
+				statistics.three_return_longe_rate 'three_return_longe_rate',
+				statistics.three_return_quick_rate 'three_return_quick_rate',
+				statistics.three_return_rate 'three_return_rate',
+				weekly_statistics.return_facebook_count 'weekly_return_facebook_count',
+				weekly_statistics.return_google_count 'weekly_return_google_count',
+				weekly_statistics.return_longe_count 'weekly_return_longe_count',
+				weekly_statistics.return_quick_count 'weekly_return_quick_count',
+				weekly_statistics.return_count 'weekly_return_count',
+				weekly_statistics.return_facebook_rate 'weekly_return_facebook_rate',
+				weekly_statistics.return_google_rate 'weekly_return_google_rate',
+				weekly_statistics.return_longe_rate 'weekly_return_longe_rate',
+				weekly_statistics.return_quick_rate 'weekly_return_quick_rate',
+				weekly_statistics.return_rate 'weekly_return_rate',
+				monthly_statistics.return_facebook_count 'monthly_return_facebook_count',
+				monthly_statistics.return_google_count 'monthly_return_google_count',
+				monthly_statistics.return_longe_count 'monthly_return_longe_count',
+				monthly_statistics.return_quick_count 'monthly_return_quick_count',
+				monthly_statistics.return_count 'monthly_return_count',
+				monthly_statistics.return_facebook_rate 'monthly_return_facebook_rate',
+				monthly_statistics.return_google_rate 'monthly_return_google_rate',
+				monthly_statistics.return_longe_rate 'monthly_return_longe_rate',
+				monthly_statistics.return_quick_rate 'monthly_return_quick_rate',
+				monthly_statistics.return_rate 'monthly_return_rate'
+			FROM statistics
+			LEFT JOIN weekly_statistics 
+				ON statistics.game_id = weekly_statistics.game_id 
+				AND statistics.date = weekly_statistics.date 
+			LEFT JOIN monthly_statistics 
+				ON statistics.game_id = monthly_statistics.game_id 
+				AND statistics.date = monthly_statistics.date 
+			WHERE statistics.date BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
+				AND statistics.game_id = '{$game_id}'
+		    ORDER BY statistics.date DESC
+		");
+		
+		$this->g_layout
+			->set("query", isset($query) ? $query : false)
+			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("end_date", $end_date)
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+	
 	function marketing()
 	{			
 		$this->_init_statistics_layout();			
@@ -1327,6 +1592,95 @@ class Statistics extends MY_Controller {
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
 	}
+	    
+    function user_online() {
+		$this->zacl->check_login(true);
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		$this->_init_layout();
+		$this->load->helper("output_table");
+				
+        header("Cache-Control: private");	
+        
+		$start_date = $this->input->get_post("start_date") ? $this->input->get_post("start_date") : date("Y-m-d");
+		$game_id = $this->input->get_post("game_id");
+        
+        $prev_date = date("Y-m-d", strtotime($start_date-24*60*60));
+        
+        $this->load->config('g_mongodb');
+        $g_mongodb = $this->config->item('mongo_db');
+        
+        $manager = new MongoDB\Driver\Manager($g_mongodb['url']);
+        
+        $online_query = new MongoDB\Driver\Query(['game_id' => $game_id, 'date' => ['$gte' => $prev_date, '$lte' => $start_date]]);
+        
+        $online_cursor = $manager->executeQuery("longe_log.user_online", $online_query);
+
+        $sharp = [];
+        $peak = [];
+        
+        foreach ($online_cursor as $document) {
+            if (!isset($sharp[$document->date][$document->hour])) $sharp[$document->date][$document->hour] = 0;
+            if (!isset($peak[$document->date][$document->hour])) $peak[$document->date][$document->hour] = 0;
+            if (isset($document->sharp)) $sharp[$document->date][$document->hour] += $document->sharp;
+            if (isset($document->peak)) $peak[$document->date][$document->hour] += $document->peak;
+        }
+        
+        $high_peak = 0;
+        $bi_peak = array();
+        
+        if (isset($peak[$start_date])) {
+            foreach ($peak[$start_date] as $hour_peak) {
+                if ($hour_peak > $high_peak) $high_peak = $hour_peak;
+            }
+            
+            if (isset($peak[$start_date][0]) && isset($peak[$prev_date][23])) {
+                $bi_peak[0] = ($peak[$start_date][0]>$peak[$prev_date][23])?$peak[$start_date][0]:$peak[$prev_date][23];
+            } elseif (!isset($peak[$start_date][0]) && isset($peak[$prev_date][23])) {
+                $bi_peak[0] = $peak[$prev_date][23];
+            } elseif (isset($peak[$start_date][0]) && !isset($peak[$prev_date][23])) {
+                $bi_peak[0] = $peak[$start_date][0];
+            } else {
+                $bi_peak[0] = 0;
+            }
+            
+            for ($h=2;$h<24;$h+=2) {
+                if (isset($peak[$start_date][$h]) && isset($peak[$start_date][$h-1])) {
+                    $bi_peak[$h] = ($peak[$start_date][$h]>$peak[$start_date][$h-1])?$peak[$start_date][$h]:$peak[$start_date][$h-1];
+                } elseif (!isset($peak[$start_date][$h]) && isset($peak[$start_date][$h-1])) {
+                    $bi_peak[$h] = $peak[$start_date][$h-1];
+                } elseif (isset($peak[$start_date][$h]) && !isset($peak[$start_date][$h-1])) {
+                    $bi_peak[$h] = $peak[$start_date][$h];
+                } else {
+                    $bi_peak[$h] = 0;
+                }
+            }
+        }
+        
+        $count_query = new MongoDB\Driver\Query(['game_id' => $game_id]);
+        
+        $count_cursor = $manager->executeQuery("longe_log.user_count", $count_query);
+        
+        $user_count = 0;
+        
+        foreach ($count_cursor as $document) {
+            $user_count += $document->count;
+        }
+        
+		$this->g_layout
+			->add_breadcrumb("即時在線")	
+			->set("sharp", $sharp)
+			->set("bi_peak", $bi_peak)
+			->set("high_peak", $high_peak)
+			->set("user_count", $user_count)
+			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("prev_date", $prev_date)
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();	
+    }
 	
 	function whale_users()
 	{			
@@ -1396,76 +1750,6 @@ class Statistics extends MY_Controller {
 		
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
-			->set("game_id", $game_id)
-			->add_js_include("game/statistics")
-			->add_js_include("jquery-ui-timepicker-addon")
-			->render();
-	}
-	
-	function user_return()
-	{			
-		$this->_init_statistics_layout();			
-		$this->load->helper("output_table");
-		
-		$this->zacl->check("game_statistics", "read");
-		
-		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
-		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
-		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
-			$start_date = date("Y-m-d",strtotime("-8 days"));
-			$end_date = date("Y-m-d",strtotime("-1 days"));
-		} 
-		$game_id = $this->input->get("game_id");
-		
-		$query = $this->DB2->query("
-			SELECT
-				statistics.date,
-				statistics.game_id,
-				statistics.one_return_count 'one_return_count',
-				(statistics.one_return_count*100/statistics.login_count) 'one_return_percentage',
-				statistics.three_return_count 'three_return_count',
-				(statistics.three_return_count*100/statistics.login_count) 'three_return_percentage',
-				weekly_statistics.return_count 'weekly_return_count',
-				(weekly_statistics.return_count*100/weekly_statistics.login_count) 'weekly_return_percentage',
-				monthly_statistics.return_count 'monthly_return_count',
-				(monthly_statistics.return_count*100/monthly_statistics.login_count) 'monthly_return_percentage'
-			FROM statistics
-			LEFT JOIN weekly_statistics 
-				ON statistics.game_id = weekly_statistics.game_id 
-				AND statistics.date = weekly_statistics.date 
-			LEFT JOIN monthly_statistics 
-				ON statistics.game_id = monthly_statistics.game_id 
-				AND statistics.date = monthly_statistics.date 
-			WHERE statistics.date BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-				AND statistics.game_id = '{$game_id}'
-		    ORDER BY statistics.date DESC
-		");
-		
-		$region_query = $this->DB2->query("
-			SELECT 
-				user_info.nation, COUNT(user_info.uid) 'user_count'
-			FROM
-				users
-				LEFT JOIN user_info ON users.uid=user_info.uid
-			WHERE
-				users.create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-			GROUP BY user_info.nation
-		");
-		
-		$this->load->library('jpgraph');
-		$jgraph_data = array();
-		$jgraph_labels = array();
-		
-		foreach($region_query->result() as $row) {
-			$jgraph_data[] = $row->user_count;
-			$jgraph_labels[] = $row->nation;
-		}
-		
-		$region_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/region_graph');
-		
-		$this->g_layout
-			->set("query", isset($query) ? $query : false)
-			->set("region_graph",  isset($region_graph) ? $region_graph : false)
 			->set("game_id", $game_id)
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
