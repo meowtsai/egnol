@@ -1628,10 +1628,33 @@ class Statistics extends MY_Controller {
         }
         
         $high_peak = 0;
+        $bi_peak = array();
         
         if (isset($peak[$start_date])) {
-            foreach ($peak[$start_date] as $peak) {
-                if ($peak > $high_peak) $high_peak = $peak;
+            foreach ($peak[$start_date] as $hour_peak) {
+                if ($hour_peak > $high_peak) $high_peak = $hour_peak;
+            }
+            
+            if (isset($peak[$start_date][0]) && isset($peak[$prev_date][23])) {
+                $bi_peak[0] = ($peak[$start_date][0]>$peak[$prev_date][23])?$peak[$start_date][0]:$peak[$prev_date][23];
+            } elseif (!isset($peak[$start_date][0]) && isset($peak[$prev_date][23])) {
+                $bi_peak[0] = $peak[$prev_date][23];
+            } elseif (isset($peak[$start_date][0]) && !isset($peak[$prev_date][23])) {
+                $bi_peak[0] = $peak[$start_date][0];
+            } else {
+                $bi_peak[0] = 0;
+            }
+            
+            for ($h=2;$h<24;$h+=2) {
+                if (isset($peak[$start_date][$h]) && isset($peak[$start_date][$h-1])) {
+                    $bi_peak[$h] = ($peak[$start_date][$h]>$peak[$start_date][$h-1])?$peak[$start_date][$h]:$peak[$start_date][$h-1];
+                } elseif (!isset($peak[$start_date][$h]) && isset($peak[$start_date][$h-1])) {
+                    $bi_peak[$h] = $peak[$start_date][$h-1];
+                } elseif (isset($peak[$start_date][$h]) && !isset($peak[$start_date][$h-1])) {
+                    $bi_peak[$h] = $peak[$start_date][$h];
+                } else {
+                    $bi_peak[$h] = 0;
+                }
             }
         }
         
@@ -1644,11 +1667,11 @@ class Statistics extends MY_Controller {
         foreach ($count_cursor as $document) {
             $user_count += $document->count;
         }
-			
+        
 		$this->g_layout
 			->add_breadcrumb("即時在線")	
 			->set("sharp", $sharp)
-			->set("peak", $peak)
+			->set("bi_peak", $bi_peak)
 			->set("high_peak", $high_peak)
 			->set("user_count", $user_count)
 			->set("game_id", $game_id)

@@ -107,18 +107,18 @@
 			<tr>
 				<th><?=$high_peak;?></th>
 				<th>時段峰值(今)</th>
-				<th><?=$peak[$start_date][0]?></th>	
-				<th><?=($peak[$start_date][2]>$peak[$start_date][1])?$peak[$start_date][2]:$peak[$start_date][1]?></th>
-				<th><?=($peak[$start_date][4]>$peak[$start_date][3])?$peak[$start_date][4]:$peak[$start_date][3]?></th>
-				<th><?=($peak[$start_date][6]>$peak[$start_date][5])?$peak[$start_date][6]:$peak[$start_date][5]?></th>
-				<th><?=($peak[$start_date][8]>$peak[$start_date][7])?$peak[$start_date][8]:$peak[$start_date][7]?></th>
-				<th><?=($peak[$start_date][10]>$peak[$start_date][9])?$peak[$start_date][10]:$peak[$start_date][9]?></th>
-				<th><?=($peak[$start_date][12]>$peak[$start_date][11])?$peak[$start_date][12]:$peak[$start_date][11]?></th>
-				<th><?=($peak[$start_date][14]>$peak[$start_date][13])?$peak[$start_date][14]:$peak[$start_date][13]?></th>
-				<th><?=($peak[$start_date][16]>$peak[$start_date][15])?$peak[$start_date][16]:$peak[$start_date][14]?></th>
-				<th><?=($peak[$start_date][18]>$peak[$start_date][17])?$peak[$start_date][18]:$peak[$start_date][15]?></th>
-				<th><?=($peak[$start_date][20]>$peak[$start_date][19])?$peak[$start_date][20]:$peak[$start_date][17]?></th>
-				<th><?=($peak[$start_date][22]>$peak[$start_date][21])?$peak[$start_date][22]:$peak[$start_date][21]?></th>
+				<th><?=$bi_peak[0]?></th>	
+				<th><?=$bi_peak[2]?></th>	
+				<th><?=$bi_peak[4]?></th>	
+				<th><?=$bi_peak[6]?></th>	
+				<th><?=$bi_peak[8]?></th>	
+				<th><?=$bi_peak[10]?></th>	
+				<th><?=$bi_peak[12]?></th>	
+				<th><?=$bi_peak[14]?></th>	
+				<th><?=$bi_peak[16]?></th>	
+				<th><?=$bi_peak[18]?></th>	
+				<th><?=$bi_peak[20]?></th>	
+				<th><?=$bi_peak[22]?></th>	
 			</tr>
 		</tbody>
 	</table>
