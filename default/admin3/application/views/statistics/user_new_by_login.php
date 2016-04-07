@@ -116,11 +116,11 @@
 				<td style="text-align:right"><?=number_format(($row->new_device_longe_count)?$row->new_device_longe_count:0, 2)?></td>
 				<td style="text-align:right"><?=number_format(($row->new_device_quick_count)?$row->new_device_quick_count:0, 2)?></td>
 				<td style="text-align:right"><?=number_format(($row->new_device_count)?$row->new_device_count:0, 2)?></td>
-				<td style="text-align:right"><?=number_format(($row->new_login_facebook_count)?$row->new_device_facebook_count/$row->new_login_facebook_count*100:0, 2)."%"?></td>		
-				<td style="text-align:right"><?=number_format(($row->new_login_google_count)?$row->new_device_google_count/$row->new_login_google_count*100:0, 2)."%"?></td>	
-				<td style="text-align:right"><?=number_format(($row->new_login_longe_count)?$row->new_device_longe_count/$row->new_login_longe_count*100:0, 2)."%"?></td>	
-				<td style="text-align:right"><?=number_format(($row->new_login_quick_count)?$row->new_device_quick_count/$row->new_login_quick_count*100:0, 2)."%"?></td>	
-				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_device_count/$row->new_login_count*100:0, 2)."%"?></td>												
+				<td style="text-align:right"><?=number_format(($row->new_device_facebook_count)?$row->new_login_facebook_count/$row->new_device_facebook_count*100:0, 2)."%"?></td>		
+				<td style="text-align:right"><?=number_format(($row->new_device_google_count)?$row->new_login_google_count/$row->new_device_google_count*100:0, 2)."%"?></td>	
+				<td style="text-align:right"><?=number_format(($row->new_device_longe_count)?$row->new_login_longe_count/$row->new_device_longe_count*100:0, 2)."%"?></td>	
+				<td style="text-align:right"><?=number_format(($row->new_device_quick_count)?$row->new_login_quick_count/$row->new_device_quick_count*100:0, 2)."%"?></td>	
+				<td style="text-align:right"><?=number_format(($row->new_device_count)?$row->new_login_count/$row->new_device_count*100:0, 2)."%"?></td>												
 			</tr>
 		<? endforeach;?>
 		</tbody>

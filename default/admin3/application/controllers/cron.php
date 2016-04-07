@@ -551,7 +551,6 @@ class Cron extends CI_Controller {
                 $span_query2 = "create_time <= DATE('{$date_1_week_ago}') AND create_time > DATE('{$date_2_week_ago}')";
 				$span_query3 = "DATE(l.create_time) <= DATE('{$date_2_week_ago}')";
 				$save_table = "weekly_statistics";
-                echo '[date_2_week_ago]'.$date_2_week_ago;
 				break;
 			
 			case "monthly":
@@ -563,7 +562,6 @@ class Cron extends CI_Controller {
                 $span_query2 = "create_time <= DATE('{$date_1_month_ago}') AND create_time > DATE('{$date_2_month_ago}')";
 			    $span_query3 = "DATE(l.create_time) <= DATE('{$date_2_month_ago}')";
 				$save_table = "monthly_statistics";
-                echo '[date_2_month_ago]'.$date_2_month_ago;
 				break;
 				
 			default:
@@ -659,82 +657,6 @@ class Cron extends CI_Controller {
 			GROUP BY lgl_t.game_id
         ) AS lgl_total ON lgl_return.game_id=lgl_total.game_id
 		");	
-        
-        echo "
-        SELECT
-            lgl_return.game_id,
-            lgl_return.{$return_text}_count,
-            lgl_return.facebook_count,
-            lgl_return.google_count,
-            lgl_return.longe_count,
-            lgl_return.quick_count,
-            lgl_total.total_count,
-            lgl_total.total_facebook_count,
-            lgl_total.total_google_count,
-            lgl_total.total_longe_count,
-            lgl_total.total_quick_count
-        FROM
-        (
-			SELECT 
-				lgl.game_id,
-                COUNT(lgl.uid) '{$return_text}_count',
-                COUNT(CASE WHEN lgl.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'facebook_count',
-                COUNT(CASE WHEN lgl.external_id LIKE '%google' THEN 1 ELSE NULL END) 'google_count',
-                COUNT(CASE WHEN lgl.external_id IS NULL THEN 1 ELSE NULL END) 'longe_count',
-                COUNT(CASE WHEN lgl.external_id LIKE '%device' THEN 1 ELSE NULL END) 'quick_count'
-			FROM
-			(
-				SELECT 
-					l.uid, l.game_id, MIN(l.create_time), MIN(u.external_id) 'external_id', MAX(l.is_first) 'is_first'
-				FROM
-					log_game_logins l
-                JOIN users u ON l.uid=u.uid
-				WHERE
-					".$span_query1."
-                        ".(($this->testaccounts)?" AND l.uid NOT IN (".$this->testaccounts.") ":"")."
-				GROUP BY l.uid, l.game_id
-			) AS lgl
-				LEFT JOIN
-			(
-				SELECT 
-					uid, game_id, MIN(create_time)
-				FROM
-					log_game_logins
-				WHERE
-					".$span_query2."
-                        ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
-				GROUP BY uid, game_id
-			) AS lgl_nologin ON lgl.game_id = lgl_nologin.game_id AND lgl.uid = lgl_nologin.uid
-			WHERE
-				lgl_nologin.uid IS NULL
-				AND lgl.is_first <> 1
-			GROUP BY lgl.game_id
-        ) AS lgl_return
-            JOIN
-        (
-            SELECT 
-				lgl_t.game_id,
-                COUNT(lgl_t.uid) 'total_count',
-                COUNT(CASE WHEN lgl_t.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'total_facebook_count',
-                COUNT(CASE WHEN lgl_t.external_id LIKE '%google' THEN 1 ELSE NULL END) 'total_google_count',
-                COUNT(CASE WHEN lgl_t.external_id IS NULL THEN 1 ELSE NULL END) 'total_longe_count',
-                COUNT(CASE WHEN lgl_t.external_id LIKE '%device' THEN 1 ELSE NULL END) 'total_quick_count'
-			FROM
-			(
-				SELECT 
-					l.uid, l.game_id, MIN(l.create_time), MIN(u.external_id) 'external_id'
-				FROM
-					log_game_logins l
-                JOIN users u ON l.uid=u.uid
-				WHERE
-					".$span_query3."
-						AND l.is_first = 1
-                        ".(($this->testaccounts)?" AND l.uid NOT IN (".$this->testaccounts.") ":"")."
-				GROUP BY l.uid, l.game_id
-			) AS lgl_t
-			GROUP BY lgl_t.game_id
-        ) AS lgl_total ON lgl_return.game_id=lgl_total.game_id
-		";
         
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {

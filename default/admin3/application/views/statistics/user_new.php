@@ -91,7 +91,7 @@
 				<td nowrap="nowrap"><?=$row->date?></td>
 				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_login_count:0, 2)?></td>
 				<td style="text-align:right"><?=number_format(($row->new_device_count)?$row->new_device_count:0, 2)?></td>
-				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_device_count/$row->new_login_count*100:0, 2)."%"?></td>													
+				<td style="text-align:right"><?=number_format(($row->new_device_count)?$row->new_login_count/$row->new_device_count*100:0, 2)."%"?></td>													
 			</tr>
 		<? endforeach;?>
 		</tbody>
