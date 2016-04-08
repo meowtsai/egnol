@@ -1606,7 +1606,7 @@ class Statistics extends MY_Controller {
 		$start_date = $this->input->get_post("start_date") ? $this->input->get_post("start_date") : date("Y-m-d");
 		$game_id = $this->input->get_post("game_id");
         
-        $prev_date = date("Y-m-d", strtotime($start_date-24*60*60));
+        $prev_date = date("Y-m-d", strtotime($start_date)-24*60*60);
         
         $this->load->config('g_mongodb');
         $g_mongodb = $this->config->item('mongo_db');
