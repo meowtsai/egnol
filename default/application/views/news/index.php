@@ -14,16 +14,28 @@
 					</ul>
 
 					<ul id="news_content">
-						<li><img src="image/news/event-icn.gif"/><a class="iframe" href="news_content.html"> <span class="date">2016/03/30</span>	刪檔封測開跑！江湖大事快衝啊~</a></li>
-						<li><img src="image/news/sys-icn.gif"/><a href="#"> <span class="date">2016/03/30</span>	刪檔封測開跑！江湖大事快衝啊~</a></li>
-						<li><img src="image/news/news-icn.gif"/><a href="#"> <span class="date">2016/03/30</span>	刪檔封測開跑！江湖大事快衝啊~</a></li>
-						<li><img src="image/news/event-icn.gif"/><a href="#"> <span class="date">2016/03/30</span>	刪檔封測開跑！江湖大事快衝啊~</a></li>
-						<li><img src="image/news/event-icn.gif"/><a href="#"> <span class="date">2016/03/30</span>	刪檔封測開跑！江湖大事快衝啊~</a></li>
+					<?
+						foreach($news->result() as $row)
+						{
+							echo "<li><img src='/p/image/news/";
+							if($row->type == 0)
+								echo "sys";
+							else if($row->type == 1)
+								echo "news";
+							else if($row->type == 2)
+								echo "event";
+							echo "-icn.gif' /><a class='iframe' href=''><span class='date'>";
+							echo date("Y-m-d", strtotime($row->create_time));
+							echo "</span>";
+							echo $row->title;
+							echo "</a></li>";
+						}
+					?>
 					</ul>
-					<a href="#"><img class="more_btn" src="/image/news/more-btn.png" /></a>
+					<a href="#"><img class="more_btn" src="/p/image/news/more-btn.png" /></a>
 				</div>
 			</div>
-			<div class="button"><a href="#" title="login"><img src="/image/news/back-btn.gif"></a></div>
+			<div class="button"><a href="#" title="login"><img src="/p/image/news/back-btn.gif"></a></div>
 		</div>
 	</div>
 </div>
