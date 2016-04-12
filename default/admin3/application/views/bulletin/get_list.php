@@ -58,8 +58,8 @@
 	<tbody>
 	<? foreach($query->result() as $row):
 		if ($row->priority <> 0) {
-			if ($row->publish_time > now()) $row->priority = 9;
-			if ($row->close_time < now()) $row->priority = 8;
+			if ($row->start_time > now()) $row->priority = 9;
+			if ($row->end_time < now()) $row->priority = 8;
 		}
 	?>
 	    <tr>
@@ -70,8 +70,8 @@
 			    <a href="<?=server_site_url($this->game_id, "bulletin/preview/{$row->id}")?>" target="_blank" title="預覽"><i class="icon icon-search"></i></a>
 		    </td>
 		    <td style="font-size:13px; color:#666">
-			    <?=date("m/d H:i", strtotime($row->publish_time))?>
-			    <?=$row->close_time<'2038-01-01' ? "<Br>~ ".date("m/d H:i", strtotime($row->close_time)) : ''?>
+			    <?=date("m/d H:i", strtotime($row->start_time))?>
+			    <?=$row->end_time<'2038-01-01' ? "<Br>~ ".date("m/d H:i", strtotime($row->end_time)) : ''?>
 		    </td>
 		    <td style="color:<?=$enable[$row->priority]['color']?>"><?=$enable[$row->priority]['name']?></td>
 		    <td>			

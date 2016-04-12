@@ -103,6 +103,7 @@ class Bulletin extends MY_Controller {
 			
 			$data = array(
 				'title'	   => $this->input->post("bulletin_title"),
+				'game_id'  => $this->input->post("game_id") ? $this->input->post("game_id") : "",
 				'type'	   => $this->input->post("bulletin_type"),
 				'content'  => $this->input->post("bulletin_content"),
 				'priority' => $this->input->post("priority"),
@@ -110,11 +111,11 @@ class Bulletin extends MY_Controller {
 			); 			
 			
 			
-			if ($this->input->post("publish_time")) {
-				$data['publish_time'] = $this->input->post("publish_time");
+			if ($this->input->post("start_time")) {
+				$data['start_time'] = $this->input->post("start_time");
 			}
-			if ($this->input->post("close_time")) {
-				$data['close_time'] = $this->input->post("close_time");
+			if ($this->input->post("end_time")) {
+				$data['end_time'] = $this->input->post("end_time");
 			}
 			
 			if ($bulletin_id = $this->input->post("bulletin_id")) { //修改

@@ -15,18 +15,18 @@ class Ajax extends MY_Controller {
 		foreach($query->result() as $row) {
 			$data[] = array(
 				'id' => $row->id,
-				'title' => strtr(strip_tags($row->bulletin_content, "<a><span>"), array("<a "=>"<a target='_blank' ")),
+				'title' => strtr(strip_tags($row->content, "<a><span>"), array("<a "=>"<a target='_blank' ")),
 				'date' =>  date("Y/m/d", strtotime($row->create_time)),
 			);
 		}
 		
-		if ($uid = $this->g_user->uid) {
+		/*if ($uid = $this->g_user->uid) {
 			$this->db->query("
 				INSERT INTO log_online_users (uid, server_id, online_date) 
 					SELECT uid, server_id, NOW() FROM characters
 					WHERE uid='{$uid}' and server_id='{$target}'	 ON DUPLICATE KEY UPDATE online_date=NOW()				
 			");
-		}		
+		}*/		
 		die(json_encode($data));
 	} 
 	

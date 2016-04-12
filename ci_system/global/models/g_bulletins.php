@@ -21,7 +21,7 @@ class G_Bulletins extends CI_Model {
 				
 		return $this->db->where("id", $id)
 				->where("priority >", "0")
-				->where("now() between publish_time and close_time", null, false)
+				->where("now() between start_time and end_time", null, false)
 				->from("bulletins")				
 				->get()->row();
 	}
@@ -39,8 +39,8 @@ class G_Bulletins extends CI_Model {
 			->from("bulletins")
 			//->where("game_id", $game_id))
 			->where("priority >", "0")
-			->where("now() between publish_time and close_time", null, false)
-			->order_by("priority", "desc")->order_by("publish_time", "desc")->get();
+			->where("now() between start_time and end_time", null, false)
+			->order_by("priority", "desc")->order_by("start_time", "desc")->get();
 	}
 	
 	function get_list_target($game_id, $type, $target, $limit=0, $offset=0)
@@ -56,7 +56,7 @@ class G_Bulletins extends CI_Model {
 					->from("bulletins")
 					->where("type", $type)
 					->where("priority >", "0")					
-					->where("now() >= publish_time", null, false)
+					->where("now() >= start_time", null, false)
 		            ->where("(target like '%{$game_id},%')", null, false)
 					->count_all_results();
 	}

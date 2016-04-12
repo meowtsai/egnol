@@ -8,6 +8,7 @@ CKEDITOR.editorConfig = function( config )
 	// Define changes to default configuration here. For example:
 	// config.language = 'fr';
 	// config.uiColor = '#AADC6E';
+    config.skin = 'v2';
 
 	config.extraPlugins += (config.extraPlugins ?',lineheight' :'lineheight');
 	
@@ -44,7 +45,7 @@ CKEDITOR.editorConfig = function( config )
 		{ name: 'tools', items : [ 'Maximize', 'ShowBlocks','-','About' ] }
 	*/
 	
-	var base_url = '/admin3/ckeditor/';
+	var base_url = '/ckeditor/';
 	//config.filebrowserBrowseUrl = base_url+'ckfinder.html';
 	//config.filebrowserImageBrowseUrl = base_url+'ckfinder/ckfinder.html?Type=Images';
 	//config.filebrowserFlashBrowseUrl = base_url+'ckfinder/ckfinder.html?Type=Flash';

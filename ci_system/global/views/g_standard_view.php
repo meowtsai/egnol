@@ -67,7 +67,7 @@
 </body>
 
 <!--slider -->
-<script>
+<!--script>
 $(document).ready(function(){
   $('.game-slider').slick({
 	   dots: true,
@@ -77,12 +77,12 @@ $(document).ready(function(){
 
   });
 });
-</script>
+</script-->
 
 <!--nav -->
-<script>
+<!--script>
 $('#menu').slicknav({
 		label:'',
 });
 </script>
-</html>
+</html-->
