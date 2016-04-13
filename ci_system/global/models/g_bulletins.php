@@ -17,8 +17,7 @@ class G_Bulletins extends CI_Model {
 	
 	function get_bulletin($game_id, $id)
 	{
-		$this->db->where("(target like '%{$game_id},%')", null, false);
-        $this->db->or_where("game_id", $game_id, false);
+		$this->db->where("(target like '%{$game_id},%' or game_id='{$game_id}')", null, false);
 				
 		return $this->db->where("id", $id)
 				->where("priority >", "0")
@@ -34,7 +33,7 @@ class G_Bulletins extends CI_Model {
 		if ($offset) $this->db->limit($limit, $offset);
 		else if ($limit) $this->db->limit($limit);
 		
-		$this->db->where("(target like '%{$game_id},%')", null, false)->or_where("game_id", $game_id, false);
+		$this->db->where("(target like '%{$game_id},%' or game_id='{$game_id}')", null, false);
 		
 		return $this->db->select("*")
 			->from("bulletins")
