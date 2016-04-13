@@ -25,10 +25,10 @@ class G_Pictures extends CI_Model {
 		else $this->db->order_by("priority", "desc");
 		
 		return $this->db->select("p.*, bc.category")
-			->from("pictures p")
-			->where("game_id", $game_id)
+			->where("p.game_id", $game_id)
 			->where("p.is_active", 1)
             ->where("now() between p.start_time and p.end_time", null, false)
+			->from("pictures p")
 			->join("picture_categories bc", "p.category_id=bc.id", "left")
 			->get();
 	}
