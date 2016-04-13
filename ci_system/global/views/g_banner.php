@@ -3,7 +3,7 @@
 <ul class="game-slider">
 <?
 
-	foreach($banners->row() as $banner)
+	foreach($banners->result() as $banner)
 	{
 		if(file_exists($banner->src))
 		{
