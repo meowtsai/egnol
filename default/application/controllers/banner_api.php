@@ -225,11 +225,11 @@ class Banner_api extends MY_Controller {
 						</tr>
 						<tr>
 							<th>起始時間</th>
-							<td><input type="text" maxlength="20" name="begin_time" value="<?=date("Y-m-d H:m:s")?>" size="33" style="width:90%;" /></td>
+							<td><input type="text" maxlength="20" name="begin_time" value="<?=date("Y-m-d H:i:s")?>" size="33" style="width:90%;" /></td>
 						</tr>
 						<tr>
 							<th>結束時間</th>
-							<td><input type="text" maxlength="20" name="end_time" value="<?=date("Y-m-d H:m:s")?>" size="33" style="width:90%;" /></td>
+							<td><input type="text" maxlength="20" name="end_time" value="<?=date("Y-m-d H:i:s")?>" size="33" style="width:90%;" /></td>
 						</tr>
 						<tr>
 							<th>圖片</th><td><input type="file" name="event_banner" style="width:90%;" /></td>
