@@ -11,7 +11,7 @@ class Ckeditor extends CI_Controller
 		****/
 		$this->load->helper('url');
 
-		$config['upload_path']= realpath("p/upload");        ###配置上传路径
+		$config['upload_path']= realpath("p/upload/bulletin");        ###配置上传路径
 		$config['allowed_types']='gif|jpg|png|swf';       ###允许上传的文件类型
 		$config['encrypt_name']=TRUE;   ###上传文件随机重命名
 
@@ -55,7 +55,8 @@ class Ckeditor extends CI_Controller
 			###如需要可以做文件信息写入数据库处理###
 
 			###$filename=base_url().'uploads/'.$rename; ###当前上传的文件，也可以../uploads/6_2012_07_13_11.jpg
-			$filename = site_url("p/upload/".$updata['file_name']);
+			//$filename = site_url("p/upload/bulletin/".$updata['file_name']);
+			$filename = "https://game.longeplay.com.tw/p/upload/bulletin/".$updata['file_name'];
 
 			###回调###
 			$str="<script type=\"text/javascript\">window.parent.CKEDITOR.tools.callFunction($fn,'$filename','$message');</script>";  ###关键$filename这里记得加上''，不然会出错
