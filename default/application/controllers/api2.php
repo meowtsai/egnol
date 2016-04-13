@@ -1455,7 +1455,7 @@ class Api2 extends MY_Controller
 	function service_question_ajax()
 	{
 		if ( ! $this->input->post("content")) die(json_encode(array("status"=>"failure", "message"=>"無內文")));
-/*		
+		
 		$query = $this->db->query("SELECT count(*) > (3-1) as chk FROM questions WHERE uid={$this->g_user->uid} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");		
 		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問，若有未說明問題，請以原提問進行補述!")));
 
@@ -1521,7 +1521,7 @@ class Api2 extends MY_Controller
 			->set("create_time", "now()", false)
 			->set("update_time", "now()", false)
 			->insert("questions", $data);
-*/
+
 		die(json_encode(array("status"=>"success", "site"=> $site)));
 	}
 	
