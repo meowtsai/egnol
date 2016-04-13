@@ -100,12 +100,13 @@ class Bulletin extends MY_Controller {
 		}
 		else
 		{	
-			
+			$content = str_replace("manager.longeplay.com.tw", "game.longeplay.com.tw", $this->input->post("bulletin_content"));
+            
 			$data = array(
 				'title'	   => $this->input->post("bulletin_title"),
 				'game_id'  => $this->input->post("game_id") ? $this->input->post("game_id") : "",
 				'type'	   => $this->input->post("bulletin_type"),
-				'content'  => $this->input->post("bulletin_content"),
+				'content'  => $content,
 				'priority' => $this->input->post("priority"),
 				'target'   => $this->input->post("target") ? implode(",", $this->input->post("target"))."," : ",",					
 			); 			
