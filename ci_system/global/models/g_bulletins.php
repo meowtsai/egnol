@@ -16,10 +16,9 @@ class G_Bulletins extends CI_Model {
 	}
 	
 	function get_bulletin($game_id, $id)
-	{
-		$this->db->where("(target like '%{$game_id},%' or game_id='{$game_id}')", null, false);
-				
+	{	
 		return $this->db->where("id", $id)
+                ->where("(target like '%{$game_id},%' or game_id='{$game_id}')", null, false)
 				->where("priority >", "0")
 				->where("now() between start_time and end_time", null, false)
 				->from("bulletins")				
