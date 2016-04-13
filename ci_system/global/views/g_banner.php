@@ -5,10 +5,7 @@
 
 	foreach($banners as $banner)
 	{
-		if(file_exists($banner->src))
-		{
-			echo "<li><a href='{$banner->link}' target='_blank'><img src='{$banner->src}' title='{$banner->title}' /></a></li>";
-		}
+		echo "<li><a href='{$banner->link}' target='_blank'><img src='{$banner->src}' title='{$banner->title}' /></a></li>";
 	}
 	
 ?>
