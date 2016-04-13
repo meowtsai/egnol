@@ -57,8 +57,8 @@ class Api2 extends MY_Controller
 		$_SESSION['login_deviceid']	= $device_id;
 		$_SESSION['old_deviceid'] = $this->input->get_post("old_deviceid");
 
-        //$is_duplicate_login = $this->_check_duplicate_login();
-		$is_duplicate_login = false;
+        $is_duplicate_login = $this->_check_duplicate_login();
+		//$is_duplicate_login = false;
 
 		if(!$this->g_user->is_login() || $is_duplicate_login)
 		{
@@ -168,7 +168,7 @@ class Api2 extends MY_Controller
 			$email = !empty($this->g_user->email) ? $this->g_user->email : "";
 			$mobile = !empty($this->g_user->mobile) ? $this->g_user->mobile : "";
 			$external_id = !empty($this->g_user->external_id) ? $this->g_user->external_id : "";
-	
+			
 			header('Content-type:text/html; Charset=UTF-8');
 			//echo "<script type='text/javascript'>LongeAPI.onLogoutSuccess()</script>";
 			$ios_str = $this->g_user->uid."-_-".$email."-_-".$mobile."-_-".$external_id."-_-".$_SESSION['server_id']."-_-".$this->g_user->token."-_-".$_SESSION['login_channel'];
@@ -1221,16 +1221,19 @@ class Api2 extends MY_Controller
 		$app_key = "";
 		foreach($partner_api as $key => $value)
 		{
-			foreach($value['sites'] as $site => $site_data)
+			if(isset($value['sites']))
 			{
-				if($site === $app_id)
+				foreach($value['sites'] as $site => $site_data)
 				{
-					$app_key = $site_data['key'];
-					break;
+					if($site === $app_id)
+					{
+						$app_key = $site_data['key'];
+						break;
+					}
 				}
+				if($app_key !== "")
+					break;
 			}
-			if($app_key !== "")
-				break;
 		}
 		
 		if($app_key === "")
