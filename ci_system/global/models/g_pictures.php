@@ -25,7 +25,7 @@ class G_Pictures extends CI_Model {
 		else $this->db->order_by("p.priority", "desc");
 		
 		return $this->db->select("p.*, bc.category")
-			->where("p.game_id", $game_id)
+			->where("bc.game_id", $game_id)
 			->where("p.is_active", 1)
             ->where("now() between p.start_time and p.end_time", null, false)
 			->from("pictures p")

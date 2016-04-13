@@ -56,7 +56,7 @@
 <?
 	$this->load->view("g_top_bar");
 	
-	if(isset($game_events))
+	if(isset($main_banners))
 		$this->load->view("g_banner");
 ?>
 <?=$layout_content?>
