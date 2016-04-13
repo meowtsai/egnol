@@ -3,9 +3,12 @@
 <ul class="game-slider">
 <?
 
-	foreach($banners as $banner)
+	foreach($banners->row() as $banner)
 	{
-		echo "<li><a href='{$banner->link}' target='_blank'><img src='{$banner->src}' title='{$banner->title}' /></a></li>";
+		if(file_exists($banner->src))
+		{
+			echo "<li><a href='{$banner->link}' target='_blank'><img src='{$banner->src}' title='{$banner->title}' /></a></li>";
+		}
 	}
 	
 ?>
