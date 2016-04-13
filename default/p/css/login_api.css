@@ -35,7 +35,7 @@
 .login-form .member_info, .login-form .member_password{ max-width:500px; margin:0 auto; text-align:left; width:90%; line-height:40px;}
 
 .member_info tr > th{ width:30%; text-align:right; padding:5px; vertical-align:middle;}
-.member_info tr > td{ width:70%; color:#e6290f; padding:5px; vertical-align:middle;}
+.member_info tr > td{ width:60%; color:#e6290f; padding:5px; vertical-align:middle;}
 .login-form input{font-family: "微軟正黑體",  "Arial";color:#333;border-radius:6px; height:50px; font-size:18px; border-width:1px; border:#ccc thin solid; box-sizing: border-box;background:#fff; width:90%; max-width:300px;}
 
 
@@ -74,6 +74,6 @@
 .login-button .button_submit{ width:48%;}
 .login-button .button_info{ width:24%;}
 .member_info tr > th{ width:40%;}
-.member_info tr > td{ width:60%;}
+.member_info tr > td{ width:50%;}
 
 }
