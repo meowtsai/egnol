@@ -60,6 +60,7 @@ class Picture extends MY_Controller {
 			->add_breadcrumb("修改")
 			->add_js_include("picture/form")
 			->add_js_include("ckeditor/ckeditor")
+			->add_js_include("jquery-ui-timepicker-addon")
 			->set("picture", $picture)
 			->set("category_query", $this->DB2->where("game_id", $this->game_id)->get("picture_categories"))
 			->render("picture/form");		
@@ -79,6 +80,7 @@ class Picture extends MY_Controller {
 			->add_breadcrumb("新增")
 			->add_js_include("picture/form")
 			->add_js_include("ckeditor/ckeditor")
+			->add_js_include("jquery-ui-timepicker-addon")
 			->set("picture", false)
 			->set("category_query", $this->DB2->where("game_id", $this->game_id)->get("picture_categories"))
 			->render("picture/form");
@@ -101,7 +103,7 @@ class Picture extends MY_Controller {
 		{
 			if ( ! empty($_FILES["userfile"]['name'])) 
 			{				
-				$this->load->library('upload', array("upload_path"=>realpath("p/upload"), "allowed_types"=>"gif|jpg|jpeg|png|swf", 'encrypt_name'=>TRUE));
+				$this->load->library('upload', array("upload_path"=>realpath("p/upload/pictures"), "allowed_types"=>"gif|jpg|jpeg|png|swf", 'encrypt_name'=>TRUE));
 
 				if ( ! $this->upload->do_upload())
 				{
@@ -110,24 +112,33 @@ class Picture extends MY_Controller {
 				}
 				else
 				{
-					rsync_to_slave();
+					//rsync_to_slave();
 					$data = $this->upload->data();
-					$src = site_url("p/upload/{$data['file_name']}");
+					$src = site_url("p/upload/pictures/{$data['file_name']}");
 				}				
 			}
 			else {
 				$src = $this->input->post("src");
 			}
 			
+			$link = str_replace("manager.longeplay.com.tw", "game.longeplay.com.tw", $this->input->post("link"));
+            
 			$data = array(
 				'category_id'		=> $this->input->post("category_id"),
 				'src'				=> $src,
-				'link'				=> $this->input->post("link"),
+				'link'				=> $link,
 				'title'				=> $this->input->post("title"),
 				'width'				=> $this->input->post("width") ? $this->input->post("width") : null,
 				'height'			=> $this->input->post("height") ? $this->input->post("height") : null,
 				'is_active'			=> $this->input->post("is_active"),
 			);
+			
+			if ($this->input->post("start_time")) {
+				$data['start_time'] = $this->input->post("start_time");
+			}
+			if ($this->input->post("end_time")) {
+				$data['end_time'] = $this->input->post("end_time");
+			}
 			
 			if ($picture_id = $this->input->post("picture_id")) { //修改
 				$this->DB1->where('id', $picture_id)->update('pictures', $data);

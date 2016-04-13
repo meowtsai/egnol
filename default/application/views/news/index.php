@@ -7,10 +7,10 @@
 			<div class="login_member">
 				<div class="login_info">
 					<ul id="news_tab">
-						<li><a href="#">所有公告</a></li>
-						<li><a href="#">活動公告</a></li>
-						<li><a href="#">系統公告</a></li>
-						<li><a href="#">江湖新聞</a></li>
+						<li><a href="/news?site=<?=$site?>">所有公告</a></li>
+						<li><a href="/news?site=<?=$site?>&type=2">活動公告</a></li>
+						<li><a href="/news?site=<?=$site?>&type=3">系統公告</a></li>
+						<li><a href="/news?site=<?=$site?>&type=1">江湖新聞</a></li>
 					</ul>
 
 					<ul id="news_content">
@@ -18,13 +18,13 @@
 						foreach($news->result() as $row)
 						{
 							echo "<li><img src='/p/image/news/";
-							if($row->type == 0)
+							if($row->type == 3)
 								echo "sys";
 							else if($row->type == 1)
 								echo "news";
 							else if($row->type == 2)
 								echo "event";
-							echo "-icn.gif' /><a class='iframe' href=''><span class='date'>";
+							echo "-icn.gif' /><a class='iframe' href='/news/detail/{$row->id}?site={$site}'><span class='date'>";
 							echo date("Y-m-d", strtotime($row->create_time));
 							echo "</span>";
 							echo $row->title;
@@ -32,8 +32,10 @@
 						}
 					?>
 					</ul>
-					<a href="#"><img class="more_btn" src="/p/image/news/more-btn.png" /></a>
 				</div>
+				<div>
+                    <?=$this->pagination->create_links();?>
+                </div>
 			</div>
 			<div class="button"><a href="#" title="login"><img src="/p/image/news/back-btn.gif"></a></div>
 		</div>

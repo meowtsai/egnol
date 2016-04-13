@@ -1658,7 +1658,7 @@ class Cron extends CI_Controller {
             
             $idle_time = time() - $row->latest_update_time;
             
-            if ($idle_time < 3*60*60) $user_online[$row->game_id][$row->server_id]+=1;
+            if ($idle_time < 2*60*60) $user_online[$row->game_id][$row->server_id]+=1;
         }
         
         foreach($user_online as $game => $servers) {

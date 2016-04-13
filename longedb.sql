@@ -650,7 +650,10 @@ CREATE TABLE `pictures` (
   `height` smallint(6) DEFAULT NULL,
   `category_id` int(11) NOT NULL,
   `create_time` datetime NOT NULL,
+  `start_time` timestamp NULL DEFAULT NULL,
+  `end_time` timestamp NULL DEFAULT NULL,
   `title` varchar(50) DEFAULT NULL,
+  `priority` tinyint(2) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -960,3 +963,24 @@ CREATE TABLE `news` (
   `link` varchar(255) DEFAULT NULL COMMENT '連結',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `bulletins`
+--
+CREATE TABLE `bulletins` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(20) DEFAULT NULL,
+  `game_id` varchar(20) NOT NULL,
+  `content` text NOT NULL,
+  `type` tinyint(2) NOT NULL DEFAULT '0',
+  `admin_uid` int(11) DEFAULT NULL,
+  `priority` tinyint(2) NOT NULL DEFAULT '0',
+  `target` varchar(500) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 0,
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL,
+  `start_time` timestamp NULL DEFAULT NULL,
+  `end_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `title_UNIQUE` (`title`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

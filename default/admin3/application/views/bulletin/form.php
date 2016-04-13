@@ -64,11 +64,11 @@
 	<div class="clearfix" style="margin-bottom:10px;"></div>
 	
 	<label>發布時間</label>
-	<input type="text" name="publish_date" class="" value="<?=$bulletin ? date('Y-m-d H:i', strtotime($bulletin->publish_date)) : ''?>">
+	<input type="text" name="start_time" class="" value="<?=$bulletin ? date('Y-m-d H:i', strtotime($bulletin->start_time)) : ''?>">
 	<span class="help-inline">(非必填，設定未來時間即可預約發布)</span>
 	
 	<label>~ 關閉時間</label>
-	<input type="text" name="close_date" class="" value="<?=$bulletin && $bulletin->close_date<'2038-01-01' ? date('Y-m-d H:i', strtotime($bulletin->close_date)) : ''?>">
+	<input type="text" name="end_time" class="" value="<?=$bulletin && $bulletin->end_time<'2038-01-01' ? date('Y-m-d H:i', strtotime($bulletin->end_time)) : ''?>">
 	<span class="help-inline">(非必填，設定後消息將於指定時間關閉)</span>	
 	
 	<div class="form-actions">

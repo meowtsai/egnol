@@ -61,19 +61,10 @@ class MY_Controller extends CI_Controller
 		}
 		$this->g_layout->set("fan_page", $fan_page);
 
-		// 讀取活動資料
-		$game_events = array();
-		$query = $this->db->from("events")
-			->where("game_id", $this->game_id)
-			->where("status", "1")
-			->where("begin_time <=", date("Y-m-d H:i:s"))
-			->where("end_time >", date("Y-m-d H:i:s"))
-			->get();
-		foreach($query->result() as $row)
-		{
-			array_push($game_events, $row);
-		}
-		$this->g_layout->set("game_events", $game_events);
+		
+	    $this->load->model("g_pictures");
+        $main_banners = $this->g_pictures->get_list_by_category($this->game_id, "main banner");
+		$this->g_layout->set("main_banners", $main_banners);
 
 		return $this->g_layout
 			->add_js_include(array('jquery.validate.min', 'jquery.metadata', 'jquery.form'))

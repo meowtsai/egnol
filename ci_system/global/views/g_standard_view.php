@@ -56,7 +56,7 @@
 <?
 	$this->load->view("g_top_bar");
 	
-	if(isset($game_events))
+	if(isset($main_banners))
 		$this->load->view("g_banner");
 ?>
 <?=$layout_content?>
@@ -67,7 +67,7 @@
 </body>
 
 <!--slider -->
-<script>
+<!--script>
 $(document).ready(function(){
   $('.game-slider').slick({
 	   dots: true,
@@ -77,12 +77,12 @@ $(document).ready(function(){
 
   });
 });
-</script>
+</script-->
 
 <!--nav -->
-<script>
+<!--script>
 $('#menu').slicknav({
 		label:'',
 });
 </script>
-</html>
+</html-->

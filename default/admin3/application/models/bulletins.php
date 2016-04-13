@@ -12,7 +12,8 @@ class Bulletins extends CI_Model {
 	
 		return $this->db->select("*")
 			->from("bulletins")
-		    ->where("(target like '%{$game_id},%')", null, false)
+		    //->where("(target like '%{$game_id},%')", null, false)
+		    ->where("game_id", $game_id)
 			->order_by("(case priority when 3 then 3 when 2 then 2 else 1 end)", "desc")->order_by("id", "desc")
 			->get();
 	}
@@ -35,10 +36,10 @@ class Bulletins extends CI_Model {
 	{
 		isset($data['create_time']) or $data['create_time'] = now();
 		isset($data['update_time']) or $data['update_time'] = now();
-		isset($data['publish_time']) or $data['publish_time'] = now();
-		isset($data['close_time']) or $data['close_time'] = '2038-01-01 00:00:00';
+		isset($data['start_time']) or $data['start_time'] = now();
+		isset($data['end_time']) or $data['end_time'] = '2038-01-01 00:00:00';
 		
-		$data['creator_uid'] = 0; //暫時
+		$data['admin_uid'] = 0; //暫時
 		
 		$this->db->insert('bulletins', $data);
 		return $this->db->insert_id();
@@ -47,11 +48,11 @@ class Bulletins extends CI_Model {
 	function update_bulletin($id, $data)
 	{
 		$data['update_time'] = now();
-		if (empty($data['publish_time'])) {
-			$data['publish_time'] = now();
+		if (empty($data['start_time'])) {
+			$data['start_time'] = now();
 		}
-		if (empty($data['close_time'])) {
-			$data['close_time'] = '2038-01-01 00:00:00';
+		if (empty($data['end_time'])) {
+			$data['end_time'] = '2038-01-01 00:00:00';
 		}
 		$this->db->where('id', $id)->update('bulletins', $data);
 	}

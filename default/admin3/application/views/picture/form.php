@@ -47,6 +47,15 @@
 	<label class="radio"><input type="radio" value="1" name="is_active" <?=$picture ? ($picture->is_active=='1' ? 'checked="checked"' : '') : 'checked="checked"'?>>發布</label>
 	<label class="radio"><input type="radio" value="0" name="is_active" <?=$picture ? ($picture->is_active=='0' ? 'checked="checked"' : '') : ''?>>不發布</label>
  
+	<div class="clearfix" style="margin-bottom:10px;"></div>
+	
+	<label>發布時間</label>
+	<input type="text" name="start_time" class="" value="<?=$picture ? date('Y-m-d H:i', strtotime($picture->start_time)) : ''?>">
+	<span class="help-inline">(非必填，設定未來時間即可預約發布)</span>
+	
+	<label>~ 關閉時間</label>
+	<input type="text" name="end_time" class="" value="<?=$picture && $picture->end_time<'2038-01-01' ? date('Y-m-d H:i', strtotime($picture->end_time)) : ''?>">
+	<span class="help-inline">(非必填，設定後消息將於指定時間關閉)</span>	
 
   <div class="form-actions"><input type="submit" value="確認送出" class="btn"></div>	  
 </form>
