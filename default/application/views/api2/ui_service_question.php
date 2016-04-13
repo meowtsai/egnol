@@ -6,7 +6,6 @@
 		<form id="question_form" enctype="multipart/form-data" method="post" action="<?=$api_url?>api2/service_question_ajax?site=<?=$site?>">
 			<div class="login-form">
 				<table class="member_info">
-					<? /*
 					<tr>
 						<th>遊戲名稱</th>
 						<td>
@@ -32,6 +31,7 @@
 							</select>
 						</td>
 					</tr>
+					<? /*
 					<tr>
 						<th>角色名稱</th>
 						<td>

@@ -13,8 +13,9 @@ $(function(){
 	});
 	
 	$(".close_question").click(function(){	
+		var site = $(this).attr("site");
 		$.json_post($(this).attr("url"), function(){
-			location.href = '/service/listing';
+			location.href = '/service/listing?site=' + site;
 		});	
 	});
 });

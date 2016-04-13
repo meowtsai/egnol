@@ -13,8 +13,7 @@
 			<table class="member_info">
 				<tr>
 					<th>帳號類型　|</th>
-					<td>
-					<?
+					<td><?
 				  		if(strpos($external_id, "@facebook"))
 						{
 							echo "Facebook 帳號";
@@ -31,8 +30,7 @@
 						{
 							echo "龍邑會員";
 						}
-					?>
-					</td>
+					?></td>
 				</tr>
 <? if(!empty($this->g_user->email) || !empty($this->g_user->mobile)): ?>
 				<tr>
@@ -45,7 +43,7 @@
 
 			<div class="login-button">
 				<p>
-					<a href="<?=$api_url?>api2/ui_change_account?site=<?=$site?>" title="更換帳號"><img src="<?=$longe_url?>p/image/member/change_usr.png" class="button_info"></a>&nbsp;
+					<a href="<?=$api_url?>api2/ui_change_account?site=<?=$site?>" title="更換帳號"><img src="<?=$longe_url?>p/image/member/change-account.png" class="button_info"></a>&nbsp;
 					<a href="<?=$api_url?>api2/ui_change_password?site=<?=$site?>" title="修改密碼"><img src="<?=$longe_url?>p/image/member/password.png" class="button_info"></a>
 				</p>
 <? else: ?>
@@ -53,7 +51,7 @@
 
 			<div class="login-button">
 				<p>
-					<a href="<?=$api_url?>api2/ui_change_account?site=<?=$site?>" title="更換帳號"><img src="<?=$longe_url?>p/image/member/change_usr.png" class="button_info"></a>&nbsp;
+					<a href="<?=$api_url?>api2/ui_change_account?site=<?=$site?>" title="更換帳號"><img src="<?=$longe_url?>p/image/member/change-account.png" class="button_info"></a>&nbsp;
 					<a href="<?=$api_url?>api2/ui_bind_account?site=<?=$site?>" title="綁定帳號"><img src="<?=$longe_url?>p/image/member/id.png" class="button_info"></a>
 				</p>
 <? endif; ?>

@@ -81,7 +81,7 @@
 								</div>
 								<? if ($row->is_official == '1' && $question->status <> '4' && $no == 1):?>
 								<div style="float:right; padding:0 0 20px 20px;">
-									<a href="javascript:;" url="<?=site_url("service/close_question/{$question->id}")?>" class="close_question">[我沒問題了]</a>
+									<a href="javascript:;" url="<?=site_url("service/close_question/{$question->id}")?>" site="<?=$site?>" class="close_question">[我沒問題了]</a>
 									<a href="#go_to_reply">[我還有疑問]</a>
 								</div>
 								<? endif;?>
