@@ -650,6 +650,8 @@ CREATE TABLE `pictures` (
   `height` smallint(6) DEFAULT NULL,
   `category_id` int(11) NOT NULL,
   `create_time` datetime NOT NULL,
+  `start_time` timestamp NULL DEFAULT NULL,
+  `end_time` timestamp NULL DEFAULT NULL,
   `title` varchar(50) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

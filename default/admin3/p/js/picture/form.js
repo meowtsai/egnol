@@ -6,4 +6,6 @@ $(function(){
 			});
 		}
 	});
+	$("input[name=start_time]").datetimepicker({dateFormat: "yy-mm-dd", changeMonth: true, changeYear: true});
+	$("input[name=end_time]").datetimepicker({dateFormat: "yy-mm-dd", changeMonth: true, changeYear: true});
 });

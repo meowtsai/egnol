@@ -2,14 +2,15 @@
 
 class G_Pictures extends CI_Model {
 
-	function get_category_row($game_id, $category_id)
+	function get_category_row($game_id, $category)
 	{
 		return $this->db
 			->from("pictures p")
 			->join("picture_categories bc", "p.category_id=bc.id", "left")
 			->where("game_id", $game_id)
-			->where("enable", "1")
-			->where("category_id", $category_id)
+			->where("p.is_active", 1)
+			->where("category", $category)
+			->where("now() between p.start_time and p.end_time", null, false)
 			->order_by("rand()")->get()->row();
 	}
 	
@@ -26,7 +27,8 @@ class G_Pictures extends CI_Model {
 		return $this->db->select("p.*, bc.category")
 			->from("pictures p")
 			->where("game_id", $game_id)
-			->where("enable", "1")
+			->where("p.is_active", 1)
+            ->where("now() between p.start_time and p.end_time", null, false)
 			->join("picture_categories bc", "p.category_id=bc.id", "left")
 			->get();
 	}
@@ -45,7 +47,7 @@ class G_Pictures extends CI_Model {
 	
 	function get_category($category_id) 
 	{
-		return $this->db->where("category_id", $category_id)->where("enable", "1")->get("pictures");
+		return $this->db->where("category_id", $category_id)->where("is_active", 1)->get("pictures");
 	}
 }
 
