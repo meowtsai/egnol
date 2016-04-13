@@ -3,12 +3,11 @@
 <ul class="game-slider">
 <?
 
-	foreach($game_events as $event)
+	foreach($banners as $banner)
 	{
-		$img = sprintf("/p/image/banner/%1$04d.jpg", $event->id);
-		if(file_exists($_SERVER['DOCUMENT_ROOT'] . $img))
+		if(file_exists($banner->src))
 		{
-			echo "<li><a href='{$event->url}' target='_blank'><img src='{$img}' title='{$event->event_name}' /></a></li>";
+			echo "<li><a href='{$banner->link}' target='_blank'><img src='{$banner->src}' title='{$banner->title}' /></a></li>";
 		}
 	}
 	

@@ -22,7 +22,7 @@ class G_Pictures extends CI_Model {
 		else if ($limit) $this->db->limit($limit);
 		
 		if ($order) $this->db->order_by($order);
-		else $this->db->order_by("create_time", "desc");
+		else $this->db->order_by("priority", "desc");
 		
 		return $this->db->select("p.*, bc.category")
 			->from("pictures p")
