@@ -10,39 +10,54 @@ class News extends MY_Controller {
 	function index()
 	{
 		$site = $this->_get_site();
+		$type = $this->input->get_post("type") ? $this->input->get_post("type") : 0;
 		
-		$news = $this->db->where("game_id", $site)->order_by("create_time", "desc")->get("news", 10);
+		$this->load->model("g_bulletins");		
+		$this->load->library('pagination');
+		
+		$this->pagination->initialize(array(
+				'base_url'	=> site_url("news?site={$site}&type={$type}"),
+				'total_rows'=> $this->g_bulletins->get_count($site, $type),
+				'per_page'	=> 7
+		));	
+		
+		//$news = $this->db->where("game_id", $site)->order_by("create_time", "desc")->get("news", 10);
 		
 		$this->_init_layout()
 			->add_css_link("login")
 			->add_css_link("news")
 			->add_css_link("jquery.mCustomScrollbar")
-			->set("news", $news)
+			->set("news", $this->g_bulletins->get_list($site, $type, 7, $this->input->get("record")))
 			->standard_view();
 	}
-	
-	function get_news()
+    
+	function preview($id)
 	{
-		$site = $this->input->get("site");
-		$offset = $this->input->get("o");
-		
-		$query = $this->db->where("game_id", $site)->order_by("create_time", "desc")->get("news", $offset, 5);
-		
-		$result = array();
-		
-		foreach($query->result() as $row)
-		{
-			$news = array(
-				"title"=>$row->title,
-				"type"=>$row->type,
-				"content"=>$row->content,
-				"time"=>$row->create_time,
-				"link"=>$row->link
-			);
-			
-			array_push($result, $news);
-		}
+		$site = $this->_get_site();
+        
+		$this->load->model("g_bulletins");
+		$row = $this->g_bulletins->get_preview($site, $id);
+		if ($row == false) {die("無此記錄");}
 
-		die(json_encode($result));
+		$this->_init_layout()
+			->add_css_link("login")
+			->add_css_link("news")
+			->set("row", $row)
+			->standard_view("news/detail");		
+	}
+	
+	function detail($id)
+	{
+		$site = $this->_get_site();
+        
+		$this->load->model("g_bulletins");
+		$row = $this->g_bulletins->get_bulletin($site, $id);
+		if ($row == false || $row->priority == 0) {die("無此記錄");}
+		
+		$this->_init_layout()
+			->add_css_link("login")
+			->add_css_link("news")
+			->set("row", $row)
+			->standard_view();
 	}
 }

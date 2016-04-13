@@ -49,13 +49,13 @@ class G_Bulletins extends CI_Model {
 	
 	function get_count($game_id, $type)
 	{
+		if ($type) $this->db->where("type", $type);
 		
 		return $this->db
 					->from("bulletins")
-					->where("type", $type)
 					->where("priority >", "0")					
-					->where("now() >= start_time", null, false)
-		            ->where("(target like '%{$game_id},%')", null, false)
+					->where("now() between start_time and end_time", null, false)
+		            ->where("(target like '%{$game_id},%' or game_id='{$game_id}')", null, false)
 					->count_all_results();
 	}
 }

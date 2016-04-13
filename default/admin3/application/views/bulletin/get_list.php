@@ -65,9 +65,9 @@
 	    <tr>
 		    <td><?=$row->id?></td>
 		    <td>
-			    <a href="<?=server_site_url($this->game_id, "bulletin/detail/{$row->id}")?>" target="_blank" title="檢視">
+			    <a href="<?=server_site_url("game", "news/detail/{$row->id}")?>" target="_blank" title="檢視">
 				    [<?=$bulletin_type_list[$row->type]?>] <?=$row->title?></a>
-			    <a href="<?=server_site_url($this->game_id, "bulletin/preview/{$row->id}")?>" target="_blank" title="預覽"><i class="icon icon-search"></i></a>
+			    <a href="<?=server_site_url("game", "news/preview/{$row->id}")?>" target="_blank" title="預覽"><i class="icon icon-search"></i></a>
 		    </td>
 		    <td style="font-size:13px; color:#666">
 			    <?=date("m/d H:i", strtotime($row->start_time))?>
