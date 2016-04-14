@@ -121,7 +121,7 @@ class Picture extends MY_Controller {
 				$src = $this->input->post("src");
 			}
 			
-			$link = str_replace("manager.longeplay.com.tw", "game.longeplay.com.tw", $this->input->post("link"));
+			$link = str_replace("http://manager.longeplay.com.tw", "https://game.longeplay.com.tw", $this->input->post("link"));
             
 			$data = array(
 				'category_id'		=> $this->input->post("category_id"),
