@@ -73,17 +73,17 @@
 				<th style="width:70px">登入設備</th>
 				<th style="width:70px">登入轉化率</th>
 				<th style="width:70px">第三方APK登入</th>
-				<th style="width:70px">總下載數</th>
-				<th style="width:70px">ios下載數</th>
-				<th style="width:70px">android下載數</th>	
-				<th style="width:70px">第三方APK下載數</th>
-				<th style="width:70px">下載轉化率</th>
-				<th style="width:70px">下載地區-台灣</th>
-				<th style="width:70px">下載地區-香港</th>
-				<th style="width:70px">下載地區-澳門</th>
-				<th style="width:70px">下載地區-新加坡</th>
-				<th style="width:70px">下載地區-馬來西亞</th>
-				<th style="width:70px">下載地區-其他</th>
+				<th style="width:70px">總首次開啟數</th>
+				<th style="width:70px">ios首次開啟數</th>
+				<th style="width:70px">android首次開啟數</th>	
+				<th style="width:70px">第三方APK首次開啟數</th>
+				<th style="width:70px">首次開啟轉化率</th>
+				<th style="width:70px">首次開啟地區-台灣</th>
+				<th style="width:70px">首次開啟地區-香港</th>
+				<th style="width:70px">首次開啟地區-澳門</th>
+				<th style="width:70px">首次開啟地區-新加坡</th>
+				<th style="width:70px">首次開啟地區-馬來西亞</th>
+				<th style="width:70px">首次開啟地區-其他</th>
 			</tr>
 		</thead>
 		<tbody>

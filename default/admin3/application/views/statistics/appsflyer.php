@@ -52,7 +52,7 @@
 				<th style="width:70px">媒體</th>
 				<th style="width:70px">裝置</th>
 				<th style="width:70px">點擊</th>
-				<th style="width:70px">下載/安裝</th>
+				<th style="width:70px">首次開啟</th>
 				<th style="width:70px">地區</th>
 				<th style="width:70px">額外設置-<br>登入(首次)</th>
 				<th style="width:70px">額外設置-<br>登入</th>
