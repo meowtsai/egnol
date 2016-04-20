@@ -62,30 +62,7 @@
 		
 </form>
 
-<?
-    switch ($this->input->get("span")) {
-		case "weekly":
-			$retention_string          = "前1週新增用戶週回訪數";
-			$retention_rate_string     = "前1週新增用戶週回訪率";
-			$retention_all_string      = "前1週登入用戶週回訪數";
-			$retention_all_rate_string = "前1週登入用戶週回訪率";
-			break;
-			
-		case "monthly":
-			$retention_string          = "前1月新增用戶月回訪數";
-			$retention_rate_string     = "前1月新增用戶月回訪率";
-			$retention_all_string      = "前1月登入用戶月回訪數";
-			$retention_all_rate_string = "前1月登入用戶月回訪率";
-			break;
-			
-		default:
-			$retention_string          = "前1日新增用戶次日留存";
-			$retention_rate_string     = "前1日新增用戶次日留存率";
-			$retention_all_string      = "前1日登入用戶次日留存";
-			$retention_all_rate_string = "前1日登入用戶次日留存率";
-			break;
-	}
-    if ($query):?>
+<?if ($query):?>
 	<? if ($query->num_rows() == 0): echo '<div class="none">查無資料</div>'; else: ?>
 	<table class="table table-striped table-bordered" style="width:auto;">
 		<thead>
@@ -137,8 +114,8 @@
                 $tw_download_count = $row->ios_tw_download_count+$row->google_tw_download_count+$row->apk_tw_download_count;
                 $hk_download_count = $row->ios_hk_download_count+$row->google_hk_download_count+$row->apk_hk_download_count;
                 $mo_download_count = $row->ios_mo_download_count+$row->google_mo_download_count+$row->apk_mo_download_count;
-                $sg_download_count = $row->ios_sg_download_count+$row->google_download_count+$row->apk_sg_download_count;
-                $my_download_count = $row->ios_my_download_count+$row->google_download_count+$row->apk_my_download_count;
+                $sg_download_count = $row->ios_sg_download_count+$row->google_sg_download_count+$row->apk_sg_download_count;
+                $my_download_count = $row->ios_my_download_count+$row->google_my_download_count+$row->apk_my_download_count;
 		?>
 			<tr>			
 				<td nowrap="nowrap"><?=$show_date?></td>
