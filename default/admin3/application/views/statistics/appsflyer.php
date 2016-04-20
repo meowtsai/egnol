@@ -57,6 +57,9 @@
 				<th style="width:70px">額外設置-<br>登入(首次)</th>
 				<th style="width:70px">額外設置-<br>登入</th>
 				<th style="width:70px">額外設置-<br>登入(銷售)</th>
+				<th style="width:70px">額外設置-<br>儲值次數(首次)</th>
+				<th style="width:70px">額外設置-<br>儲值次數</th>
+				<th style="width:70px">額外設置-<br>儲值金額USD</th>
 				<th style="width:70px">額外設置-<br>創角(首次)</th>
 				<th style="width:70px">額外設置-<br>創角</th>
 				<th style="width:70px">額外設置-<br>創角(銷售)</th>
@@ -73,18 +76,21 @@
 				<td nowrap="nowrap"><?=$row->game_id?></td>
 				<td nowrap="nowrap"><?=$row->media?></td>
 				<td nowrap="nowrap"><?=($row->platform=='google')?'android':$row->platform?></td>
-				<td style="text-align:right"><?=number_format($row->click_count)?></td>
-				<td style="text-align:right"><?=number_format($row->install_count)?></td>
+				<td style="text-align:right"><?=$row->click_count?></td>
+				<td style="text-align:right"><?=$row->install_count?></td>
 				<td nowrap="nowrap"><?=$row->country_code?></td>
-				<td style="text-align:right"><?=number_format($row->af_login_unique)?></td>	
-				<td style="text-align:right"><?=number_format($row->af_login)?></td>	
-				<td style="text-align:right"><?=number_format($row->af_login_sales)?></td>	
-				<td style="text-align:right"><?=number_format($row->le_usercharactercreate_unique)?></td>	
-				<td style="text-align:right"><?=number_format($row->le_usercharactercreate)?></td>	
-				<td style="text-align:right"><?=number_format($row->le_usercharactercreate_sales)?></td>	
-				<td style="text-align:right"><?=number_format($row->le_usercharacterlevelup_unique)?></td>	
-				<td style="text-align:right"><?=number_format($row->le_usercharacterlevelup)?></td>	
-				<td style="text-align:right"><?=number_format($row->le_usercharacterlevelup_sales)?></td>												
+				<td style="text-align:right"><?=$row->af_login_unique?></td>	
+				<td style="text-align:right"><?=$row->af_login?></td>	
+				<td style="text-align:right"><?=$row->af_login_sales?></td>	
+				<td style="text-align:right"><?=$row->pay_unique_event_count?></td>	
+				<td style="text-align:right"><?=$row->pay_event_count?></td>	
+				<td style="text-align:right"><?=$row->pay_amount?></td>	
+				<td style="text-align:right"><?=$row->le_usercharactercreate_unique?></td>	
+				<td style="text-align:right"><?=$row->le_usercharactercreate?></td>	
+				<td style="text-align:right"><?=$row->le_usercharactercreate_sales?></td>	
+				<td style="text-align:right"><?=$row->le_usercharacterlevelup_unique?></td>	
+				<td style="text-align:right"><?=$row->le_usercharacterlevelup?></td>	
+				<td style="text-align:right"><?=$row->le_usercharacterlevelup_sales?></td>												
 			</tr>
 		<? endforeach;?>
 		</tbody>

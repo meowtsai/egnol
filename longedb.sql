@@ -539,17 +539,18 @@ CREATE TABLE `marketing_statistics` (
   `click_count` int(8) DEFAULT NULL,
   `install_count` int(8) DEFAULT NULL,
   `pay_user_count` int(8) DEFAULT NULL,
+  `pay_unique_event_count` int(8) DEFAULT NULL,
   `pay_event_count` int(8) DEFAULT NULL,
-  `pay_amount` float(7,4) DEFAULT NULL,
+  `pay_amount` float(7,2) DEFAULT NULL,
   `af_login` int(8) DEFAULT NULL,
   `af_login_unique` int(8) DEFAULT NULL,
-  `af_login_sales` float(7,4) DEFAULT NULL,
+  `af_login_sales` float(7,2) DEFAULT NULL,
   `le_usercharactercreate` int(8) DEFAULT NULL,
   `le_usercharactercreate_unique` int(8) DEFAULT NULL,
-  `le_usercharactercreate_sales` float(7,4) DEFAULT NULL,
+  `le_usercharactercreate_sales` float(7,2) DEFAULT NULL,
   `le_usercharacterlevelup` int(8) DEFAULT NULL,
   `le_usercharacterlevelup_unique` int(8) DEFAULT NULL,
-  `le_usercharacterlevelup_sales` float(7,4) DEFAULT NULL,
+  `le_usercharacterlevelup_sales` float(7,2) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

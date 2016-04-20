@@ -1793,7 +1793,8 @@ class Cron extends CI_Controller {
                         $le_usercharacterlevelup_unique = $data[$title_arr['le_usercharacterlevelup (Unique users)']];
                         $le_usercharacterlevelup        = $data[$title_arr['le_usercharacterlevelup (Event counter)']];
                         $le_usercharacterlevelup_sales  = $data[$title_arr['le_usercharacterlevelup (Sales in USD)']];
-                        $pay_user_count                 = $data[$title_arr['af_purchase (Event counter)']];
+                        $pay_unique_event_count         = $data[$title_arr['af_purchase (Unique users)']];
+                        $pay_event_count                = $data[$title_arr['af_purchase (Event counter)']];
                         $pay_amount                     = $data[$title_arr['af_purchase (Sales in USD)']];
                         
                         if (isset($insert_arr[$d][$country][$media]['clicks'])) $insert_arr[$d][$country][$media]['clicks']                                                 += intval($clicks);
@@ -1818,8 +1819,10 @@ class Cron extends CI_Controller {
                         else $insert_arr[$d][$country][$media]['le_usercharacterlevelup'] = $le_usercharacterlevelup;
                         if (isset($insert_arr[$d][$country][$media]['le_usercharacterlevelup_sales'])) $insert_arr[$d][$country][$media]['le_usercharacterlevelup_sales']   += $le_usercharacterlevelup_sales;
                         else $insert_arr[$d][$country][$media]['le_usercharacterlevelup_sales'] = $le_usercharacterlevelup_sales;
-                        if (isset($insert_arr[$d][$country][$media]['pay_user_count'])) $insert_arr[$d][$country][$media]['pay_user_count']                                 += $pay_user_count;
-                        else $insert_arr[$d][$country][$media]['pay_user_count'] = $pay_user_count;
+                        if (isset($insert_arr[$d][$country][$media]['pay_unique_event_count'])) $insert_arr[$d][$country][$media]['pay_unique_event_count']                 += $pay_unique_event_count;
+                        else $insert_arr[$d][$country][$media]['pay_unique_event_count'] = $pay_unique_event_count;
+                        if (isset($insert_arr[$d][$country][$media]['pay_event_count'])) $insert_arr[$d][$country][$media]['pay_event_count']                               += $pay_event_count;
+                        else $insert_arr[$d][$country][$media]['pay_event_count'] = $pay_event_count;
                         if (isset($insert_arr[$d][$country][$media]['pay_amount'])) $insert_arr[$d][$country][$media]['pay_amount']                                         += $pay_amount;
                         else $insert_arr[$d][$country][$media]['pay_amount'] = $pay_amount;
                     }
@@ -1848,7 +1851,8 @@ class Cron extends CI_Controller {
                                     'le_usercharacterlevelup_unique' => $data['le_usercharacterlevelup_unique'],
                                     'le_usercharacterlevelup'        => $data['le_usercharacterlevelup'],
                                     'le_usercharacterlevelup_sales'  => $data['le_usercharacterlevelup_sales'],
-                                    'pay_user_count'                 => $data['pay_user_count'],
+                                    'pay_unique_event_count'         => $data['pay_unique_event_count'],
+                                    'pay_event_count'                => $data['pay_event_count'],
                                     'pay_amount'                     => $data['pay_amount']
                                 );
                                 
