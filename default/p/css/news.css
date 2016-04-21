@@ -27,7 +27,7 @@
 
 .login-ins .login_box{max-width:725px; width:100%; display:block; margin:20px auto;}
 .login_box .button{width:100%; text-align:right;}
-.login-ins .login_box .login_member{ background: url(../image/member/member_bg.png) top center no-repeat; background-size: 100% 100%; margin:50px auto; padding:0px; text-align:left; width:100%; display:block;}
+.login-ins .login_box .login_member{ background-color: white; background-size: 100% 100%; margin:50px auto; padding:0px; text-align:left; width:100%; display:block;}
 
 .login_member .login_info{ padding:18px; }
 .login_info .scrollbar{max-height:355px; overflow-x:hidden; line-height:25px;}
