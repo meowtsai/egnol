@@ -10,7 +10,7 @@ class Game
     	$this->CI =& get_instance();
     	$this->CI->load->config("api"); 	    	
     }
-    
+	
 	function check_server_alive($server_id)
 	{
 		$this->CI->load->model("games");
@@ -168,13 +168,13 @@ class Game
     
     //儲值時直接轉入遊戲伺服器
     //$billing {uid, server_id, amount}
-    function payment_transfer($uid, $server_id, $amount)
+    function payment_transfer($uid, $server_id, $amount, $partner_order_id='', $character_id='', $transaction_id='', $_args='')
     {
 		if (empty($uid) || empty($server_id) || empty($amount)) $this->_go_payment_result(1, 2, $amount);  
 	
 		$this->CI->load->library("g_wallet");		
 		$remain = $this->CI->g_wallet->get_balance($uid);
-		$args = "rm={$remain}";
+		$args = "rm={$remain}" . "&" . $_args;
 
 		$this->CI->load->model("games");
 		$server = $this->CI->games->get_server($server_id);
@@ -184,11 +184,11 @@ class Game
 		if ( $server->is_transaction_active == 0) {
 			$this->_go_payment_result(1, 0, $amount, "遊戲伺服器目前暫停轉點服務", $args);
     	}
-
+		
 		//建單，並扣款
- 		$order_id = $this->CI->g_wallet->produce_order($uid, "top_up_account", "2", $amount, $server->server_id, "");			
+ 		$order_id = $this->CI->g_wallet->produce_order($uid, "top_up_account", "2", $amount, $server->server_id, $partner_order_id, $character_id, $transaction_id);
 		if (empty($order_id)) $this->_go_payment_result(1, 0, $amount, $this->CI->g_wallet->error_message, $args);
-			
+		
 		$order = $this->CI->g_wallet->get_order($order_id);
 /*
 		// 若為遊戲內儲值則完成訂單
@@ -213,7 +213,8 @@ class Game
 
 			if ($res === "1") {
 				$this->CI->g_wallet->complete_order($order);
-				$args = "gp=".($amount*$game->exchange_rate)."&sid={$server_id}";
+				$args = "gp=".($amount*$game->exchange_rate)."&sid={$server_id}&".$_args;
+						
 				$this->_go_payment_result(1, 1, $amount, "", $args);
 			}
 			else if ($res === "-1") {
@@ -272,7 +273,7 @@ class Game
 		{
 			if($_SESSION['payment_api_call'] == 'true')
 			{
-				header('location: '.site_url("api/ui_payment_result?s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args));
+				header('location: '.site_url("api2/ui_payment_result?s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args));
 				exit();
 			}
 		}
