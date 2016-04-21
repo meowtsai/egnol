@@ -54,14 +54,15 @@ function cancelButton () {
 <div id="content-login">
 	<div class="login-ins">
 		<form id="choose_form" class="choose_form" method="post" action="">
-			<input type="hidden" name="PAID">
-			<input type="hidden" name="CUID">
-			<input type="hidden" name="ERP_ID">
+			<input type="hidden" name="PAID"/>
+			<input type="hidden" name="CUID"/>
+			<input type="hidden" name="ERP_ID"/>
 
-			<input type="hidden" name="pay_type">
-			<input type="hidden" name="subpay_type">
-			<input type="hidden" name="prod_id">
+			<input type="hidden" name="pay_type"/>
+			<input type="hidden" name="subpay_type"/>
+			<input type="hidden" name="prod_id"/>
 
+			<input type="hidden" name="partner_order_id" value="<?=$partner_order_id?>" />
 			<input type="hidden" name="api_call" value="true" />
 
 			<div class="login-form">
@@ -87,7 +88,7 @@ function cancelButton () {
 
 							<select id="server_pool" style="display:none;">
 								<? foreach($servers->result() as $row):
-								if ( IN_OFFICE == false && in_array($row->server_status, array("private", "hide"))) continue;?>
+//								if ( IN_OFFICE == false && in_array($row->server_status, array("private", "hide"))) continue;?>
 								<option value="<?=$row->server_id?>" <?=($this->input->get("server")==$row->server_id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?></option>
 								<? endforeach;?>
 							</select>

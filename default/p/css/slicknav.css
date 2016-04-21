@@ -37,7 +37,7 @@
 /* Button */
 .slicknav_btn { /*三個小槓的icon範圍*/ width:95px; height:95px; /*background:none;*/ position:relative; right:0px; top:0px; margin-top:-15px; padding:0; text-decoration:none; text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75); z-index:9999999;}
 
-.slicknav_menu a.slicknav_open{/*點下去時的效果*/ background:#F09; color:#fff;   }
+.slicknav_menu a.slicknav_open{/*點下去時的效果*/ background:#e6290f; color:#fff;   }
 
 /* Button Text */
 .slicknav_menu  .slicknav_menutxt {
@@ -46,13 +46,13 @@
     text-shadow: 0 1px 3px #000;
 }
 /* Button Lines */
-.slicknav_menu .slicknav_icon-bar {/*icon圖*/ background-color: #F09; -webkit-box-shadow:none; -moz-box-shadow:none; box-shadow:none;  }
+.slicknav_menu .slicknav_icon-bar {/*icon圖*/ background-color: #e6290f; -webkit-box-shadow:none; -moz-box-shadow:none; box-shadow:none;  }
 .slicknav_menu a.slicknav_open .slicknav_icon-bar{ background-color:#fff;} /*展開後的icon圖顏色*/
 .slicknav_menu { /*ALL item*/ }
 .slicknav_nav { /*下拉部分*/ color:#fff; text-align:center; margin:0; padding:0; font-size:0.875em; }
 
 /*展開下方按鈕的範圍*/
-.slicknav_nav, .slicknav_nav ul { list-style: none; background:#434141; overflow:hidden; position:absolute; width:100%; top:80px; left:0; clear:both;}
+.slicknav_nav, .slicknav_nav ul { list-style: none; background:#636363; overflow:hidden; position:absolute; width:100%; top:80px; left:0; clear:both;}
 .slicknav_nav ul {
     padding:0;
     margin:0 0 0 20px;
@@ -65,7 +65,7 @@
 
 /*展開的下方按鈕，滑入效果*/
 .slicknav_nav .slicknav_row:hover { background:#bf431d; color:#fff; }
-.slicknav_nav a:hover{ background:#F09; color:#fff; }
+.slicknav_nav a:hover{ background:#e6290f; color:#fff; }
 
 
 .slicknav_nav .slicknav_txtnode {

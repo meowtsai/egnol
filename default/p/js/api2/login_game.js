@@ -22,6 +22,7 @@ $(document).ready(function()
 		},
 		submitHandler: function(form)
 		{
+			leLoading();
 			$(form).ajaxSubmit({
 				dataType: 'json',
 				success: function(json)
@@ -33,6 +34,7 @@ $(document).ready(function()
 					}
 					else
 					{
+						leHideScreenMask();
 		                $('#continue').show();
 						leOpenDialog('登入錯誤', json.message, leDialogType.MESSAGE);
 					}
