@@ -52,7 +52,7 @@ class Api2 extends MY_Controller
 	function ui_login()
 	{
 		$site	= $this->_get_site();
-        
+
 		$device_id	= !empty($_SESSION['login_deviceid']) ? $_SESSION['login_deviceid'] : $this->input->get_post("deviceid");
 		$_SESSION['login_deviceid']	= $device_id;
 		$_SESSION['old_deviceid'] = $this->input->get_post("old_deviceid");
@@ -592,7 +592,9 @@ class Api2 extends MY_Controller
 		
 		$this->g_user->logout();
 		
+		$_SESSION['login_key'] = '';
 		$_SESSION['server_id'] = '';
+		unset($_SESSION['login_key']);
 		unset($_SESSION['server_id']);
 		
         die("<script type='text/javascript'>location.href='/api2/ui_login?deviceid={$device_id}&site={$site}&change_account=1'</script>");
@@ -876,11 +878,12 @@ class Api2 extends MY_Controller
 	{
 		$site = $this->_get_site();
 		$server_id = $this->input->get_post("serverid");
+		$partner_order_id = $this->input->get_post("poid");
 		
+		$_SESSION['site'] = $site;
+			
 		if(!$this->g_user->is_login())
 		{
-			$_SESSION['site'] = $site;
-			
 			if(!empty($this->input->get_post("pcode")))
 			{
 				// 免輸入登入機制(Session 失效時使用)
@@ -929,6 +932,7 @@ class Api2 extends MY_Controller
 			->set("servers", $servers)
 			->set("server_id", $server_id)
 			->set("characters", $characters)
+			->set("partner_order_id", $partner_order_id)
 			->add_css_link("login_api")
 			->add_css_link("money")
 			->add_js_include("payment/index")
@@ -949,13 +953,13 @@ class Api2 extends MY_Controller
 		$payment_type		= $_SESSION['payment_type'];
 		$payment_channel	= $_SESSION['payment_channel'];
 
-		$_SESSION['site']				= '';
+		//$_SESSION['site']				= '';
 		$_SESSION['payment_game']		= '';
 		$_SESSION['payment_server']		= '';
 		$_SESSION['payment_character']	= '';
 		$_SESSION['payment_type']		= '';
 		$_SESSION['payment_channel']	= '';
-		unset($_SESSION['site']);
+		//unset($_SESSION['site']);
 		unset($_SESSION['payment_game']);
 		unset($_SESSION['payment_server']);
 		unset($_SESSION['payment_character']);
@@ -1056,25 +1060,23 @@ class Api2 extends MY_Controller
 		$verify_code = $this->input->post("verify_code");
 		$partner_order_id = $this->input->post("partner_order_id");
 		
-		// 設定紀錄資料
-		$user_billing_data = array(
-			'uid' 			=> $uid,
-			'transaction_type' => "inapp_billing_ios",
-			'billing_type'	=> '1',
-			'server_id' 	=> $server_id,
-			'ip'		 	=> $_SERVER['REMOTE_ADDR'],
-			'result'		=> '1',
-			'note'			=> $product_id . "_" . $verify_code,
-			'partner_order_id' => $partner_order_id
-		);
+		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
+		if (empty($server_info))
+		{
+			$server_info = $this->db->from("servers")->where("address", $server_id)->get()->row();
+			if (empty($server_info))
+			{
+				die(json_encode(array("result"=>"0", "error"=>"伺服器不存在")));
+			}
+			
+			$server_id = $server_info->server_id;
+		}
+		
+		$this->load->library("g_wallet");
 
-		// 寫入資料庫
-		$this->db
-			->set("create_time", "now()", false)
-			->set("update_time", "now()", false)
-			->insert("user_billing", $user_billing_data);
-
-		$order_id = $this->db->insert_id();
+		$order_id = $this->g_wallet->produce_iap_order($uid, "inapp_billing_ios", "1", $server_id, $partner_order_id, $product_id . "|" . $verify_code);
+		if(empty($order_id))
+			die(json_encode(array("result"=>0, "msg"=>$this->g_wallet->error_message)));
 		
 		die(json_encode(array("result"=>1, "productId"=>$product_id, "orderId"=>$order_id)));
 	}
@@ -1085,10 +1087,14 @@ class Api2 extends MY_Controller
 		$order_id = $this->input->post("order_id");
 		$product_id = $this->input->post("product_id");
 		$verify_code = $this->input->post("verify_code");
+
+		log_message("error", "ios_iap_cancel: {$order_id}");
 		
-		//
-		//
-		//
+		$this->load->library("g_wallet");
+		
+		$order = $this->g_wallet->get_order($order_id);
+		if(!empty($order))
+			$this->g_wallet->cancel_order($order);
 
 		die(json_encode(array("result"=>1)));
 	}
@@ -1106,22 +1112,6 @@ class Api2 extends MY_Controller
 
 		return json_decode($curl_res);
 	}
-
-	function _curl_post($url, $data)
-	{
-        $ch = curl_init();
-		curl_setopt($ch, CURLOPT_URL, $url);
-		curl_setopt($ch, CURLOPT_POST, true);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-		$curl_res = curl_exec($ch);
-		$this->post_curl_error = curl_errno($ch);
-		curl_close($ch);
-
-		$result = json_decode($curl_res);
-
-		return $result;
-	}
 	
 	// 驗證並完成訂單
 	function ios_verify_receipt()
@@ -1137,59 +1127,56 @@ class Api2 extends MY_Controller
 		$server_id = $this->input->post("server_id");
 		$character_id = $this->input->post("character_id");
 		$verify_code = $this->input->post("verify_code");
-
-		// 要先驗證資料庫的訂單
-		// 1. 檢查 Product ID
-		// 2. 檢查資料庫紀錄是否符合
-/*
-		// 要先驗證資料庫的訂單
-		$billing_query = $this->db->from("user_billing")
-									->where("id", $order_id)
-									->get();
-		if(empty($billing_query))
-			die(json_encode(array("result"=>0, "msg"=>"Order ID not found.")));
-
-		$billing_row = $billing_query->row();
-		if(empty($billing_row))
-			die(json_encode(array("result"=>0, "msg"=>"Order ID not found.")));
-
-		$vc = $product_id . "_" . $verify_code;
-
-		if($billing_row->uid !== $uid ||
-			$billing_row->server_id !== $server_id ||
-			$billing_row->note !== $vc ||
-			$billing_row->partner_order_id !== $partner_order_id)
+		
+		// 先讀取資料庫的訂單
+		$this->load->library("g_wallet");
+		
+		$order = $this->g_wallet->get_order($order_id);
+		if(empty($order))
 		{
-			die(json_encode(array("result"=>0, "msg"=>"Order information not match.")));
+			// 訂單不存在
+			die(json_encode(array("result"=>0, "msg"=>"Order not found.")));
+		}
+
+		// 取得 server 資料
+		$server_num = $server_id;
+		
+		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
+		if (empty($server_info))
+		{
+			$server_info = $this->db->from("servers")->where("address", $server_id)->get()->row();
+			if (empty($server_info))
+			{
+				// Server ID 有問題
+				$this->g_wallet->cancel_other_order($order, $order->note . "|App server {$server_id} not exist.");
+				
+				die(json_encode(array("result"=>"0", "msg"=>"App server not exist.")));
+			}
+			
+			$server_id = $server_info->server_id;
+		}
+
+		// 驗證訂單
+		if(intval($order->result) != 0)
+		{
+			// 訂單狀態不符
+			log_message("error", "ios_verify_receipt: Order {$order_id} status error.");
+			
+			die(json_encode(array("result"=>0, "msg"=>"Order status error.")));
 		}
 		
-		// 驗證成功, 結掉訂單
-		$user_billing_transfer_data = array(
-			'uid' 			=> $uid,
-			'transaction_type' => "top_up_account",
-			'billing_type'	=> '2',
-			'amount' 		=> $price,
-			'server_id' 	=> $server_id,
-			'ip'		 	=> $_SERVER['REMOTE_ADDR'],
-			'result'		=> '1',
-			'note'			=> $product_id,
-			'order_no'		=> $order_id,
-			'character_id'	=> $character.id
-		);    	
+		$vc = $product_id . "|" . $verify_code;
 
-		// 寫入資料庫
-		$this->db
-			->set("create_time", "now()", false)
-			->set("update_time", "now()", false)
-			->insert("user_billing", $user_billing_transfer_data);
-		
-		
-		// 通知個別 App Server 儲值入點
-		// 絕代 Server API 返回結果 JSON - { code: 200, msg: "OK" }
-		//    code 200 = 成功, 其他值為失敗, 要隔一段時間重試
-		//
-*/		
-		//
+		if($order->uid !== $uid ||
+			$order->server_id !== $server_id ||
+			$order->note !== $vc ||
+			$order->partner_order_id !== $partner_order_id)
+		{
+			// 未通過資料核對, 關閉訂單
+			$this->g_wallet->cancel_other_order($order, $order->note . "|Order information not match.");
+
+			die(json_encode(array("result"=>0, "msg"=>"Order information not match.")));
+		}
 		
 		// 再向 AppStore 驗證
 		$url = "https://buy.itunes.apple.com/verifyReceipt";
@@ -1205,69 +1192,46 @@ class Api2 extends MY_Controller
 		if($result->status != 0)
 		{
 			// 未通過 AppStore 驗證, 關閉訂單
+			$this->g_wallet->cancel_other_order($order, $order->note . "|Receipt data not match.");
+			
 			die(json_encode(array("result"=>0, "msg"=>"Receipt data not match!")));
 		}
-		
-		// 驗證成功, 結掉訂單
-		$partner_api = $this->config->item("partner_api");
-		$game_api = $this->config->item("game_api");
-		
-		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
-		if (empty($server_info))
-		{
-			die(json_encode(array("result"=>0, "msg"=>"App server not exist.")));
-		}
-		$app_id = $server_info->game_id;
-		$app_key = "";
-		foreach($partner_api as $key => $value)
-		{
-			if(isset($value['sites']))
-			{
-				foreach($value['sites'] as $site => $site_data)
-				{
-					if($site === $app_id)
-					{
-						$app_key = $site_data['key'];
-						break;
-					}
-				}
-				if($app_key !== "")
-					break;
-			}
-		}
-		
-		if($app_key === "")
-			die(json_encode(array("result"=>0, "msg"=>"App key not found.")));
-		
-		$time = time();
-		$rand = strval(rand());
-		
-		$server_num = 0;
-		$paytype = 'inapp';
-		
-		$str = "{$currency}{$order_id}{$partner_order_id}{$paytype}{$price}{$product_id}{$character_id}{$server_num}{$time}{$transaction_id}{$uid}{$app_key}";
-        $verify = MD5($str);
 
-        $res = $this->_curl_post($game_api[$app_id]['billing'], array(
-													'order_id'=>$order_id,
-													'transaction_id'=>$transaction_id,
-													'partner_order_id'=>$partner_order_id,
-													'product_id'=>$product_id,
-													'price'=>$price,
-													'currency'=>$currency,
-													'uid'=>$uid,
-													'role_id'=>$character_id,
-													'server_id'=>$server_num,
-													'pay_type'=>$paytype,
-													'verify'=>$verify,
-													'time'=>$time));
+		// 驗證成功, 先結掉儲值訂單
+		$this->g_wallet->complete_order($order);
+		
+		// 記錄轉點
+		$transfer_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $price, $server_id, $partner_order_id, $character_id, $transaction_id);
+		if (empty($transfer_id))
+		{
+			// 建立轉點記錄失敗
+			log_message("error", "ios_verify_receipt: Create transfer log for order-{$order_id} failed!");
+			
+			die(json_encode(array("result"=>0, "msg"=>"Create transfer log failed!")));
+		}
+		$transfer_order = $this->g_wallet->get_order($transfer_id);
 
-		if($res->code == 200)
+		// 呼叫遊戲入點機制
+		$this->load->library("game_api/{$server_info->game_id}");
+		$res = $this->{$server_info->game_id}->iap_transfer($transfer_order, $server_info, "app_store", $product_id, $price, $currency);
+		$error_message = $this->{$server_info->game_id}->error_message;
+
+		if($res === "1")
+		{
+			// 成功, 結掉訂單
+			$this->g_wallet->complete_order($transfer_order);
+			
 			die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
+		}
 		else
-			die(json_encode(array("result"=>0, "msg"=>$res->msg)));
+		{
+			// 轉入遊戲伺服器失敗
+			$this->g_wallet->ready_for_game_order($transfer_order, $order->note . "|" . $error_message);
+			
+			die(json_encode(array("result"=>0, "msg"=>$error_message)));
+		}
 	}
-
+	
 	// Android IAP 儲值選擇畫面
 	function ui_android_iap_view()
 	{
@@ -1287,26 +1251,27 @@ class Api2 extends MY_Controller
 		$verify_code = $this->input->post("verify_code");
 		$partner_order_id = $this->input->post("partner_order_id");
 		
-		// 設定紀錄資料
-		$user_billing_data = array(
-			'uid' 			=> $uid,
-			'transaction_type' => "inapp_billing_google",
-			'billing_type'	=> '1',
-			'server_id' 	=> $server_id,
-			'ip'		 	=> $_SERVER['REMOTE_ADDR'],
-			'result'		=> '1',
-			'note'			=> $product_id . "_" . $verify_code,
-			'partner_order_id' => $partner_order_id
-		);
+		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
+		if (empty($server_info))
+		{
+			$server_info = $this->db->from("servers")->where("address", $server_id)->get()->row();
+			if (empty($server_info))
+			{
+				die(json_encode(array("result"=>"0", "error"=>"伺服器不存在")));
+			}
+			
+			$server_id = $server_info->server_id;
+		}
 
-		// 寫入資料庫
-		$this->db
-			->set("create_time", "now()", false)
-			->set("update_time", "now()", false)
-			->insert("user_billing", $user_billing_data);
-
-		$order_id = $this->db->insert_id();
-
+		log_message("error", "android_iap_start: {$uid},{$server_id},{$partner_order_id}");
+		
+		$this->load->library("g_wallet");
+		
+		$order_id = $this->g_wallet->produce_iap_order($uid, "inapp_billing_google", "1", $server_id, $partner_order_id, $product_id . "|" . $verify_code);
+		
+		if(empty($order_id))
+			die(json_encode(array("result"=>0, "msg"=>$this->g_wallet->error_message)));
+		
 		die(json_encode(array("result"=>1, "productId"=>$product_id, "orderId"=>$order_id)));
 	}
 	
@@ -1316,10 +1281,14 @@ class Api2 extends MY_Controller
 		$order_id = $this->input->post("order_id");
 		$product_id = $this->input->post("product_id");
 		$verify_code = $this->input->post("verify_code");
+
+		log_message("error", "android_iap_cancel: {$order_id}");
 		
-		//
-		//
-		//
+		$this->load->library("g_wallet");
+		
+		$order = $this->g_wallet->get_order($order_id);
+		if(!empty($order))
+			$this->g_wallet->cancel_order($order);
 
 		die(json_encode(array("result"=>1)));
 	}
@@ -1337,67 +1306,89 @@ class Api2 extends MY_Controller
 		$server_id = $this->input->post("server_id");
 		$character_id = $this->input->post("character_id");
 		$verify_code = $this->input->post("verify_code");
+
+		log_message("error", "android_verify_receipt: order_id-{$order_id}");
 		
-/*
-		// 要先驗證資料庫的訂單
-		// 1. 檢查 Product ID
-		// 2. 檢查資料庫紀錄是否符合
+		// 先讀取資料庫的訂單
+		$this->load->library("g_wallet");
 		
-		// 驗證成功, 結掉訂單
-*/		
-		$partner_api = $this->config->item("partner_api");
-		$game_api = $this->config->item("game_api");
+		$order = $this->g_wallet->get_order($order_id);
+		if(empty($order))
+		{
+			// 訂單不存在
+			die(json_encode(array("result"=>0, "msg"=>"Order not found.")));
+		}
+
+		// 取得 server 資料
+		$server_num = $server_id;
 		
 		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
 		if (empty($server_info))
 		{
-			die(json_encode(array("result"=>0, "msg"=>"App server not exist.")));
-		}
-		$app_id = $server_info->game_id;
-		$app_key = "";
-		foreach($partner_api as $key => $value)
-		{
-			foreach($value['sites'] as $site => $site_data)
+			$server_info = $this->db->from("servers")->where("address", $server_id)->get()->row();
+			if (empty($server_info))
 			{
-				if($site === $app_id)
-				{
-					$app_key = $site_data['key'];
-					break;
-				}
+				die(json_encode(array("result"=>"0", "msg"=>"App server not exist.")));
 			}
-			if($app_key !== "")
-				break;
+			
+			$server_id = $server_info->server_id;
 		}
-		if($app_key === "")
-			die(json_encode(array("result"=>0, "msg"=>"App key not found.")));
 		
-		$time = time();
-		$rand = strval(rand());
+		// 驗證訂單
+		if(intval($order->result) != 0)
+		{
+			// 訂單狀態不符
+			log_message("error", "android_verify_receipt: Order {$order_id} status error.");
+			
+			die(json_encode(array("result"=>0, "msg"=>"Order status error.")));
+		}
 		
-		$server_num = 0;
-		$paytype = 'inapp';
-		
-		$str = "{$currency}{$order_id}{$partner_order_id}{$paytype}{$price}{$product_id}{$character_id}{$server_num}{$time}{$transaction_id}{$uid}{$app_key}";
-        $verify = MD5($str);
+		$vc = $product_id . "|" . $verify_code;
 
-        $res = $this->_curl_post($game_api[$app_id]['billing'], array(
-													'order_id'=>$order_id,
-													'transaction_id'=>$transaction_id,
-													'partner_order_id'=>$partner_order_id,
-													'product_id'=>$product_id,
-													'price'=>$price,
-													'currency'=>$currency,
-													'uid'=>$uid,
-													'role_id'=>$character_id,
-													'server_id'=>$server_num,
-													'pay_type'=>$paytype,
-													'verify'=>$verify,
-													'time'=>$time));
+		if($order->uid !== $uid ||
+			$order->server_id !== $server_id ||
+			$order->note !== $vc ||
+			$order->partner_order_id !== $partner_order_id)
+		{
+			// 未通過資料核對, 關閉訂單
+			$this->g_wallet->cancel_other_order($order, $order->note . "|Order information not match.");
 
-		if($res->code == 200)
+			die(json_encode(array("result"=>0, "msg"=>"Order information not match.")));
+		}
+
+		// 驗證成功, 先結掉儲值訂單
+		$this->g_wallet->complete_order($order);
+		
+		// 記錄轉點
+		$transfer_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $price, $server_id, $partner_order_id, $character_id, $transaction_id);
+		if (empty($transfer_id))
+		{
+			// 建立轉點記錄失敗
+			log_message("error", "android_verify_receipt: Create transfer log for order-{$order_id} failed!");
+			
+			die(json_encode(array("result"=>0, "msg"=>"Create transfer log failed!")));
+		}
+		$transfer_order = $this->g_wallet->get_order($transfer_id);
+
+		// 呼叫遊戲入點機制
+		$this->load->library("game_api/{$server_info->game_id}");
+		$res = $this->{$server_info->game_id}->iap_transfer($transfer_order, $server_info, "google_play", $product_id, $price, $currency);
+		$error_message = $this->{$server_info->game_id}->error_message;
+
+		if($res === "1")
+		{
+			// 成功, 結掉訂單
+			$this->g_wallet->complete_order($transfer_order);
+
 			die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
+		}
 		else
-			die(json_encode(array("result"=>0, "msg"=>$res->msg)));
+		{
+			// 轉入遊戲伺服器失敗
+			$this->g_wallet->ready_for_game_order($transfer_order, $order->note . "|" . $error_message);
+			
+			die(json_encode(array("result"=>0, "msg"=>$error_message)));
+		}
 	}
 	
 	// 客服頁面
@@ -1417,7 +1408,8 @@ class Api2 extends MY_Controller
 			->join("games g", "gi.game_id=g.game_id")->get();
 		
 		$games = $this->db->from("games")->where("is_active", "1")->get();
-		$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("server_id")->get("servers");
+		//$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("server_id")->get("servers");
+		$servers = $this->db->where("is_transaction_active", "1")->order_by("server_id")->get("servers");
 
 		// 讀取玩家角色列表
 		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();
@@ -1622,6 +1614,8 @@ class Api2 extends MY_Controller
 		$server_id = $this->input->post("server");
 		$uid = $this->input->post("uid");
 
+		log_message("error", "set_login_server:{$server_id},{$uid}");
+		
 		if (empty($partner) || empty($game_id))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
@@ -1737,6 +1731,8 @@ class Api2 extends MY_Controller
 	// 建立遊戲角色
 	function create_character()
 	{
+		log_message("error", "create_character:1");
+		
 		$partner = $this->input->post("partner");
 		$game_id = $this->input->post("site");
 		// 暫時增加檢查, 之後須修正 SDK 統一規格
@@ -1751,11 +1747,23 @@ class Api2 extends MY_Controller
 		if(empty($character_name))
 			$character_name = $this->input->post("caracter_name");
 
+		log_message("error", "create_character:{$server_id},{$uid},{$character_id},{$character_name}");
+		
+		// 若沒設定 server_id, 則找出最近一次登入的 server
+		if(empty($server_id))
+		{
+			$login_game = $this->db->from("log_game_logins")->where("uid", $uid)->order_by("create_time desc")->limit(1)->get()->row();
+			if(!empty($login_game))
+			{
+				$server_id = $login_game->server_id;
+			}
+		}
+		
 		if (empty($uid) || empty($server_id) || empty($game_id) || empty($character_name))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"參數錯誤")));
 		}
-
+		
 		$msg = $this->_check_partner_game($partner, $game_id);
 		if($msg != '1')
 		{
@@ -1765,7 +1773,7 @@ class Api2 extends MY_Controller
 		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
 		if (empty($server_info))
 		{
-			$server_info = $this->db->from("servers")->where("server_connection_key", $server_id)->get()->row();
+			$server_info = $this->db->from("servers")->where("address", $server_id)->get()->row();
 			if (empty($server_info))
 			{
 				die(json_encode(array("result"=>"0", "error"=>"伺服器不存在")));
@@ -1773,19 +1781,19 @@ class Api2 extends MY_Controller
 			
 			$server_id = $server_info->server_id;
 		}
-
+		
 		$query = $this->db->from("users")->where("uid", $uid)->get();
 		if ($query->num_rows() == 0)
 		{
 			die(json_encode(array("result"=>"0", "error"=>"uid不存在")));
 		}
-
+		
 		$this->load->model("g_characters");
 		if ($this->g_characters->chk_character_exists($server_info, $uid, $character_name))
 		{
 			die(json_encode(array("result"=>"0", "error"=>"角色已存在")));
 		}
-
+		
 		$insert_id = $this->g_characters->create_character($server_info,
 			array(
 				"uid" => $uid,
@@ -1802,6 +1810,7 @@ class Api2 extends MY_Controller
 								"id" => $insert_id,
 								"character_name" => $character_name,
 								"points" => 0));
+		
 		exit();
 	}
 
@@ -2132,10 +2141,14 @@ class Api2 extends MY_Controller
                     $result[] = $document;
                 }
                 
-                if (isset($result[0]->latest_update_time)) {
-                    $idle_time = time() - $result[0]['latest_update_time'];
+                if (isset($result[0]->latest_update_time))
+				{
+                    $idle_time = time() - $result[0]->latest_update_time;
                     
-                    if ($idle_time < 6*60*60) return true;
+                    if ($idle_time < 6*60*60)
+					{
+						return true;
+					}
                 }
             }
         }

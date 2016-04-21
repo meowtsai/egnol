@@ -41,12 +41,6 @@
 	}
 	echo $css_link;
 ?>
-<link rel="stylesheet" type="text/css" href="<?=$longe_url?>p/css/slick.css"/>
-<link rel="stylesheet" type="text/css" href="<?=$longe_url?>p/css/slick-theme.css"/>
-<script type="text/javascript" src="<?=$longe_url?>p/js/slick.min.js"></script>
-
-<script src="/p/js/jquery.slicknav.min.js" type="text/javascript"></script>
-<link href="/p/css/slicknav.css" rel="stylesheet" type="text/css" />
 <?
 	echo $js_include;
 ?>
@@ -65,9 +59,18 @@
 		$this->load->view("g_copyright");
 ?>
 </body>
+</html>
 
+<link rel="stylesheet" type="text/css" href="<?=$longe_url?>p/css/slick.css"/>
+<link rel="stylesheet" type="text/css" href="<?=$longe_url?>p/css/slick-theme.css"/>
+<script type="text/javascript" src="<?=$longe_url?>p/js/slick.min.js"></script>
+
+<script src="/p/js/jquery.slicknav.min.js" type="text/javascript"></script>
+<link href="/p/css/slicknav.css" rel="stylesheet" type="text/css" />
+
+<? if(isset($main_banners)) { ?>
 <!--slider -->
-<!--script>
+<script>
 $(document).ready(function(){
   $('.game-slider').slick({
 	   dots: true,
@@ -77,12 +80,13 @@ $(document).ready(function(){
 
   });
 });
-</script-->
-
+</script>
+<? } ?>
+	
 <!--nav -->
-<!--script>
+<script>
 $('#menu').slicknav({
 		label:'',
 });
 </script>
-</html-->
+

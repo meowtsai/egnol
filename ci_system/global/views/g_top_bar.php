@@ -49,7 +49,7 @@ $(function()
 {
 	$('.not_ready').click(function()
 	{
-		leOpenDialog('絕代雙驕','敬請期待！',leDialogType.MESSAGE);	
+		leOpenDialog('龍邑遊戲','敬請期待！',leDialogType.MESSAGE);	
 	});
 });
 </script>

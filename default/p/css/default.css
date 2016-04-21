@@ -120,7 +120,8 @@
 .le_loading_frm {
 	position:absolute;
 	width:50%;
-	min-width:240px;
-	max-width:240px;
+	max-width:120px;
 	border-radius:8px;
+	opacity:.75;
+	filter:Alpha(opacity=75);
 }
