@@ -42,13 +42,13 @@ WHERE x.uid={$uid}";
     }
             
     //billing_type: 1購買,2轉點,3回補,4贈送
-    function produce_order($uid, $transaction_type, $billing_type, $amount, $pay_server_id='', $order='', $character='')
+    function produce_order($uid, $transaction_type, $billing_type, $amount, $pay_server_id='', $partner_order_id='', $character_id='', $order_no='')
     {	
-    	if ($order) {
-	    	$cnt = $this->CI->db->from("user_billing")->where("order", $order)->where_in("result", array("1","3"))->count_all_results();
+/*  	if ($order_no) {
+	    	$cnt = $this->CI->db->from("user_billing")->where("order_no", $order_no)->where_in("result", array("1","3"))->count_all_results();
 			if ($cnt > 0)  return $this->_return_error("第三方訂單號已被使用");
     	}
-    	
+*/    	
 		$country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
 		$country_code = ($country_code) ? $country_code : null;
 		
@@ -63,13 +63,15 @@ WHERE x.uid={$uid}";
     		'note'			=> '',
 			'country_code'  => $country_code,
     	);    	
-    	$order && $user_billing_data["order"] = $order;
+    	$partner_order_id && $user_billing_data["partner_order_id"] = $partner_order_id;
+    	$character_id && $user_billing_data["character_id"] = $character_id;
+    	$order_no && $user_billing_data["order_no"] = $order_no;
     	
     	$this->CI->db
     		->set("create_time", "now()", false)
     		->set("update_time", "now()", false)
     		->insert("user_billing", $user_billing_data);
-			
+		
     	return $this->CI->db->insert_id();
     }
     
@@ -141,7 +143,7 @@ WHERE x.uid={$uid}";
     	return $this->CI->db->insert_id();
     }    
     
-    function produce_gash_order($uid, $gash_billing_id, $amount, $character_id)
+    function produce_gash_order($uid, $gash_billing_id, $amount, $character_id, $coid, $partner_order_id)
 	{	
 		$cnt = $this->CI->db->from("user_billing")->where("gash_billing_id", $gash_billing_id)->where("result", "1")->count_all_results();
 		if ($cnt > 0)  return $this->_return_error("ID已被使用");			
@@ -159,6 +161,8 @@ WHERE x.uid={$uid}";
     			'gash_billing_id' => $gash_billing_id,
 				'character_id'  => $character_id,
 				'country_code'  => $country_code,
+				'order_no'		=> $coid,
+				'partner_order_id' => $partner_order_id
     		);
     	
     	$this->CI->db->set("create_time", "now()", false)->insert("user_billing", $user_billing_data);
@@ -203,7 +207,7 @@ WHERE x.uid={$uid}";
     }      
     
 	// iOS/Android in-app purchase 訂單
-    function produce_iap_order($uid, $transaction_type, $billing_type, $server_id, $partner_order_id, $character_id, $note)
+    function produce_iap_order($uid, $transaction_type, $billing_type, $server_id, $partner_order_id, $note)
     {	
 		$cnt = $this->CI->db->from("user_billing")->where("partner_order_id", $partner_order_id)->where_in("result", array("1","3"))->count_all_results();
 		if($cnt > 0)
@@ -220,7 +224,6 @@ WHERE x.uid={$uid}";
     		'ip'		 	=> $_SERVER['REMOTE_ADDR'],
     		'result'		=> '0',
     		'note'			=> $note,
-			'character_id'  => $character_id,
 			'country_code'  => $country_code,
 			'partner_order_id' => $partner_order_id,
     	);    	
