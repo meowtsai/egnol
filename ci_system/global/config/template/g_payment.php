@@ -1,4 +1,4 @@
-﻿<?
+<?
 	$gash_tw_url = base_url()."gash/order?country=tw";
 	$gash_global_url = base_url()."gash/order?country=global";
 	$pepay_url = base_url()."pepay/order";
@@ -98,7 +98,7 @@
 				"maximum" => 30000, "minimum" => 100, "mobile" => 2,
 				"trade" => array("paid"=>"BNK80801", "cuid"=>"TWD", "erp_id"=>"J990001", "convert_rate"=>"1", "action" => $gash_tw_url)
 			),
-			"玉山銀行大额付款" => array(
+			"玉山銀行大額付款" => array(
 				"maximum" => 100000, "minimum" => 100, "mobile" => 2,
 				"trade" => array("paid"=>"BNK80803", "cuid"=>"TWD", "erp_id"=>"J990001", "convert_rate"=>"1", "action" => $gash_tw_url)
 			),
