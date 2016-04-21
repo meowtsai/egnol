@@ -100,7 +100,7 @@ class Bulletin extends MY_Controller {
 		}
 		else
 		{	
-			$content = str_replace("manager.longeplay.com.tw", "game.longeplay.com.tw", $this->input->post("bulletin_content"));
+			$content = str_replace("http://manager.longeplay.com.tw", "https://game.longeplay.com.tw", $this->input->post("bulletin_content"));
             
 			$data = array(
 				'title'	   => $this->input->post("bulletin_title"),

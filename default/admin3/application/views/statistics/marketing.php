@@ -62,30 +62,7 @@
 		
 </form>
 
-<?
-    switch ($this->input->get("span")) {
-		case "weekly":
-			$retention_string          = "前1週新增用戶週回訪數";
-			$retention_rate_string     = "前1週新增用戶週回訪率";
-			$retention_all_string      = "前1週登入用戶週回訪數";
-			$retention_all_rate_string = "前1週登入用戶週回訪率";
-			break;
-			
-		case "monthly":
-			$retention_string          = "前1月新增用戶月回訪數";
-			$retention_rate_string     = "前1月新增用戶月回訪率";
-			$retention_all_string      = "前1月登入用戶月回訪數";
-			$retention_all_rate_string = "前1月登入用戶月回訪率";
-			break;
-			
-		default:
-			$retention_string          = "前1日新增用戶次日留存";
-			$retention_rate_string     = "前1日新增用戶次日留存率";
-			$retention_all_string      = "前1日登入用戶次日留存";
-			$retention_all_rate_string = "前1日登入用戶次日留存率";
-			break;
-	}
-    if ($query):?>
+<?if ($query):?>
 	<? if ($query->num_rows() == 0): echo '<div class="none">查無資料</div>'; else: ?>
 	<table class="table table-striped table-bordered" style="width:auto;">
 		<thead>
@@ -96,17 +73,17 @@
 				<th style="width:70px">登入設備</th>
 				<th style="width:70px">登入轉化率</th>
 				<th style="width:70px">第三方APK登入</th>
-				<th style="width:70px">總下載數</th>
-				<th style="width:70px">ios下載數</th>
-				<th style="width:70px">android下載數</th>	
-				<th style="width:70px">第三方APK下載數</th>
-				<th style="width:70px">下載轉化率</th>
-				<th style="width:70px">下載地區-台灣</th>
-				<th style="width:70px">下載地區-香港</th>
-				<th style="width:70px">下載地區-澳門</th>
-				<th style="width:70px">下載地區-新加坡</th>
-				<th style="width:70px">下載地區-馬來西亞</th>
-				<th style="width:70px">下載地區-其他</th>
+				<th style="width:70px">總首次開啟數</th>
+				<th style="width:70px">ios首次開啟數</th>
+				<th style="width:70px">android首次開啟數</th>	
+				<th style="width:70px">第三方APK首次開啟數</th>
+				<th style="width:70px">首次開啟轉化率</th>
+				<th style="width:70px">首次開啟地區-台灣</th>
+				<th style="width:70px">首次開啟地區-香港</th>
+				<th style="width:70px">首次開啟地區-澳門</th>
+				<th style="width:70px">首次開啟地區-新加坡</th>
+				<th style="width:70px">首次開啟地區-馬來西亞</th>
+				<th style="width:70px">首次開啟地區-其他</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -137,8 +114,8 @@
                 $tw_download_count = $row->ios_tw_download_count+$row->google_tw_download_count+$row->apk_tw_download_count;
                 $hk_download_count = $row->ios_hk_download_count+$row->google_hk_download_count+$row->apk_hk_download_count;
                 $mo_download_count = $row->ios_mo_download_count+$row->google_mo_download_count+$row->apk_mo_download_count;
-                $sg_download_count = $row->ios_sg_download_count+$row->google_download_count+$row->apk_sg_download_count;
-                $my_download_count = $row->ios_my_download_count+$row->google_download_count+$row->apk_my_download_count;
+                $sg_download_count = $row->ios_sg_download_count+$row->google_sg_download_count+$row->apk_sg_download_count;
+                $my_download_count = $row->ios_my_download_count+$row->google_my_download_count+$row->apk_my_download_count;
 		?>
 			<tr>			
 				<td nowrap="nowrap"><?=$show_date?></td>

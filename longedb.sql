@@ -521,6 +521,7 @@ CREATE TABLE `monthly_statistics` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
+
 --
 -- Table structure for table `marketing_statistics`
 --
@@ -528,7 +529,7 @@ CREATE TABLE `monthly_statistics` (
 DROP TABLE IF EXISTS `marketing_statistics`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `statistics` (
+CREATE TABLE `marketing_statistics` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `date` date NOT NULL,
   `game_id` varchar(20) NOT NULL,
@@ -538,7 +539,18 @@ CREATE TABLE `statistics` (
   `click_count` int(8) DEFAULT NULL,
   `install_count` int(8) DEFAULT NULL,
   `pay_user_count` int(8) DEFAULT NULL,
-  `pay_amount` int(11) DEFAULT NULL,
+  `pay_unique_event_count` int(8) DEFAULT NULL,
+  `pay_event_count` int(8) DEFAULT NULL,
+  `pay_amount` float(7,2) DEFAULT NULL,
+  `af_login` int(8) DEFAULT NULL,
+  `af_login_unique` int(8) DEFAULT NULL,
+  `af_login_sales` float(7,2) DEFAULT NULL,
+  `le_usercharactercreate` int(8) DEFAULT NULL,
+  `le_usercharactercreate_unique` int(8) DEFAULT NULL,
+  `le_usercharactercreate_sales` float(7,2) DEFAULT NULL,
+  `le_usercharacterlevelup` int(8) DEFAULT NULL,
+  `le_usercharacterlevelup_unique` int(8) DEFAULT NULL,
+  `le_usercharacterlevelup_sales` float(7,2) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

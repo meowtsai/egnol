@@ -1452,10 +1452,12 @@ class Cron extends CI_Controller {
 	
 	function save_statistics($data, $save_table="statistics") {
 		
+        if ($save_table=='marketing_statistics') $this->DB2->where("platform", $data['platform'])->where("country_code", $data['country_code'])->where("media", $data['media']);
 		$statistics = $this->DB2->where("game_id", $data['game_id'])->where("date", $data['date'])->get($save_table);
 		
 		if ($statistics->num_rows() > 0) {
             echo "[update]";
+        if ($save_table=='marketing_statistics') $this->DB1->where("platform", $data['platform'])->where("country_code", $data['country_code'])->where("media", $data['media']);
 			$this->DB1->where("game_id", $data['game_id'])->where("date", $data['date'])->update($save_table, $data);
 		} else {
             echo "[insert]";
@@ -1719,6 +1721,160 @@ class Cron extends CI_Controller {
 		for ($run_date; $run_date <= date('Y-m-d'); $run_date=date("Y-m-d",strtotime('+1 day', strtotime($run_date)))) {
 			echo '['.$run_date.']'.PHP_EOL;
 			$this->appannie_data($run_date);
+		}
+	}
+    
+    function appsflyer_data($start_date="", $end_date="") {
+            
+		if (empty($start_date)) $start_date=date("Y-m-d",strtotime("-1 days"));
+		if (empty($end_date)) $end_date=$start_date;
+        
+        $this->load->config('appsflyer');
+        $appsflyer_api = $this->config->item("appsflyer_api");
+        
+        foreach ($appsflyer_api as $game_id => $devices) {
+            foreach ($devices as $device => $codes) {
+                
+                $app_id = $codes['app_id'];
+                $api_token = $codes['api_token'];
+                
+                $downloadUrl = "https://hq.appsflyer.com/export/{$app_id}/geo_by_date_report/v4?api_token={$api_token}&from={$start_date}&to={$end_date}";      
+
+                $filePath = "p/data/appsflyer.csv";
+                $file = fopen($filePath, "w+");
+                
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $downloadUrl);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                //curl_setopt($ch, CURLOPT_HEADER, true); 
+                curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
+                curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+                
+                $result = curl_exec($ch);
+                
+                fwrite($file, $result);
+
+                fclose($file);
+                curl_close($ch);
+                
+                $file = fopen("p/data/appsflyer.csv", "r");
+                
+                $insert_arr = array();
+                $title_arr =array();
+                $i = 0;
+                
+                while (!feof($file)) {
+                    $data = fgetcsv($file);
+                    
+                    if ($i == 0) {
+                        $title_arr = array_flip($data);
+                    }
+                    
+                    if ($i && isset($data[0])) {
+                        $d = date("Y-m-d",strtotime($data[0]));
+                        
+                        $country = $data[1];
+                        if (stripos($data[3], "Facebook") !== false) {
+                            $media = 'facebook';
+                        } elseif (stripos($data[3], "Appsflyer") !== false) {
+                            $media = 'appsflyer';
+                        } else {
+                            $media = 'organic';
+                        }
+                        
+                        $clicks                         = $data[6];
+                        $installs                       = $data[8];
+                        $af_login_unique                = $data[$title_arr['af_login (Unique users)']];
+                        $af_login                       = $data[$title_arr['af_login (Event counter)']];
+                        $af_login_sales                 = $data[$title_arr['af_login (Sales in USD)']];
+                        $le_usercharactercreate_unique  = $data[$title_arr['le_usercharactercreate (Unique users)']];
+                        $le_usercharactercreate         = $data[$title_arr['le_usercharactercreate (Event counter)']];
+                        $le_usercharactercreate_sales   = $data[$title_arr['le_usercharactercreate (Sales in USD)']];
+                        $le_usercharacterlevelup_unique = $data[$title_arr['le_usercharacterlevelup (Unique users)']];
+                        $le_usercharacterlevelup        = $data[$title_arr['le_usercharacterlevelup (Event counter)']];
+                        $le_usercharacterlevelup_sales  = $data[$title_arr['le_usercharacterlevelup (Sales in USD)']];
+                        $pay_unique_event_count         = $data[$title_arr['af_purchase (Unique users)']];
+                        $pay_event_count                = $data[$title_arr['af_purchase (Event counter)']];
+                        $pay_amount                     = $data[$title_arr['af_purchase (Sales in USD)']];
+                        
+                        if (isset($insert_arr[$d][$country][$media]['clicks'])) $insert_arr[$d][$country][$media]['clicks']                                                 += intval($clicks);
+                        else $insert_arr[$d][$country][$media]['clicks'] = intval($clicks);
+                        if (isset($insert_arr[$d][$country][$media]['installs'])) $insert_arr[$d][$country][$media]['installs']                                             += intval($installs);
+                        else $insert_arr[$d][$country][$media]['installs'] = intval($installs);
+                        if (isset($insert_arr[$d][$country][$media]['af_login_unique'])) $insert_arr[$d][$country][$media]['af_login_unique']                               += $af_login_unique;
+                        else $insert_arr[$d][$country][$media]['af_login_unique'] = $af_login_unique;
+                        if (isset($insert_arr[$d][$country][$media]['af_login'])) $insert_arr[$d][$country][$media]['af_login']                                             += $af_login;
+                        else $insert_arr[$d][$country][$media]['af_login'] = $af_login;
+                        if (isset($insert_arr[$d][$country][$media]['af_login_sales'])) $insert_arr[$d][$country][$media]['af_login_sales']                                 += $af_login_sales;
+                        else $insert_arr[$d][$country][$media]['af_login_sales'] = $af_login_sales;
+                        if (isset($insert_arr[$d][$country][$media]['le_usercharactercreate_unique'])) $insert_arr[$d][$country][$media]['le_usercharactercreate_unique']   += $le_usercharactercreate_unique;
+                        else $insert_arr[$d][$country][$media]['le_usercharactercreate_unique'] = $le_usercharactercreate_unique;
+                        if (isset($insert_arr[$d][$country][$media]['le_usercharactercreate'])) $insert_arr[$d][$country][$media]['le_usercharactercreate']                 += $le_usercharactercreate;
+                        else $insert_arr[$d][$country][$media]['le_usercharactercreate'] = $le_usercharactercreate;
+                        if (isset($insert_arr[$d][$country][$media]['le_usercharactercreate_sales'])) $insert_arr[$d][$country][$media]['le_usercharactercreate_sales']     += $le_usercharactercreate_sales;
+                        else $insert_arr[$d][$country][$media]['le_usercharactercreate_sales'] = $le_usercharactercreate_sales;
+                        if (isset($insert_arr[$d][$country][$media]['le_usercharacterlevelup_unique'])) $insert_arr[$d][$country][$media]['le_usercharacterlevelup_unique'] += $le_usercharacterlevelup_unique;
+                        else $insert_arr[$d][$country][$media]['le_usercharacterlevelup_unique'] = $le_usercharacterlevelup_unique;
+                        if (isset($insert_arr[$d][$country][$media]['le_usercharacterlevelup'])) $insert_arr[$d][$country][$media]['le_usercharacterlevelup']               += $le_usercharacterlevelup;
+                        else $insert_arr[$d][$country][$media]['le_usercharacterlevelup'] = $le_usercharacterlevelup;
+                        if (isset($insert_arr[$d][$country][$media]['le_usercharacterlevelup_sales'])) $insert_arr[$d][$country][$media]['le_usercharacterlevelup_sales']   += $le_usercharacterlevelup_sales;
+                        else $insert_arr[$d][$country][$media]['le_usercharacterlevelup_sales'] = $le_usercharacterlevelup_sales;
+                        if (isset($insert_arr[$d][$country][$media]['pay_unique_event_count'])) $insert_arr[$d][$country][$media]['pay_unique_event_count']                 += $pay_unique_event_count;
+                        else $insert_arr[$d][$country][$media]['pay_unique_event_count'] = $pay_unique_event_count;
+                        if (isset($insert_arr[$d][$country][$media]['pay_event_count'])) $insert_arr[$d][$country][$media]['pay_event_count']                               += $pay_event_count;
+                        else $insert_arr[$d][$country][$media]['pay_event_count'] = $pay_event_count;
+                        if (isset($insert_arr[$d][$country][$media]['pay_amount'])) $insert_arr[$d][$country][$media]['pay_amount']                                         += $pay_amount;
+                        else $insert_arr[$d][$country][$media]['pay_amount'] = $pay_amount;
+                    }
+                    $i++;
+                }
+                
+                if ($i) {
+                    foreach ($insert_arr as $in_date => $countries) {
+                        foreach ($countries as $country => $medias) {
+                            foreach ($medias as $media => $data) {
+                                
+                                $in_data = array(
+                                    'date'                           => $in_date,
+                                    'game_id'                        => $game_id,
+                                    'platform'                       => $device,
+                                    'country_code'                   => $country,
+                                    'media'                          => $media,
+                                    'click_count'                    => $data['clicks'],
+                                    'install_count'                  => $data['installs'],
+                                    'af_login_unique'                => $data['af_login_unique'],
+                                    'af_login'                       => $data['af_login'],
+                                    'af_login_sales'                 => $data['af_login_sales'],
+                                    'le_usercharactercreate_unique'  => $data['le_usercharactercreate_unique'],
+                                    'le_usercharactercreate'         => $data['le_usercharactercreate'],
+                                    'le_usercharactercreate_sales'   => $data['le_usercharactercreate_sales'],
+                                    'le_usercharacterlevelup_unique' => $data['le_usercharacterlevelup_unique'],
+                                    'le_usercharacterlevelup'        => $data['le_usercharacterlevelup'],
+                                    'le_usercharacterlevelup_sales'  => $data['le_usercharacterlevelup_sales'],
+                                    'pay_unique_event_count'         => $data['pay_unique_event_count'],
+                                    'pay_event_count'                => $data['pay_event_count'],
+                                    'pay_amount'                     => $data['pay_amount']
+                                );
+                                
+                                $this->save_statistics($in_data, 'marketing_statistics');
+                            }
+                        }
+                    }
+                }
+
+                fclose($file);
+            }
+        }
+    }
+    
+	function appsflyer_que($date) {
+		ini_set('max_execution_time', 99999);
+		
+		$run_date = $date;
+		
+		for ($run_date; $run_date <= date('Y-m-d'); $run_date=date("Y-m-d",strtotime('+1 day', strtotime($run_date)))) {
+			echo '['.$run_date.']'.PHP_EOL;
+			$this->appsflyer_data($run_date);
 		}
 	}
 }
