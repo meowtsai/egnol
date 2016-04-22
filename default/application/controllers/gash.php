@@ -43,6 +43,7 @@ class Gash extends MY_Controller {
 		$_SESSION['payment_type']		= $this->input->post('billing_type');
 		$_SESSION['payment_channel']	= $this->input->post('billing_channel');
 		$_SESSION['payment_api_call']   = $this->input->post('api_call');
+		$_SESSION['payment_partner_order_id'] = $this->input->post('partner_order_id');
 
 		$country = $this->input->get("country");
 		
@@ -198,19 +199,22 @@ class Gash extends MY_Controller {
 					if (empty($gash_billing->uid)) go_payment_result(0, 0, $money, "用戶資訊遺失");										
 					
 					$this->load->library("g_wallet");
-					$order_id = $this->g_wallet->produce_gash_order($gash_billing->uid, $gash_billing->id, $money, $_SESSION['payment_character']);
+					$order_id = $this->g_wallet->produce_gash_order($gash_billing->uid, $gash_billing->id, $money, $_SESSION['payment_character'], $trans->nodes["COID"], $_SESSION['payment_partner_order_id']);
 					if (empty($order_id)) go_payment_result(0, 0, $money, $this->g_wallet->error_message);
 					
 					$this->db->where("COID", $trans->nodes["COID"])->update("gash_billing", array("status" => "2"));					
 					
 					//一并轉入遊戲伺服器					
-					if ($gash_billing->server_id) {
+					if ($gash_billing->server_id)
+					{
+						$args = "oid=".$order_id."&cuid=".$gash_billing->CUID;
+						
 						$this->load->library("game");
-						$this->game->payment_transfer($gash_billing->uid, $gash_billing->server_id, $money);
-						go_payment_result(1, 1, $money);
+						$this->game->payment_transfer($gash_billing->uid, $gash_billing->server_id, $money, $_SESSION['payment_partner_order_id'], $_SESSION['payment_character'], $trans->nodes["COID"], $args);
+						go_payment_result(1, 1, $money, "", $args);
 					}
 					else {
-						go_payment_result(1, 2, $money);
+						go_payment_result(1, 2, $money, "", $args);
 					}										
 				}		
 				else go_payment_result(0, 0, $money, $this->gash_conf["RCODE"][$trans->nodes["PAY_RCODE"]]."(". $trans->nodes["PAY_RCODE"].")");	
@@ -354,11 +358,11 @@ function go_payment_result($status, $transfer_status, $price, $message='', $args
 	$site = $_SESSION['site'];
 	$api_call = $_SESSION['payment_api_call'];
 
-    $_SESSION['payment_api_call'] = '';
+	$_SESSION['payment_api_call'] = '';
 	unset($_SESSION['payment_api_call']);
 
 	if($api_call == 'true')
-		header('location: '.g_conf('url', 'api')."api/ui_payment_result?s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args);
+		header('location: '.g_conf('url', 'api')."api2/ui_payment_result?s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args);
 	else
 		header('location: '.g_conf('url', 'longe')."payment/result?site={$site}&s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args);
 	exit();

@@ -69,7 +69,9 @@ $config["partner_api"] = array(
 							'r2g_450',
 							'r2g_590',
 							'r2g_1490',
-							'r2g_2990'
+							'r2g_2990',
+							'r2g_month.120',
+							'r2g_month.240',
 						)
 					)
 				),

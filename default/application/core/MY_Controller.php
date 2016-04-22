@@ -20,7 +20,7 @@ class MY_Controller extends CI_Controller
 	{
 		$this->load->library("g_layout");
 		
-		if ($this->g_user->is_login())
+		/*if ($this->g_user->is_login())
 		{
 			$recent_server = $this->db->select("g.name as game_name, gi.name as server_name, gi.server_id")
 				->from("log_game_logins lgl")
@@ -28,7 +28,7 @@ class MY_Controller extends CI_Controller
 				->join("games g","g.game_id=gi.game_id")
 				->where("lgl.uid", $this->g_user->uid)->where("is_recent", "1")->order_by("lgl.id desc")->limit(3)->get();
 		}
-		else $recent_server = false;
+		else */$recent_server = false;
 
 		$this->g_layout->set("recent_server", $recent_server);
 

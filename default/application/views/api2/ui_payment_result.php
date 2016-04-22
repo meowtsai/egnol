@@ -6,16 +6,24 @@
 
 	$get_point = !empty($this->input->get("gp"))? $this->input->get("gp") : 0;
 
+	$order_id = $this->input->get("oid");
+	$cuid = $this->input->get("cuid");
+
     $tips = "若您儲值遇到任何問題，請向<a href='{$longe_url}service?site={$site}'>客服中心</a>反映。";
 ?>
 <script type='text/javascript'>
 	function onClickPaymentOK()
 	{
+		alert("test");
 		if (typeof LongeAPI != 'undefined')
 		{
 <?
-			echo "LongeAPI.onPaymentSuccess('{$game->game_id}','{$server->server_id}','{$character->name}','{$billing_type}','{$pay_type}',parseInt('{$price}',10),parseInt('{$get_point}',10));";
-?>
+			if ($status == '1')
+				echo "LongeAPI.onPaymentSuccess('{$order_id}','{$billing_type}','{$pay_type}','{$cuid}',{$price},{$get_point});";
+			else
+				echo "LongeAPI.onPaymentCancel()";
+				
+	/* iOS 暫無第三方儲值
 		} else {
             encodedurl = encodeURIComponent("<? echo "ios://paymentresult-_-{$game->game_id}-_-{$server->server_id}-_-{$character->name}-_-{$billing_type}-_-{$pay_type}-_-{$price}-_-{$get_point}" ?>");
 			//window.location = encodedurl;
@@ -24,6 +32,8 @@
 			document.documentElement.appendChild(iframe);
 			iframe.parentNode.removeChild(iframe);
 			iframe = null;
+	*/
+?>
 		}
 	}
 </script>

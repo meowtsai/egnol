@@ -11,6 +11,7 @@
 				<div class="login-button">
 					<input name="doLogin" type="submit" id="doSubmit" value="" style="display:none;" />
 					<img style="cursor:pointer;" src="<?=$longe_url?>p/image/member/member_check.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')" />
+					<img style="cursor:pointer;" src="<?=$longe_url?>p/image/member/clear.png" class="button_submit" onclick="javascript:location.href='/api2/ui_login?site=<?=$site?>';" />
 				</div>
 
 				<ul class="notes">
