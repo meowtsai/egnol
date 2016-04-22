@@ -126,7 +126,7 @@ class Picture extends MY_Controller {
 			$data = array(
 				'category_id'		=> $this->input->post("category_id"),
 				'src'				=> $src,
-				'link'				=> $link,
+				'link'				=> $this->input->post("link"),
 				'title'				=> $this->input->post("title"),
 				'width'				=> $this->input->post("width") ? $this->input->post("width") : null,
 				'height'			=> $this->input->post("height") ? $this->input->post("height") : null,
