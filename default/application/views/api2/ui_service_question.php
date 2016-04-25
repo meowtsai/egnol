@@ -31,7 +31,6 @@
 							</select>
 						</td>
 					</tr>
-					<? /*
 					<tr>
 						<th>角色名稱</th>
 						<td>
@@ -46,7 +45,6 @@
 							</select>
 						</td>
 					</tr>
-					*/ ?>
 					<tr>
 						<th>問題類型</th>
 						<td>
