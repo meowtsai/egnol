@@ -37,7 +37,7 @@
                     <?=$this->pagination->create_links();?>
                 </div>
 			</div>
-			<div class="button"><a href="#" title="login"><img src="/p/image/news/back-btn.gif"></a></div>
+			<div class="button"><a href="<?=$game_url?>"><img src="/p/image/news/back-btn.gif"></a></div>
 		</div>
 	</div>
 </div>

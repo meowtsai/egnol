@@ -1,10 +1,10 @@
-﻿<?
+<?
 	$gash_tw_url = base_url()."gash/order?country=tw";
 	$gash_global_url = base_url()."gash/order?country=global";
 	$pepay_url = base_url()."pepay/order";
 
-    $config["payment_frontend_url"] = "http://203.66.111.103/";
-    $config["payment_backend_ip"] = "203.66.111.103";
+    $config["payment_frontend_url"] = "https://game.longeplay.com.tw/";
+    $config["payment_backend_ip"] = "203.66.111.6";
     
 	$config["payment_options"] = array(
 		"手機市話" => array(
@@ -13,19 +13,19 @@
 				"trade" => array("paid"=>"TELSON04", "cuid"=>"TWD", "erp_id"=>"J990001", "convert_rate"=>"1", "action" => $gash_tw_url)
 			),
 			"中華電信839行動電話小額付費" => array(
-				"maximum" => 3000, "minimum" => 0, "mobile" => 2,
+				"maximum" => 2000, "minimum" => 30, "mobile" => 2,
 				"trade" => array("paid"=>"TELCHT05", "cuid"=>"TWD", "erp_id"=>"J990001", "convert_rate"=>"1", "action" => $gash_tw_url)
 			),
 			"中華電信Hinet小額付費" => array(
-				"maximum" => 3000, "minimum" => 0, "mobile" => 2,
+				"maximum" => 2000, "minimum" => 30, "mobile" => 2,
 				"trade" => array("paid"=>"TELCHT06", "cuid"=>"TWD", "erp_id"=>"J990001", "convert_rate"=>"1", "action" => $gash_tw_url)
 			),
 			"中華電信市內電話小額付費" => array(
-				"maximum" => 3000, "minimum" => 0, "mobile" => 2,
+				"maximum" => 2000, "minimum" => 30, "mobile" => 2,
 				"trade" => array("paid"=>"TELCHT07", "cuid"=>"TWD", "erp_id"=>"J990001", "convert_rate"=>"1", "action" => $gash_tw_url)
 			),
 			"遠傳電信小額付費" => array(
-				"maximum" => 3000, "minimum" => 0, "mobile" => 2,
+				"maximum" => 3000, "minimum" => 30, "mobile" => 2,
 				"trade" => array("paid"=>"TELFET01", "cuid"=>"TWD", "erp_id"=>"J990001", "convert_rate"=>"1", "action" => $gash_tw_url)
 			),
 			/*"台灣大哥大小額付費" => array(

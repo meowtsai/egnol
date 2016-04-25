@@ -21,7 +21,7 @@
                     </div>
 				</div>
 			</div>
-			<div class="button" onClick="window.history.back();"><img src="/p/image/news/back.png"></div>
+			<div class="button" style="cursor:pointer;" onClick="window.history.back();"><img src="/p/image/news/back.png"></div>
 		</div>
 	</div>
 </div>

@@ -11,10 +11,10 @@
         var $CI;
         
         /** 環境 **/
-        public $smtp_host = "edm.longeplay.com.tw";
-        public $smtp_user= "no-reply";  // SMTP username
+        public $smtp_host = "smail.longeplay.com.tw";
+        public $smtp_user= "no-reply@smail.longeplay.com.tw";  // SMTP username
         public $smtp_passwd= "noxj/6u4reply"; // SMTP password
-        public $smtp_from= "no-reply@edm.longeplay.com.tw";
+        public $smtp_from= "no-reply@smail.longeplay.com.tw";
         public $smtp_from_name= "longeplay service";
         public $smtp_subject= "LongE Service";
 

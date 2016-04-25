@@ -29,7 +29,7 @@
 <ul class="cf">
 <li><a href="<?=$longe_url?>member?site=<?=$site?>&redirect_url=<?=urlencode($redirect_url)?>" title="<?=$member_title?>"></a></li>
 <li><a href="<?=$longe_url?>service?site=<?=$site?>" title="客服中心"></a></li>
-<li><a href="javascript:void(0);" class="not_ready" title="公告"></a></li>
+<li><a href="<?=$longe_url?>news?site=<?=$site?>" title="公告"></a></li>
 <li><a href="<?=$fan_page?>" target="_blank" title="粉絲團"></a></li>
 <li><a href="javascript:void(0);" class="not_ready" title="儲值中心"></a></li>
 </ul>
@@ -37,7 +37,7 @@
 <ul id="menu" class="cf" typeof="v:menu">
 <li><a href="javascript:void(0);" class="not_ready" title="儲值中心" rel="v:url" property="v:title">儲值中心</a></li>
 <li><a href="<?=$fan_page?>" target="_blank" title="粉絲團" rel="v:url" property="v:title">粉絲團</a></li>
-<li><a href="javascript:void(0);" class="not_ready" title="公告" rel="v:url" property="v:title">公告</a></li>
+<li><a href="<?=$longe_url?>news?site=<?=$site?>" title="公告" rel="v:url" property="v:title">公告</a></li>
 <li><a href="<?=$longe_url?>service?site=<?=$site?>" title="客服中心" rel="v:url" property="v:title">客服中心</a></li>
 <li><a href="<?=$longe_url?>member?site=<?=$site?>&redirect_url=<?=urlencode($redirect_url)?>" title="<?=$member_title?>" rel="v:url" property="v:title"><?=$member_title?></a></li>
 </ul>
