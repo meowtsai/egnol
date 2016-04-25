@@ -160,6 +160,44 @@ CREATE TABLE `gash_billing` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `mycard_billing`
+--
+
+DROP TABLE IF EXISTS `mycard_billing`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `mycard_billing` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(10) unsigned NOT NULL,
+  `auth_code` varchar(300) DEFAULT NULL,
+  `trade_code` varchar(255) DEFAULT NULL,
+  `mycard_type` tinyint(1) DEFAULT NULL,
+  `mycard_card_id` varchar(255) DEFAULT NULL,
+  `mycard_pwd` varchar(255) DEFAULT NULL,
+  `game_id` tinyint(3) DEFAULT NULL,
+  `payment_id` varchar(30) DEFAULT NULL,
+  `trade_seq` varchar(20) NOT NULL,
+  `product_code` varchar(15) DEFAULT NULL,
+  `status` tinyint(3) NOT NULL,
+  `trade_ok` tinyint(1) NOT NULL DEFAULT '0',
+  `is_confirm` tinyint(1) NOT NULL DEFAULT '0',
+  `cash_out` tinyint(1) NOT NULL DEFAULT '0',
+  `cash_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `update_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `create_time` datetime NOT NULL,
+  `note` tinytext,
+  `plug` tinyint(1) NOT NULL DEFAULT '1',
+  `quantity` int(10) NOT NULL DEFAULT '0',
+  `mycard_trade_seq` varchar(255) DEFAULT NULL,
+  `trade_type` tinyint(1) NOT NULL DEFAULT '0',
+  `server_id` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `trade_seq` (`trade_seq`),
+  KEY `uid` (`uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=365091 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `log_admin_actions`
 --
 
