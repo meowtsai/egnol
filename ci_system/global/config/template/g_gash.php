@@ -4,18 +4,18 @@ $config["gash"] = array(
 	"amount" => array("100", "300", "500", "1000", "3000", "5000", "10000", "20000", "30000"),
 	"m_amount" => array("60", "150", "300", "660", "790", "1490", "3590", "5990", "9990", "14900", "29900"),		
 	"global" => array(
-		"MID" => "M1000159",
-		"CID" => "C001590000298",
-		"key" => "LKTE69Y7Y43N6LW2",
-		"secret1" => "h03kz1URD11TAxM+VOuSwBvIxC7YSixz",
-		"secret2" => "D4PKPcXrVzE=",
+		"MID" => "M1000491",
+		"CID" => "C004910000938",
+		"key" => "PR7yTf%SJUhwJ",
+		"secret1" => "9AgMquZpqYQsWSaEjaTusI6RqjznXAvE",
+		"secret2" => "tpt2EaoWcK4=",
 	),
 	"tw" => array(
-		"MID" => "M1000262",
-		"CID" => "C002620000423",
-		"key" => "ISAHDOISBOIUG",
-		"secret1" => "m4Ck7Gh5ewdvZT+G1Ek+tZh9GjWVHQ8g",
-		"secret2" => "MEQMPCtY3Qc=",
+		"MID" => "M1000490",
+		"CID" => "C004900000937",
+		"key" => "KDTW8#PSq",
+		"secret1" => "qmt6aVg3mO1lm0ZHkX01RKJl3uMXU1ym",
+		"secret2" => "EuTzhXbemAU=",
 	),
 	"long_e2" => array(
 		"MID" => "M1000309",
@@ -31,9 +31,8 @@ $config["gash"] = array(
 	),
 	"PAID" => array(
 		"COPGAM02" 	=> "GASH+點數卡",
-		"COPGAM05" 	=> "GASH+點數卡(Mobile)",
-		"COPGAM08"	=> "GASH+ 會員帳戶支付",		
-		"COPGAM09"	=> "GASH會員遊戲帳號綁定",		
+		"COPGAM05" 	=> "GASH+點數卡(Moblie)",
+		"COPGAM08"	=> "GASH+ 會員帳戶支付",			
 		"TELCHT05"	=> "中華電信839三合一",
 		"TELCHT06"	=> "中華電信數據三合一(Hinet)",
 		"TELCHT07"	=> "中華電信市話三合一",
@@ -42,13 +41,11 @@ $config["gash"] = array(
 		"BNK80803"	=> "玉山銀行(大額交易)",
 		"BNK80804"	=> "玉山支付通(支付寶)",
 		"BNKRBS01" 	=> "全球信用卡",
-		"BNK82201" 	=> "中國信託一般信用卡",
-		"BNK82204" 	=> "銀聯卡",
-		"COPALI02"	=> "支付寶(USD)",	
+		"BNK82201" 	=> "中國信託一般信用卡",	
 		"COPPAL01"	=> "PayPal",
-		"COPPAL02"	=> "PayPal(國際)",
 		"COPPEZ01"	=> "PAYEASY",
 		"COPGV01" 	=> "Indonesia untuk membayar",
+		"COPMOZ01" 	=> "Pilipinas upang bayaran",
 		"COPPSB01" 	=> "ธนาคารไทยการชำระเงิน",
 		"COPPST01" 	=> "Thanh Toán Việt Nam",
 		"COPWBC02" 	=> "Malaysia Bank untuk Bayar",
@@ -58,34 +55,34 @@ $config["gash"] = array(
 		"TELCHT07"	=> "中華電信 市話(三合一)",
 		"TELFET01"	=> "遠傳電信一般型",
 		"TELTCC01"	=> "台灣大哥大一般型",
-		"TELVIBO"	=> "威寶行動電話小額付費"
+		"TELDANAL01" 	=> "한국 통신 결제",
 	),
 	"CUID" => array(
 		"PIN"	=> "GASH 點數卡儲值",
 		"TWD"	=> "新台幣",
-		//"PHP" 	=> "菲國比索",
+		"PHP" 	=> "菲國比索",
 		"MYR" 	=> "馬來西亞令吉",
 		"USD" 	=> "美金",
 		"EUR" 	=> "歐元",
 		"IDR" 	=> "印尼盾",
 		"THB" 	=> "泰銖",	
 		"VND" 	=> "越南幣",
-		//"KRW" 	=> "韓元",
-		"HKD" 	=> "港幣",
-	),
+		"KRW" 	=> "韓元",
+		"HKD" 	=> "港幣",				
+	),		
 	"converter" => array(
 		"TWD" 	=> 1,
 		"PIN" 	=> 1,
-		//"PHP" 	=> 1.7,
+		"PHP" 	=> 1.7,
 		"MYR" 	=> 0.14,
 		"USD" 	=> 0.036,
 		"EUR" 	=> 0.028,
 		"IDR" 	=> 460,
 		"THB" 	=> 1.5,	
 		"VND" 	=> 880,
-		//"KRW" 	=> 44,
+		"KRW" 	=> 44,
 		"HKD" 	=> 2.5, // 1港幣 = 10港點, 4台幣 = 1港幣 => 1台幣 = 2.5港點
-	),
+	),			
 	"RCODE" => array(
 		'1001' => '驗證碼錯誤',
 		'1002' => '未傳入BASE64編碼參數',
@@ -158,6 +155,19 @@ $config["gash"] = array(
 		'9998' => 'GPS系統繁忙',
 		'9999' => 'GPS系統異常',					
 	),
+	"items" => array(
+		"Gash+儲值卡(港幣)" => array("PAID"=>"COPGAM02", "CUID"=>"HKD", "ERP_ID"=>"PINHALL"),
+		"Gash+儲值卡(菲國比索)" => array("PAID"=>"COPGAM02", "CUID"=>"PHP", "ERP_ID"=>"PINHALL"),
+		"Gash+儲值卡(馬來西亞令吉)" => array("PAID"=>"COPGAM02", "CUID"=>"MYR", "ERP_ID"=>"PINHALL"),
+		"全球信用卡(美金)" => array("PAID"=>"BNKRBS01", "CUID"=>"USD", "ERP_ID"=>"J990001"),
+		"全球信用卡(歐元)" => array("PAID"=>"BNKRBS01", "CUID"=>"EUR", "ERP_ID"=>"J990001"),
+		"Indonesia untuk membayar(印尼盾)" => array("PAID"=>"COPGV01", "CUID"=>"IDR", "ERP_ID"=>"J990001"),
+		"Pilipinas upang bayaran(菲國比索)" => array("PAID"=>"COPMOZ01", "CUID"=>"PHP", "ERP_ID"=>"J990001"),
+		"ธนาคารไทยการชำระเงิน(泰銖)" => array("PAID"=>"COPPSB01", "CUID"=>"THB", "ERP_ID"=>"J990001"),
+		"Thanh Toán Việt Nam(越南幣)" => array("PAID"=>"COPPST01", "CUID"=>"VND", "ERP_ID"=>"J990001"),
+		"Malaysia Bank untuk Bayar(馬來西亞令吉)" => array("PAID"=>"COPWBC02", "CUID"=>"MYR", "ERP_ID"=>"J990001"),
+		"한국 통신 결제(韓元)" => array("PAID"=>"TELDANAL01", "CUID"=>"KRW", "ERP_ID"=>"J990001"),												
+	)		
 );
 
 if (ENVIRONMENT == 'development') {
@@ -166,14 +176,14 @@ if (ENVIRONMENT == 'development') {
 			"settle" => "https://stage-api.eg.gashplus.com/CP_Module/settle.asmx?WSDL",
 			"checkorder" => "https://stage-api.eg.gashplus.com/CP_Module/checkorder.asmx?WSDL",
 	);
-	$config["gash"]["global"]["MID"] = "M1000190";
-	$config["gash"]["global"]["CID"] = "C001900000304";
-	$config["gash"]["global"]["key"] = "avs45093yh98bw43jq";
-	$config["gash"]["global"]["secret1"] = "ZmMB4SaOwtQOdQNyuPrgGgGr9wqIrKBa";
-	$config["gash"]["global"]["secret2"] = "WLJc9+TYk9g=";	
-	$config["gash"]["tw"]["MID"] = "M1000286";
-	$config["gash"]["tw"]["CID"] = "C002860000460";
-	$config["gash"]["tw"]["key"] = "SAHJSPO;ahnAPO";
-	$config["gash"]["tw"]["secret1"] = "UitFhM7lIrCdXDaUVPefW/kxEjCNzBz1";
-	$config["gash"]["tw"]["secret2"] = "x7M+YBakKpM=";
+	$config["gash"]["global"]["MID"] = "M1000525";
+	$config["gash"]["global"]["CID"] = "C005250000918";
+	$config["gash"]["global"]["key"] = "fhnxdrrQ3RWRVZFD";
+	$config["gash"]["global"]["secret1"] = "jC8/z7Rk6JWGcr3K1LN3YxxEyFphfygV";
+	$config["gash"]["global"]["secret2"] = "tTVvofLpTMo=";	
+	$config["gash"]["tw"]["MID"] = "M1000524";
+	$config["gash"]["tw"]["CID"] = "C005240000917";
+	$config["gash"]["tw"]["key"] = "45Y75RIJMCGH";
+	$config["gash"]["tw"]["secret1"] = "0/NKR+XpXmQVXreqh5p/ZRoAQ7i5oMp1";
+	$config["gash"]["tw"]["secret2"] = "rQDFxzAKGF8=";
 }

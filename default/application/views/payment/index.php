@@ -18,10 +18,10 @@ if(preg_match('/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|c
 
 $currency_array = array(
     "TWD" => "新台幣TWD",
-    "USD" => "美金USD",
+//    "USD" => "美金USD",
     //"EUR" => "EUR",
-    "HKD" => "港幣HKD",
-    "MYR" => "馬來西亞令吉MYR",
+//    "HKD" => "港幣HKD",
+//    "MYR" => "馬來西亞令吉MYR",
     //"IDR" => "IDR",
     //"THB" => "THB",
     //"THB" => "THB"
