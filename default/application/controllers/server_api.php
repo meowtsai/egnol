@@ -85,8 +85,13 @@ class Server_api extends MY_Controller
 		{
             die('0');
         }
-		
-		
+/*		
+		$this->load->library("game");
+        if($this->game->login($server_id, $uid) == false)
+		{
+			die('0');
+		}
+*/		
 		log_message("error", "user_login_complete:{$uid},{$server_id}");
 		
 		die('1');
@@ -104,7 +109,7 @@ class Server_api extends MY_Controller
 		{
             die('0');
         }
-		
+/*		
 		// 若沒設定 server_id, 則找出最近一次登入的 server
 		if(empty($server_id))
 		{
@@ -114,9 +119,7 @@ class Server_api extends MY_Controller
 				$server_id = $login_game->server_id;
 			}
 		}
-		
-		log_message("error", "user_create_character:{$server_id},{$uid},{$character_id},{$character_name}");
-
+*/		
 		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
 		if (empty($server_info))
 		{
@@ -152,8 +155,6 @@ class Server_api extends MY_Controller
 		{
 			die('0');
 		}
-
-		log_message("error", "user_create_character:{$insert_id}");
 		
 		die('1');
 	}
