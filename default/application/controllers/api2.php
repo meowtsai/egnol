@@ -286,7 +286,7 @@ class Api2 extends MY_Controller
 		);
 
         $this->_set_logout_time();
-            
+        
 		$this->db->insert("log_game_logins", $data);	
         
 		if ( $this->db->insert_id() )
@@ -1198,6 +1198,7 @@ class Api2 extends MY_Controller
 		}
 
 		// 驗證成功, 先結掉儲值訂單
+		$this->g_wallet->update_order($order, array("amount"=>$price,"order_no"=>$transaction_id));
 		$this->g_wallet->complete_order($order);
 		
 		// 記錄轉點
@@ -1357,6 +1358,7 @@ class Api2 extends MY_Controller
 		}
 
 		// 驗證成功, 先結掉儲值訂單
+		$this->g_wallet->update_order($order, array("amount"=>$price,"order_no"=>$transaction_id));
 		$this->g_wallet->complete_order($order);
 		
 		// 記錄轉點
@@ -1604,6 +1606,9 @@ class Api2 extends MY_Controller
 	// 設定登入伺服器
 	function set_login_server()
 	{
+		// *** 2016-04-21 準備將功能轉移到 server_api
+		//
+		/*
 		$partner = $this->input->post("partner");
 		$game_id = $this->input->post("site");
 		// 暫時增加檢查, 之後須修正 SDK 統一規格
@@ -1613,8 +1618,6 @@ class Api2 extends MY_Controller
 		}
 		$server_id = $this->input->post("server");
 		$uid = $this->input->post("uid");
-
-		log_message("error", "set_login_server:{$server_id},{$uid}");
 		
 		if (empty($partner) || empty($game_id))
 		{
@@ -1637,6 +1640,7 @@ class Api2 extends MY_Controller
 		{
 			die(json_encode(array("result"=>"0", "error"=>"無此伺服器")));
 		}
+		*/
 /*
 		// 登入 log
 		$this->load->library("game");
@@ -1731,8 +1735,9 @@ class Api2 extends MY_Controller
 	// 建立遊戲角色
 	function create_character()
 	{
-		log_message("error", "create_character:1");
-		
+		// *** 2016-04-21 將功能轉移到 server_api
+		//
+		/*
 		$partner = $this->input->post("partner");
 		$game_id = $this->input->post("site");
 		// 暫時增加檢查, 之後須修正 SDK 統一規格
@@ -1746,8 +1751,6 @@ class Api2 extends MY_Controller
 		$character_name = $this->input->post("character_name");
 		if(empty($character_name))
 			$character_name = $this->input->post("caracter_name");
-
-		log_message("error", "create_character:{$server_id},{$uid},{$character_id},{$character_name}");
 		
 		// 若沒設定 server_id, 則找出最近一次登入的 server
 		if(empty($server_id))
@@ -1810,6 +1813,8 @@ class Api2 extends MY_Controller
 								"id" => $insert_id,
 								"character_name" => $character_name,
 								"points" => 0));
+		*/
+		echo json_encode(array("result"	=> 1));
 		
 		exit();
 	}
