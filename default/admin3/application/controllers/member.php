@@ -164,7 +164,7 @@ class Member extends MY_Controller {
         
         $user_billing = $this->DB2->query("
             SELECT
-                COUNT(CASE WHEN amount BETWEEN 60 AND 599 THEN 1 ELSE NULL END) as lvl1,
+                COUNT(CASE WHEN amount BETWEEN 50 AND 599 THEN 1 ELSE NULL END) as lvl1,
                 COUNT(CASE WHEN amount BETWEEN 600 AND 1499 THEN 1 ELSE NULL END) as lvl2,
                 COUNT(CASE WHEN amount BETWEEN 1500 AND 4999 THEN 1 ELSE NULL END) as lvl3,
                 COUNT(CASE WHEN amount BETWEEN 5000 AND 19999 THEN 1 ELSE NULL END) as lvl4,

@@ -323,7 +323,7 @@
                 </thead>
                 <tbody>
                     <tr>
-                        <td>LVL1($60~$599)</td><td><?=$user_billing->lvl1?></td>
+                        <td>LVL1($50~$599)</td><td><?=$user_billing->lvl1?></td>
                     </tr><tr>
                         <td>LVL2($600~$1499)</td><td><?=$user_billing->lvl2?></td>
                     </tr><tr>

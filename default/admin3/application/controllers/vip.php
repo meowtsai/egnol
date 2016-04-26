@@ -121,7 +121,101 @@ class Vip extends MY_Controller {
 			->render("vip/form");
 	}
 	
-	function modify_json()
+	function modify_event_json()
+	{
+        $this->load->helper('path');
+        
+		if ($this->zacl->check_acl("vip", "authorize")) {
+            $pm_admin_uid = $_SESSION['admin_uid'];
+            $status = 2;
+        } else {
+            $pm_admin_uid = "";
+            $status = 1;
+        }
+        
+		$vip_id = $this->input->post("vip_id");
+		
+		$data = array(
+			"game_id" => $this->input->post("game"),
+			'title' => htmlspecialchars($this->input->post("title")),
+			'content' => nl2br(htmlspecialchars($this->input->post("content"))),
+			'admin_uid' => $_SESSION['admin_uid'],
+			'pm_admin_uid' => $pm_admin_uid,
+			'status' => $status,
+			'is_active' => $this->input->post("is_active"),
+			'start_date' => $this->input->post("start_date"),
+			'end_date' => $this->input->post("end_date"),
+		);
+        
+        if (!is_dir(set_realpath("p/upload/vip_event{$vip_id}"))) {
+            mkdir(set_realpath("p/upload/vip_event{$vip_id}"), 0777, TRUE);
+        }
+        
+		$this->load->library('upload');
+		$config['upload_path'] = set_realpath("p/upload/vip_event{$vip_id}");
+		$config['allowed_types'] = '*';
+		$config['max_size']	= '10240'; //10MB
+		$config['encrypt_name'] = false;
+		
+		$upload_cnt = 0;
+		if ( ! empty($_FILES["file01"]["name"]))
+		{
+			$this->upload->initialize($config);
+			if ( ! $this->upload->do_upload("file01"))
+			{
+				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+			}
+			else
+			{
+				$upload_data = $this->upload->data();
+				$data['file_path'.(++$upload_cnt)] = site_url("p/upload/vip_event{$vip_id}/{$upload_data['file_name']}");					
+			}
+		}
+		
+		if ( ! empty($_FILES["file02"]["name"]))
+		{
+			$this->upload->initialize($config);
+			if ( ! $this->upload->do_upload("file02"))
+			{
+				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+			}
+			else
+			{
+				$upload_data = $this->upload->data();
+				$data['file_path'.(++$upload_cnt)] = site_url("p/upload/vip_event{$vip_id}/{$upload_data['file_name']}");					
+			}
+		}
+		if ( ! empty($_FILES["file03"]["name"]))
+		{
+			$this->upload->initialize($config);
+			if ( ! $this->upload->do_upload("file03"))
+			{
+				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+			}
+			else
+			{
+				$upload_data = $this->upload->data();
+				$data['file_path'.(++$upload_cnt)] = site_url("p/upload/vip_event{$vip_id}/{$upload_data['file_name']}");					
+			}
+		}		
+		
+		if ($vip_id) {			
+			$this->DB1
+				->where("id", $vip_id)
+				->update("vip_events", $data);
+		}
+		else {
+			$this->DB1
+				->set("create_time", "now()", false)
+				->set("update_time", "now()", false)
+				->insert("vip_events", $data);	
+			$vip_id = $this->DB1->insert_id();			
+		}
+		
+		die(json_message(array("redirect_url"=> base_url("vip/event_view/".$vip_id), "id"=>$vip_id), true));		
+	}
+	
+	function modify_ticket_json()
 	{
         $this->load->helper('path');
         
@@ -299,6 +393,27 @@ class Vip extends MY_Controller {
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
 	}
+	
+	function event_view($id)
+	{
+		$this->zacl->check("vip", "modify");
+
+		$vip_event = $this->DB2->where("id", $id)->get()->row();
+		
+		$replies = $this->DB2
+			->select("tr.*, au.name as admin_uname")
+			->from("vip_ticket_replies tr")
+			->join("admin_users au", "au.uid=tr.admin_uid", "left")
+			->where("vip_ticket_id", $id)->order_by("tr.id", "asc")->get();
+		
+		$this->_init_vip_layout()
+			->add_breadcrumb("檢視")
+			->add_js_include("vip/view")
+			->set("vip", $vip_event)
+			->set("replies", $replies)
+			->render("vip/event_form");
+	}	
+	
 	
 	function view($id)
 	{
