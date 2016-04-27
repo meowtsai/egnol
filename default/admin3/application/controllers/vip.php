@@ -126,10 +126,12 @@ class Vip extends MY_Controller {
         $this->load->helper('path');
         
 		if ($this->zacl->check_acl("vip", "authorize")) {
-            $pm_admin_uid = $_SESSION['admin_uid'];
+            $auth_admin_uid = $_SESSION['admin_uid'];
+            $auth_time = time();
             $status = 2;
         } else {
-            $pm_admin_uid = "";
+            $auth_admin_uid = "";
+            $auth_time = "";
             $status = 1;
         }
         
@@ -140,7 +142,8 @@ class Vip extends MY_Controller {
 			'title' => htmlspecialchars($this->input->post("title")),
 			'content' => nl2br(htmlspecialchars($this->input->post("content"))),
 			'admin_uid' => $_SESSION['admin_uid'],
-			'pm_admin_uid' => $pm_admin_uid,
+			'auth_admin_uid' => $auth_admin_uid,
+			'auth_time' => $auth_time,
 			'status' => $status,
 			'is_active' => $this->input->post("is_active"),
 			'start_date' => $this->input->post("start_date"),
@@ -398,7 +401,13 @@ class Vip extends MY_Controller {
 	{
 		$this->zacl->check("vip", "modify");
 
-		$vip_event = $this->DB2->where("id", $id)->get()->row();
+		$vip_event = $this->DB2->select("t.*, g.name as game_name, u.name, auth.name as auth_user_name")
+			->where("t.id", $id)
+			->from("vip_events t")
+			->join("games g", "g.game_id=t.game_id", "left")
+			->join("admin_users u", "u.uid=t.admin_uid")
+			->join("admin_users auth", "auth.uid=t.auth_admin_uid", "left")
+			->get()->row();
 		
 		$replies = $this->DB2
 			->select("tr.*, au.name as admin_uname")
@@ -409,9 +418,9 @@ class Vip extends MY_Controller {
 		$this->_init_vip_layout()
 			->add_breadcrumb("檢視")
 			->add_js_include("vip/view")
-			->set("vip", $vip_event)
+			->set("vip_event", $vip_event)
 			->set("replies", $replies)
-			->render("vip/event_form");
+			->render();
 	}	
 	
 	
@@ -513,16 +522,31 @@ class Vip extends MY_Controller {
 		die(json_success());		
 	}
 		
-	function move_vip($id)
+	function move_vip_event($id)
 	{
 		$status = $this->input->get_post("status", TRUE);
         
-		$this->DB1->set("status", $status)->where("id", $id)->update("vips");
+		if (!$this->zacl->check_acl("vip", "authorize") && $status==2) die(json_failure("無核准權限"));
+        
+		$this->DB1->set("status", $status)->where("id", $id)->update("vip_events");
 		if ($this->DB1->affected_rows() > 0) {
 			die(json_success());	
 		}
 		else {
-			die(json_failure("問題尚未處理"));
+			die(json_failure("異常錯誤"));
+		}
+	}
+		
+	function move_vip_ticket($id)
+	{
+		$status = $this->input->get_post("status", TRUE);
+            
+		$this->DB1->set("status", $status)->where("id", $id)->update("vip_tickets");
+		if ($this->DB1->affected_rows() > 0) {
+			die(json_success());	
+		}
+		else {
+			die(json_failure("異常錯誤"));
 		}
 	}
 	

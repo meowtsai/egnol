@@ -881,7 +881,8 @@ CREATE TABLE `vip_tickets` (
   `status` char(1) NOT NULL DEFAULT '1',
   `admin_uid` int(11) DEFAULT NULL,
   `update_time` datetime NOT NULL,
-  `pm_admin_uid` int(11) DEFAULT NULL,
+  `auth_admin_uid` int(11) DEFAULT NULL,
+  `auth_time` timestamp NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='VIP訂單';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -908,7 +909,8 @@ CREATE TABLE `vip_events` (
   `update_time` timestamp NOT NULL,
   `start_date` timestamp NULL DEFAULT NULL,
   `end_date` timestamp NULL DEFAULT NULL,
-  `pm_admin_uid` int(11) DEFAULT NULL,
+  `auth_admin_uid` int(11) DEFAULT NULL,
+  `auth_time` timestamp NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='VIP活動';
 /*!40101 SET character_set_client = @saved_cs_client */;
