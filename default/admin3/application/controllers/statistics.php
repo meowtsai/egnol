@@ -932,7 +932,7 @@ class Statistics extends MY_Controller {
 			    new_login_count 'new_login_count',
                 deposit_user_count 'deposit_user_count',
                 deposit_total 'deposit_total',
-                new_deposit_user_count 'new_user_deposit_count',
+                new_user_deposit_count 'new_user_deposit_count',
                 new_user_deposit_total 'new_user_deposit_total'
 		    FROM statistics 
 		    WHERE game_id = '{$game_id}'
