@@ -1138,6 +1138,20 @@ class Api2 extends MY_Controller
 			die(json_encode(array("result"=>0, "msg"=>"Order not found.")));
 		}
 
+		$amount = $price;
+		
+		// 若不是台幣, 要取得台幣價格
+		if($currency !== "TWD")
+		{
+			log_message("error", "ios_verify_receipt: User {$uid} using {$currency} for payment.");
+			$pos = strpos($product_id, "_");
+			if($pos !== false)
+				$amount = intval(substr($product_id, $pos + 1));
+		}
+		
+		// 更新訂單資料
+		$this->g_wallet->update_order($order, array("amount"=>$amount,"order_no"=>$transaction_id));
+		
 		// 取得 server 資料
 		$server_num = $server_id;
 		
@@ -1178,6 +1192,15 @@ class Api2 extends MY_Controller
 			die(json_encode(array("result"=>0, "msg"=>"Order information not match.")));
 		}
 		
+		// 檢查訂單號碼格式
+		// *** 暫時使用 ***
+		if(strpos($transaction_id, "-") !== false)
+		{
+			log_message("error", "ios_verify_receipt: Fake order {$transaction_id}.");
+			//
+			die(json_encode(array("result"=>0, "msg"=>"Order not match.")));
+		}
+		
 		// 再向 AppStore 驗證
 		$url = "https://buy.itunes.apple.com/verifyReceipt";
 		$result = $this->_send_ios_verify($url, json_encode(array("receipt-data"=>$receipt_data)));
@@ -1197,8 +1220,32 @@ class Api2 extends MY_Controller
 			die(json_encode(array("result"=>0, "msg"=>"Receipt data not match!")));
 		}
 
+		// 驗證返回資料
+		if(empty($result->receipt))
+		{
+			// 訂單資料錯誤
+			log_message("error", "ios_verify_receipt: Receipt result error.");
+			
+			die(json_encode(array("result"=>0, "msg"=>"Receipt result error.")));
+		}
+		if(empty($result->receipt->bid))
+		{
+			// 訂單資料錯誤
+			log_message("error", "ios_verify_receipt: Receipt result error.");
+			
+			die(json_encode(array("result"=>0, "msg"=>"Receipt result error.")));
+		}
+
+		$this->load->library("game_api/{$server_info->game_id}");
+		if(strcmp($result->receipt->bid, $this->{$server_info->game_id}->get_apple_bundle_id()) != 0)
+		{
+			// 訂單資料錯誤
+			log_message("error", "ios_verify_receipt: Receipt result error.");
+			
+			die(json_encode(array("result"=>0, "msg"=>"Receipt result error.")));
+		}
+		
 		// 驗證成功, 先結掉儲值訂單
-		$this->g_wallet->update_order($order, array("amount"=>$price,"order_no"=>$transaction_id));
 		$this->g_wallet->complete_order($order);
 		
 		// 記錄轉點
@@ -1213,7 +1260,6 @@ class Api2 extends MY_Controller
 		$transfer_order = $this->g_wallet->get_order($transfer_id);
 
 		// 呼叫遊戲入點機制
-		$this->load->library("game_api/{$server_info->game_id}");
 		$res = $this->{$server_info->game_id}->iap_transfer($transfer_order, $server_info, "app_store", $product_id, $price, $currency);
 		$error_message = $this->{$server_info->game_id}->error_message;
 
@@ -1320,6 +1366,8 @@ class Api2 extends MY_Controller
 			die(json_encode(array("result"=>0, "msg"=>"Order not found.")));
 		}
 
+		$this->g_wallet->update_order($order, array("amount"=>$price,"order_no"=>$transaction_id));
+		
 		// 取得 server 資料
 		$server_num = $server_id;
 		
@@ -1357,8 +1405,16 @@ class Api2 extends MY_Controller
 			die(json_encode(array("result"=>0, "msg"=>"Order information not match.")));
 		}
 
+		// 檢查訂單號碼格式
+		// *** 暫時使用 ***
+		if(strpos($transaction_id, "GPA.") !== 0)
+		{
+			log_message("error", "android_verify_receipt: Fake order {$transaction_id}.");
+			//
+			die(json_encode(array("result"=>0, "msg"=>"Order not match.")));
+		}
+		
 		// 驗證成功, 先結掉儲值訂單
-		$this->g_wallet->update_order($order, array("amount"=>$price,"order_no"=>$transaction_id));
 		$this->g_wallet->complete_order($order);
 		
 		// 記錄轉點
@@ -2127,6 +2183,9 @@ class Api2 extends MY_Controller
                 ->where("uid", $this->g_user->uid)
                 ->where("game_id", $site)
                 ->where('logout_time', '0000-00-00 00:00:00')->get()->row();
+			
+			if(empty($log_game_logins))
+				return false;
                 
             $check_deviceid = ($_SESSION['old_deviceid'])?$_SESSION['old_deviceid']:$_SESSION['login_deviceid'];
                 
