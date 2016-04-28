@@ -28,7 +28,18 @@ class Server_api extends MY_Controller
         $g_mongodb = $this->config->item('mongo_db');
         $this->mongo_log = new MongoDB\Driver\Manager($g_mongodb['url']);
 	}
+	
+    function _return_error($msg) 
+    {
+    	$this->error_message = $msg;
+    	return false;
+    }
     
+	function system_check_and_notify()
+	{
+		
+	}
+	
     function validate_token() {
         
         if ($this->input->get_post("uid")) $uid = $this->input->get_post("uid");
@@ -104,6 +115,8 @@ class Server_api extends MY_Controller
 		$uid = $this->input->post("uid");
 		$character_id = $this->input->post("character_id");
 		$character_name = $this->input->post("character_name");
+
+		log_message("error", "user_create_character:{$uid},{$server_id},{$character_id},{$character_name}");
 		
         if(!IN_OFFICE)
 		{
@@ -158,10 +171,4 @@ class Server_api extends MY_Controller
 		
 		die('1');
 	}
-	
-    function _return_error($msg) 
-    {
-    	$this->error_message = $msg;
-    	return false;
-    }
 }

@@ -77,6 +77,7 @@ $config["partner_api"] = array(
 				),
 				'Apple' => array(
 					'ID' => '1014250566',
+					'BundleID' => 'com.longe.NetEase.R2G',
 					'AppStoreProducts' => array(
 						'longer2g_60',
 						'longer2g_150',
