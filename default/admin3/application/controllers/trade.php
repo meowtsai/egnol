@@ -498,10 +498,11 @@ class Trade extends MY_Controller {
 			$this->DB2->start_cache();
             
 			$this->DB2
-				->select("gb.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name")
+				->select("gb.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name, ub.id ubid")
 				->from("gash_billing gb")
 				->join("servers gi", "gi.server_id=gb.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
+				->join("user_billing ub", "ub.gash_billing_id=gb.id", "left")
 				->join("users u", "u.uid=gb.uid", "left");			
 			
 			$this->input->get("country") && $this->DB2->where("gb.country", $this->input->get("country"));
@@ -570,11 +571,11 @@ class Trade extends MY_Controller {
 					header("Content-type:application/vnd.ms-excel;");
 					header("Content-Disposition: filename={$filename};");
 					
-					$content = "id,uid,euid,信箱,手機,交易管道,訂單號,GPS訂單號,遊戲伺服器,金額,結果,訊息,建立日期\n";
+					$content = "id,uid,euid,信箱,手機,龍邑單號,交易管道,訂單號,GPS訂單號,遊戲伺服器,金額,結果,訊息,建立日期\n";
 					
 					foreach($query->result() as $row) {
 						$trade_channel = $gash_conf["PAID"][$row->PAID]."(".$gash_conf["CUID"][$row->CUID].")";
-						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$trade_channel},\"{$row->COID}\",{$row->RRN},\"({$row->game_abbr_name}){$row->server_name}\",{$row->AMOUNT},".($row->status=='2' ? '成功' : ($row->status=='1' ? '未請款' : '失敗')).",{$row->note},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
+						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$row->ubid}\",{$trade_channel},\"{$row->COID}\",{$row->RRN},\"({$row->game_abbr_name}){$row->server_name}\",{$row->AMOUNT},".($row->status=='2' ? '成功' : ($row->status=='1' ? '未請款' : '失敗')).",{$row->note},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
 					}
 					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
 					exit();						
