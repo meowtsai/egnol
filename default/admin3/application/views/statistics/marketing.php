@@ -34,6 +34,58 @@
     </li>
 </ul>
 
+<? if ($query):?>
+
+<table class="table table-striped table-bordered" style="width:auto;">
+	<thead>
+		<tr>
+			<th style="width:60px;">開始</th>
+			<th style="width:60px;">結束</th>
+			<th style="width:80px">遊戲</th>
+			<th style="width:120px;">活動名稱</th>
+			<th style="width:80px;">累計金額</th>
+			<th style="width:60px;">取消</th>
+			<th style="width:60px;">待匯款</th>
+			<th style="width:60px;">匯款完成</th>
+			<th style="width:60px;">派發完成</th>
+			<th style="width:60px;">結案</th>	
+			<th style="width:60px;">動作</th>	
+		</tr>
+	</thead>
+	<tbody>
+		<? if ($query->num_rows() == 0):?>
+				
+		<tr>
+			<td colspan="10">
+				<div style="padding:10px; color:#777;">查無記錄</div>
+			</td>
+		</tr>
+
+		<? else:?>
+		
+		<? foreach($query->result() as $row):?>
+		<tr>
+			<td><?=date('Y-m-d', strtotime($row->start_date))?></td>
+			<td><?=($row->end_date=='0000-00-00 00:00:00')?"":date('Y-m-d', strtotime($row->end_date))?></td>
+			<td><?=$row->game_name?></td>
+			<td style="word-break: break-all">
+				<a href="<?=site_url("vip/event_view/{$row->id}")?>"><?=mb_strimwidth(strip_tags($row->title), 0, 66, '...', 'utf-8')?></a>
+			</td>
+			<td><?=$row->total?></td>
+			<td><?=$row->cancelled_count?></td>
+			<td><?=$row->pending_count?></td>
+			<td><?=$row->complete_count?></td>
+			<td><?=$row->delivered_count?></td>
+			<td><?=$row->closed_count?></td>
+			<td> </td>
+		</tr>
+		<? endforeach;?>
+		
+		<? endif;?>
+		
+	</tbody>
+</table>
+<? endif;?>
 <form method="get" action="<?=site_url("statistics/marketing")?>" class="form-search">
 	<!--input type="hidden" name="game_id" value="<?=$this->input->get("span")?>"-->
 	<input type="hidden" name="span" value="<?=$this->input->get("span")?>">
