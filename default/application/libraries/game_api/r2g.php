@@ -25,6 +25,13 @@ class R2g extends Game_Api
 		return $server_info->server_id;
 	}
 	
+	function get_apple_bundle_id()
+	{
+		$partner_api = $this->CI->config->item("partner_api");
+		
+		return $partner_api['netease']['sites']['r2g']['Apple']['BundleID'];
+	}
+	
 	// 第三方金流入點
     function transfer($server, $order, $amount, $rate)
     {
