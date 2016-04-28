@@ -38,34 +38,8 @@ class Vip extends MY_Controller {
 	
 	function index()
 	{
-        $admin_uid = $_SESSION['admin_uid'];
-            
-		$requester = $this->DB2->query("
-			SELECT t.*, g.name as game_name, u.name, au.name allocate_user_name, ccu.name cc_user_name FROM 
-                vips t
-            JOIN admin_users u ON u.uid=t.admin_uid
-            LEFT JOIN games g ON g.game_id=t.game_id
-            LEFT JOIN admin_users au ON au.uid=t.allocate_admin_uid
-            LEFT JOIN admin_users ccu ON ccu.uid=t.cc_admin_uid
-            WHERE t.admin_uid='$admin_uid'
-                AND t.status IN (\"1\", \"2\", \"3\")
-		");	
-        
-		$allocated = $this->DB2->query("
-			SELECT t.*, g.name as game_name, u.name, au.name allocate_user_name, ccu.name cc_user_name FROM 
-                vips t
-            JOIN admin_users u ON u.uid=t.admin_uid
-            LEFT JOIN games g ON g.game_id=t.game_id
-            LEFT JOIN admin_users au ON au.uid=t.allocate_admin_uid
-            LEFT JOIN admin_users ccu ON ccu.uid=t.cc_admin_uid
-            WHERE (t.allocate_admin_uid='$admin_uid' OR t.cc_admin_uid='$admin_uid')
-                AND t.status IN (\"1\", \"2\", \"3\")
-		");
-		
-		$this->_init_vip_layout()
-			->set("requester", $requester)
-			->set("allocated", $allocated)	
-			->render();
+        $this->load->helper('url');
+        redirect('/vip/event_list', 'refresh');
 	}
 	
 	function add_event()
@@ -224,41 +198,72 @@ class Vip extends MY_Controller {
 	{
         $this->load->helper('path');
         
-		$vip_id = $this->input->post("vip_id");
+		$ticket_id = $this->input->post("ticket_id");
         
-		$character = $this->DB2->from("characters")->where("server_id", $this->input->post("server"))->where("name", $this->input->post("character_name"))->get()->row();
-		
-        if (!$character) die(json_failure("無此角色"));
+        if ($this->input->post("action") == '2') {
+            if (!$this->input->post("billing_time")) die(json_failure("匯款時間未填"));
+            if (!$this->input->post("billing_account")) die(json_failure("匯款帳號未填"));
+            if (!$this->input->post("billing_name")) die(json_failure("匯款戶名未填"));
+            $data = array(
+                "billing_time" => $this->input->post("billing_time"),
+                "billing_account" => $this->input->post("billing_account"),
+                "billing_name" => $this->input->post("billing_name"),
+                "status" => 2,
+            );
+        } elseif ($this->input->post("action") == '0') {
+            $data = array(
+                "status" => 0,
+            );
+        } elseif ($this->input->post("action") == '3') {
+            $data = array(
+                "status" => 3,
+            );
+        } elseif ($this->input->post("action") == '4') {
+            $data = array(
+                "status" => 4,
+            );
+        } else {
         
-		$data = array(
-			"uid" => $character->uid,
-			"vip_event_id" => $this->input->post("vip_event_id"),
-			"server_id" => $this->input->post("server"),
-			"character_id" => $character->id,
-			"status" => $this->input->post("status"),
-			"cost" => $this->input->post("cost"),
-			'admin_uid' => $_SESSION['admin_uid'],
-		);
+            if ($this->input->post("uid")) $this->DB2->where("uid", $this->input->post("uid"));
+            $character = $this->DB2->from("characters")->where("server_id", $this->input->post("server"))->where("name", $this->input->post("character_name"))->get();
+            
+            if ($character->num_rows()==0) die(json_failure("查無此角色"));
+            if ($character->num_rows()>1) die(json_failure("發現重複角色名稱，請輸入uid"));
+            
+            $row = $character->result();
+            $uid = $row[0]->uid;
+            $character_id = $row[0]->id;
+            
+            if ($this->input->post("line")) {
+                $this->DB1
+                    ->where("uid", $uid)
+                    ->update("user_info", array("line" => $this->input->post("line")));
+            }
+            
+            $data = array(
+                "uid" => $uid,
+                "vip_event_id" => $this->input->post("vip_event_id"),
+                "server_id" => $this->input->post("server"),
+                "character_id" => $character_id,
+                "status" => $this->input->post("status"),
+                "cost" => $this->input->post("cost"),
+                'admin_uid' => $_SESSION['admin_uid'],
+            );
+        }
         
-		if ($vip_id) {			
+		if ($ticket_id) {			
 			$this->DB1
-				->where("id", $vip_id)
+				->where("id", $ticket_id)
 				->update("vip_tickets", $data);
 		} else {
 			$this->DB1
 				->set("create_time", "now()", false)
 				->set("update_time", "now()", false)
 				->insert("vip_tickets", $data);	
-			$vip_id = $this->DB1->insert_id();			
+			$ticket_id = $this->DB1->insert_id();			
 		}
-        
-        if ($this->input->post("line")) {
-			$this->DB1
-				->where("id", $character->uid)
-				->update("user_info", array("line" => $this->input->post("line")));
-        }
 		
-		die(json_message(array("redirect_url"=> base_url("vip/event_view/".$this->input->post("vip_event_id")), "id"=>$this->input->post("vip_event_id")), true));		
+		die(json_message(array("redirect_url"=> base_url("vip/event_view/".$this->input->post("vip_event_id")), "ticket_status"=>($this->input->post("action"))?$this->input->post("action"):"1"), true));		
 	}
 		
 	function event_list()
@@ -332,10 +337,10 @@ class Vip extends MY_Controller {
 			->join("admin_users auth", "auth.uid=t.auth_admin_uid", "left")
 			->get()->row();
             
-		$ticket_status = ($this->input->post("ticket_status"))?$this->input->post("ticket_status"):1;
+		$ticket_status = (null !== $this->input->get_post("ticket_status"))?$this->input->get_post("ticket_status"):1;
         
 		$vip_tickets = $this->DB2
-			->select("vt.*, au.name as admin_uname, ui.line as line, s.name as server_name, c.name as character_name, c.in_game_id as in_game_id")
+			->select("vt.*, au.name as admin_uname, ui.line, s.name as server_name, c.name as character_name, c.in_game_id as in_game_id")
 			->from("vip_tickets vt")
 			->join("servers s", "s.server_id=vt.server_id", "left")
 			->join("characters c", "c.id=vt.character_id", "left")

@@ -3,6 +3,7 @@
 	$vip_status = $this->config->item('vip_event_status');
 ?>
 <div id="func_bar">
+	<a href="<?=site_url("vip/add_event")?>" class="btn btn-primary">+VIP活動</a>
 </div>
 
 <form method="get" action="<?=site_url("vip/event_list")?>" class="form-search">
@@ -54,12 +55,12 @@
 			<th style="width:80px">遊戲</th>
 			<th style="width:120px;">活動名稱</th>
 			<th style="width:80px;">累計金額</th>
-			<th style="width:60px;">取消</th>
-			<th style="width:60px;">待匯款</th>
-			<th style="width:60px;">匯款完成</th>
-			<th style="width:60px;">派發完成</th>
-			<th style="width:60px;">結案</th>	
-			<th style="width:60px;">動作</th>	
+			<th style="width:60px;">訂單-取消</th>
+			<th style="width:60px;">訂單-待匯款</th>
+			<th style="width:60px;">訂單-匯款完成</th>
+			<th style="width:60px;">訂單-派發完成</th>
+			<th style="width:60px;">訂單-結案</th>	
+			<th style="width:60px;">活動狀態</th>	
 		</tr>
 	</thead>
 	<tbody>
@@ -79,6 +80,10 @@
 			<td><?=($row->end_date=='0000-00-00 00:00:00')?"":date('Y-m-d', strtotime($row->end_date))?></td>
 			<td><?=$row->game_name?></td>
 			<td style="word-break: break-all">
+            <?
+				$type = $this->config->item("vip_event_type");
+				echo "【".$type[$row->type]."】";
+			?>
 				<a href="<?=site_url("vip/event_view/{$row->id}")?>"><?=mb_strimwidth(strip_tags($row->title), 0, 66, '...', 'utf-8')?></a>
 			</td>
 			<td><?=$row->total?></td>
@@ -87,7 +92,12 @@
 			<td><a href="<?=site_url("vip/event_view/{$row->id}?ticket_status=2")?>"><?=$row->complete_count?></a></td>
 			<td><a href="<?=site_url("vip/event_view/{$row->id}?ticket_status=3")?>"><?=$row->delivered_count?></a></td>
 			<td><a href="<?=site_url("vip/event_view/{$row->id}?ticket_status=4")?>"><?=$row->closed_count?></a></td>
-			<td> </td>
+			<td style="color:<?=($row->status==2)?"green":"red"?>">
+			<?
+				$status = $this->config->item("vip_event_status");
+				echo $status[$row->status];
+			?>
+			</td>
 		</tr>
 		<? endforeach;?>
 		
