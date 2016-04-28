@@ -1366,7 +1366,21 @@ class Api2 extends MY_Controller
 			die(json_encode(array("result"=>0, "msg"=>"Order not found.")));
 		}
 
-		$this->g_wallet->update_order($order, array("amount"=>$price,"order_no"=>$transaction_id));
+		$amount = $price;
+		
+		// 若不是台幣, 要取得台幣價格
+		if($currency !== "TWD")
+		{
+			log_message("error", "android_verify_receipt: User {$uid} using {$currency} for payment.");
+			$pos = strpos($product_id, ".");
+			if($pos === false)
+				$pos = strpos($product_id, "_");
+
+			if($pos !== false)
+				$amount = intval(substr($product_id, $pos + 1));
+		}
+		
+		$this->g_wallet->update_order($order, array("amount"=>$amount,"order_no"=>$transaction_id));
 		
 		// 取得 server 資料
 		$server_num = $server_id;

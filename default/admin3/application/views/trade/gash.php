@@ -100,6 +100,7 @@
 			<th style="width:50px;">#</th>
 			<th style="width:70px;">uid
 				<div style="color:#777;">euid</div></th>	
+			<th style="width:70px;">龍邑單號</th>
 			<th style="width:100px;">交易管道</th>
 			<th style="width:100px;">訂單號</th>
 			<th style="width:100px;">GPS交易編號</th>	
@@ -130,6 +131,7 @@
 				<a href="<?=site_url("trade/gash?uid={$row->uid}&action=查詢")?>"><i class="icon-search"></i></a>
 				<div style="color:#777;"><?=$this->g_user->encode($row->uid)?></div>
 			</td>
+			<td><?=$row->ubid?></td>
 			<td><?=$gash_conf["PAID"][$row->PAID]?>(<?=$gash_conf["CUID"][$row->CUID]?>)
 			</td>
 			<td><?=$row->COID?></td>
@@ -157,9 +159,9 @@
 					</button>	
 					<ul class="dropdown-menu pull-right">						
 						<? if ($row->status=='2'):?>
-						<li><a href="javascript:;" class="json_post_alert" url="/ajax/redo_gash_billing/<?=$row->id?>"></i> 重做儲值</a></li>
+						<li><a href="javascript:;" class="json_post_alert" url="/ajax/redo_gash_billing/<?=$row->id?>"> 重做儲值</a></li>
 						<? else:?>
-						<li><a href="javascript:;" class="json_post_alert" url="/ajax/resend_gash_billing/<?=$row->id?>"></i> 重送交易</a></li>
+						<li><a href="javascript:;" class="json_post_alert" url="/ajax/resend_gash_billing/<?=$row->id?>"> 重送交易</a></li>
 						<? endif;?>
 					</ul>
 				</div>			
