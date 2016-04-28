@@ -329,12 +329,29 @@ class Vip extends MY_Controller {
 	{
 		$this->zacl->check("vip", "read");
 
-		$vip_event = $this->DB2->select("t.*, g.name as game_name, u.name, auth.name as auth_user_name")
+		$vip_event = $this->DB2->select("t.*, g.name as game_name, u.name, auth.name as auth_user_name,
+                vt.cancelled_count as cancelled_count,
+                vt.pending_count as pending_count,
+                vt.complete_count as complete_count,
+                vt.delivered_count as delivered_count,
+                vt.closed_count as closed_count")
 			->where("t.id", $id)
 			->from("vip_events t")
 			->join("games g", "g.game_id=t.game_id", "left")
 			->join("admin_users u", "u.uid=t.admin_uid")
 			->join("admin_users auth", "auth.uid=t.auth_admin_uid", "left")
+			->join("(
+                SELECT 
+                    vip_event_id, 
+                    SUM(CASE WHEN status='0' THEN 1 ELSE 0 END) 'cancelled_count',
+                    SUM(CASE WHEN status='1' THEN 1 ELSE 0 END) 'pending_count',
+                    SUM(CASE WHEN status='2' THEN 1 ELSE 0 END) 'complete_count',
+                    SUM(CASE WHEN status='3' THEN 1 ELSE 0 END) 'delivered_count',
+                    SUM(CASE WHEN status='4' THEN 1 ELSE 0 END) 'closed_count'
+                FROM vip_tickets
+                WHERE vip_event_id = {$id}
+                GROUP BY vip_event_id
+            ) AS vt", "vt.vip_event_id=t.id", "left")
 			->get()->row();
             
 		$ticket_status = (null !== $this->input->get_post("ticket_status"))?$this->input->get_post("ticket_status"):1;

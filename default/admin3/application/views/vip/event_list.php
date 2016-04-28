@@ -67,7 +67,7 @@
 		<? if ($query->num_rows() == 0):?>
 				
 		<tr>
-			<td colspan="10">
+			<td colspan="11">
 				<div style="padding:10px; color:#777;">查無記錄</div>
 			</td>
 		</tr>
