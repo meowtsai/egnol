@@ -53,6 +53,7 @@ $(function()
 			var msg_html = '『' + option.html() + '』台幣兌換遊戲中『' + option.attr('goldname') + '』比值為 <span style="color:#c00">1:' + exchange_rate;
 
 			msg_html += '</span>。<br />(每 <span style="color:#c00">100</span> 台幣可獲得 <span style="color:#c00">' + (exchange_rate * 100) + '</span> ' + option.attr('goldname') + ')';
+			msg_html += '<br />儲值成功後，重新登入遊戲即可獲得' + option.attr('goldname') + '。';
 
 			pay_msg.html(msg_html);
 		}
