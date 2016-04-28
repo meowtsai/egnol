@@ -102,7 +102,8 @@
 				<div style="color:#777;">euid</div></th>	
 			<th style="width:100px;">交易管道</th>
 			<th style="width:100px;">訂單號</th>
-			<th style="width:100px;">GPS交易編號</th>						
+			<th style="width:100px;">GPS交易編號</th>	
+			<th style="width:80px;">遊戲伺服器</th>					
 			<th style="width:35px;">金額</th>
 			<th style="width:50px;">結果</th>
 			<th style="width:120px;">訊息</th>
@@ -133,6 +134,7 @@
 			</td>
 			<td><?=$row->COID?></td>
 			<td><?=$row->RRN?></td>
+			<td><?= "({$row->game_abbr_name}){$row->server_name}" ?></td>
 			<td><?=$row->AMOUNT?></td>
 			<td><?=$row->status=='2' ? '成功' : ($row->status=='1' ? '未請款' : '失敗')?></td>
 			<td>

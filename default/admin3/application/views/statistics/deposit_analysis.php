@@ -111,12 +111,12 @@
 				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_user_deposit_count/$row->new_login_count*100:0, 2)."%"?></td>
 				<td style="text-align:right"><?=number_format(($old_login_count)?$old_user_deposit_count/$old_login_count*100:0, 2)."%"?></td>
 				<td style="text-align:right"><?=number_format(($row->login_count)?$row->deposit_user_count/$row->login_count*100:0, 2)."%"?></td>
-				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_user_deposit_total/$row->new_login_count:0, 2)?></td>
-				<td style="text-align:right"><?=number_format(($old_login_count)?$old_user_deposit_total/$old_login_count:0, 2)?></td>
-				<td style="text-align:right"><?=number_format(($row->login_count)?$row->deposit_total/$row->login_count:0, 2)?></td>
 				<td style="text-align:right"><?=number_format(($row->new_user_deposit_count)?$row->new_user_deposit_total/$row->new_user_deposit_count:0, 2)?></td>
 				<td style="text-align:right"><?=number_format(($old_user_deposit_count)?$old_user_deposit_total/$old_user_deposit_count:0, 2)?></td>
-				<td style="text-align:right"><?=number_format(($row->deposit_user_count)?$row->deposit_total/$row->deposit_user_count:0, 2)?></td>														
+				<td style="text-align:right"><?=number_format(($row->deposit_user_count)?$row->deposit_total/$row->deposit_user_count:0, 2)?></td>	
+				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_user_deposit_total/$row->new_login_count:0, 2)?></td>
+				<td style="text-align:right"><?=number_format(($old_login_count)?$old_user_deposit_total/$old_login_count:0, 2)?></td>
+				<td style="text-align:right"><?=number_format(($row->login_count)?$row->deposit_total/$row->login_count:0, 2)?></td>													
 			</tr>
 		<? endforeach;?>
 		</tbody>

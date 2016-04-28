@@ -383,9 +383,11 @@ class Trade extends MY_Controller {
 			$this->input->get("trade_ok") && $this->DB2->where("mb.trade_ok", substr($this->input->get("trade_ok"),1));
 			
 			$this->DB2
-				->select("mb.*, u.email, u.mobile, u.external_id")
+				->select("mb.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name")
 				->select("coalesce(trade_code, mycard_trade_seq) as mycard_key", false)
 				->from("mycard_billing mb")
+				->join("servers gi", "gi.server_id=gb.server_id", "left")
+				->join("games g", "g.game_id=gi.game_id", "left")
 				->join("users u", "u.uid=mb.uid", "left");
 									
 			if ($this->input->get("start_date")) {
@@ -442,7 +444,7 @@ class Trade extends MY_Controller {
 					header("Content-type:application/vnd.ms-excel;");
 					header("Content-Disposition: filename={$filename};");
 					
-					$content = "id,uid,euid,信箱,手機,交易管道,訂單號,Mycard訂單號,卡號,金額,結果,訊息,建立日期\n";
+					$content = "id,uid,euid,信箱,手機,交易管道,訂單號,Mycard訂單號,卡號,遊戲伺服器,金額,結果,訊息,建立日期\n";
 					
 					foreach($query->result() as $row) {
 						$trade_channel = '';
@@ -492,12 +494,14 @@ class Trade extends MY_Controller {
 		if ($this->input->get("action")) 
 		{
 			header("Cache-Control: private");			 
-					
+                
 			$this->DB2->start_cache();
-			
+            
 			$this->DB2
-				->select("gb.*, u.email, u.mobile, u.external_id")
+				->select("gb.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name")
 				->from("gash_billing gb")
+				->join("servers gi", "gi.server_id=gb.server_id", "left")
+				->join("games g", "g.game_id=gi.game_id", "left")
 				->join("users u", "u.uid=gb.uid", "left");			
 			
 			$this->input->get("country") && $this->DB2->where("gb.country", $this->input->get("country"));
@@ -566,11 +570,11 @@ class Trade extends MY_Controller {
 					header("Content-type:application/vnd.ms-excel;");
 					header("Content-Disposition: filename={$filename};");
 					
-					$content = "id,uid,euid,信箱,手機,交易管道,訂單號,GPS訂單號,金額,結果,訊息,建立日期\n";
+					$content = "id,uid,euid,信箱,手機,交易管道,訂單號,GPS訂單號,遊戲伺服器,金額,結果,訊息,建立日期\n";
 					
 					foreach($query->result() as $row) {
 						$trade_channel = $gash_conf["PAID"][$row->PAID]."(".$gash_conf["CUID"][$row->CUID].")";
-						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$trade_channel},\"{$row->COID}\",{$row->RRN},{$row->AMOUNT},".($row->status=='2' ? '成功' : '失敗').",{$row->note},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
+						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$trade_channel},\"{$row->COID}\",{$row->RRN},\"({$row->game_abbr_name}){$row->server_name}\",{$row->AMOUNT},".($row->status=='2' ? '成功' : ($row->status=='1' ? '未請款' : '失敗')).",{$row->note},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
 					}
 					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
 					exit();						
@@ -611,8 +615,10 @@ class Trade extends MY_Controller {
 			$this->DB2->start_cache();
 			
 			$this->DB2
-				->select("pb.*, u.email, u.mobile, u.external_id")
+				->select("pb.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name")
 				->from("pepay_billing pb")
+				->join("servers gi", "gi.server_id=pb.server_id", "left")
+				->join("games g", "g.game_id=gi.game_id", "left")
 				->join("users u", "u.uid=pb.uid", "left");			
 			
 			$this->input->get("id") && $this->DB2->where("pb.id", $this->input->get("id"));
@@ -685,7 +691,7 @@ class Trade extends MY_Controller {
 					
 					foreach($query->result() as $row) {
 						$trade_channel = $pepay_conf['Prod_ids'][$row->PROD_ID];
-						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$trade_channel},\"{$row->ORDER_ID}\",\"{$row->SESS_ID}\",{$row->AMOUNT},".($row->status=='2' ? '成功' : '失敗').",{$row->note},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
+						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$trade_channel},\"{$row->ORDER_ID}\",\"{$row->SESS_ID}\",\"({$row->game_abbr_name}){$row->server_name}\",{$row->AMOUNT},".($row->status=='2' ? '成功' : '失敗').",{$row->note},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
 					}
 					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
 					exit();						
@@ -784,6 +790,24 @@ class Trade extends MY_Controller {
 					
 					$this->g_layout->set("total_rows", $total_rows);
 					break;
+					
+				case "輸出":
+					ini_set("memory_limit","2048M");
+					
+					$query = $this->DB2->get();
+						
+					$filename = "output.csv";					
+					header("Content-type:application/vnd.ms-excel;");
+					header("Content-Disposition: filename={$filename};");
+					
+					$content = "id,uid,euid,信箱,手機,訂單號,遊戲伺服器,金額,結果,訊息,建立日期\n";
+					
+					foreach($query->result() as $row) {
+						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",\"{$row->order_no}\",\"({$row->game_abbr_name}){$row->server_name}\",{$row->amount},".($row->result=='1' ? ($row->is_confirmed=='' ? '未請款' : '成功') : '失敗').",{$row->note},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
+					}
+					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
+					exit();						
+					break;		
 			}
 			
 			$this->DB2->stop_cache();
@@ -883,6 +907,24 @@ class Trade extends MY_Controller {
 					
 					$this->g_layout->set("total_rows", $total_rows);
 					break;
+					
+				case "輸出":
+					ini_set("memory_limit","2048M");
+					
+					$query = $this->DB2->get();
+						
+					$filename = "output.csv";					
+					header("Content-type:application/vnd.ms-excel;");
+					header("Content-Disposition: filename={$filename};");
+					
+					$content = "id,uid,euid,信箱,手機,訂單號,遊戲伺服器,金額,結果,訊息,建立日期\n";
+					
+					foreach($query->result() as $row) {
+						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",\"{$row->order_no}\",\"({$row->game_abbr_name}){$row->server_name}\",{$row->amount},".($row->result=='1' ? '成功' : '失敗').",{$row->note},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
+					}
+					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
+					exit();						
+					break;	
 			}
 			
 			$this->DB2->stop_cache();

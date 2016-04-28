@@ -43,7 +43,7 @@
 		<input type="text" name="order_no" value="<?=$this->input->get("order_no")?>" style="width:300px" placeholder="Google訂單號">			
 	
 		<input type="submit" class="btn btn-small btn-inverse" name="action" value="查詢">
-		<!-- <input type="submit" class="btn btn-small btn-warning" name="action" value="輸出"> -->		
+		<input type="submit" class="btn btn-small btn-warning" name="action" value="輸出">	
 		
 		<? if ($this->input->get("use_default") == false):?>
 		<span class="sptl"></span>		
