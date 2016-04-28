@@ -87,7 +87,44 @@ class Fb_Api extends Channel_Api
         $user_profile = $response->getGraphUser();
         $this->uid = $user_profile['id'];
 		
-		if ($this->uid) 
+		try {
+            // Returns a `Facebook\FacebookResponse` object
+            $response = $this->sdk->get('/me/ids_for_business', $accessToken);
+			$graphObject = $response->getGraphEdge();
+        } catch(Facebook\Exceptions\FacebookResponseException $e) {
+			log_message("error", "Facebook login:".$e->getMessage());
+            //echo 'Graph returned an error: ' . $e->getMessage();
+            exit;
+        } catch(Facebook\Exceptions\FacebookSDKException $e) {
+			log_message("error", "Facebook login:".$e->getMessage());
+            //echo 'Facebook SDK returned an error: ' . $e->getMessage();
+            exit;
+        }
+
+		if(!empty($graphObject))
+		{
+			foreach($graphObject as $fbApp)
+			{
+				$user_date = array();
+
+				$this->uid = $fbApp['id'];
+				$row = $this->CI->db->get_where("users", array("external_id" => $this->uid."@facebook"))->row();
+				if ($row) 
+				{
+					$user_data['email'] = $row->email;
+					$user_data['external_id'] = $this->uid;
+					return $user_data;
+				}
+			}
+			$user_data['external_id'] = $user_profile["id"];
+			$user_data['name'] = $user_profile["name"];
+			if ( ! empty($user_profile['email']))
+			{
+			   $user_data['email'] = $user_profile['email'];
+			}
+    		return $user_data;    		
+		}
+		else if($this->uid) 
     	{
     		$user_date = array();
     		
