@@ -291,97 +291,6 @@ class Api2 extends MY_Controller
         
 		if ( $this->db->insert_id() )
 		{
-            $bulk = new MongoDB\Driver\BulkWrite;
-            $bulk->insert(["uid" => intval($this->g_user->uid), "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "device_id" => $_SESSION['login_deviceid'], "latest_update_time" => time()]);
-            
-            $this->mongo_log->executeBulkWrite("longe_log.users", $bulk);
-            
-            unset($bulk);
-            
-            $filter = ['device_id' => $_SESSION['login_deviceid'], 'game_id' => $site, 'uid' => null];
-            $newObj = ['$set' => ['uid' => intval($this->g_user->uid)]];
-            
-            $options = ["multi" => true, "upsert" => false];
-            
-            $bulk = new MongoDB\Driver\BulkWrite;
-            $bulk->update($filter, $newObj, $options);
-
-            $this->mongo_log->executeBulkWrite("longe_log.le_AppPause", $bulk);
-            $this->mongo_log->executeBulkWrite("longe_log.le_AppResume", $bulk);
-            $this->mongo_log->executeBulkWrite("longe_log.le_AppStart", $bulk);
-            $this->mongo_log->executeBulkWrite("longe_log.le_AppViewEnter", $bulk);
-            $this->mongo_log->executeBulkWrite("longe_log.test_simplepost", $bulk);
-            
-            unset($bulk);
-            
-            $user_count_date = date('Y-m-d', time() + 59*60);
-            $user_count_hour = date('G', time() + 59*60);
-            $peak = 0;
-            
-            $uc_query = new MongoDB\Driver\Query([
-                "game_id" => $site,
-                "server_id" => $server
-            ]);
-        
-            $uc_cursor = $this->mongo_log->executeQuery("longe_log.user_count", $uc_query);
-
-            $uc_result = [];
-            
-            foreach ($uc_cursor as $document) {
-                $uc_result[] = $document;
-            }
-            
-            if (isset($uc_result[0]->count)) { 
-                
-                $new_count = $uc_result[0]->count + 1;
-                
-                $uc2_filter = ['game_id' => $site, "server_id" => $server];
-                $uc2_newObj = ['$set' => ['count' => $new_count]];
-                
-                $uc2_options = ["multi" => false, "upsert" => true];
-                
-                $bulk = new MongoDB\Driver\BulkWrite;
-                $bulk->update($uc2_filter, $uc2_newObj, $uc2_options);
-
-                $this->mongo_log->executeBulkWrite("longe_log.user_count", $bulk);
-                unset($bulk);
-                
-                $uo_query = new MongoDB\Driver\Query([
-                    "game_id" => $site,
-                    "server_id" => $server, 
-                    "date" => $user_count_date, 
-                    "hour" => intval($user_count_hour)
-                ]);
-            
-                $uo_cursor = $this->mongo_log->executeQuery("longe_log.user_online", $uo_query);
-
-                $uo_result = [];
-                
-                foreach ($uo_cursor as $document) {
-                    $uo_result[] = $document;
-                }
-                if (!isset($uo_result[0]->peak) || (isset($uo_result[0]->peak) && $uo_result[0]->peak < $new_count)) $peak = $new_count;
-            } else {
-                $bulk = new MongoDB\Driver\BulkWrite;
-                $bulk->insert(["game_id" => $site, "server_id" => $server, "count" => 1]);
-                $this->mongo_log->executeBulkWrite("longe_log.user_count", $bulk);
-                $peak = 1;
-                unset($bulk);
-            }
-            
-            if ($peak) {
-                $uo_filter = ['game_id' => $site, "server_id" => $server, "date" => $user_count_date, "hour" => intval($user_count_hour)];
-                $uo_newObj = ['$set' => ['peak' => $peak]];
-                
-                $uo_options = ["multi" => false, "upsert" => true];
-                
-                $bulk = new MongoDB\Driver\BulkWrite;
-                $bulk->update($uo_filter, $uo_newObj, $uo_options);
-
-                $this->mongo_log->executeBulkWrite("longe_log.user_online", $bulk);
-                unset($bulk);
-            }
-            
 		    $_SESSION['server_id'] = $server;
 			die(json_message(array("message"=>"成功", "site"=>$site, "token"=>$this->g_user->token), true));
 		}
@@ -1249,7 +1158,7 @@ class Api2 extends MY_Controller
 		$this->g_wallet->complete_order($order);
 		
 		// 記錄轉點
-		$transfer_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $amount, $server_id, $partner_order_id, $character_id, $transaction_id);
+		$transfer_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $price, $server_id, $partner_order_id, $character_id, $transaction_id);
 		if (empty($transfer_id))
 		{
 			// 建立轉點記錄失敗
@@ -1432,7 +1341,7 @@ class Api2 extends MY_Controller
 		$this->g_wallet->complete_order($order);
 		
 		// 記錄轉點
-		$transfer_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $amount, $server_id, $partner_order_id, $character_id, $transaction_id);
+		$transfer_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $price, $server_id, $partner_order_id, $character_id, $transaction_id);
 		if (empty($transfer_id))
 		{
 			// 建立轉點記錄失敗
@@ -1480,10 +1389,8 @@ class Api2 extends MY_Controller
 			->join("games g", "gi.game_id=g.game_id")->get();
 		
 		$games = $this->db->from("games")->where("is_active", "1")->get();
-		if(IN_OFFICE)
-			$servers = $this->db->where("is_transaction_active", "1")->order_by("server_id")->get("servers");
-		else
-			$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("server_id")->get("servers");
+		//$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("server_id")->get("servers");
+		$servers = $this->db->where("is_transaction_active", "1")->order_by("server_id")->get("servers");
 
 		// 讀取玩家角色列表
 		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();

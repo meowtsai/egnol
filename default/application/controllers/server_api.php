@@ -92,20 +92,123 @@ class Server_api extends MY_Controller
 		$uid = $this->input->post("uid");
 		$server_id = $this->input->post("server_id");
 		
-        if(!IN_OFFICE)
-		{
+        if(!IN_OFFICE) die('0');
+        
+		$query = $this->db->from("log_game_logins")
+		           ->where("uid", $uid)
+				   ->where("is_recent", "1")
+				   ->where("game_id", $game_id)->get()->row();
+                   
+        if ($query) {
+        
+            $this->db->where("uid", $uid)
+              ->where("is_recent", '1')
+              ->where("game_id", $game_id)->update("log_game_logins", array("create_time" => 'now()', "server_id" => $server_id, "is_ingame" => 1));
+              
+            $bulk = new MongoDB\Driver\BulkWrite;
+            $bulk->insert(["uid" => intval($uid), "game_id" => $game_id, "server_id" => $server_id, "token" => $query->token, "device_id" => $query->device_id, "latest_update_time" => time()]);
+            
+            $this->mongo_log->executeBulkWrite("longe_log.users", $bulk);
+            
+            unset($bulk);
+            
+            $filter = ['device_id' => $query->device_id, 'game_id' => $game_id, 'uid' => null];
+            $newObj = ['$set' => ['uid' => intval($uid)]];
+            
+            $options = ["multi" => true, "upsert" => false];
+            
+            $bulk = new MongoDB\Driver\BulkWrite;
+            $bulk->update($filter, $newObj, $options);
+
+            $this->mongo_log->executeBulkWrite("longe_log.le_AppPause", $bulk);
+            $this->mongo_log->executeBulkWrite("longe_log.le_AppResume", $bulk);
+            $this->mongo_log->executeBulkWrite("longe_log.le_AppStart", $bulk);
+            $this->mongo_log->executeBulkWrite("longe_log.le_AppViewEnter", $bulk);
+            $this->mongo_log->executeBulkWrite("longe_log.test_simplepost", $bulk);
+            
+            unset($bulk);
+            
+            $user_count_date = date('Y-m-d', time() + 59*60);
+            $user_count_hour = date('G', time() + 59*60);
+            $peak = 0;
+            
+            $uc_query = new MongoDB\Driver\Query([
+                "game_id" => $game_id,
+                "server_id" => $server_id
+            ]);
+        
+            $uc_cursor = $this->mongo_log->executeQuery("longe_log.user_count", $uc_query);
+
+            $uc_result = [];
+            
+            foreach ($uc_cursor as $document) {
+                $uc_result[] = $document;
+            }
+            
+            if (isset($uc_result[0]->count)) { 
+                
+                $new_count = $uc_result[0]->count + 1;
+                
+                $uc2_filter = ['game_id' => $game_id, "server_id" => $server_id];
+                $uc2_newObj = ['$set' => ['count' => $new_count]];
+                
+                $uc2_options = ["multi" => false, "upsert" => true];
+                
+                $bulk = new MongoDB\Driver\BulkWrite;
+                $bulk->update($uc2_filter, $uc2_newObj, $uc2_options);
+
+                $this->mongo_log->executeBulkWrite("longe_log.user_count", $bulk);
+                unset($bulk);
+                
+                $uo_query = new MongoDB\Driver\Query([
+                    "game_id" => $game_id,
+                    "server_id" => $server_id, 
+                    "date" => $user_count_date, 
+                    "hour" => intval($user_count_hour)
+                ]);
+            
+                $uo_cursor = $this->mongo_log->executeQuery("longe_log.user_online", $uo_query);
+
+                $uo_result = [];
+                
+                foreach ($uo_cursor as $document) {
+                    $uo_result[] = $document;
+                }
+                if (!isset($uo_result[0]->peak) || (isset($uo_result[0]->peak) && $uo_result[0]->peak < $new_count)) $peak = $new_count;
+            } else {
+                $bulk = new MongoDB\Driver\BulkWrite;
+                $bulk->insert(["game_id" => $game_id, "server_id" => $server_id, "count" => 1]);
+                $this->mongo_log->executeBulkWrite("longe_log.user_count", $bulk);
+                $peak = 1;
+                unset($bulk);
+            }
+            
+            if ($peak) {
+                $uo_filter = ['game_id' => $game_id, "server_id" => $server_id, "date" => $user_count_date, "hour" => intval($user_count_hour)];
+                $uo_newObj = ['$set' => ['peak' => $peak]];
+                
+                $uo_options = ["multi" => false, "upsert" => true];
+                
+                $bulk = new MongoDB\Driver\BulkWrite;
+                $bulk->update($uo_filter, $uo_newObj, $uo_options);
+
+                $this->mongo_log->executeBulkWrite("longe_log.user_online", $bulk);
+                unset($bulk);
+            } 
+             
+    /*		
+            $this->load->library("game");
+            if($this->game->login($server_id, $uid) == false)
+            {
+                die('0');
+            }
+    */		
+            log_message("debug", "user_login_complete:{$uid},{$server_id}");
+            
+            die('1');
+        } else {
             die('0');
         }
-/*		
-		$this->load->library("game");
-        if($this->game->login($server_id, $uid) == false)
-		{
-			die('0');
-		}
-*/		
-		log_message("error", "user_login_complete:{$uid},{$server_id}");
-		
-		die('1');
 	}
     
 	// 玩家在遊戲中創角色
