@@ -55,7 +55,7 @@ class R2g extends Game_Api
 		$free_point = 0;
 		
 		// 針對 GASH 活動
-		if(!empty($gash_billing_id) && $server->server_id === 'r2gtest')
+		if(!empty($gash_billing_id))
 		{
 			$gash_billing = $this->CI->db->from("gash_billing")->where("id", $gash_billing_id)->get()->row();
 			if($gash_billing->PAID === 'COPGAM02' || $gash_billing->PAID === 'COPGAM05' || $gash_billing->PAID === 'COPGAM09')
