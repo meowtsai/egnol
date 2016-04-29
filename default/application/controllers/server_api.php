@@ -89,8 +89,8 @@ class Server_api extends MY_Controller
 	function user_login_complete()
 	{
 		//$game_id = $this->input->get_post("game_id");
-		$uid = $this->input->post("uid");
-		$vendor_server_id = $this->input->post("server_id");
+		$uid = $this->input->get_post("uid");
+		$vendor_server_id = $this->input->get_post("server_id");
 		
         log_message("error", "user_login_complete:{$uid},{$vendor_server_id}");
         
