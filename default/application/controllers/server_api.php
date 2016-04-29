@@ -113,7 +113,7 @@ class Server_api extends MY_Controller
             $this->db->where("uid", $uid)
               ->where("is_recent", '1')
               ->where("game_id", $game_id)->update("log_game_logins", array("create_time" => date('Y-m-d H:i:s'), "server_id" => $server_id, "is_ingame" => 1));
-              
+              /*
             $bulk = new MongoDB\Driver\BulkWrite;
             $bulk->insert(["uid" => intval($uid), "game_id" => $game_id, "server_id" => $server_id, "token" => $query->token, "device_id" => $query->device_id, "latest_update_time" => time()]);
             
@@ -208,7 +208,7 @@ class Server_api extends MY_Controller
 
                 $this->mongo_log->executeBulkWrite("longe_log.user_online", $bulk);
                 unset($bulk);
-            } 
+            } */
         log_message("error", "user_login_complete:8");
              
     /*		
