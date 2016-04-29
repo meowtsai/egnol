@@ -88,7 +88,7 @@ class Server_api extends MY_Controller
 	// 玩家在遊戲 server 中完成遊戲本身的登入程序(在龍邑的登入程序之後)
 	function user_login_complete()
 	{
-		$game_id = $this->input->get_post("game_id");
+		//$game_id = $this->input->get_post("game_id");
 		$uid = $this->input->get_post("uid");
 		$vendor_server_id = $this->input->get_post("server_id");
 		
@@ -96,9 +96,10 @@ class Server_api extends MY_Controller
         
         if(!IN_OFFICE) die('0');
         
-        $vendor_server = $this->db->from("servers")->where("game_id", $game_id)->where("address", $vendor_server_id)->order_by("server_id")->get()->row();
+        $vendor_server = $this->db->from("servers")->where("address", $vendor_server_id)->order_by("server_id")->get()->row();
         
         $server_id = $vendor_server->server_id;
+        $game_id = $vendor_server->game_id;
         
 		$query = $this->db->from("log_game_logins")
 		           ->where("uid", $uid)
