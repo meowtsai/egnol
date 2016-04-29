@@ -95,6 +95,7 @@ class Server_api extends MY_Controller
         log_message("error", "user_login_complete:{$uid},{$vendor_server_id}");
         
         if(!IN_OFFICE) die('0');
+            die('1');
         
         $vendor_server = $this->db->from("servers")->where("address", $vendor_server_id)->order_by("server_id")->get()->row();
         
