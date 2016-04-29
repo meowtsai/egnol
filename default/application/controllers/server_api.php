@@ -89,14 +89,14 @@ class Server_api extends MY_Controller
 	function user_login_complete()
 	{
 		//$game_id = $this->input->get_post("game_id");
-		$uid = $this->input->get_post("uid");
-		$vendor_server_id = $this->input->get_post("server_id");
+		$uid = $this->input->post("uid");
+		$vendor_server_id = $this->input->post("server_id");
 		
         log_message("error", "user_login_complete:{$uid},{$vendor_server_id}");
         
         if(!IN_OFFICE) die('0');
         
-        /*$vendor_server = $this->db->from("servers")->where("address", $vendor_server_id)->order_by("server_id")->get()->row();
+        $vendor_server = $this->db->from("servers")->where("address", $vendor_server_id)->order_by("server_id")->get()->row();
         
         $server_id = $vendor_server->server_id;
         $game_id = $vendor_server->game_id;
@@ -107,10 +107,9 @@ class Server_api extends MY_Controller
 				   ->where("is_recent", "1")
 				   ->where("game_id", $game_id)->get()->row();
                    
-        log_message("error", "user_login_complete:2");*/
-        $query=true;
+        log_message("error", "user_login_complete:2");
         if ($query) {
-                      /*
+        
             $this->db->where("uid", $uid)
               ->where("is_recent", '1')
               ->where("game_id", $game_id)->update("log_game_logins", array("create_time" => date('Y-m-d H:i:s'), "server_id" => $server_id, "is_ingame" => 1));
@@ -211,6 +210,14 @@ class Server_api extends MY_Controller
                 unset($bulk);
             } */
         log_message("error", "user_login_complete:8");
+             
+    /*		
+            $this->load->library("game");
+            if($this->game->login($server_id, $uid) == false)
+            {
+                die('0');
+            }
+    */		
             
             die('1');
         } else {
