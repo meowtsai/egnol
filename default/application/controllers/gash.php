@@ -224,7 +224,7 @@ class Gash extends MY_Controller {
 						$args = "oid=".$order_id."&cuid=".$gash_billing->CUID;
 						
 						$this->load->library("game");
-						$this->game->payment_transfer($gash_billing->uid, $gash_billing->server_id, $money, $_SESSION['payment_partner_order_id'], $_SESSION['payment_character'], $trans->nodes["COID"], $args);
+						$this->game->payment_transfer($gash_billing->uid, $gash_billing->server_id, $money, $_SESSION['payment_partner_order_id'], $_SESSION['payment_character'], $trans->nodes["COID"], $args, $gash_billing->id);
 						go_payment_result(1, 1, $money, "", $args);
 					}
 					else {

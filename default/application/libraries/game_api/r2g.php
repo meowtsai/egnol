@@ -33,7 +33,7 @@ class R2g extends Game_Api
 	}
 	
 	// 第三方金流入點
-    function transfer($server, $order, $amount, $rate)
+    function transfer($server, $order, $amount, $rate, $gash_billing_id='')
     {
 		$partner_api = $this->CI->config->item("partner_api");
 		$game_api = $this->CI->config->item("game_api");
@@ -51,6 +51,24 @@ class R2g extends Game_Api
 		
 		$character = $this->CI->db->from("characters")->where("id", $order->character_id)->get()->row();
 		$server = $this->CI->db->from("servers")->where("server_id", $character->server_id)->get()->row();
+		
+		$free_point = 0;
+		
+		// 針對 GASH 活動
+		if(!empty($gash_billing_id))
+		{
+			$gash_billing = $this->CI->db->from("gash_billing")->where("id", $gash_billing_id)->get()->row();
+			if($gash_billing->PAID === 'COPGAM02' || $gash_billing->PAID === 'COPGAM05' || $gash_billing->PAID === 'COPGAM09')
+			{
+				// GASH 帳號點數/點數卡/點數卡(手機)
+				$free_point = intval(floatval($amount) * 0.15);
+
+				if($free_point > 0)
+					$product_id = $product_id . "+{$free_point}";
+				
+				log_message("error", "transfer: GASH payment event for {$gash_billing->PAID} add {$free_point} point");
+			}
+		}
 		
 		$server_num = $server->address;
 		$partner_character_id = $character->in_game_id;

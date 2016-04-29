@@ -105,7 +105,7 @@ class Game
     
     //儲值時直接轉入遊戲伺服器
     //$billing {uid, server_id, amount}
-    function payment_transfer($uid, $server_id, $amount, $partner_order_id='', $character_id='', $transaction_id='', $_args='')
+    function payment_transfer($uid, $server_id, $amount, $partner_order_id='', $character_id='', $transaction_id='', $_args='', $gash_billing_id='')
     {
 		if (empty($uid) || empty($server_id) || empty($amount)) $this->_go_payment_result(1, 2, $amount);  
 	
@@ -134,7 +134,7 @@ class Game
 		{
 			// 呼叫遊戲入點機制
 			$this->CI->load->library("game_api/{$server->game_id}");
-			$res = $this->CI->{$server->game_id}->transfer($server, $order, $amount, $game->exchange_rate);
+			$res = $this->CI->{$server->game_id}->transfer($server, $order, $amount, $game->exchange_rate, $gash_billing_id);
 			$error_message = $this->CI->{$server->game_id}->error_message;
 
 			if ($res === "1") {
