@@ -96,7 +96,7 @@ class Server_api extends MY_Controller
         
         if(!IN_OFFICE) die('0');
         
-        $vendor_server = $this->db->from("servers")->where("address", $vendor_server_id)->order_by("server_id")->get()->row();
+        /*$vendor_server = $this->db->from("servers")->where("address", $vendor_server_id)->order_by("server_id")->get()->row();
         
         $server_id = $vendor_server->server_id;
         $game_id = $vendor_server->game_id;
@@ -107,7 +107,8 @@ class Server_api extends MY_Controller
 				   ->where("is_recent", "1")
 				   ->where("game_id", $game_id)->get()->row();
                    
-        log_message("error", "user_login_complete:2");
+        log_message("error", "user_login_complete:2");*/
+        $query=true;
         if ($query) {
                       /*
             $this->db->where("uid", $uid)
@@ -210,14 +211,6 @@ class Server_api extends MY_Controller
                 unset($bulk);
             } */
         log_message("error", "user_login_complete:8");
-             
-    /*		
-            $this->load->library("game");
-            if($this->game->login($server_id, $uid) == false)
-            {
-                die('0');
-            }
-    */		
             
             die('1');
         } else {
