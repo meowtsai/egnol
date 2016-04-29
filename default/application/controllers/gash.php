@@ -88,7 +88,8 @@ class Gash extends MY_Controller {
 		
 		//echo "<pre>".print_r($trans->nodes, true)."</pre>";
 		//exit();
-		$data = array(
+		
+        $data = array(
 			'uid'		=> $trans->nodes["USER_ACCTID"],
 			'MSG_TYPE' 	=> $trans->nodes["MSG_TYPE"],
 			'PCODE' 	=> $trans->nodes["PCODE"],
@@ -107,6 +108,12 @@ class Gash extends MY_Controller {
 			
 		$this->db->set("create_time", "NOW()", false)->set("update_time", "NOW()", false)->insert("gash_billing", $data);
 		
+        $gash_billing_id = $this->db->insert_id();
+        
+		$this->load->library("g_wallet");
+		$order_id = $this->g_wallet->produce_gash_order($this->g_user->uid, $gash_billing_id, $trans->nodes["AMOUNT"], $_SESSION['payment_character'], $this->_make_trade_seq(), $_SESSION['payment_partner_order_id'], "0");
+		if (empty($order_id)) go_payment_result(0, 0, $money, $this->g_wallet->error_message);
+        
 		print_r($trans->nodes);
 		print_r($data);
 		//die;
@@ -199,8 +206,15 @@ class Gash extends MY_Controller {
 					if (empty($gash_billing->uid)) go_payment_result(0, 0, $money, "用戶資訊遺失");										
 					
 					$this->load->library("g_wallet");
-					$order_id = $this->g_wallet->produce_gash_order($gash_billing->uid, $gash_billing->id, $money, $_SESSION['payment_character'], $trans->nodes["COID"], $_SESSION['payment_partner_order_id']);
-					if (empty($order_id)) go_payment_result(0, 0, $money, $this->g_wallet->error_message);
+                    
+                    
+					$user_billing = $this->db->where("gash_billing_id", $gash_billing->id)->get("user_billing")->row();
+                    
+					//$order_id = $this->g_wallet->produce_gash_order($gash_billing->uid, $gash_billing->id, $money, $_SESSION['payment_character'], $trans->nodes["COID"], $_SESSION['payment_partner_order_id']);
+					//if (empty($order_id)) go_payment_result(0, 0, $money, $this->g_wallet->error_message);
+                    $order_id = $user_billing->id;
+                    
+					$this->db->where("id", $order_id)->update("user_billing", array("result" => "1"));	
 					
 					$this->db->where("COID", $trans->nodes["COID"])->update("gash_billing", array("status" => "2"));					
 					

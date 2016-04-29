@@ -846,24 +846,6 @@ CREATE TABLE `tickets` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `vip_ticket_replies`
---
-
-DROP TABLE IF EXISTS `vip_ticket_replies`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `vip_ticket_replies` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `content` text NOT NULL,
-  `vip_ticket_id` int(11) NOT NULL,
-  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `uid` int(11) NOT NULL,
-  `admin_uid` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
 -- Table structure for table `vip_tickets`
 --
 
@@ -873,16 +855,20 @@ DROP TABLE IF EXISTS `vip_tickets`;
 CREATE TABLE `vip_tickets` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `vip_event_id` int(11) NOT NULL,
-  `type` char(1) NOT NULL,
-  `title` varchar(60) NOT NULL,
-  `content` text NOT NULL,
+  `cost` int(8) NOT NULL,
   `uid` int(11) NOT NULL,
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `status` char(1) NOT NULL DEFAULT '1',
+  `server_id` varchar(20) NOT NULL,
+  `character_id` int(11) DEFAULT NULL,
   `admin_uid` int(11) DEFAULT NULL,
-  `update_time` datetime NOT NULL,
+  `update_time` timestamp NOT NULL,
+  `billing_time` timestamp NULL DEFAULT NULL,
+  `deliver_time` timestamp NULL DEFAULT NULL,
+  `billing_account` int(5) DEFAULT NULL,
+  `billing_name` varchar(20) DEFAULT NULL,
   `auth_admin_uid` int(11) DEFAULT NULL,
-  `auth_time` timestamp NOT NULL,
+  `auth_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='VIP訂單';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -896,8 +882,10 @@ DROP TABLE IF EXISTS `vip_events`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `vip_events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type` char(1) NOT NULL,
   `title` varchar(60) NOT NULL,
   `content` text NOT NULL,
+  `cost` int(8) NOT NULL,
   `game_id` varchar(20) DEFAULT NULL,
   `file_path1` varchar(300) DEFAULT NULL,
   `file_path2` varchar(300) DEFAULT NULL,
@@ -910,7 +898,7 @@ CREATE TABLE `vip_events` (
   `start_date` timestamp NULL DEFAULT NULL,
   `end_date` timestamp NULL DEFAULT NULL,
   `auth_admin_uid` int(11) DEFAULT NULL,
-  `auth_time` timestamp NOT NULL,
+  `auth_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='VIP活動';
 /*!40101 SET character_set_client = @saved_cs_client */;

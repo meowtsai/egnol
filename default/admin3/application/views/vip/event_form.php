@@ -36,6 +36,13 @@
                 <label class="radio inline"><input type="radio" value="0" name="is_active" <?=$vip ? ($vip->is_active=='0' ? 'checked="checked"' : '') : ''?>> 不發布</label>
              </td>
         </tr>
+        <tr>
+			<td>類型：</td>
+			<td>
+                <label class="radio inline"><input type="radio" value="1" name="type" <?=$vip ? ($vip->type=='1' ? 'checked="checked"' : '') : 'checked="checked"'?>> 活動</label>
+                <label class="radio inline"><input type="radio" value="2" name="type" <?=$vip ? ($vip->type=='2' ? 'checked="checked"' : '') : ''?>> 補款</label>
+             </td>
+        </tr>
 		<tr>
 			<td>標題：</td>
 			<td><input type="text" name="title" class="required" maxlength="60" style="width:300px;" value="<?=$vip ? preg_replace('/<br\\s*?\/??>/i','',$vip->title): ''?>"></td>
@@ -44,6 +51,10 @@
 			<td style="vertical-align:top">描述：</td>
 			<td><textarea rows="8" minlength="5" style="width:100%;" name="content" class="required"><?=$vip ? preg_replace('/<br\\s*?\/??>/i','',$vip->content): ''?></textarea></td>
 		</tr>
+		<tr>
+			<td>金額：</td>
+			<td><input type="text" name="cost" class="required" maxlength="60" style="width:300px;" value="<?=$vip ? $vip->cost: ''?>"></td>
+		</tr>	
         
         <tr>
             <th>附件</th><td style="white-space:pre-wrap;"><input type="file" name="file01" class="pic_input" /></td>

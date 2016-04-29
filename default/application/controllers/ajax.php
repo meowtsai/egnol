@@ -137,6 +137,17 @@ class Ajax extends MY_Controller {
 		else die(json_failure("交易不存在"));
 	}
 	
+    function resend_gash_billing_cron()
+    {
+		$query = $this->db->from("gash_billing")->where("RCODE", '0000')->where("PAY_STATUS", 'S')->where("status", '1')->get();
+        
+        if ($query->num_rows() > 0) {
+            foreach($query->result() as $row) {
+                resend_gash_billing($row->id);
+            }
+        }
+    }
+    
 	function resend_gash_billing($id)
 	{
 		require_once dirname(__FILE__).'/../libraries/gash/Common.php';
