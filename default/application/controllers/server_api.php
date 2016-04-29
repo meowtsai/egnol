@@ -208,7 +208,7 @@ class Server_api extends MY_Controller
 
                 $this->mongo_log->executeBulkWrite("longe_log.user_online", $bulk);
                 unset($bulk);
-            } */
+            }
         log_message("error", "user_login_complete:8");
              
     /*		
