@@ -95,20 +95,17 @@ class Server_api extends MY_Controller
         log_message("error", "user_login_complete:{$uid},{$vendor_server_id}");
         
         if(!IN_OFFICE) die('0');
-            die('1');
         
         $vendor_server = $this->db->from("servers")->where("address", $vendor_server_id)->order_by("server_id")->get()->row();
         
         $server_id = $vendor_server->server_id;
         $game_id = $vendor_server->game_id;
-        log_message("error", "user_login_complete:1");
         
 		$query = $this->db->from("log_game_logins")
 		           ->where("uid", $uid)
 				   ->where("is_recent", "1")
 				   ->where("game_id", $game_id)->get()->row();
                    
-        log_message("error", "user_login_complete:2");
         if ($query) {
         
             $this->db->where("uid", $uid)
@@ -116,10 +113,9 @@ class Server_api extends MY_Controller
               ->where("game_id", $game_id)->update("log_game_logins", array("create_time" => date('Y-m-d H:i:s'), "server_id" => $server_id, "is_ingame" => "1"));
 
             $bulk = new MongoDB\Driver\BulkWrite;
-            $bulk->insert(["uid" => intval($uid), "game_id" => $game_id, "server_id" => $server_id, "token" => $query->token, "device_id" => $query->device_id, "latest_update_time" => time()]);
+            //$bulk->insert(["uid" => intval($uid), "game_id" => $game_id, "server_id" => $server_id, "token" => $query->token, "device_id" => $query->device_id, "latest_update_time" => time()]);
             
-        log_message("error", "user_login_complete:3");
-            $this->mongo_log->executeBulkWrite("longe_log.users", $bulk);
+            //$this->mongo_log->executeBulkWrite("longe_log.users", $bulk);
             
             unset($bulk);
             
@@ -139,7 +135,6 @@ class Server_api extends MY_Controller
             
             unset($bulk);
             
-        log_message("error", "user_login_complete:4");
             $user_count_date = date('Y-m-d', time() + 59*60);
             $user_count_hour = date('G', time() + 59*60);
             $peak = 0;
@@ -157,7 +152,6 @@ class Server_api extends MY_Controller
                 $uc_result[] = $document;
             }
             
-        log_message("error", "user_login_complete:5");
             if (isset($uc_result[0]->count)) { 
                 
                 $new_count = $uc_result[0]->count + 1;
@@ -188,14 +182,12 @@ class Server_api extends MY_Controller
                     $uo_result[] = $document;
                 }
                 if (!isset($uo_result[0]->peak) || (isset($uo_result[0]->peak) && $uo_result[0]->peak < $new_count)) $peak = $new_count;
-        log_message("error", "user_login_complete:6");
             } else {
                 $bulk = new MongoDB\Driver\BulkWrite;
                 $bulk->insert(["game_id" => $game_id, "server_id" => $server_id, "count" => 1]);
                 $this->mongo_log->executeBulkWrite("longe_log.user_count", $bulk);
                 $peak = 1;
                 unset($bulk);
-        log_message("error", "user_login_complete:7");
             }
             
             if ($peak) {
@@ -210,15 +202,6 @@ class Server_api extends MY_Controller
                 $this->mongo_log->executeBulkWrite("longe_log.user_online", $bulk);
                 unset($bulk);
             }
-        log_message("error", "user_login_complete:8");
-             
-    /*		
-            $this->load->library("game");
-            if($this->game->login($server_id, $uid) == false)
-            {
-                die('0');
-            }
-    */		
             
             die('1');
         } else {
