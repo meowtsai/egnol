@@ -88,11 +88,17 @@ class Server_api extends MY_Controller
 	// 玩家在遊戲 server 中完成遊戲本身的登入程序(在龍邑的登入程序之後)
 	function user_login_complete()
 	{
-		$game_id = $this->input->post("game_id");
-		$uid = $this->input->post("uid");
-		$server_id = $this->input->post("server_id");
+		$game_id = $this->input->get_post("game_id");
+		$uid = $this->input->get_post("uid");
+		$vendor_server_id = $this->input->get_post("server_id");
 		
+        log_message("error", "user_login_complete:{$uid},{$vendor_server_id}");
+        
         if(!IN_OFFICE) die('0');
+        
+        $vendor_server = $this->db->from("servers")->where("game_id", $game_id)->where("address", $vendor_server_id)->order_by("server_id")->get()->row();
+        
+        $server_id = $vendor_server->server_id;
         
 		$query = $this->db->from("log_game_logins")
 		           ->where("uid", $uid)
@@ -103,7 +109,7 @@ class Server_api extends MY_Controller
         
             $this->db->where("uid", $uid)
               ->where("is_recent", '1')
-              ->where("game_id", $game_id)->update("log_game_logins", array("create_time" => 'now()', "server_id" => $server_id, "is_ingame" => 1));
+              ->where("game_id", $game_id)->update("log_game_logins", array("create_time" => date('Y-m-d H:i:s'), "server_id" => $server_id, "is_ingame" => 1));
               
             $bulk = new MongoDB\Driver\BulkWrite;
             $bulk->insert(["uid" => intval($uid), "game_id" => $game_id, "server_id" => $server_id, "token" => $query->token, "device_id" => $query->device_id, "latest_update_time" => time()]);
@@ -203,7 +209,6 @@ class Server_api extends MY_Controller
                 die('0');
             }
     */		
-            log_message("debug", "user_login_complete:{$uid},{$server_id}");
             
             die('1');
         } else {
