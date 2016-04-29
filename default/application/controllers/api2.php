@@ -1249,7 +1249,7 @@ class Api2 extends MY_Controller
 		$this->g_wallet->complete_order($order);
 		
 		// 記錄轉點
-		$transfer_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $price, $server_id, $partner_order_id, $character_id, $transaction_id);
+		$transfer_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $amount, $server_id, $partner_order_id, $character_id, $transaction_id);
 		if (empty($transfer_id))
 		{
 			// 建立轉點記錄失敗
@@ -1432,7 +1432,7 @@ class Api2 extends MY_Controller
 		$this->g_wallet->complete_order($order);
 		
 		// 記錄轉點
-		$transfer_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $price, $server_id, $partner_order_id, $character_id, $transaction_id);
+		$transfer_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $amount, $server_id, $partner_order_id, $character_id, $transaction_id);
 		if (empty($transfer_id))
 		{
 			// 建立轉點記錄失敗
@@ -1480,8 +1480,10 @@ class Api2 extends MY_Controller
 			->join("games g", "gi.game_id=g.game_id")->get();
 		
 		$games = $this->db->from("games")->where("is_active", "1")->get();
-		//$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("server_id")->get("servers");
-		$servers = $this->db->where("is_transaction_active", "1")->order_by("server_id")->get("servers");
+		if(IN_OFFICE)
+			$servers = $this->db->where("is_transaction_active", "1")->order_by("server_id")->get("servers");
+		else
+			$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("server_id")->get("servers");
 
 		// 讀取玩家角色列表
 		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();
