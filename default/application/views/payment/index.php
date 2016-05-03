@@ -76,7 +76,7 @@ var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 							</select>
 							<select id="server_pool" style="display:none;">
 								<? foreach($servers->result() as $row):
-								if ( IN_OFFICE == false && in_array($row->server_status, array("private", "hide"))) continue;?>
+								if ( IN_OFFICE == false && (in_array($row->server_status, array("private", "hide")) || intval($row->is_transaction_active) != 1)) continue;?>
 								<option value="<?=$row->server_id?>" <?=($this->input->get("server")==$row->server_id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?></option>
 								<? endforeach;?>
 							</select>
