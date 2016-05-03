@@ -107,7 +107,33 @@ class Server_api extends MY_Controller
 				   ->where("game_id", $game_id)->get()->row();
                    
         if ($query) {
-        
+            
+            if ($query->server_id==$server_id) {
+                $this->db->where("id", $query->id)->update("log_game_logins", array("create_time" => date('Y-m-d H:i:s'), "is_ingame" => "1"));
+            } else {                
+                $is_first_query = $this->db->from("log_game_logins")
+                   ->where("uid", $uid)
+                   ->where("is_first", "1")
+                   ->where("server_id", $server_id)
+                   ->where("game_id", $game_id)->get();
+                   
+                if (empty($is_first_query) || $is_first_query->num_rows() == 0)
+                {
+                    $is_first = '1';
+                } else {
+                    $is_first = '0';
+                }	
+                
+                $this->db->where("id", $query->id)->update("log_game_logins", array("create_time" => date('Y-m-d H:i:s'), "server_id" => $server_id, "is_ingame" => "1", "is_first" => $is_first));
+                
+                $previous_record = $this->db->from("log_game_logins")->where("game_id", $game_id)->where("server_id", $query->server_id)->where("uid", $uid)->order_by('create_time desc')->limit(1)->get()->row();
+                
+                if ($previous_record) {
+                    $this->db->where("id", $previous_record->id)->update("log_game_logins", array("is_recent" => '1'));
+                }
+               
+            }
+            
             $this->db->where("uid", $uid)
               ->where("is_recent", '1')
               ->where("game_id", $game_id)->update("log_game_logins", array("create_time" => date('Y-m-d H:i:s'), "server_id" => $server_id, "is_ingame" => "1"));
