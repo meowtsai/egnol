@@ -106,7 +106,7 @@ class Server_api extends MY_Controller
 		$query = $this->db->from("log_game_logins")
 		           ->where("uid", $uid)
 				   ->where("is_recent", "1")
-				   ->where("game_id", $game_id)->get()->row();
+				   ->where("game_id", $game_id)->order_by('id desc')->limit(1)->get()->row();
                    
         if ($query) {
             
