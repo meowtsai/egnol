@@ -270,6 +270,10 @@ class Vip extends MY_Controller {
                     break;
                 case '3':
                     $transfer_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $this->input->post("cost"), $this->input->post("server"), "", $character_id, "", $ticket_id);
+                    
+                    $transfer_order = $this->g_wallet->get_order($transfer_id);
+
+                    $this->g_wallet->complete_order($transfer_order);
                     break;
             }
 		} else {
