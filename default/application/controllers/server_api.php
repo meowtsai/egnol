@@ -128,10 +128,12 @@ class Server_api extends MY_Controller
                 
                 $this->db->where("id", $query->id)->update("log_game_logins", array("create_time" => date('Y-m-d H:i:s'), "server_id" => $server_id, "is_ingame" => "1", "is_first" => $is_first));
                 
-                $previous_record = $this->db->from("log_game_logins")->where("game_id", $game_id)->where("server_id", $default_server_id)->where("uid", $uid)->order_by('create_time desc')->limit(1)->get()->row();
+                $previous_record = $this->db->from("log_game_logins")->where("game_id", $game_id)->where("uid", $uid)->order_by('create_time desc')->limit(1)->get()->row();
                 
                 if ($previous_record && $previous_record->server_id<>$server_id) {
                     $this->db->where("id", $previous_record->id)->update("log_game_logins", array("is_recent" => '1'));
+                } elseif ($previous_record && $previous_record->server_id==$server_id) {
+                    $this->db->where("id", $previous_record->id)->update("log_game_logins", array("is_recent" => '0'));
                 }
             }
 
