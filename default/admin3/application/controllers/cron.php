@@ -158,12 +158,19 @@ class Cron extends CI_Controller {
 				{$span_select}
 			FROM
 				(SELECT
-					game_id, uid, SUM(is_first) 'first_login'
+					game_id, uid, COUNT(create_time) 'first_login'
 				FROM
-					log_game_logins
+					(SELECT
+                        game_id, uid, MIN(create_time) 'create_time'
+                    FROM 
+                        log_game_logins
+                    WHERE
+                        1=1
+                            ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
+                    GROUP BY game_id, uid
+                    ) all_first
 				WHERE
 					".$span_query."
-                        ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
 				GROUP BY game_id, uid) tmp
             JOIN users u ON tmp.uid=u.uid
 			GROUP BY tmp.game_id");	
@@ -221,21 +228,27 @@ class Cron extends CI_Controller {
                     CASE WHEN u.external_id IS NULL THEN 1 ELSE NULL END 'longe_login',
                     CASE WHEN u.external_id LIKE '%device' THEN 1 ELSE NULL END 'quick_login'
 				FROM
-					log_game_logins AS lgl,
-				(
-					SELECT 
-						uid, game_id, characters.create_time
-					FROM
-						characters
-						JOIN servers ON characters.server_id = servers.server_id
-					WHERE
-						characters.create_time BETWEEN '{$date}' AND '{$stop_time}'
-				) AS new_characters
+                    (SELECT
+                        game_id, uid, MIN(create_time) 'create_time'
+                    FROM 
+                        log_game_logins
+                    WHERE
+                        1=1
+                            ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
+                    GROUP BY game_id, uid
+                    ) AS lgl,
+                    (
+                        SELECT 
+                            uid, game_id, characters.create_time
+                        FROM
+                            characters
+                            JOIN servers ON characters.server_id = servers.server_id
+                        WHERE
+                            characters.create_time BETWEEN '{$date}' AND '{$stop_time}'
+                    ) AS new_characters
                 LEFT JOIN users u ON new_characters.uid=u.uid
 				WHERE
 					DATE(lgl.create_time) = '{$date}'
-                        AND lgl.is_first = 1
-                        ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
                         AND new_characters.uid = lgl.uid
                         AND new_characters.game_id = lgl.game_id
 						AND new_characters.create_time >= lgl.create_time
@@ -607,7 +620,7 @@ class Cron extends CI_Controller {
 			FROM
 			(
 				SELECT 
-					l.uid, l.game_id, MIN(l.create_time), MIN(u.external_id) 'external_id', MAX(l.is_first) 'is_first'
+					l.uid, l.game_id, MIN(l.create_time) 'create_time', MIN(u.external_id) 'external_id'
 				FROM
 					log_game_logins l
                 JOIN users u ON l.uid=u.uid
@@ -616,6 +629,16 @@ class Cron extends CI_Controller {
                         ".(($this->testaccounts)?" AND l.uid NOT IN (".$this->testaccounts.") ":"")."
 				GROUP BY l.uid, l.game_id
 			) AS lgl
+                JOIN
+            (
+                SELECT
+                    uid, game_id, MIN(create_time) 'create_time'
+                FROM 
+                    log_game_logins
+                WHERE
+                    1=1
+                GROUP BY uid, game_id
+            ) AS all_first ON all_first.uid = lgl.uid AND all_first.game_id = lgl.game_id
 				LEFT JOIN
 			(
 				SELECT 
@@ -629,7 +652,7 @@ class Cron extends CI_Controller {
 			) AS lgl_nologin ON lgl.game_id = lgl_nologin.game_id AND lgl.uid = lgl_nologin.uid
 			WHERE
 				lgl_nologin.uid IS NULL
-				AND lgl.is_first <> 1
+				AND lgl.create_time <> all_first.create_time
 			GROUP BY lgl.game_id
         ) AS lgl_return
             JOIN
@@ -646,12 +669,18 @@ class Cron extends CI_Controller {
 				SELECT 
 					l.uid, l.game_id, MIN(l.create_time), MIN(u.external_id) 'external_id'
 				FROM
-					log_game_logins l
+					(SELECT
+                        game_id, uid, MIN(create_time) 'create_time'
+                    FROM 
+                        log_game_logins
+                    WHERE
+                        1=1
+                            ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
+                    GROUP BY game_id, uid
+                    ) l
                 JOIN users u ON l.uid=u.uid
 				WHERE
 					".$span_query3."
-						AND l.is_first = 1
-                        ".(($this->testaccounts)?" AND l.uid NOT IN (".$this->testaccounts.") ":"")."
 				GROUP BY l.uid, l.game_id
 			) AS lgl_t
 			GROUP BY lgl_t.game_id
@@ -783,13 +812,19 @@ class Cron extends CI_Controller {
 				FROM
 					user_billing ub
 				JOIN servers sv ON ub.server_id = sv.server_id
-                JOIN log_game_logins lgl ON {$span_query1} AND sv.game_id=lgl.game_id AND ub.uid=lgl.uid
+                JOIN (SELECT
+                        game_id, uid, MIN(create_time) 'create_time'
+                    FROM 
+                        log_game_logins
+                    WHERE
+                        1=1
+                            ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
+                    GROUP BY game_id, uid
+                    ) lgl ON {$span_query1} AND sv.game_id=lgl.game_id AND ub.uid=lgl.uid
 				WHERE 
-                    lgl.is_first = 1
-                        AND {$span_query2}
+                    {$span_query2}
 						AND ub.billing_type = 2
 						AND ub.result = 1
-                        ".(($this->testaccounts)?" AND ub.uid NOT IN (".$this->testaccounts.") ":"")."
 				GROUP BY ub.uid , sv.game_id
 			) tmp
 			GROUP BY game_id");
@@ -1217,12 +1252,20 @@ class Cron extends CI_Controller {
 						COUNT(CASE WHEN user_game_length >= 7200 THEN 1 ELSE NULL END) 'new_login_count_more'
 					FROM
                     (
-                        SELECT game_id, DATE(create_time) 'date', uid, SUM(TIMESTAMPDIFF(SECOND, create_time, logout_time)) 'user_game_length' FROM
-                            log_game_logins
-                        WHERE create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
-                            AND is_first = 1
-                            ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
-                        GROUP BY game_id, DATE(create_time), uid
+                        SELECT all_first.game_id, DATE(all_first.create_time) 'date', all_first.uid, SUM(TIMESTAMPDIFF(SECOND, all_first.create_time, all_first.logout_time)) 'user_game_length' 
+                        FROM
+                            (SELECT
+                                game_id, uid, MIN(create_time) 'create_time', MIN(logout_time) 'logout_time'
+                            FROM 
+                                log_game_logins
+                            WHERE
+                                1=1
+                                AND logout_time <> '0000-00-00 00:00:00'
+                                    ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
+                            GROUP BY game_id, uid
+                            ) all_first
+                        WHERE all_first.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
+                        GROUP BY all_first.game_id, DATE(all_first.create_time), all_first.uid
                     ) AS ugl2
 					GROUP BY game_id, date
 				) AS new_gt
@@ -1423,14 +1466,23 @@ class Cron extends CI_Controller {
 		$query = $this->DB2->query("
 			SELECT lgl.game_id, DATE(lgl.create_time) 'date',
 				SUM(ub.amount) 'life_time_value'
-			FROM log_game_logins lgl
-			JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id
-			WHERE lgl.is_first = 1
-				AND lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
+			FROM 
+			    user_billing ub
+                JOIN servers s ON ub.server_id=s.server_id
+                JOIN
+                (SELECT
+                    game_id, uid, MIN(create_time) 'create_time'
+                FROM 
+                    log_game_logins
+                WHERE
+                    1=1
+                        ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
+                GROUP BY game_id, uid
+                ) lgl ON lgl.uid=ub.uid AND s.game_id=lgl.game_id
+			WHERE lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
 				AND ub.billing_type = 2 
 				AND ub.result = 1
 				AND ub.create_time BETWEEN '{$date} 00:00:00' AND '{$end_date} 00:00:00'
-                ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
 			GROUP BY lgl.game_id, DATE(lgl.create_time)
 		");
 
