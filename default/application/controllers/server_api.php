@@ -113,10 +113,8 @@ class Server_api extends MY_Controller
             $default_server_id = $query->server_id;
             
             if ($default_server_id==$server_id) {
-                log_message("error", "user_login_complete[1]:");
                 $this->db->where("id", $query->id)->update("log_game_logins", array("create_time" => date('Y-m-d H:i:s'), "is_ingame" => "1"));
             } else {                
-                log_message("error", "user_login_complete[2]:");
                 $is_first_query = $this->db->from("log_game_logins")
                    ->where("uid", $uid)
                    ->where("is_first", "1")
@@ -125,24 +123,20 @@ class Server_api extends MY_Controller
                    
                 if (empty($is_first_query) || $is_first_query->num_rows() == 0)
                 {
-                log_message("error", "user_login_complete[3]:");
                     $is_first = '1';
                 } else {
-                log_message("error", "user_login_complete[4]:");
                     $is_first = '0';
                 }	
                 
                 $this->db->where("id", $query->id)->update("log_game_logins", array("create_time" => date('Y-m-d H:i:s'), "server_id" => $server_id, "is_ingame" => "1", "is_first" => $is_first));
+            }
+            
+            $previous_record = $this->db->from("log_game_logins")->where("id !=", $query->id)->where("game_id", $game_id)->where("uid", $uid)->order_by('id desc')->limit(1)->get()->row();
                 
-                $previous_record = $this->db->from("log_game_logins")->where("id !=", $query->id)->where("game_id", $game_id)->where("uid", $uid)->order_by('id desc')->limit(1)->get()->row();
-                
-                if ($previous_record && $previous_record->server_id<>$server_id) {
-                log_message("error", "user_login_complete[5]:");
-                    $this->db->where("id", $previous_record->id)->update("log_game_logins", array("is_recent" => '1'));
-                } elseif ($previous_record && $previous_record->server_id==$server_id) {
-                log_message("error", "user_login_complete[6]:");
-                    $this->db->where("id", $previous_record->id)->update("log_game_logins", array("is_recent" => '0'));
-                }
+            if ($previous_record && $previous_record->server_id<>$server_id) {
+                $this->db->where("id", $previous_record->id)->update("log_game_logins", array("is_recent" => '1'));
+            } elseif ($previous_record && $previous_record->server_id==$server_id) {
+                $this->db->where("id", $previous_record->id)->update("log_game_logins", array("is_recent" => '0'));
             }
 
             $bulk = new MongoDB\Driver\BulkWrite;
