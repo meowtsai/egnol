@@ -108,7 +108,9 @@ class Server_api extends MY_Controller
                    
         if ($query) {
             
-            if ($query->server_id==$server_id) {
+            $default_server_id = $query->server_id;
+            
+            if ($default_server_id==$server_id) {
                 $this->db->where("id", $query->id)->update("log_game_logins", array("create_time" => date('Y-m-d H:i:s'), "is_ingame" => "1"));
             } else {                
                 $is_first_query = $this->db->from("log_game_logins")
@@ -126,17 +128,12 @@ class Server_api extends MY_Controller
                 
                 $this->db->where("id", $query->id)->update("log_game_logins", array("create_time" => date('Y-m-d H:i:s'), "server_id" => $server_id, "is_ingame" => "1", "is_first" => $is_first));
                 
-                $previous_record = $this->db->from("log_game_logins")->where("game_id", $game_id)->where("server_id", $query->server_id)->where("uid", $uid)->order_by('create_time desc')->limit(1)->get()->row();
+                $previous_record = $this->db->from("log_game_logins")->where("game_id", $game_id)->where("server_id", $default_server_id)->where("uid", $uid)->order_by('create_time desc')->limit(1)->get()->row();
                 
                 if ($previous_record && $previous_record->server_id<>$server_id) {
                     $this->db->where("id", $previous_record->id)->update("log_game_logins", array("is_recent" => '1'));
                 }
-               
             }
-            
-            $this->db->where("uid", $uid)
-              ->where("is_recent", '1')
-              ->where("game_id", $game_id)->update("log_game_logins", array("create_time" => date('Y-m-d H:i:s'), "server_id" => $server_id, "is_ingame" => "1"));
 
             $bulk = new MongoDB\Driver\BulkWrite;
             //$bulk->insert(["uid" => intval($uid), "game_id" => $game_id, "server_id" => $server_id, "token" => $query->token, "device_id" => $query->device_id, "latest_update_time" => time()]);
