@@ -61,12 +61,15 @@ class R2g extends Game_Api
 			if($gash_billing->PAID === 'COPGAM02' || $gash_billing->PAID === 'COPGAM05' || $gash_billing->PAID === 'COPGAM09')
 			{
 				// GASH 帳號點數/點數卡/點數卡(手機)
-				$free_point = intval(floatval($amount) * 0.15);
+				if(intval($amount) >= 10)
+				{
+					$free_point = floatval($amount) * 0.15;
 
-				if($free_point > 0)
-					$product_id = $product_id . "+{$free_point}";
-				
-				log_message("error", "transfer: GASH payment event for {$gash_billing->PAID} add {$free_point} point");
+					if($free_point > 0)
+						$product_id = $product_id . "+" . number_format($free_point, 1, '.', '');
+
+					log_message("error", "transfer: GASH payment event for {$gash_billing->PAID} add {$free_point} points.");
+				}
 			}
 		}
 		
