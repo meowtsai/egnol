@@ -134,10 +134,10 @@ class Server_api extends MY_Controller
             
             $previous_record = $this->db->from("log_game_logins")->where("id !=", $new_log_id)->where("game_id", $game_id)->where("uid", $uid)->order_by('id desc')->limit(1)->get()->row();
                 
-            if ($previous_record && $previous_record->server_id<>$server_id) {
-                $this->db->where("id", $previous_record->id)->update("log_game_logins", array("is_recent" => '3'));
-            } elseif ($previous_record && $previous_record->server_id==$server_id) {
-                $this->db->where("id", $previous_record->id)->update("log_game_logins", array("is_recent" => '2'));
+            if (!empty($previous_record) && $previous_record->server_id<>$server_id) {
+                $this->db->where("id", $previous_record->id)->update("log_game_logins", array("is_recent" => '1'));
+            } elseif (!empty($previous_record) && $previous_record->server_id==$server_id) {
+                $this->db->where("id", $previous_record->id)->update("log_game_logins", array("is_recent" => '0'));
             }
 
             $bulk = new MongoDB\Driver\BulkWrite;
