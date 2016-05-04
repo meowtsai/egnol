@@ -101,8 +101,6 @@ class Server_api extends MY_Controller
         $server_id = $vendor_server->server_id;
         $game_id = $vendor_server->game_id;
         
-        log_message("error", "user_login_complete[server_id]:".$server_id);
-        
 		$query = $this->db->from("log_game_logins")
 		           ->where("uid", $uid)
 				   ->where("is_recent", "1")
