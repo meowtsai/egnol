@@ -221,38 +221,28 @@ class Cron extends CI_Controller {
 			FROM
 			(
 				SELECT 
-					lgl.game_id, 
+					new_ch.game_id, 
                     1 'new_character',
                     CASE WHEN u.external_id LIKE '%facebook' THEN 1 ELSE NULL END 'facebook_login',
                     CASE WHEN u.external_id LIKE '%google' THEN 1 ELSE NULL END 'google_login',
                     CASE WHEN u.external_id IS NULL THEN 1 ELSE NULL END 'longe_login',
                     CASE WHEN u.external_id LIKE '%device' THEN 1 ELSE NULL END 'quick_login'
 				FROM
-                    (SELECT
-                        game_id, uid, MIN(create_time) 'create_time'
-                    FROM 
-                        log_game_logins
-                    WHERE
-                        1=1
-                            ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
-                    GROUP BY game_id, uid
-                    ) AS lgl,
                     (
                         SELECT 
-                            uid, game_id, characters.create_time
+                            ch.uid, servers.game_id, MIN(ch.create_time) 'create_time'
                         FROM
-                            characters
-                            JOIN servers ON characters.server_id = servers.server_id
+                            characters as ch
+                        JOIN servers ON ch.server_id = servers.server_id
                         WHERE
-                            characters.create_time BETWEEN '{$date}' AND '{$stop_time}'
-                    ) AS new_characters
-                LEFT JOIN users u ON new_characters.uid=u.uid
-				WHERE
-					DATE(lgl.create_time) = '{$date}'
-                        AND new_characters.uid = lgl.uid
-                        AND new_characters.game_id = lgl.game_id
-						AND new_characters.create_time >= lgl.create_time
-				GROUP BY lgl.game_id , lgl.uid
+                            1=1
+                                ".(($this->testaccounts)?" AND ch.uid NOT IN (".$this->testaccounts.") ":"")."
+                        GROUP BY ch.uid, servers.game_id
+                    ) AS new_ch
+                LEFT JOIN users u ON new_ch.uid=u.uid
+                WHERE
+                    DATE(new_ch.create_time) = '{$date}'
+				GROUP BY new_ch.game_id , new_ch.uid
 			) AS tmp
 			GROUP BY game_id");	
 
