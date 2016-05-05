@@ -478,7 +478,7 @@ if ( ! function_exists('_exception_handler'))
 		//{
 		//	return;
 		//}
-        if (in_array($severity, config_item['exclude_logging']))
+        if (in_array($severity, config_item('exclude_logging')))
         {
             return;
         }
