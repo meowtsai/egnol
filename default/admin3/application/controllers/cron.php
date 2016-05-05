@@ -115,10 +115,10 @@ class Cron extends CI_Controller {
 			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND WEEKOFYEAR(create_time) = WEEKOFYEAR('{$date}')";
 				$save_table = "weekly_statistics";
                 $span_select= "
-                    COUNT(CASE WHEN tmp.first_login=1 AND u.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'new_login_facebook_count',
-                    COUNT(CASE WHEN tmp.first_login=1 AND u.external_id LIKE '%google' THEN 1 ELSE NULL END) 'new_login_google_count',
-                    COUNT(CASE WHEN tmp.first_login=1 AND u.external_id IS NULL THEN 1 ELSE NULL END) 'new_login_longe_count',
-                    COUNT(CASE WHEN tmp.first_login=1 AND u.external_id LIKE '%device' THEN 1 ELSE NULL END) 'new_login_quick_count',
+                    COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'new_login_facebook_count',
+                    COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%google' THEN 1 ELSE NULL END) 'new_login_google_count',
+                    COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id IS NULL THEN 1 ELSE NULL END) 'new_login_longe_count',
+                    COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%device' THEN 1 ELSE NULL END) 'new_login_quick_count',
                     COUNT(CASE WHEN u.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'login_facebook_count',
                     COUNT(CASE WHEN u.external_id LIKE '%google' THEN 1 ELSE NULL END) 'login_google_count',
                     COUNT(CASE WHEN u.external_id IS NULL THEN 1 ELSE NULL END) 'login_longe_count',
@@ -129,10 +129,10 @@ class Cron extends CI_Controller {
 			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}')";
 				$save_table = "monthly_statistics";
                 $span_select= "
-                    COUNT(CASE WHEN tmp.first_login=1 AND u.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'new_login_facebook_count',
-                    COUNT(CASE WHEN tmp.first_login=1 AND u.external_id LIKE '%google' THEN 1 ELSE NULL END) 'new_login_google_count',
-                    COUNT(CASE WHEN tmp.first_login=1 AND u.external_id IS NULL THEN 1 ELSE NULL END) 'new_login_longe_count',
-                    COUNT(CASE WHEN tmp.first_login=1 AND u.external_id LIKE '%device' THEN 1 ELSE NULL END) 'new_login_quick_count',
+                    COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'new_login_facebook_count',
+                    COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%google' THEN 1 ELSE NULL END) 'new_login_google_count',
+                    COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id IS NULL THEN 1 ELSE NULL END) 'new_login_longe_count',
+                    COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%device' THEN 1 ELSE NULL END) 'new_login_quick_count',
                     COUNT(CASE WHEN u.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'login_facebook_count',
                     COUNT(CASE WHEN u.external_id LIKE '%google' THEN 1 ELSE NULL END) 'login_google_count',
                     COUNT(CASE WHEN u.external_id IS NULL THEN 1 ELSE NULL END) 'login_longe_count',
@@ -143,10 +143,10 @@ class Cron extends CI_Controller {
 				$span_query = "DATE(create_time) = '{$date}'";
 				$save_table = "statistics";
                 $span_select= "
-                    COUNT(CASE WHEN tmp.first_login=1 AND u.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'new_login_facebook_count',
-                    COUNT(CASE WHEN tmp.first_login=1 AND u.external_id LIKE '%google' THEN 1 ELSE NULL END) 'new_login_google_count',
-                    COUNT(CASE WHEN tmp.first_login=1 AND u.external_id IS NULL THEN 1 ELSE NULL END) 'new_login_longe_count',
-                    COUNT(CASE WHEN tmp.first_login=1 AND u.external_id LIKE '%device' THEN 1 ELSE NULL END) 'new_login_quick_count'";
+                    COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'new_login_facebook_count',
+                    COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%google' THEN 1 ELSE NULL END) 'new_login_google_count',
+                    COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id IS NULL THEN 1 ELSE NULL END) 'new_login_longe_count',
+                    COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%device' THEN 1 ELSE NULL END) 'new_login_quick_count'";
 				break;
 		}
             
@@ -154,13 +154,23 @@ class Cron extends CI_Controller {
 			SELECT
 				tmp.game_id, 
                 COUNT(tmp.uid) 'login_count', 
-                SUM(tmp.first_login) 'new_login_count',
+                COUNT(tmp.first_login) 'new_login_count',
 				{$span_select}
 			FROM
 				(SELECT
-					game_id, uid, COUNT(create_time) 'first_login'
+					lgl.game_id, lgl.uid, all_first.create_time 'first_login'
 				FROM
-					(SELECT
+                    (SELECT
+                        game_id, uid, MIN(create_time) 'create_time'
+                    FROM 
+                        log_game_logins
+                    WHERE
+                        ".$span_query."
+                            ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
+                    GROUP BY game_id, uid
+                    ) lgl
+				LEFT JOIN
+                    (SELECT
                         game_id, uid, MIN(create_time) 'create_time'
                     FROM 
                         log_game_logins
@@ -168,10 +178,8 @@ class Cron extends CI_Controller {
                         1=1
                             ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
                     GROUP BY game_id, uid
-                    ) all_first
-				WHERE
-					".$span_query."
-				GROUP BY game_id, uid) tmp
+                    ) all_first ON lgl.game_id=all_first.game_id AND lgl.uid=all_first.uid AND lgl.create_time=all_first.create_time
+				) tmp
             JOIN users u ON tmp.uid=u.uid
 			GROUP BY tmp.game_id");	
 
