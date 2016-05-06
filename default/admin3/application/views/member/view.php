@@ -370,4 +370,5 @@
 <a href="<?=site_url("trade/pepay?uid={$user->uid}&action=查詢")?>">Pepay</a> |
 <a href="<?=site_url("trade/google?uid={$user->uid}&action=查詢")?>">Google</a> |
 <a href="<?=site_url("trade/ios?uid={$user->uid}&action=查詢")?>">IOS</a>)
+<a href="<?=site_url("trade/vip?uid={$user->uid}&action=查詢")?>">VIP</a>)
 <a href="<?=site_url("trade/transfer?uid={$user->uid}&action=查詢")?>" class="btn btn-link btn-small">轉點記錄</a>

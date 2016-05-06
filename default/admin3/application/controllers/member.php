@@ -172,7 +172,7 @@ class Member extends MY_Controller {
                 COUNT(CASE WHEN amount >=100000 THEN 1 ELSE NULL END) as lvl6,
                 SUM(amount) as ltv
             FROM user_billing 
-            WHERE uid={$uid} AND billing_type=2 AND result=1
+            WHERE uid={$uid} AND billing_type=1 AND result=1
         ")->row();
         
 		$games = $this->db->from("games")->get();
