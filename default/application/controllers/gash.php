@@ -369,6 +369,10 @@ class Gash extends MY_Controller {
 
 function go_payment_result($status, $transfer_status, $price, $message='', $args='') 
 {
+	// 若沒有設定 site, 表示是系統 check_order 處理或有問題, 不用顯示結果
+	if(!isset($_SESSION['site']))
+	   exit();
+	
 	$site = $_SESSION['site'];
 	$api_call = $_SESSION['payment_api_call'];
 
