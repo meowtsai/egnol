@@ -73,6 +73,20 @@ class R2g extends Game_Api
 			}
 		}
 		
+		// 贈點測試
+		if(intval($order->billing_type) == 4)
+		{
+			if(intval($amount) >= 10)
+			{
+				$free_point = floatval($amount) * 0.15;
+
+				if($free_point > 0)
+					$product_id = $product_id . "+" . number_format($free_point, 1, '.', '');
+
+				log_message("error", "transfer: Test GASH payment event add {$free_point} points.");
+			}
+		}
+		
 		$server_num = $server->address;
 		$partner_character_id = $character->in_game_id;
 		

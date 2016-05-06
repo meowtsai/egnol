@@ -1168,7 +1168,7 @@ class Api2 extends MY_Controller
 		$this->g_wallet->complete_order($order);
 		
 		// 記錄轉點
-		$transfer_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $price, $server_id, $partner_order_id, $character_id, $transaction_id);
+		$transfer_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $amount, $server_id, $partner_order_id, $character_id, $transaction_id);
 		if (empty($transfer_id))
 		{
 			// 建立轉點記錄失敗
@@ -1351,7 +1351,7 @@ class Api2 extends MY_Controller
 		$this->g_wallet->complete_order($order);
 		
 		// 記錄轉點
-		$transfer_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $price, $server_id, $partner_order_id, $character_id, $transaction_id);
+		$transfer_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $amount, $server_id, $partner_order_id, $character_id, $transaction_id);
 		if (empty($transfer_id))
 		{
 			// 建立轉點記錄失敗
