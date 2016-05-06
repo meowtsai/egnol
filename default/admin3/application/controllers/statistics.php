@@ -836,7 +836,76 @@ class Statistics extends MY_Controller {
 				ORDER BY stc.year DESC, stc.date DESC
 		    ");
 		}
-		
+        
+		$this->load->library('jpgraph');
+		$jgraph_data = array();
+		$jgraph_labels = array();
+        
+        $expected_date;
+        $row_cnt = 0;
+        $sum_type;
+        
+		foreach($query->result() as $row) {
+            $row_cnt++;
+            if ($date_group == 'DATE') {
+                if ($row_cnt>1) {
+                    for($next_date=strtotime((string)$row->date); $next_date<$expected_date; $expected_date=strtotime('-1 day', $expected_date)) {
+                        $row_cnt++;
+                        $jgraph_data[] = 0;
+                        $jgraph_labels[] = date('m/d', $expected_date);
+                    }
+                }
+                $expected_date = strtotime('-1 day', strtotime((string)$row->date));
+                $jgraph_labels[] = date('m/d', strtotime((string)$row->date));
+            } else if ($date_group == 'WEEK') {
+                $jgraph_labels[] = date('m/d', strtotime(sprintf("%4dW%02d", (string)$row->year, (string)$row->date)));
+            } else {
+                $jgraph_labels[] = (string)$row->date;
+            }
+            						
+            switch ($this->input->get("action"))
+            {
+                case "登入用戶":
+                    $jgraph_data[] = $row->login_count;
+                    break;
+                case "付費比":
+                    $jgraph_data[] = ($row->login_count)?$row->deposit_user_count/$row->login_count:0;
+                    break;
+                case "儲值人數":
+                    $jgraph_data[] = $row->deposit_user_count;
+                    break;
+                case "ARPPU":
+                    $jgraph_data[] = ($row->deposit_user_count)?$row->deposit_total/$row->deposit_user_count:0;
+                    break;
+                case "日營收":
+                    $jgraph_data[] = $row->deposit_total;
+                    break;
+                case "註冊留存":
+                    $jgraph_data[] = ($row->y_new_login_count)?$row->y_one_retention_count/$row->y_new_login_count:0;
+                    break;
+                case "行銷花費":
+                    $jgraph_data[] = 0;
+                    break;
+                case "新用戶付費":
+                    $jgraph_data[] = $row->new_user_deposit_total;
+                    break;
+                case "付費ROI":
+                    $jgraph_data[] = 0;
+                    break;
+                case "整體ROI":
+                    $jgraph_data[] = 0;
+                    break;
+                default:
+                    $jgraph_data[] = $row->new_login_count;
+                    break;
+            }
+		}
+        
+		$settings = array('width' => $row_cnt*35+50);
+        
+		$revenue_graph = $this->jpgraph->bar_chart($jgraph_data, $jgraph_labels, dirname(__FILE__).'/../../p/jpgraphs/'.$span.'_operation_graph', $settings);
+        
+        
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
@@ -1138,6 +1207,39 @@ class Statistics extends MY_Controller {
 		    AND date BETWEEN '{$start_date}' AND '{$end_date}'
         ");
 		
+        $facebook_count = 0;
+        $google_count = 0;
+        $longe_count = 0;
+        $quick_count = 0;
+        
+        if ($query) {
+			foreach($query->result() as $row) {
+                if ($this->input->get("action") == '新增登入設備') {
+                    $facebook_count += $row->new_device_facebook_count;
+                    $google_count += $row->new_device_google_count;
+                    $longe_count += $row->new_device_longe_count;
+                    $quick_count += $row->new_device_quick_count;
+                } else {
+                    $facebook_count += $row->new_login_facebook_count;
+                    $google_count += $row->new_login_google_count;
+                    $longe_count += $row->new_login_longe_count;
+                    $quick_count += $row->new_login_quick_count;
+                }
+            }
+        }
+        
+        $this->load->library('jpgraph');
+        $jgraph_data = array();
+        $jgraph_labels = array();
+        $jgraph_data[]=($facebook_count); $jgraph_labels[]="FB\n(%.1f%%)";
+        $jgraph_data[]=($google_count); $jgraph_labels[]="Google\n(%.1f%%)";
+        $jgraph_data[]=($longe_count); $jgraph_labels[]="Longe\n(%.1f%%)";
+        $jgraph_data[]=($quick_count); $jgraph_labels[]="Quick\n(%.1f%%)";
+        
+        $deposit_pie_chart = $this->jpgraph->pie_chart($jgraph_data, $jgraph_labels, "", dirname(__FILE__).'/../../p/jpgraphs/user_new_by_login_pie_chart');
+        
+        
+        
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)

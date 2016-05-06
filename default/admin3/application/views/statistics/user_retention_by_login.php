@@ -159,7 +159,7 @@
 			</tr>
 		</thead>
 		<tbody>
-		<? $color = array('dd2200', 'aa4400', 'aa4400', 'aa4400', '448800', '448800', '448800', '448800', '00aa00', '00aa00', '00aa00');
+		<? $color = array('dd2200', 'aa4400', 'aa4400', 'aa4400', '448800', '448800', '448800', '448800', '00aa00', '00aa00', '00aa00', '00aa00');
 			foreach($query->result() as $row):
 				$startdate = strtotime($row->date);
 				$enddate = strtotime(date("Y-m-d"));
