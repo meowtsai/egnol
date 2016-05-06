@@ -82,7 +82,7 @@ class Platform extends MY_Controller {
 							
 					        $_SESSION["admin_uid"] = $row->uid;
 					        $_SESSION["admin_account"] = $row->account;
-					        $_SESSION["admin_role"] = $ldap_role;
+					        $_SESSION["admin_role"] = $row->role;
 					        $_SESSION["admin_name"] = $data[0]["name"][0];
 							
 							if ($row->name <> $data[0]["name"][0] || $row->role <> $ldap_role) {

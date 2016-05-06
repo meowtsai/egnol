@@ -973,6 +973,8 @@ CREATE TABLE `user_billing` (
   `order_no` varchar(50) DEFAULT NULL,
   `country_code` varchar(3) DEFAULT NULL,
   `gash_billing_id` int(11) DEFAULT NULL,
+  `mycard_billing_id` int(11) DEFAULT NULL,
+  `vip_ticket_id` int(11) DEFAULT NULL,
   `character_id` int(11) DEFAULT NULL,
   `is_confirmed` tinyint(1) DEFAULT 0,
   `create_time` timestamp NULL DEFAULT NULL,

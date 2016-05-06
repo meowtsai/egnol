@@ -73,11 +73,27 @@
 		<input type="submit" class="btn btn-small btn-inverse" name="action" value="營運數據">	
 	
 	</div>
-		
-</form>
 
 <?if ($query):?>
 	<? if ($query->num_rows() == 0): echo '<div class="none">查無資料</div>'; else: ?>
+    
+    <div><img src="<?=base_url()?>/p/jpgraphs/<?=$span?>_operation_graph" alt=""></div>
+    <div>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='註冊' || $this->input->get("action")=='營運數據')?'btn-inverse':''?>" name="action" value="註冊">
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='登入用戶')?'btn-inverse':''?>" name="action" value="登入用戶">
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='付費比')?'btn-inverse':''?>" name="action" value="付費比">
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='儲值人數')?'btn-inverse':''?>" name="action" value="儲值人數">
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='ARPPU')?'btn-inverse':''?>" name="action" value="ARPPU">
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='日營收')?'btn-inverse':''?>" name="action" value="日營收">
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='註冊留存')?'btn-inverse':''?>" name="action" value="註冊留存">
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='行銷花費')?'btn-inverse':''?>" name="action" value="行銷花費">
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='新用戶付費')?'btn-inverse':''?>" name="action" value="新用戶付費">
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='付費ROI')?'btn-inverse':''?>" name="action" value="付費ROI">
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='整體ROI')?'btn-inverse':''?>" name="action" value="整體ROI">
+    </div>
+    <div>&nbsp;</div>
+    
 	<table class="table table-striped table-bordered" style="width:auto;">
 		<thead>
 			<tr>
@@ -140,3 +156,5 @@
 	</table>
 	<? endif;?>
 <? endif;?>
+
+</form>

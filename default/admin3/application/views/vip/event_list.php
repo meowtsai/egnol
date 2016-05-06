@@ -84,7 +84,7 @@
 				$type = $this->config->item("vip_event_type");
 				echo "【".$type[$row->type]."】";
 			?>
-				<a href="<?=site_url("vip/event_view/{$row->id}")?>"><?=mb_strimwidth(strip_tags($row->title), 0, 66, '...', 'utf-8')?></a>
+				<a href="<?=site_url("vip/event_view/{$row->id}?ticket_status=1")?>"><?=mb_strimwidth(strip_tags($row->title), 0, 66, '...', 'utf-8')?></a>
 			</td>
 			<td><?=$row->total?></td>
 			<td><a href="<?=site_url("vip/event_view/{$row->id}?ticket_status=0")?>"><?=$row->cancelled_count?></a></td>

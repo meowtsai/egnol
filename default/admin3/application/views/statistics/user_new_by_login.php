@@ -68,12 +68,18 @@
 		<input type="submit" class="btn btn-small btn-inverse" name="action" value="新增用戶分析">	
 	
 	</div>
-		
-</form>
 
-<?
-    if ($query):?>
+<?if ($query):?>
 	<? if ($query->num_rows() == 0): echo '<div class="none">查無資料</div>'; else: ?>
+    
+    <div><img src="<?=base_url()?>/p/jpgraphs/user_new_by_login_pie_chart" alt=""></div>
+    <div>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='新增用戶' || $this->input->get("action")=='新增用戶分析')?'btn-inverse':''?>" name="action" value="新增用戶">
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='新增登入設備')?'btn-inverse':''?>" name="action" value="新增登入設備">
+    </div>
+    <div>&nbsp;</div>
+
 	<table class="table table-striped table-bordered" style="width:auto;">
 		<thead>
 			<tr>
@@ -127,3 +133,5 @@
 	</table>
 	<? endif;?>
 <? endif;?>
+		
+</form>

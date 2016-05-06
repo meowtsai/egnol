@@ -946,8 +946,133 @@ class Trade extends MY_Controller {
 			->add_js_include("trade/payment")
 			->add_js_include("jquery-ui-timepicker-addon")	
 			->render();
-	}		
-	
+	}
+    
+	function vip()
+	{
+		$this->zacl->check("vip", "read");	
+		
+		//$this->load->config("g_gash");
+		$this->_init_trade_layout();
+		
+		if ($this->input->get("action")) 
+		{
+			header("Cache-Control: private");			 
+                
+			$this->DB2->start_cache();
+            
+			$this->DB2
+				->select("vt.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name, ub.id ubid")
+				->from("vip_tickets vt")
+				->join("servers gi", "gi.server_id=vt.server_id", "left")
+				->join("games g", "g.game_id=gi.game_id", "left")
+				->join("user_billing ub", "ub.vip_ticket_id=vt.id", "left")
+				->join("users u", "u.uid=vt.uid", "left");		
+            $this->DB2->where("ub.transaction_type", "vip_billing");
+			
+			$this->input->get("vip_ticket_id") && $this->DB2->where("vt.id", $this->input->get("vip_ticket_id"));
+			$this->input->get("uid") && $this->DB2->where("vt.uid", $this->input->get("uid"));
+			$this->input->get("euid") && $this->DB2->where("vt.uid", $this->g_user->decode($this->input->get("euid")));			
+			if ($this->input->get("account")) {
+				$this->DB2->where("u.email", trim($this->input->get("account")));		
+				$this->DB2->or_where("u.mobile", trim($this->input->get("account")));
+			}		
+			
+			if ($status = $this->input->get("status")) {
+				 if ($status == 'S') $this->DB2->where("vt.status >=", "2");
+				 else  $this->DB2->where("vt.status <", "2");				
+			}
+			
+			if ($this->input->get("start_date")) {
+				$start_date = $this->DB2->escape($this->input->get("start_date"));
+				if ($this->input->get("end_date")) {
+					$end_date = $this->DB2->escape($this->input->get("end_date").":59");
+					$this->DB2->where("vt.create_time between {$start_date} and {$end_date}", null, false);	
+				}	
+				else $this->DB2->where("vt.create_time >= {$start_date}", null, false);
+			}
+			
+			$this->input->get("billing_account") && $this->DB2->where("vt.billing_account", $this->input->get("billing_account"));
+			$this->input->get("billing_name") && $this->DB2->where("vt.billing_name", $this->input->get("billing_name"));
+			if ($this->input->get("billing_start_date")) {
+				$billing_start_date = $this->DB2->escape($this->input->get("billing_start_date"));
+				if ($this->input->get("billing_end_date")) {
+					$billing_end_date = $this->DB2->escape($this->input->get("billing_end_date").":59");
+					$this->DB2->where("vt.billing_time between {$billing_start_date} and {$billing_end_date}", null, false);	
+				}	
+				else $this->DB2->where("vt.billing_time >= {$billing_start_date}", null, false);
+			}
+            
+			if ($this->input->get("test") == 'no') {
+				$this->DB2->where("vt.uid not in (select uid from testaccounts)");
+			}
+			else if ($this->input->get("test") == 'only') {
+				$this->DB2->where("vt.uid in (select uid from testaccounts)");
+			}
+		
+			switch ($this->input->get("action"))
+			{
+				case "查詢": 					
+					$this->DB2->stop_cache();
+
+					$total_rows = $this->DB2->count_all_results();
+					$query = $this->DB2->limit(100, $this->input->get("record"))->order_by("vt.id desc")->get();					
+
+					$get = $this->input->get();					
+					unset($get["record"]);
+					$query_string = http_build_query($get);
+					
+					$this->load->library('pagination');
+					$this->pagination->initialize(array(
+							'base_url'	=> site_url("trade/gash?{$query_string}"),
+							'total_rows'=> $total_rows,
+							'per_page'	=> 100
+						));				
+					
+					$this->g_layout->set("total_rows", $total_rows);
+					break;
+					
+				case "輸出":
+					ini_set("memory_limit","2048M");
+
+					$gash_conf = $this->config->item('gash');
+					
+					$query = $this->DB2->get();
+						
+					$filename = "output.csv";					
+					header("Content-type:application/vnd.ms-excel;");
+					header("Content-Disposition: filename={$filename};");
+					
+					$content = "id,uid,euid,信箱,手機,龍邑單號,VIP訂單號,遊戲伺服器,金額,結果,匯款帳戶末5碼,匯款姓名,匯款時間,建立日期\n";
+					
+					foreach($query->result() as $row) {
+						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$row->ubid}\",{$id},\"({$row->game_abbr_name}){$row->server_name}\",{$row->AMOUNT},".($row->status=='2' ? '成功' : ($row->status=='1' ? '未請款' : '失敗')).",{$row->note},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
+					}
+					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
+					exit();						
+					break;					
+			}
+			
+			$this->DB2->stop_cache();
+			$this->DB2->flush_cache();
+		}
+		else {
+			$default_value = array(
+				'use_default' => true,
+				'start_date' => date('Y-m-d')." 00:00",
+				'test' => 'no',
+			);
+			$_GET = $default_value;			
+		}		
+		
+		$this->g_layout
+			->add_breadcrumb("VIP儲值查詢")
+			->set("query", isset($query) ? $query : false)
+			->add_js_include("trade/vip")
+			->add_js_include("jquery-ui-timepicker-addon")	
+			->render();
+	}
+    
 	function mycard_statistics()
 	{				
 		$this->zacl->check("mycard", "statistics");
@@ -1310,6 +1435,75 @@ class Trade extends MY_Controller {
 		$this->g_layout
 			->add_breadcrumb("IOS儲值統計")	
 			->set("query", isset($query) ? $query : false)
+			->add_js_include("trade/transfer")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}	
+	
+	function vip_statistics()
+	{				
+		$this->zacl->check("vip", "statistics");
+		
+		$this->load->helper("output_table");
+		
+		$this->_init_trade_layout();
+		
+		if ($this->input->get("action")) 
+		{
+			header("Cache-Control: private");		
+		
+			$this->DB2->from("vip_tickets vt")
+				->where("status >= ", "2")
+				->where("vt.uid not in (select uid from testaccounts)")	
+				->join("users u", "u.uid=vt.uid", "left")
+				->join("servers gi", "gi.server_id=vt.server_id", "left");				
+									
+			if ($this->input->get("start_date")) {
+				$start_date = $this->DB2->escape($this->input->get("start_date"));
+				if ($this->input->get("end_date")) {
+					$end_date = $this->DB2->escape($this->input->get("end_date").":59");
+					$this->DB2->where("vt.create_time between {$start_date} and {$end_date}", null, false);	
+				}	
+				else $this->DB2->where("vt.create_time >= {$start_date}", null, false);
+			}
+			
+			if ($this->input->get("game")) {
+				$this->DB2->where("gi.game_id", $this->input->get("game"));
+			}
+
+			switch ($this->input->get("action"))
+			{						
+							
+				case "時段統計":		
+					switch($this->input->get("time_unit")) {
+						case 'hour': $len=13; break;
+						case 'day': $len=10; break;
+						case 'month': $len=7; break;
+						case 'year': $len=4; break;
+						default: $len=10;
+					}
+					$query = $this->DB2->select("LEFT(vt.create_time, {$len}) title, sum(vt.cost) cnt", false)
+						->group_by("title")
+						->order_by("title desc")->get();
+					break;
+			}
+		}
+		else {
+			$default_value = array(
+				'use_default' => true,
+				'start_date' => date('Y-m')."-01 00:00",
+				'time_unit' => 'day',
+				'display_game' => 'game',
+			);
+			$_GET = $default_value;			
+		}
+		
+		$games = $this->DB2->from("games")->get();
+			
+		$this->g_layout
+			->add_breadcrumb("VIP儲值統計")	
+			->set("query", isset($query) ? $query : false)
+			->set("games", $games)
 			->add_js_include("trade/transfer")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();

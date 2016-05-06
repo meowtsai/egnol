@@ -251,16 +251,39 @@ class Vip extends MY_Controller {
             );
         }
         
+        $this->load->library("g_wallet");
+            
 		if ($ticket_id) {			
 			$this->DB1
 				->where("id", $ticket_id)
 				->update("vip_tickets", $data);
+            
+            $user_billing = $this->DB2->where("vip_ticket_id", $ticket_id)->where("transaction_type", "vip_billing")->from("user_billing")->get()->row(); 
+            $order = $this->g_wallet->get_order($user_billing->id);
+            
+            switch($this->input->post("action")) {
+                case '0':
+                    $this->g_wallet->cancel_order($order);
+                    break;
+                case '2':
+                    $this->g_wallet->complete_order($order);
+                    break;
+                case '3':
+                    $transfer_id = $this->g_wallet->produce_order($user_billing->uid, "top_up_account", "2", $user_billing->amount, $user_billing->server_id, "", $user_billing->character_id, "", $ticket_id);
+                    
+                    $transfer_order = $this->g_wallet->get_order($transfer_id);
+
+                    $this->g_wallet->complete_order($transfer_order);
+                    break;
+            }
 		} else {
 			$this->DB1
 				->set("create_time", "now()", false)
 				->set("update_time", "now()", false)
 				->insert("vip_tickets", $data);	
-			$ticket_id = $this->DB1->insert_id();			
+			$ticket_id = $this->DB1->insert_id();		
+            
+            $order_id = $this->g_wallet->produce_order($uid, "vip_billing", "1", $this->input->post("cost"), $this->input->post("server"), "", $character_id, "", $ticket_id);
 		}
 		
 		die(json_message(array("redirect_url"=> base_url("vip/event_view/".$this->input->post("vip_event_id")), "ticket_status"=>($this->input->post("action"))?$this->input->post("action"):"1"), true));		
