@@ -141,7 +141,7 @@
                 <th colspan="8">訂單資訊</th>
             </tr>
             <tr>
-                <th>UID</th>
+                <th>UID(自動判斷)</th>
                 <th style="width:150px;">伺服器</th>
                 <th style="width:150px;">角色</th>
                 <th>遊戲ID</th>
