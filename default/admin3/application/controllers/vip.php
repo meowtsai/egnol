@@ -318,7 +318,7 @@ class Vip extends MY_Controller {
             (
                 SELECT 
                     vip_event_id, 
-                    SUM(cost) 'total', 
+                    SUM(CASE WHEN status>='2' THEN cost ELSE 0 END) 'total', 
                     SUM(CASE WHEN status='0' THEN 1 ELSE 0 END) 'cancelled_count',
                     SUM(CASE WHEN status='1' THEN 1 ELSE 0 END) 'pending_count',
                     SUM(CASE WHEN status='2' THEN 1 ELSE 0 END) 'complete_count',
