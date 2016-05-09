@@ -101,7 +101,7 @@ class Vip extends MY_Controller {
         
 		if ($this->zacl->check_acl("vip", "authorize")) {
             $auth_admin_uid = $_SESSION['admin_uid'];
-            $auth_time = time();
+            $auth_time = date('Y-m-d H:i:s');
             $status = 2;
         } else {
             $auth_admin_uid = "";
@@ -191,7 +191,7 @@ class Vip extends MY_Controller {
 			$vip_id = $this->DB1->insert_id();			
 		}
 		
-		die(json_message(array("redirect_url"=> base_url("vip/event_view/".$vip_id), "id"=>$vip_id), true));		
+		die(json_message(array("redirect_url"=> base_url("vip/event_view/".$vip_id), "id"=>$vip_id), true));	
 	}
 	
 	function modify_ticket_json()
@@ -203,6 +203,7 @@ class Vip extends MY_Controller {
         if ($this->input->post("action") == '2') {
             if (!$this->input->post("billing_time")) die(json_failure("匯款時間未填"));
             if (!$this->input->post("billing_account")) die(json_failure("匯款帳號未填"));
+            if (!preg_match('/^[0-9]{5}$/', $this->input->post("billing_account"))) die(json_failure("匯款帳號請填寫末五碼數字"));
             if (!$this->input->post("billing_name")) die(json_failure("匯款戶名未填"));
             $data = array(
                 "billing_time" => $this->input->post("billing_time"),
@@ -288,7 +289,8 @@ class Vip extends MY_Controller {
             $order_id = $this->g_wallet->produce_order($uid, "vip_billing", "1", $this->input->post("cost"), $this->input->post("server"), "", $character_id, "", $ticket_id);
 		}
 		
-		die(json_message(array("redirect_url"=> base_url("vip/event_view/".$this->input->post("vip_event_id")), "ticket_status"=>($this->input->post("action"))?$this->input->post("action"):"1"), true));		
+		//die(json_message(array("redirect_url"=> base_url("vip/event_view/".$this->input->post("vip_event_id")), "ticket_status"=>($this->input->post("action"))?$this->input->post("action"):"1"), true));		
+		die(json_message(array("redirect_url"=> base_url("vip/event_view/".$this->input->post("vip_event_id")), "ticket_status"=>($this->input->post("action"))?$this->input->post("action"):"1","message"=>"成功"), true));	
 	}
 		
 	function event_list()
