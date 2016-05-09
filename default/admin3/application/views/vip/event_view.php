@@ -247,7 +247,7 @@
                     <td></td>
                     <td></td>
                     <td colspan="2"> 
-                    <?if($vip_event->status==2 && strtotime($vip_event->start_date)<=time() && ($vip_event->end_date=='0000-00-00 00:00:00' || strtotime($vip_event->start_date)>=time())):?>
+                    <?if($vip_event->status==2 && strtotime($vip_event->start_date)<=time() && ($vip_event->end_date=='0000-00-00 00:00:00' || strtotime($vip_event->end_date)>=time())):?>
                     <input type="submit" class="btn btn-small btn-primary" value="新建"></td>
                     <?endif;?>
 				</form>  		
