@@ -1,5 +1,5 @@
 <style>
-#content {width:800px;}
+#content {width:950px;}
 </style>
 
 <legend>VIP活動編號 #<?=$vip_event->id?></legend>	
@@ -133,7 +133,7 @@
     </ul>
     
     <? if ($vip_tickets):?>
-    <table class="table table-striped table-bordered" style="width:auto;">
+    <table class="table table-striped table-bordered">
         <thead>
             <tr>
                 <th rowspan="2">編號</th>
@@ -142,8 +142,8 @@
             </tr>
             <tr>
                 <th>UID(自動判斷)</th>
-                <th style="width:150px;">伺服器</th>
-                <th style="width:150px;">角色</th>
+                <th>伺服器</th>
+                <th>角色名稱</th>
                 <th>遊戲ID</th>
                 <th>LINE</th>
                 <th>訂購時間</th>
