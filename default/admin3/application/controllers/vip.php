@@ -331,8 +331,9 @@ class Vip extends MY_Controller {
             ) AS vt ON vt.vip_event_id=t.id
             WHERE 1=1
                 ".(($this->input->get("status")<>'')?" AND t.status ='{$this->input->get("status")}'":"")."
-                ".(($this->input->get("is_old")=='only')?" AND t.end_date<now()":"")."
-                ".(($this->input->get("is_old")=='new')?" AND (t.end_date IS NULL or t.end_date>=now())":"")."
+                ".(($this->input->get("game")<>'')?" AND t.game_id ='{$this->input->get("game")}'":"")."
+                ".(($this->input->get("is_old")=='old')?" AND t.end_date<now() AND t.end_date!='0000-00-00 00:00:00'":"")."
+                ".(($this->input->get("is_old")=='new')?" AND (t.end_date='0000-00-00 00:00:00' OR t.end_date>=now())":"")."
             ORDER BY id DESC
 		");   
                     
