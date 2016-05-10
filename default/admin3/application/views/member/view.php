@@ -72,8 +72,8 @@
                     else echo $user->mobile;
                 }
             ?></td>
-            <th>VIP</th>
-            <td> </td>
+            <th>Line</th>
+            <td><?=$user->line?></td>
 		</tr>
 		<tr>
             <th>uid</th>
@@ -252,8 +252,6 @@
                         <th>累積儲值金額</th>
                         <th>儲值獲得</th>
                         <th>活動贈與</th>
-                        <th>遊戲內剩餘點數</th>
-                        <th>遊戲內VIP</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -261,8 +259,6 @@
                         <td><?=$balance->aq?></td>
                         <td><?=$exchange_rate*$balance->aq?></td>
                         <td><?=$balance->gq?></td>
-                        <td></td>
-                        <td></td>		
                     </tr>
                 </tbody>
             </table>
@@ -369,6 +365,6 @@
 <a href="<?=site_url("trade/gash?uid={$user->uid}&action=查詢")?>">Gash+</a> |
 <a href="<?=site_url("trade/pepay?uid={$user->uid}&action=查詢")?>">Pepay</a> |
 <a href="<?=site_url("trade/google?uid={$user->uid}&action=查詢")?>">Google</a> |
-<a href="<?=site_url("trade/ios?uid={$user->uid}&action=查詢")?>">IOS</a>)
+<a href="<?=site_url("trade/ios?uid={$user->uid}&action=查詢")?>">IOS</a> |
 <a href="<?=site_url("trade/vip?uid={$user->uid}&action=查詢")?>">VIP</a>)
 <a href="<?=site_url("trade/transfer?uid={$user->uid}&action=查詢")?>" class="btn btn-link btn-small">轉點記錄</a>
