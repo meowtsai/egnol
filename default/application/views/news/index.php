@@ -25,7 +25,7 @@
 							else if($row->type == 2)
 								echo "event";
 							echo "-icn.gif' /><a class='iframe' href='/news/detail/{$row->id}?site={$site}'><span class='date'>";
-							echo date("Y-m-d", strtotime($row->create_time));
+							echo date("Y-m-d", strtotime($row->start_time));
 							echo "</span>";
 							echo $row->title;
 							echo "</a></li>";
