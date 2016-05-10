@@ -87,11 +87,11 @@
 				<a href="<?=site_url("vip/event_view/{$row->id}?ticket_status=1")?>"><?=mb_strimwidth(strip_tags($row->title), 0, 66, '...', 'utf-8')?></a>
 			</td>
 			<td><?=$row->total?></td>
-			<td><a href="<?=site_url("vip/event_view/{$row->id}?ticket_status=0")?>"><?=$row->cancelled_count?></a></td>
-			<td><a href="<?=site_url("vip/event_view/{$row->id}?ticket_status=1")?>"><?=$row->pending_count?></a></td>
-			<td><a href="<?=site_url("vip/event_view/{$row->id}?ticket_status=2")?>"><?=$row->complete_count?></a></td>
-			<td><a href="<?=site_url("vip/event_view/{$row->id}?ticket_status=3")?>"><?=$row->delivered_count?></a></td>
-			<td><a href="<?=site_url("vip/event_view/{$row->id}?ticket_status=4")?>"><?=$row->closed_count?></a></td>
+			<td><a href="<?=site_url("vip/event_view/{$row->id}?ticket_status=0#tickets")?>"><?=$row->cancelled_count?></a></td>
+			<td><a href="<?=site_url("vip/event_view/{$row->id}?ticket_status=1#tickets")?>"><?=$row->pending_count?></a></td>
+			<td><a href="<?=site_url("vip/event_view/{$row->id}?ticket_status=2#tickets")?>"><?=$row->complete_count?></a></td>
+			<td><a href="<?=site_url("vip/event_view/{$row->id}?ticket_status=3#tickets")?>"><?=$row->delivered_count?></a></td>
+			<td><a href="<?=site_url("vip/event_view/{$row->id}?ticket_status=4#tickets")?>"><?=$row->closed_count?></a></td>
 			<td style="color:<?=($row->status==2)?"green":"red"?>">
 			<?
 				$status = $this->config->item("vip_event_status");

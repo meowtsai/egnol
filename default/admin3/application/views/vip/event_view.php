@@ -113,22 +113,24 @@
 			<td colspan="2"><?=$vip_event->auth_time?></td>
 		</tr>
 	</table>
-	
+        
+	<a name="tickets"></a>
+        
     <ul class="nav nav-tabs">
         <li class="<?=($this->input->get("ticket_status")==="0") ? "active" : ""?>">
-            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=0")?>">取消(<?=$vip_event->cancelled_count?>)</a>
+            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=0#tickets")?>">取消(<?=$vip_event->cancelled_count?>)</a>
         </li>
         <li class="<?=($this->input->get("ticket_status")==null || $this->input->get("ticket_status")==1) ? "active" : ""?>">
-            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=1")?>">待匯款/新建(<?=$vip_event->pending_count?>)</a>
+            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=1#tickets")?>">待匯款/新建(<?=$vip_event->pending_count?>)</a>
         </li>
         <li class="<?=($this->input->get("ticket_status")==2) ? "active" : ""?>">
-            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=2")?>">匯款完成(<?=$vip_event->complete_count?>)</a>
+            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=2#tickets")?>">匯款完成(<?=$vip_event->complete_count?>)</a>
         </li>
         <li class="<?=($this->input->get("ticket_status")==3) ? "active" : ""?>">
-            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=3")?>">派發完成(<?=$vip_event->delivered_count?>)</a>
+            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=3#tickets")?>">派發完成(<?=$vip_event->delivered_count?>)</a>
         </li>
         <li class="<?=($this->input->get("ticket_status")==4) ? "active" : ""?>">
-            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=4")?>">結案(<?=$vip_event->closed_count?>)</a>
+            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=4#tickets")?>">結案(<?=$vip_event->closed_count?>)</a>
         </li>
     </ul>
     
