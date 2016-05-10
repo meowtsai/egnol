@@ -134,7 +134,7 @@ class Server_api extends MY_Controller
                 
             if (!empty($previous_record) && $previous_record->server_id<>$server_id) {
                 $this->db->where("id", $previous_record->id)->update("log_game_logins", array("is_recent" => '1'));
-                $this->db->where("id !=", $new_log_id)->where("server_id", server_id)->where("uid", $uid)->where("game_id", $game_id)->order_by('id desc')->limit(1)->update("log_game_logins", array("is_recent" => '0'));
+                $this->db->where("id !=", $new_log_id)->where("server_id", $server_id)->where("uid", $uid)->where("game_id", $game_id)->order_by('id desc')->limit(1)->update("log_game_logins", array("is_recent" => '0'));
             } elseif (!empty($previous_record) && $previous_record->server_id==$server_id) {
                 $this->db->where("id", $previous_record->id)->update("log_game_logins", array("is_recent" => '0'));
             }
