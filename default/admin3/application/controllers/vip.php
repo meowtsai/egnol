@@ -333,7 +333,7 @@ class Vip extends MY_Controller {
                 ".(($this->input->get("status")<>'')?" AND t.status ='{$this->input->get("status")}'":"")."
                 ".(($this->input->get("game")<>'')?" AND t.game_id ='{$this->input->get("game")}'":"")."
                 ".(($this->input->get("is_old")=='old')?" AND t.end_date<now() AND t.end_date!='0000-00-00 00:00:00'":"")."
-                ".(($this->input->get("is_old")=='new')?" AND (t.end_date='0000-00-00 00:00:00' OR t.end_date>=now())":"")."
+                ".(($this->input->get("is_old")=='new' || ($this->input->get("is_old")==''))?" AND (t.end_date='0000-00-00 00:00:00' OR t.end_date>=now())":"")."
             ORDER BY id DESC
 		");   
                     
