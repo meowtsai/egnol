@@ -99,6 +99,8 @@ class Trade extends MY_Controller {
 					->join("servers gi", "gi.server_id=ub.server_id", "left")
 					->join("games g", "g.game_id=gi.game_id", "left")
 					->join("users u", "u.uid=ub.uid", "left");
+            
+            $this->DB2->where("ub.transaction_type !=", "vip_billing");
 									
 			if ($this->input->get("start_date")) {
 				$start_date = $this->DB2->escape($this->input->get("start_date"));
