@@ -166,7 +166,7 @@
 					<input type="hidden" name="vip_event_id" value="<?=$vip_event->id?>">	
 					<input type="hidden" name="ticket_id" value="<?=$row->id?>">	
                     <td><?=$row->id?></td>
-                    <td><?=$row->uid?></td>
+                    <td><a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?></a></td>
                     <td><?=$row->server_name?></td>
                     <td><?=$row->character_name?></td>
                     <td><?=$row->in_game_id?></td>
