@@ -184,7 +184,7 @@
                         <td><?=$row->billing_name?></td>
                     <? endif;?>
                     <? if ($this->input->get("ticket_status")==='0'): ?>
-                        <td></td>
+                        <td><?=$row->note?></td>
                     </form>  	
                     <form id="cancel_ticket_form" method="post" action="<?=site_url("vip/modify_ticket_json")?>" style="margin:0">
                     <? elseif (!$this->input->get("ticket_status") || $this->input->get("ticket_status")==1): ?>
@@ -199,6 +199,7 @@
                         <input type="hidden" name="ticket_id" value="<?=$row->id?>">	
                         <td> 
                             <input type="submit" class="btn btn-small btn-inverse" value="取消訂單">
+                            <input type="text" name="note" class="required" style="width:55px;margin:0;margin-top:4px" placeholder="備註" value="">
                         </td>
                     <? elseif ($this->input->get("ticket_status")==2 && $modify_acl):?>
                         <td> 
@@ -212,6 +213,7 @@
                         <input type="hidden" name="ticket_id" value="<?=$row->id?>">	
                         <td> 
                             <input type="submit" class="btn btn-small btn-inverse" value="取消訂單">
+                            <input type="text" name="note" class="required" style="width:55px;margin:0;margin-top:4px" placeholder="備註" value="">
                         </td>
                     <? elseif ($this->input->get("ticket_status")==3 && $authorize_acl):?>
                         <td> 
@@ -225,6 +227,7 @@
                         <input type="hidden" name="ticket_id" value="<?=$row->id?>">	
                         <td>
                             <input type="submit" class="btn btn-small btn-inverse" value="取消訂單">
+                            <input type="text" name="note" class="required" style="width:55px;margin:0;margin-top:4px" placeholder="備註" value="">
                         </td>
                     <? else:?>
                         <td colspan="2"> </td>

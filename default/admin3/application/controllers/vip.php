@@ -201,6 +201,7 @@ class Vip extends MY_Controller {
 		$ticket_id = $this->input->post("ticket_id");
         
         if ($this->input->post("action") == '2') {
+            $new_status = 2;
             if (!$this->input->post("billing_time")) die(json_failure("匯款時間未填"));
             if (!$this->input->post("billing_account")) die(json_failure("匯款帳號未填"));
             if (!preg_match('/^[0-9]{5}$/', $this->input->post("billing_account"))) die(json_failure("匯款帳號請填寫末五碼數字"));
@@ -212,18 +213,23 @@ class Vip extends MY_Controller {
                 "status" => 2,
             );
         } elseif ($this->input->post("action") == '0') {
+            $new_status = 0;
             $data = array(
                 "status" => 0,
+                "note" => $this->input->post("note"),
             );
         } elseif ($this->input->post("action") == '3') {
+            $new_status = 3;
             $data = array(
                 "status" => 3,
             );
         } elseif ($this->input->post("action") == '4') {
+            $new_status = 4;
             $data = array(
                 "status" => 4,
             );
         } else {
+            $new_status = 1;
         
             if ($this->input->post("uid")) $this->DB2->where("uid", $this->input->post("uid"));
             $character = $this->DB2->from("characters")->where("server_id", $this->input->post("server"))->where("name", $this->input->post("character_name"))->get();
@@ -290,7 +296,7 @@ class Vip extends MY_Controller {
 		}
 		
 		//die(json_message(array("redirect_url"=> base_url("vip/event_view/".$this->input->post("vip_event_id")), "ticket_status"=>($this->input->post("action"))?$this->input->post("action"):"1"), true));		
-		die(json_message(array("redirect_url"=> base_url("vip/event_view/".$this->input->post("vip_event_id")), "ticket_status"=>($this->input->post("action"))?$this->input->post("action"):"1","message"=>"成功"), true));	
+		die(json_message(array("redirect_url"=> base_url("vip/event_view/".$this->input->post("vip_event_id")."?ticket_status=".$new_status."#tickets"), "message"=>"成功"), true));	
 	}
 		
 	function event_list()

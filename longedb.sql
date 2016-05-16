@@ -870,6 +870,7 @@ CREATE TABLE `vip_tickets` (
   `billing_name` varchar(20) DEFAULT NULL,
   `auth_admin_uid` int(11) DEFAULT NULL,
   `auth_time` timestamp NULL DEFAULT NULL,
+  `note` text,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='VIP訂單';
 /*!40101 SET character_set_client = @saved_cs_client */;
