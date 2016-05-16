@@ -5,10 +5,10 @@
 <legend>VIP活動編號 #<?=$vip_event->id?></legend>	
 
 <div id="func_bar">
-	<? if ($modify_acl || ($vip_event->status == '1' && $vip_event->admin_uid==$_SESSION['admin_uid'])):?>	
+	<? if (($vip_event->status !== '0' && $modify_acl) || ($vip_event->status == '1' && $vip_event->admin_uid==$_SESSION['admin_uid'])):?>	
 	    <a href="<?=site_url("vip/edit_event/{$vip_event->id}")?>" class="btn btn-primary">編輯活動</a>
     <? endif;?>
-    <? if ($modify_acl || ($vip_event->status == '1' && $vip_event->admin_uid==$_SESSION['admin_uid'])): ?>
+    <? if (($vip_event->status !== '0' && $modify_acl) || ($vip_event->status == '1' && $vip_event->admin_uid==$_SESSION['admin_uid'])): ?>
         <br><br>
         <a href="javascript:;" url="<?=site_url("vip/move_vip_event/{$vip_event->id}?status=0")?>" class="json_post pull-left btn btn-danger">取消活動</a>
     <? endif;?>
