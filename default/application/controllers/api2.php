@@ -1044,6 +1044,11 @@ class Api2 extends MY_Controller
 		$partner_order_id = $this->input->post("partner_order_id");
 		$uid = $this->input->post("uid");
 		$server_id = $this->input->post("server_id");
+        
+        // 為了絕代ios server_id傳錯，用uid去補
+        $last_login = $this->db->from("log_game_logins")->where("uid", $uid)->where("is_recent", "1")->order_by("id", "desc")->limit(1)->get()->row();
+        $server_id = $last_login->server_id;
+        
 		$character_id = $this->input->post("character_id");
 		$verify_code = $this->input->post("verify_code");
 		
