@@ -82,6 +82,7 @@
 			<th style="width:80px;">遊戲伺服器</th>
 			<th style="width:50px;">結果</th>
 			<th style="width:120px;">訊息</th>
+			<th style="width:80px;">原廠單號</th>
 			<th style="width:70px;">建立日期</th>
 		</tr>
 	</thead>
@@ -109,6 +110,7 @@
 			<td><?= "({$row->game_abbr_name}){$row->server_name}" ?></td>
 			<td><?=$row->result=='1' ? '成功' : '失敗'?></td>
 			<td><?=$row->note?></td>
+			<td><?=$row->partner_order_id?></td>
 			<td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>
 				<!-- 
 				<div class="btn-group">

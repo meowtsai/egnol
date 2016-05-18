@@ -99,6 +99,7 @@
 			<th style="width:35px;">金額</th>
 			<th style="width:50px;">結果</th>
 			<th style="width:120px;">訊息</th>
+			<th style="width:80px;">原廠單號</th>
 			<th style="width:70px;">建立日期</th>	
 			<th style="width:22px;">
 		</tr>
@@ -131,6 +132,7 @@
 			<td>
 				<?=$row->note?>
 			</td>
+			<td><?=$row->partner_order_id?></td>
 			<td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>
 			<td>
 				<!-- 

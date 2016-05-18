@@ -125,7 +125,8 @@
 			<th style="width:80px;">遊戲伺服器</th>
 			<th style="width:40px;">結果</th>
 			<th style="width:80px;">訊息</th>			
-			<th style="width:80px;">第三方訂單號</th>
+			<th style="width:80px;">第三方單號</th>
+			<th style="width:80px;">原廠單號</th>
 			<th style="width:90px;">建立日期</th>	
 			<th style="width:22px;"></th>
 		</tr>
@@ -163,6 +164,7 @@
 				</div>
 			</td>
 			<td><?=$row->order_no?></td>
+			<td><?=$row->partner_order_id?></td>
 			<td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>		
 			<td>
 				<div class="btn-group">
