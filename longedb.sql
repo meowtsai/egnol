@@ -282,13 +282,13 @@ CREATE TABLE `log_logins` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `statistics`
+-- Table structure for table `user_statistics`
 --
 
-DROP TABLE IF EXISTS `statistics`;
+DROP TABLE IF EXISTS `user_statistics`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `statistics` (
+CREATE TABLE `user_statistics` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `date` date NOT NULL,
   `game_id` varchar(20) DEFAULT NULL,
@@ -312,32 +312,6 @@ CREATE TABLE `statistics` (
   `new_device_google_count` int(11) DEFAULT NULL,
   `new_device_longe_count` int(11) DEFAULT NULL,
   `new_device_quick_count` int(11) DEFAULT NULL,
-  `one_retention_all_count` int(11) DEFAULT NULL,
-  `one_retention_count` int(11) DEFAULT NULL,
-  `one_retention_facebook_count` int(11) DEFAULT NULL,
-  `one_retention_google_count` int(11) DEFAULT NULL,
-  `one_retention_longe_count` int(11) DEFAULT NULL,
-  `one_retention_quick_count` int(11) DEFAULT NULL,
-  `three_retention_count` int(11) DEFAULT NULL,
-  `three_retention_facebook_count` int(11) DEFAULT NULL,
-  `three_retention_google_count` int(11) DEFAULT NULL,
-  `three_retention_longe_count` int(11) DEFAULT NULL,
-  `three_retention_quick_count` int(11) DEFAULT NULL,
-  `seven_retention_count` int(11) DEFAULT NULL,
-  `seven_retention_facebook_count` int(11) DEFAULT NULL,
-  `seven_retention_google_count` int(11) DEFAULT NULL,
-  `seven_retention_longe_count` int(11) DEFAULT NULL,
-  `seven_retention_quick_count` int(11) DEFAULT NULL,
-  `fourteen_retention_count` int(11) DEFAULT NULL,
-  `fourteen_retention_facebook_count` int(11) DEFAULT NULL,
-  `fourteen_retention_google_count` int(11) DEFAULT NULL,
-  `fourteen_retention_longe_count` int(11) DEFAULT NULL,
-  `fourteen_retention_quick_count` int(11) DEFAULT NULL,
-  `thirty_retention_count` int(11) DEFAULT NULL,
-  `thirty_retention_facebook_count` int(11) DEFAULT NULL,
-  `thirty_retention_google_count` int(11) DEFAULT NULL,
-  `thirty_retention_longe_count` int(11) DEFAULT NULL,
-  `thirty_retention_quick_count` int(11) DEFAULT NULL,
   `deposit_user_count` int(11) DEFAULT NULL,
   `new_deposit_user_count` int(11) DEFAULT NULL,
   `consume_user_count` int(11) DEFAULT NULL,
@@ -395,64 +369,21 @@ CREATE TABLE `statistics` (
   `apk_mo_download_count` int(8) DEFAULT NULL,
   `apk_sg_download_count` int(8) DEFAULT NULL,
   `apk_my_download_count` int(8) DEFAULT NULL,
-  `one_return_count` int(11) DEFAULT NULL,
-  `one_return_facebook_count` int(11) DEFAULT NULL,
-  `one_return_google_count` int(11) DEFAULT NULL,
-  `one_return_longe_count` int(11) DEFAULT NULL,
-  `one_return_quick_count` int(11) DEFAULT NULL,
-  `three_return_count` int(11) DEFAULT NULL,
-  `three_return_facebook_count` int(11) DEFAULT NULL,
-  `three_return_google_count` int(11) DEFAULT NULL,
-  `three_return_longe_count` int(11) DEFAULT NULL,
-  `three_return_quick_count` int(11) DEFAULT NULL,
-  `one_return_rate` float(7,4) DEFAULT NULL,
-  `one_return_facebook_rate` float(7,4) DEFAULT NULL,
-  `one_return_google_rate` float(7,4) DEFAULT NULL,
-  `one_return_longe_rate` float(7,4) DEFAULT NULL,
-  `one_return_quick_rate` float(7,4) DEFAULT NULL,
-  `three_return_rate` float(7,4) DEFAULT NULL,
-  `three_return_facebook_rate` float(7,4) DEFAULT NULL,
-  `three_return_google_rate` float(7,4) DEFAULT NULL,
-  `three_return_longe_rate` float(7,4) DEFAULT NULL,
-  `three_return_quick_rate` float(7,4) DEFAULT NULL,
-  `one_ltv` int(11) DEFAULT NULL,
-  `two_ltv` int(11) DEFAULT NULL,
-  `three_ltv` int(11) DEFAULT NULL,
-  `four_ltv` int(11) DEFAULT NULL,
-  `five_ltv` int(11) DEFAULT NULL,
-  `six_ltv` int(11) DEFAULT NULL,
-  `seven_ltv` int(11) DEFAULT NULL,
-  `fourteen_ltv` int(11) DEFAULT NULL,
-  `thirty_ltv` int(11) DEFAULT NULL,
-  `sixty_ltv` int(11) DEFAULT NULL,
-  `ninety_ltv` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `weekly_statistics`
+-- Table structure for table `weekly_user_statistics`
 --
 
-DROP TABLE IF EXISTS `weekly_statistics`;
+DROP TABLE IF EXISTS `weekly_user_statistics`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `weekly_statistics` (
+CREATE TABLE `weekly_user_statistics` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `game_id` varchar(20) NOT NULL,
   `date` date NOT NULL,
-  `one_retention_count` varchar(11) DEFAULT NULL,
-  `one_retention_all_count` varchar(11) DEFAULT NULL,
-  `return_count` int(11) DEFAULT NULL,
-  `return_facebook_count` int(11) DEFAULT NULL,
-  `return_google_count` int(11) DEFAULT NULL,
-  `return_longe_count` int(11) DEFAULT NULL,
-  `return_quick_count` int(11) DEFAULT NULL,
-  `return_rate` float(7,4) DEFAULT NULL,
-  `return_facebook_rate` float(7,4) DEFAULT NULL,
-  `return_google_rate` float(7,4) DEFAULT NULL,
-  `return_longe_rate` float(7,4) DEFAULT NULL,
-  `return_quick_rate` float(7,4) DEFAULT NULL,
   `login_count` int(11) DEFAULT NULL,
   `login_facebook_count` int(11) DEFAULT NULL,
   `login_google_count` int(11) DEFAULT NULL,
@@ -501,28 +432,16 @@ CREATE TABLE `weekly_statistics` (
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 --
--- Table structure for table `monthly_statistics`
+-- Table structure for table `monthly_user_statistics`
 --
 
-DROP TABLE IF EXISTS `monthly_statistics`;
+DROP TABLE IF EXISTS `monthly_user_statistics`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `monthly_statistics` (
+CREATE TABLE `monthly_user_statistics` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `game_id` varchar(20) NOT NULL,
   `date` date NOT NULL,
-  `one_retention_count` varchar(11) DEFAULT NULL,
-  `one_retention_all_count` varchar(11) DEFAULT NULL,
-  `return_count` int(11) DEFAULT NULL,
-  `return_facebook_count` int(11) DEFAULT NULL,
-  `return_google_count` int(11) DEFAULT NULL,
-  `return_longe_count` int(11) DEFAULT NULL,
-  `return_quick_count` int(11) DEFAULT NULL,
-  `return_rate` float(7,4) DEFAULT NULL,
-  `return_facebook_rate` float(7,4) DEFAULT NULL,
-  `return_google_rate` float(7,4) DEFAULT NULL,
-  `return_longe_rate` float(7,4) DEFAULT NULL,
-  `return_quick_rate` float(7,4) DEFAULT NULL,
   `login_count` int(11) DEFAULT NULL,
   `login_facebook_count` int(11) DEFAULT NULL,
   `login_google_count` int(11) DEFAULT NULL,
@@ -557,6 +476,141 @@ CREATE TABLE `monthly_statistics` (
   `apk_mo_download_count` int(9) DEFAULT NULL,
   `apk_sg_download_count` int(9) DEFAULT NULL,
   `apk_my_download_count` int(9) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `operation_statistics`
+--
+
+DROP TABLE IF EXISTS `operation_statistics`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `operation_statistics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date` date NOT NULL,
+  `game_id` varchar(20) DEFAULT NULL,
+  `one_retention_all_count` int(11) DEFAULT NULL,
+  `one_retention_count` int(11) DEFAULT NULL,
+  `one_retention_facebook_count` int(11) DEFAULT NULL,
+  `one_retention_google_count` int(11) DEFAULT NULL,
+  `one_retention_longe_count` int(11) DEFAULT NULL,
+  `one_retention_quick_count` int(11) DEFAULT NULL,
+  `three_retention_count` int(11) DEFAULT NULL,
+  `three_retention_facebook_count` int(11) DEFAULT NULL,
+  `three_retention_google_count` int(11) DEFAULT NULL,
+  `three_retention_longe_count` int(11) DEFAULT NULL,
+  `three_retention_quick_count` int(11) DEFAULT NULL,
+  `seven_retention_count` int(11) DEFAULT NULL,
+  `seven_retention_facebook_count` int(11) DEFAULT NULL,
+  `seven_retention_google_count` int(11) DEFAULT NULL,
+  `seven_retention_longe_count` int(11) DEFAULT NULL,
+  `seven_retention_quick_count` int(11) DEFAULT NULL,
+  `fourteen_retention_count` int(11) DEFAULT NULL,
+  `fourteen_retention_facebook_count` int(11) DEFAULT NULL,
+  `fourteen_retention_google_count` int(11) DEFAULT NULL,
+  `fourteen_retention_longe_count` int(11) DEFAULT NULL,
+  `fourteen_retention_quick_count` int(11) DEFAULT NULL,
+  `thirty_retention_count` int(11) DEFAULT NULL,
+  `thirty_retention_facebook_count` int(11) DEFAULT NULL,
+  `thirty_retention_google_count` int(11) DEFAULT NULL,
+  `thirty_retention_longe_count` int(11) DEFAULT NULL,
+  `thirty_retention_quick_count` int(11) DEFAULT NULL,
+  `one_return_count` int(11) DEFAULT NULL,
+  `one_return_facebook_count` int(11) DEFAULT NULL,
+  `one_return_google_count` int(11) DEFAULT NULL,
+  `one_return_longe_count` int(11) DEFAULT NULL,
+  `one_return_quick_count` int(11) DEFAULT NULL,
+  `three_return_count` int(11) DEFAULT NULL,
+  `three_return_facebook_count` int(11) DEFAULT NULL,
+  `three_return_google_count` int(11) DEFAULT NULL,
+  `three_return_longe_count` int(11) DEFAULT NULL,
+  `three_return_quick_count` int(11) DEFAULT NULL,
+  `one_return_rate` float(7,4) DEFAULT NULL,
+  `one_return_facebook_rate` float(7,4) DEFAULT NULL,
+  `one_return_google_rate` float(7,4) DEFAULT NULL,
+  `one_return_longe_rate` float(7,4) DEFAULT NULL,
+  `one_return_quick_rate` float(7,4) DEFAULT NULL,
+  `three_return_rate` float(7,4) DEFAULT NULL,
+  `three_return_facebook_rate` float(7,4) DEFAULT NULL,
+  `three_return_google_rate` float(7,4) DEFAULT NULL,
+  `three_return_longe_rate` float(7,4) DEFAULT NULL,
+  `three_return_quick_rate` float(7,4) DEFAULT NULL,
+  `one_ltv` int(11) DEFAULT NULL,
+  `two_ltv` int(11) DEFAULT NULL,
+  `three_ltv` int(11) DEFAULT NULL,
+  `four_ltv` int(11) DEFAULT NULL,
+  `five_ltv` int(11) DEFAULT NULL,
+  `six_ltv` int(11) DEFAULT NULL,
+  `seven_ltv` int(11) DEFAULT NULL,
+  `fourteen_ltv` int(11) DEFAULT NULL,
+  `thirty_ltv` int(11) DEFAULT NULL,
+  `sixty_ltv` int(11) DEFAULT NULL,
+  `ninety_ltv` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `weekly_operation_statistics`
+--
+
+DROP TABLE IF EXISTS `weekly_operation_statistics`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `weekly_operation_statistics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `game_id` varchar(20) NOT NULL,
+  `date` date NOT NULL,
+  `one_retention_count` varchar(11) DEFAULT NULL,
+  `one_retention_all_count` varchar(11) DEFAULT NULL,
+  `return_count` int(11) DEFAULT NULL,
+  `return_facebook_count` int(11) DEFAULT NULL,
+  `return_google_count` int(11) DEFAULT NULL,
+  `return_longe_count` int(11) DEFAULT NULL,
+  `return_quick_count` int(11) DEFAULT NULL,
+  `return_rate` float(7,4) DEFAULT NULL,
+  `return_facebook_rate` float(7,4) DEFAULT NULL,
+  `return_google_rate` float(7,4) DEFAULT NULL,
+  `return_longe_rate` float(7,4) DEFAULT NULL,
+  `return_quick_rate` float(7,4) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+--
+-- Table structure for table `monthly_operation_statistics`
+--
+
+DROP TABLE IF EXISTS `monthly_operation_statistics`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `monthly_operation_statistics` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `game_id` varchar(20) NOT NULL,
+  `date` date NOT NULL,
+  `one_retention_count` varchar(11) DEFAULT NULL,
+  `one_retention_all_count` varchar(11) DEFAULT NULL,
+  `return_count` int(11) DEFAULT NULL,
+  `return_facebook_count` int(11) DEFAULT NULL,
+  `return_google_count` int(11) DEFAULT NULL,
+  `return_longe_count` int(11) DEFAULT NULL,
+  `return_quick_count` int(11) DEFAULT NULL,
+  `return_rate` float(7,4) DEFAULT NULL,
+  `return_facebook_rate` float(7,4) DEFAULT NULL,
+  `return_google_rate` float(7,4) DEFAULT NULL,
+  `return_longe_rate` float(7,4) DEFAULT NULL,
+  `return_quick_rate` float(7,4) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
