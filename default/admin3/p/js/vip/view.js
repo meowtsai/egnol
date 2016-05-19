@@ -4,7 +4,7 @@ $(function(){
 			$(form).json_ajaxSubmit(function(json){
 				alert(json.message);
 				if (json.status == 'success') {
-					location.href = location.href;
+					location.href = json.redirect_url;
 				}
 			});
 		}
@@ -15,7 +15,7 @@ $(function(){
 			$(form).json_ajaxSubmit(function(json){
 				alert(json.message);
 				if (json.status == 'success') {
-					location.href = location.href;
+					location.href = json.redirect_url;
 				}
 			});
 		}
@@ -26,7 +26,7 @@ $(function(){
 			$(form).json_ajaxSubmit(function(json){
 				alert(json.message);
 				if (json.status == 'success') {
-					location.href = location.href;
+                    location.reload();
 				}
 			});
 		}

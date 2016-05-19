@@ -101,7 +101,7 @@ class Vip extends MY_Controller {
         
 		if ($this->zacl->check_acl("vip", "authorize")) {
             $auth_admin_uid = $_SESSION['admin_uid'];
-            $auth_time = time();
+            $auth_time = date('Y-m-d H:i:s');
             $status = 2;
         } else {
             $auth_admin_uid = "";
@@ -191,7 +191,7 @@ class Vip extends MY_Controller {
 			$vip_id = $this->DB1->insert_id();			
 		}
 		
-		die(json_message(array("redirect_url"=> base_url("vip/event_view/".$vip_id), "id"=>$vip_id), true));		
+		die(json_message(array("redirect_url"=> base_url("vip/event_view/".$vip_id), "id"=>$vip_id), true));	
 	}
 	
 	function modify_ticket_json()
@@ -201,8 +201,10 @@ class Vip extends MY_Controller {
 		$ticket_id = $this->input->post("ticket_id");
         
         if ($this->input->post("action") == '2') {
+            $new_status = 2;
             if (!$this->input->post("billing_time")) die(json_failure("匯款時間未填"));
             if (!$this->input->post("billing_account")) die(json_failure("匯款帳號未填"));
+            if (!preg_match('/^[0-9]{5}$/', $this->input->post("billing_account"))) die(json_failure("匯款帳號請填寫末五碼數字"));
             if (!$this->input->post("billing_name")) die(json_failure("匯款戶名未填"));
             $data = array(
                 "billing_time" => $this->input->post("billing_time"),
@@ -211,18 +213,23 @@ class Vip extends MY_Controller {
                 "status" => 2,
             );
         } elseif ($this->input->post("action") == '0') {
+            $new_status = 0;
             $data = array(
                 "status" => 0,
+                "note" => $this->input->post("note"),
             );
         } elseif ($this->input->post("action") == '3') {
+            $new_status = 3;
             $data = array(
                 "status" => 3,
             );
         } elseif ($this->input->post("action") == '4') {
+            $new_status = 4;
             $data = array(
                 "status" => 4,
             );
         } else {
+            $new_status = 1;
         
             if ($this->input->post("uid")) $this->DB2->where("uid", $this->input->post("uid"));
             $character = $this->DB2->from("characters")->where("server_id", $this->input->post("server"))->where("name", $this->input->post("character_name"))->get();
@@ -269,11 +276,13 @@ class Vip extends MY_Controller {
                     $this->g_wallet->complete_order($order);
                     break;
                 case '3':
+                    /*
                     $transfer_id = $this->g_wallet->produce_order($user_billing->uid, "top_up_account", "2", $user_billing->amount, $user_billing->server_id, "", $user_billing->character_id, "", $ticket_id);
                     
                     $transfer_order = $this->g_wallet->get_order($transfer_id);
 
                     $this->g_wallet->complete_order($transfer_order);
+                    */
                     break;
             }
 		} else {
@@ -286,7 +295,8 @@ class Vip extends MY_Controller {
             $order_id = $this->g_wallet->produce_order($uid, "vip_billing", "1", $this->input->post("cost"), $this->input->post("server"), "", $character_id, "", $ticket_id);
 		}
 		
-		die(json_message(array("redirect_url"=> base_url("vip/event_view/".$this->input->post("vip_event_id")), "ticket_status"=>($this->input->post("action"))?$this->input->post("action"):"1"), true));		
+		//die(json_message(array("redirect_url"=> base_url("vip/event_view/".$this->input->post("vip_event_id")), "ticket_status"=>($this->input->post("action"))?$this->input->post("action"):"1"), true));		
+		die(json_message(array("redirect_url"=> base_url("vip/event_view/".$this->input->post("vip_event_id")."?ticket_status=".$new_status."#tickets"), "message"=>"成功"), true));	
 	}
 		
 	function event_list()
@@ -316,7 +326,7 @@ class Vip extends MY_Controller {
             (
                 SELECT 
                     vip_event_id, 
-                    SUM(cost) 'total', 
+                    SUM(CASE WHEN status>='2' THEN cost ELSE 0 END) 'total', 
                     SUM(CASE WHEN status='0' THEN 1 ELSE 0 END) 'cancelled_count',
                     SUM(CASE WHEN status='1' THEN 1 ELSE 0 END) 'pending_count',
                     SUM(CASE WHEN status='2' THEN 1 ELSE 0 END) 'complete_count',
@@ -327,8 +337,9 @@ class Vip extends MY_Controller {
             ) AS vt ON vt.vip_event_id=t.id
             WHERE 1=1
                 ".(($this->input->get("status")<>'')?" AND t.status ='{$this->input->get("status")}'":"")."
-                ".(($this->input->get("is_old")=='only')?" AND t.end_date<now()":"")."
-                ".(($this->input->get("is_old")=='new')?" AND (t.end_date IS NULL or t.end_date>=now())":"")."
+                ".(($this->input->get("game")<>'')?" AND t.game_id ='{$this->input->get("game")}'":"")."
+                ".(($this->input->get("is_old")=='old')?" AND t.end_date<now() AND t.end_date!='0000-00-00 00:00:00'":"")."
+                ".(($this->input->get("is_old")=='new' || ($this->input->get("is_old")==''))?" AND (t.end_date='0000-00-00 00:00:00' OR t.end_date>=now())":"")."
             ORDER BY id DESC
 		");   
                     

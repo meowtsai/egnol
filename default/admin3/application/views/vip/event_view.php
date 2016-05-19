@@ -1,13 +1,21 @@
 <style>
-#content {width:800px;}
+#content {width:950px;}
 </style>
 
 <legend>VIP活動編號 #<?=$vip_event->id?></legend>	
 
 <div id="func_bar">
-	<? if ($modify_acl || ($vip_event->status == '1' && $vip_event->admin_uid==$_SESSION['admin_uid'])):?>	
-	    <a href="<?=site_url("vip/edit_event/{$vip_event->id}")?>" class="btn btn-primary">編輯</a>
-    <? endif;?>	
+	<? if (($vip_event->status !== '0' && $modify_acl) || ($vip_event->status == '1' && $vip_event->admin_uid==$_SESSION['admin_uid'])):?>	
+	    <a href="<?=site_url("vip/edit_event/{$vip_event->id}")?>" class="btn btn-primary">編輯活動</a>
+    <? endif;?>
+    <? if (($vip_event->status !== '0' && $modify_acl) || ($vip_event->status == '1' && $vip_event->admin_uid==$_SESSION['admin_uid'])): ?>
+        <br><br>
+        <a href="javascript:;" url="<?=site_url("vip/move_vip_event/{$vip_event->id}?status=0")?>" class="json_post pull-left btn btn-danger">取消活動</a>
+    <? endif;?>
+    <? if ($vip_event->status==1 && $authorize_acl): ?>
+        <br><br>
+        <a href="javascript:;" url="<?=site_url("vip/move_vip_event/{$vip_event->id}?status=2")?>" class="json_post pull-right btn btn-success">核准活動</a>
+    <? endif;?>
 </div>
 
 
@@ -105,27 +113,29 @@
 			<td colspan="2"><?=$vip_event->auth_time?></td>
 		</tr>
 	</table>
-	
+        
+	<a name="tickets"></a>
+        
     <ul class="nav nav-tabs">
         <li class="<?=($this->input->get("ticket_status")==="0") ? "active" : ""?>">
-            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=0")?>">取消(<?=$vip_event->cancelled_count?>)</a>
+            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=0#tickets")?>">取消(<?=$vip_event->cancelled_count?>)</a>
         </li>
         <li class="<?=($this->input->get("ticket_status")==null || $this->input->get("ticket_status")==1) ? "active" : ""?>">
-            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=1")?>">待匯款/新建(<?=$vip_event->pending_count?>)</a>
+            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=1#tickets")?>">待匯款/新建(<?=$vip_event->pending_count?>)</a>
         </li>
         <li class="<?=($this->input->get("ticket_status")==2) ? "active" : ""?>">
-            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=2")?>">匯款完成(<?=$vip_event->complete_count?>)</a>
+            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=2#tickets")?>">匯款完成(<?=$vip_event->complete_count?>)</a>
         </li>
         <li class="<?=($this->input->get("ticket_status")==3) ? "active" : ""?>">
-            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=3")?>">派發完成(<?=$vip_event->delivered_count?>)</a>
+            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=3#tickets")?>">派發完成(<?=$vip_event->delivered_count?>)</a>
         </li>
         <li class="<?=($this->input->get("ticket_status")==4) ? "active" : ""?>">
-            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=4")?>">結案(<?=$vip_event->closed_count?>)</a>
+            <a href="<?=site_url("vip/event_view/{$vip_event->id}?ticket_status=4#tickets")?>">結案(<?=$vip_event->closed_count?>)</a>
         </li>
     </ul>
     
     <? if ($vip_tickets):?>
-    <table class="table table-striped table-bordered" style="width:auto;">
+    <table class="table table-striped table-bordered">
         <thead>
             <tr>
                 <th rowspan="2">編號</th>
@@ -133,9 +143,9 @@
                 <th colspan="8">訂單資訊</th>
             </tr>
             <tr>
-                <th>UID</th>
+                <th>UID(自動判斷)</th>
                 <th>伺服器</th>
-                <th>角色</th>
+                <th>角色名稱</th>
                 <th>遊戲ID</th>
                 <th>LINE</th>
                 <th>訂購時間</th>
@@ -156,7 +166,7 @@
 					<input type="hidden" name="vip_event_id" value="<?=$vip_event->id?>">	
 					<input type="hidden" name="ticket_id" value="<?=$row->id?>">	
                     <td><?=$row->id?></td>
-                    <td><?=$row->uid?></td>
+                    <td><a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?></a></td>
                     <td><?=$row->server_name?></td>
                     <td><?=$row->character_name?></td>
                     <td><?=$row->in_game_id?></td>
@@ -164,7 +174,7 @@
                     <td><?=$row->create_time?></td>
                     <td><?=$row->admin_uname?></td>
                     <td><?=$row->cost?></td>
-                    <? if (!$this->input->get("ticket_status") || $this->input->get("ticket_status")==1): ?>
+                    <? if ($this->input->get("ticket_status")!=='0' && (!$this->input->get("ticket_status") || $this->input->get("ticket_status")==1)): ?>
                         <td><input type="text" name="billing_time" class="date required" value="" style="width:120px"></td>
                         <td><input type="text" name="billing_account" class="required" value="" style="width:60px"></td>
                         <td><input type="text" name="billing_name" class="required" value=""></td>
@@ -173,7 +183,11 @@
                         <td><?=$row->billing_account?></td>
                         <td><?=$row->billing_name?></td>
                     <? endif;?>
-                    <? if (!$this->input->get("ticket_status") || $this->input->get("ticket_status")==1): ?>
+                    <? if ($this->input->get("ticket_status")==='0'): ?>
+                        <td><?=$row->note?></td>
+                    </form>  	
+                    <form id="cancel_ticket_form" method="post" action="<?=site_url("vip/modify_ticket_json")?>" style="margin:0">
+                    <? elseif (!$this->input->get("ticket_status") || $this->input->get("ticket_status")==1): ?>
                         <td> 
                             <input type="hidden" name="action" value="2">	
                             <input type="submit" class="btn btn-small btn-success" value="匯款完成">
@@ -185,6 +199,7 @@
                         <input type="hidden" name="ticket_id" value="<?=$row->id?>">	
                         <td> 
                             <input type="submit" class="btn btn-small btn-inverse" value="取消訂單">
+                            <input type="text" name="note" class="required" style="width:55px;margin:0;margin-top:4px" placeholder="備註" value="">
                         </td>
                     <? elseif ($this->input->get("ticket_status")==2 && $modify_acl):?>
                         <td> 
@@ -198,6 +213,7 @@
                         <input type="hidden" name="ticket_id" value="<?=$row->id?>">	
                         <td> 
                             <input type="submit" class="btn btn-small btn-inverse" value="取消訂單">
+                            <input type="text" name="note" class="required" style="width:55px;margin:0;margin-top:4px" placeholder="備註" value="">
                         </td>
                     <? elseif ($this->input->get("ticket_status")==3 && $authorize_acl):?>
                         <td> 
@@ -211,6 +227,7 @@
                         <input type="hidden" name="ticket_id" value="<?=$row->id?>">	
                         <td>
                             <input type="submit" class="btn btn-small btn-inverse" value="取消訂單">
+                            <input type="text" name="note" class="required" style="width:55px;margin:0;margin-top:4px" placeholder="備註" value="">
                         </td>
                     <? else:?>
                         <td colspan="2"> </td>
@@ -221,7 +238,7 @@
             
             <? endif;?>
             
-            <? if (!$this->input->get("ticket_status") || $this->input->get("ticket_status")==1): ?>
+            <? if ($this->input->get("ticket_status")!=='0' && (!$this->input->get("ticket_status") || $this->input->get("ticket_status")==1)): ?>
             <tr>
 				<form id="new_ticket_form" method="post" action="<?=site_url("vip/modify_ticket_json")?>" style="margin:0">
 					<input type="hidden" name="vip_event_id" value="<?=$vip_event->id?>">	
@@ -247,7 +264,7 @@
                     <td></td>
                     <td></td>
                     <td colspan="2"> 
-                    <?if($vip_event->status==2 && strtotime($vip_event->start_date)<=time() && ($vip_event->end_date=='0000-00-00 00:00:00' || strtotime($vip_event->start_date)>=time())):?>
+                    <?if($vip_event->status==2 && strtotime($vip_event->start_date)<=time() && ($vip_event->end_date=='0000-00-00 00:00:00' || strtotime($vip_event->end_date)>=time())):?>
                     <input type="submit" class="btn btn-small btn-primary" value="新建"></td>
                     <?endif;?>
 				</form>  		
@@ -258,12 +275,4 @@
     </table>
     <? endif;?>
 	</div>
-    <div class="form-actions">
-        <? if ($modify_acl || ($vip_event->status == '1' && $vip_event->admin_uid==$_SESSION['admin_uid'])): ?>
-        <a href="javascript:;" url="<?=site_url("vip/move_vip_event/{$vip_event->id}?status=0")?>" class="json_post pull-left btn btn-danger">取消</a>
-        <? endif;?>
-        <? if ($vip_event->status==1 && $authorize_acl): ?>
-        <a href="javascript:;" url="<?=site_url("vip/move_vip_event/{$vip_event->id}?status=2")?>" class="json_post pull-right btn btn-success">核准</a>
-        <? endif;?>
-    </div>
 </div>	

@@ -990,6 +990,10 @@ class Api2 extends MY_Controller
 			
 			$server_id = $server_info->server_id;
 		}
+        
+        // 為了絕代ios server_id傳錯，用uid去補
+        $last_login = $this->db->from("log_game_logins")->where("uid", $uid)->where("is_recent", "1")->order_by("id", "desc")->limit(1)->get()->row();
+        $server_id = $last_login->server_id;
 		
 		$this->load->library("g_wallet");
 
@@ -1088,6 +1092,11 @@ class Api2 extends MY_Controller
 			
 			$server_id = $server_info->server_id;
 		}
+        
+        // 為了絕代ios server_id傳錯，用uid去補
+        $last_login = $this->db->from("log_game_logins")->where("uid", $uid)->where("is_recent", "1")->order_by("id", "desc")->limit(1)->get()->row();
+        $server_id = $last_login->server_id;
+        
 
 		// 驗證訂單
 		if(intval($order->result) != 0)

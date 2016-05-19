@@ -122,7 +122,7 @@ class Member extends MY_Controller {
 	function view($uid) 
 	{
 		$user = $this->DB2
-					->select("u.*, lgl.create_time as last_login_date, ui.ident, ui.ban_reason, ui.ban_date, ui.name, ui.sex, ui.street, ui.birthday, ui.note")
+					->select("u.*, lgl.create_time as last_login_date, ui.ident, ui.ban_reason, ui.ban_date, ui.name, ui.sex, ui.street, ui.birthday, ui.note, ui.line")
 					->from("users u")->where("u.uid", $uid)
 					->join("log_game_logins lgl", "u.uid=lgl.uid and is_recent='1'", "left")
 					->join("user_info ui", "u.uid=ui.uid", "left")
@@ -172,7 +172,7 @@ class Member extends MY_Controller {
                 COUNT(CASE WHEN amount >=100000 THEN 1 ELSE NULL END) as lvl6,
                 SUM(amount) as ltv
             FROM user_billing 
-            WHERE uid={$uid} AND billing_type=2 AND result=1
+            WHERE uid={$uid} AND billing_type=1 AND result=1
         ")->row();
         
 		$games = $this->db->from("games")->get();

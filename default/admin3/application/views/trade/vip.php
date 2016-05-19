@@ -108,7 +108,7 @@
 				<div style="color:#777;"><?=$this->g_user->encode($row->uid)?></div>
 			</td>
 			<td><?=$row->ubid?></td>
-			<td><?=$row->id?></td>
+			<td><a href="<?=site_url("vip/event_view/{$row->vip_event_id}?ticket_status={$row->status}#tickets")?>"><?=$row->id?></a></td>
 			<td><?= "({$row->game_abbr_name}){$row->server_name}" ?></td>
 			<td><?=$row->cost?></td>
 			<td><?=$row->status>='2' ? '成功' : '失敗'?></td>
