@@ -577,7 +577,7 @@ class Trade extends MY_Controller {
 					
 					foreach($query->result() as $row) {
 						$trade_channel = $gash_conf["PAID"][$row->PAID]."(".$gash_conf["CUID"][$row->CUID].")";
-						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$row->ubid}\",{$trade_channel},\"{$row->COID}\",{$row->RRN},\"({$row->game_abbr_name}){$row->server_name}\",{$row->AMOUNT},".($row->status=='2' ? '成功' : ($row->status=='1' ? '未請款' : '失敗')).",{$row->note},{$row->partner_order_id},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
+						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",\"{$row->ubid}\",{$trade_channel},\"{$row->COID}\",{$row->RRN},\"({$row->game_abbr_name}){$row->server_name}\",{$row->AMOUNT},".($row->status=='2' ? '成功' : ($row->status=='1' ? '未請款' : '失敗')).",{$row->note},{$row->partner_order_id},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
 					}
 					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
 					exit();						
@@ -806,7 +806,7 @@ class Trade extends MY_Controller {
 					$content = "id,uid,euid,信箱,手機,訂單號,遊戲伺服器,金額,結果,訊息,原廠單號,建立日期\n";
 					
 					foreach($query->result() as $row) {
-						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",\"{$row->order_no}\",\"({$row->game_abbr_name}){$row->server_name}\",{$row->amount},".($row->result=='1' ? ($row->is_confirmed=='' ? '未請款' : '成功') : '失敗').",{$row->note},{$row->partner_order_id},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
+						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",\"".ltrim($row->order_no, "GPA.")."\",\"({$row->game_abbr_name}){$row->server_name}\",{$row->amount},".($row->result=='1' ? ($row->is_confirmed=='' ? '未請款' : '成功') : '失敗').",{$row->note},{$row->partner_order_id},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
 					}
 					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
 					exit();						

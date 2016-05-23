@@ -144,7 +144,7 @@ WHERE x.uid={$uid}";
     	return $this->CI->db->insert_id();
     }    
     
-    function produce_gash_order($uid, $gash_billing_id, $amount, $character_id, $coid, $partner_order_id, $result='1')
+    function produce_gash_order($uid, $gash_billing_id, $amount, $character_id, $coid, $partner_order_id, $result='1', $server_id='')
 	{	
 		$cnt = $this->CI->db->from("user_billing")->where("gash_billing_id", $gash_billing_id)->where("result", "1")->count_all_results();
 		if ($cnt > 0)  return $this->_return_error("ID已被使用");			
@@ -160,6 +160,7 @@ WHERE x.uid={$uid}";
     			'ip'		 	=> $_SERVER['REMOTE_ADDR'],
     			'result'		=> $result,
     			'gash_billing_id' => $gash_billing_id,
+				'$server_id'    => $server_id,
 				'character_id'  => $character_id,
 				'country_code'  => $country_code,
 				'order_no'		=> $coid,
