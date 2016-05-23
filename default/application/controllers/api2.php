@@ -159,7 +159,7 @@ class Api2 extends MY_Controller
 				->set("device_id", $device_id)
 				->set("server_mode", $server_mode)
 				->set("servers", $servers)
-				->add_css_link("login")
+				->add_css_link("login_api")
 				->add_js_include("api2/login_game")
 				->api_view("api2/ui_member");
 		} 
@@ -189,7 +189,7 @@ class Api2 extends MY_Controller
 			unset($_SESSION['server_id']);
 		}
 	}
-
+	
 	function ui_login_json()
 	{
 		header('content-type:text/html; charset=utf-8');
@@ -2272,5 +2272,16 @@ class Api2 extends MY_Controller
 		}
 		
 		die(json_encode(array("result"=>"1")));
+	}
+
+	function ui_test()
+	{
+		if(!IN_OFFICE)
+			die();
+		
+		$this->_init_layout()
+			->add_css_link("login_api")
+			->add_js_include("api2/login")
+			->api_view();
 	}
 }

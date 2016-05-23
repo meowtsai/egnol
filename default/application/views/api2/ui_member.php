@@ -75,12 +75,6 @@
 				</p>
 <? endif; ?>
 				<input name="doLogin" type="submit" id="doSubmit" value="" style="display:none;" />
-			<!--/div>
-		    </div>
-		</form>
-		
-		<form id="login_form" method="post" action="#">
-		    <div-->
 				<img id="continue" style="cursor:pointer;" src="<?=$longe_url?>p/image/member/enter.png" />
 		    </div>
 		    </div>
