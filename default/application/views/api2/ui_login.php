@@ -31,11 +31,11 @@
 					{
 						if($channel['channel'] == "facebook")
 						{
-							echo "<img id='login-btn-facebook' style='cursor:pointer;' src='{$longe_url}p/image/member/login-btn-fb.png' />";
+							echo "<img id='login-btn-facebook' style='cursor:pointer;margin:4px;' src='{$longe_url}p/image/member/login-btn-fb.png' />";
 						}
 						else if($channel['channel'] == "google")
 						{
-							echo "<img id='login-btn-google' style='cursor:pointer;' src='{$longe_url}p/image/member/login-btn-google.png' ";
+							echo "<img id='login-btn-google' style='cursor:pointer;margin:4px;' src='{$longe_url}p/image/member/login-btn-google.png' ";
 							echo "parm=\"{$api_url}api2/ui_channel_login?site={$site}&channel={$channel['channel']}\" />";
 						}
 					}
