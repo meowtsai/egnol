@@ -483,7 +483,7 @@ class User_statistics extends MY_Controller {
                 FROM user_billing ub
                     JOIN servers sr ON ub.server_id=sr.server_id
                 WHERE sr.game_id = '{$game_id}'
-                    AND ub.create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
+                    AND ub.create_time BETWEEN DATE('{$start_date}') AND DATE_ADD(DATE('{$end_date}'), INTERVAL 1 DAY)
                     AND ub.billing_type = 1
                     AND ub.result = 1
                     ".(($this->testaccounts)?" AND ub.uid NOT IN (".$this->testaccounts.") ":"")."
