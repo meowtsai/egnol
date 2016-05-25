@@ -6,7 +6,7 @@ class Daily_report extends MY_Controller {
 	{
 		parent::__construct();					
 		
-		error_reporting(E_ALL);
+		//error_reporting(E_ALL);
 		ini_set('display_errors','On');	
 		$this->load->helper("g_common");
         
@@ -44,78 +44,245 @@ class Daily_report extends MY_Controller {
 		$this->load->helper("output_table");
 		
 		//$this->zacl->check("game_statistics", "read");
-		$date = array();
-		$date[0] = date("Y-m-d",strtotime("-1 days"));
-		$date[1] = date("Y-m-d",strtotime("-2 days"));
-		$date[2] = date("Y-m-d",strtotime("-8 days"));
-		
-		foreach($date as $k => $d) {
-			$d_1=date("Y-m-d",strtotime("-1 days", strtotime($d)));
-			$d_7=date("Y-m-d",strtotime("-7 days", strtotime($d)));
-			
-			$name = 'query'.$k;
-			$$name = $this->DB2->query("
-				SELECT
-					*
-				FROM
-				(
-					SELECT 
-						s.date AS 'find_date',
-						SUM(s.login_count) 'login_count',
-						SUM(s.new_login_count) 'new_login_count',
-						SUM(s.device_count) 'device_count',
-						SUM(s.deposit_user_count) 'deposit_user_count',
-						SUM(s.new_deposit_user_count) 'new_deposit_user_count',
-						SUM(s.deposit_total) 'deposit_total',
-						SUM(s.consume_total) 'consume_total',
-						SUM(s.peak_user_count) 'peak_user_count',
-						SUM(s.total_time) 'total_time',
-						SUM(os.one_ltv) 'one_ltv'
-					FROM user_statistics s
-                    LEFT JOIN operation_statistics os ON s.game_id=os.game_id AND s.date=os.date
-					WHERE s.date = '{$d}'
-					GROUP BY s.date
-				) main,
-				(
-					SELECT 
-						SUM(s.new_login_count) 'new_login_count_1',
-						SUM(os.one_retention_all_count) 'one_retention_all_count',
-						SUM(os.one_retention_count) 'one_retention_count'
-					FROM user_statistics s
-                    LEFT JOIN operation_statistics os ON s.game_id=os.game_id AND s.date=os.date
-					WHERE s.date = '{$d_1}'
-					GROUP BY s.date
-				) main_1,
-				(
-					SELECT 
-						SUM(s.new_login_count) 'new_login_count_7',
-						SUM(os.seven_retention_count) 'seven_retention_count'
-					FROM user_statistics s
-                    LEFT JOIN operation_statistics os ON s.game_id=os.game_id AND s.date=os.date
-					WHERE s.date = '{$d_7}'
-					GROUP BY s.date
-				) main_7,
-				(
-					SELECT
-						SUM(new_login_count) 'total_users',
-						SUM(deposit_total) 'historical_revenue_sum',
-						SUM(new_deposit_user_count) 'historical_deposit_user_count'
-					FROM
-						user_statistics
-					WHERE
-						date <= '{$d}'
-				) historical_total
-			");
-		}
+		$account_query = $this->account_data();
+		$statistics_query = $this->statistics_data();
+		$billing_query = $this->billing_data();
 		
 		$this->g_layout
-			->set("query0", isset($query0) ? $query0 : false)
-			->set("query1", isset($query1) ? $query1 : false)
-			->set("query2", isset($query2) ? $query2 : false)
-			->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
-			->add_js_include("game/statistics")
-			->add_js_include("jquery-ui-timepicker-addon")
+			->set("account_query", isset($account_query) ? $account_query : false)
+			->set("statistics_query", isset($statistics_query) ? $statistics_query : false)
+			->set("billing_query", isset($billing_query) ? $billing_query : false)
 			->render();
+	}
+    
+	function send_mail()
+	{			
+		//$this->_init_statistics_layout();			
+		//$this->load->helper("output_table");
+		
+		//$this->zacl->check("game_statistics", "read");
+		$account_query = $this->account_data();
+		$statistics_query = $this->statistics_data();
+		$billing_query = $this->billing_data();
+		
+        $message = "<html>
+            <head>
+                <meta charset='UTF-8'>
+                <style>.hdr{font-weight:bold;}table,td{border:1px solid #000;text-align:right;}.th1{background-color:#faafaf;text-align:center;}.th2{background-color:#91a5e8;text-align:center;}.th3{background-color:#f8c88f;text-align:center;}.num{text-align:right;}</style>
+            </head>
+            <body>
+                <p></p>";
+        
+        if ($account_query) {
+            if ($account_query->num_rows() == 0) {
+                $message .= '<div class="none">查無資料</div>'; 
+            } else {
+                $row = $account_query->row();
+                $message .= "<div class='hdr'>龍邑平台帳號數據(即時)</div>
+                <table>
+                    <tr>
+                        <td class='th2'>帳號類型</td>
+                        <td class='th2'>".date("m/d", strtotime("-5 days"))."前</td>
+                        <td class='th2'>".date("m/d", strtotime("-5 days"))."</td>
+                        <td class='th2'>".date("m/d", strtotime("-4 days"))."</td>
+                        <td class='th2'>".date("m/d", strtotime("-3 days"))."</td>
+                        <td class='th2'>".date("m/d", strtotime("-2 days"))."</td>
+                        <td class='th2'>".date("m/d", strtotime("-1 days"))."</td>
+                        <td class='th2'>本日數量</td>
+                        <td class='th2'>目前總數</td>
+                    </tr>
+                    <tr>
+                        <td class='th1'>所有類型</td>
+                        <td>".$row->y6_newuser_count."</td>
+                        <td>".$row->y5_newuser_count."</td>
+                        <td>".$row->y4_newuser_count."</td>
+                        <td>".$row->y3_newuser_count."</td>
+                        <td>".$row->y2_newuser_count."</td>
+                        <td>".$row->y_newuser_count."</td>
+                        <td>".$row->t_newuser_count."</td>
+                        <td>".$row->newuser_count."</td>
+                    </tr>
+                    <tr>
+                        <td class='th1'>直接申請</td>
+                        <td>".$row->y6_newuser_longe_count."</td>
+                        <td>".$row->y5_newuser_longe_count."</td>
+                        <td>".$row->y4_newuser_longe_count."</td>
+                        <td>".$row->y3_newuser_longe_count."</td>
+                        <td>".$row->y2_newuser_longe_count."</td>
+                        <td>".$row->y_newuser_longe_count."</td>
+                        <td>".$row->t_newuser_longe_count."</td>
+                        <td>".$row->newuser_longe_count."</td>
+                    </tr>
+                    <tr>
+                        <td class='th1'>Facebook</td>
+                        <td>".$row->y6_newuser_facebook_count."</td>
+                        <td>".$row->y5_newuser_facebook_count."</td>
+                        <td>".$row->y4_newuser_facebook_count."</td>
+                        <td>".$row->y3_newuser_facebook_count."</td>
+                        <td>".$row->y2_newuser_facebook_count."</td>
+                        <td>".$row->y_newuser_facebook_count."</td>
+                        <td>".$row->t_newuser_facebook_count."</td>
+                        <td>".$row->newuser_facebook_count."</td>
+                    </tr>
+                    <tr>
+                        <td class='th1'>Google</td>
+                        <td>".$row->y6_newuser_google_count."</td>
+                        <td>".$row->y5_newuser_google_count."</td>
+                        <td>".$row->y4_newuser_google_count."</td>
+                        <td>".$row->y3_newuser_google_count."</td>
+                        <td>".$row->y2_newuser_google_count."</td>
+                        <td>".$row->y_newuser_google_count."</td>
+                        <td>".$row->t_newuser_google_count."</td>
+                        <td>".$row->newuser_google_count."</td>
+                    </tr>
+                    <tr>
+                        <td class='th1'>行動裝置</td>
+                        <td>".$row->y6_newuser_quick_count."</td>
+                        <td>".$row->y5_newuser_quick_count."</td>
+                        <td>".$row->y4_newuser_quick_count."</td>
+                        <td>".$row->y3_newuser_quick_count."</td>
+                        <td>".$row->y2_newuser_quick_count."</td>
+                        <td>".$row->y_newuser_quick_count."</td>
+                        <td>".$row->t_newuser_quick_count."</td>
+                        <td>".$row->newuser_quick_count."</td>
+                    </tr>
+                </table>
+                </td></tr><br />";
+            }
+        }
+	
+        if ($statistics_query) {
+            $game_id = '';
+            
+            foreach($statistics_query->result() as $row) {
+                if ($game_id <> '' && $game_id <> $row->game_id) {
+                    $message .= "</table><br />";
+                }
+                if ($game_id == '' || $game_id <> $row->game_id) {
+                    $game_id = $row->game_id;
+                    $message .= "<div class='hdr'>".$row->name."統計數據(每日更新)</div>
+                <table>
+                    <tr>
+                        <td class='th2'>日期</td>
+                        <td class='th2'>新增用戶數</td>
+                        <td class='th2'>總創角數</td>
+                        <td class='th2'>不重複創角數</td>
+                        <td class='th2'>DAU</td>
+                        <td class='th2'>1日留存率</td>
+                        <td class='th2'>3日留存率</td>
+                    </tr>";
+                }
+                
+                $message .= "<tr>
+				<td class='th1'>".date("m/d", strtotime($row->date))."</td>
+				<td>".$row->new_login_count."</td>
+				<td>".$row->total_new_character_count."</td>
+				<td>".$row->new_character_count."</td>
+				<td>".$row->login_count."</td>
+				<td>".number_format(($row->new_login_count)?$row->one_retention_count*100/$row->new_login_count:0, 2)."</td>
+				<td>".number_format(($row->new_login_count)?$row->three_retention_count*100/$row->new_login_count:0, 2)."</td>
+			</tr>";
+            }
+            
+            $message .= "</table><br />";
+        }
+        
+        if ($billing_query) {
+            foreach($billing_query->result() as $row) {
+                $message .= "<div class='hdr'>".$row->name."儲值數據(即時)</div>
+                <table>
+                    <tr>
+                        <td class='th2'>儲值管道</td>
+                        <td class='th2'>".date("m/d", strtotime("-5 days"))."前</td>
+                        <td class='th2'>".date("m/d", strtotime("-5 days"))."</td>
+                        <td class='th2'>".date("m/d", strtotime("-4 days"))."</td>
+                        <td class='th2'>".date("m/d", strtotime("-3 days"))."</td>
+                        <td class='th2'>".date("m/d", strtotime("-2 days"))."</td>
+                        <td class='th2'>".date("m/d", strtotime("-1 days"))."</td>
+                        <td class='th2'>本日數量</td>
+                        <td class='th2'>目前總數</td>
+                    </tr>
+                    <tr>
+                        <td class='th1'>所有管道</td>
+                        <td>".$row->y6_total."</td>
+                        <td>".$row->y5_total."</td>
+                        <td>".$row->y4_total."</td>
+                        <td>".$row->y3_total."</td>
+                        <td>".$row->y2_total."</td>
+                        <td>".$row->y_total."</td>
+                        <td>".$row->t_total."</td>
+                        <td>".$row->total."</td>
+                    </tr>
+                    <tr>
+                        <td class='th1'>GASH</td>
+                        <td>".$row->y6_gash_total."</td>
+                        <td>".$row->y5_gash_total."</td>
+                        <td>".$row->y4_gash_total."</td>
+                        <td>".$row->y3_gash_total."</td>
+                        <td>".$row->y2_gash_total."</td>
+                        <td>".$row->y_gash_total."</td>
+                        <td>".$row->t_gash_total."</td>
+                        <td>".$row->gash_total."</td>
+                    </tr>
+                    <tr>
+                        <td class='th1'>AppStore</td>
+                        <td>".$row->y6_ios_total."</td>
+                        <td>".$row->y5_ios_total."</td>
+                        <td>".$row->y4_ios_total."</td>
+                        <td>".$row->y3_ios_total."</td>
+                        <td>".$row->y2_ios_total."</td>
+                        <td>".$row->y_ios_total."</td>
+                        <td>".$row->t_ios_total."</td>
+                        <td>".$row->ios_total."</td>
+                    </tr>
+                    <tr>
+                        <td class='th1'>GooglePlay</td>
+                        <td>".$row->y6_google_total."</td>
+                        <td>".$row->y5_google_total."</td>
+                        <td>".$row->y4_google_total."</td>
+                        <td>".$row->y3_google_total."</td>
+                        <td>".$row->y2_google_total."</td>
+                        <td>".$row->y_google_total."</td>
+                        <td>".$row->t_google_total."</td>
+                        <td>".$row->google_total."</td>
+                    </tr>
+                </table>
+                </td></tr>";
+            }
+        }
+        $message .= "</table>
+            </body>
+        </html>";
+        
+        $this->load->library('email');
+        
+        $config['smtp_user'] = 'no-reply@smail.longeplay.com.tw';
+        $config['smtp_pass'] = 'noxj/6u4reply';
+        $config['smtp_host'] = 'smail.longeplay.com.tw';
+        $config['mailtype']  = 'html';
+
+        $this->email->initialize($config);
+        
+        $this->email->from('no-reply@smail.longeplay.com.tw', '龍邑自動報表系統');
+        
+        $tos = $this->DB2->where_in("role", array("admin", "pm", "cs_master", "mo"))->where('password IS NULL', null, false)->get("admin_users");
+        
+        $tos_string = '';
+        if ($tos) {
+            foreach($tos->result() as $row) {
+                $tos_string .= $row->account."@longeplay.com.tw,";
+            }
+        }
+        $tos_string = rtrim($tos_string, ",");
+        
+        $this->email->to($tos_string); 
+
+        $this->email->subject('龍邑活動日報<'.date("Y/m/d").'>');
+        $this->email->message($message);	
+
+        $this->email->send();
+        
+        die();
 	}
     
     function account_data() {
@@ -163,6 +330,8 @@ class Daily_report extends MY_Controller {
                 COUNT(CASE WHEN DATE(create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND external_id LIKE '%device' THEN 1 ELSE NULL END) 'y6_newuser_quick_count'
             FROM users 
 		");
+        
+        return $query;
     }
     
     function statistics_data() {
@@ -191,12 +360,16 @@ class Daily_report extends MY_Controller {
                 GROUP BY s.game_id, DATE(ch.create_time)
             ) as nc ON us.game_id=nc.game_id AND us.date=nc.create_date
             WHERE g.is_active=1 AND us.date < CURDATE() AND us.date >= DATE_SUB(CURDATE(), INTERVAL 5 DAY)
+            ORDER BY us.game_id DESC, us.date ASC
 		");
+        
+        return $query;
     }
     
     function billing_data() {
         $query = $this->DB2->query("
             SELECT 
+                g.name,
                 g.game_id,
                 SUM(u.amount) 'total',
                 SUM(CASE WHEN u.transaction_type='gash_billing' THEN u.amount ELSE NULL END) 'gash_total',
@@ -233,9 +406,11 @@ class Daily_report extends MY_Controller {
             FROM user_billing u
             JOIN servers s ON u.server_id=s.server_id
             JOIN games g ON s.game_id=g.game_id
-            WHERE g.is_active='1' AND s.is_test_server=0 AND u.billing_type=1 AND u.result=1 AND ".(($this->testaccounts)?" AND u.uid NOT IN (".$this->testaccounts.") ":"")."
+            WHERE g.is_active='1' AND s.is_test_server=0 AND u.billing_type=1 AND u.result=1 ".(($this->testaccounts)?" AND u.uid NOT IN (".$this->testaccounts.") ":"")."
             GROUP BY g.game_id
 		");
+        
+        return $query;
     }
     
     function event_data() {
