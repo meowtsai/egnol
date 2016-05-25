@@ -7,7 +7,24 @@ class Daily_report extends MY_Controller {
 		parent::__construct();					
 		
 		error_reporting(E_ALL);
-		ini_set('display_errors','On');		
+		ini_set('display_errors','On');	
+		$this->load->helper("g_common");
+        
+		$this->DB1 = $this->load->database('long_e', TRUE);
+        $this->DB2 = $this->load->database('long_e_2', TRUE);
+			
+    	$query = $this->DB2->select("uid")->from("testaccounts")->get();
+
+        $testaccounts = array();
+        
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+			    $testaccounts[] = $row->uid;
+		    }
+		}
+        
+        $testaccounts_str = implode(",", $testaccounts);
+        $this->testaccounts = $testaccounts_str;	
 	}		
 	
 	function _init_statistics_layout()
@@ -180,12 +197,44 @@ class Daily_report extends MY_Controller {
     function billing_data() {
         $query = $this->DB2->query("
             SELECT 
-            FROM user_billing
-            WHERE billing_type=1 AND result=1
-            
-            SELECT SUM(u.amount) AS money 
-            FROM user_billing AS u,gash_billing AS g 
-            WHERE u.gash_billing_id=g.id AND u.billing_type=1 AND u.result=1 AND g.server_id<>'r2gtest' AND u.create_time>'2016-04-26 12:00:00' AND u.create_time<?
+                g.game_id,
+                SUM(u.amount) 'total',
+                SUM(CASE WHEN u.transaction_type='gash_billing' THEN u.amount ELSE NULL END) 'gash_total',
+                SUM(CASE WHEN u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'ios_total',
+                SUM(CASE WHEN u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'google_total',
+                SUM(CASE WHEN DATE(u.create_time)=CURDATE() THEN u.amount ELSE NULL END) 't_total',
+                SUM(CASE WHEN DATE(u.create_time)=CURDATE() AND u.transaction_type='gash_billing' THEN u.amount ELSE NULL END) 't_gash_total',
+                SUM(CASE WHEN DATE(u.create_time)=CURDATE() AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 't_ios_total',
+                SUM(CASE WHEN DATE(u.create_time)=CURDATE() AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 't_google_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) THEN u.amount ELSE NULL END) 'y_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND u.transaction_type='gash_billing' THEN u.amount ELSE NULL END) 'y_gash_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y_ios_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y_google_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) THEN u.amount ELSE NULL END) 'y2_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND u.transaction_type='gash_billing' THEN u.amount ELSE NULL END) 'y2_gash_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y2_ios_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y2_google_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) THEN u.amount ELSE NULL END) 'y3_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND u.transaction_type='gash_billing' THEN u.amount ELSE NULL END) 'y3_gash_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y3_ios_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y3_google_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) THEN u.amount ELSE NULL END) 'y4_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND u.transaction_type='gash_billing' THEN u.amount ELSE NULL END) 'y4_gash_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y4_ios_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y4_google_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) THEN u.amount ELSE NULL END) 'y5_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND u.transaction_type='gash_billing' THEN u.amount ELSE NULL END) 'y5_gash_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y5_ios_total',
+                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y5_google_total',
+                SUM(CASE WHEN DATE(u.create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) THEN u.amount ELSE NULL END) 'y6_total',
+                SUM(CASE WHEN DATE(u.create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND u.transaction_type='gash_billing' THEN u.amount ELSE NULL END) 'y6_gash_total',
+                SUM(CASE WHEN DATE(u.create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y6_ios_total',
+                SUM(CASE WHEN DATE(u.create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y6_google_total'
+            FROM user_billing u
+            JOIN servers s ON u.server_id=s.server_id
+            JOIN games g ON s.game_id=g.game_id
+            WHERE g.is_active='1' AND s.is_test_server=0 AND u.billing_type=1 AND u.result=1 AND ".(($this->testaccounts)?" AND u.uid NOT IN (".$this->testaccounts.") ":"")."
+            GROUP BY g.game_id
 		");
     }
     

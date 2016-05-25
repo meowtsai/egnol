@@ -8,6 +8,19 @@ class User_statistics extends MY_Controller {
 		
 		error_reporting(E_ALL);
 		ini_set('display_errors','On');		
+			
+    	$query = $this->DB2->select("uid")->from("testaccounts")->get();
+
+        $testaccounts = array();
+        
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+			    $testaccounts[] = $row->uid;
+		    }
+		}
+        
+        $testaccounts_str = implode(",", $testaccounts);
+        $this->testaccounts = $testaccounts_str;
 	}		
 	
 	function _init_statistics_layout()
@@ -471,8 +484,9 @@ class User_statistics extends MY_Controller {
                     JOIN servers sr ON ub.server_id=sr.server_id
                 WHERE sr.game_id = '{$game_id}'
                     AND ub.create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-                    AND ub.billing_type = 2
+                    AND ub.billing_type = 1
                     AND ub.result = 1
+                    ".(($this->testaccounts)?" AND ub.uid NOT IN (".$this->testaccounts.") ":"")."
                 GROUP BY ub.uid
             ) tmp
         ");
