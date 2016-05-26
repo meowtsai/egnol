@@ -189,3 +189,35 @@
 	</table>
 	<? endforeach;?>
 <? endif;?>
+
+<? if ($event_query && $event_query->num_rows()>0):?>
+    <legend>活動數據(即時)</legend>
+	<table class="table table-striped table-bordered" style="width:auto;">
+		<thead>
+				<th style="width:160px">活動名稱</th>
+				<th style="width:160px"><?=date("m/d", strtotime("-5 days"))?>前</th>
+				<th style="width:160px"><?=date("m/d", strtotime("-5 days"))?></th>
+				<th style="width:160px"><?=date("m/d", strtotime("-4 days"))?></th>
+				<th style="width:160px"><?=date("m/d", strtotime("-3 days"))?></th>
+				<th style="width:160px"><?=date("m/d", strtotime("-2 days"))?></th>
+				<th style="width:160px"><?=date("m/d", strtotime("-1 days"))?></th>
+				<th style="width:160px">本日數量</th>
+				<th style="width:160px">目前總數</th>
+		</thead>
+		<tbody>
+	<? foreach($event_query->result() as $row):?>
+			<tr>
+				<td><?="【".$row->name."】".$row->event_name?></td>
+				<td style="text-align:right"><?=$row->y6_serial_count?></td>
+				<td style="text-align:right"><?=$row->y5_serial_count?></td>
+				<td style="text-align:right"><?=$row->y4_serial_count?></td>
+				<td style="text-align:right"><?=$row->y3_serial_count?></td>
+				<td style="text-align:right"><?=$row->y2_serial_count?></td>
+				<td style="text-align:right"><?=$row->y_serial_count?></td>
+				<td style="text-align:right"><?=$row->t_serial_count?></td>
+				<td style="text-align:right"><?=$row->serial_count?></td>
+			</tr>
+	<? endforeach;?>
+		</tbody>
+	</table>
+<? endif;?>

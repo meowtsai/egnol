@@ -47,11 +47,13 @@ class Daily_report extends MY_Controller {
 		$account_query = $this->account_data();
 		$statistics_query = $this->statistics_data();
 		$billing_query = $this->billing_data();
+		$event_query = $this->event_data();
 		
 		$this->g_layout
 			->set("account_query", isset($account_query) ? $account_query : false)
 			->set("statistics_query", isset($statistics_query) ? $statistics_query : false)
 			->set("billing_query", isset($billing_query) ? $billing_query : false)
+			->set("event_query", isset($event_query) ? $event_query : false)
 			->render();
 	}
     
@@ -64,6 +66,7 @@ class Daily_report extends MY_Controller {
 		$account_query = $this->account_data();
 		$statistics_query = $this->statistics_data();
 		$billing_query = $this->billing_data();
+		$event_query = $this->event_data();
 		
         $message = "<html>
             <head>
@@ -246,10 +249,44 @@ class Daily_report extends MY_Controller {
                         <td>".$row->t_google_total."</td>
                         <td>".$row->google_total."</td>
                     </tr>
-                </table>
+                </table><br />
                 </td></tr>";
             }
         }
+        
+        if ($event_query && $event_query->num_rows()>0) {
+            $message .= "<div class='hdr'>活動數據(即時)</div>
+                <table>
+                    <tr>
+                        <td class='th2'>活動名稱</td>
+                        <td class='th2'>".date("m/d", strtotime("-5 days"))."前</td>
+                        <td class='th2'>".date("m/d", strtotime("-5 days"))."</td>
+                        <td class='th2'>".date("m/d", strtotime("-4 days"))."</td>
+                        <td class='th2'>".date("m/d", strtotime("-3 days"))."</td>
+                        <td class='th2'>".date("m/d", strtotime("-2 days"))."</td>
+                        <td class='th2'>".date("m/d", strtotime("-1 days"))."</td>
+                        <td class='th2'>本日數量</td>
+                        <td class='th2'>目前總數</td>
+                    </tr>";
+            foreach($event_query->result() as $row) {
+                $message .= "
+                    <tr>
+                        <td class='th1'>【".$row->name."】".$row->event_name."</td>
+                        <td>".$row->y6_serial_count."</td>
+                        <td>".$row->y5_serial_count."</td>
+                        <td>".$row->y4_serial_count."</td>
+                        <td>".$row->y3_serial_count."</td>
+                        <td>".$row->y2_serial_count."</td>
+                        <td>".$row->y_serial_count."</td>
+                        <td>".$row->t_serial_count."</td>
+                        <td>".$row->serial_count."</td>
+                    </tr>";
+            }
+            $message .= "
+                </table>
+                </td></tr>";
+        }
+        
         $message .= "</table>
             </body>
         </html>";
@@ -414,7 +451,31 @@ class Daily_report extends MY_Controller {
     }
     
     function event_data() {
+        $query = $this->DB2->query("
+            SELECT
+                e.game_id,
+                es.event_id,
+                g.name,
+                e.event_name,
+                COUNT(*) 'serial_count',
+                COUNT(CASE WHEN DATE(es.create_time)=CURDATE() THEN 1 ELSE NULL END) 't_serial_count',
+                COUNT(CASE WHEN DATE(es.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) THEN 1 ELSE NULL END) 'y_serial_count',
+                COUNT(CASE WHEN DATE(es.create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) THEN 1 ELSE NULL END) 'y2_serial_count',
+                COUNT(CASE WHEN DATE(es.create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) THEN 1 ELSE NULL END) 'y3_serial_count',
+                COUNT(CASE WHEN DATE(es.create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) THEN 1 ELSE NULL END) 'y4_serial_count',
+                COUNT(CASE WHEN DATE(es.create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) THEN 1 ELSE NULL END) 'y5_serial_count',
+                COUNT(CASE WHEN DATE(es.create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) THEN 1 ELSE NULL END) 'y6_serial_count'
+            FROM
+                event_serial es
+            JOIN events e ON es.event_id=e.id
+            JOIN games g ON e.game_id=g.game_id
+            WHERE es.status=1
+                AND e.status=1
+                AND e.end_time>DATE_SUB(CURDATE(), INTERVAL 7 DAY)
+            GROUP BY e.game_id, es.event_id, e.event_name
+		");
         
+        return $query;
     }
 }
 
