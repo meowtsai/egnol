@@ -213,7 +213,64 @@ class Platform extends MY_Controller {
 			->add_breadcrumb("修改密碼")
 			->set("row", $row)
 			->render();
-	}		
+	}	
+	
+	function schedule()
+	{		
+		$this->zacl->check_login(true);
+		
+        $year = $this->input->get_post("year") ? $this->input->get_post("year") : "";
+        $month = $this->input->get_post("month") ? $this->input->get_post("month") : "";
+        
+        if (empty($year) || empty($month)) {
+            $year  = date("Y");
+            $month = date("m");
+            $prev_year  = date("Y", strtotime("-1 month"));
+            $prev_month = date("m", strtotime("-1 month"));
+            $next_year  = date("Y", strtotime("+1 month"));
+            $next_month = date("m", strtotime("+1 month"));
+        } else {
+            $set_date = strtotime($year.'-'.$month.'-1');
+            $prev_year  = date("Y", strtotime("-1 month", $set_date));
+            $prev_month = date("m", strtotime("-1 month", $set_date));
+            $next_year  = date("Y", strtotime("+1 month", $set_date));
+            $next_month = date("m", strtotime("+1 month", $set_date));
+        }
+        
+        ($year==date("Y") && $month==date("m"))?$day=date("y"):$day="";
+        
+		$bulletin_start = $this->DB2->select("*, DAY(start_time) 'day'")->where("YEAR(start_time)", $year)->where("MONTH(start_time)", $month)->get("bulletins");
+        
+		$bulletin_end = $this->DB2->select("*, DAY(end_time) 'day'")->where("YEAR(end_time)", $year)->where("MONTH(end_time)", $month)->get("bulletins");
+        
+		$event_start = $this->DB2->select("*, DAY(begin_time) 'day'")->where("YEAR(begin_time)", $year)->where("MONTH(begin_time)", $month)->get("events");
+        
+		$event_end = $this->DB2->select("*, DAY(end_time) 'day'")->where("YEAR(end_time)", $year)->where("MONTH(end_time)", $month)->get("events");
+        
+		$event_fullfill = $this->DB2->select("*, DAY(fulfill_time) 'day'")->where("YEAR(fulfill_time)", $year)->where("MONTH(fulfill_time)", $month)->get("events");
+        
+		$vip_start = $this->DB2->select("*, DAY(start_date) 'day'")->where("YEAR(start_date)", $year)->where("MONTH(start_date)", $month)->get("vip_events");
+        
+		$vip_end = $this->DB2->select("*, DAY(end_date) 'day'")->where("YEAR(end_date)", $year)->where("MONTH(end_date)", $month)->get("vip_events");
+        
+		$this->_init_layout()
+			->set("year", $year)
+			->set("month", $month)
+			->set("day", $day)
+			->set("prev_year", $prev_year)
+			->set("prev_month", $prev_month)
+			->set("next_year", $next_year)
+			->set("next_month", $next_month)
+			->set("bulletin_start", isset($bulletin_start) ? $bulletin_start : false)
+			->set("bulletin_end", isset($bulletin_end) ? $bulletin_end : false)
+			->set("event_start", isset($event_start) ? $event_start : false)
+			->set("event_end", isset($event_end) ? $event_end : false)
+			->set("event_fullfill", isset($event_fullfill) ? $event_fullfill : false)
+			->set("vip_start", isset($vip_start) ? $vip_start : false)
+			->set("vip_end", isset($vip_end) ? $vip_end : false)
+			->add_css_link('schedule')
+			->render("");
+	}	
 	
 }
 

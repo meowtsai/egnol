@@ -2,7 +2,7 @@
 	$channels = $this->config->item('channels'); 
 ?>
 <div id="func_bar">
-	
+	<a href="<?=site_url("platform/schedule")?>" class="btn btn-primary" role="button">行事曆</a>
 </div>
 
 <legend>龍邑平台帳號數據(即時)</legend>
