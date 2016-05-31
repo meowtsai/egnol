@@ -1,0 +1,10 @@
+table.calendar	{ border-left:1px solid rgb(212, 212, 212); }
+tr.calendar-row	{  }
+td.calendar-day	{ min-height:80px; font-size:11px; position:relative; vertical-align: top;} * html div.calendar-day { height:80px; }
+td.calendar-day:hover	{ background:#eceff5; vertical-align: top;}
+td.calendar-day-np	{ background:#eee; min-height:80px; } * html div.calendar-day-np { height:80px; }
+td.calendar-day-head { background:#eee; font-weight:bold; text-align:center; width:160px; padding:5px; border-bottom:1px solid rgb(212, 212, 212); border-top:1px solid rgb(212, 212, 212); border-right:1px solid rgb(212, 212, 212); }
+td.calendar-today	{ background:#FFE5DB;}
+div.day-number		{ background:rgb(212, 212, 212); padding:5px; font-weight:bold; float:right; margin:-5px -5px 0 0; width:20px; text-align:center; }
+/* shared */
+td.calendar-day, td.calendar-day-np { width:120px; padding:5px; border-bottom:1px solid rgb(212, 212, 212); border-right:1px solid rgb(212, 212, 212); }
