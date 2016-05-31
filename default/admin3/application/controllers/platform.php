@@ -237,7 +237,7 @@ class Platform extends MY_Controller {
             $next_month = date("m", strtotime("+1 month", $set_date));
         }
         
-        ($year==date("Y") && $month==date("m"))?$day=date("y"):$day="";
+        ($year==date("Y") && $month==date("m"))?$day=date("d"):$day="";
         
 		$bulletin_start = $this->DB2->select("*, DAY(start_time) 'day'")->where("YEAR(start_time)", $year)->where("MONTH(start_time)", $month)->get("bulletins");
         
