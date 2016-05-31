@@ -1,9 +1,16 @@
+<div id="header">
+<div class="header-ins">
+<div class="header-logo">
+<img src="https://game.longeplay.com.tw/p/image/header-logo.png" />
+</div>
+</div>
+</div>
 <div id="content-login">
-	<div class="login-ins">
+	<div class="login-ins" style="padding-top:10px;">
 		<form id="login_form" method="post" action="<?=$api_url?>api2/ui_login_json?site=<?=$site?>">
 			<input type="hidden" name="partner" value="<?=$partner?>">
 			<input type="hidden" name="game_key" value="<?=$game_key?>">
-			<div class="login-form">
+			<div class="login-form" style="padding-top:0px;">
 				<?if(isset($is_duplicate_login) && $is_duplicate_login):?>
 					<div class="notes"><b>★ 此帳號已於其他裝置進行遊戲中，請先將其登出。</b></div>
 				<?endif;?>
@@ -18,9 +25,14 @@
 
 				<div class="login-button">
 					<input name="doLogin" type="submit" id="doSubmit" value="" style="display:none;" />
+<? /*					
 					<p><a href="#" title="login"><img src="<?=$longe_url?>p/image/member/login-btn.png" onclick="javascript:$('#doSubmit').trigger('click')"></a></p>
 					<p><a href="<?=$api_url?>api2/ui_register?site=<?=$site?>" title="login">註冊帳號</a>&nbsp;│&nbsp;<a href="<?=$api_url?>api2/ui_forgot_password?site=<?=$site?>" title="login">忘記密碼</a></p>
 					<p><img id="login-btn-quick" src="<?=$longe_url?>p/image/member/play-btn.png" style="cursor:pointer;" parm1="<?=$device_id?>" parm2="<?=$site?>" /></p>
+*/ ?>
+					<p><img id="sign-in-btn" onclick="javascript:$('#doSubmit').trigger('click')" /></p>
+					<p><a href="<?=$api_url?>api2/ui_register?site=<?=$site?>" title="login">註冊帳號</a>&nbsp;│&nbsp;<a href="<?=$api_url?>api2/ui_forgot_password?site=<?=$site?>" title="login">忘記密碼</a></p>
+					<p><img id="login-btn-quick" parm1="<?=$device_id?>" parm2="<?=$site?>" /></p>
 				</div>
 
 				<div class="login-other">
@@ -31,12 +43,14 @@
 					{
 						if($channel['channel'] == "facebook")
 						{
-							echo "<img id='login-btn-facebook' style='cursor:pointer;margin:4px;' src='{$longe_url}p/image/member/login-btn-fb.png' />";
+							// echo "<img id='login-btn-facebook' style='cursor:pointer;margin:4px;' src='{$longe_url}p/image/member/login-btn-fb.png' />";
+							echo "<img id='login-btn-facebook' />";
 						}
 						else if($channel['channel'] == "google")
 						{
-							echo "<img id='login-btn-google' style='cursor:pointer;margin:4px;' src='{$longe_url}p/image/member/login-btn-google.png' ";
-							echo "parm=\"{$api_url}api2/ui_channel_login?site={$site}&channel={$channel['channel']}\" />";
+							// echo "<img id='login-btn-google' style='cursor:pointer;margin:4px;' src='{$longe_url}p/image/member/login-btn-google.png' ";
+							// echo "parm=\"{$api_url}api2/ui_channel_login?site={$site}&channel={$channel['channel']}\" />";
+							echo "<img id='login-btn-google' parm=\"{$api_url}api2/ui_channel_login?site={$site}&channel={$channel['channel']}\" />";
 						}
 					}
 				?>

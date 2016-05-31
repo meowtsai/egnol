@@ -10,10 +10,10 @@
 .login-ins .login-form{ max-width:600px; width:100%; margin:0 auto; padding-top:30px; display:inline-block;}
 
 
-.login-button {	margin-top: 30px; width: 100%; color: #333; padding-bottom:50px; text-align:center;}
+.login-button {	margin-top: 30px; width: 100%; color: #333; padding-bottom:10px; text-align:center;}
 .login-button p{ margin-bottom:10px;}
 
-.login-ins .login-other{ padding-top:30px; border-top: 1px solid #ccc; }
+.login-ins .login-other{ padding-top:14px; border-top: 1px solid #ccc; }
 .login-ins .login-other img:nth-of-type(1){ margin-right:10px;}
 
 
@@ -79,11 +79,11 @@
 
 
 #sign-in-btn {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn.png);}
-#_login-btn-quick {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/play-btn.png);}
-#_login-btn-facebook {margin:4px;display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn-fb.png);}
-#_login-btn-google {margin:4px;display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn-google.png);}
+#login-btn-quick {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/play-btn.png);}
+#login-btn-facebook {margin:4px 2px;display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn-fb.png);}
+#login-btn-google {margin:4px 2px;display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn-google.png);}
 
-#_continue {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/enter.png);}
+._continue {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/enter.png);}
 #_change-account-btn {display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/change-account.png);}
 #_change-pwd-btn {display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/password.png);}
 #_bind-account-btn {display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/id.png);}
@@ -93,11 +93,11 @@
 	only screen and (min-resolution: 220dpi)
 {
 #sign-in-btn {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn@2x.png);background-size: contain;}
-#_login-btn-quick {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/play-btn@2x.png);background-size: contain;}
-#_login-btn-facebook {margin:4px;display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn-fb@2x.png);background-size: contain;}
-#_login-btn-google {margin:4px;display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn-google@2x.png);background-size: contain;}
+#login-btn-quick {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/play-btn@2x.png);background-size: contain;}
+#login-btn-facebook {margin:4px 2px;display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn-fb@2x.png);background-size: contain;}
+#login-btn-google {margin:4px 2px;display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn-google@2x.png);background-size: contain;}
 	
-#_continue {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/enter@2x.png);background-size: contain;}
+._continue {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/enter@2x.png);background-size: contain;}
 #_change-account-btn {display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/change-account@2x.png);background-size: contain;}
 #_change-pwd-btn {display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/password@2x.png);background-size: contain;}
 #_bind-account-btn {display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/id@2x.png);background-size: contain;}

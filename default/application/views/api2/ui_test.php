@@ -1,7 +1,7 @@
 <div id="header">
 <div class="header-ins">
 <div class="header-logo">
-<img src="https://r2g.longeplay.com.tw/p/image/header-logo.png" />
+<img src="https://game.longeplay.com.tw/p/image/header-logo.png" />
 </div>
 </div>
 </div>
