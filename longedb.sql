@@ -1150,3 +1150,13 @@ CREATE TABLE `bulletins` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `title_UNIQUE` (`title`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `iap_receipt`
+--
+CREATE TABLE `iap_receipts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_billing_id` int(11) NOT NULL,
+  `receipt` text NOT NULL,
+  PRIMARY KEY (`id`),
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
