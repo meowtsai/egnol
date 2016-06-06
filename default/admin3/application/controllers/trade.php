@@ -82,7 +82,7 @@ class Trade extends MY_Controller {
 			$this->input->get("id") && $this->DB2->where("ub.id", $this->input->get("id"));
 			$this->input->get("uid") && $this->DB2->where("ub.uid", $this->input->get("uid"));
 			$this->input->get("euid") && $this->DB2->where("ub.uid", $this->g_user->decode($this->input->get("euid")));
-			$this->input->get("order_no") && $this->DB2->where("ub.order_no", $this->input->get("order"));
+			$this->input->get("order_no") && $this->DB2->where("ub.order_no", $this->input->get("order_no"));
 			$this->input->get("game") && $this->DB2->where("g.game_id", $this->input->get("game"));
 			$this->input->get("server") && $this->DB2->where("gi.server_id", $this->input->get("server"));
 			$this->input->get("result") && $this->DB2->where("ub.result", substr($this->input->get("result"),1));
