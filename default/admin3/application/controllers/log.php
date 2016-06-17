@@ -308,9 +308,9 @@ class Log extends MY_Controller {
 					$this->DB2->_protect_identifiers = FALSE;
 					$this->DB2->group_by("LEFT(lgl.create_time, {$len})");
 					$this->DB2->_protect_identifiers = TRUE;
-				}				
+				}		
 				
-				$this->DB2->select_max("lgl.id")->get();
+				$this->DB2->select_max("lgl.id", "id")->get();
 				$sql = $this->DB2->last_query();
 				
 				$this->DB2->start_cache();

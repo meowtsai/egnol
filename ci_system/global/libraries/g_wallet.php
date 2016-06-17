@@ -120,7 +120,7 @@ WHERE x.uid={$uid}";
     		->update("user_billing", $data);
     }
     
-    function produce_mycard_order($uid, $mycard_billing_id, $transaction_type, $amount)
+    function produce_mycard_order($uid, $mycard_billing_id, $transaction_type, $amount, $character_id, $result='1', $server_id='')
 	{	
 		if ( ! in_array($transaction_type, array("mycard_ingame", "mycard_billing"))) return $this->_return_error("transaction_type 錯誤");
 		$cnt = $this->CI->db->from("user_billing")->where("mycard_billing_id", $mycard_billing_id)->where("result", "1")->count_all_results();
@@ -135,8 +135,10 @@ WHERE x.uid={$uid}";
     			'billing_type'	=> '1',
     			'amount' 		=> $amount,
     			'ip'		 	=> $_SERVER['REMOTE_ADDR'],
-    			'result'		=> '1',
+    			'result'		=> $result,
     			'mycard_billing_id' => $mycard_billing_id,
+				'server_id'    => $server_id,
+				'character_id'  => $character_id,
 				'country_code'  => $country_code,
     		);
     	

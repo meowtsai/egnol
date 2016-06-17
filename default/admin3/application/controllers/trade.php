@@ -382,13 +382,13 @@ class Trade extends MY_Controller {
 			$this->input->get("trade_seq") && $this->DB2->where("mb.trade_seq", $this->input->get("trade_seq"));
 			$this->input->get("mycard_trade_seq") && $this->DB2->where("mb.mycard_trade_seq", $this->input->get("mycard_trade_seq"));
 			$this->input->get("mycard_card_id") && $this->DB2->where("mb.mycard_card_id", $this->input->get("mycard_card_id"));
-			$this->input->get("trade_ok") && $this->DB2->where("mb.trade_ok", substr($this->input->get("trade_ok"),1));
+			$this->input->get("result") && $this->DB2->where("mb.result", $this->input->get("result"));
 			
 			$this->DB2
 				->select("mb.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name")
 				->select("coalesce(trade_code, mycard_trade_seq) as mycard_key", false)
 				->from("mycard_billing mb")
-				->join("servers gi", "gi.server_id=gb.server_id", "left")
+				->join("servers gi", "gi.server_id=mb.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
 				->join("users u", "u.uid=mb.uid", "left");
 									
@@ -459,7 +459,7 @@ class Trade extends MY_Controller {
 							}
 						}
 						$mycard_trade_seq = empty($row->trade_code) ? $row->mycard_trade_seq : $row->trade_code;
-						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$trade_channel},\"{$row->trade_seq}\",{$mycard_trade_seq},{$row->mycard_card_id},".strtr($row->product_code, array("long_e"=>"")).",".($row->trade_ok=='1' ? '成功' : '失敗').",{$row->note},{$row->partner_order_id},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
+						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$trade_channel},\"{$row->trade_seq}\",{$mycard_trade_seq},{$row->mycard_card_id},".strtr($row->item_code, array("long_e"=>"")).",".($row->result=='1' ? '成功' : '失敗').",{$row->note},{$row->partner_order_id},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
 					}
 					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
 					exit();						
@@ -1088,7 +1088,7 @@ class Trade extends MY_Controller {
 			header("Cache-Control: private");		
 		
 			$this->DB2->from("mycard_billing mb")
-				->where("trade_ok", "1")
+				->where("result", "1")
 				->where("mb.uid not in (select uid from testaccounts)")	
 				->join("users u", "u.uid=mb.uid", "left");				
 									
@@ -1111,7 +1111,7 @@ class Trade extends MY_Controller {
 			{						
 				case "交易管道統計":
 									
-					$query = $this->DB2->select("mid(coalesce(trade_code, mycard_trade_seq),1,3) title, sum(REPLACE(mb.product_code,'long_e','')) cnt", false)
+					$query = $this->DB2->select("payment_type, sum(amount) cnt", false)
 						->group_by("title")
 						->order_by("cnt desc")->get();					
 					break;
@@ -1124,7 +1124,7 @@ class Trade extends MY_Controller {
 						case 'year': $len=4; break;
 						default: $len=10;
 					}
-					$query = $this->DB2->select("LEFT(mb.create_time, {$len}) title, sum(REPLACE(mb.product_code,'long_e','')) cnt", false)
+					$query = $this->DB2->select("LEFT(mb.create_time, {$len}) title, sum(REPLACE(mb.item_code,'long_e','')) cnt", false)
 						->group_by("title")
 						->order_by("title desc")->get();
 					break;
@@ -1527,7 +1527,7 @@ class Trade extends MY_Controller {
 					
 					if ($billing)
 					{
-						if (strpos($billing->product_code, "long_e") !== false) {
+						if (strpos($billing->item_code, "long_e") !== false) {
 							$result = $this->g_mycard->query_billing($billing->auth_code);
 							$result->type = 'billing'; 
 						}								

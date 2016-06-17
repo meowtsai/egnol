@@ -171,15 +171,20 @@ CREATE TABLE `mycard_billing` (
   `uid` int(10) unsigned NOT NULL,
   `auth_code` varchar(300) DEFAULT NULL,
   `trade_code` varchar(255) DEFAULT NULL,
+  `payment_type` varchar(20) DEFAULT NULL,
+  `trade_type` tinyint(1) NOT NULL DEFAULT '0',
   `mycard_type` tinyint(1) DEFAULT NULL,
   `mycard_card_id` varchar(255) DEFAULT NULL,
   `mycard_pwd` varchar(255) DEFAULT NULL,
   `game_id` tinyint(3) DEFAULT NULL,
   `payment_id` varchar(30) DEFAULT NULL,
   `trade_seq` varchar(20) NOT NULL,
-  `product_code` varchar(15) DEFAULT NULL,
+  `mycard_trade_seq` varchar(255) DEFAULT NULL,
+  `fac_trade_seq` varchar(20) DEFAULT NULL,
+  `item_code` varchar(20) DEFAULT NULL,
   `status` tinyint(3) NOT NULL,
-  `trade_ok` tinyint(1) NOT NULL DEFAULT '0',
+  `result` tinyint(1) NOT NULL DEFAULT '0',
+  `currency` varchar(4) DEFAULT NULL,
   `is_confirm` tinyint(1) NOT NULL DEFAULT '0',
   `cash_out` tinyint(1) NOT NULL DEFAULT '0',
   `cash_out_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
@@ -187,14 +192,12 @@ CREATE TABLE `mycard_billing` (
   `create_time` datetime NOT NULL,
   `note` tinytext,
   `plug` tinyint(1) NOT NULL DEFAULT '1',
-  `quantity` int(10) NOT NULL DEFAULT '0',
-  `mycard_trade_seq` varchar(255) DEFAULT NULL,
-  `trade_type` tinyint(1) NOT NULL DEFAULT '0',
-  `server_id` int(11) DEFAULT NULL,
+  `amount` int(10) NOT NULL DEFAULT '0',
+  `server_id` varchar(20) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `trade_seq` (`trade_seq`),
+  UNIQUE KEY `mycard_trade_seq` (`mycard_trade_seq`),
   KEY `uid` (`uid`)
-) ENGINE=InnoDB AUTO_INCREMENT=365091 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
