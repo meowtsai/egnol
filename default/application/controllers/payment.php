@@ -16,7 +16,7 @@ class Payment extends MY_Controller
 		$_SESSION['site'] = $site;
 
 		$this->load->config("g_gash");
-		$this->load->config("g_payment");
+		$this->load->config("g_payment_gash");
 
 		// 讀取遊戲列表
 		$games = $this->db->from("games")->where("is_active", "1")->get();
@@ -44,7 +44,7 @@ class Payment extends MY_Controller
 		$_SESSION['site'] = $site;
 
 		$this->load->config("g_mycard");
-		$this->load->config("g_payment");
+		$this->load->config("g_payment_mycard");
 
 		// 讀取遊戲列表
 		$games = $this->db->from("games")->where("is_active", "1")->get();
@@ -230,7 +230,7 @@ class Payment extends MY_Controller
 	
 	function update_payment_disable_list()
 	{
-        $this->load->config("g_payment");
+        $this->load->config("g_payment_gash");
 		
 		if ($this->input->post('disable_list') && $this->input->ip_address()==$this->config->item("payment_backend_ip")) 
 		{

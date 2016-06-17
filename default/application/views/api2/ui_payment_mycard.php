@@ -1,5 +1,6 @@
 <?
-	$mycard_conf = $this->config->item("mycard");
+	$gash_conf = $this->config->item("mycard");
+	
 	$options = $this->config->item("payment_options");
 	
 // 判斷是否為行動裝置, 電腦版才要顯示 QR Code
@@ -28,26 +29,30 @@ $currency_array = array(
 );
     
 $filename = "./p/payment_disable_list";
-
-if (file_exists($filename)) {
-    $handle = fopen($filename, "r");
-    $payment_disable_list = fread($handle, filesize($filename));
-    $payment_disable_array = explode(",", $payment_disable_list);
-    fclose($handle);
-} else {
-    $payment_disable_array = array();
-}
+$handle = fopen($filename, "r");
+$payment_disable_list = fread($handle, filesize($filename));
+$payment_disable_array = explode(",", $payment_disable_list);
+fclose($handle);
 ?>
 
 <script type="text/javascript">
-var mycard_amount = ['<?= implode("','", $mycard_conf["amount"])?>'];
+var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
+function cancelButton () {
+	if (typeof LongeAPI != 'undefined') { 
+        LongeAPI.onPaymentCancel();  
+    } else {
+        //window.location = "ios://cancelbutton";
+		var iframe = document.createElement('IFRAME');
+		iframe.setAttribute('src', "ios://cancelbutton");
+		document.documentElement.appendChild(iframe);
+		iframe.parentNode.removeChild(iframe);
+		iframe = null;
+	}
+}
 </script>
 
 <div id="content-login">
 	<div class="login-ins">
-		<div class="bread cf" typeof="v:Breadcrumb">
-			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>payment?site=<?=$site?>" title="儲值中心" rel="v:url" property="v:title">儲值中心</a>
-		</div>
 		<form id="choose_form" class="choose_form" method="post" action="">
 			<input type="hidden" name="cuid">
 
@@ -57,7 +62,8 @@ var mycard_amount = ['<?= implode("','", $mycard_conf["amount"])?>'];
             
 			<input type="hidden" name="amount">
 
-			<input type="hidden" name="api_call" value="false" />
+			<input type="hidden" name="partner_order_id" value="<?=$partner_order_id?>" />
+			<input type="hidden" name="api_call" value="true" />
 
 			<div class="login-form">
 				<table class="member_info">
@@ -79,9 +85,10 @@ var mycard_amount = ['<?= implode("','", $mycard_conf["amount"])?>'];
 							<select name="server" class="required" style="width:85%;">
 								<option value="">--請先選擇伺服器--</option>
 							</select>
+
 							<select id="server_pool" style="display:none;">
 								<? foreach($servers->result() as $row):
-								if ( IN_OFFICE == false && (in_array($row->server_status, array("private", "hide")) || intval($row->is_transaction_active) != 1)) continue;?>
+//								if ( IN_OFFICE == false && in_array($row->server_status, array("private", "hide"))) continue;?>
 								<option value="<?=$row->server_id?>" <?=($this->input->get("server")==$row->server_id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?></option>
 								<? endforeach;?>
 							</select>
@@ -161,7 +168,7 @@ var mycard_amount = ['<?= implode("','", $mycard_conf["amount"])?>'];
 									
 									if(($key =='TWD' && !isset($arr2['trade']['cuid'])) || $key == $arr2['trade']['cuid']):
 								?>
-								<option value="<?=$opt?>" name="channel" class="currency" maximum="<?=$arr2['maximum']?>" minimum="<?=$arr2['minimum']?>" <?=$attr_str?>><?=$opt?></option>
+								<option value="<?=$opt?>" name="gash_channel" class="gash_option currency" maximum="<?=$arr2['maximum']?>" minimum="<?=$arr2['minimum']?>" <?=$attr_str?>><?=$opt?></option>
 								<? endif;
 								endforeach;?>
 							</select>
@@ -187,7 +194,8 @@ var mycard_amount = ['<?= implode("','", $mycard_conf["amount"])?>'];
 
 				<div class="login-button">
 					<input name="doSubmit" type="submit" id="doSubmit" value="" style="display:none;" />
-                    <img style="cursor:pointer;" src="<?=$longe_url?>p/image/money/confirm-btn.png" onclick="javascript:$('#doSubmit').trigger('click')" />
+                    <p><img style="cursor:pointer;" src="<?=$longe_url?>p/image/money/confirm-btn.png" onclick="javascript:$('#doSubmit').trigger('click')" /></p>
+					<p><img style="cursor:pointer;" src="<?=$longe_url?>p/image/member/clear.png" onclick="javascript:cancelButton();" /></p>
 				</div>
 
 				<ul class="notes">

@@ -111,7 +111,7 @@ class Gash extends MY_Controller {
         $gash_billing_id = $this->db->insert_id();
         
 		$this->load->library("g_wallet");
-		$order_id = $this->g_wallet->produce_gash_order($this->g_user->uid, $gash_billing_id, $trans->nodes["AMOUNT"], $_SESSION['payment_character'], $this->_make_trade_seq(), $_SESSION['payment_partner_order_id'], "0", $_SESSION['payment_server']);
+		$order_id = $this->g_wallet->produce_gash_order($this->g_user->uid, $gash_billing_id, $trans->nodes["AMOUNT"], $_SESSION['payment_character'], $trans->nodes["COID"], $_SESSION['payment_partner_order_id'], "0", $_SESSION['payment_server']);
 		if (empty($order_id)) go_payment_result(0, 0, $money, $this->g_wallet->error_message);
         
 		print_r($trans->nodes);
