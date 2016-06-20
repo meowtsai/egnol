@@ -834,7 +834,7 @@ class Api2 extends MY_Controller
 		}
 
 		$this->load->config("g_gash");
-		$this->load->config("g_payment");
+		$this->load->config("g_payment_gash");
 
 		// 讀取遊戲列表
 		$games = $this->db->from("games")->where("is_active", "1")->get();
@@ -855,6 +855,75 @@ class Api2 extends MY_Controller
 			->add_css_link("login_api")
 			->add_css_link("money")
 			->add_js_include("payment/index")
+			->api_view();
+	}
+
+	// 點數儲值
+	function ui_payment_mycard()
+	{
+		$site = $this->_get_site();
+		$server_id = $this->input->get_post("serverid");
+		$partner_order_id = $this->input->get_post("poid");
+		
+		$_SESSION['site'] = $site;
+			
+		if(!$this->g_user->is_login())
+		{
+			if(!empty($this->input->get_post("pcode")))
+			{
+				// 免輸入登入機制(Session 失效時使用)
+				$partner		= $this->input->get_post("partner");
+				$email			= $this->input->get_post("email");
+				$mobile			= $this->input->get_post("mobile");
+				$device_id		= $this->input->get_post("deviceid");
+				$external_id	= $this->input->get_post("externalid");
+				$pcode			= $this->input->get_post("pcode");
+				/*
+				$this->load->config("api");
+				$partner_conf = $this->config->item("partner_api");
+				if(!array_key_exists($partner, $partner_conf))
+				{
+					die();
+				}
+				if(!array_key_exists($site, $partner_conf[$partner]["sites"]))
+				{
+					die();
+				}
+				$partner_game = $partner_conf[$partner]["sites"][$site];
+
+				//$chk_code = md5($partner.$email.$server_id.$mobile.$partner_game['key'].$device_id);
+				//if($chk_code != $pcode)
+				//	die();
+				*/
+				if($this->g_user->verify_account($email, $mobile, '', $external_id) != true)
+					die();
+			}
+			else
+				$this->_require_login();
+		}
+
+		$this->load->config("g_mycard");
+		$this->load->config("g_payment_mycard");
+
+		// 讀取遊戲列表
+		$games = $this->db->from("games")->where("is_active", "1")->get();
+		// 讀取伺服器列表
+		if(IN_OFFICE)
+			$servers = $this->db->where("is_transaction_active", "1")->order_by("server_id")->get("servers");
+		else
+			$servers = $this->db->where_in("server_status", array("public", "maintaining"))->where("is_transaction_active", "1")->order_by("server_id")->get("servers");
+		// 讀取玩家角色列表
+		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();
+
+		$this->_init_layout()
+			->set("games", $games)
+			->set("servers", $servers)
+			->set("server_id", $server_id)
+			->set("characters", $characters)
+			->set("partner_order_id", $partner_order_id)
+			->add_css_link("login_api")
+			->add_css_link("money")
+			->add_js_include("payment/index2")
 			->api_view();
 	}
 

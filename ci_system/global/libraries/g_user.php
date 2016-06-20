@@ -74,12 +74,12 @@ class G_User
 		{
 			if (empty($redirect_url))
 			{
-				$redirect_url = 'https://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+				$redirect_url = base_url().ltrim($_SERVER['REQUEST_URI'], "\/");
 			}
 			header("Content-type: text/html; charset=utf-8");
 			echo "<script type='text/javascript'>
 					alert('請先進行登入');
-					top.location.href='https://{$_SERVER['HTTP_HOST']}/member/login?site={$site}&redirect_url=".urlencode($redirect_url)."';
+					top.location.href='".base_url()."member/login?site={$site}&redirect_url=".urlencode($redirect_url)."';
 					</script>";
 			exit();
 		}

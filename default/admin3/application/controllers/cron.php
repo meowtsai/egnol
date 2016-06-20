@@ -34,15 +34,18 @@ class Cron extends CI_Controller {
 		
         switch($span) {
 			case "weekly":
-				$save_table = "weekly_statistics";
+				$save_table1 = "weekly_user_statistics";
+				$save_table2 = "weekly_operation_statistics";
 				break;
 			
 			case "monthly":
-				$save_table = "monthly_statistics";
+				$save_table1 = "monthly_user_statistics";
+				$save_table2 = "monthly_operation_statistics";
 				break;
 				
 			default:
-				$save_table = "statistics";
+				$save_table1 = "user_statistics";
+				$save_table2 = "operation_statistics";
 				break;
 		}
 
@@ -51,7 +54,7 @@ class Cron extends CI_Controller {
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
 				
-                $query2 = $this->DB2->from($save_table)->where("game_id", $row->game_id)->limit(1)->get();
+                $query2 = $this->DB2->from($save_table1)->where("game_id", $row->game_id)->limit(1)->get();
 
 		        if ($query2->num_rows() > 0) {
 					
@@ -60,7 +63,8 @@ class Cron extends CI_Controller {
 			            'date' => $date
 			        );
 			
-			        $this->save_statistics($data, $save_table);
+			        $this->save_statistics($data, $save_table1);
+			        $this->save_statistics($data, $save_table2);
 					
 		        } elseif($span=="daily") {
 					
@@ -71,7 +75,8 @@ class Cron extends CI_Controller {
 				            'date' => $i
 			            );
 			
-			            $this->save_statistics($data2, $save_table);
+			            $this->save_statistics($data2, $save_table1);
+			            $this->save_statistics($data2, $save_table2);
 		            }
 		        }
 		    }
@@ -113,7 +118,7 @@ class Cron extends CI_Controller {
         switch($span) {
 			case "weekly":
 			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND WEEKOFYEAR(create_time) = WEEKOFYEAR('{$date}')";
-				$save_table = "weekly_statistics";
+				$save_table = "weekly_user_statistics";
                 $span_select= "
                     COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'new_login_facebook_count',
                     COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%google' THEN 1 ELSE NULL END) 'new_login_google_count',
@@ -127,7 +132,7 @@ class Cron extends CI_Controller {
 			
 			case "monthly":
 			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}')";
-				$save_table = "monthly_statistics";
+				$save_table = "monthly_user_statistics";
                 $span_select= "
                     COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'new_login_facebook_count',
                     COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%google' THEN 1 ELSE NULL END) 'new_login_google_count',
@@ -141,7 +146,7 @@ class Cron extends CI_Controller {
 				
 			default:
 				$span_query = "DATE(create_time) = '{$date}'";
-				$save_table = "statistics";
+				$save_table = "user_statistics";
                 $span_select= "
                     COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'new_login_facebook_count',
                     COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%google' THEN 1 ELSE NULL END) 'new_login_google_count',
@@ -282,17 +287,17 @@ class Cron extends CI_Controller {
         switch($span) {
 			case "weekly":
 			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND WEEKOFYEAR(create_time) = WEEKOFYEAR('{$date}')";
-				$save_table = "weekly_statistics";
+				$save_table = "weekly_user_statistics";
 				break;
 			
 			case "monthly":
 			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}')";
-				$save_table = "monthly_statistics";
+				$save_table = "monthly_user_statistics";
 				break;
 				
 			default:
 				$span_query = "DATE(create_time) = '{$date}'";
-				$save_table = "statistics";
+				$save_table = "user_statistics";
 				break;
 		}
             
@@ -407,7 +412,7 @@ class Cron extends CI_Controller {
 								AND '".date("Y-m-d", strtotime($date))." 23:59:59'";
 				$span_query2 = "create_time BETWEEN '".date("Y-m-d", strtotime("+1 day", strtotime($date)))."'
 								AND '".date("Y-m-d", strtotime("+7 days", strtotime($date)))." 23:59:59'";
-				$save_table = "weekly_statistics";
+				$save_table = "weekly_operation_statistics";
 				break;
 			
 			case "monthly":
@@ -415,13 +420,13 @@ class Cron extends CI_Controller {
 								AND '".date("Y-m-t", strtotime($date))." 23:59:59'";
 				$span_query2 = "create_time BETWEEN '".date("Y-m", strtotime("+1 day", strtotime($date)))."-01'
 								AND '".date("Y-m-t", strtotime("+1 day", strtotime($date)))." 23:59:59'";
-				$save_table = "monthly_statistics";
+				$save_table = "monthly_operation_statistics";
 				break;
 				
 			default:
 			    $span_query1 = "DATE(create_time) = '{$date}'";
 			    $span_query2 = " DATE(create_time) = DATE_ADD(DATE('{$date}'), INTERVAL {$interval} DAY)";
-				$save_table = "statistics";
+				$save_table = "operation_statistics";
 				break;
 		}
         
@@ -561,7 +566,7 @@ class Cron extends CI_Controller {
                 $date_2_week_ago=date("Y-m-d",strtotime("-2 week", strtotime($date)));
                 $span_query2 = "create_time <= DATE('{$date_1_week_ago}') AND create_time > DATE('{$date_2_week_ago}')";
 				$span_query3 = "DATE(l.create_time) <= DATE('{$date_2_week_ago}')";
-				$save_table = "weekly_statistics";
+				$save_table = "weekly_operation_statistics";
 				break;
 			
 			case "monthly":
@@ -572,7 +577,7 @@ class Cron extends CI_Controller {
                 $date_2_month_ago=date("Y-m-t",strtotime("-62 days", strtotime($date)));
                 $span_query2 = "create_time <= DATE('{$date_1_month_ago}') AND create_time > DATE('{$date_2_month_ago}')";
 			    $span_query3 = "DATE(l.create_time) <= DATE('{$date_2_month_ago}')";
-				$save_table = "monthly_statistics";
+				$save_table = "monthly_operation_statistics";
 				break;
 				
 			default:
@@ -589,7 +594,7 @@ class Cron extends CI_Controller {
 						break;
 				}
 				$span_query1 = "DATE(l.create_time) = '{$date}'";
-				$save_table = "statistics";
+				$save_table = "operation_statistics";
 				break;
 		}
 		
@@ -780,19 +785,19 @@ class Cron extends CI_Controller {
 			case "weekly":
 			    $span_query1 = "YEAR(lgl.create_time) = YEAR(ub.create_time) AND WEEKOFYEAR(lgl.create_time) = WEEKOFYEAR(ub.create_time)";
 			    $span_query2 = "YEAR(ub.create_time) = YEAR('{$date}') AND WEEKOFYEAR(ub.create_time) = WEEKOFYEAR('{$date}')";
-				$save_table = "weekly_statistics";
+				$save_table = "weekly_user_statistics";
 				break;
 			
 			case "monthly":
 			    $span_query1 = "YEAR(lgl.create_time)=YEAR(ub.create_time) AND MONTH(lgl.create_time)=MONTH(ub.create_time)";
 			    $span_query2 = "YEAR(ub.create_time) = YEAR('{$date}') AND MONTH(ub.create_time) = MONTH('{$date}')";
-				$save_table = "monthly_statistics";
+				$save_table = "monthly_user_statistics";
 				break;
 				
 			default:
 				$span_query1 = "DATE(lgl.create_time)=DATE(ub.create_time)";
 				$span_query2 = "DATE(ub.create_time) = '{$date}'";
-				$save_table = "statistics";
+				$save_table = "user_statistics";
 				break;
 		}
 		
@@ -1493,14 +1498,14 @@ class Cron extends CI_Controller {
 						$update_field => $row->life_time_value
 			        );
 				
-					$this->save_statistics($data);
+					$this->save_statistics($data, "operation_statistics");
 			    }
 		    }
 		}
 		echo "generate_new_user_".$interval."_lifetime_value_statistics done - ".$date.PHP_EOL;
 	}
 	
-	function save_statistics($data, $save_table="statistics") {
+	function save_statistics($data, $save_table="user_statistics") {
 		
         if ($save_table=='marketing_statistics') $this->DB2->where("platform", $data['platform'])->where("country_code", $data['country_code'])->where("media", $data['media']);
 		$statistics = $this->DB2->where("game_id", $data['game_id'])->where("date", $data['date'])->get($save_table);

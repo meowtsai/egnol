@@ -1,148 +1,199 @@
-$(function(){
-    
+var type='';
+
+$(function()
+{
 	var validation_option = {
 		onfocusout: false,
 		onkeyup: false,
 		onclick: false,
 		messages: {
 			game: "尚未選擇遊戲",
-			server: "尚未選擇伺服器"
+			server: "尚未選擇伺服器",
+			character: "尚未選擇角色",
+			billing_type: "尚未選擇儲值方式",
+			billing_channel: "尚未選擇支付管道",
+			billing_money: "尚未選擇儲值金額"
 		},
-		showErrors: function(errorMap, errorList) {
+		showErrors: function(errorMap, errorList)
+		{
 		   var err = '';
-		   $(errorList).each(function(i, v){
-			   err += v.message + "\n";
+		   $(errorList).each(function(i, v)
+		   {
+			   err += v.message + "<br/>";
 		   });
-		   if (err) alert(err);
-		}				
+		   if (err)
+		   {
+				leOpenDialog('儲值錯誤', err, leDialogType.MESSAGE);
+			}
+		}
 	 }
-	
-    $("#choose_form").validate(validation_option);    
-    $("#choose_other_form").validate(validation_option);
-    $("#mycard_ingame_form").validate(validation_option); 
-    
+
+    $("#choose_form").validate(validation_option);
+
 	var server_pool = $("#server_pool");
-	var game = $("select[name='game']");	
-	game.on('change', function(){
-		
-		if (game.val() == 'ry') {
-			var arr = ['50', '500', '1000', '5000', '10000'];
-			$(".amount_block label").each(function() {
-				if ($.inArray($(this).find("input").val(), arr) === -1) {
-					$(this).hide();
-				};
-			});
-			$('.amount_block input').eq(3).click();
-		}
-		else {
-			$(".amount_block label").show();
-		}
-		
+	var game = $("select[name='game']");
+	game.on('change', function()
+	{
 		var server = $(this).parents("form").find("select[name='server']");
-		server.empty().append("<option value=''>--請選擇--</option>");
-		if (typeof $(this).val() !== 'undefined' && $(this).val() !== '') {
+		server.empty().append("<option value=''>--請選擇伺服器--</option>");
+		if (typeof $(this).val() !== 'undefined' && $(this).val() !== '')
+		{
 			server_pool.find("option."+$(this).val()).clone().appendTo(server);
 		}
-		update_gain_tip(this);
+
+		var character = $(this).parents("form").find("select[name='character']");
+		character.empty().append("<option value=''>--請選擇角色--</option>");
+
+        var option = $("option:selected", this);
+		var pay_msg = $('#payment_msg');
+		if(typeof option.attr('rate') !== typeof undefined && option.attr('rate') !== false)
+		{
+			var exchange_rate = parseFloat(option.attr('rate'));
+			var msg_html = '『' + option.html() + '』台幣兌換遊戲中『' + option.attr('goldname') + '』比值為 <span style="color:#c00">1:' + exchange_rate;
+
+			msg_html += '</span>。<br />(每 <span style="color:#c00">100</span> 台幣可獲得 <span style="color:#c00">' + (exchange_rate * 100) + '</span> ' + option.attr('goldname') + ')';
+			msg_html += '<br />儲值成功後，重新登入遊戲即可獲得' + option.attr('goldname') + '。';
+
+			pay_msg.html(msg_html);
+		}
+		else
+			pay_msg.html('請先選擇遊戲。');
 	});
 	game.trigger("change");
-	
-	$("input[name='type']").on("change", function(event){
-		var frm = $(this).parents("form:first");
-		if ($(this).val() == 'game') {
-			frm.find(".game_option").show();
-		} else frm.find(".game_option").hide();
-		update_gain_tip(this);
+
+	var character_pool = $("#character_pool");
+	$("select[name='server']").on('change', function()
+	{
+		var character = $(this).parents("form").find("select[name='character']");
+		character.empty().append("<option value=''>--請選擇角色--</option>");
+		if (typeof $(this).val() !== 'undefined' && $(this).val() !== '')
+		{
+			character_pool.find("option."+$(this).val()).clone().appendTo(character);
+		}
 	});
-	
-    $("input[name='gash_channel']").on("click", function(event){
+
+    $("select[name='billing_type']").on("change", function ()
+	{
+        var option = $("option:selected", this);
+
+		$('#choose_form .amount_row').hide();
+		$('#choose_form .amount_block').html('');
+
+		if(option.val() == "")
+		{
+			$('#pay_type_block').hide();
+			return;
+		}
+
+		if(option.attr("pay_type") == "")
+		{
+			$("#pay_type_block").hide();
+		}
+		else
+		{
+            var currency = $("select[name='currency']").val();
+			
+			$("#pay_type_block").show();
+			$(".pay_type").hide();
+			$(".pay_type option").prop("selected", false);
+			$(".pay_type_" + option.attr("pay_type") + "." + currency).show();
+			
+			return;
+		}
+
+        onBillingOptionSelected($("option:selected", this));
+	});
+
+    $("select[name='currency']").on("change", function ()
+	{
+		$('#pay_type_block').hide();
+		
+        var currency = $("select[name='currency']").val();
+		$(".billing_type").show();
+		$(".billing_type option").prop("selected", false);
+		$(".billing_type").not("." + currency).hide();
+		
+		return;
+	});
+
+    $("select[name='billing_channel']").on("change", function ()
+	{
+        var option = $("option:selected", this);
+
+		if(option.val() == "")
+			return;
+
+        onBillingOptionSelected($("option:selected", this));
+	});
+
+    $("select[name='billing_money']").on("change", function ()
+	{
+    	$("input[name='amount']").val($("option:selected", this).val());
+		
+		return;
+	});
+
+	function onBillingOptionSelected(opt)
+	{
 		var html = '';
-		var $this = $(this);
-		$.each(gash_amount, function(key,val){			
-			var amount = (val*($this.attr("convert_rate")*1000)/1000);
-			//if ($this.attr("CUID") == 'IDR' && amount > 964800) return;
-			if ($this.attr("CUID") == 'IDR' && amount > 46000) return;
-			else if ($this.attr("CUID") == 'PHP' && amount > 4070) return;
-			else if ($this.attr("CUID") == 'THB' && amount > 2980) return;
-			//else if ($this.attr("CUID") == 'VND' && amount > 2082500) return;
-			else if ($this.attr("CUID") == 'VND' && amount > 88000) return;
-			else if ($this.attr("CUID") == 'MYR' && amount > 305) return;
-			else if ($this.attr("CUID") == 'KRW' && amount > 106650) return;
-			html += '<label><input type="radio" name="payment_amount" class="required" value="'+amount+'" >'+amount+'</label><br> ';
-		});		
-		if ($this.attr("PAID") !== 'COPGAM02') {
-			$('#choose_other_form .amount_row').show();
-			$('#choose_other_form .amount_block').html(html);
-			$('#choose_other_form .amount_block input').eq(3).click();
+
+		$.each(mycard_amount, function(key, val)
+		{
+			//if (eval(val) > opt.attr("maximum")) return;
+			//if (eval(val) < opt.attr("minimum")) return;
+
+			var amount = (val*(opt.attr("convert_rate")*1000)/1000);
+			//if (opt.attr("CUID") == 'IDR' && amount > 964800) return;
+
+			html += '<option name="payment_amount" value="'+amount+'" nt='+val+' >'+amount+'</option> ';
+		});
+
+		if (opt.attr("paid") == 'INGAME')
+		{
+			$('#choose_form .amount_row').hide();
+            
+    	    $("input[name='amount']").val(opt.attr("maximum"));
 		}
-		else {
-			$('#choose_other_form .amount_row').hide();
+		else
+		{
+			$('#choose_form .amount_row').show();
+			$('#choose_form .amount_block').html(html);
+
+			var idx = $('#choose_form .amount_block option').length-1;
+			$('#choose_form .amount_block option').each(function(i,n)
+			{
+				if ($(this).val() == 1000) idx = i;
+			});
+			if (idx > 3) idx = 3;
+			$('#choose_form .amount_block option').eq(idx).click();
+            
+    	    $("input[name='amount']").val(mycard_amount[0]);
 		}
-    	$("input[name='PAID']").val($this.attr("PAID"));
-    	$("input[name='CUID']").val($this.attr("CUID"));
-    	$("input[name='ERP_ID']").val($this.attr("ERP_ID"));		
-    });	
-    $("input[name='gash_channel']").eq(0).click();
-    
-    $(".amount_block").on("change", "input", function(event){
-    	$("input[name='service_id']").val($(this).attr("service_id"));
-   		update_gain_tip(this);
+
+    	$("input[name='cuid']").val(opt.attr("cuid"));
+
+    	$("input[name='pay_type']").val(opt.attr("paid"));
+    	$("input[name='subpay_type']").val(opt.attr("subpay_type"));
+    	$("input[name='prod_id']").val(opt.attr("ItemCode"));
+
+    	$('#choose_form').attr('action', opt.attr("action"));
+    }
+
+    $(".gash_global").on("click", function(event)
+	{
+    	$('#choose_form').attr('action', $('#choose_form').attr('action').replace("tw", "global"));
     });
-    
-    $(".leftside a").on("click", function(){
-		$(".leftside a").removeClass("active");
-		$(this).addClass("active");
+
+	$("select[name='game'] option").each(function()
+	{
+	    var $this = $(this);
+		var curGameId = $('#cur_game_id').val();
+
+	    if ($this.val() == curGameId)
+		{
+	        $this.prop('selected', true);
+			game.trigger("change");
+	        return false;
+	    }
 	});
-    $(".leftside a:first").click();
-    
 });
-
-function update_gain_tip(obj) {
-	var frm = $(obj).parents("form:first");
-	if (frm.find("select[name='game']").val() && frm.find("input[name='type']:checked").val() == 'game') {
-		var game = frm.find("select[name='game'] option:selected");
-		var amount = frm.find("input[name='payment_amount']:checked").val()*game.attr("rate");
-		if (frm.attr('id') == 'choose_other_form') {
-			amount = (amount*1000) / (frm.find("input[name='gash_channel']:checked").attr("convert_rate")*1000); 
-		}
-		frm.find("#gain_tip").text("您將可以獲得 "+amount+game.attr("goldname"));
-	}
-	else frm.find("#gain_tip").text('');
-}
-
-function choose(type, def) {
-	$('#choose_form').show();
-	$('#mycard_ingame_form').hide();	
-	$('#choose_other_form').hide();
-	$("#choose_title").text(type);	
-	$.get("http://www.longeplay.com.tw/mycard/get_product/"+encodeURI(def), function(data){
-		var html = '';
-		$.each(data, function(key,val){
-			html += '<label style="display:block;"><input type="radio" name="payment_amount" class="required" service_id="'+val+'" value="'+key+'" >'+key+'</label> ';
-		});		
-		$('#choose_form .amount_block').html(html);
-		$('#choose_form .amount_block input').eq(3).click();
-	}, 'json');
-}
-
-function choose_other(type) {
-	$('#choose_form').hide();
-	$('#mycard_ingame_form').hide();
-	$('#choose_other_form').show();
-	$("#choose_title").text(type);	
-}
-
-function choose_mycard_ingame() {
-	$('#choose_form').hide();
-	$('#mycard_ingame_form').show();	
-	$('#choose_other_form').hide();
-	$("#choose_title").text('Mycard實體卡');	
-}
-
-function switch_pay_type(id) {
-	if (typeof id == 'undefined' || id == 'b') {
-		$("#pay_type_block").hide();
-	} else $("#pay_type_block").show();
-	$(".pay_type").hide();
-	$(".pay_type_"+id).show().find("input").eq(0).click();
-}

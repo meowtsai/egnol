@@ -74,6 +74,7 @@ if ($vip_end) {
 ?>
 
 <table cellpadding="0" cellspacing="0" class="calendar">
+    <legend><?=$year?>年<?=$month?>月<?=$day?>日</legend>
     <div class="btn-group">
         <a href="<?=site_url("platform/schedule?year={$prev_year}&month={$prev_month}")?>" class="btn btn-primary" role="button">&lt;&lt; 上個月</a>
         <a href="<?=site_url("platform/schedule")?>" class="btn" role="button">本月</a>

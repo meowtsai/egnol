@@ -20,10 +20,10 @@
 	<div class="control-group">	
 		
 		交易結果
-		<select name="trade_ok" style="width:75px">
+		<select name="result" style="width:75px">
 			<option value="">--</option>
-			<option value="r0" <?=($this->input->get("trade_ok")=='r0' ? 'selected="selected"' : '')?>>失敗</option>
-			<option value="r1" <?=($this->input->get("trade_ok")=='r1' ? 'selected="selected"' : '')?>>成功</option>
+			<option value="0" <?=($this->input->get("result")=='0' ? 'selected="selected"' : '')?>>失敗</option>
+			<option value="1" <?=($this->input->get("result")=='1' ? 'selected="selected"' : '')?>>成功</option>
 		</select>	
 
 		<span class="sptl"></span>	
@@ -109,7 +109,7 @@
 	</thead>
 	<tbody>
 		<? foreach($query->result() as $row):?>
-		<tr class="<?=$row->trade_ok=='1' ? 'success' : ''?>">
+		<tr class="<?=$row->result=='1' ? 'success' : ''?>">
 			<td><?=$row->id?></td>
 			<td title="帳號: 
 				<?
@@ -128,17 +128,22 @@
 			</td>
 			<td>
 				<? 
-					if ( ! empty ($row->mycard_key)) {
-						foreach ($mycard_channel as $key => $chnnel) {
-							if (strpos($row->mycard_key, $key) === 0) {
-								echo $chnnel;
-								break;
-							}
-						}
+					if ( ! empty ($row->payment_type)) {
+						switch($row->payment_type) {
+                            case "INGAME":
+                                echo "實體卡";
+                                break;
+                            case "COSTPOINT":
+                                echo "會員扣點";
+                                break;
+                            default:
+                                echo "小額付費";
+                                break;
+                        }
 					}
 				?>
 			</td>
-			<td><a href="<?=site_url("trade/mycard_api?trade_seq={$row->trade_seq}&action=查詢")?>" target="_blank" title="查詢這筆Mycard交易狀態"><?=$row->trade_seq?></a>
+			<td><!--a href="<?=site_url("trade/mycard_api?trade_seq={$row->trade_seq}&action=查詢")?>" target="_blank" title="查詢這筆Mycard交易狀態"><?=$row->trade_seq?></a--><?=$row->trade_seq?>
 			</td>
 			<td>
 			<?
@@ -152,8 +157,9 @@
 				<input type="text" value="<?=$row->auth_code?>" style="width:36px;" onclick="this.select()">
 				<? endif;?>
 			</td>
-			<td><?=strtr($row->product_code, array("long_e"=>""))?></td>
-			<td><?=$row->trade_ok=='1' ? '成功' : '失敗'?>(<?=$row->status?>)</td>
+			<!--td><?=strtr($row->item_code, array("long_e"=>""))?></td-->
+			<td><?=$row->amount ?></td>
+			<td><?=$row->result=='1' ? '成功' : '失敗'?>(<?=$row->status?>)</td>
 			<td style="font-size:13px;"><?=$row->note?></td>
 			<td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>
 			<td>
@@ -161,7 +167,7 @@
 					<button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
 						<span class="caret"></span>
 					</button>	
-					<? if ($row->trade_ok=='0'):?>
+					<? if ($row->result=='0'):?>
 					<ul class="dropdown-menu pull-right">
 						<li><a href="javascript:;" class="json_post_alert" url="/ajax/resend_mycard_billing/<?=$row->trade_seq?>" ><i class="icon-repeat"></i> 重送交易</a></li>
 					</ul>
