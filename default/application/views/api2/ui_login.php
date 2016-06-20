@@ -1,11 +1,11 @@
-<div id="header">
-<div class="header-ins">
-<div class="header-logo">
-<img src="https://game.longeplay.com.tw/p/image/header-logo.png" />
-</div>
-</div>
-</div>
 <div id="content-login">
+	<div id="header">
+		<div class="header-ins">
+			<div class="header-logo">
+				<img src="https://game.longeplay.com.tw/p/image/header-logo.png" />
+			</div>
+		</div>
+	</div>
 	<div class="login-ins" style="padding-top:10px;">
 		<form id="login_form" method="post" action="<?=$api_url?>api2/ui_login_json?site=<?=$site?>">
 			<input type="hidden" name="partner" value="<?=$partner?>">

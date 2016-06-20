@@ -33,9 +33,9 @@
 .login_info .scrollbar{max-height:355px; overflow-x:hidden; line-height:25px;}
 
 .login-form .member_info, .login-form .member_password{ max-width:500px; margin:0 auto; text-align:left; width:90%; line-height:40px;}
-
 .member_info tr > th{ width:30%; text-align:right; padding:5px; vertical-align:middle;}
 .member_info tr > td{ width:60%; color:#e6290f; padding:5px; vertical-align:middle;}
+
 .login-form input { font-family: "微軟正黑體",  "Arial"; color:#333; box-sizing: border-box; border-radius:5px; height:50px; font-size:18px; border:#ccc thin solid; background:#fff; width:90%; max-width:300px; padding:10px;}
 .login-button .button_info{ margin-bottom:10px;}
 
@@ -77,6 +77,11 @@
 
 }
 
+#api-header-logo {height:100%;background-image: url(https://game.longeplay.com.tw/p/image/header-logo-2.png);background-size: contain;}
+
+#info_block {border-radius:10px;border:1px solid #ddd;background-color:#d6d6d6;padding:10px 0;}
+.info_title {color:#000;font-weight:bold;line-height:18px;}
+.info_field {color:#333333;margin-bottom:16px;padding:0;line-height:18px;}
 
 #sign-in-btn {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn.png);}
 #login-btn-quick {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/play-btn.png);}
@@ -92,6 +97,8 @@
 	only screen and (-o-min-device-pixel-ratio: 15/10),
 	only screen and (min-resolution: 220dpi)
 {
+#api-header-logo {height:100%;background-image: url(https://game.longeplay.com.tw/p/image/header-logo-2@2x.png);background-size: contain;}
+
 #sign-in-btn {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn@2x.png);background-size: contain;}
 #login-btn-quick {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/play-btn@2x.png);background-size: contain;}
 #login-btn-facebook {margin:4px 2px;display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn-fb@2x.png);background-size: contain;}
