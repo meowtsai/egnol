@@ -126,7 +126,7 @@ class Mycard extends MY_Controller {
 				$mycard_ingame_url = $this->mycard_conf['pay_url']."?AuthCode=".$result->AuthCode;
 
                 $this->load->library("g_wallet");
-                $this->g_wallet->produce_mycard_order($this->g_user->uid, $mycard_billing_id, "mycard_ingame", $amount, $_SESSION['payment_character'], "1", $_SESSION['payment_server']);
+                $this->g_wallet->produce_mycard_order($this->g_user->uid, $mycard_billing_id, "mycard_billing", $amount, $_SESSION['payment_character'], "1", $_SESSION['payment_server']);
                 
 				header('location:'.$mycard_ingame_url);
 				exit();
@@ -187,21 +187,23 @@ class Mycard extends MY_Controller {
 		/*if ($this->mycards->check_value_exists("mycard_card_id", $post['CardId']) === true) {
 			die("此筆mycard_id已使用");
 		}*/
-		if ($this->mycards->check_value_exists("mycard_trade_seq", $post['MyCardTradeNo']) === true) {
-			go_payment_result(0, 0, 0, "此筆mycard序號已使用");
-		}
 		
 		$error_message = ($post['ReturnCode'] <> 1) ? urldecode($post['ReturnMsg'])."[{$post['ReturnCode']}]" : "";
-		$data = array(
-			'result'		=> $post['ReturnCode'],
-			'mycard_trade_seq' => $post['MyCardTradeNo'],
-			'mycard_type'	=> $post['MyCardType'],
-			'amount'		=> $post['Amount'],
-			'status' 		=> '2',
-			'note' 			=> $error_message,
-		);
-		$this->mycards->update_billing($data, array("fac_trade_seq" => $post['FacTradeSeq']));
+        
+		if ($this->mycards->check_value_exists("mycard_trade_seq", $post['MyCardTradeNo']) === true) {
+			go_payment_result(0, 0, 0, $error_message);
+		}
 		
+        $data = array(
+            'result'		=> $post['ReturnCode'],
+            'mycard_trade_seq' => $post['MyCardTradeNo'],
+            'mycard_type'	=> $post['MyCardType'],
+            'amount'		=> $post['Amount'],
+            'status' 		=> '2',
+            'note' 			=> $error_message,
+        );
+        $this->mycards->update_billing($data, array("fac_trade_seq" => $post['FacTradeSeq']));
+        
 		if ($post['ReturnCode'] == 1) {
             $this->confirm($mycard_billing);
 		} else {
@@ -209,10 +211,10 @@ class Mycard extends MY_Controller {
         }
 	}
 	
-    function confirm($mycard_billing)
+    function confirm($mycard_billing, $is_get_order=0)
 	{
         $confirm_url = $this->mycard_conf["confirm_url"]."?AuthCode=".$mycard_billing->auth_code;
-
+        
         $cnt = 0;
         while ($cnt++ < 3) {
             $confirm_result = json_decode(my_curl($confirm_url));
@@ -221,9 +223,10 @@ class Mycard extends MY_Controller {
         } 	
 
         if (empty($confirm_result)) {
+            if ($is_get_order) return 0;
             go_payment_result(0, 0, 0, "mycard伺服器無回應");	
         }
-
+        
         if ($confirm_result->PayResult == "3") {
             $this->mycards->update_billing(array("is_confirm" => 1, "status" => 3, "amount" => $confirm_result->Amount), array("fac_trade_seq" => $mycard_billing->fac_trade_seq));
 
@@ -237,22 +240,26 @@ class Mycard extends MY_Controller {
             } 	
             
             if (empty($billing_result)) {
+                if ($is_get_order) return 0;
                 go_payment_result(0, 0, 0, "mycard伺服器無回應");	
             }
 
             if ($billing_result->ReturnCode == "1") {
-                $this->mycards->update_billing(array("cash_out" => 1, "status" => 4, "cash_out_time" => date('Y-m-d H:i:s')), array("fac_trade_seq" => $mycard_billing->fac_trade_seq));
+                $this->mycards->update_billing(array("cash_out" => 1, "status" => 4, "cash_out_time" => date('Y-m-d H:i:s'), "result" => 1), array("fac_trade_seq" => $mycard_billing->fac_trade_seq));
 
                 $user_billing = $this->db->where("mycard_billing_id", $mycard_billing->id)->get("user_billing")->row();
 
                 $this->load->library("game");
-                $this->game->payment_transfer($mycard_billing->uid, $mycard_billing->server_id, $confirm_result->Amount, $user_billing->partner_order_id, $user_billing->character_id, "", "", $mycard_billing->id);
+                $this->game->payment_transfer($mycard_billing->uid, $mycard_billing->server_id, $confirm_result->Amount, $user_billing->partner_order_id, $user_billing->character_id, $mycard_billing->trade_seq, "", $mycard_billing->id);
 
+                if ($is_get_order) return 1;
                 go_payment_result(1, 1, $confirm_result->Amount, $error_message);
             } else {
+                if ($is_get_order) return 0;
                 go_payment_result(0, 0, 0, $billing_result->ReturnMsg);
             }
         } else {
+            if ($is_get_order) return 0;
             go_payment_result(0, 0, 0, $confirm_result->ReturnMsg);
         }
 	}
@@ -268,30 +275,13 @@ class Mycard extends MY_Controller {
 	//mycard billing 主動通知CP廠商交易成功
 	function get_order()
 	{
-		if ($this->input->post() == false) die("未傳遞參數");
+        if(!IN_OFFICE) die('0');
+		if (empty($this->input->post('DATA'))) die("未傳遞參數");
+		log_message("error", "get_order:".$this->input->post('DATA'));
 		
-		/*
-		$_POST['data'] = "<BillingApplyRq> 
-					<FatoryId>xxxxxx</FatoryId> 
-					<TotalNum>2</TotalNum> 
-					<Records> 
-						<Record> 
-							<ReturnMsgNo>1</ReturnMsgNo> 
-							<ReturnMsg></ReturnMsg> 
-							<TradeSeq>20130603000013</TradeSeq> 
-						</Record> 
-						<Record> 
-							<ReturnMsgNo>1</ReturnMsgNo> 
-							<ReturnMsg></ReturnMsg> 
-							<TradeSeq>20130531000016</TradeSeq> 
-						</Record> 
-					</Records> 
-			</BillingApplyRq>";*/
-		
-	    //$xml = simplexml_load_string($this->input->post('data'));	
+        $json = json_decode($this->input->post('DATA'));
         
-        $json = json_decode($this->input->post('data'));
-	    $fatory_id = (string)$json->FatoryId;
+	    $factory_id = (string)$json->FacServiceId;
 	    $total_num = (int)$json->TotalNum;
 
 	    foreach($json->FacTradeSeq as $item)
@@ -299,7 +289,7 @@ class Mycard extends MY_Controller {
 	    	$row = $this->db->from("mycard_billing")->where("fac_trade_seq", $item)->get()->row();
 	    	if ($row && ! empty($row->auth_code)) 
 	    	{	        	
-                if ($row->cash_out == 0) $this->confirm($row);
+                if ($row->cash_out == 0) $this->confirm($row, 1);
 	    	}
 	    }		
 	}
@@ -307,6 +297,7 @@ class Mycard extends MY_Controller {
     //mycard billing 交易成功資料之差異比對
 	function inform()
 	{
+        if(!IN_OFFICE) die('0');
 		if ($this->input->post() == false) die("未傳遞參數");
         
         $mycard_trade_seq = $this->input->post('MyCardTradeNo');

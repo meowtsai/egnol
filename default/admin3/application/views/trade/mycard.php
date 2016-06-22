@@ -97,14 +97,14 @@
 				<div style="color:#777;">euid</div></th>	
 			<th style="width:100px;">交易管道</th>
 			<th style="width:100px;">訂單號</th>			
-			<th style="width:80px;">Mycard訂單號
+			<th style="width:80px;">Mycard訂單號	
+			<th style="width:80px;">Longe訂單號
 				<div style="color:#777;">卡號</div></th>
 			<th style="width:50px;">交易<br>授權碼</th>
 			<th style="width:35px;">金額</th>
 			<th style="width:50px;">結果(狀態碼)</th>
 			<th style="width:90px;">訊息</th>
 			<th style="width:70px;">建立日期</th>	
-			<th style="width:22px;">
 		</tr>
 	</thead>
 	<tbody>
@@ -152,6 +152,7 @@
 			?>
 			<div style="color:#777;"><?=$row->mycard_card_id?></div>
 			</td>
+			<td><?=$row->fac_trade_seq ?></td>
 			<td>
 				<? if ( ! empty($row->auth_code)):?>
 				<input type="text" value="<?=$row->auth_code?>" style="width:36px;" onclick="this.select()">
@@ -161,19 +162,7 @@
 			<td><?=$row->amount ?></td>
 			<td><?=$row->result=='1' ? '成功' : '失敗'?>(<?=$row->status?>)</td>
 			<td style="font-size:13px;"><?=$row->note?></td>
-			<td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>
-			<td>
-				<div class="btn-group">
-					<button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
-						<span class="caret"></span>
-					</button>	
-					<? if ($row->result=='0'):?>
-					<ul class="dropdown-menu pull-right">
-						<li><a href="javascript:;" class="json_post_alert" url="/ajax/resend_mycard_billing/<?=$row->trade_seq?>" ><i class="icon-repeat"></i> 重送交易</a></li>
-					</ul>
-					<? endif;?>
-				</div>			
-			</td>								
+			<td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>							
 		</tr>
 		<? endforeach;?>
 	</tbody>

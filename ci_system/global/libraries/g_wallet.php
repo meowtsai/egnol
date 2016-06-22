@@ -49,8 +49,8 @@ WHERE x.uid={$uid}";
 			if ($cnt > 0)  return $this->_return_error("第三方訂單號已被使用");
     	}
 */    	
-		$country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
-		$country_code = ($country_code) ? $country_code : null;
+        $country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
+        $country_code = ($country_code) ? $country_code : null;
 		
     	$user_billing_data = array(
     		'uid' 			=> $uid,
@@ -79,6 +79,42 @@ WHERE x.uid={$uid}";
     function complete_order($order)
     {
     	$this->CI->db->where("id", $order->id)->update("user_billing", array("result" => "1"));
+    }
+    
+    function re_complete_order($order, $amount = 0, $note = '')
+    {
+        if ($amount) {
+            $user_billing_update = array("result" => "1", "amount" => $amount);
+            $top_up_amount = $amount;
+        } else {
+            $user_billing_update = array("result" => "1");
+            $top_up_amount = $order->amount;
+        }
+        
+    	$this->CI->db->where("id", $order->id)->update("user_billing", $user_billing_update);
+        
+    	$user_billing_data = array(
+    		'uid' 			=> $order->uid,
+    		'transaction_type' => 'top_up_account',
+    		'billing_type'	=> 2,
+    		'amount' 		=> $top_up_amount,
+    		'server_id' 	=> $order->server_id,
+    		'ip'		 	=> $order->ip,
+    		'result'		=> '1',
+    		'note'			=> ($note)?$note:$order->note,
+			'country_code'  => $order->country_code,
+    		'partner_order_id' => $order->partner_order_id,
+    		'character_id' 	=> $order->character_id,
+    		'order_no' 	    => $order->order_no,
+    		'vip_ticket_id' => $order->vip_ticket_id,
+    	);
+    	
+    	$this->CI->db
+    		->set("create_time", "now()", false)
+    		->set("update_time", "now()", false)
+    		->insert("user_billing", $user_billing_data);
+        
+    	return $this->CI->db->insert_id();
     }
     
     function confirm_order($order)

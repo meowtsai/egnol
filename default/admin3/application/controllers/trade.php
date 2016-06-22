@@ -357,6 +357,30 @@ class Trade extends MY_Controller {
 			->render();
 	}
 	
+	function re_complete_order($order_id)
+	{
+		$this->zacl->check("transfer", "modify");	
+        
+		$this->load->library("g_wallet");		
+		$row = $this->g_wallet->get_order($order_id) or die("訂單不存在");
+		$err_message = "";
+        
+		if ($this->input->post()) 
+		{	
+            if ($this->input->post("amount")) {
+                $this->g_wallet->re_complete_order($row, $this->input->post('amount'));
+			    header("location:".current_url());
+            }
+            else $err_message = "請準確填寫金額";
+		}
+        
+		$this->_init_trade_layout()
+			->add_breadcrumb("補送訂單")	
+			->set("row", $row)
+			->set("err_message", $err_message)
+			->render();
+	}
+	
 	function mycard()
 	{
 		$this->zacl->check("mycard", "read");	
@@ -1112,7 +1136,7 @@ class Trade extends MY_Controller {
 				case "交易管道統計":
 									
 					$query = $this->DB2->select("payment_type, sum(amount) cnt", false)
-						->group_by("title")
+						->group_by("payment_type")
 						->order_by("cnt desc")->get();					
 					break;
 							
