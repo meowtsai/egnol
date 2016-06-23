@@ -388,8 +388,8 @@ class Service extends MY_Controller {
 		$question = $this->DB2->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email, u.external_id, u.uid, au.name allocate_user_name")
 			->where("q.id", $id)
 			->from("questions q")
-			->join("servers gi", "gi.server_id=q.server_id")
-			->join("games g", "g.game_id=gi.game_id")
+			->join("servers gi", "gi.server_id=q.server_id", "left")
+			->join("games g", "g.game_id=gi.game_id", "left")
 			->join("users u", "u.uid=q.uid", "left")
 			->join("admin_users au", "au.uid=q.allocate_admin_uid", "left")
 			->get()->row();
