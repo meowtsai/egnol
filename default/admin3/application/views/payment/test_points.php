@@ -1,5 +1,5 @@
 <? 
-	if (isset($msg)) output_result($msg, $msg_type);
+	if (isset($msg[0])) output_result($msg, $msg_type);
 ?>
 <div>
 	<form method="post" class="validation">
