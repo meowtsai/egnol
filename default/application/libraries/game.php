@@ -8,7 +8,7 @@ class Game
     function __construct()
     {    
     	$this->CI =& get_instance();
-    	$this->CI->load->config("api"); 	    	
+    	$this->CI->load->config("g_api"); 	    	
     }
 	
 	function check_server_alive($server_id)

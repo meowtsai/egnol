@@ -45,7 +45,7 @@ class Member extends MY_Controller
 		$account = urldecode($this->input->get("account", true));
 
 		// 載入第三方登入通道種類
-		$this->load->config("api");
+		$this->load->config("g_api");
 		$channel_api = $this->config->item("channel_api");
 		$channel_item = array();
 		foreach($channel_api as $key => $channel)
@@ -120,7 +120,7 @@ class Member extends MY_Controller
 
 		$param = $login_param = array();
 
-		$this->load->config("api");
+		$this->load->config("g_api");
 		$channel_api = $this->config->item("channel_api");
 		if (array_key_exists($channel, $channel_api) == false)
 		{
@@ -176,7 +176,7 @@ class Member extends MY_Controller
 		$site = empty($_SESSION['site']) ? 'long_e' : $_SESSION['site'];
 		$param = array();
 
-		$this->load->config("api");
+		$this->load->config("g_api");
 		$channel_api = $this->config->item("channel_api");
 		if (array_key_exists($channel, $channel_api) == false) {
 			die("未串接此通道({$channel})");

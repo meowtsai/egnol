@@ -138,7 +138,7 @@ class Payment extends MY_Controller
 		$partner = $this->input->get("partner");
 		$game = $this->input->get("game");
 		
-		$this->load->config("api");
+		$this->load->config("g_api");
 		$partner_api = $this->config->item('partner_api');
 		
 		if (empty($partner) || empty($game)) die("參數錯誤");
@@ -200,13 +200,13 @@ class Payment extends MY_Controller
 	{
 		$this->_require_login();
 				
-		$this->load->config('api');		
+		$this->load->config("g_api");		
 		$this->partner_conf = $this->config->item("partner_api");
 		
 		$partner = $this->input->get("partner");
 		$game = $this->input->get("game");
 		
-		$this->load->config("api");
+		$this->load->config("g_api");
 		$partner_api = $this->config->item('partner_api');
 		
 		if (empty($partner) || empty($game)) die("參數錯誤");

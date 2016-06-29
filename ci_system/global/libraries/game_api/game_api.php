@@ -9,7 +9,7 @@ class Game_Api
     function __construct()
     {    
     	$this->CI =& get_instance();
-    	$this->CI->load->config("api");    	    	
+    	$this->CI->load->config("g_api");    	    	
     }
     
     function load_config($game)

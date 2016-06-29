@@ -17,7 +17,7 @@ class Api extends MY_Controller
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->config('api');		
+		$this->load->config("g_api");		
 		$this->partner_conf = $this->config->item("partner_api");
 	}
 
@@ -99,7 +99,7 @@ class Api extends MY_Controller
 			}
 			
 			// 載入第三方登入通道種類
-			$this->load->config("api");
+			$this->load->config("g_api");
 			$channel_api = $this->config->item("channel_api");
 			$channel_item = array();
 			foreach($channel_api as $key => $channel)
@@ -326,7 +326,7 @@ class Api extends MY_Controller
 
 		$param = $login_param = array();
 
-		$this->load->config("api");
+		$this->load->config("g_api");
 		$channel_api = $this->config->item("channel_api");
 		if (array_key_exists($channel, $channel_api) == false)
 		{
