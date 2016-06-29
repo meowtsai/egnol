@@ -228,7 +228,7 @@ class Mycard extends MY_Controller {
         }
         
         if ($confirm_result->PayResult == "3") {
-            $this->mycards->update_billing(array("is_confirm" => 1, "status" => 3, "amount" => $confirm_result->Amount), array("fac_trade_seq" => $mycard_billing->fac_trade_seq));
+            $this->mycards->update_billing(array("is_confirm" => 1, "status" => 3, "amount" => $confirm_result->Amount, "mycard_trade_seq" => $confirm_result->MyCardTradeNo, "mycard_type" => $confirm_result->MyCardType), array("fac_trade_seq" => $mycard_billing->fac_trade_seq));
 
             $billing_url = $this->mycard_conf["billing_url"]."?AuthCode=".$mycard_billing->auth_code;
 

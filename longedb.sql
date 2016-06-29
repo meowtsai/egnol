@@ -1153,3 +1153,25 @@ CREATE TABLE `bulletins` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `title_UNIQUE` (`title`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `promotion_codes`
+--
+DROP TABLE IF EXISTS `promotion_codes`;
+CREATE TABLE `promotion_codes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `game_id` varchar(20) NOT NULL,
+  `code` varchar(64) NOT NULL,
+  `title` varchar(64) DEFAULT NULL,
+  `type` tinyint(2) NOT NULL DEFAULT '0',
+  `server_id` varchar(20) DEFAULT NULL,
+  `character_id` int(11) DEFAULT NULL,
+  `uid` int(11) DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 1,
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL,
+  `start_time` timestamp NULL DEFAULT NULL,
+  `end_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `code_UNIQUE` (`game_id`, `code`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
