@@ -10,8 +10,6 @@ $(function()
 			game: "尚未選擇遊戲",
 			server: "尚未選擇伺服器",
 			character: "尚未選擇角色",
-			billing_type: "尚未選擇儲值方式",
-			billing_channel: "尚未選擇支付管道",
 			billing_money: "尚未選擇儲值金額"
 		},
 		showErrors: function(errorMap, errorList)
@@ -71,118 +69,52 @@ $(function()
 			character_pool.find("option."+$(this).val()).clone().appendTo(character);
 		}
 	});
-
-    $("select[name='billing_type']").on("change", function ()
-	{
-        var option = $("option:selected", this);
-
-		$('#choose_form .amount_row').hide();
-		$('#choose_form .amount_block').html('');
-
-		if(option.val() == "")
-		{
-			$('#pay_type_block').hide();
-			return;
-		}
-
-		if(option.attr("pay_type") == "")
-		{
-			$("#pay_type_block").hide();
-		}
-		else
-		{
-            var currency = $("select[name='currency']").val();
-			
-			$("#pay_type_block").show();
-			$(".pay_type").hide();
-			$(".pay_type option").prop("selected", false);
-			$(".pay_type_" + option.attr("pay_type") + "." + currency).show();
-			
-			return;
-		}
-
-        onBillingOptionSelected($("option:selected", this));
-	});
-
+    
     $("select[name='currency']").on("change", function ()
 	{
-		$('#pay_type_block').hide();
-		
         var currency = $("select[name='currency']").val();
-		$(".billing_type").show();
-		$(".billing_type option").prop("selected", false);
-		$(".billing_type").not("." + currency).hide();
+		
+        onBillingOptionSelected();
 		
 		return;
 	});
-
-    $("select[name='billing_channel']").on("change", function ()
-	{
-        var option = $("option:selected", this);
-
-		if(option.val() == "")
-			return;
-
-        onBillingOptionSelected($("option:selected", this));
-	});
-
+    
     $("select[name='billing_money']").on("change", function ()
 	{
-    	$("input[name='amount']").val($("option:selected", this).val());
+        $("input[name='amount']").val($(this).val());
 		
 		return;
 	});
+    
+    onBillingOptionSelected();
 
-	function onBillingOptionSelected(opt)
+	function onBillingOptionSelected()
 	{
-		var html = '';
+        var html = '';
 
-		$.each(mycard_amount, function(key, val)
-		{
-			//if (eval(val) > opt.attr("maximum")) return;
-			//if (eval(val) < opt.attr("minimum")) return;
+        $.each(mycard_amount, function(key, val)
+        {
+            //if (eval(val) > opt.attr("maximum")) return;
+            //if (eval(val) < opt.attr("minimum")) return;
 
-			var amount = (val*(opt.attr("convert_rate")*1000)/1000);
-			//if (opt.attr("CUID") == 'IDR' && amount > 964800) return;
+            var currency = $("select[name='currency']").val();
 
-			html += '<option name="payment_amount" value="'+amount+'" nt='+val+' >'+amount+'</option> ';
-		});
+            var amount = (val*(convert_rate[currency]*1000)/1000);
+            //if (opt.attr("CUID") == 'IDR' && amount > 964800) return;
 
-		if (opt.attr("paid") == 'INGAME')
-		{
-			$('#choose_form .amount_row').hide();
-            
-    	    $("input[name='amount']").val(opt.attr("maximum"));
-		}
-		else
-		{
-			$('#choose_form .amount_row').show();
-			$('#choose_form .amount_block').html(html);
+            html += '<option name="payment_amount" value="'+amount+'" nt='+val+' >'+amount+'</option> ';
+        });
 
-			var idx = $('#choose_form .amount_block option').length-1;
-			$('#choose_form .amount_block option').each(function(i,n)
-			{
-				if ($(this).val() == 1000) idx = i;
-			});
-			if (idx > 3) idx = 3;
-			$('#choose_form .amount_block option').eq(idx).click();
-            
-    	    $("input[name='amount']").val(mycard_amount[0]);
-		}
+        $('#choose_form .amount_block').html(html);
 
-    	$("input[name='cuid']").val(opt.attr("cuid"));
-
-    	$("input[name='pay_type']").val(opt.attr("paid"));
-    	$("input[name='subpay_type']").val(opt.attr("subpay_type"));
-    	$("input[name='prod_id']").val(opt.attr("ItemCode"));
-
-    	$('#choose_form').attr('action', opt.attr("action"));
+        var idx = $('#choose_form .amount_block option').length-1;
+        $('#choose_form .amount_block option').each(function(i,n)
+        {
+            if ($(this).val() == 1000) idx = i;
+        });
+        if (idx > 3) idx = 3;
+        $('#choose_form .amount_block option').eq(idx).click();
     }
-
-    $(".gash_global").on("click", function(event)
-	{
-    	$('#choose_form').attr('action', $('#choose_form').attr('action').replace("tw", "global"));
-    });
 
 	$("select[name='game'] option").each(function()
 	{

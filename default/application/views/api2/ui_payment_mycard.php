@@ -1,5 +1,5 @@
 <?
-	$gash_conf = $this->config->item("mycard");
+	$mycard_conf = $this->config->item("mycard");
 	
 	$options = $this->config->item("payment_options");
 	
@@ -36,7 +36,7 @@ fclose($handle);
 ?>
 
 <script type="text/javascript">
-var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
+var mycard_amount = ['<?= implode("','", $mycard_conf["amount"])?>'];
 function cancelButton () {
 	if (typeof LongeAPI != 'undefined') { 
         LongeAPI.onPaymentCancel();  
@@ -168,7 +168,7 @@ function cancelButton () {
 									
 									if(($key =='TWD' && !isset($arr2['trade']['cuid'])) || $key == $arr2['trade']['cuid']):
 								?>
-								<option value="<?=$opt?>" name="gash_channel" class="gash_option currency" maximum="<?=$arr2['maximum']?>" minimum="<?=$arr2['minimum']?>" <?=$attr_str?>><?=$opt?></option>
+								<option value="<?=$opt?>" name="channel" class="option currency" maximum="<?=$arr2['maximum']?>" minimum="<?=$arr2['minimum']?>" <?=$attr_str?>><?=$opt?></option>
 								<? endif;
 								endforeach;?>
 							</select>

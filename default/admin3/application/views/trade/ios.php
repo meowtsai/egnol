@@ -84,6 +84,7 @@
 			<th style="width:120px;">訊息</th>
 			<th style="width:80px;">原廠單號</th>
 			<th style="width:70px;">建立日期</th>
+			<th style="width:22px;"></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -112,16 +113,18 @@
 			<td><?=$row->note?></td>
 			<td><?=$row->partner_order_id?></td>
 			<td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>
-				<!-- 
+			<td>
 				<div class="btn-group">
 					<button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
 						<span class="caret"></span>
 					</button>	
+					<? if ($row->result<>'1'):?>
 					<ul class="dropdown-menu pull-right">
-						<li><a href="javascript:;" class="json_post_alert" url="http://www.longeplay.com.tw/ajax/resend_gash_billing/<?=$row->COID?>"></i> 重送交易</a></li>
+						<li><a href="<?=site_url("/trade/re_complete_order/{$row->id}")?>" ><i class="icon-repeat"></i>　補單</a></li>
 					</ul>
+					<? endif;?>
 				</div>			
-				 -->							
+			</td>							
 		</tr>
 		<? endforeach;?>
 	</tbody>

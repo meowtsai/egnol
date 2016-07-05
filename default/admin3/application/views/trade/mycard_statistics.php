@@ -63,13 +63,14 @@
 			case "交易管道統計":
 				
 				$field = array('交易管道');
-				$table = array();				
+				$table = array();	
+                $payment_types = array('INGAME', 'COSTPOINT', '');
 				
 				foreach($query->result() as $row) 
 				{
-					$title = $row->title;
+					$title = $row->payment_type;
 					foreach ($mycard_channel as $key => $chnnel) {
-						if (strpos($row->title, $key) === 0) {
+						if (strpos($row->payment_type, $key) === 0) {
 							$title = $chnnel;
 							break;
 						}

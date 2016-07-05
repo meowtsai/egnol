@@ -19,7 +19,7 @@ class Api2 extends MY_Controller
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->config('api');		
+		$this->load->config("g_api");		
 		$this->partner_conf = $this->config->item("partner_api");
         
         $this->load->config('g_mongodb');
@@ -111,7 +111,7 @@ class Api2 extends MY_Controller
 			}
 			
 			// 載入第三方登入通道種類
-			$this->load->config("api");
+			$this->load->config("g_api");
 			$channel_api = $this->config->item("channel_api");
 			$channel_item = array();
 			foreach($channel_api as $key => $channel)
@@ -357,7 +357,7 @@ class Api2 extends MY_Controller
 
 		$param = $login_param = array();
 
-		$this->load->config("api");
+		$this->load->config("g_api");
 		$channel_api = $this->config->item("channel_api");
 		if (array_key_exists($channel, $channel_api) == false)
 		{
@@ -810,7 +810,7 @@ class Api2 extends MY_Controller
 				$external_id	= $this->input->get_post("externalid");
 				$pcode			= $this->input->get_post("pcode");
 				/*
-				$this->load->config("api");
+				$this->load->config("g_api");
 				$partner_conf = $this->config->item("partner_api");
 				if(!array_key_exists($partner, $partner_conf))
 				{
@@ -879,7 +879,7 @@ class Api2 extends MY_Controller
 				$external_id	= $this->input->get_post("externalid");
 				$pcode			= $this->input->get_post("pcode");
 				/*
-				$this->load->config("api");
+				$this->load->config("g_api");
 				$partner_conf = $this->config->item("partner_api");
 				if(!array_key_exists($partner, $partner_conf))
 				{

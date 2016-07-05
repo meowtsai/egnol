@@ -84,7 +84,7 @@
 			<th style="width:120px;">訊息</th>
 			<th style="width:80px;">原廠單號</th>
 			<th style="width:70px;">建立日期</th>	
-			<!--th style="width:22px;"></th-->
+			<th style="width:22px;"></th>
 		</tr>
 	</thead>
 	<tbody>
@@ -121,18 +121,18 @@
 			<td><?=$row->note?></td>
 			<td><?=$row->partner_order_id?></td>
 			<td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>
-			<!--td>
+			<td>
 				<div class="btn-group">
 					<button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
 						<span class="caret"></span>
 					</button>	
+					<? if ($row->result<>'1'):?>
 					<ul class="dropdown-menu pull-right">
-						<? if ($row->result == '0' && $row->is_confirmed == '0'):?>
-						<li><a href="javascript:;" class="json_post_alert" url="/ajax/confirm_google_billing/<?=$row->id?>">請款</a></li>
-						<? endif;?>
+						<li><a href="<?=site_url("/trade/re_complete_order/{$row->id}")?>" ><i class="icon-repeat"></i>　補單</a></li>
 					</ul>
+					<? endif;?>
 				</div>			
-			</td-->								
+			</td>								
 		</tr>
 		<? endforeach;?>
 	</tbody>

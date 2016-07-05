@@ -21,7 +21,7 @@ class Server_api extends MY_Controller
 	function __construct()
 	{
 		parent::__construct();
-		$this->load->config('api');		
+		$this->load->config("g_api");		
 		$this->partner_conf = $this->config->item("partner_api");
         
         $this->load->config('g_mongodb');

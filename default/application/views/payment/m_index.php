@@ -2,7 +2,7 @@
 	function make_openurl($url) 
 	{
 		$CI =& get_instance();
-		$CI->load->config('api');
+		$CI->load->config("g_api");
 		$partner_conf = $CI->config->item("partner_api");	 
 		$key = $partner_conf['public_key'];
 		$euid = $CI->g_user->euid;
