@@ -81,13 +81,13 @@ WHERE x.uid={$uid}";
     	$this->CI->db->where("id", $order->id)->update("user_billing", array("result" => "1"));
     }
     
-    function re_complete_order($order, $amount = 0, $note = '')
+    function re_complete_order($order, $amount = 0, $order_no = '', $note = '')
     {
         if ($amount) {
-            $user_billing_update = array("result" => "1", "amount" => $amount);
+            $user_billing_update = array("result" => "1", "order_no" => $order_no, "amount" => $amount);
             $top_up_amount = $amount;
         } else {
-            $user_billing_update = array("result" => "1");
+            $user_billing_update = array("result" => "1", "order_no" => $order_no);
             $top_up_amount = $order->amount;
         }
         

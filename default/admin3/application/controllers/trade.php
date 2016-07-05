@@ -367,11 +367,13 @@ class Trade extends MY_Controller {
         
 		if ($this->input->post()) 
 		{	
-            if ($this->input->post("amount")) {
-                $this->g_wallet->re_complete_order($row, $this->input->post('amount'));
-			    header("location:".current_url());
+            if (!$this->input->post("amount")) $err_message = "請準確填寫金額";
+            if (!$this->input->post("order_no")) $err_message = "請準確填寫訂單號";
+            
+            if (!$err_message) {
+                $this->g_wallet->re_complete_order($row, $this->input->post('amount'), $this->input->post('order_no'));
+                header("location:".current_url());
             }
-            else $err_message = "請準確填寫金額";
 		}
         
 		$this->_init_trade_layout()

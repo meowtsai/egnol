@@ -1,6 +1,8 @@
 <? 
 	$result_arr = array("0" => array("初始", "#666"), "1" => array("成功", "#0a1"), "2" => array("失敗", "#a10"), 
 			"3" => array("逾時", "804"), "4" => array("其它", "#01a"), "5" => array("等候入點", "#0a1"));
+
+    $billing_channel = substr($row->transaction_type, 14);
 ?>
 <form method="post">
 	<fieldset>
@@ -23,7 +25,7 @@
 				?></dd>
 			</dl>
 			<small>
-				<a href="<?=site_url("trade/transfer?uid={$row->uid}&action=查詢")?>" class="btn btn-mini">轉點記錄</a>			
+				<a href="<?=site_url("trade/{$billing_channel}?uid={$row->uid}&action=查詢")?>" class="btn btn-mini"><?=$billing_channel?>儲值記錄</a>			
 			</small>
 		</blockquote>
 		
@@ -46,6 +48,8 @@
         <div class="text-error"><?=$err_message?>!!</div>
    		
    		<? endif;?>
+    	<label for="note">訂單號</label>
+   		<input type="text" id="order_no" name="order_no" style="width:600px" value="<?=$row->order_no?>">
     	<label for="note">備註</label>
    		<input type="text" id="note" name="note" style="width:600px" value="<?=$row->note?>">
    				

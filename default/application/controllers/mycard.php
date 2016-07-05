@@ -40,16 +40,16 @@ class Mycard extends MY_Controller {
 		$this->_require_login();
         
         $payment_type = $this->input->post("pay_type");
-        $item_code = $this->input->post("prod_id");
-        $product_name = $this->input->post("prod_id");
-        $currency = $this->input->post("cuid");
+        //$item_code = $this->input->post("prod_id");
+        //$product_name = $this->input->post("prod_id");
+        $currency = $this->input->post("currency");
         $amount = $this->input->post("amount");
 		
 		$_SESSION['payment_game']		= $this->input->post('game');
 		$_SESSION['payment_server']		= $this->input->post('server');
 		$_SESSION['payment_character']	= $this->input->post('character');
-		$_SESSION['payment_type']		= $this->input->post('billing_type');
-		$_SESSION['payment_channel']	= $this->input->post('billing_channel');
+		//$_SESSION['payment_type']		= $this->input->post('billing_type');
+		//$_SESSION['payment_channel']	= $this->input->post('billing_channel');
         //print_r($this->input->post());
         //die();
         
@@ -59,10 +59,10 @@ class Mycard extends MY_Controller {
 			'uid'			=> $this->g_user->uid,
 			'fac_trade_seq'	=> $fac_trade_seq,		
 			'status' 		=> '0',
-			'payment_type'	=> $payment_type,
+			'payment_type'	=> '',
             "trade_type"    => '2',	
             "currency"      => $currency,	
-			'item_code'		=> $item_code
+			'item_code'		=> ''
 		);
 		if ($this->input->post("server")) $data["server_id"] = $this->input->post("server");	
         
@@ -74,9 +74,9 @@ class Mycard extends MY_Controller {
 			'TradeType'    => "2",
 			'ServerId'     => $data["server_id"],
 			'CustomerId'   => $this->g_user->uid,
-			'PaymentType'  => $payment_type,
-			'ItemCode'     => $item_code,
-			'ProductName'  => $product_name,
+			'PaymentType'  => '',
+			'ItemCode'     => '',
+			'ProductName'  => $amount,
 			'Amount'       => $amount,
 			'Currency'     => $currency,
 			'SandBoxMode'  => "true"
@@ -86,7 +86,7 @@ class Mycard extends MY_Controller {
 		$data['Hash'] = hash('sha256', strval($urlencoded));
 		
 		$auth_url = $this->mycard_conf["auth_url"]."?".http_build_query($data);
-		
+        
 		$cnt = 0;
 		while ($cnt++ < 3) {
 			$result = json_decode(my_curl($auth_url));
@@ -199,6 +199,7 @@ class Mycard extends MY_Controller {
             'mycard_trade_seq' => $post['MyCardTradeNo'],
             'mycard_type'	=> $post['MyCardType'],
             'amount'		=> $post['Amount'],
+			'payment_type'	=> $post['PaymentType'],
             'status' 		=> '2',
             'note' 			=> $error_message,
         );
@@ -228,7 +229,15 @@ class Mycard extends MY_Controller {
         }
         
         if ($confirm_result->PayResult == "3") {
-            $this->mycards->update_billing(array("is_confirm" => 1, "status" => 3, "amount" => $confirm_result->Amount, "mycard_trade_seq" => $confirm_result->MyCardTradeNo, "mycard_type" => $confirm_result->MyCardType), array("fac_trade_seq" => $mycard_billing->fac_trade_seq));
+            $this->mycards->update_billing(
+                array(
+                    "is_confirm" => 1, 
+                    "status" => 3, 
+                    "amount" => $confirm_result->Amount, 
+                    "mycard_trade_seq" => $confirm_result->MyCardTradeNo, 
+                    "mycard_type" => $confirm_result->MyCardType, 
+                    "payment_type" => $confirm_result->PaymentType), 
+                array("fac_trade_seq" => $mycard_billing->fac_trade_seq));
 
             $billing_url = $this->mycard_conf["billing_url"]."?AuthCode=".$mycard_billing->auth_code;
 
