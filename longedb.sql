@@ -1175,3 +1175,13 @@ CREATE TABLE `promotion_codes` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `code_UNIQUE` (`game_id`, `code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+-- Table structure for table `iap_receipt`
+--
+CREATE TABLE `iap_receipts` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_billing_id` int(11) NOT NULL,
+  `status` tinyint(4) NOT NULL DEFAULT '0',
+  `receipt` text NOT NULL,
+  PRIMARY KEY (`id`),
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
