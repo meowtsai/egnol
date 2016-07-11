@@ -843,6 +843,7 @@ CREATE TABLE `questions` (
   `is_read` char(1) NOT NULL DEFAULT '0',
   `note` text,
   `admin_uid` int(11) DEFAULT NULL,
+  `close_admin_uid` int(11) DEFAULT NULL,
   `update_time` datetime NOT NULL,
   `phone` varchar(300) DEFAULT NULL,
   `email` varchar(300) DEFAULT NULL,
@@ -1089,6 +1090,17 @@ CREATE TABLE `users` (
   UNIQUE KEY `mobile_UNIQUE` (`mobile`),
   UNIQUE KEY `email_UNIQUE` (`email`),
   UNIQUE KEY `external_id_UNIQUE` (`external_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+--
+-- Table structure for table `log_user_updates`
+--
+CREATE TABLE `log_user_updates` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `content` text NOT NULL,
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 CREATE TABLE `events` (

@@ -22,7 +22,8 @@
 						<table style="width:100%;">
 							<tr>
 						        <td class="button">
-								    <div class="wrap_text" style="max-width:70%;min-width:70%;"><?=$row->content?></div>
+                                    <div class="wrap_text" style="max-width:12%;min-width:12%;"><b>#<?=$row->id?></b></div>
+								    <div class="wrap_text" style="max-width:55%;min-width:55%;"><?=$row->content?></div>
 								    <div class="wrap_text" style="max-width:3%;min-width:3%;">|</div>
 								    <div class="wrap_text" style="float:right; max-width:23%; width:23%;">
 									    <?=$question_status[$row->status]?>

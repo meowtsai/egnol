@@ -44,6 +44,12 @@ $(function(){
 		}
 	});
 	
+	
+    $("select[name=select_type]").change(function(e)
+    {
+       $("#type_form").submit();
+    });
+    
 	$("#type_form").validate({
 		submitHandler: function(form) {
 			$(form).json_ajaxSubmit(function(json){

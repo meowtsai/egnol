@@ -505,7 +505,7 @@ class Api2 extends MY_Controller
 		header('content-type:text/html; charset=utf-8');
 
 		$site = $this->_get_site();
-		
+        
 		$this->g_user->logout();
 		
 		$_SESSION['login_key'] = '';

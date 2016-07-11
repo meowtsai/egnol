@@ -218,9 +218,17 @@ class Member extends MY_Controller
 				if ($boolResult != true)
 				{
 					$boolResult = $this->g_user->create_account('', '', '', $external_id);
+                    
 					if($boolResult == true )
 					{
 						$this->g_user->verify_account('', '', '', $external_id);
+                    
+                        $log_data = array(
+                            "uid" => $this->g_user->uid,
+                            "content" => "NEW: [external_id]".$external_id
+                        );
+
+                        $this->db->insert("log_user_updates", $log_data);
 					}
 					else
 					{
@@ -303,6 +311,14 @@ class Member extends MY_Controller
 		if ($boolResult==true)
 		{
 			$this->g_user->verify_account($email, $mobile, $pwd);
+                    
+            $log_data = array(
+                "uid" => $this->g_user->uid,
+                "content" => "NEW: [email]".$email." [mobile]".$mobile
+            );
+
+            $this->db->insert("log_user_updates", $log_data);
+            
 			die(json_message(array("message"=>"成功", "site"=>$site), true));
 		}
 		else
@@ -359,6 +375,14 @@ class Member extends MY_Controller
 		if ($result == true)
 		{
 			$this->g_user->verify_account($email, $mobile, $pwd);
+            
+            $log_data = array(
+                "uid" => $this->g_user->uid,
+                "content" => "UPDATE: [email]".$email." [mobile]".$mobile
+            );
+
+            $this->db->insert("log_user_updates", $log_data);
+            
 			die(json_message(array("message"=>"成功", "site"=>$site)));
 		}
 		else
@@ -395,6 +419,8 @@ class Member extends MY_Controller
 			'sex' => $this->input->post("sex"),
 			'street' => $this->input->post("address_road"),
 		);
+        
+        $log_content = "UPDATE: [name]".$user_info['name']." [sex]".$user_info['sex']." [street]".$user_info['street'];
 		if ($this->input->post("email"))
 		{
 			$email = $this->input->post("email");
@@ -403,6 +429,7 @@ class Member extends MY_Controller
 				die(json_failure("E-MAIL 已被使用"));
 			}
 			$data["email"] = $email;
+            $log_content .= " [email]".$email; 
 		}
 		if ($this->input->post("mobile"))
 		{
@@ -412,12 +439,17 @@ class Member extends MY_Controller
 				die(json_failure("手機號碼已被使用"));
 			}
 			$data["mobile"] = $mobile;
+            $log_content .= " [mobile]".$mobile; 
 		}
-		if ($this->input->post("ident")) $data["ident"] = $this->input->post("ident");
-
+		if ($this->input->post("ident")) {
+            $data["ident"] = $this->input->post("ident");
+            $log_content .= " [ident]".$ident; 
+        }
 		if ($this->input->post("birthday_y"))
 		{
 			$user_info['birthday'] = "{$this->input->post("birthday_y")}-{$this->input->post("birthday_m")}-{$this->input->post("birthday_d")}";
+            
+            $log_content .= " [birthday]".$birthday; 
 		}
 
 		function clear(&$value)
@@ -442,6 +474,13 @@ class Member extends MY_Controller
 			$this->g_user->mobile = $this->input->post("mobile");
 		}
 
+        $log_data = array(
+            "uid" => $this->g_user->uid,
+            "content" => $log_content
+        );
+
+        $this->db->insert("log_user_updates", $log_data);
+        
 		die(json_message(array("message"=>"成功", "site"=>$site), true));
 	}
 
@@ -481,6 +520,14 @@ class Member extends MY_Controller
 
 			if($this->g_send_mail->passwdResetMail($email, $new))
 			{
+
+                $log_data = array(
+                    "uid" => $this->g_user->uid,
+                    "content" => "RESET PASSWORD: [email]".$email
+                );
+
+                $this->db->insert("log_user_updates", $log_data);
+                
 				die(json_message(array("message"=>"新密碼已發送到您的 E-Mail 信箱。", "site"=>$site)));
 			}
 			else
@@ -506,6 +553,13 @@ class Member extends MY_Controller
 
 			if($this->g_send_sms->send($site, $mobile, $msg))
 			{
+                $log_data = array(
+                    "uid" => $this->g_user->uid,
+                    "content" => "RESET PASSWORD: [mobile]".$mobile
+                );
+
+                $this->db->insert("log_user_updates", $log_data);
+                
 				die(json_message(array("message"=>"已使用簡訊發送新密碼至您的手機。", "site"=>$site)));
 			}
 			else
@@ -564,6 +618,14 @@ class Member extends MY_Controller
 		}
 
 		$this->db->where("uid", $this->g_user->uid)->update("users", array("password" => md5(trim($pwd))));
+        
+        $log_data = array(
+            "uid" => $this->g_user->uid,
+            "content" => "CHANGE PASSWORD"
+        );
+
+        $this->db->insert("log_user_updates", $log_data);
+        
 		die(json_message(array("message"=>"修改成功", "site"=>$site)));
 	}
 

@@ -88,132 +88,149 @@
 
 <?=tran_pagination($this->pagination->create_links());?>
 
-<table class="table table-striped table-bordered" style="width:auto;">
-	<thead>
-		<tr>
-			<th style="width:60px;">#</th>
-			<th style="width:80px">遊戲</th>
-			<th style="width:120px">角色名稱</th>
-			<th style="width:400px">描述</th>
-			<th style="width:90px;">uid</th>
-			<th style="width:110px;"><a href="?<?=$query_string?>">轉點金額</a><?=$this->input->get("sort") == 'expense' ? ' <i class="icon icon-chevron-down"></i>' : ''?></th>
-			<th style="width:80px;">狀態</th>
-			<th style="width:80px;">處理人</th>
-			<th style="width:100px;">日期</th>		
-			<th></th>	 	
-		</tr>
-	</thead>
-	<tbody>
-		<? if ($query->num_rows() == 0):?>
-				
-		<tr>
-			<td colspan="10">
-				<div style="padding:10px; color:#777;">查無記錄</div>
-			</td>
-		</tr>
+<form name="type_form" id="type_form" method="post" action="<?=site_url("service/update_type_json")?>" style="margin:0;">
+    <input type="hidden" name="update_question_id" id="update_question_id" value="">	
+    <input type="hidden" name="select_type" id="select_type" value="">	
+    <table class="table table-striped table-bordered" style="width:auto;">
+        <thead>
+            <tr>
+                <th style="width:60px;">#</th>
+                <th style="width:80px">遊戲</th>
+                <th style="width:120px">角色名稱</th>
+                <th style="width:85px">提問類型</th>
+                <th style="width:300px">描述</th>
+                <th style="width:90px;">uid</th>
+                <th style="width:110px;"><a href="?<?=$query_string?>">轉點金額</a><?=$this->input->get("sort") == 'expense' ? ' <i class="icon icon-chevron-down"></i>' : ''?></th>
+                <th style="width:80px;">狀態</th>
+                <th style="width:80px;">處理人</th>
+                <th style="width:100px;">日期</th>		
+                <th></th>	 	
+            </tr>
+        </thead>
+        <tbody>
+            <? if ($query->num_rows() == 0):?>
 
-		<? else:?>
-		
-		<? foreach($query->result() as $row):?>
-		<tr>
-			<td><a href="<?=site_url("service/view/{$row->id}")?>"><?=$row->id?></a></td>
-			<td><?=$row->game_name?></td>
-			<td><?=$row->character_name?></td>
-			<? if ($row->type == '9'):?>
-			<td colspan="3">
-				<span style="font-size:12px;">【<?=$question_type[$row->type]?>】</span>
-				<a href="<?=site_url("service/view/{$row->id}")?>"><?=mb_strimwidth(strip_tags($row->content), 0, 98, '...', 'utf-8')?></a>
-			</td>
-			<td><?=$question_status[$row->status]?>
-				<div style="font-size:11px;"> 
-				<?  if ($row->allocate_status == '1'):?>
-					<span style="color:#999">(後送中)</span>
-				<? elseif ($row->allocate_status == '2'):?>
-					<span style="color:#090">(後送完成)</span>
-				<? endif;?>
-				</div>
-			</td>						
-			<? else:?>
-			<td style="word-break: break-all">
-				<span style="font-size:12px;">【<?=$question_type[$row->type]?>】</span>
-				<a href="<?=site_url("service/view/{$row->id}")?>"><?=mb_strimwidth(strip_tags($row->content), 0, 66, '...', 'utf-8')?></a>
-			</td>			
-			<td>
-				<a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?></a>
-				<a href="<?=site_url("service/get_list?uid={$row->uid}&action=查詢")?>"><i class="icon-search"></i></a>
-			</td>
-			<td><?=$row->expense?></td>
-			<td><?=$question_status[$row->status]?>
-				<div style="font-size:11px;"> 
-				
-				<?  if ($row->status == '2' || $row->status == '4'):?>				
-					<?= $row->is_read ? '<span style="color:#090">(已讀)</span>' : '<span style="color:#999">(未讀)</span>'; ?>				
-				<? endif;?>
-				
-				<?  if ($row->allocate_status == '1'):?>
-					<span style="color:#999">(後送中)</span>
-				<? elseif ($row->allocate_status == '2'):?>
-					<span style="color:#090">(後送完成)</span>
-				<? endif;?>
-				
-				</div>
-			</td>			
-			<? endif;?>			
-			<td><?=$row->admin_uname?></td>
-			<td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>
-			<td>
-				<div class="btn-group">
-					<button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
-						<span class="caret"></span>
-					</button>	
-					<ul class="dropdown-menu pull-right">
-						<? if ($row->status == '0'):?>
-						<li><a href="javascript:;" class="json_post" url="<?=site_url("service/show_question/{$row->id}")?>"><i class="icon-repeat"></i> 調回處理中</a></li>
-						<? else:?>
-						<li><a href="javascript:;" class="json_post" url="<?=site_url("service/show_question/{$row->id}")?>"><i class="icon-repeat"></i> 調回處理中</a></li>
-						<li><a href="javascript:;" class="json_post" url="<?=site_url("service/hide_question/{$row->id}")?>"><i class="icon-remove"></i> 隱藏</a></li>
-						<? endif;?>
-					</ul>
-				</div>			
-			</td>
-		</tr>
-		<? endforeach;?>
+            <tr>
+                <td colspan="10">
+                    <div style="padding:10px; color:#777;">查無記錄</div>
+                </td>
+            </tr>
 
-<? if ($_SERVER['REQUEST_URI'] == '/service/todo'):?>
-<script language="JavaScript">
-title_tmp1 = document.title;
-if (title_tmp1.indexOf(">>")!=-1) {
-	title_tmp2=title_tmp1.split(">>");
-	title_last=" —> "+title_tmp2[1];
-	title_last=title_last + " —> " + title_tmp2[2];
-}else{
-	if (title_tmp1.indexOf("——")!=-1) {
-		title_tmp2=title_tmp1.split("——");
-		title_last=" —> "+title_tmp2[1];
-		if (title_last==" —> ") {title_last=" —> "};
-		if (title_last==" —> ") {title_last=" —> "};
-	}
-}
-title_new="待處理案件";
-step=0;
-function flash_title()
-{
-	step++;
-	if (step==5) {step=1;}
-	if (step==1) {document.title='★☆☆ '+title_new+'(<?=$total_rows?>) ☆☆★';}
-	if (step==2) {document.title='☆★☆ '+title_new+'(<?=$total_rows?>) ☆★☆';}
-	if (step==3) {document.title='☆☆★ '+title_new+'(<?=$total_rows?>) ★☆☆';}
-	if (step==4) {document.title='☆★☆ '+title_new+'(<?=$total_rows?>) ☆★☆';}
-	setTimeout("flash_title()",500);
-}
-flash_title();
-</script>		
-<? endif;?>
-		
-		<? endif;?>
-		
-	</tbody>
-</table>
+            <? else:?>
+
+            <? foreach($query->result() as $row):?>
+            <tr>
+                <td><a href="<?=site_url("service/view/{$row->id}")?>"><?=$row->id?></a></td>
+                <td><?=$row->game_name?></td>
+                <td><?=$row->character_name?>(<?=$row->server_name?>)</td>
+                <? if ($row->type == '9'):?>
+                <td>
+                    <select name="select_type" style="width:100px">
+                        <? foreach($question_type as $key => $type):?>
+                        <option value="<?=$key?>" <?=($row->type==$key ? 'selected="selected"' : '')?>><?=$type?></option>
+                        <? endforeach;?>
+                    </select>
+                </td>
+                <td colspan="3">
+                    <a href="<?=site_url("service/view/{$row->id}")?>"><?=mb_strimwidth(strip_tags($row->content), 0, 98, '...', 'utf-8')?></a>
+                </td>
+                <td><?=$question_status[$row->status]?>
+                    <div style="font-size:11px;"> 
+                    <?  if ($row->allocate_status == '1'):?>
+                        <span style="color:#999">(後送中)</span>
+                    <? elseif ($row->allocate_status == '2'):?>
+                        <span style="color:#090">(後送完成)</span>
+                    <? endif;?>
+                    </div>
+                </td>						
+                <? else:?>
+                <td style="word-break: break-all">
+                    <select name="type" class="required" style="width:100px;" question_id="<?=$row->id?>">
+                        <? foreach($this->config->item("question_type") as $id => $type):?>
+                        <option value="<?=$id?>" <?=($row->type==$id ? 'selected="selected"' : '')?>><?=$type?></option>
+                        <? endforeach;?>
+                    </select>
+                </td>	
+                <td style="word-break: break-all">
+                    <a href="<?=site_url("service/view/{$row->id}")?>"><?=mb_strimwidth(strip_tags($row->content), 0, 66, '...', 'utf-8')?></a>
+                </td>			
+                <td>
+                    <a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?></a>
+                    <a href="<?=site_url("service/get_list?uid={$row->uid}&action=查詢")?>"><i class="icon-search"></i></a>
+                </td>
+                <td><?=$row->expense?></td>
+                <td><?=($row->close_admin_uid)?"":"玩家"?><?=$question_status[$row->status]?>
+                    <div style="font-size:11px;"> 
+
+                    <?  if ($row->status == '2' || $row->status == '4'):?>				
+                        <?= $row->is_read ? '<span style="color:#090">(已讀)</span>' : '<span style="color:#999">(未讀)</span>'; ?>				
+                    <? endif;?>
+
+                    <?  if ($row->allocate_status == '1'):?>
+                        <span style="color:#999">(後送中)</span>
+                    <? elseif ($row->allocate_status == '2'):?>
+                        <span style="color:#090">(後送完成)</span>
+                    <? endif;?>
+
+                    </div>
+                </td>			
+                <? endif;?>			
+                <td><?=$row->admin_uname?></td>
+                <td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>
+                <td>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                        </button>	
+                        <ul class="dropdown-menu pull-right">
+                            <? if ($row->status == '0'):?>
+                            <li><a href="javascript:;" class="json_post" url="<?=site_url("service/show_question/{$row->id}")?>"><i class="icon-repeat"></i> 調回處理中</a></li>
+                            <? else:?>
+                            <li><a href="javascript:;" class="json_post" url="<?=site_url("service/show_question/{$row->id}")?>"><i class="icon-repeat"></i> 調回處理中</a></li>
+                            <li><a href="javascript:;" class="json_post" url="<?=site_url("service/hide_question/{$row->id}")?>"><i class="icon-remove"></i> 隱藏</a></li>
+                            <? endif;?>
+                        </ul>
+                    </div>			
+                </td>
+            </tr>
+            <? endforeach;?>
+
+    <? if ($_SERVER['REQUEST_URI'] == '/service/todo'):?>
+    <script language="JavaScript">
+    title_tmp1 = document.title;
+    if (title_tmp1.indexOf(">>")!=-1) {
+        title_tmp2=title_tmp1.split(">>");
+        title_last=" —> "+title_tmp2[1];
+        title_last=title_last + " —> " + title_tmp2[2];
+    }else{
+        if (title_tmp1.indexOf("——")!=-1) {
+            title_tmp2=title_tmp1.split("——");
+            title_last=" —> "+title_tmp2[1];
+            if (title_last==" —> ") {title_last=" —> "};
+            if (title_last==" —> ") {title_last=" —> "};
+        }
+    }
+    title_new="待處理案件";
+    step=0;
+    function flash_title()
+    {
+        step++;
+        if (step==5) {step=1;}
+        if (step==1) {document.title='★☆☆ '+title_new+'(<?=$total_rows?>) ☆☆★';}
+        if (step==2) {document.title='☆★☆ '+title_new+'(<?=$total_rows?>) ☆★☆';}
+        if (step==3) {document.title='☆☆★ '+title_new+'(<?=$total_rows?>) ★☆☆';}
+        if (step==4) {document.title='☆★☆ '+title_new+'(<?=$total_rows?>) ☆★☆';}
+        setTimeout("flash_title()",500);
+    }
+    flash_title();
+    </script>		
+    <? endif;?>
+
+            <? endif;?>
+
+        </tbody>
+    </table>
+</form>
 
 		<? 
 			break;				

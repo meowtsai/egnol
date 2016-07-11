@@ -7,6 +7,10 @@
 <? if ($question):?>
 			<table class="member_info">
 				<tr>
+					<th>案件編號　|</th>
+					<td><?=$question->id?></td>
+				</tr>
+				<tr>
 					<th>提問類型　|</th>
 					<td>
 					<?

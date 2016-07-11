@@ -44,6 +44,7 @@
 		<tr>
 			<th style="width:80px;">案件狀態：</th>
 			<td colspan="3">
+            <?=($question->close_admin_uid)?"":"玩家"?>
 			<?
 				$status = $this->config->item("question_status");
 				echo $status[$question->status];
@@ -82,14 +83,13 @@
 			<th>提問類型：</th>
 			<td colspan="3">
                 <form id="type_form" method="post" action="<?=site_url("service/update_type_json")?>" style="margin:0;">
-					<input type="hidden" name="question_id" value="<?=$question->id?>">	
-                    <select name="type" class="required" style="width:150px;">
+					<input type="hidden" name="update_question_id" value="<?=$question->id?>">	
+                    <select name="select_type" class="required" style="width:100px;">
                         <option value="">--請選擇--</option>
                         <? foreach($this->config->item("question_type") as $id => $type):?>
                         <option value="<?=$id?>" <?=($question && $question->type==$id ? 'selected="selected"' : '')?>><?=$type?></option>
                         <? endforeach;?>
                     </select>
-					<button type="submit" class="btn" style="vertical-align:top;">儲存</button>
                 </form>
 			</td>
 		</tr>

@@ -310,7 +310,7 @@ class Service extends MY_Controller {
 			$this->input->get("todo") && $this->DB2->where("(q.status=1 or q.allocate_status=2 and q.status<>4)", null, false);
 			
 			$this->DB2
-				->select("q.*, g.name as game_name, au.name as admin_uname")
+				->select("q.*, g.name as game_name, au.name as admin_uname, gi.name as server_name")
 				->select("(select sum(amount) from user_billing where uid=q.uid and billing_type=2 and result=1) as expense")
 				->from("questions q")
 				->join("servers gi", "gi.server_id=q.server_id", "left")
@@ -473,8 +473,8 @@ class Service extends MY_Controller {
 
 	function update_type_json()
 	{
-		$this->DB1->where("id", $this->input->post("question_id"))
-			->update("questions", array('type' => $this->input->post("type")));
+		$this->DB1->where("id", $this->input->post("update_question_id"))
+			->update("questions", array('type' => $this->input->post("select_type")));
 		
 		die(json_success());		
 	}		
@@ -508,7 +508,7 @@ class Service extends MY_Controller {
 	{				
 		if ( ! $this->zacl->check_acl("service", "modify")) die(json_failure("沒有權限"));
 		
-		$this->DB1->set("status", "4")->where("admin_uid is not null", null, false)->where("id", $id)->update("questions");
+		$this->DB1->set("status", "4")->set("close_admin_uid", $_SESSION['admin_uid'])->where("admin_uid is not null", null, false)->where("id", $id)->update("questions");
 		if ($this->DB1->affected_rows() > 0) {
 			die(json_success());	
 		}
