@@ -1193,6 +1193,7 @@ class Api2 extends MY_Controller
 		// *** 暫時使用 ***
 		if(strpos($transaction_id, "-") !== false)
 		{
+			$this->g_wallet->cancel_other_order($order, $order->note . "|Fake order.");
 			log_message("error", "ios_verify_receipt: Fake order {$transaction_id}.");
 			//
 			die(json_encode(array("result"=>0, "msg"=>"Order not match.")));
@@ -1221,6 +1222,7 @@ class Api2 extends MY_Controller
 		if(empty($result->receipt))
 		{
 			// 訂單資料錯誤
+			$this->g_wallet->cancel_other_order($order, $order->note . "|Receipt result error.");
 			log_message("error", "ios_verify_receipt: Receipt result error.");
 			
 			die(json_encode(array("result"=>0, "msg"=>"Receipt result error.")));
@@ -1228,6 +1230,7 @@ class Api2 extends MY_Controller
 		if(empty($result->receipt->bid))
 		{
 			// 訂單資料錯誤
+			$this->g_wallet->cancel_other_order($order, $order->note . "|Receipt result error.");
 			log_message("error", "ios_verify_receipt: Receipt result error.");
 			
 			die(json_encode(array("result"=>0, "msg"=>"Receipt result error.")));
@@ -1237,6 +1240,7 @@ class Api2 extends MY_Controller
 		if(strcmp($result->receipt->bid, $this->{$server_info->game_id}->get_apple_bundle_id()) != 0)
 		{
 			// 訂單資料錯誤
+			$this->g_wallet->cancel_other_order($order, $order->note . "|Receipt result error.");
 			log_message("error", "ios_verify_receipt: Receipt result error.");
 			
 			die(json_encode(array("result"=>0, "msg"=>"Receipt result error.")));
@@ -1376,7 +1380,17 @@ class Api2 extends MY_Controller
 			if($pos !== false)
 				$amount = intval(substr($product_id, $pos + 1));
 		}
-		
+		/*
+		$check_dup = $this->db->from("user_billing")->where("order_no", $transaction_id)->get()->row();
+		if(!empty($check_dup))
+		{
+			log_message("error", "android_verify_receipt: Duplicate transaction_id {$transaction_id}.");
+			
+			$this->g_wallet->cancel_other_order($order, $order->note . "|Duplicate transaction_id {$transaction_id}.");
+			
+			die(json_encode(array("result"=>0, "msg"=>"Duplicate transaction_id.")));
+		}
+		*/
 		$this->g_wallet->update_order($order, array("amount"=>$amount,"order_no"=>$transaction_id));
 		
 		// 取得 server 資料

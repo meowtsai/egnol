@@ -32,7 +32,7 @@ $(function(){
 					{
 						leOpenDialog('成功', json.message, leDialogType.MESSAGE, function()
                         {
-                            location.href = '/api/ui_login?' + json.site;
+                            location.href = '/api2/ui_login?site=' + json.site;
                         });
 					}
 					else
