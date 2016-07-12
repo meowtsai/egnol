@@ -136,6 +136,10 @@
 	</tbody>
 </table>
 
+<a href="<?=site_url("member/log_user_updates/{$user->uid}")?>" class="btn btn-link btn-small">基本資料修改記錄</a>
+
+<br><br>
+
 <legend>客服近期詢問記錄</legend>
 
 <table class="table table-striped table-bordered" style="width:750px">

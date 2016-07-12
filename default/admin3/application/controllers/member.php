@@ -375,6 +375,17 @@ class Member extends MY_Controller {
 			->set("query", $query)
 			->render();		
 	}
+    
+	function log_user_updates($uid)
+	{	
+        
+		$query = $this->DB2->from("log_user_updates")->where("uid", $uid)->order_by("id desc")->get();
+		
+		$this->_init_member_layout()
+			->add_breadcrumb("帳號修改紀錄")
+			->set("query", $query)
+			->render();
+	}
 }
 
 /* End of file welcome.php */

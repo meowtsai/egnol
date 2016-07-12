@@ -105,6 +105,28 @@ class Testdata extends CI_Controller {
 			}
 		}
 	}
+	
+	function generate_log_user_updates()
+	{
+		ini_set('max_execution_time', 9999);
+		$this->lang->load('db_lang', 'zh-TW');
+		
+		$query = $this->db->get("users");
+		
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+                
+                $log_content = ($row->external_id)?"NEW: [external_id]".$row->external_id:"NEW: [email]".$row->email." [mobile]".$row->mobile;
+                
+				$log_data = array(
+                            "uid" => $row->uid,
+                            "content" => $log_content
+                        );
+
+                $this->db->insert("log_user_updates", $log_data);
+			}
+		}
+	}
 }
 
 /* End of file search.php */
