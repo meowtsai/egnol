@@ -509,8 +509,8 @@ class Member extends MY_Controller
 		if(filter_var($email, FILTER_VALIDATE_EMAIL))
 		{
 			// 使用 email
-			$cnt = $this->db->from("users")->where("email", $email)->count_all_results();
-			if ($cnt == 0)
+			$user = $this->db->from("users")->where("email", $email)->get()->row();
+			if (!$user)
 			{
 				die(json_failure("沒有這位使用者或資料填寫錯誤。"));
 			}
@@ -522,7 +522,7 @@ class Member extends MY_Controller
 			{
 
                 $log_data = array(
-                    "uid" => $this->g_user->uid,
+                    "uid" => $user->uid,
                     "content" => "RESET PASSWORD: [email]".$email
                 );
 
@@ -539,8 +539,8 @@ class Member extends MY_Controller
 		{
 			// 使用手機號碼
 			$mobile = $email;
-			$cnt = $this->db->from("users")->where("mobile", $mobile)->count_all_results();
-			if ($cnt == 0)
+			$user = $this->db->from("users")->where("mobile", $mobile)->get()->row();
+			if (!$user)
 			{
 				die(json_failure("沒有這位使用者或資料填寫錯誤。"));
 			}
@@ -554,7 +554,7 @@ class Member extends MY_Controller
 			if($this->g_send_sms->send($site, $mobile, $msg))
 			{
                 $log_data = array(
-                    "uid" => $this->g_user->uid,
+                    "uid" => $user->uid,
                     "content" => "RESET PASSWORD: [mobile]".$mobile
                 );
 

@@ -323,14 +323,26 @@ class Api2 extends MY_Controller
 			$_SESSION['site'] = $site;
 
 			$boolResult = $this->g_user->verify_account('', '', '', $external_id);
+            $is_new = 0;
+            
 			if ($boolResult != true)
 			{
 				$boolResult = $this->g_user->create_account('', '', '', $external_id);
+                $is_new = 1;
 			}
 
 			if ($boolResult==true)
-			{
+			{  
 				$this->g_user->verify_account('', '', '', $external_id);
+                
+                if ($is_new) {
+                    $log_data = array(
+                        "uid" => $this->g_user->uid,
+                        "content" => "NEW: [external_id]".$external_id
+                    );
+
+                    $this->db->insert("log_user_updates", $log_data);
+                }
 			}
 			else
 			{
@@ -415,14 +427,26 @@ class Api2 extends MY_Controller
 			$_SESSION['site'] = $site;
 
 			$boolResult = $this->g_user->verify_account('', '', '', $external_id);
+            $is_new = 0;
+            
 			if ($boolResult != true)
 			{
 				$boolResult = $this->g_user->create_account('', '', '', $external_id);
+                $is_new = 1;
 			}
 
 			if ($boolResult==true)
 			{
 				$this->g_user->verify_account('', '', '', $external_id);
+                
+                if ($is_new) {
+                    $log_data = array(
+                        "uid" => $this->g_user->uid,
+                        "content" => "NEW: [external_id]".$external_id
+                    );
+
+                    $this->db->insert("log_user_updates", $log_data);
+                }
 			}
 			else
 			{
@@ -471,14 +495,26 @@ class Api2 extends MY_Controller
 			$_SESSION['site'] = $site;
 
 			$boolResult = $this->g_user->verify_account('', '', '', $external_id);
+            $is_new = 0;
+            
 			if ($boolResult != true)
 			{
 				$boolResult = $this->g_user->create_account('', '', '', $external_id);
+                $is_new = 1;
 			}
 
 			if ($boolResult==true)
 			{
 				$this->g_user->verify_account('', '', '', $external_id);
+                
+                if ($is_new) {
+                    $log_data = array(
+                        "uid" => $this->g_user->uid,
+                        "content" => "NEW: [external_id]".$external_id
+                    );
+
+                    $this->db->insert("log_user_updates", $log_data);
+                }
 			}
 			else
 			{
@@ -588,6 +624,14 @@ class Api2 extends MY_Controller
 		if ($boolResult==true)
 		{
 			$this->g_user->verify_account($email, $mobile, $pwd);
+                    
+            $log_data = array(
+                "uid" => $this->g_user->uid,
+                "content" => "NEW: [email]".$email." [mobile]".$mobile
+            );
+
+            $this->db->insert("log_user_updates", $log_data);
+            
 			die(json_message(array("message"=>"成功", "site"=>$site), true));
 		}
 		else
@@ -668,8 +712,8 @@ class Api2 extends MY_Controller
 		if(filter_var($email, FILTER_VALIDATE_EMAIL))
 		{
 			// 使用 email
-			$cnt = $this->db->from("users")->where("email", $email)->count_all_results();
-			if ($cnt == 0)
+			$user = $this->db->from("users")->where("email", $email)->get()->row();
+			if (!$user)
 			{
 				die(json_failure("沒有這位使用者或資料填寫錯誤。"));
 			}
@@ -679,6 +723,14 @@ class Api2 extends MY_Controller
 
 			if($this->g_send_mail->passwdResetMail($email, $new))
 			{
+                
+                $log_data = array(
+                    "uid" => $user->uid,
+                    "content" => "RESET PASSWORD: [email]".$email
+                );
+
+                $this->db->insert("log_user_updates", $log_data);
+                
 				die(json_message(array("message"=>"新密碼已發送到您的 E-Mail 信箱。", "site"=>$site)));
 			}
 			else
@@ -690,8 +742,8 @@ class Api2 extends MY_Controller
 		{
 			// 使用手機號碼
 			$mobile = $email;
-			$cnt = $this->db->from("users")->where("mobile", $mobile)->count_all_results();
-			if ($cnt == 0)
+			$user = $this->db->from("users")->where("mobile", $mobile)->get()->row();
+			if (!$user)
 			{
 				die(json_failure("沒有這位使用者或資料填寫錯誤。"));
 			}
@@ -704,6 +756,13 @@ class Api2 extends MY_Controller
 
 			if($this->g_send_sms->send($site, $mobile, $msg))
 			{
+                $log_data = array(
+                    "uid" => $user->uid,
+                    "content" => "RESET PASSWORD: [mobile]".$mobile
+                );
+
+                $this->db->insert("log_user_updates", $log_data);
+                
 				die(json_message(array("message"=>"已使用簡訊發送新密碼至您的手機。", "site"=>$site)));
 			}
 			else
@@ -762,6 +821,14 @@ class Api2 extends MY_Controller
 		}
 
 		$this->db->where("uid", $this->g_user->uid)->update("users", array("password" => md5(trim($pwd))));
+        
+        $log_data = array(
+            "uid" => $this->g_user->uid,
+            "content" => "CHANGE PASSWORD"
+        );
+
+        $this->db->insert("log_user_updates", $log_data);
+        
 		die(json_message(array("message"=>"修改成功", "site"=>$site)));
 	}
 
