@@ -125,7 +125,7 @@
                 <td><?=$row->character_name?>(<?=$row->server_name?>)</td>
                 <? if ($row->type == '9'):?>
                 <td>
-                    <select name="select_type" style="width:100px">
+                    <select name="new_type" style="width:100px">
                         <? foreach($question_type as $key => $type):?>
                         <option value="<?=$key?>" <?=($row->type==$key ? 'selected="selected"' : '')?>><?=$type?></option>
                         <? endforeach;?>
@@ -145,7 +145,7 @@
                 </td>						
                 <? else:?>
                 <td style="word-break: break-all">
-                    <select name="type" class="required" style="width:100px;" question_id="<?=$row->id?>">
+                    <select name="new_type" class="required" style="width:100px;" question_id="<?=$row->id?>">
                         <? foreach($this->config->item("question_type") as $id => $type):?>
                         <option value="<?=$id?>" <?=($row->type==$id ? 'selected="selected"' : '')?>><?=$type?></option>
                         <? endforeach;?>

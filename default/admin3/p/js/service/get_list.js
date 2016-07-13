@@ -3,7 +3,7 @@ $(function(){
 	$("input[name=start_date]").datetimepicker({dateFormat: "yy-mm-dd", changeMonth: true, changeYear: true});
 	$("input[name=end_date]").datetimepicker({dateFormat: "yy-mm-dd", changeMonth: true, changeYear: true});
 	
-    $("select[name=type]").change(function(e)
+    $("select[name=new_type]").change(function(e)
     {
         $("#update_question_id").val($(this).attr("question_id"));
         $("#select_type").val($(this).val());
