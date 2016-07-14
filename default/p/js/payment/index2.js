@@ -79,8 +79,6 @@ $(function()
 		return;
 	});
     
-    $("input[name='amount']").val($("select[name='billing_money']").val());
-    
     $("select[name='billing_money']").on("change", function ()
 	{
         $("input[name='amount']").val($(this).val());
@@ -116,6 +114,8 @@ $(function()
         });
         if (idx > 3) idx = 3;
         $('#choose_form .amount_block option').eq(idx).click();
+        
+        $("input[name='amount']").val($("select[name='billing_money']").val());
     }
 
 	$("select[name='game'] option").each(function()
