@@ -79,7 +79,7 @@ class Mycard extends MY_Controller {
 			'ProductName'  => $amount,
 			'Amount'       => $amount,
 			'Currency'     => $currency,
-			'SandBoxMode'  => "true"
+			'SandBoxMode'  => (ENVIRONMENT == 'development')?"true":"false"
 		);
         
         $urlencoded = urlencode(implode("", $data).$this->mycard_conf["hash_key"]);
