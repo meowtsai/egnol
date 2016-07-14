@@ -82,6 +82,8 @@ class Mycard extends MY_Controller {
 			'SandBoxMode'  => (ENVIRONMENT == 'development')?"true":"false"
 		);
         
+		log_message("error", "mycard order:".implode("", $data));
+        
         $urlencoded = urlencode(implode("", $data).$this->mycard_conf["hash_key"]);
 		$data['Hash'] = hash('sha256', strval($urlencoded));
 		

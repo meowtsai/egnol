@@ -79,6 +79,8 @@ $(function()
 		return;
 	});
     
+    $("input[name='amount']").val($("select[name='billing_money']").val());
+    
     $("select[name='billing_money']").on("change", function ()
 	{
         $("input[name='amount']").val($(this).val());
