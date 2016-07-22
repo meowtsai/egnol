@@ -1,7 +1,7 @@
 <?
 	$mycard_conf = $this->config->item("mycard");
-	
 	$options = $this->config->item("payment_options");
+    $convert_rate = $this->config->item("convert_rate");
 	
 // 判斷是否為行動裝置, 電腦版才要顯示 QR Code
 $useragent=$_SERVER['HTTP_USER_AGENT'];
@@ -37,6 +37,11 @@ fclose($handle);
 
 <script type="text/javascript">
 var mycard_amount = ['<?= implode("','", $mycard_conf["amount"])?>'];
+var convert_rate = {<?
+    foreach ($convert_rate as $key => $val){
+        echo $key.":".$val;
+    }
+                    ?>};
 function cancelButton () {
 	if (typeof LongeAPI != 'undefined') { 
         LongeAPI.onPaymentCancel();  
@@ -54,14 +59,7 @@ function cancelButton () {
 <div id="content-login">
 	<div class="login-ins">
 		<form id="choose_form" class="choose_form" method="post" action="">
-			<input type="hidden" name="cuid">
-
-			<input type="hidden" name="pay_type">
-			<input type="hidden" name="subpay_type">
-			<input type="hidden" name="prod_id">
-            
 			<input type="hidden" name="amount">
-
 			<input type="hidden" name="partner_order_id" value="<?=$partner_order_id?>" />
 			<input type="hidden" name="api_call" value="true" />
 
@@ -117,71 +115,7 @@ function cancelButton () {
 							</select>
 						</td>
 					</tr>
-					<tr>
-						<th>儲值方式</th>
-						<td>
-						<? foreach($currency_array as $key => $val):?>
-							<select name="billing_type" class="billing_type required <?=$key?>" style="width:85%;<?=($key=='TWD')?"":"display:none;"?>">
-			                    <option value=''>--請選擇儲值方式--</option>
-
-								<? foreach($options as $tab => $arr):
-									if (array_key_exists("trade", $arr)):
-										$attr_str = '';
-										foreach($arr['trade'] as $attr => $val) $attr_str .= " {$attr}='{$val}'";
-								?>
-								<option pay_type="" maximum="<?=$arr['maximum']?>" minimum="<?=$arr['minimum']?>" <?=$attr_str?>><?=$tab?></option>
-								<? else:
-										$class_str = 'billing_type_opt';
-										foreach($arr as $tab2 => $arr2) {
-											if($key == $arr2['trade']['cuid']):
-								?>
-								<option pay_type="<?=$tab?>" class="<?=$class_str?>"><?=$tab?></option>
-								<?
-												break;
-											endif;
-										}
-									endif;
-								endforeach;?>
-							</select>
-						<?endforeach;?>
-						</td>
-					</tr>
-					<tr id="pay_type_block" style="display:none;">
-						<th>支付管道</th>
-						<td>
-						<? foreach($currency_array as $key => $val):?>
-							<? foreach($options as $tab => $arr): ?>
-							<select name="billing_channel"  class="pay_type pay_type_<?=$tab?> <?=$key?> required" style="width:85%;">
-			                    <option value=''>--請選擇支付管道--</option>
-
-								<? foreach($arr as $opt => $arr2):
-                                    if (in_array($opt, $payment_disable_array)) continue;
-									if (array_key_exists("trade", $arr)) continue;									
-									if ($is_mobile || $is_tablet) {
-										if ($arr2['mobile'] == "0") continue;
-									} else {
-										if ($arr2['mobile'] == "1") continue;
-									}
-									
-									$attr_str = '';
-									foreach($arr2['trade'] as $attr => $val) $attr_str .= " {$attr}='{$val}'";
-									
-									if(($key =='TWD' && !isset($arr2['trade']['cuid'])) || $key == $arr2['trade']['cuid']):
-								?>
-								<option value="<?=$opt?>" name="channel" class="option currency" maximum="<?=$arr2['maximum']?>" minimum="<?=$arr2['minimum']?>" <?=$attr_str?>><?=$opt?></option>
-								<? endif;
-								endforeach;?>
-							</select>
-							<? endforeach;?>
-						<?endforeach;?>
-						</td>
-					</tr>
-					<tr>
-						<th></th>
-						<td>
-						</td>
-					</tr>
-					<tr class="amount_row" style="display:none;">
+					<tr class="amount_row">
 						<th>儲值金額</th>
 						<td>
 							<select name="billing_money"  class="amount_block required" style="width:85%;">

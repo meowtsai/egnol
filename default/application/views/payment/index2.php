@@ -55,9 +55,7 @@ var convert_rate = {<?
 			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>payment?site=<?=$site?>" title="儲值中心" rel="v:url" property="v:title">儲值中心</a>
 		</div>
 		<form id="choose_form" class="choose_form" method="post" action="<?=$this->config->item("mycard_url")?>">
-            
 			<input type="hidden" name="amount">
-
 			<input type="hidden" name="api_call" value="false" />
 
 			<div class="login-form">
