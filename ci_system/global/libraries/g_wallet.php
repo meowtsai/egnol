@@ -18,6 +18,15 @@ class G_Wallet
     				->where("id", $order_id)->get()->row();
     }
     
+    function get_order_by_order_no($transaction_type, $order_no)
+    {
+    	return $this->CI->db->select("u.*, ub.*")
+    				->from("user_billing ub")
+    				->join("users u", "ub.uid=u.uid")
+					->where("transaction_type", $transaction_type)
+    				->where("order_no", $order_no)->get()->row();
+    }
+    
     function get_balance($uid)
     {
 		$balance_sql = "
@@ -247,7 +256,7 @@ WHERE x.uid={$uid}";
     }      
     
 	// iOS/Android in-app purchase 訂單
-    function produce_iap_order($uid, $transaction_type, $billing_type, $server_id, $partner_order_id, $note)
+    function produce_iap_order($uid, $transaction_type, $billing_type, $server_id, $partner_order_id, $note, $character_id = '')
     {	
 		$cnt = $this->CI->db->from("user_billing")->where("partner_order_id", $partner_order_id)->where_in("result", array("1","3"))->count_all_results();
 		if($cnt > 0)
@@ -268,6 +277,8 @@ WHERE x.uid={$uid}";
 			'partner_order_id' => $partner_order_id,
     	);    	
     	
+    	$character_id && $user_billing_data["character_id"] = $character_id;
+		
     	$this->CI->db
     		->set("create_time", "now()", false)
     		->set("update_time", "now()", false)
