@@ -49,6 +49,7 @@ function cancelButton () {
 		iframe = null;
 	}
 }
+alert("由於與Gash合約將到期，《絕代雙驕》將於 8/5 12:00 關閉WEB儲值，再請注意，造成不便，再請見諒");
 </script>
 
 <div id="content-login">
