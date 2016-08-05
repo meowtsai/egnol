@@ -49,7 +49,6 @@ function cancelButton () {
 		iframe = null;
 	}
 }
-alert("由於與Gash合約將到期，《絕代雙驕》將於 8/5 12:00 關閉WEB儲值，再請注意，造成不便，敬請見諒");
 </script>
 
 <div id="content-login">
@@ -67,7 +66,7 @@ alert("由於與Gash合約將到期，《絕代雙驕》將於 8/5 12:00 關閉W
 			<input type="hidden" name="api_call" value="true" />
 
 			<div class="login-form">
-				<table class="member_info">
+				<!--table class="member_info">
 					<tr>
 						<th>遊戲名稱</th>
 						<td>
@@ -197,10 +196,11 @@ alert("由於與Gash合約將到期，《絕代雙驕》將於 8/5 12:00 關閉W
 					<input name="doSubmit" type="submit" id="doSubmit" value="" style="display:none;" />
                     <p><img style="cursor:pointer;" src="<?=$longe_url?>p/image/money/confirm-btn.png" onclick="javascript:$('#doSubmit').trigger('click')" /></p>
 					<p><img style="cursor:pointer;" src="<?=$longe_url?>p/image/member/clear.png" onclick="javascript:cancelButton();" /></p>
-				</div>
+				</div-->
 
 				<ul class="notes">
-					<li id="payment_msg">點數比值與相關訊息...</li>
+					<li id="payment_msg">由於與 Gash 合約即將到期，再請玩家利用 IOS 及 GOOGLE 商店下載包以進行儲值，如造成您的不便，再請見諒。
+</li>
 				</ul>
 			</div>
 		</form>
