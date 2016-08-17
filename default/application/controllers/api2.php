@@ -1925,7 +1925,7 @@ class Api2 extends MY_Controller
 			die(json_encode(array("result"=>0, "msg"=>"Order not found.")));
 		}
 		
-		$this->g_wallet->complete_order($transfer_order);
+		$this->g_wallet->complete_order($order);
 		die(json_encode(array("result"=>1)));
 	}
 	
