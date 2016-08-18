@@ -55,7 +55,11 @@ var convert_rate = {<?
 			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>payment?site=<?=$site?>" title="儲值中心" rel="v:url" property="v:title">儲值中心</a>
 		</div>
 		<form id="choose_form" class="choose_form" method="post" action="<?=$this->config->item("mycard_url")?>">
-			<input type="hidden" name="amount">
+            <? if($set_money):?>
+                <input type="hidden" name="amount" value="<?=$set_money?>">
+            <? else:?>
+			    <input type="hidden" name="amount">
+            <? endif;?>
 			<input type="hidden" name="api_call" value="false" />
 
 			<div class="login-form">
@@ -112,10 +116,14 @@ var convert_rate = {<?
 					<tr class="amount_row">
 						<th>儲值金額</th>
 						<td>
-							<select name="billing_money"  class="amount_block required" style="width:85%;">
-			                    <option value=''>--請選擇儲值金額--</option>
+                            <? if($set_money):?>
+                                <input type="hidden" name="billing_money" value="<?=$set_money?>"><?=$set_money?>
+                            <? else:?>
+                                <select name="billing_money"  class="amount_block required" style="width:85%;">
+                                    <option value=''>--請選擇儲值金額--</option>
 
-							</select>
+                                </select>
+                            <? endif;?>
 						</td>
 					</tr>
 				</table>

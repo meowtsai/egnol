@@ -857,7 +857,7 @@ class Api2 extends MY_Controller
 	}
 
 	// 點數儲值
-	function ui_payment()
+	function ui_payment_old()
 	{
 		$site = $this->_get_site();
 		$server_id = $this->input->get_post("serverid");
@@ -926,11 +926,12 @@ class Api2 extends MY_Controller
 	}
 
 	// 點數儲值
-	function ui_payment_mycard()
+	function ui_payment()
 	{
 		$site = $this->_get_site();
 		$server_id = $this->input->get_post("serverid");
 		$partner_order_id = $this->input->get_post("poid");
+		$set_money = $this->input->get_post("money");
 		
 		$_SESSION['site'] = $site;
 			
@@ -988,6 +989,7 @@ class Api2 extends MY_Controller
 			->set("server_id", $server_id)
 			->set("characters", $characters)
 			->set("partner_order_id", $partner_order_id)
+			->set("set_money", $set_money)
 			->add_css_link("login_api")
 			->add_css_link("money")
 			->add_js_include("payment/index2")

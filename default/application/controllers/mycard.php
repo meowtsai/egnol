@@ -48,6 +48,7 @@ class Mycard extends MY_Controller {
 		$_SESSION['payment_game']		= $this->input->post('game');
 		$_SESSION['payment_server']		= $this->input->post('server');
 		$_SESSION['payment_character']	= $this->input->post('character');
+		$_SESSION['payment_api_call']   = $this->input->post('api_call');
 		//$_SESSION['payment_type']		= $this->input->post('billing_type');
 		//$_SESSION['payment_channel']	= $this->input->post('billing_channel');
         //print_r($this->input->post());
@@ -340,7 +341,20 @@ class Mycard extends MY_Controller {
 
 function go_payment_result($status, $transfer_status, $price, $message, $args='') 
 {
-	header('location: '.site_url("payment/result?s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args));
+	// 若沒有設定 site, 表示是系統 check_order 處理或有問題, 不用顯示結果
+	if(!isset($_SESSION['site']))
+	   exit();
+	
+	$site = $_SESSION['site'];
+	$api_call = $_SESSION['payment_api_call'];
+
+	$_SESSION['payment_api_call'] = '';
+	unset($_SESSION['payment_api_call']);
+
+	if($api_call == 'true')
+		header('location: '.g_conf('url', 'api')."api2/ui_payment_result?s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args);
+	else
+		header('location: '.g_conf('url', 'longe')."payment/result?site={$site}&s={$status}&ts={$transfer_status}&p={$price}&m=".urlencode($message)."&".$args);
 	exit();
 }
 /* End of file welcome.php */
