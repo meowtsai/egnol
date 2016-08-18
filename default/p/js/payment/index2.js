@@ -14,13 +14,13 @@ $(function()
 		},
 		showErrors: function(errorMap, errorList)
 		{
-		   var err = '';
-		   $(errorList).each(function(i, v)
-		   {
-			   err += v.message + "<br/>";
-		   });
-		   if (err)
-		   {
+		    var err = '';
+		    $(errorList).each(function(i, v)
+		    {
+			    err += v.message + "<br/>";
+		    });
+		    if (err)
+		    {
 				leOpenDialog('儲值錯誤', err, leDialogType.MESSAGE);
 			}
 		}
@@ -115,7 +115,7 @@ $(function()
         if (idx > 3) idx = 3;
         $('#choose_form .amount_block option').eq(idx).click();
         
-        $("input[name='amount']").val($("select[name='billing_money']").val());
+        if ($("input[name='billing_money']").val() == null) $("input[name='amount']").val($("select[name='billing_money']").val());
     }
 
 	$("select[name='game'] option").each(function()

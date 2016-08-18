@@ -40,6 +40,7 @@ class Payment extends MY_Controller
 		$this->_require_login();
 
 		$site = $this->_get_site();
+		$set_money = $this->input->get_post("money");
 
 		$_SESSION['site'] = $site;
 
@@ -57,6 +58,7 @@ class Payment extends MY_Controller
 			->set("games", $games)
 			->set("servers", $servers)
 			->set("characters", $characters)
+			->set("set_money", $set_money)
 			->add_css_link("login")
 			->add_css_link("money")
 			->add_js_include("payment/index2")
