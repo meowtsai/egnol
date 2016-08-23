@@ -1009,6 +1009,8 @@ class Api2 extends MY_Controller
 		$payment_character	= $_SESSION['payment_character'];
 		$payment_type		= $_SESSION['payment_type'];
 		$payment_channel	= $_SESSION['payment_channel'];
+		$cuid	            = $_SESSION['cuid'];
+		$oid	            = $_SESSION['oid'];
 
 		//$_SESSION['site']				= '';
 		$_SESSION['payment_game']		= '';
@@ -1016,12 +1018,16 @@ class Api2 extends MY_Controller
 		$_SESSION['payment_character']	= '';
 		$_SESSION['payment_type']		= '';
 		$_SESSION['payment_channel']	= '';
+		$_SESSION['cuid']	            = '';
+		$_SESSION['oid']	            = '';
 		//unset($_SESSION['site']);
 		unset($_SESSION['payment_game']);
 		unset($_SESSION['payment_server']);
 		unset($_SESSION['payment_character']);
 		unset($_SESSION['payment_type']);
 		unset($_SESSION['payment_channel']);
+		unset($_SESSION['cuid']);
+		unset($_SESSION['oid']);
 
 		// 讀取遊戲資料
 		$game = $this->db->from("games")->where("game_id", $payment_game)->get()->row();
@@ -1037,6 +1043,8 @@ class Api2 extends MY_Controller
 			->set("character", $character)
 			->set("billing_type", $payment_type)
 			->set("pay_type", $payment_channel)
+			->set("cuid", $cuid)
+			->set("order_id", $oid)
 			->set("status", $this->input->get("status"))
 			->set("message", urldecode($this->input->get("message")))
 			->add_css_link("login_api")

@@ -91,7 +91,7 @@ class Mycard extends MY_Controller {
 		$auth_url = $this->mycard_conf["auth_url"]."?".http_build_query($data);
         
 		$cnt = 0;
-		while ($cnt++ < 3) {
+		while ($cnt++ < 5) {
 			$result = json_decode(my_curl($auth_url));
 			if ( ! empty($result)) break;
 			sleep(1);
@@ -127,7 +127,6 @@ class Mycard extends MY_Controller {
 				$data['hash'] = hash('sha256', $this->mycard_conf["key1_new"].$data['authCode'].$data['facId'].$data['facMemId'].$this->mycard_conf["key2_new"]);
                 */
 				$mycard_ingame_url = $this->mycard_conf['pay_url']."?AuthCode=".$result->AuthCode;
-
                 $this->load->library("g_wallet");
                 $this->g_wallet->produce_mycard_order($this->g_user->uid, $mycard_billing_id, "mycard_billing", $amount, $_SESSION['payment_character'], "1", $_SESSION['payment_server']);
                 
@@ -197,6 +196,11 @@ class Mycard extends MY_Controller {
 			go_payment_result(0, 0, 0, $error_message);
 		}
 		
+		$_SESSION['payment_type']		= $post['PaymentType'];
+		$_SESSION['payment_channel']	= $post['MyCardType'];
+		$_SESSION['cuid']	            = $post['Currency'];
+		$_SESSION['oid']	            = $post['MyCardTradeNo'];
+        
         $data = array(
             'result'		=> $post['ReturnCode'],
             'mycard_trade_seq' => $post['MyCardTradeNo'],

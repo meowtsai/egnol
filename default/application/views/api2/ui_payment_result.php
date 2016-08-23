@@ -6,8 +6,8 @@
 
 	$get_point = !empty($this->input->get("gp"))? $this->input->get("gp") : 0;
 
-	$order_id = $this->input->get("oid");
-	$cuid = $this->input->get("cuid");
+	//$order_id = $this->input->get("oid");
+	//$cuid = $this->input->get("cuid");
 
     $tips = "若您儲值遇到任何問題，請向<a href='{$longe_url}service?site={$site}'>客服中心</a>反映。";
 ?>
