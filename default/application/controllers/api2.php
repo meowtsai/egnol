@@ -51,7 +51,7 @@ class Api2 extends MY_Controller
 	// - 帳號功能主要入口, 其他 ui 前置 function 由 web 呼叫
 	function ui_login()
 	{
-		$site	= $this->_get_site();
+		$site	= !empty($_SESSION['site']) ? $_SESSION['site'] : $this->_get_site();
 
 		$device_id	= !empty($_SESSION['login_deviceid']) ? $_SESSION['login_deviceid'] : $this->input->get_post("deviceid");
 		$_SESSION['login_deviceid']	= $device_id;
