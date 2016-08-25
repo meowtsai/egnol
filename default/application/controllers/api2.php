@@ -71,7 +71,7 @@ class Api2 extends MY_Controller
 			$_SESSION['login_key']		= $login_key;
 
 			// server 登入選擇模式, 0 = 不選擇(default), 1 = 登入後選擇
-			$server_mode = $this->input->get_post("servermode");
+			$server_mode = !empty($_SESSION['servermode']) ? $_SESSION['servermode'] : $this->input->get_post("servermode");
 			if(empty($server_mode))
 			{
 				$server_mode = 0;
