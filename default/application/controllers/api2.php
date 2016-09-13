@@ -172,6 +172,7 @@ class Api2 extends MY_Controller
 			header('Content-type:text/html; Charset=UTF-8');
 			//echo "<script type='text/javascript'>LongeAPI.onLogoutSuccess()</script>";
 			$ios_str = $this->g_user->uid."-_-".$email."-_-".$mobile."-_-".$external_id."-_-".$_SESSION['server_id']."-_-".$this->g_user->token."-_-".$_SESSION['login_channel'];
+			log_message("error", "ios_str: {$ios_str}");
 			echo "<script type='text/javascript'>
 				if (typeof LongeAPI != 'undefined') {
 				    LongeAPI.onLoginSuccess('{$this->g_user->uid}', '{$email}', '{$mobile}', '{$external_id}', '{$_SESSION['server_id']}', '{$this->g_user->token}', {$_SESSION['login_channel']});

@@ -323,6 +323,12 @@ class Service extends MY_Controller {
 					->where("u.email", $this->input->get("account"))
 					->or_where("u.mobile", $this->input->get("account"));
 			}
+            
+			if ($this->input->get("replies") || $this->input->get("cs_admin")) {
+				$this->DB2->join("question_replies qr", "q.id=qr.question_id", "left");
+                if ($this->input->get("replies")) $this->DB2->like("qr.content", $this->input->get("replies"), 'both');
+                if ($this->input->get("cs_admin")) $this->DB2->where("qr.admin_uid", $this->input->get("cs_admin"));
+			}
 									
 			if ($this->input->get("start_date")) {
 				$start_date = $this->DB2->escape($this->input->get("start_date"));
@@ -353,14 +359,31 @@ class Service extends MY_Controller {
 							'base_url'	=> site_url("service/get_list?".$query_string),
 							'total_rows'=> $total_rows,
 							'per_page'	=> 10
-						));				
-					
+						));
+                    
 					$this->g_layout->set("total_rows", $total_rows);
+                    
 					break;
 			}
 						
 			$this->DB2->stop_cache();
 			$this->DB2->flush_cache();
+                                
+                    $q_ids = array();
+                    
+					if ($query) {
+                        foreach($query->result() as $row) {
+                            $q_ids[] = $row->id;
+                        }
+                    }
+                    
+                    $reply_query = $this->DB2
+                        ->select("qr.question_id, au.name, count(*) as cnt")
+                        ->from("question_replies qr")
+				            ->join("admin_users au", "au.uid=qr.admin_uid", "left")
+                        ->where_in("qr.question_id", $q_ids)
+                        ->where("qr.is_official >", 0)
+                        ->group_by(array("qr.question_id", "au.name"))->get(); 
 		}
 		else {
 			$default_value = array(
@@ -371,11 +394,14 @@ class Service extends MY_Controller {
 		}
 					
 		$games = $this->DB2->from("games")->get();
+		$cs_admins = $this->DB2->from("admin_users")->where_in("role", array("cs", "cs_master"))->get();
 		
 		$this->g_layout
 			->add_breadcrumb("查詢")	
 			->set("query", isset($query) ? $query : false)
+			->set("reply_query", isset($reply_query) ? $reply_query : false)
 			->set("games", $games)
+			->set("cs_admins", $cs_admins)
 			->add_js_include("service/get_list")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();

@@ -1,6 +1,17 @@
 <?php 
 	$question_type = $this->config->item('question_type');
 	$question_status = $this->config->item('question_status');
+
+    $admin_repliers = array();
+
+    if ($reply_query) {
+        foreach ($reply_query->result() as $row) {
+            if (isset($admin_repliers[$row->question_id]))
+                $admin_repliers[$row->question_id] .= $row->name.'('.$row->cnt.')<br>';
+            else
+                $admin_repliers[$row->question_id] = $row->name.'('.$row->cnt.')<br>';
+        }
+    } 
 ?>
 <div id="func_bar">
 </div>
@@ -40,6 +51,17 @@
 		</select>
 		
 		<span class="sptl"></span>
+        
+        處理人員
+		<select name="cs_admin" style="width:120px">
+			<option value="">--</option>
+			<? foreach($cs_admins->result() as $row):?>
+			<option value="<?=$row->uid?>" <?=($this->input->get("cs_admin")==$row->uid ? 'selected="selected"' : '')?>><?=$row->name?></option>
+			<? endforeach;?>
+		</select>		
+			
+		<span class="sptl"></span>
+		
 				
 		建檔時間
 		<input type="text" name="start_date" value="<?=$this->input->get("start_date")?>" style="width:120px"> 至
@@ -51,6 +73,7 @@
 	<div class="control-group">
 		
 		<input type="text" name="content" value="<?=$this->input->get("content")?>" style="width:120px" placeholder="提問描述">
+		<input type="text" name="replies" value="<?=$this->input->get("replies")?>" style="width:120px" placeholder="回覆內容">
 		<input type="text" name="question_id" value="<?=$this->input->get("question_id")?>" style="width:90px" placeholder="#id">
 		<input type="text" name="uid" value="<?=$this->input->get("uid")?>" style="width:90px" placeholder="uid">
 		<input type="text" name="account" value="<?=$this->input->get("account")?>" style="width:90px" placeholder="帳號">
@@ -175,7 +198,7 @@
                     </div>
                 </td>			
                 <? endif;?>			
-                <td><?=$row->admin_uname?></td>
+                <td><?=$admin_repliers[$row->id]?></td>
                 <td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>
                 <td>
                     <div class="btn-group">
