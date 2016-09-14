@@ -369,21 +369,22 @@ class Service extends MY_Controller {
 			$this->DB2->stop_cache();
 			$this->DB2->flush_cache();
                                 
-                    $q_ids = array();
-                    
-					if ($query) {
-                        foreach($query->result() as $row) {
-                            $q_ids[] = $row->id;
-                        }
-                    }
-                    
-                    $reply_query = $this->DB2
-                        ->select("qr.question_id, au.name, count(*) as cnt")
-                        ->from("question_replies qr")
-				            ->join("admin_users au", "au.uid=qr.admin_uid", "left")
-                        ->where_in("qr.question_id", $q_ids)
-                        ->where("qr.is_official >", 0)
-                        ->group_by(array("qr.question_id", "au.name"))->get(); 
+            $q_ids = array();
+
+            if ($query && $query->num_rows() > 0) {
+                
+                foreach($query->result() as $row) {
+                    $q_ids[] = $row->id;
+                }
+                
+                $reply_query = $this->DB2
+                    ->select("qr.question_id, au.name, count(*) as cnt")
+                    ->from("question_replies qr")
+                        ->join("admin_users au", "au.uid=qr.admin_uid", "left")
+                    ->where_in("qr.question_id", $q_ids)
+                    ->where("qr.is_official >", 0)
+                    ->group_by(array("qr.question_id", "au.name"))->get(); 
+            }
 		}
 		else {
 			$default_value = array(
