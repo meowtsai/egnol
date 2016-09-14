@@ -198,7 +198,7 @@
                     </div>
                 </td>			
                 <? endif;?>			
-                <td><?=$admin_repliers[$row->id]?></td>
+                <td><?=(isset($admin_repliers[$row->id]))?$admin_repliers[$row->id]:""?></td>
                 <td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>
                 <td>
                     <div class="btn-group">
