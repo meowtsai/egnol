@@ -83,114 +83,29 @@
 .info_title {color:#000;font-weight:bold;line-height:18px;}
 .info_field {color:#333333;margin-bottom:16px;padding:0;line-height:18px;}
 
-/*
-#sign-in-btn {margin:0 auto;width:171px;height:50px;cursor:pointer;background-image: url(/p/image/member/login-btn.png);}
-#login-btn-quick {margin:0 auto;width:171px;height:50px;cursor:pointer;background-image: url(/p/image/member/play-btn.png);}
+#sign-in-btn {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn.png);}
+#login-btn-quick {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/play-btn.png);}
 #login-btn-facebook {margin:4px 2px;display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn-fb.png);}
 #login-btn-google {margin:4px 2px;display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn-google.png);}
 
-._continue {margin:0 auto;width:171px;height:50px;cursor:pointer;background-image: url(/p/image/member/enter.png);}
-#_change-account-btn {display:inline-block;width:141px;height:50px;cursor:pointer;background-image: url(/p/image/member/change-account.png);}
-#_change-pwd-btn {display:inline-block;width:141px;height:50px;cursor:pointer;background-image: url(/p/image/member/password.png);}
-#_bind-account-btn {display:inline-block;width:141px;height:50px;cursor:pointer;background-image: url(/p/image/member/id.png);}
-*/
-
-#content-login .login-ins #sign-in-btn,
-#content-login .login-ins ._continue
-{
-    width:171px;
-    height:50px;
-    cursor:pointer;
-	-moz-box-shadow: 0px 2px 0px 0px #863023;
-	-webkit-box-shadow: 0px 2px 0px 0px #863023;
-	box-shadow: 0px 2px 0px 0px #863023;
-	background-color:#e6280e;
-	border:1px solid #e6280e;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-    text-align:center;
-    line-height: 52px;
-	font-family: "微軟正黑體", "Arial";
-	font-size:17px;
-	text-decoration:none;
-}
-
-#content-login .login-ins #login-btn-quick, 
-#content-login .login-ins #_change-account-btn,
-#content-login .login-ins #_change-pwd-btn,
-#content-login .login-ins #_bind-account-btn
-{
-    width:171px;
-    height:50px;
-    cursor:pointer;
-	-moz-box-shadow: 0px 2px 0px 0px #ae761d;
-	-webkit-box-shadow: 0px 2px 0px 0px #ae761d;
-	box-shadow: 0px 2px 0px 0px #ae761d;
-	background-color:#fb8e00;
-	border:1px solid #fb8e00;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-    text-align:center;
-    line-height: 52px;
-	font-family: "微軟正黑體", "Arial";
-	font-size:17px;
-	text-decoration:none;
-}
-
-#sign-in-btn,
-#login-btn-quick,
-._continue {margin:0 auto;}
-
-#content-login .login-ins #login-btn-facebook {
-    margin:4px 2px;
-    display:inline-block;
-    width:141px;
-    height:46px;
-    cursor:pointer;
-	-moz-box-shadow: 0px 2px 0px 0px #364e8c;
-	-webkit-box-shadow: 0px 2px 0px 0px #364e8c;
-	box-shadow: 0px 2px 0px 0px #364e8c;
-	background-color:#4962a4;
-	border:1px solid #4962a4;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-    text-align:center;
-    line-height: 48px;
-	font-family: "微軟正黑體", "Arial";
-	font-size:14px;
-	text-decoration:none;
-}
-#content-login .login-ins #login-btn-google {
-    margin:4px 2px;
-    display:inline-block;
-    width:141px;
-    height:46px;
-    cursor:pointer;
-	-moz-box-shadow: 0px 2px 0px 0px #3463b1;
-	-webkit-box-shadow: 0px 2px 0px 0px #3463b1;
-	box-shadow: 0px 2px 0px 0px #3463b1;
-	background-color:#4086f6;
-	border:1px solid #4086f6;
-	display:inline-block;
-	cursor:pointer;
-	color:#ffffff;
-    text-align:center;
-    line-height: 48px;
-	font-family: "微軟正黑體", "Arial";
-	font-size:14px;
-	text-decoration:none;
-}
-
-#_change-account-btn,
-#_change-pwd-btn,
-#_bind-account-btn {display:inline-block;}
+._continue {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/enter.png);}
+#_change-account-btn {display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/change-account.png);}
+#_change-pwd-btn {display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/password.png);}
+#_bind-account-btn {display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/id.png);}
 
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5),
 	only screen and (-o-min-device-pixel-ratio: 15/10),
 	only screen and (min-resolution: 220dpi)
 {
 #api-header-logo {height:100%;background-image: url(https://game.longeplay.com.tw/p/image/header-logo-2@2x.png);background-size: contain;}
+
+#sign-in-btn {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn@2x.png);background-size: contain;}
+#login-btn-quick {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/play-btn@2x.png);background-size: contain;}
+#login-btn-facebook {margin:4px 2px;display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn-fb@2x.png);background-size: contain;}
+#login-btn-google {margin:4px 2px;display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn-google@2x.png);background-size: contain;}
+	
+._continue {margin:0 auto;width:171px;height:52px;cursor:pointer;background-image: url(/p/image/member/enter@2x.png);background-size: contain;}
+#_change-account-btn {display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/change-account@2x.png);background-size: contain;}
+#_change-pwd-btn {display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/password@2x.png);background-size: contain;}
+#_bind-account-btn {display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/id@2x.png);background-size: contain;}
 }
