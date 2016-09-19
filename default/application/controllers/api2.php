@@ -159,7 +159,7 @@ class Api2 extends MY_Controller
 				->set("device_id", $device_id)
 				->set("server_mode", $server_mode)
 				->set("servers", $servers)
-				->add_css_link("login_api")
+				->add_css_link("login_api_no_img")
 				->add_js_include("api2/login_game")
 				->api_view("api2/ui_member");
 		} 
@@ -588,7 +588,7 @@ class Api2 extends MY_Controller
 	function ui_register()
 	{
 		$this->_init_layout()
-			->add_css_link("login_api")
+			->add_css_link("login_api_no_img")
 			->add_js_include("api2/register")
 			->api_view();
 	}

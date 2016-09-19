@@ -1,0 +1,196 @@
+@charset "utf-8";
+/* CSS Document */
+/* For IE 6/7 (trigger hasLayout) */
+
+
+#content-login{background: #fff url(/p/image/content/common-bg-sdk.jpg) top center no-repeat; -moz-background-size: cover; background-size: cover; margin:0; padding:0; text-align:center; min-height:100%; display:block; z-index:1;}
+#content-login .login-ins{height:80%; margin:0 auto; padding:40px 0; color:#333; max-width:1050px; }
+#content-login .login-ins a { color:#333; text-decoration: none;}
+#content-login .login-ins a:hover{color:#e6290f;}
+.login-ins .login-form{ max-width:600px; width:100%; margin:0 auto; padding-top:30px; display:inline-block;}
+
+
+.login-button {	margin-top: 30px; width: 100%; color: #333; padding-bottom:10px; text-align:center;}
+.login-button p{ margin-bottom:10px;}
+
+.login-ins .login-other{ padding-top:14px; border-top: 1px solid #ccc; }
+.login-ins .login-other img:nth-of-type(1){ margin-right:10px;}
+
+
+.login-ins .notes{ padding:15px 15px 0 15px; border: 2px solid #e6290f; width:90%; margin:0 auto; text-align:left; margin-bottom:50px; background-color:#fff; filter:alpha(opacity=80); opacity: 0.8;  }
+
+.login-ins .notes li{ margin-left : 2em; text-indent : -1em ; line-height:20px; padding-bottom:15px;}
+
+.login .login_word{color:#fffb00;}
+.login-submit li span{width:70px;}
+.login span.UCode{max-width:300px; width:100%; text-align:left; margin:0px;}
+
+.login-ins .login_box{max-width:725px; width:100%; display:block; margin:20px auto;}
+.login_box .button{width:100%; text-align:right;}
+.login-ins .login_box .login_member{ background: url(/p/image/member/member_bg.png) top center no-repeat; background-size: 100% 100%; margin:50px auto; padding:0px; text-align:left; width:100%; display:block;}
+
+.login_member .login_info{ padding:40px; }
+.login_info .scrollbar{max-height:355px; overflow-x:hidden; line-height:25px;}
+
+.login-form .member_info, .login-form .member_password{ max-width:500px; margin:0 auto; text-align:left; width:90%; line-height:40px;}
+.member_info tr > th{ width:30%; text-align:right; padding:5px; vertical-align:middle;}
+.member_info tr > td{ width:60%; color:#e6290f; padding:5px; vertical-align:middle;}
+
+.login-form input { font-family: "微軟正黑體",  "Arial"; color:#333; box-sizing: border-box; border-radius:5px; height:50px; font-size:18px; border:#ccc thin solid; background:#fff; width:90%; max-width:300px; padding:10px;}
+.login-button .button_info{ margin-bottom:10px;}
+
+
+.member_password tr > th{ width:100%; vertical-align:middle; padding:5px;}
+.member_password .title{ margin-right:10px; width:30%; display:block; text-align:right; float:left;}
+.member_password th > input{ width:60%;}
+/*RWD*/
+
+
+@media only screen and (max-width:1150px){
+
+#content-login .login-ins { width:calc(90% - 50px);}
+}
+@media only screen and (max-width:985px){
+
+#content-login .login-ins { width:calc(100% - 30px);}
+}
+
+@media only screen and (max-width:805px){
+.login_member .login_info{ padding:20px; }
+}
+
+@media only screen and (max-width:650px){
+.login .login_word span{ display:none;}
+.login li span, .login .lgin_word{ max-width:300px; width:90%; text-align:left; margin:0 0 10px 0;}
+.login_box .button{text-align:center;}
+
+.member_password .title{ margin:0px; width:100%; display:block; text-align:left; float:left;}
+.member_password th > input{ width:100%; max-width:500px;}
+
+
+}
+
+@media only screen and (max-width:450px){
+.login-button .button_submit{ width:48%;}
+.member_info tr > th{ width:40%;}
+.member_info tr > td{ width:50%;}
+
+}
+
+#api-header-logo {height:100%;background-image: url(https://game.longeplay.com.tw/p/image/header-logo-2.png);background-size: contain;}
+
+#info_block {border-radius:10px;border:1px solid #ddd;background-color:#d6d6d6;padding:10px 0;}
+.info_title {color:#000;font-weight:bold;line-height:18px;}
+.info_field {color:#333333;margin-bottom:16px;padding:0;line-height:18px;}
+
+/*
+#sign-in-btn {margin:0 auto;width:171px;height:50px;cursor:pointer;background-image: url(/p/image/member/login-btn.png);}
+#login-btn-quick {margin:0 auto;width:171px;height:50px;cursor:pointer;background-image: url(/p/image/member/play-btn.png);}
+#login-btn-facebook {margin:4px 2px;display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn-fb.png);}
+#login-btn-google {margin:4px 2px;display:inline-block;width:141px;height:52px;cursor:pointer;background-image: url(/p/image/member/login-btn-google.png);}
+
+._continue {margin:0 auto;width:171px;height:50px;cursor:pointer;background-image: url(/p/image/member/enter.png);}
+#_change-account-btn {display:inline-block;width:141px;height:50px;cursor:pointer;background-image: url(/p/image/member/change-account.png);}
+#_change-pwd-btn {display:inline-block;width:141px;height:50px;cursor:pointer;background-image: url(/p/image/member/password.png);}
+#_bind-account-btn {display:inline-block;width:141px;height:50px;cursor:pointer;background-image: url(/p/image/member/id.png);}
+*/
+
+#content-login .login-ins #sign-in-btn,
+#content-login .login-ins ._continue
+{
+    width:171px;
+    height:50px;
+    cursor:pointer;
+	-moz-box-shadow: 0px 2px 0px 0px #863023;
+	-webkit-box-shadow: 0px 2px 0px 0px #863023;
+	box-shadow: 0px 2px 0px 0px #863023;
+	background-color:#e6280e;
+	border:1px solid #e6280e;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+    text-align:center;
+    line-height: 52px;
+	font-family: "微軟正黑體", "Arial";
+	font-size:17px;
+	text-decoration:none;
+}
+
+#content-login .login-ins #login-btn-quick, 
+#content-login .login-ins #_change-account-btn,
+#content-login .login-ins #_change-pwd-btn,
+#content-login .login-ins #_bind-account-btn
+{
+    width:171px;
+    height:50px;
+    cursor:pointer;
+	-moz-box-shadow: 0px 2px 0px 0px #ae761d;
+	-webkit-box-shadow: 0px 2px 0px 0px #ae761d;
+	box-shadow: 0px 2px 0px 0px #ae761d;
+	background-color:#fb8e00;
+	border:1px solid #fb8e00;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+    text-align:center;
+    line-height: 52px;
+	font-family: "微軟正黑體", "Arial";
+	font-size:17px;
+	text-decoration:none;
+}
+
+#sign-in-btn,
+#login-btn-quick,
+._continue {margin:0 auto;}
+
+#content-login .login-ins #login-btn-facebook {
+    margin:4px 2px;
+    display:inline-block;
+    width:141px;
+    height:46px;
+    cursor:pointer;
+	-moz-box-shadow: 0px 2px 0px 0px #364e8c;
+	-webkit-box-shadow: 0px 2px 0px 0px #364e8c;
+	box-shadow: 0px 2px 0px 0px #364e8c;
+	background-color:#4962a4;
+	border:1px solid #4962a4;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+    text-align:center;
+    line-height: 48px;
+	font-family: "微軟正黑體", "Arial";
+	font-size:14px;
+	text-decoration:none;
+}
+#content-login .login-ins #login-btn-google {
+    margin:4px 2px;
+    display:inline-block;
+    width:141px;
+    height:46px;
+    cursor:pointer;
+	-moz-box-shadow: 0px 2px 0px 0px #3463b1;
+	-webkit-box-shadow: 0px 2px 0px 0px #3463b1;
+	box-shadow: 0px 2px 0px 0px #3463b1;
+	background-color:#4086f6;
+	border:1px solid #4086f6;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+    text-align:center;
+    line-height: 48px;
+	font-family: "微軟正黑體", "Arial";
+	font-size:14px;
+	text-decoration:none;
+}
+
+#_change-account-btn,
+#_change-pwd-btn,
+#_bind-account-btn {display:inline-block;}
+
+@media only screen and (-webkit-min-device-pixel-ratio: 1.5),
+	only screen and (-o-min-device-pixel-ratio: 15/10),
+	only screen and (min-resolution: 220dpi)
+{
+#api-header-logo {height:100%;background-image: url(https://game.longeplay.com.tw/p/image/header-logo-2@2x.png);background-size: contain;}
+}
