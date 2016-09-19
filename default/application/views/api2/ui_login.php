@@ -30,9 +30,14 @@
 					<p><a href="<?=$api_url?>api2/ui_register?site=<?=$site?>" title="login">註冊帳號</a>&nbsp;│&nbsp;<a href="<?=$api_url?>api2/ui_forgot_password?site=<?=$site?>" title="login">忘記密碼</a></p>
 					<p><img id="login-btn-quick" src="<?=$longe_url?>p/image/member/play-btn.png" style="cursor:pointer;" parm1="<?=$device_id?>" parm2="<?=$site?>" /></p>
 */ ?>
+                    <?/*
 					<p><img id="sign-in-btn" onclick="javascript:$('#doSubmit').trigger('click')" /></p>
 					<p><a href="<?=$api_url?>api2/ui_register?site=<?=$site?>" title="login">註冊帳號</a>&nbsp;│&nbsp;<a href="<?=$api_url?>api2/ui_forgot_password?site=<?=$site?>" title="login">忘記密碼</a></p>
 					<p><img id="login-btn-quick" parm1="<?=$device_id?>" parm2="<?=$site?>" /></p>
+                    */?>
+                    <p><a id="sign-in-btn" href="#" onclick="javascript:$('#doSubmit').trigger('click')">登入</a></p>
+					<p><a href="<?=$api_url?>api2/ui_register?site=<?=$site?>" title="login">註冊帳號</a>&nbsp;│&nbsp;<a href="<?=$api_url?>api2/ui_forgot_password?site=<?=$site?>" title="login">忘記密碼</a></p>
+					<p><a id="login-btn-quick" href="#" parm1="<?=$device_id?>" parm2="<?=$site?>">直接玩</a></p>
 				</div>
 
 				<div class="login-other">
@@ -44,13 +49,14 @@
 						if($channel['channel'] == "facebook")
 						{
 							// echo "<img id='login-btn-facebook' style='cursor:pointer;margin:4px;' src='{$longe_url}p/image/member/login-btn-fb.png' />";
-							echo "<img id='login-btn-facebook' />";
+							echo "<button type='button' id='login-btn-facebook' href='#'>Facebook帳號登入</button >"; 
 						}
 						else if($channel['channel'] == "google")
 						{
 							// echo "<img id='login-btn-google' style='cursor:pointer;margin:4px;' src='{$longe_url}p/image/member/login-btn-google.png' ";
 							// echo "parm=\"{$api_url}api2/ui_channel_login?site={$site}&channel={$channel['channel']}\" />";
-							echo "<img id='login-btn-google' parm=\"{$api_url}api2/ui_channel_login?site={$site}&channel={$channel['channel']}\" />";
+							//echo "<img id='login-btn-google' parm=\"{$api_url}api2/ui_channel_login?site={$site}&channel={$channel['channel']}\" />";
+							echo "<button type='button' id='login-btn-google' href='#' parm=\"{$api_url}api2/ui_channel_login?site={$site}&channel={$channel['channel']}\">Google帳號登入</button >";
 						}
 					}
 				?>

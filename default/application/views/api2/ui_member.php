@@ -54,11 +54,19 @@
 				<div id="button_block" class="login-button">
 					<p>
 <? if($is_bind): ?>
-						<img id="_change-account-btn" onclick="javascript:window.location.href='<?=$api_url?>api2/ui_change_account?site=<?=$site?>'" class="button_info" />
+                        <a id="_change-account-btn" href="#" onclick="javascript:window.location.href='<?=$api_url?>api2/ui_change_account?site=<?=$site?>'">切換帳號</a>
+                        <a id="_change-pwd-btn" href="#" onclick="javascript:window.location.href='<?=$api_url?>api2/ui_change_password?site=<?=$site?>'">修改資料</a>
+						<?/*
+                        <img id="_change-account-btn" onclick="javascript:window.location.href='<?=$api_url?>api2/ui_change_account?site=<?=$site?>'" class="button_info" />
 						<img id="_change-pwd-btn" onclick="javascript:window.location.href='<?=$api_url?>api2/ui_change_password?site=<?=$site?>'" class="button_info" />
+                        */?>
 <? else: ?>
+                        <a id="_change-account-btn" href="#" onclick="javascript:window.location.href='<?=$api_url?>api2/ui_change_account?site=<?=$site?>'">切換帳號</a>
+                        <a id="_bind-account-btn" href="#" onclick="javascript:window.location.href='<?=$api_url?>api2/ui_bind_account?site=<?=$site?>'">綁定帳號</a>
+						<?/*
 						<img id="_change-account-btn" onclick="javascript:window.location.href='<?=$api_url?>api2/ui_change_account?site=<?=$site?>'" class="button_info" />
 						<img id="_bind-account-btn" onclick="javascript:window.location.href='<?=$api_url?>api2/ui_bind_account?site=<?=$site?>'" class="button_info" />
+                        */?>
 <? endif; ?>
 					</p>
 <? if($server_mode == 1): ?>
@@ -81,7 +89,10 @@
 					</p>
 <? endif; ?>
 					<input name="doLogin" type="submit" id="doSubmit" value="" style="display:none;" />
+						<?/*
 					<img id="continue" src="<?=$longe_url?>p/image/member/enter.png" class="_continue" />
+                        */?>
+                        <a id="continue" href="#" class="_continue">進入遊戲</a>
 				</div>
 		    </div>
 		</form>
