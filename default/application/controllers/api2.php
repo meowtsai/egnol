@@ -121,7 +121,7 @@ class Api2 extends MY_Controller
 			}
 
 			$this->_init_layout()
-				->add_css_link("login_api")
+				->add_css_link("login_api_no_img")
 				->add_js_include("api2/login")
 				->set("partner", $partner)
 				->set("game_key", $game_key)
