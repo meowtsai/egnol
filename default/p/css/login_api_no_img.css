@@ -71,7 +71,11 @@
 }
 
 @media only screen and (max-width:450px){
-.login-button .button_submit{ width:48%;}
+#content-login .login-ins .login-button #submit-btn,
+#content-login .login-ins .login-button #cancel-btn,
+#content-login .login-ins #_change-account-btn,
+#content-login .login-ins #_change-pwd-btn,
+#content-login .login-ins #_bind-account-btn { width:47%;}
 .member_info tr > th{ width:40%;}
 .member_info tr > td{ width:50%;}
 
@@ -96,9 +100,10 @@
 */
 
 #content-login .login-ins #sign-in-btn,
-#content-login .login-ins ._continue
+#content-login .login-ins ._continue,
+#content-login .login-ins #submit-btn
 {
-    width:171px;
+    width:169px;
     height:50px;
     cursor:pointer;
 	-moz-box-shadow: 0px 2px 0px 0px #863023;
@@ -112,7 +117,7 @@
     text-align:center;
     line-height: 52px;
 	font-family: "微軟正黑體", "Arial";
-	font-size:17px;
+	font-size:18px;
 	text-decoration:none;
 }
 
@@ -137,15 +142,16 @@
 	font-size:17px;
 	text-decoration:none;
 }
+#content-login .login-ins #login-btn-quick {font-size:18px;}
 
 #sign-in-btn,
 #login-btn-quick,
-._continue {width:171px;margin:0 auto;}
+._continue {width:169px;margin:0 auto;}
 
 #content-login .login-ins #login-btn-facebook {
     margin:4px 2px;
     display:inline-block;
-    width:141px;
+    width:139px;
     height:46px;
     cursor:pointer;
 	-moz-box-shadow: 0px 2px 0px 0px #364e8c;
@@ -165,7 +171,7 @@
 #content-login .login-ins #login-btn-google {
     margin:4px 2px;
     display:inline-block;
-    width:141px;
+    width:139px;
     height:46px;
     cursor:pointer;
 	-moz-box-shadow: 0px 2px 0px 0px #3463b1;
@@ -185,7 +191,27 @@
 
 #_change-account-btn,
 #_change-pwd-btn,
-#_bind-account-btn {width:141px;display:inline-block;}
+#_bind-account-btn {width:139px;display:inline-block;}
+
+#content-login .login-ins #cancel-btn
+{
+    width:169px;
+    height:50px;
+    cursor:pointer;
+	-moz-box-shadow: 0px 2px 0px 0px #484848;
+	-webkit-box-shadow: 0px 2px 0px 0px #484848;
+	box-shadow: 0px 2px 0px 0px #484848;
+	background-color:#5f5f5f;
+	border:1px solid #5f5f5f;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+    text-align:center;
+    line-height: 52px;
+	font-family: "微軟正黑體", "Arial";
+	font-size:18px;
+	text-decoration:none;
+}
 
 @media only screen and (-webkit-min-device-pixel-ratio: 1.5),
 	only screen and (-o-min-device-pixel-ratio: 15/10),

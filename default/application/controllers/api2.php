@@ -645,7 +645,7 @@ class Api2 extends MY_Controller
 	function ui_bind_account()
 	{
 		$this->_init_layout()
-			->add_css_link("login_api")
+			->add_css_link("login_api_no_img")
 			->add_js_include("api2/bind_account")
 			->api_view();
 	}
@@ -689,7 +689,7 @@ class Api2 extends MY_Controller
 	function ui_forgot_password()
 	{
 		$this->_init_layout()
-			->add_css_link("login_api")
+			->add_css_link("login_api_no_img")
 			->add_js_include("api2/forgot_password")
 			->api_view();
 	}
@@ -779,7 +779,7 @@ class Api2 extends MY_Controller
 		$this->_require_login();
 
 		$this->_init_layout()
-			->add_css_link("login_api")
+			->add_css_link("login_api_no_img")
 			->add_js_include("api2/change_password")
 			->api_view();
 	}
