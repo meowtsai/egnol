@@ -140,8 +140,8 @@ function cancelButton () {
 
 				<div class="login-button">
 					<input name="doSubmit" type="submit" id="doSubmit" value="" style="display:none;" />
-                    <p><img style="cursor:pointer;" src="<?=$longe_url?>p/image/money/confirm-btn.png" onclick="javascript:$('#doSubmit').trigger('click')" /></p>
-					<p><img style="cursor:pointer;" src="<?=$longe_url?>p/image/member/clear.png" onclick="javascript:cancelButton();" /></p>
+                    <p><a id="submit-btn" href="#" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click');">確認送出</a></p>
+                    <p><a id="cancel-btn" href="#" class="button_submit" onclick="javascript:cancelButton();">取消</a></p>
 				</div>
 
 				<ul class="notes">

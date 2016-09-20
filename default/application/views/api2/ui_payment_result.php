@@ -78,7 +78,7 @@
 
 			<div class="login-button">
 				<p>
-                    <img src="<?=$longe_url?>p/image/member/submit.png" class="button_submit" onclick="javascript:onClickPaymentOK();" />
+                    <a id="submit-btn" href="#" class="button_submit" onclick="javascript:onClickPaymentOK();">確認</a>
 				</p>
 			</div>
 

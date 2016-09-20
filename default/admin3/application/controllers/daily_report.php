@@ -106,7 +106,7 @@ class Daily_report extends MY_Controller {
                         <td>".$row->newuser_count."</td>
                     </tr>
                     <tr>
-                        <td class='th1'>直接申請</td>
+                        <td class='th1'>龍邑會員</td>
                         <td>".$row->y6_newuser_longe_count."</td>
                         <td>".$row->y5_newuser_longe_count."</td>
                         <td>".$row->y4_newuser_longe_count."</td>
@@ -139,7 +139,7 @@ class Daily_report extends MY_Controller {
                         <td>".$row->newuser_google_count."</td>
                     </tr>
                     <tr>
-                        <td class='th1'>行動裝置</td>
+                        <td class='th1'>直接玩</td>
                         <td>".$row->y6_newuser_quick_count."</td>
                         <td>".$row->y5_newuser_quick_count."</td>
                         <td>".$row->y4_newuser_quick_count."</td>

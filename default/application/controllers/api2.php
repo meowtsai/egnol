@@ -991,7 +991,7 @@ class Api2 extends MY_Controller
 			->set("characters", $characters)
 			->set("partner_order_id", $partner_order_id)
 			->set("set_money", $set_money)
-			->add_css_link("login_api")
+			->add_css_link("login_api_no_img")
 			->add_css_link("money")
 			->add_js_include("payment/index2")
 			->api_view();
@@ -1048,7 +1048,7 @@ class Api2 extends MY_Controller
 			->set("order_id", $oid)
 			->set("status", $this->input->get("status"))
 			->set("message", urldecode($this->input->get("message")))
-			->add_css_link("login_api")
+			->add_css_link("login_api_no_img")
 			->add_css_link("money")
 			->api_view();
 	}
