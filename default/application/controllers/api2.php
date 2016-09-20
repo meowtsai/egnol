@@ -837,7 +837,7 @@ class Api2 extends MY_Controller
 	function ui_service_agreement()
 	{
 		$this->_init_layout()
-			->add_css_link("login_api")
+			->add_css_link("login_api_no_img")
 			->api_view('member/service_agreement');
 	}
 
@@ -845,7 +845,7 @@ class Api2 extends MY_Controller
 	function ui_privacy_agreement()
 	{
 		$this->_init_layout()
-			->add_css_link("login_api")
+			->add_css_link("login_api_no_img")
 			->api_view('member/privacy_agreement');
 	}
 
@@ -853,7 +853,7 @@ class Api2 extends MY_Controller
 	function ui_member_agreement()
 	{
 		$this->_init_layout()
-			->add_css_link("login_api")
+			->add_css_link("login_api_no_img")
 			->api_view('member/member_agreement');
 	}
 
@@ -1111,7 +1111,7 @@ class Api2 extends MY_Controller
 	function ui_ios_iap_view()
 	{
 		$this->_init_layout()
-			->add_css_link("login_api")
+			->add_css_link("login_api_no_img")
 			->add_css_link("money")
 			->api_view();
 	}
@@ -1560,7 +1560,7 @@ class Api2 extends MY_Controller
 	function ui_android_iap_view()
 	{
 		$this->_init_layout()
-			->add_css_link("login_api")
+			->add_css_link("login_api_no_img")
 			->add_css_link("money")
 			->api_view();
 	}

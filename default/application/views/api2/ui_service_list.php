@@ -14,7 +14,7 @@
 		<ul class="server_case">
 			<? $no = $query->num_rows();
 				foreach($query->result() as $row):?>
-				<a href="<?=$longe_url?>service/view/<?=$row->id?>?site=<?=$site?>")">
+				<a href="<?=$longe_url?>service/view/<?=$row->id?>?site=<?=$site?>">
 					<li style="margin-top:10px;">
 						<table style="width:100%;">
 							<tr>

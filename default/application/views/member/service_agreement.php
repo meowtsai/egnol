@@ -82,7 +82,7 @@
 					</p>
 				</div>
 			</div>
-			<div class="button"><img style="cursor:pointer;" src="<?=$longe_url?>p/image/member/back.png" onclick="javascript:history.back();" /></div>
+			<div class="button"><a id="cancel-btn" href="#" class="button_submit" onclick="javascript:history.back();">返回</a></div>
 		</div>
 	</div>
 </div>

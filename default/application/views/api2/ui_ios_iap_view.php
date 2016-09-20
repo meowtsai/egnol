@@ -64,8 +64,8 @@
 				<li id="payment_msg" style="height:140px;overflow-y:auto;"></li>
 			</ul>
 			<div class="login-button">
-				<p><img style="cursor:pointer;" src="<?=$longe_url?>p/image/money/confirm-btn.png" onclick="javascript:OnClickConfirm()" /></p>
-				<p><img style="cursor:pointer;" src="<?=$longe_url?>p/image/member/clear.png" onclick="javascript:OnClickCancel();" /></p>
+				<p><a id="submit-btn" href="#" class="button_submit" onclick="javascript:OnClickConfirm();">確認送出</a></p>
+				<p><a id="cancel-btn" href="#" class="button_submit" onclick="javascript:OnClickCancel();">取消</a></p>
 			</div>
 		</div>
 	</div>
