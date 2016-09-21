@@ -22,17 +22,12 @@ class News extends MY_Controller {
 		));	
 		
 		//$news = $this->db->where("game_id", $site)->order_by("create_time", "desc")->get("news", 10);
-		if ($this->input->get_post("format")=="txt") {
-            echo "一些冠冕堂皇的說詞
-            更多冠冕堂皇的說詞";
-        } else {
-            $this->_init_layout()
-                ->add_css_link("login")
-                ->add_css_link("news")
-                ->add_css_link("jquery.mCustomScrollbar")
-                ->set("news", $this->g_bulletins->get_list($site, $type, 7, $this->input->get("record")))
-                ->standard_view();
-        }
+        $this->_init_layout()
+            ->add_css_link("login")
+            ->add_css_link("news")
+            ->add_css_link("jquery.mCustomScrollbar")
+            ->set("news", $this->g_bulletins->get_list($site, $type, 7, $this->input->get("record")))
+            ->standard_view();
 	}
     
 	function preview($id)
