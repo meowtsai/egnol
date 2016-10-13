@@ -145,7 +145,7 @@ class Api2 extends MY_Controller
 	{
 		$site	= $this->_get_site();
             
-		if (!isset($_SESSION['skip_pick_server']))
+		if (!isset($_SESSION['skip_pick_server']) && !isset($_SESSION['server_id']))
 		{
 			// 已登入, 改顯示會員畫面
 			$partner    = !empty($_SESSION['login_partner']) ? $_SESSION['login_partner'] : $this->input->get_post("partner");
