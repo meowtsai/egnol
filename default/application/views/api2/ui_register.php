@@ -1,48 +1,22 @@
-<div id="content-login">
-	<div class="login-ins">
+<div class="site_container">
+    <div class="grid_container">
+        <h1>用戶註冊</h1>
+        <div id="line"></div>
         <form id="register_form" method="post" action="<?=$api_url?>api2/ui_register_json?site=<?=$site?>">
-			<div class="login-form">
-				<table class="member_info">
-					<tr>
-						<th>E-mail</th>
-						<td><input type="text" name="email" class="email" id="email" size="33"></td>
-					</tr>
-					<tr>
-						 <th>手機號碼</th>
-						 <td><input type="text" name="mobile" class="mobile isMobile" id="mobile" size="33"></td>
-					<tr>
-						 <th></th>
-						 <td>E-mail與手機號碼至少需填寫其中一個</td>
-					</tr>
-					<tr>
-						<th>密　　碼</th><td><input type="password" id="pwd" name="pwd" class="required" minlength="6" maxlength="18" size="33"></td>
-					</tr>
-					<tr>
-						<th>確認密碼</th><td><input type="password" name="pwd2" class="required" equalTo='#pwd' size="33"></td>
-					</tr>
-					<tr>
-						<th>驗證碼</th>
-						<td>
-							<input type="text" name="captcha" class="required" maxlength="4" minlength="4" value="" size="33" style="width:100px;">
-                            <div id="captcha_area" style="display:inline-block;vertical-align:middle;"></div>
-						</td>
-					</tr>
-				</table>
-
-				<div class="login-button">
-					<p>
-						<input type="checkbox" name="chk" class="required" id="check" style="max-width:20px;"> <span style="vertical-align:text-bottom;">我已閱讀並同意</span>
-						<a href="<?=$api_url?>api2/ui_service_agreement?site=<?=$site?>" style="vertical-align:text-bottom;color:#a50000">會員服務條款</a><span style="vertical-align:text-bottom;">、</span>
-						<a href="<?=$api_url?>api2/ui_member_agreement?site=<?=$site?>" style="vertical-align:text-bottom;color:#a50000">個資同意書</a><span style="vertical-align:text-bottom;">與</span>
-						<a href="<?=$api_url?>api2/ui_privacy_agreement?site=<?=$site?>"  style="vertical-align:text-bottom;color:#a50000">隱私權政策</a>
-					</p>
-					<p>
-                    	<input name="doLogin" type="submit" id="doSubmit" value="" class="button_submit" style="display:none;" />
-                        <a href="#" title="確定"><img src="<?=$longe_url?>p/image/member/submit.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')"></a>
-						&nbsp;<a href="<?=$api_url?>api2/ui_login?site=<?=$site?>" title="取消"><img src="<?=$longe_url?>p/image/member/clear.png" class="button_submit"></a>
-					</p>
-				</div>
-			</div>
-		</form>
-	</div>
+            <div class="inputbox"><input type="text" name="mobile" id="mobile" class="form__input mobile isMobile" placeholder="請輸入手機號碼"/></div>
+            <div class="inputbox"><input type="text" name="email" id="email" class="form__input email" placeholder="請輸入Email"/></div>
+            <div class="clear"></div>
+            <p class="text_01">E-mail與手機號碼至少需填寫其中一個</p>
+            <div class="inputbox"><input type="password" id="pwd" name="pwd" class="form__input" placeholder="請輸入密碼(至少六碼以上)" required /></div>
+            <div class="inputbox"><input type="password" id="pwd2" name="pwd2" class="form__input" placeholder="確認密碼" required /></div>
+            <div class="inputbox"><input type="text" name="captcha" class="form__input" placeholder="請輸入驗證碼" required /></div>
+            <div id="captcha_area" style="display:inline-block;vertical-align:middle;width:49%;text-align: center;"></div>
+            <div class="clear"></div>
+            <p class="text_02"><input type="checkbox" name="chk" class="required" id="check">我已閱讀並同意<a href="<?=$api_url?>api2/ui_service_agreement?site=<?=$site?>">會員服務條款</a>、<a href="<?=$api_url?>api2/ui_member_agreement?site=<?=$site?>">個資同意書</a>與<a href="<?=$api_url?>api2/ui_privacy_agreement?site=<?=$site?>">隱私政策</a></p>
+            <input name="doLogin" type="submit" id="doSubmit" value="" class="button_submit" style="display:none;" />
+            <button type="button" class="btn btn-primary btn-block btn-large" onclick="javascript:$('#doSubmit').trigger('click')">立即註冊</button>
+        </form>
+        <div id="line"></div>
+        <div id="longe"><img src="<?=$api_url?>/p/image/api2/longe.png" width="66" height="30"></div>
+    </div>
 </div>

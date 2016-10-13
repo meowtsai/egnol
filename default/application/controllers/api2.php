@@ -121,7 +121,11 @@ class Api2 extends MY_Controller
 			}
 
 			$this->_init_layout()
-				->add_css_link("login_api_no_img")
+				//->add_css_link("login_api_no_img")
+				->add_css_link("style")
+				->add_css_link("normalize")
+				->add_js_include("api2/prefixfree.min")
+				->add_js_include("api2/index")
 				->add_js_include("api2/login")
 				->set("partner", $partner)
 				->set("game_key", $game_key)
@@ -140,8 +144,8 @@ class Api2 extends MY_Controller
 	function _ui_member()
 	{
 		$site	= $this->_get_site();
-
-		if (!isset($_SESSION['server_id']))
+            
+		if (!isset($_SESSION['skip_pick_server']))
 		{
 			// 已登入, 改顯示會員畫面
 			$partner    = !empty($_SESSION['login_partner']) ? $_SESSION['login_partner'] : $this->input->get_post("partner");
@@ -159,12 +163,17 @@ class Api2 extends MY_Controller
 				->set("device_id", $device_id)
 				->set("server_mode", $server_mode)
 				->set("servers", $servers)
-				->add_css_link("login_api_no_img")
+				->add_css_link("style")
+				->add_css_link("normalize")
+				->add_js_include("api2/prefixfree.min")
+				->add_js_include("api2/index")
 				->add_js_include("api2/login_game")
 				->api_view("api2/ui_member");
-		} 
+		}
 		else
-		{	
+		{
+            $is_login_game = $this->_login_game();
+        
 			$email = !empty($this->g_user->email) ? $this->g_user->email : "";
 			$mobile = !empty($this->g_user->mobile) ? $this->g_user->mobile : "";
 			$external_id = !empty($this->g_user->external_id) ? $this->g_user->external_id : "";
@@ -187,7 +196,9 @@ class Api2 extends MY_Controller
 			</script>";
 			
 			$_SESSION['server_id'] = '';
-			unset($_SESSION['server_id']);
+			unset($_SESSION['server_id']);			
+			$_SESSION['skip_pick_server'] = '';
+			unset($_SESSION['skip_pick_server']);
 		}
 	}
 	
@@ -226,6 +237,7 @@ class Api2 extends MY_Controller
 		if ( $this->g_user->verify_account($email, $mobile, $pwd) === true )
 		{
 			$_SESSION['login_channel'] = 1; // 帳密登入
+            $_SESSION['skip_pick_server'] = 1;
 			
 			die(json_message(array("message"=>"成功", "site"=>$site), true));
 		}
@@ -237,8 +249,9 @@ class Api2 extends MY_Controller
 	
 	function ui_login_game_json()
 	{
+        /*
 		header('content-type:text/html; charset=utf-8');
-
+        
         $is_duplicate_login = $this->_check_duplicate_login();
         if ($is_duplicate_login) die(json_failure('此帳號已於其他裝置進行遊戲中，請先將其登出。'));
         
@@ -300,11 +313,98 @@ class Api2 extends MY_Controller
             unset($bulk);
             
 		    $_SESSION['server_id'] = $server;
+            //return 1;
+			die(json_message(array("message"=>"成功", "site"=>$site, "token"=>$this->g_user->token), true));
+		}
+		else
+		{
+            //return 0;
+			die(json_failure('登入伺服器錯誤'));
+		}
+        */
+        
+        $is_login_game = $this->_login_game();
+		if ($is_login_game)
+		{
+		    $site = $this->_get_site();
 			die(json_message(array("message"=>"成功", "site"=>$site, "token"=>$this->g_user->token), true));
 		}
 		else
 		{
 			die(json_failure('登入伺服器錯誤'));
+		}
+	}
+    
+	function _login_game()
+	{
+        $is_duplicate_login = $this->_check_duplicate_login();
+        if ($is_duplicate_login) die(json_failure('此帳號已於其他裝置進行遊戲中，請先將其登出。'));
+        
+		$site = $this->_get_site();
+
+		if (isset($_SESSION['server_mode']) && $_SESSION['server_mode'] == 1) {
+			$server = $this->input->post("server");
+			if(empty($server))
+			{
+				die(json_failure('請選擇伺服器'));
+			}
+		} else {
+			$single_server = $this->db->from("servers")->where("game_id", $site)->order_by("server_id")->get()->row();
+			
+			$server = $single_server->server_id;
+		}
+
+		$query = $this->db->from("log_game_logins")
+		           ->where("uid", $_SESSION['user_id'])
+				   ->where("is_first", "1")
+				   ->where("server_id", $server)
+				   ->where("game_id", $site)->get();
+		if (empty($query) || $query->num_rows() == 0)
+		{
+			$is_first = '1';
+		} else {
+			$is_first = '0';
+	        $this->db->where("uid", $_SESSION['user_id'])
+			  ->where("is_recent", '1')
+			  ->where("server_id", $server)
+			  ->where("game_id", $site)->update("log_game_logins", array("is_recent" => '0'));
+		}	
+		$ad = $this->input->get('ad') ? $this->input->get('ad') : (empty($_SESSION['ad']) ? '' : $_SESSION['ad']);
+		
+		$data = array(
+			'uid' => $_SESSION['user_id'],
+			'ip' => $_SERVER["REMOTE_ADDR"],
+			//'create_time' => now(),
+			'is_recent' => '1',
+			'is_first' => $is_first,
+			'ad' => $ad,
+			'server_id' => $server,
+			'game_id' => $site,
+            'device_id' => $_SESSION['login_deviceid'],
+			'token' => $this->g_user->token
+		);
+
+        $this->_set_logout_time();
+        
+		$this->db->insert("log_game_logins", $data);	
+        
+		if ( $this->db->insert_id() )
+		{
+            $bulk = new MongoDB\Driver\BulkWrite;
+            $bulk->insert(["uid" => intval($this->g_user->uid), "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "device_id" => $_SESSION['login_deviceid'], "latest_update_time" => time()]);
+            
+            $this->mongo_log->executeBulkWrite("longe_log.users", $bulk);
+            
+            unset($bulk);
+            
+		    $_SESSION['server_id'] = $server;
+            return 1;
+			//die(json_message(array("message"=>"成功", "site"=>$site, "token"=>$this->g_user->token), true));
+		}
+		else
+		{
+            return 0;
+			//die(json_failure('登入伺服器錯誤'));
 		}
 	}
 
@@ -356,6 +456,7 @@ class Api2 extends MY_Controller
 		}
 
 		$_SESSION['login_channel'] = 2; // 裝置直接登入
+        $_SESSION['skip_pick_server'] = 1;
 		echo "<script type='text/javascript'>location.href='/api2/ui_login?site={$site}';</script>";
 	}
 
@@ -398,10 +499,12 @@ class Api2 extends MY_Controller
 	    		$login_param = array('scope' => '',);
 	    	}
 			$_SESSION['login_channel'] = 3; // 網頁 Facebook 登入
+            $_SESSION['skip_pick_server'] = 1;
 		}
 		else if($channel == "google")
 		{
 			$_SESSION['login_channel'] = 4; // 網頁 Google 登入
+            $_SESSION['skip_pick_server'] = 1;
 		}
 
 		$this->load->library("channel_api/{$lib}", $param);
@@ -460,6 +563,7 @@ class Api2 extends MY_Controller
 		}
 
 		$_SESSION['login_channel'] = 3; // 行動裝置 Facebook 登入
+        $_SESSION['skip_pick_server'] = 1;
 		echo "<script type='text/javascript'>location.href='/api2/ui_login?site={$site}';</script>";
 	}
 	
@@ -528,6 +632,7 @@ class Api2 extends MY_Controller
 		}
 
 		$_SESSION['login_channel'] = 4; // 行動裝置 Google 登入
+        $_SESSION['skip_pick_server'] = 1;
 		echo "<script type='text/javascript'>location.href='/api2/ui_login?site={$site}';</script>";
 	}
 
@@ -588,7 +693,10 @@ class Api2 extends MY_Controller
 	function ui_register()
 	{
 		$this->_init_layout()
-			->add_css_link("login_api_no_img")
+            ->add_css_link("style")
+            ->add_css_link("normalize")
+            ->add_js_include("api2/prefixfree.min")
+            ->add_js_include("api2/index")
 			->add_js_include("api2/register")
 			->api_view();
 	}
@@ -644,10 +752,17 @@ class Api2 extends MY_Controller
 	// 帳號綁定
 	function ui_bind_account()
 	{
-		$this->_init_layout()
-			->add_css_link("login_api_no_img")
-			->add_js_include("api2/bind_account")
-			->api_view();
+        if(!empty($this->g_user->email) || !empty($this->g_user->mobile)) {
+            redirect('/api2/ui_login', 'location', 301);
+        } else {
+            $this->_init_layout()
+                ->add_css_link("style")
+                ->add_css_link("normalize")
+                ->add_js_include("api2/prefixfree.min")
+                ->add_js_include("api2/index")
+                ->add_js_include("api2/bind_account")
+                ->api_view();
+        }
 	}
 
 	function ui_bind_account_json()
@@ -689,7 +804,10 @@ class Api2 extends MY_Controller
 	function ui_forgot_password()
 	{
 		$this->_init_layout()
-			->add_css_link("login_api_no_img")
+            ->add_css_link("style")
+            ->add_css_link("normalize")
+            ->add_js_include("api2/prefixfree.min")
+            ->add_js_include("api2/index")
 			->add_js_include("api2/forgot_password")
 			->api_view();
 	}
@@ -779,7 +897,10 @@ class Api2 extends MY_Controller
 		$this->_require_login();
 
 		$this->_init_layout()
-			->add_css_link("login_api_no_img")
+            ->add_css_link("style")
+            ->add_css_link("normalize")
+            ->add_js_include("api2/prefixfree.min")
+            ->add_js_include("api2/index")
 			->add_js_include("api2/change_password")
 			->api_view();
 	}
@@ -2476,6 +2597,9 @@ class Api2 extends MY_Controller
     
     function _check_duplicate_login()
     {
+        //暫時先不檢查，未來加設定判斷哪些遊戲需要
+        return false;
+        
 		$site = $this->_get_site();
         
         if ($this->g_user->uid && !$_SESSION['old_deviceid']) {

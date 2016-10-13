@@ -4,9 +4,9 @@ charset {}
 a {text-decoration:none;}
 #container {background:#fff;}
 
-.items {background:url(/p/img/items.png);}
+.items {background:url(/p/image/api2/items.png);}
 
-.index_items {background:url(/p/img/index_items.png);}
+.index_items {background:url(/p/image/api2/index_items.png);}
 .box {margin-bottom:10px;}
 .clear {clear:both;}
 
@@ -14,7 +14,7 @@ a {text-decoration:none;}
 .icon_b_game {background-position:-16px -140px; }
 .icon_h_game {background-position:-32px -140px; }
 
-#header {height:366px; background:url(/p/img/bg01.png) repeat-x 0 bottom;}
+#header {height:366px; background:url(/p/image/api2/bg01.png) repeat-x 0 bottom;}
 #header .btn01 {display:inline-block; width:115px; height:33px;}
 #header .btn01:hover {background-position:0 -160px;}
 #header .btn02 {display:inline-block; width:115px; height:33px; background-position:0 -40px;}
@@ -39,7 +39,7 @@ a {text-decoration:none;}
  
 #recommendation {}
 #recommendation ul {margin:12px;}
-#recommendation ul li {width:174px; height:132px; background:url(/p/img/index_items.png) -120px 0; float:left; margin:2px; }
+#recommendation ul li {width:174px; height:132px; background:url(/p/image/api2/index_items.png) -120px 0; float:left; margin:2px; }
 #recommendation ul li .pic {margin:6px 6px 3px 6px; height:90px; width:160px; overflow:hidden;}
 #recommendation ul li .func {padding:0 2px 0 7px;}
 #recommendation ul li .btn01 {display:inline-block; width:76px; height:24px; background-position:0 -80px;}
@@ -49,7 +49,7 @@ a {text-decoration:none;}
 
 #mobile {}
 #mobile ul {margin:12px;}
-#mobile ul li {width:349px; height:187px; background:url(/p/img/index_items.png) -120px -133px; float:left; margin:2px; position:relative;}
+#mobile ul li {width:349px; height:187px; background:url(/p/image/api2/index_items.png) -120px -133px; float:left; margin:2px; position:relative;}
 #mobile ul li .pic {margin:6px 4px 6px 6px; height:172px; width:162px; overflow:hidden; float:left; position:relative;}
 #mobile ul li .right {float:right; width:170px; margin:6px 6px 6px 0;}
 #mobile ul li .name {font-weight:bold; font-size:19px; line-height:32px; float:left;}
@@ -88,8 +88,8 @@ a {text-decoration:none;}
 
 /* Ths play, pause, prev and next buttons */
 .pika-imgnav a {position: absolute; text-indent: -5000px; display: block;z-index:3;}
-	.pika-imgnav a.previous {background: url(/p/img/select_L.png) no-repeat left 45%; height: 100%; width: 50px; top: 10px; left: 10px;cursor:pointer;}
-	.pika-imgnav a.next {background: url(/p/img/select_R.png) no-repeat right 45%; height: 100%; width: 50px; top: 10px; right: 10px;cursor:pointer;}
+	.pika-imgnav a.previous {background: url(/p/image/api2/select_L.png) no-repeat left 45%; height: 100%; width: 50px; top: 10px; left: 10px;cursor:pointer;}
+	.pika-imgnav a.next {background: url(/p/image/api2/select_R.png) no-repeat right 45%; height: 100%; width: 50px; top: 10px; right: 10px;cursor:pointer;}
 	.pika-imgnav a.play {background: url(play.png) no-repeat 0% 50%; height: 100px; width: 44px;top:0;left:50%;display: none;cursor:pointer;}
 	.pika-imgnav a.pause {background: url(pause.png) no-repeat 0% 50%; height: 100px; width: 44px;top:0;left:50%;display:none;cursor:pointer;}
 
@@ -105,7 +105,7 @@ a {text-decoration:none;}
 				display:none;}
 
 /* If using user thumbnails there's a pause well the new large image loads. This is the loader for that */		
-.pika-loader{ background:url(/p/img/loading.gif) 3px 3px no-repeat #000; background-color:rgba(0,0,0,0.9); color:white; width:60px; font-size:11px; padding:5px 3px; 
+.pika-loader{ background:url(/p/image/api2/loading.gif) 3px 3px no-repeat #000; background-color:rgba(0,0,0,0.9); color:white; width:60px; font-size:11px; padding:5px 3px; 
 	text-align:right; position:absolute; top:15px; right:15px; }
 
 

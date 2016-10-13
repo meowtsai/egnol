@@ -1,67 +1,54 @@
-<div id="content-login">
-	<div id="header">
-		<div class="header-ins">
-			<div class="header-logo">
-				<img src="https://game.longeplay.com.tw/p/image/header-logo.png" />
-			</div>
-		</div>
-	</div>
-	<div class="login-ins" style="padding-top:10px;">
-		<form id="login_form" method="post" action="<?=$api_url?>api2/ui_login_json?site=<?=$site?>">
-			<input type="hidden" name="partner" value="<?=$partner?>">
-			<input type="hidden" name="game_key" value="<?=$game_key?>">
-			<div class="login-form" style="padding-top:0px;">
-				<?if(isset($is_duplicate_login) && $is_duplicate_login):?>
-					<div class="notes"><b>★ 此帳號已於其他裝置進行遊戲中，請先將其登出。</b></div>
-				<?endif;?>
-				<table class="member_password">
-					<tr>
-						<th><span class="title">E-mail或手機號碼</span><input type="text" class="required" name="account" id="name" maxlength="128" size="33"></th>
-					</tr>
-					<tr>
-						<th><span class="title">密碼</span><input type="password" class="required" name="pwd" id="name" maxlength="18" size="33" AUTOCOMPLETE="OFF"></th>
-					</tr>
-				</table>
-
-				<div class="login-button">
-					<input name="doLogin" type="submit" id="doSubmit" value="" style="display:none;" />
-<? /*					
-					<p><a href="#" title="login"><img src="<?=$longe_url?>p/image/member/login-btn.png" onclick="javascript:$('#doSubmit').trigger('click')"></a></p>
-					<p><a href="<?=$api_url?>api2/ui_register?site=<?=$site?>" title="login">註冊帳號</a>&nbsp;│&nbsp;<a href="<?=$api_url?>api2/ui_forgot_password?site=<?=$site?>" title="login">忘記密碼</a></p>
-					<p><img id="login-btn-quick" src="<?=$longe_url?>p/image/member/play-btn.png" style="cursor:pointer;" parm1="<?=$device_id?>" parm2="<?=$site?>" /></p>
-*/ ?>
-                    <?/*
-					<p><img id="sign-in-btn" onclick="javascript:$('#doSubmit').trigger('click')" /></p>
-					<p><a href="<?=$api_url?>api2/ui_register?site=<?=$site?>" title="login">註冊帳號</a>&nbsp;│&nbsp;<a href="<?=$api_url?>api2/ui_forgot_password?site=<?=$site?>" title="login">忘記密碼</a></p>
-					<p><img id="login-btn-quick" parm1="<?=$device_id?>" parm2="<?=$site?>" /></p>
-                    */?>
-                    <p><a id="sign-in-btn" href="#" onclick="javascript:$('#doSubmit').trigger('click')">登入</a></p>
-					<p><a href="<?=$api_url?>api2/ui_register?site=<?=$site?>" title="login">註冊帳號</a>&nbsp;│&nbsp;<a href="<?=$api_url?>api2/ui_forgot_password?site=<?=$site?>" title="login">忘記密碼</a></p>
-					<p><a id="login-btn-quick" href="#" parm1="<?=$device_id?>" parm2="<?=$site?>">直接玩</a></p>
-				</div>
-
-				<div class="login-other">
-				<?
-					// 產生所有第三方登入按鈕
-					$back_url = urlencode($redirect_url);
-					foreach($channel_item as $channel)
-					{
-						if($channel['channel'] == "facebook")
-						{
-							// echo "<img id='login-btn-facebook' style='cursor:pointer;margin:4px;' src='{$longe_url}p/image/member/login-btn-fb.png' />";
-							echo "<button type='button' id='login-btn-facebook' href='#'>Facebook帳號登入</button >"; 
-						}
-						else if($channel['channel'] == "google")
-						{
-							// echo "<img id='login-btn-google' style='cursor:pointer;margin:4px;' src='{$longe_url}p/image/member/login-btn-google.png' ";
-							// echo "parm=\"{$api_url}api2/ui_channel_login?site={$site}&channel={$channel['channel']}\" />";
-							//echo "<img id='login-btn-google' parm=\"{$api_url}api2/ui_channel_login?site={$site}&channel={$channel['channel']}\" />";
-							echo "<button type='button' id='login-btn-google' href='#' parm=\"{$api_url}api2/ui_channel_login?site={$site}&channel={$channel['channel']}\">Google帳號登入</button >";
-						}
-					}
-				?>
-				</div>
-			</div>
-		</form>
-	</div>
+<div class="site_container">
+    <div class="grid_container">
+        <div id="left">
+	        <h1><img src="<?=$api_url?>/p/image/api2/img.png" class="img"></h1>
+            <div id="footer2">
+                <div id="line"></div>
+                <div id="longe2"><img src="<?=$api_url?>/p/image/api2/longe.png" width="66" height="30"></div>
+            </div>
+        </div>
+        <div id="line2"></div>
+        <div id="right">
+            <div id="line_tt"></div>
+            <form id="login_form" method="post" action="<?=$api_url?>api2/ui_login_json?site=<?=$site?>">
+                <input type="hidden" name="partner" value="<?=$partner?>">
+                <input type="hidden" name="game_key" value="<?=$game_key?>">
+                <input type="text" name="account" id="name" maxlength="128" class="form__input" placeholder="請輸入手機號碼或E-mail" required />
+                <input type="password" name="pwd" id="name" maxlength="18" class="form__input" placeholder="請輸入密碼" required />
+                
+				<input name="doLogin" type="submit" id="doSubmit" value="" style="display:none;" />
+                <button type="submit" id="sign-in-btn" class="btn btn-primary btn-block btn-large" onclick="javascript:$('#doSubmit').trigger('click')">登入</button>
+            </form>
+            <div style="height:10px;"></div>
+            <p class="text_05">
+                <a href="<?=$api_url?>api2/ui_forgot_password?site=<?=$site?>" title="login">忘記密碼</a><span style="padding:0 10px;color:#FFF;">|</span><a href="<?=$api_url?>api2/ui_register?site=<?=$site?>" title="login">快速註冊</a>
+            <div id="elseID">
+                <div id="elseID_title"></div>
+                    <ul id="play_bt">
+                        <li><a id="login-btn-quick" href="#" parm1="<?=$device_id?>" parm2="<?=$site?>"><img src="<?=$api_url?>/p/image/api2/play.png"/></a></li>
+                        <?
+                            // 產生所有第三方登入按鈕
+                            $back_url = urlencode($redirect_url);
+                            foreach ($channel_item as $channel)
+                            {
+                                if ($channel['channel'] == "facebook")
+                                {
+                                    echo "<li><a id='login-btn-facebook' href='#'><img src='{$api_url}/p/image/api2/fb_play.png'/></a></li>"; 
+                                }
+                                else if($channel['channel'] == "google")
+                                {
+                                    echo "<li><a  id='login-btn-google' href='#' parm=\"{$api_url}api2/ui_channel_login?site={$site}&channel={$channel['channel']}\"><img src='{$api_url}/p/image/api2/google_play.png'/></a></li>";
+                                }
+                            }
+                        ?>
+                    </ul>
+                <div class="clear"></div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div id="footer1">
+            <div id="line"></div>
+            <div id="longe"><img src="<?=$api_url?>/p/image/api2/longe.png" width="66" height="30"></div>
+        </div>
+    </div>
 </div>

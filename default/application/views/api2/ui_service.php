@@ -25,9 +25,8 @@
 			<p>
 			</p>
 			<p>
-				<img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-btn.png" class="button_submit" onclick="javascript:location.href='<?=$api_url?>api2/ui_service_question?site=<?=$site?>'" /><? /*&nbsp;
+				<img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-btn.png" class="button_submit" onclick="javascript:location.href='<?=$api_url?>api2/ui_service_question?site=<?=$site?>'" />&nbsp;
 				<img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-btn2.png" class="button_submit" onclick="javascript:location.href='<?=$api_url?>api2/ui_service_list?site=<?=$site?>'" />
-				*/ ?>
 			</p>
 			<div class="login-button">
 				<p><img id="btn-service-back" style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-back-btn2.png" /></p>
