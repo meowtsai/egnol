@@ -32,7 +32,7 @@
 				<p><img id="btn-service-back" style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-back-btn2.png" /></p>
 			</div>
 			<ul class="notes">
-				<li>提醒大俠：查詢回報紀錄及需附檔案回報時，請直接利用官網線上提問或遊戲主畫面中的客服功能回報，謝謝。</li>
+				<li>提醒大俠：需附檔案回報時，請直接利用官網線上提問，謝謝。</li>
 			</ul>
 		</div>
 	</div>

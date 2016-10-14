@@ -4,7 +4,7 @@
 <? if ($question):?>
 			<table class="member_info">
 				<tr>
-					<th>提問類型　|</th>
+					<th>提問類型 |</th>
 					<td>
 					<?
 						$type = $this->config->item("question_type");
@@ -13,31 +13,31 @@
 					</td>
 				</tr>
 				<tr>
-					<th>遊戲名稱　|</th>
+					<th>遊戲名稱 |</th>
 					<td><?=$question->game_name?></td>
 				</tr>
 				<tr>
-					<th>伺服器　|</th>
+					<th>伺服器 |</th>
 					<td><?=$question->server_name?></td>
 				</tr>
 				<tr>
-					<th>角色名稱　|</th>
+					<th>角色名稱 |</th>
 					<td><?=$question->character_name?></td>
 				</tr>
 				<tr>
-					<th>E-MAIL　|</th>
+					<th>E-MAIL |</th>
 					<td><?=$question->email?></td>
 				</tr>
 				<tr>
-					<th>手機號碼　|</th>
+					<th>手機號碼 |</th>
 					<td><?=$question->mobile?></td>
 				</tr>
 				<tr>
-					<th>提問描述　|</th>
+					<th>提問描述 |</th>
 					<td style="overflow:visible; text-overflow:clip; white-space:normal; word-wrap: break-word;"><?=$question->content?></td>
 				</tr>
 				<tr>
-					<th>截圖　|</th>
+					<th>截圖 |</th>
 					<td>
 		        	<? if ($question->pic_path1):?>
 					<div>
@@ -63,7 +63,7 @@
 					</td>
 				</tr>
 				<tr>
-					<th>處理狀態　|</th>
+					<th>處理狀態 |</th>
 					<td>
 					<?
 					if ($replies->num_rows() == 0) echo '目前尚在處理中';
@@ -116,6 +116,13 @@
 <? else:?>
 			<div>問題不存在</div>
 <? endif;?>
+		</div>
+        
+		<div class="login-button">
+			<p>
+				<input name="doSubmit" type="submit" id="doSubmit" value="" style="display:none;" />
+				<img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-back-btn2.png" class="button_submit" onclick="javascript:history.back();return false" />
+			</p>
 		</div>
 	</div>
 </div>

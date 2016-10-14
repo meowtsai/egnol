@@ -122,8 +122,8 @@ class Api2 extends MY_Controller
 
 			$this->_init_layout()
 				//->add_css_link("login_api_no_img")
-				->add_css_link("style")
 				->add_css_link("normalize")
+				->add_css_link("style")
 				->add_js_include("api2/prefixfree.min")
 				->add_js_include("api2/index")
 				->add_js_include("api2/login")
@@ -163,8 +163,8 @@ class Api2 extends MY_Controller
 				->set("device_id", $device_id)
 				->set("server_mode", $server_mode)
 				->set("servers", $servers)
-				->add_css_link("style")
 				->add_css_link("normalize")
+				->add_css_link("style")
 				->add_js_include("api2/prefixfree.min")
 				->add_js_include("api2/index")
 				->add_js_include("api2/login_game")
@@ -693,8 +693,8 @@ class Api2 extends MY_Controller
 	function ui_register()
 	{
 		$this->_init_layout()
-            ->add_css_link("style")
             ->add_css_link("normalize")
+            ->add_css_link("style")
             ->add_js_include("api2/prefixfree.min")
             ->add_js_include("api2/index")
 			->add_js_include("api2/register")
@@ -756,8 +756,8 @@ class Api2 extends MY_Controller
             redirect('/api2/ui_login', 'location', 301);
         } else {
             $this->_init_layout()
-                ->add_css_link("style")
                 ->add_css_link("normalize")
+                ->add_css_link("style")
                 ->add_js_include("api2/prefixfree.min")
                 ->add_js_include("api2/index")
                 ->add_js_include("api2/bind_account")
@@ -804,8 +804,8 @@ class Api2 extends MY_Controller
 	function ui_forgot_password()
 	{
 		$this->_init_layout()
-            ->add_css_link("style")
             ->add_css_link("normalize")
+            ->add_css_link("style")
             ->add_js_include("api2/prefixfree.min")
             ->add_js_include("api2/index")
 			->add_js_include("api2/forgot_password")
@@ -897,8 +897,8 @@ class Api2 extends MY_Controller
 		$this->_require_login();
 
 		$this->_init_layout()
-            ->add_css_link("style")
             ->add_css_link("normalize")
+            ->add_css_link("style")
             ->add_js_include("api2/prefixfree.min")
             ->add_js_include("api2/index")
 			->add_js_include("api2/change_password")
@@ -2024,7 +2024,8 @@ class Api2 extends MY_Controller
 		}
 		
 		$this->_init_layout()
-			->add_css_link("service")
+			->add_css_link("login_api")
+			//->add_css_link("service")
 			->add_css_link("server")
 			->add_js_include("api2/view")
 			->add_js_include("jquery.blockUI")

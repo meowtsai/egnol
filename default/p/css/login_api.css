@@ -32,7 +32,7 @@
 .login_member .login_info{ padding:40px; }
 .login_info .scrollbar{max-height:355px; overflow-x:hidden; line-height:25px;}
 
-.login-form .member_info, .login-form .member_password{ max-width:500px; margin:0 auto; text-align:left; width:90%; line-height:40px;}
+.login-form .member_info, .login-form .member_password{ max-width:500px; margin:0 auto; text-align:left; width:95%; line-height:40px;}
 .member_info tr > th{ width:30%; text-align:right; padding:5px; vertical-align:middle;}
 .member_info tr > td{ width:60%; color:#e6290f; padding:5px; vertical-align:middle;}
 
@@ -71,9 +71,10 @@
 }
 
 @media only screen and (max-width:450px){
+.login-form .member_info, .login-form .member_password{ width:100%;}
 .login-button .button_submit{ width:48%;}
-.member_info tr > th{ width:40%;}
-.member_info tr > td{ width:50%;}
+.member_info tr > th{ width:30%;}
+.member_info tr > td{ width:65%;}
 
 }
 
