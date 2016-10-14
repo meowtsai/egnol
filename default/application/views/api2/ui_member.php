@@ -32,8 +32,8 @@
             <div id="text_area">
                 <? if($is_bind): ?>
                     <p><?=$account_type?></p>
-                    <p><?=(!empty($email) ? $email : "尚未設定")?></p>
-                    <p><?=(!empty($mobile) ? $mobile : "尚未設定")?></p>
+                    <p><?=(!empty($email) ? $email : "Email尚未設定")?></p>
+                    <p><?=(!empty($mobile) ? $mobile : "手機號碼尚未設定")?></p>
                 <? else: ?>
                     <p><?=$account_type?>(尚未綁定)</p>
                 <? endif; ?>
