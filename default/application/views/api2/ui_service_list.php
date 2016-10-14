@@ -40,7 +40,7 @@
 		<div class="login-button">
 			<p>
 				<input name="doSubmit" type="submit" id="doSubmit" value="" style="display:none;" />
-				<img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-back-btn2.png" class="button_submit" onclick="javascript:history.back();" />
+				<img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-back-btn2.png" class="button_submit" onclick="javascript:history.back();return false" />
 			</p>
 		</div>
 	</div>

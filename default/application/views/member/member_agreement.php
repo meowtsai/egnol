@@ -79,7 +79,7 @@ tr, td {
 					</div>
 				</div>
 			</div>
-			<div class="button"><a id="cancel-btn" href="#" class="button_submit" onclick="javascript:history.back();">返回</a></div>
+			<div class="button"><a id="cancel-btn" href="#" class="button_submit" onclick="javascript:history.back();return false">返回</a></div>
 		</div>
 	</div>
 </div>
