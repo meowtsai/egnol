@@ -12,8 +12,8 @@
             </div>
             <br>
             <input name="doLogin" type="submit" id="doSubmit" value="" style="display:none;" />
-            <button id="submit-btn" type="submit" class="btn btn-primary btn-block btn-large button_submit" onclick="javascript:$('#doSubmit').trigger('click');">確認送出</button>          <div style="height:10px;"></div>
-            <button id="cancel-btn" type="submit" class="btn btn-primary btn-block btn-large button_submit" onclick="javascript:location.href='/api2/ui_login?site=<?=$site?>';">取消</button>
+            <button id="submit-btn" type="button" class="btn btn-primary btn-block btn-large button_submit" onclick="javascript:$('#doSubmit').trigger('click');">確認送出</button>          <div style="height:10px;"></div>
+            <button id="cancel-btn" type="button" class="btn btn-primary btn-block btn-large button_submit" onclick="javascript:location.href='/api2/ui_login?site=<?=$site?>';">取消</button>
         </form>
         <div id="line"></div>
         <div id="longe"><img src="<?=$api_url?>/p/image/api2/longe.png" width="66" height="30"></div>
