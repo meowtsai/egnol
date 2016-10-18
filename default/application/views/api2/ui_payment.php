@@ -76,41 +76,53 @@ function cancelButton () {
 					<tr>
 						<th>遊戲名稱</th>
 						<td>
-							<select name="game" class="required" style="width:85%;">
-								<option value="">--請選擇遊戲--</option>
-								<? foreach($games->result() as $row): ?>
-								<option value="<?=$row->game_id?>" rate="<?=$row->exchange_rate?>" goldname="<?=$row->currency?>" <?=($this->input->get("game")==$row->game_id ? 'selected="selected"' : '')?>><?=$row->name?></option>
-								<? endforeach;?>
-							</select>
+                            <? if($game_id && $game_name):?>
+                                <input type="hidden" name="game" value="<?=$game_id?>"><?=$game_name?>
+                            <? else:?>
+                                <select name="game" class="required" style="width:85%;">
+                                    <option value="">--請選擇遊戲--</option>
+                                    <? foreach($games->result() as $row): ?>
+                                    <option value="<?=$row->game_id?>" rate="<?=$row->exchange_rate?>" goldname="<?=$row->currency?>" <?=($this->input->get("game")==$row->game_id ? 'selected="selected"' : '')?>><?=$row->name?></option>
+                                    <? endforeach;?>
+                                </select>
+                            <? endif;?>
 						</td>
 						<input type="hidden" id="cur_game_id" value="<?=$site?>">
 					</tr>
 					<tr>
 						<th>伺服器</th>
 						<td>
-							<select name="server" class="required" style="width:85%;">
-								<option value="">--請先選擇伺服器--</option>
-							</select>
+                            <? if($server_id && $server_name):?>
+                                <input type="hidden" name="server" value="<?=$server_id?>"><?=$server_name?>
+                            <? else:?>
+                                <select name="server" class="required" style="width:85%;">
+                                    <option value="">--請先選擇伺服器--</option>
+                                </select>
 
-							<select id="server_pool" style="display:none;">
-								<? foreach($servers->result() as $row):
-//								if ( IN_OFFICE == false && in_array($row->server_status, array("private", "hide"))) continue;?>
-								<option value="<?=$row->server_id?>" <?=($this->input->get("server")==$row->server_id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?></option>
-								<? endforeach;?>
-							</select>
+                                <select id="server_pool" style="display:none;">
+                                    <? foreach($servers->result() as $row):
+    //								if ( IN_OFFICE == false && in_array($row->server_status, array("private", "hide"))) continue;?>
+                                    <option value="<?=$row->server_id?>" <?=($this->input->get("server")==$row->server_id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?></option>
+                                    <? endforeach;?>
+                                </select>
+                            <? endif;?>
 						</td>
 					</tr>
 					<tr>
 						<th>角色名稱</th>
 						<td>
-							<select name="character" class="required" style="width:85%;">
-								<option value="">--請選擇角色--</option>
-							</select>
-							<select id="character_pool" style="display:none;">
-								<? foreach($characters->result() as $row): ?>
-								<option value="<?=$row->id?>" class="<?=$row->server_id?>"><?=$row->name?></option>
-								<? endforeach;?>
-							</select>
+                            <? if($character_id && $character_name):?>
+                                <input type="hidden" name="character" value="<?=$character_id?>"><?=$character_name?>
+                            <? else:?>
+                                <select name="character" class="required" style="width:85%;">
+                                    <option value="">--請選擇角色--</option>
+                                </select>
+                                <select id="character_pool" style="display:none;">
+                                    <? foreach($characters->result() as $row): ?>
+                                    <option value="<?=$row->id?>" class="<?=$row->server_id?>"><?=$row->name?></option>
+                                    <? endforeach;?>
+                                </select>
+                            <? endif;?>
 						</td>
 					</tr>
 					<tr>

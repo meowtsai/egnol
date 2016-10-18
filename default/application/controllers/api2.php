@@ -1052,6 +1052,8 @@ class Api2 extends MY_Controller
 	{
 		$site = $this->_get_site();
 		$server_id = $this->input->get_post("serverid");
+		$character_id = $this->input->get_post("charid");
+		$character_name = $this->input->get_post("charname");
 		$partner_order_id = $this->input->get_post("poid");
 		$set_money = $this->input->get_post("money");
 		
@@ -1104,12 +1106,23 @@ class Api2 extends MY_Controller
 			$servers = $this->db->where_in("server_status", array("public", "maintaining"))->where("is_transaction_active", "1")->order_by("server_id")->get("servers");
 		// 讀取玩家角色列表
 		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();
+        
+        
+        if ($server_id && $character_id) {
+            $set_server = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
+            $set_game = $this->db->from("games")->where("game_id", $set_server->game_id)->get()->row();
+        }
 
 		$this->_init_layout()
 			->set("games", $games)
 			->set("servers", $servers)
-			->set("server_id", $server_id)
+			->set("game_id", (isset($set_game->game_id))?$set_game->game_id:"")
+			->set("game_name", (isset($set_game->name))?$set_game->name:"")
+			->set("server_id", (isset($set_server->server_id))?$set_server->server_id:"")
+			->set("server_name", (isset($set_server->name))?$set_server->name:"")
 			->set("characters", $characters)
+			->set("character_id", $character_id)
+			->set("character_name", $character_name)
 			->set("partner_order_id", $partner_order_id)
 			->set("set_money", $set_money)
 			->add_css_link("login_api_no_img")
