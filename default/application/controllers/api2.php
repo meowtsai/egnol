@@ -82,6 +82,7 @@ class Api2 extends MY_Controller
 			
             unset($login_key);
             
+            
 			// 免輸入登入機制(Session 失效時使用)
 			if(!empty($login_key) && $change_account != 1)
 			{
