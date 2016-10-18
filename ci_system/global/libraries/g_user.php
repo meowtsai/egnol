@@ -61,6 +61,13 @@ class G_User
 		unset($_SESSION['token']);
 		unset($_SESSION['login_deviceid']);
 		unset($_SESSION['old_deviceid']);
+        
+		unset($this->uid);
+		unset($this->euid);
+		unset($this->email);
+		unset($this->mobile);
+		unset($this->external_id);
+		unset($this->token);
 		
 		//setcookie('PHPSESSID', '', time()-3600);
 		//session_destroy();
