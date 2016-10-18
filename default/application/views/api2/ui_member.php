@@ -46,7 +46,7 @@
                 <? else: ?>
                     <button id="_bind-account-btn" type="button" class="btn btn-primary btn-large" style="width:32%;" onclick="javascript:window.location.href='<?=$api_url?>api2/ui_bind_account?site=<?=$site?>'">綁定帳號</button>
                 <? endif; ?>
-                <button type="submit" class="btn btn-primary btn-large" style="width:32%;" onclick="javascript:window.location.href='<?=$api_url?>api2/ui_service?site=<?=$site?>'">客服中心</button>
+                <button type="button" class="btn btn-primary btn-large" style="width:32%;" onclick="javascript:window.location.href='<?=$api_url?>api2/ui_service?site=<?=$site?>'">客服中心</button>
             </p>
             <input name="doLogin" type="submit" id="doSubmit" value="" style="display:none;" />
             <button id="continue" type="button" class="btn btn-primary btn-block btn-large _continue">進入遊戲</button>

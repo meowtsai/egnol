@@ -80,6 +80,8 @@ class Api2 extends MY_Controller
 
 			$change_account = !empty($this->input->get("change_account")) ? $this->input->get("change_account") : 0;
 			
+            unset($login_key);
+            
 			// 免輸入登入機制(Session 失效時使用)
 			if(!empty($login_key) && $change_account != 1)
 			{
