@@ -1,6 +1,7 @@
 $(function()
 {
 	$("#register_form").validate({
+        focusInvalid: false,
 		onfocusout: false,
 		onkeyup: false,
 		onclick: false,

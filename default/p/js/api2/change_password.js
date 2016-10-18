@@ -1,6 +1,7 @@
 $(function()
 {
 	$("#change_form").validate({
+        focusInvalid: false,
 		onfocusout: false,
 		onkeyup: false,
 		onclick: false,
