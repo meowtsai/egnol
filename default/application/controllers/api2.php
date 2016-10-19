@@ -1887,6 +1887,189 @@ class Api2 extends MY_Controller
 		}
 	}
 	
+	
+	// 開始 Android IAP 訂單
+	function android_iap_start_1()
+	{
+		$product_id = $this->input->post("product_id");
+		$uid = $this->input->post("uid");
+		$app_id = $this->input->post("app_id");
+		$server_id = $this->input->post("server_id");
+		$verify_code = $this->input->post("verify_code");
+		$partner_order_id = $this->input->post("partner_order_id");
+		
+		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
+		if (empty($server_info))
+		{
+			$server_info = $this->db->from("servers")->where("address", $server_id)->get()->row();
+			if (empty($server_info))
+			{
+				die(json_encode(array("result"=>"0", "error"=>"伺服器不存在")));
+			}
+			
+			$server_id = $server_info->server_id;
+		}
+		log_message("error", "android_iap_start: {$uid},{$server_id},{$partner_order_id}");
+		
+		$this->load->library("g_wallet");
+		
+		$order_id = $this->g_wallet->produce_iap_order($uid, "inapp_billing_google", "1", $server_id, $partner_order_id, $product_id . "|" . $verify_code);
+		
+		if(empty($order_id))
+			die(json_encode(array("result"=>0, "msg"=>$this->g_wallet->error_message)));
+		
+		die(json_encode(array("result"=>1, "productId"=>$product_id, "orderId"=>$order_id)));
+	}
+	
+	// 驗證訂單
+	function android_verify_receipt_1()
+	{
+		$receipt_data = $this->input->post("receipt_data");
+		$order_id = $this->input->post("order_id");
+		$product_id = $this->input->post("product_id");
+		$price = $this->input->post("price");
+		$currency = $this->input->post("currency");
+		$transaction_id = $this->input->post("transaction_id");
+		$partner_order_id = $this->input->post("partner_order_id");
+		$uid = $this->input->post("uid");
+		$server_id = $this->input->post("server_id");
+		$character_id = $this->input->post("character_id");
+		$verify_code = $this->input->post("verify_code");
+		log_message("error", "android_verify_receipt: order_id-{$order_id}");
+		
+		// 先讀取資料庫的訂單
+		$this->load->library("g_wallet");
+		
+		$order = $this->g_wallet->get_order($order_id);
+		if(empty($order))
+		{
+			// 訂單不存在
+			die(json_encode(array("result"=>0, "msg"=>"Order not found.")));
+		}
+		$amount = $price;
+		
+		// 若不是台幣, 要取得台幣價格
+		if($currency !== "TWD")
+		{
+			log_message("error", "android_verify_receipt: User {$uid} using {$currency} for payment.");
+			$pos = strpos($product_id, ".");
+			if($pos === false)
+				$pos = strpos($product_id, "_");
+			if($pos !== false)
+				$amount = intval(substr($product_id, $pos + 1));
+		}
+		/*
+		$check_dup = $this->db->from("user_billing")->where("order_no", $transaction_id)->get()->row();
+		if(!empty($check_dup))
+		{
+			log_message("error", "android_verify_receipt: Duplicate transaction_id {$transaction_id}.");
+			
+			$this->g_wallet->cancel_other_order($order, $order->note . "|Duplicate transaction_id {$transaction_id}.");
+			
+			die(json_encode(array("result"=>0, "msg"=>"Duplicate transaction_id.")));
+		}
+		*/
+		$this->g_wallet->update_order($order, array("amount"=>$amount,"order_no"=>$transaction_id));
+		
+		// 取得 server 資料
+		$server_num = $server_id;
+		
+		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
+		if (empty($server_info))
+		{
+			$server_info = $this->db->from("servers")->where("address", $server_id)->get()->row();
+			if (empty($server_info))
+			{
+				die(json_encode(array("result"=>"0", "msg"=>"App server not exist.")));
+			}
+			
+			$server_id = $server_info->server_id;
+		}
+		
+		// 驗證訂單
+		if(intval($order->result) != 0)
+		{
+			// 訂單狀態不符
+			log_message("error", "android_verify_receipt: Order {$order_id} status error.");
+			
+			die(json_encode(array("result"=>0, "msg"=>"Order status error.")));
+		}
+		
+		$vc = $product_id . "|" . $verify_code;
+		if($order->uid !== $uid ||
+			$order->server_id !== $server_id ||
+			$order->note !== $vc ||
+			$order->partner_order_id !== $partner_order_id)
+		{
+			// 未通過資料核對, 關閉訂單
+			$this->g_wallet->cancel_other_order($order, $order->note . "|Order information not match.");
+			die(json_encode(array("result"=>0, "msg"=>"Order information not match.")));
+		}
+		// 檢查訂單號碼格式
+		// *** 暫時使用 ***
+		if(strpos($transaction_id, "GPA.") !== 0)
+		{
+			log_message("error", "android_verify_receipt: Fake order {$transaction_id}.");
+			//
+			die(json_encode(array("result"=>0, "msg"=>"Order not match.")));
+		}
+		
+		// 驗證成功, 先結掉儲值訂單
+		$this->g_wallet->complete_order($order);
+		
+		// 記錄轉點
+		$transfer_id = $this->g_wallet->produce_order($uid, "top_up_account", "2", $amount, $server_id, $partner_order_id, $character_id, $transaction_id);
+		if (empty($transfer_id))
+		{
+			// 建立轉點記錄失敗
+			log_message("error", "android_verify_receipt: Create transfer log for order-{$order_id} failed!");
+			
+			die(json_encode(array("result"=>0, "msg"=>"Create transfer log failed!")));
+		}
+		$transfer_order = $this->g_wallet->get_order($transfer_id);
+		// 呼叫遊戲入點機制
+		/*
+		$this->load->library("game_api/{$server_info->game_id}");
+		$res = $this->{$server_info->game_id}->iap_transfer($transfer_order, $server_info, "google_play", $product_id, $price, $currency);
+		$error_message = $this->{$server_info->game_id}->error_message;
+		*/
+		$res = "1";
+		if($res === "1")
+		{
+			// 成功
+			die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
+		}
+		else
+		{
+			// 轉入遊戲伺服器失敗
+			$this->g_wallet->ready_for_game_order($transfer_order, $order->note . "|" . $error_message);
+			
+			die(json_encode(array("result"=>0, "msg"=>$error_message)));
+		}
+	}
+	
+	// 結掉 Android IAP 訂單
+	function android_iap_close_1()
+	{
+		$order_id = $this->input->post("order_id");
+		$product_id = $this->input->post("product_id");
+		$transaction_id = $this->input->post("transaction_id");
+		$partner_order_id = $this->input->post("partner_order_id");
+		
+		// 先讀取資料庫的訂單
+		$this->load->library("g_wallet");
+		
+		$order = $this->g_wallet->get_order($order_id);
+		if(empty($order))
+		{
+			// 訂單不存在
+			die(json_encode(array("result"=>0, "msg"=>"Order not found.")));
+		}
+		
+		$this->g_wallet->complete_order($order);
+		die(json_encode(array("result"=>1)));
+	}
+    
 	// 客服頁面
 	function ui_service()
 	{
