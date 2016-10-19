@@ -744,6 +744,9 @@ class Api2 extends MY_Controller
 
             $this->db->insert("log_user_updates", $log_data);
             
+			$_SESSION['login_channel'] = 1; // 帳密登入
+            $_SESSION['skip_pick_server'] = 1;
+            
 			die(json_message(array("message"=>"成功", "site"=>$site), true));
 		}
 		else
