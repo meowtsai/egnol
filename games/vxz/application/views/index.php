@@ -3,7 +3,7 @@
         <ul class="menu">
             <li class="new"><a class="anchor" href="#NEW">最新消息</a></li>
             <li class="charater"><a class="anchor" href="#CHARACTER">遊戲特色</a></li>
-            <li class="center"><a href="/payment?site=vxz">儲值中心</a></li>
+            <li class="center"><a href="https://game.longeplay.com.tw/payment?site=vxz">儲值中心</a></li>
             <li class="teach"><a href="#" target="_blank">儲值教學</a></li>
             <li class="fb"><a href="https://www.facebook.com/playvxz/?fref=ts" target="_blank">粉絲團</a></li>
             <li class="download"><a href="#">下載遊戲</a></li>
@@ -12,7 +12,7 @@
                 <a class="google" href="#" target="_blank">GOOGLEPLAY</a>
                 <a class="apk" href="#" target="_blank">APK</a>
             </div>
-            <li class="service"><a href="/service?site=vxz">客服中心</a></li>
+            <li class="service"><a href="https://game.longeplay.com.tw/service?site=vxz">客服中心</a></li>
             <li class="back"><a class="anchor" href="#TOP">回首頁</a></li>
         </ul>
     </div>
@@ -139,7 +139,7 @@
 
     <!-- SERVEICE -->
     <div id="service">
-        <a href="/service?site=vxz" class="btn_24" title="24小時客服中心"><img src="<?=base_url()?>p/img/btn_24.png"></a>
+        <a href="https://game.longeplay.com.tw/service?site=vxz" class="btn_24" title="24小時客服中心"><img src="<?=base_url()?>p/img/btn_24.png"></a>
         <p>小李飛刀  例行性維護時間 每週四 10:00~12:00 </p>
     </div>
 </div>

@@ -20,9 +20,9 @@
     <div class="nav">
         <ul class="menu">
             <div class="ICON"><img src="<?=base_url()?>p/img/mobile/ICON.png"></div>
-            <li id="btn_CENTER" class="Nowtab"><a href="/payment?site=vxz">儲值中心</a></li>
+            <li id="btn_CENTER" class="Nowtab"><a href="https://game.longeplay.com.tw/payment?site=vxz">儲值中心</a></li>
             <li id="btn_TEACH" class="Nowtab"><a href="#">儲值教學</a></li>
-            <li id="btn_SERVICE" class="Nowtab"><a href="/service?site=vxz">客服中心</a></li>
+            <li id="btn_SERVICE" class="Nowtab"><a href="https://game.longeplay.com.tw/service?site=vxz">客服中心</a></li>
         </ul>
     </div>
 </div>
@@ -154,7 +154,7 @@
 
     <!-- SERVICE -->
     <div id="service">
-        <a href="#" class="btn_24" title="24小時客服中心"><img src="<?=base_url()?>p/img/mobile/btn_24.png"></a>
+        <a href="https://game.longeplay.com.tw/service?site=vxz" class="btn_24" title="24小時客服中心"><img src="<?=base_url()?>p/img/mobile/btn_24.png"></a>
         <p>小李飛刀  例行性維護時間 每週四 10:00~12:00 </p>
     </div>
 
