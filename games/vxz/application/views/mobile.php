@@ -117,7 +117,7 @@
                     </div>
                 </div>
                 <div id="tab2" class="tab_content">
-                    <div  class="btn_morev"><a href="#" target="_blank" title="更多影片"><img src="<?=base_url()?>p/img/mobile/MORE_V.png"></a></div>
+                    <div  class="btn_morev"><a href="https://www.youtube.com/playlist?list=PLXR5aguP6xFioLu1TSZ_j1mgcCbcqATNV" title="更多影片"><img src="<?=base_url()?>p/img/mobile/MORE_V.png"></a></div>
                     <div  class="slider02">
                         <? if (isset($slider_video_mobile)):?>
                             <?
