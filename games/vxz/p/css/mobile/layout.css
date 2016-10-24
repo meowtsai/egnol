@@ -1,0 +1,599 @@
+@charset "utf-8";
+/* CSS Document */
+
+body,html{
+	width: 100%;
+	font-family:"Trebuchet MS", Arial, Helvetica,"微軟正黑體", sans-serif;
+	background-color:#ffffff;
+}
+a{
+	cursor:pointer;
+}
+ul li a{
+	display:block;
+	width:100%;
+	height:100%;
+	text-indent:-9999px; /* 隱藏文字 */
+	overflow:hidden;
+}
+.box{
+	height: 90px;
+	width: 100%;
+	margin-top: -90px;
+}
+/* NAV BAR on */
+.header01{
+	width:960px;
+	height:90px;
+	position:fixed;
+	left:50%;
+	margin:0 0 0 -480px;
+	background-color:#0099cc;
+	z-index:1000;
+}
+/* NAV BAR under */
+.header02{
+	width:960px;
+	height:90px;
+	position:fixed;
+	bottom:0px;
+	left:50%;
+	margin:0 0 0 -480px;
+	background-color:#0099cc;
+	z-index:1000;
+}
+.nav{
+	width:960px;
+	height:50px;
+	position:absolute;
+	top:0px;
+	left:50%;
+	margin:0 0 0 -480px;
+}
+.nav ul{
+	width:960px; 
+	height:50px;	
+}
+.nav ul li{
+	display:block;
+	height:50px;
+	float:left;
+	transition: all .2s ease-in-out; /* 變速曲線 */
+}
+.nav ul li:hover,.Hovertab{
+	background-image:url(../../img/mobile/btn_nav_hover.png);
+}
+.Nowtab{
+	background-image:url(../../img/mobile/btn_nav.png);
+}
+#btn_NEW{
+	position:absolute;
+	left:18px;
+	width:227px;
+	background-position:left center;
+}
+#btn_CHARACTER{
+	position:absolute;
+	left:245px;
+	width:227px;
+	background-position:-227px;
+}
+#btn_FB{
+	position:absolute;
+	left:472px;
+	width:227px;
+	background-position:-454px;
+}
+#btn_DOWNLOAD{
+	position:absolute;
+	left:699px;
+	width:227px;
+	background-position:-681px;
+}
+#btn_CENTER{
+	position:absolute;
+	left:255px;
+	width:227px;
+	background-position:-908px;
+}
+#btn_TEACH{
+	position:absolute;
+	left:482px;
+	width:227px;
+	background-position:-1135px;
+}
+#btn_SERVICE{
+	position:absolute;
+	left:709px;
+	width:227px;
+	background-position:-1362px;
+}
+.ICON{
+	position:absolute;
+	bottom:-30px;
+	left:30px;
+}
+/*menu_dropdown*/
+.nav2{
+	position: absolute;
+	z-index: 90;
+	display: block;
+	width: 227px;
+	height: 198px;
+	top: 90px;
+	right: 10px;
+}
+.nav2 a{
+	display: block;
+	width: 227px;
+	height: 66px;
+	float: left;
+	margin: 0px;
+	font-size: 0px;
+	text-align: center;
+	background-size:100% auto;
+	-ms-background-size:100% auto;
+	-webkit-background-size:100% auto;
+	-moz-background-size:100% auto;
+	-o-background-size:100% auto;
+}
+
+.ios{
+	background-position: 0px 0px;
+	background-image: url(../../img/mobile/dwon_01.png);
+	
+}
+.google{
+	background-image: url(../../img/mobile/dwon_02.png);
+	background-position: 0px 0px;
+}
+.apk{
+	background-image: url(../../img/mobile/dwon_03.png);
+	background-position: 0px 0px;
+}
+
+/*--- BIG BLOCK ---*/
+.wrapper,#TOP{
+	display:block;
+	width:960px;
+	margin:0 auto;
+	position:relative;
+	height:1110px;
+	background-position:top center;
+	background-repeat:no-repeat;
+	z-index:100;
+}
+.wrapper,#NEW{
+	display:block;
+	width:960px;
+	margin:0 auto;
+	position:relative;
+	height:550px;
+	background-position:top center;
+	background-repeat:no-repeat;
+}
+.wrapper,#SLIDERBOX{
+	display:block;
+	width:960px;
+	margin:0 auto;
+	position:relative;
+	height:440px;
+	background-position:top center;
+	background-repeat:no-repeat;
+}
+.wrapper,#CHARACTER{
+	display:block;
+	width:960px;
+	margin:0 auto;
+	position:relative;
+	height:860px;
+	background-position:top center;
+	background-repeat:no-repeat;
+}
+.wrapper,#HEROS{
+	display:block;
+	width:960px;
+	margin:0 auto;
+	position:relative;
+	height:700px;
+	background-position:top center;
+	background-repeat:no-repeat;
+}
+.wrapper,#service{
+	display:block;
+	width:960px;
+	margin:0 auto;
+	position:relative;
+	height:100px;
+	background-position:top center;
+	background-repeat:no-repeat;
+}
+.wrapper,#footer{
+	display:block;
+	width:960px;
+	margin:0 auto;
+	position:relative;
+	height:100px;
+	background-position:top center;
+	background-repeat:no-repeat;
+}
+/*--- SMALL BLOCK ---*/
+.inner_box{
+	display:block;	
+	width:100%;
+	height:100%;
+	position:absolute;
+	left:50%;
+	margin:0 0 0 -480px;
+}
+/*--- GO TOP---*/
+#goTop {
+	position: fixed;
+	opacity: 1; 
+	bottom: 75px;
+	right: 10px;
+	z-index:1000;
+}
+#goTop a{
+	width: 115px;
+	height: 138px; 
+
+	z-index: 10;
+	cursor: pointer;
+}
+#goTop:hover { 
+	opacity: 1; 
+	width: 115px; 
+	height: 138px; 
+}
+
+/*--- TOP ---*/
+#TOP{
+	background-image:url(../../img/mobile/BG_00.jpg);
+	width:960px;
+	overflow:hidden;
+}
+/* LOGO */
+#TOP h1{
+	display: block;
+	width: 485px;
+	height: 215px;
+	position: absolute;
+	top:95px;
+	left:250px;
+	font-size: 0px; /* 隱藏文字 */
+}
+/* DWONLOAD ON */
+.btn_IOS01,.btn_Android01,.btn_APK01{
+	position:absolute;
+	bottom:25px;
+	float:left;
+}
+.btn_IOS01{
+	left:30px;
+}
+.btn_Android01{
+	left:295px;
+}
+.btn_APK01{
+	left:560px;
+}
+/* DWONLOAD UNDER */
+.btn_IOS02,.btn_Android02,.btn_APK02{
+	position:absolute;
+	bottom:25px;
+	float:left;
+}
+.btn_IOS02{
+	left:30px;
+}
+.btn_Android02{
+	left:295px;
+}
+.btn_APK02{
+	left:560px;
+}
+/*--- NEW+SLIDER ---*/
+#NEW{
+	background-color:#ffffff;
+}
+#newsbox{
+	display: block;
+	width: 960px;
+	height: 450px;
+	position: absolute;
+	top: 0px;
+	left: 0px;	
+	background-color: #ffffff;
+}
+#newsbox h2{
+	display: block;
+	width: 348px;
+	height: 108px;
+	position: absolute;
+	top: 0px;
+	left: 10px;	
+	font-size: 0px;
+}
+#newsbox .btn_more{
+	display: block;
+	width: 246px;
+	height: 58px;
+	position: absolute;
+	top: 25px;
+	right: 0px;
+	font-size: 0px;
+}
+#newsbox li{
+	width:960px; 
+	height:50px; 
+	position: relative;
+	top: 110px;
+	margin:15px 20px;
+	overflow:hidden;
+	list-style-type:none	
+}
+#newsbox li a:hover { 
+	text-decoration: none; 
+}
+#newsbox .news_icon { 
+	width:91px;
+	height:47px;
+	float:left; 
+	padding-right:10px; 
+}
+#newsbox .news_tips { 
+	width:610px; 
+	font-size:24px;  
+	float:left;
+	overflow:hidden; 
+	margin-right:5px; 
+	padding-top:11px;  
+}
+#newsbox .news_tips_date { 
+	width:150px; 
+	font-size:24px; 
+	line-height:16px; 
+	float:left; 
+	padding-top:15px;  
+}
+/* LINK TYPE*/
+.links { 
+	display:block;
+	width:960px; 
+	height:50px; 
+	color: #000000;
+	font-weight: bold;
+}
+.links:hover, .news_tips:hover, .news_tips_date:hover { 
+	color: #0099cc; 
+	text-decoration: none; 
+}
+
+/* SLIDER01*/
+#SLIDERBOX{
+	background-color:#ffffff;
+}
+#slider{
+	clear:both;
+	display: block;
+	width: 960px;
+	height: 440px;
+	position: absolute;
+	top:0;
+	left:0;
+
+}
+.show01{
+	padding:0;
+	width: 960px;
+	height: 440px;
+	top:0;
+	left:0;
+}
+.show02{
+	padding:0;
+	width: 960px;
+	height: 440px;
+	top:0;
+	left:0;
+}
+.show03{
+	padding:0;
+	width: 960px;
+	height: 440px;
+	top:0;
+	left:0;
+}
+/*--- NEW+SLIDER BOX ---*/
+#CHARACTER{ 
+	background-color:#ffffff;
+}
+ul.tabs {
+	display: block;
+	position: absolute;
+	left: 50%;
+	overflow: hidden;
+	width: 698px;
+	height: 85px;
+	margin-left: -380px;
+	z-index: 90;
+	margin-top: 665px;
+}	
+ul.tabs li {
+	height: 85px;
+	float: left;
+	overflow: hidden;
+	position: relative;
+}
+ul.tabs li {
+	text-decoration: none;
+	background-repeat: no-repeat;
+	background-position: 0px -85px;
+}
+ul.tabs li.btn_A{
+	display: block;
+	width: 336px;
+	height: 85px;
+	background-image: url(../../img/mobile/btn_A.png);
+}
+ul.tabs li.btn_B{
+	display: block;
+	width: 336px;
+	height: 85px;
+	background-image: url(../../img/mobile/btn_B.png);
+	margin-left: 20px;
+} 
+ul.tabs li a:hover {
+	background-position: 0px 0px;
+}
+ul.tabs li.active{
+	background-position: 0px 0px;
+}
+
+.abgne_tab h2 {
+	display: block;
+	width: 348px;
+	height: 108px;
+	position: absolute;
+	top: 90px;
+	left: 10px;	
+	font-size: 0px;
+}
+.tab_container{
+	display: block;
+	height: 750px;
+	overflow: hidden;
+	clear: both;
+	margin-right: auto;
+	margin-bottom: 0;
+	margin-left: auto;
+	width: 960px;
+}
+
+/* ABOUT*/
+.slider01{
+	display: block;
+	width: 960px;
+	height: 542px;
+	position: absolute;
+	top: 110px;
+	left: 0px;
+	overflow: hidden;
+}
+#owl-demo2{
+	display: block;
+	width: 960px;
+	height: 542px;
+	top: 0px;
+	padding: 0px;
+	clear: both;
+	margin-right: auto;
+	margin-left: auto;
+}
+
+#owl-demo2 .item{
+	width: 960px;
+	height: 542px;
+	display: block;
+	margin-right: 0px;
+}
+#owl-demo2 .item img{
+        display: block;
+        width:100%;
+        height: auto;
+}
+
+.btn_morev{
+	display: block;
+	width: 246px;
+	height: 58px;
+	position: absolute;
+	top: 25px;
+	right: 0px;
+	font-size: 0px;
+}
+.slider02{
+	display: block;
+	width: 960px;
+	height: 542px;
+	position: absolute;
+	top: 110px;
+	left: 0px;
+	overflow: hidden;
+}
+
+#owl-demo{
+	display: block;
+	width: 780px;
+	height: 355px;
+	clear: both;
+	top: 180px;
+	margin-left:90px;
+	z-index: 10;
+	padding: 0px;
+}
+
+#owl-demo .item{
+	width: 780px;
+	height: 355px;
+	display: block;
+	overflow: hidden;
+}
+#owl-demo .item img{
+	display: block;
+	width:780px;
+	height: auto;
+	margin: 0 10px;
+}
+
+#HEROS{ 
+	background-image:url(../../img/mobile/BG_02.jpg);
+}
+
+/*--- FOOTER BOX START---*/
+#service{ 
+	width:100%; 
+	height:85px; 
+	position:relative;
+	bottom:0px;
+	margin:0; 	 
+	overflow:hidden;
+	background-color:#333333;
+}
+#service p{ 
+	font-size:24px;
+	font-weight: bold;
+	width:auto;
+	position:absolute;
+	top:0px;
+	left:30px;
+	text-align:left;	
+	color:#ffffff;
+	overflow:hidden;
+}
+.btn_24{
+	width:220px;
+	height:45px;
+	position:absolute;
+	top:20px;
+	right:30px;
+	overflow:hidden;
+}
+/*--- FOOTER BOX START---*/
+#footer{ 
+	width:100%; 
+	height:200px; 
+	position:relative;
+	bottom:0px;
+	margin:0; 
+	text-align:center; 
+	overflow:hidden;
+	background-color:#000000;
+}
+#footer img{ 
+	position:absolute;
+	top:20px;
+	right:30px;	
+	overflow:hidden;
+}

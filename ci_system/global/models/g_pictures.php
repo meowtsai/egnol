@@ -23,7 +23,7 @@ class G_Pictures extends CI_Model {
 		
 		if ($order) $this->db->order_by($order);
 		else $this->db->order_by("p.priority", "desc");
-		
+        
 		return $this->db->select("p.*, bc.category")
 			->where("bc.game_id", $game_id)
 			->where("p.is_active", 1)
@@ -35,8 +35,9 @@ class G_Pictures extends CI_Model {
 	
 	function get_list_by_category($game_id, $category)
 	{
-		$this->db->where("bc.category", $category);
-		return $this->get_list($game_id, 0);
+        $category_id = $this->db->select("id")->where("game_id", $game_id)->where("category", $category)->from("picture_categories")->get()->row();
+        
+		return $this->get_list($game_id, $category_id->id);
 	}
 	
 	function get_count($game_id, $category_id)
