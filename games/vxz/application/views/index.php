@@ -36,7 +36,7 @@
         <div id="NEW">					
             <h2><img src="<?=base_url()?>p/img/h2_news.png"></h2>
             <div id="newsbox"> 							
-                <a href="/news?site=vxz" class="btn_more" title="MORE"><img src="<?=base_url()?>p/img/MORE.png"></a>
+                <a href="https://game.longeplay.com.tw/news?site=vxz" class="btn_more" title="MORE"><img src="<?=base_url()?>p/img/MORE.png"></a>
                 <? if (isset($news)):?>
 					<?
 						foreach($news->result() as $row)
@@ -49,7 +49,7 @@
 								$img = "icon_event";
                             
                             echo '<li>
-                                      <a class="links" href="/news/detail/'.$row->id.'?site='.$site.'">	
+                                      <a class="links" href="https://game.longeplay.com.tw/news/detail/'.$row->id.'?site='.$site.'">	
                                           <span class="news_icon"><img src="'.base_url().'p/img/'.$img.'.png" width="65" height="33"/></span>
                                           <span class="news_tips_date">'.date("Y-m-d", strtotime($row->start_time)).'</span>
                                           <span class="news_tips">'.$row->title.'</span>	
