@@ -14,6 +14,6 @@ class Mobile extends MY_Controller
             ->set("slider_about_mobile", $this->g_pictures->get_list_by_category("vxz", "slider_about_mobile"))
             ->set("slider_video_mobile", $this->g_pictures->get_list_by_category("vxz", "slider_video_mobile"))
             ->set("slider_heroes_mobile", $this->g_pictures->get_list_by_category("vxz", "slider_heroes_mobile"))
-            ->view("mobile");
+            ->api_view("mobile");
 	}
 }
