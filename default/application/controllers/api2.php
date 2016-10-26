@@ -1391,8 +1391,8 @@ class Api2 extends MY_Controller
 		}
 		
 		// 呼叫遊戲入點機制
-//		$res = $this->{$server_info->game_id}->iap_transfer($transfer_order, $server_info, "app_store", $product_id, $price, $currency);
-//		$error_message = $this->{$server_info->game_id}->error_message;
+		$res = $this->{$server_info->game_id}->iap_transfer($transfer_order, $server_info, "app_store", $product_id, $price, $currency);
+		$error_message = $this->{$server_info->game_id}->error_message;
 		$res = "1";
 		if($res === "1")
 		{
