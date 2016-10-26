@@ -2030,11 +2030,10 @@ class Api2 extends MY_Controller
 		}
 		$transfer_order = $this->g_wallet->get_order($transfer_id);
 		// 呼叫遊戲入點機制
-		/*
 		$this->load->library("game_api/{$server_info->game_id}");
 		$res = $this->{$server_info->game_id}->iap_transfer($transfer_order, $server_info, "google_play", $product_id, $price, $currency);
 		$error_message = $this->{$server_info->game_id}->error_message;
-		*/
+        
 		$res = "1";
 		if($res === "1")
 		{
