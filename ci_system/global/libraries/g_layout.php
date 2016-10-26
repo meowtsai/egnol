@@ -201,8 +201,8 @@ class G_Layout
     	echo $this->CI->load->view("g_api_view", $this->template_data, true);
     }
 
-	// 顯示空白制式畫面
-    function blank_view($view="")
+	// 顯示mobile制式畫面
+    function mobile_view($view="")
     {
     	if (empty($view))
 		{
@@ -216,7 +216,7 @@ class G_Layout
     	$this->template_data['css_link'] = $this->produce_css_link();
     	$this->template_data['js_include'] = $this->produce_js_include();
 
-    	echo $this->CI->load->view("g_blank_view", $this->template_data, true);
+    	echo $this->CI->load->view("g_mobile_view", $this->template_data, true);
     }
 
 	// 顯示活動用制式畫面
