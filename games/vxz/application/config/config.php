@@ -14,7 +14,7 @@
 | path to your installation.
 |
 */
-$config['base_url']	= 'http://test-payment.longeplay.com.tw/games/vxz';
+$config['base_url']	= 'https://vxz.longeplay.com.tw';
 
 /*
 |--------------------------------------------------------------------------

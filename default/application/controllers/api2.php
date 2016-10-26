@@ -1885,6 +1885,7 @@ class Api2 extends MY_Controller
 	// 開始 Android IAP 訂單
 	function android_iap_start_1()
 	{
+        log_message("error", "android_iap_start_1: start");
 		$product_id = $this->input->post("product_id");
 		$uid = $this->input->post("uid");
 		$app_id = $this->input->post("app_id");
@@ -1898,6 +1899,7 @@ class Api2 extends MY_Controller
 			$server_info = $this->db->from("servers")->where("address", $server_id)->get()->row();
 			if (empty($server_info))
 			{
+                log_message("error", "android_iap_start_1: 伺服器不存在");
 				die(json_encode(array("result"=>"0", "error"=>"伺服器不存在")));
 			}
 			
@@ -1909,8 +1911,10 @@ class Api2 extends MY_Controller
 		
 		$order_id = $this->g_wallet->produce_iap_order($uid, "inapp_billing_google", "1", $server_id, $partner_order_id, $product_id . "|" . $verify_code);
 		
-		if(empty($order_id))
+		if(empty($order_id)) {
+            log_message("error", "android_iap_start_1: ".$this->g_wallet->error_message);
 			die(json_encode(array("result"=>0, "msg"=>$this->g_wallet->error_message)));
+        }
 		
 		die(json_encode(array("result"=>1, "productId"=>$product_id, "orderId"=>$order_id)));
 	}
@@ -1918,6 +1922,7 @@ class Api2 extends MY_Controller
 	// 驗證訂單
 	function android_verify_receipt_1()
 	{
+        log_message("error", "android_verify_receipt_1: start");
 		$receipt_data = $this->input->post("receipt_data");
 		$order_id = $this->input->post("order_id");
 		$product_id = $this->input->post("product_id");
@@ -1938,6 +1943,7 @@ class Api2 extends MY_Controller
 		if(empty($order))
 		{
 			// 訂單不存在
+            log_message("error", "android_verify_receipt_1: Order not found.");
 			die(json_encode(array("result"=>0, "msg"=>"Order not found.")));
 		}
 		$amount = $price;
@@ -1974,6 +1980,7 @@ class Api2 extends MY_Controller
 			$server_info = $this->db->from("servers")->where("address", $server_id)->get()->row();
 			if (empty($server_info))
 			{
+                log_message("error", "android_verify_receipt_1: App server not exist.");
 				die(json_encode(array("result"=>"0", "msg"=>"App server not exist.")));
 			}
 			
