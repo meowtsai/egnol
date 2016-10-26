@@ -1916,6 +1916,7 @@ class Api2 extends MY_Controller
 			die(json_encode(array("result"=>0, "msg"=>$this->g_wallet->error_message)));
         }
 		
+        log_message("error", "android_iap_start_1: done");
 		die(json_encode(array("result"=>1, "productId"=>$product_id, "orderId"=>$order_id)));
 	}
 	
@@ -2008,12 +2009,12 @@ class Api2 extends MY_Controller
 		}
 		// 檢查訂單號碼格式
 		// *** 暫時使用 ***
-		if(strpos($transaction_id, "GPA.") !== 0)
+		/*if(strpos($transaction_id, "GPA.") !== 0)
 		{
 			log_message("error", "android_verify_receipt: Fake order {$transaction_id}.");
-			//
+			
 			die(json_encode(array("result"=>0, "msg"=>"Order not match.")));
-		}
+		}*/
 		
 		// 驗證成功, 先結掉儲值訂單
 		$this->g_wallet->complete_order($order);
