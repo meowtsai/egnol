@@ -201,6 +201,24 @@ class G_Layout
     	echo $this->CI->load->view("g_api_view", $this->template_data, true);
     }
 
+	// 顯示空白制式畫面
+    function blank_view($view="")
+    {
+    	if (empty($view))
+		{
+    		$view = $this->CI->router->directory . $this->CI->router->class."/".$this->CI->router->method;
+    	}
+
+    	$this->data['layout_breadcrumb'] = $this->breadcrumb;
+
+    	$this->template_data['meta'] = $this->meta;
+    	$this->template_data['layout_content'] = $this->CI->load->view($view, $this->data, true);
+    	$this->template_data['css_link'] = $this->produce_css_link();
+    	$this->template_data['js_include'] = $this->produce_js_include();
+
+    	echo $this->CI->load->view("g_blank_view", $this->template_data, true);
+    }
+
 	// 顯示活動用制式畫面
     function event_view($view="")
     {
