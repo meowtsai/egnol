@@ -239,10 +239,10 @@ class Server_api extends MY_Controller
 	// 玩家在遊戲中創角色
 	function user_create_character()
 	{
-		$server_id = $this->input->post("server_id");
-		$uid = $this->input->post("uid");
-		$character_id = $this->input->post("character_id");
-		$character_name = $this->input->post("character_name");
+		$server_id = $this->input->get_post("server_id");
+		$uid = $this->input->get_post("uid");
+		$character_id = $this->input->get_post("character_id");
+		$character_name = $this->input->get_post("character_name");
 
 		log_message("error", "user_create_character:{$uid},{$server_id},{$character_id},{$character_name}");
 		
