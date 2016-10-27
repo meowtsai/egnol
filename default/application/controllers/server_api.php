@@ -32,6 +32,7 @@ class Server_api extends MY_Controller
     function _return_error($msg) 
     {
     	$this->error_message = $msg;
+		echo $msg;
     	return false;
     }
     
@@ -42,13 +43,15 @@ class Server_api extends MY_Controller
 	
     function validate_token() {
         
+        log_message("error", "validate_token");
+		
         if ($this->input->get_post("uid")) $uid = $this->input->get_post("uid");
         else return $this->_return_error("欄位不齊全");
         if ($this->input->get_post("game_id")) $game_id = $this->input->get_post("game_id");
         else return $this->_return_error("欄位不齊全");
         if ($this->input->get_post("token")) $token = $this->input->get_post("token");
         else return $this->_return_error("欄位不齊全");
-        
+		
         log_message("error", "validate_token:{$uid},{$game_id}");
 		
     	$pass_ips = array();    	
