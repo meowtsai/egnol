@@ -49,6 +49,8 @@ class Server_api extends MY_Controller
         if ($this->input->get_post("token")) $token = $this->input->get_post("token");
         else return $this->_return_error("欄位不齊全");
         
+        log_message("error", "validate_token:{$uid},{$game_id}");
+		
     	$pass_ips = array();    	
     	foreach($this->partner_conf as $partner => $item)
 		{
