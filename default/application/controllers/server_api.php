@@ -96,16 +96,24 @@ class Server_api extends MY_Controller
 	{
 		//$game_id = $this->input->get_post("game_id");
 		$uid = $this->input->get_post("uid");
-		$vendor_server_id = $this->input->get_post("server_id");
+		$server_id = $this->input->get_post("server_id");
 		
         log_message("error", "user_login_complete:{$uid},{$vendor_server_id}");
         
         if(!IN_OFFICE) die('0');
         
-        $vendor_server = $this->db->from("servers")->where("address", $vendor_server_id)->order_by("server_id")->get()->row();
-        
-        $server_id = $vendor_server->server_id;
-        $game_id = $vendor_server->game_id;
+		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
+		if (empty($server_info))
+		{
+			$server_info = $this->db->from("servers")->where("address", $server_id)->get()->row();
+			if (empty($server_info))
+			{
+				die('0');
+			}
+			
+			$server_id = $server_info->server_id;
+			$game_id = $server_info->game_id;
+		}
         
 		$query = $this->db->from("log_game_logins")
 		           ->where("uid", $uid)
