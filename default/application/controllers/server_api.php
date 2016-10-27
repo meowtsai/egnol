@@ -48,6 +48,7 @@ class Server_api extends MY_Controller
         if ($this->input->get_post("uid")) $uid = $this->input->get_post("uid");
         else return $this->_return_error("欄位不齊全");
         if ($this->input->get_post("game_id")) $game_id = $this->input->get_post("game_id");
+        elseif ($this->input->get_post("game_Id")) $game_id = $this->input->get_post("game_Id");
         else return $this->_return_error("欄位不齊全");
         if ($this->input->get_post("token")) $token = $this->input->get_post("token");
         else return $this->_return_error("欄位不齊全");
