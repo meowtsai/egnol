@@ -2332,7 +2332,7 @@ class Api2 extends MY_Controller
 		$post = var_export($this->input->post(), true);
 		$get = var_export($this->input->get(), true);
 		
-        log_message("error", "validate_token:get=>{$get},post=>{$post}");
+        log_message("error", "set_login_server:get=>{$get},post=>{$post}");
 		
 		echo json_encode(array("result"	=> 1));
 		exit();
