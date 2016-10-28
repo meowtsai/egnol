@@ -2328,6 +2328,12 @@ class Api2 extends MY_Controller
 			die(json_encode(array("result"=>"0", "error"=>$this->game->error_message)));
 		}
 */
+		
+		$post = $this->input->post();
+		$get = $this->input->get();
+		
+        log_message("error", "validate_token:get=>{$get},post=>{$post}");
+		
 		echo json_encode(array("result"	=> 1));
 		exit();
 	}
