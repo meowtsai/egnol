@@ -2329,8 +2329,8 @@ class Api2 extends MY_Controller
 		}
 */
 		
-		$post = $this->input->post();
-		$get = $this->input->get();
+		$post = var_export($this->input->post(), true);
+		$get = var_export($this->input->get(), true);
 		
         log_message("error", "validate_token:get=>{$get},post=>{$post}");
 		
