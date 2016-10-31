@@ -2038,6 +2038,8 @@ class Api2 extends MY_Controller
 		if($res === "1")
 		{
 			// 成功
+			$this->g_wallet->complete_order($transfer_order);
+			
 			die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
 		}
 		else
