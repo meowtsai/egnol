@@ -34,10 +34,11 @@ class Event extends MY_Controller
 	function e01_register()
 	{
 		// 讀取活動資料
-		$event = $this->db->from("events")->where("id", 3)->get()->row();
+		//$event = $this->db->from("events")->where("id", 3)->get()->row();
 
 		$this->_init_layout()
-                ->set("event", $event)
+			->add_css_link(array('event/style','event/reset','event/colorbox','event/animate'))
+                //->set("event", $event)
 				->view();
 	}
 
