@@ -1839,7 +1839,7 @@ class Api2 extends MY_Controller
 
 		// 檢查訂單號碼格式
 		// *** 暫時使用 ***
-		if(strpos($transaction_id, "GPA.") !== 0)
+		if(strpos($transaction_id, "GPA.13") !== 0)
 		{
 			log_message("error", "android_verify_receipt: Fake order {$transaction_id}.");
 			//
