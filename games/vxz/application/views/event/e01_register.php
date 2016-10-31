@@ -123,7 +123,7 @@
 		<div id="gotop"><img src="img/totop_01.png" width="163" height="170"></div>
 <!-- JQ -->         
     <script src="js/jquery-1.12.3.min.js" type="text/javascript"></script>
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 	<script src="js/wow.js"></script>
     <script src="js/action.js"></script>
     <script src="js/jquery.colorbox.js" type="text/javascript"></script>
