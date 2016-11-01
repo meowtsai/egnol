@@ -2346,6 +2346,8 @@ class Api2 extends MY_Controller
 		$partner = $this->input->post("partner");
 		$game_id = $this->input->post("site");
 		// 暫時增加檢查, 之後須修正 SDK 統一規格
+		
+        log_message("error", "get_server_list:partner=>{$partner},game_id=>{$game_id}");
 		if(empty($game_id))
 		{
 			$game_id = $this->input->post("game");
