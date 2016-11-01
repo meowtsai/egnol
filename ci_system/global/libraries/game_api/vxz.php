@@ -153,6 +153,8 @@ class Vxz extends Game_Api
 	// In-App Purchase 入點
     function iap_transfer($order, $server, $pay_type, $product_id, $price, $currency)
     {
+        log_message("error", "iap_transfer: start");
+		
 		$partner_api = $this->CI->config->item("partner_api");
 		$game_api = $this->CI->config->item("game_api");
 		$app_key = $partner_api['netease']['sites']['vxz']['key'];
@@ -163,11 +165,13 @@ class Vxz extends Game_Api
 		$transaction_id = $order->order_no;
 		$partner_order_id = $order->partner_order_id;
 		
+        log_message("error", "iap_transfer: 1");
 		$character = $this->CI->db->from("characters")->where("id", $order->character_id)->get()->row();
 		
 		$server_num = $server->address;
 		$partner_character_id = $character->in_game_id;
 		
+        log_message("error", "iap_transfer: 2");
 		$str = "{$currency}{$order_id}{$partner_order_id}{$pay_type}{$price}{$product_id}{$partner_character_id}{$server_num}{$time}{$transaction_id}{$uid}{$app_key}";
         $verify = MD5($str);
 
