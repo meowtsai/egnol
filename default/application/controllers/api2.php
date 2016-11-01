@@ -2912,6 +2912,8 @@ class Api2 extends MY_Controller
 		$app_id = $this->input->get_post("app");
 		$app_key = $this->input->get_post("key");
 		
+        log_message("error", "get_app_info:partner_id=>{$partner_id},app_id=>{$app_id},app_key=>{$app_key}");
+		
 		if(empty($partner_id) || empty($app_id) || empty($app_key))
 		{
 			die('');
