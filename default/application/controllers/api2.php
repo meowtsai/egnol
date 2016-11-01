@@ -1306,7 +1306,6 @@ class Api2 extends MY_Controller
 		
 		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
 		
-        log_message("error", "ios_iap_start_1: 1");
 		if (empty($server_info))
 		{
 			$server_info = $this->db->from("servers")->where("address", $server_id)->get()->row();
@@ -1319,7 +1318,6 @@ class Api2 extends MY_Controller
 			$server_id = $server_info->server_id;
 		}
 		
-        log_message("error", "ios_iap_start_1: 2");
 		// 先讀取資料庫的訂單
 		$this->load->library("g_wallet");
 		
@@ -1344,7 +1342,6 @@ class Api2 extends MY_Controller
 			die(json_encode(array("result"=>0, "msg"=>"Order status error.")));
 		}
 		
-        log_message("error", "ios_iap_start_1: 3");
 		$amount = $price;
 		// 若不是台幣, 要取得台幣價格
 		if($currency !== "TWD")
@@ -1394,12 +1391,11 @@ class Api2 extends MY_Controller
 			}
 		}
 		
-        log_message("error", "ios_iap_start_1: 4");
 		// 呼叫遊戲入點機制
+		$this->load->library("game_api/{$server_info->game_id}");
 		$res = $this->{$server_info->game_id}->iap_transfer($transfer_order, $server_info, "app_store", $product_id, $price, $currency);
 		$error_message = $this->{$server_info->game_id}->error_message;
 		$res = "1";
-        log_message("error", "ios_iap_start_1: 5");
 		if($res === "1")
 		{
 			// 成功, 結掉轉點訂單
