@@ -22,31 +22,31 @@
 	<div class="top">
 		 <div class="logo">
 			<div class="wow fadeInDown animated" style="visibility:visible">
-			<a href="#"><img src="img/logo.png"></a></div>
+			<a href="#"><img src="<?=base_url()?>p/img/event/logo.png"></a></div>
 
 			<div class="mvbt">
 			<a id="colorbox" class="youtube" href="https://www.youtube.com/embed/kzaiMQL0JjE?rel=0&amp;wmode=transparent">
-			<img src="img/play.png"></a>
+			<img src="<?=base_url()?>p/img/event/play.png"></a>
 			</div>
 
 			<div class="mv">
 			<div class="wow flipInY animated" style="visibility:visible;">              
-			<img src="img/mv.png"></div>
+			<img src="<?=base_url()?>p/img/event/mv.png"></div>
 			</div>
 
 			<div class="people1">
 			<div class="wow bounceInLeft animated" data-wow-delay="0.4s" style="visibility:visible;-webkit-animation-delay:0.4s;-moz-animation-delay:0.4s;animation-delay:0.4s;">
-			<img src="img/lsh.png"></div>
+			<img src="<?=base_url()?>p/img/event/lsh.png"></div>
 			</div>
 
 			<div class="people2">
 			<div class="wow bounceInRight animated" data-wow-delay="0.4s" style="visibility:visible;-webkit-animation-delay:0.4s;-moz-animation-delay:0.4s;animation-delay:0.4s;">
-			<img src="img/sgjh.png"></div>
+			<img src="<?=base_url()?>p/img/event/sgjh.png"></div>
 			</div>
 
 			<div class="tt">
 			<div class="wow bounceIn animated" data-wow-delay="0.5s" style="visibility:visible;-webkit-animation-delay:0.5s;-moz-animation-delay:0.5s;animation-delay:0.5s;">
-			<img src="img/text.png"></div>
+			<img src="<?=base_url()?>p/img/event/text.png"></div>
 			</div>                                      
 		</div>
 	</div>
@@ -67,15 +67,15 @@
 		   <iframe src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2Fhttps%3A%2F%2Fwww.facebook.com%2Fplayvxz%2F%3Ffref%3Dts&width=115&layout=button_count&action=like&size=large&show_faces=false&share=true&height=46&appId" width="115" height="46" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
 		   </div>              
 		   <p><input type="email" class="t1" placeholder="請輸入E-mail"></p>
-		   <p><input type="tel" class="t2" placeholder="請輸入手機號碼"></p>
-		   <p><input type="type" class="t3"></p>
+		   <p><input type="mobile" class="t2" placeholder="請輸入手機號碼"></p>
+		   <p><input type="share_code_id" class="t3"></p>
 		   <p>
-		   <a class="t4" href=""><img src="img/login.png"></a>
+		   <a class="t4" href=""><img src="<?=base_url()?>p/img/event/login.png"></a>
 		   </p>
 		   <div class="display">
 			<ul>
-			 <li class="t5">事前登錄序號<span class="t6">12345-67890-ABCDE-FGHIJ</span></li>
-			 <li class="t7">情緣合擊分享碼<span class="t8">12345-67890-ABCDE-FGHIJ</span></li>
+			 <li class="t5">事前登錄序號<span class="t6"></span></li>
+			 <li class="t7">情緣合擊分享碼<span class="t8"></span></li>
 			</ul>
 		   </div>
 		 </div>
@@ -83,7 +83,7 @@
 		   <ul>
 			 <li class="t9"><span>http://www.longeplay.com.tw/</span></li>
 		   </ul>
-			 <p><a class="t10" href=""><img src="img/copy.png"></a></p>
+			 <p><a class="t10" href=""><img src="<?=base_url()?>p/img/event/copy.png"></a></p>
 		 </div>
 	  </div>
 
@@ -103,14 +103,15 @@
 	</div>
 	<div class="footer"></div>
 <!-- GO TOP -->	
-	<div id="gotop"><img src="img/totop_01.png" width="163" height="170"></div>
+	<div id="gotop"><img src="<?=base_url()?>p/img/event/totop_01.png" width="163" height="170"></div>
 <!-- JQ -->         
-<script src="js/jquery-1.12.3.min.js" type="text/javascript"></script>
+<script src="<?=base_url()?>p/js/event/jquery-1.12.3.min.js" type="text/javascript"></script>
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-<script src="js/wow.js"></script>
-<script src="js/action.js"></script>
-<script src="js/jquery.colorbox.js" type="text/javascript"></script>
-<script src="js/jquery.colorbox-min.js" type="text/javascript"></script>
+<script src="<?=base_url()?>p/js/event/wow.js"></script>
+<script src="<?=base_url()?>p/js/event/action.js"></script>
+<script src="<?=base_url()?>p/js/event/jquery.colorbox.js" type="text/javascript"></script>
+<script src="<?=base_url()?>p/js/event/jquery.colorbox-min.js" type="text/javascript"></script>
+<script src="<?=base_url()?>p/js/event/validate.js" type="text/javascript"></script>
 <script>
 		$(document).ready(function(){
 			//Examples of how to assign the Colorbox event to elements

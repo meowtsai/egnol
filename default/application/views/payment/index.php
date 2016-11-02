@@ -90,7 +90,7 @@ var convert_rate = {<?
 							</select>
 						</td>
 					</tr>
-					<!--tr>
+					<tr>
 						<th>角色名稱</th>
 						<td>
 							<select name="character" class="required" style="width:85%;">
@@ -102,7 +102,7 @@ var convert_rate = {<?
 								<? endforeach;?>
 							</select>
 						</td>
-					</tr-->
+					</tr>
 					<tr>
 						<th>幣別</th>
 						<td>

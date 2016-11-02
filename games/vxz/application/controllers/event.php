@@ -26,20 +26,34 @@ class Event extends MY_Controller
 
 	// --------------------------------------------------------------------------------------------------------
 	// 預註冊活動
-    // 1. 事前登錄活動時間為 2016/2/25 12:00 起
-	// 2. 序號保留至
-	// 3. 本活動需輸入正確之手機號碼，若為空號或無法使用將喪失獲獎資格。
-	// 4. 一組E-MAIL/手機號碼僅可參加活動一次。
-	// 5. 每個遊戲帳號僅能兌換一次事前登錄獎勵。
 	function e01_register()
 	{
 		// 讀取活動資料
 		//$event = $this->db->from("events")->where("id", 3)->get()->row();
+		$email = $this->input->post("email");
+		$mobile = $this->input->post("mobile");
+		$share_code_id = $this->input->get_post("share_code_id");
 
+		if (!empty($email) && !empty($mobile)) {
+			$check_code_used = $this->db->from("event_serials")->where("event_id", 8)->where("email", $email)->where("mobile", mobile)->get()->row();
+
+			if (empty($check_code_used)) {
+				$check_used = $this->db->from("event_serials")->where("event_id", 8)->where("email", $email)->or_where("mobile", $mobile)->get()->row();
+				
+				if (empty($check_used)) {
+					$earlylogin_code = $this->db->from("event_serials")->where("event_id", 8)->where("email", NULL)->where("mobile", NULL)->get()->row();
+					
+					$share_code = $this->db->from("event_serials")->where("event_id", 9)->where("email", NULL)->where("mobile", NULL)->get()->row();
+				}
+			} else {
+
+			}
+		}
+		
 		$this->_init_layout()
 			->add_css_link(array('event/style','event/reset','event/colorbox','event/animate'))
                 //->set("event", $event)
-				->view();
+				->api_view();
 	}
 
 	// 取得序號

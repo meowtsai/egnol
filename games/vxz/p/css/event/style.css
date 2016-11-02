@@ -74,27 +74,27 @@ ul li a{
 	background-position: 0px -40px;
 }
 .nav ul li.new a{
-	background-image: url(../img/btn_nav_02.png);
+	background-image: url(../../img/event/btn_nav_02.png);
 }
 
 .nav ul li.center a{
-	background-image: url(../img/btn_nav_06.png);
+	background-image: url(../../img/event/btn_nav_06.png);
 }
 .nav ul li.teach a{
-	background-image: url(../img/btn_nav_08.png);
+	background-image: url(../../img/event/btn_nav_08.png);
 }
 .nav ul li.fb a{
-	background-image: url(../img/btn_nav_10.png);
+	background-image: url(../../img/event/btn_nav_10.png);
 }
 .nav ul li.download a{
-	background-image: url(../img/btn_nav_12.png);
+	background-image: url(../../img/event/btn_nav_12.png);
 	background-repeat: no-repeat;
 }
 .nav ul li.service a{
-	background-image: url(../img/btn_nav_14.png);
+	background-image: url(../../img/event/btn_nav_14.png);
 }
 .nav ul li.back a{
-	background-image: url(../img/btn_nav_16.png);
+	background-image: url(../../img/event/btn_nav_16.png);
 }
 
 
@@ -121,14 +121,14 @@ ul li a{
 }
 .ios{
 	background-position: 0px 0px;
-	background-image:url(../img/dwon_01.png);
+	background-image:url(../../img/event/dwon_01.png);
 }
 .google{
-	background-image:url(../img/dwon_02.png);
+	background-image:url(../../img/event/dwon_02.png);
 	background-position: 0px 0px;
 }
 .apk{
-	background-image:url(../img/dwon_03.png);
+	background-image:url(../../img/event/dwon_03.png);
 	background-position: 0px 0px;
 }
 .ios:hover{
@@ -148,7 +148,7 @@ ul li a{
 	margin: 0 auto;
 	clear: both;
 	height:878px;
-	background-image:url(../img/bg_01.jpg);
+	background-image:url(../../img/event/bg_01.jpg);
 	background-repeat:no-repeat;
 	background-position: center top;
 	overflow: hidden;
@@ -172,7 +172,7 @@ ul li a{
 	position:absolute;
 	left:50%;
 	margin-left:-70px;
-	background-image:url(../img/mvbg.png);
+	background-image:url(../../img/event/mvbg.png);
 	background-repeat:no-repeat;
 	top:160px;
 	}
@@ -218,7 +218,7 @@ ul li a{
 	
 .section{
 	height: 1270px;
-	background-image: url(../img/bg_02.jpg);
+	background-image: url(../../img/event/bg_02.jpg);
 	background-repeat: no-repeat;
 	background-position: center top;
 	display: block;
@@ -258,7 +258,7 @@ ul li a{
 	display: block;
 	width: 317px;
 	height: 90px;
-	background-image:url(../img/btn01.png);
+	background-image:url(../../img/event/btn01.png);
 	background-repeat:no-repeat;
 	background-position: 0px -90px;
 	float: left;
@@ -272,7 +272,7 @@ ul li a{
 	display: block;
 	width: 317px;
 	height: 90px;
-	background-image:url(../img/btn02.png);
+	background-image:url(../../img/event/btn02.png);
 	background-repeat:no-repeat;
 	background-position: 0px -90px;
 	float: left;
@@ -306,7 +306,7 @@ ul li a{
 	}
 
 #btn_1{
-	background-image:url(../img/tab1.png);
+	background-image:url(../../img/event/tab1.png);
 	background-repeat:no-repeat;
 	background-position: center top;
 	width:1096px;
@@ -321,7 +321,7 @@ ul li a{
 	
 #btn_2{
 	display:none;
-	background-image:url(../img/tab2.png);
+	background-image:url(../../img/event/tab2.png);
 	background-repeat:no-repeat;
 	background-position: center top;
 	width:1016px;
@@ -410,7 +410,7 @@ input{
 /*------------ 活動注意事項 ------------*/		
 .article{
 	height:770px;
-	background-image:url(../img/bg_03.jpg);
+	background-image:url(../../img/event/bg_03.jpg);
 	background-repeat:no-repeat;
 	background-position: center top;
 	}
@@ -453,7 +453,7 @@ input{
 	margin-right: auto;
 	margin-bottom: 0;
 	margin-left: auto;
-	background-image:url(../img/bg_04.jpg);
+	background-image:url(../../img/event/bg_04.jpg);
 	background-repeat:no-repeat;
 	background-position: center top;
 	}
