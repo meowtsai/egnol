@@ -9,7 +9,7 @@ $(function()
 		messages: {
 			game: "尚未選擇遊戲",
 			server: "尚未選擇伺服器",
-			character: "尚未選擇角色",
+			//character: "尚未選擇角色",
 			billing_money: "尚未選擇儲值金額"
 		},
 		showErrors: function(errorMap, errorList)
@@ -39,8 +39,8 @@ $(function()
 			server_pool.find("option."+$(this).val()).clone().appendTo(server);
 		}
 
-		var character = $(this).parents("form").find("select[name='character']");
-		character.empty().append("<option value=''>--請選擇角色--</option>");
+		//var character = $(this).parents("form").find("select[name='character']");
+		//character.empty().append("<option value=''>--請選擇角色--</option>");
 
         var option = $("option:selected", this);
 		var pay_msg = $('#payment_msg');
@@ -59,6 +59,7 @@ $(function()
 	});
 	game.trigger("change");
 
+	/*
 	var character_pool = $("#character_pool");
 	$("select[name='server']").on('change', function()
 	{
@@ -69,6 +70,7 @@ $(function()
 			character_pool.find("option."+$(this).val()).clone().appendTo(character);
 		}
 	});
+	*/
     
     $("select[name='currency']").on("change", function ()
 	{
