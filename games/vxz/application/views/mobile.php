@@ -5,7 +5,7 @@
             <li id="btn_NEW" class="Nowtab"><a class="anchor" href="#NEW">最新消息</a></li>
             <li id="btn_CHARACTER" class="Nowtab"><a class="anchor" href="#CHARACTER">遊戲特色</a></li>
             <li id="btn_FB" class="Nowtab"><a href="https://www.facebook.com/playvxz/?fref=ts">粉絲團</a></li>
-            <li id="btn_DOWNLOAD" class="Nowtab"><a href="#">下載遊戲</a></li>
+            <li id="btn_DOWNLOAD" class="Nowtab"><a href="#" onclick="javascript:alert('【敬請期待】');">下載遊戲</a></li>
         </ul>
     </div>
     <div class="nav2"  style="display:none">
@@ -21,7 +21,7 @@
         <ul class="menu">
             <div class="ICON"><img src="<?=base_url()?>p/img/mobile/ICON.png"></div>
             <li id="btn_CENTER" class="Nowtab"><a href="https://game.longeplay.com.tw/payment?site=vxz">儲值中心</a></li>
-            <li id="btn_TEACH" class="Nowtab"><a href="#">儲值教學</a></li>
+            <li id="btn_TEACH" class="Nowtab"><a href="#" onclick="javascript:alert('【敬請期待】');">儲值教學</a></li>
             <li id="btn_SERVICE" class="Nowtab"><a href="https://game.longeplay.com.tw/service?site=vxz">客服中心</a></li>
         </ul>
     </div>
@@ -33,9 +33,9 @@
         <div class="inner_box">
             <h1 class="wow fadeInUp" data-wow-delay="0.2s"><img src="<?=base_url()?>p/img/mobile/LOGO.png"></h1> 
             <!-- APP 下載點 -->
-            <a href="#" class="btn_IOS01" title="IOS"><img src="<?=base_url()?>p/img/mobile/APPSTORE.png"></a>
-            <a href="#" class="btn_Android01" title="Android"><img src="<?=base_url()?>p/img/mobile/GOOGLEPLAY.png"></a>
-            <a href="#" class="btn_APK01" title="APK"><img src="<?=base_url()?>p/img/mobile/APK.png"></a>
+            <a href="#" class="btn_IOS01" title="IOS" onclick="javascript:alert('【敬請期待】');"><img src="<?=base_url()?>p/img/mobile/APPSTORE.png"></a>
+            <a href="#" class="btn_Android01" title="Android" onclick="javascript:alert('【敬請期待】');"><img src="<?=base_url()?>p/img/mobile/GOOGLEPLAY.png"></a>
+            <a href="#" class="btn_APK01" title="APK" onclick="javascript:alert('【敬請期待】');"><img src="<?=base_url()?>p/img/mobile/APK.png"></a>
         </div>
     </div>
 

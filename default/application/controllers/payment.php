@@ -7,7 +7,7 @@ class Payment extends MY_Controller
 {
 	// 儲值中心主頁面
 	//	選擇遊戲、伺服器和儲值管道
-	function index()
+	function index_old()
 	{		
 		$this->_require_login();
 
@@ -35,7 +35,7 @@ class Payment extends MY_Controller
 			->standard_view();
 	}	
     
-	function index2()
+	function index()
 	{		
 		$this->_require_login();
 

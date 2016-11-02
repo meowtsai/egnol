@@ -4,9 +4,9 @@
             <li class="new"><a class="anchor" href="#NEW">最新消息</a></li>
             <li class="charater"><a class="anchor" href="#CHARACTER">遊戲特色</a></li>
             <li class="center"><a href="https://game.longeplay.com.tw/payment?site=vxz">儲值中心</a></li>
-            <li class="teach"><a href="#" target="_blank">儲值教學</a></li>
+            <li class="teach"><a href="#" onclick="javascript:alert('【敬請期待】');">儲值教學</a></li>
             <li class="fb"><a href="https://www.facebook.com/playvxz/?fref=ts" target="_blank">粉絲團</a></li>
-            <li class="download"><a href="#">下載遊戲</a></li>
+            <li class="download"><a href="#" onclick="javascript:alert('【敬請期待】');">下載遊戲</a></li>
             <div class="nav2" style="display:none">
                 <a class="ios" href="#" target="_blank">APPSTORE</a>
                 <a class="google" href="#" target="_blank">GOOGLEPLAY</a>
@@ -25,9 +25,9 @@
             <img src="<?=base_url()?>p/img/LOGO.png" alt="">
         </h1> 			
         <div class="QR01"><img src="<?=base_url()?>p/img/QR.png">
-            <a href="#" title="IOS"><img src="<?=base_url()?>p/img/APPSTORE.png"></a>
-            <a href="#" title="Android"><img src="<?=base_url()?>p/img/GOOGLEPLAY.png"></a>
-            <a href="#" title="APK"><img src="<?=base_url()?>p/img/APK.png"></a>
+            <a href="#" title="IOS" onclick="javascript:alert('【敬請期待】');"><img src="<?=base_url()?>p/img/APPSTORE.png"></a>
+            <a href="#" title="Android" onclick="javascript:alert('【敬請期待】');"><img src="<?=base_url()?>p/img/GOOGLEPLAY.png"></a>
+            <a href="#" title="APK" onclick="javascript:alert('【敬請期待】');"><img src="<?=base_url()?>p/img/APK.png"></a>
         </div>
     </div>
 
