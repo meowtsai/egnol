@@ -31,7 +31,7 @@ class Payment extends MY_Controller
 			->set("characters", $characters)
 			->add_css_link("login")
 			->add_css_link("money")
-			->add_js_include("payment/index")
+			->add_js_include("payment/index_old")
 			->standard_view();
 	}	
     
@@ -61,7 +61,7 @@ class Payment extends MY_Controller
 			->set("set_money", $set_money)
 			->add_css_link("login")
 			->add_css_link("money")
-			->add_js_include("payment/index2")
+			->add_js_include("payment/index")
 			->standard_view();
 	}	
 

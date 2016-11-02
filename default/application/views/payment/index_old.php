@@ -1,7 +1,6 @@
 <?
-	$mycard_conf = $this->config->item("mycard");
-	$options = $this->config->item("payment_options");	
-    $convert_rate = $this->config->item("convert_rate");
+	$gash_conf = $this->config->item("gash");
+	$options = $this->config->item("payment_options");
 	
 // 判斷是否為行動裝置, 電腦版才要顯示 QR Code
 $useragent=$_SERVER['HTTP_USER_AGENT'];
@@ -29,24 +28,14 @@ $currency_array = array(
 );
     
 $filename = "./p/payment_disable_list";
-
-if (file_exists($filename)) {
-    $handle = fopen($filename, "r");
-    $payment_disable_list = fread($handle, filesize($filename));
-    $payment_disable_array = explode(",", $payment_disable_list);
-    fclose($handle);
-} else {
-    $payment_disable_array = array();
-}
+$handle = fopen($filename, "r");
+$payment_disable_list = fread($handle, filesize($filename));
+$payment_disable_array = explode(",", $payment_disable_list);
+fclose($handle);
 ?>
 
 <script type="text/javascript">
-var mycard_amount = ['<?= implode("','", $mycard_conf["amount"])?>'];
-var convert_rate = {<?
-    foreach ($convert_rate as $key => $val){
-        echo $key.":".$val;
-    }
-                    ?>};
+var gash_amount = ['<?= implode("','", $gash_conf["amount"])?>'];
 </script>
 
 <div id="content-login">
@@ -54,16 +43,19 @@ var convert_rate = {<?
 		<div class="bread cf" typeof="v:Breadcrumb">
 			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>payment?site=<?=$site?>" title="儲值中心" rel="v:url" property="v:title">儲值中心</a>
 		</div>
-		<form id="choose_form" class="choose_form" method="post" action="<?=$this->config->item("mycard_url")?>">
-            <? if($set_money):?>
-                <input type="hidden" name="amount" value="<?=$set_money?>">
-            <? else:?>
-			    <input type="hidden" name="amount">
-            <? endif;?>
+		<form id="choose_form" class="choose_form" method="post" action="">
+			<input type="hidden" name="PAID">
+			<input type="hidden" name="CUID">
+			<input type="hidden" name="ERP_ID">
+
+			<input type="hidden" name="pay_type">
+			<input type="hidden" name="subpay_type">
+			<input type="hidden" name="prod_id">
+
 			<input type="hidden" name="api_call" value="false" />
 
 			<div class="login-form">
-				<table class="member_info">
+				<!--table class="member_info">
 					<tr>
 						<th>遊戲名稱</th>
 						<td>
@@ -96,6 +88,7 @@ var convert_rate = {<?
 							<select name="character" class="required" style="width:85%;">
 								<option value="">--請選擇角色--</option>
 							</select>
+
 							<select id="character_pool" style="display:none;">
 								<? foreach($characters->result() as $row): ?>
 								<option value="<?=$row->id?>" class="<?=$row->server_id?>"><?=$row->name?></option>
@@ -113,17 +106,77 @@ var convert_rate = {<?
 							</select>
 						</td>
 					</tr>
-					<tr class="amount_row">
+					<tr>
+						<th>儲值方式</th>
+						<td>
+						<? foreach($currency_array as $key => $val):?>
+							<select name="billing_type" class="billing_type required <?=$key?>" style="width:85%;<?=($key=='TWD')?"":"display:none;"?>">
+			                    <option value=''>--請選擇儲值方式--</option>
+
+								<? foreach($options as $tab => $arr):
+									if (array_key_exists("trade", $arr)):
+										$attr_str = '';
+										foreach($arr['trade'] as $attr => $val) $attr_str .= " {$attr}='{$val}'";
+								?>
+								<option pay_type="" maximum="<?=$arr['maximum']?>" minimum="<?=$arr['minimum']?>" <?=$attr_str?>><?=$tab?></option>
+								<? else:
+										$class_str = 'billing_type_opt';
+										foreach($arr as $tab2 => $arr2) {
+											if($key == $arr2['trade']['cuid']):
+								?>
+								<option pay_type="<?=$tab?>" class="<?=$class_str?>"><?=$tab?></option>
+								<?
+												break;
+											endif;
+										}
+									endif;
+								endforeach;?>
+							</select>
+						<?endforeach;?>
+						</td>
+					</tr>
+					<tr id="pay_type_block" style="display:none;">
+						<th>支付管道</th>
+						<td>
+						<? foreach($currency_array as $key => $val):?>
+							<? foreach($options as $tab => $arr): ?>
+							<select name="billing_channel"  class="pay_type pay_type_<?=$tab?> <?=$key?> required" style="width:85%;">
+			                    <option value=''>--請選擇支付管道--</option>
+
+								<? foreach($arr as $opt => $arr2):
+                                    if (in_array($opt, $payment_disable_array)) continue;
+									if (array_key_exists("trade", $arr)) continue;									
+									if ($is_mobile || $is_tablet) {
+										if ($arr2['mobile'] == "0") continue;
+									} else {
+										if ($arr2['mobile'] == "1") continue;
+									}
+									
+									$attr_str = '';
+									foreach($arr2['trade'] as $attr => $val) $attr_str .= " {$attr}='{$val}'";
+									
+									if(($key =='TWD' && !isset($arr2['trade']['cuid'])) || $key == $arr2['trade']['cuid']):
+								?>
+								<option value="<?=$opt?>" name="gash_channel" class="gash_option currency" maximum="<?=$arr2['maximum']?>" minimum="<?=$arr2['minimum']?>" <?=$attr_str?>><?=$opt?></option>
+								<? endif;
+								endforeach;?>
+							</select>
+							<? endforeach;?>
+						<?endforeach;?>
+						</td>
+					</tr>
+					<tr>
+						<th></th>
+						<td>
+						</td>
+					</tr>
+					<tr class="amount_row" style="display:none;">
 						<th>儲值金額</th>
 						<td>
-                            <? if($set_money):?>
-                                <input type="hidden" name="billing_money" value="<?=$set_money?>"><?=$set_money?>
-                            <? else:?>
-                                <select name="billing_money"  class="amount_block required" style="width:85%;">
-                                    <option value=''>--請選擇儲值金額--</option>
+							<select name="billing_money"  class="amount_block required" style="width:85%;">
+			                    <option value=''>--請選擇儲值金額--</option>
 
-                                </select>
-                            <? endif;?>
+							</select>
 						</td>
 					</tr>
 				</table>
@@ -131,10 +184,11 @@ var convert_rate = {<?
 				<div class="login-button">
 					<input name="doSubmit" type="submit" id="doSubmit" value="" style="display:none;" />
                     <img style="cursor:pointer;" src="<?=$longe_url?>p/image/money/confirm-btn.png" onclick="javascript:$('#doSubmit').trigger('click')" />
-				</div>
+				</div-->
 
 				<ul class="notes">
-					<li id="payment_msg">點數比值與相關訊息...</li>
+					<li id="payment_msg">由於與 Gash 合約即將到期，再請玩家利用 IOS 及 GOOGLE 商店下載包以進行儲值，如造成您的不便，再請見諒。
+</li>
 				</ul>
 			</div>
 		</form>

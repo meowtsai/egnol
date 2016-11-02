@@ -1,4 +1,3 @@
-
 var type='';
 
 $(function()
@@ -11,19 +10,17 @@ $(function()
 			game: "尚未選擇遊戲",
 			server: "尚未選擇伺服器",
 			character: "尚未選擇角色",
-			billing_type: "尚未選擇儲值方式",
-			billing_channel: "尚未選擇支付管道",
 			billing_money: "尚未選擇儲值金額"
 		},
 		showErrors: function(errorMap, errorList)
 		{
-		   var err = '';
-		   $(errorList).each(function(i, v)
-		   {
-			   err += v.message + "<br/>";
-		   });
-		   if (err)
-		   {
+		    var err = '';
+		    $(errorList).each(function(i, v)
+		    {
+			    err += v.message + "<br/>";
+		    });
+		    if (err)
+		    {
 				leOpenDialog('儲值錯誤', err, leDialogType.MESSAGE);
 			}
 		}
@@ -72,124 +69,54 @@ $(function()
 			character_pool.find("option."+$(this).val()).clone().appendTo(character);
 		}
 	});
-
-    $("select[name='billing_type']").on("change", function ()
-	{
-        var option = $("option:selected", this);
-
-		$('#choose_form .amount_row').hide();
-		$('#choose_form .amount_block').html('');
-
-		if(option.val() == "")
-		{
-			$('#pay_type_block').hide();
-			return;
-		}
-
-		if(option.attr("pay_type") == "")
-		{
-			$("#pay_type_block").hide();
-		}
-		else
-		{
-            var currency = $("select[name='currency']").val();
-			
-			$("#pay_type_block").show();
-			$(".pay_type").hide();
-			$(".pay_type option").prop("selected", false);
-			$(".pay_type_" + option.attr("pay_type") + "." + currency).show();
-			
-			return;
-		}
-
-        onBillingOptionSelected($("option:selected", this));
-	});
-
+    
     $("select[name='currency']").on("change", function ()
 	{
-		$('#pay_type_block').hide();
-		
         var currency = $("select[name='currency']").val();
-		$(".billing_type").show();
-		$(".billing_type option").prop("selected", false);
-		$(".billing_type").not("." + currency).hide();
+		
+        onBillingOptionSelected();
 		
 		return;
 	});
-
-    $("select[name='billing_channel']").on("change", function ()
+    
+    $("select[name='billing_money']").on("change", function ()
 	{
-        var option = $("option:selected", this);
-
-		if(option.val() == "")
-			return;
-
-        onBillingOptionSelected($("option:selected", this));
+        $("input[name='amount']").val($(this).val());
+		
+		return;
 	});
+    
+    onBillingOptionSelected();
 
-	function onBillingOptionSelected(opt)
+	function onBillingOptionSelected()
 	{
-		var html = '';
+        var html = '';
 
-		$.each(gash_amount, function(key, val)
-		{
-			if (eval(val) > opt.attr("maximum")) return;
-			if (eval(val) < opt.attr("minimum")) return;
+        $.each(mycard_amount, function(key, val)
+        {
+            //if (eval(val) > opt.attr("maximum")) return;
+            //if (eval(val) < opt.attr("minimum")) return;
 
-			var amount = (val*(opt.attr("convert_rate")*1000)/1000);
-			//if (opt.attr("CUID") == 'IDR' && amount > 964800) return;
+            var currency = $("select[name='currency']").val();
 
-			if (opt.attr("CUID") == 'IDR' && amount > 46000) return;
-			else if (opt.attr("CUID") == 'PHP' && amount > 4070) return;
-			else if (opt.attr("CUID") == 'THB' && amount > 2980) return;
-			//else if (opt.attr("CUID") == 'VND' && amount > 2082500) return;
-			else if (opt.attr("CUID") == 'VND' && amount > 88000) return;
-			else if (opt.attr("CUID") == 'MYR' && amount > 305) return;
-			else if (opt.attr("CUID") == 'KRW' && amount > 106650) return;
-			else if (opt.attr("PAID") == 'BNK82201' && amount > 5000) return;
-			else if (opt.attr("PAID") == 'TELCHT05' && amount > 3000) return;
-			else if (opt.attr("PAID") == 'TELCHT06' && amount > 2000) return;
-			else if (opt.attr("PAID") == 'TELCHT07' && amount > 3000) return;
-			else if (opt.attr("PAID") == 'TELTCC01' && amount > 3000) return;
-			else if (opt.attr("PAID") == 'TELFET01' && amount > 3000) return;
-			else if (opt.attr("PAID") == 'TELSON04' && amount > 2000) return;
+            var amount = (val*(convert_rate[currency]*1000)/1000);
+            //if (opt.attr("CUID") == 'IDR' && amount > 964800) return;
 
-			html += '<option name="payment_amount" value="'+amount+'" nt='+val+' >'+amount+'</option> ';
-		});
+            html += '<option name="payment_amount" value="'+amount+'" nt='+val+' >'+amount+'</option> ';
+        });
 
-		if (opt.attr("PAID") == 'COPGAM02' || opt.attr("PAID") == 'COPGAM05')
-		{
-			$('#choose_form .amount_row').hide();
-		}
-		else
-		{
-			$('#choose_form .amount_row').show();
-			$('#choose_form .amount_block').html(html);
+        $('#choose_form .amount_block').html(html);
 
-			var idx = $('#choose_form .amount_block option').length-1;
-			$('#choose_form .amount_block option').each(function(i,n)
-			{
-				if ($(this).val() == 1000) idx = i;
-			});
-			if (idx > 3) idx = 3;
-			$('#choose_form .amount_block option').eq(idx).click();
-		}
-
-    	$("input[name='PAID']").val(opt.attr("PAID"));
-    	$("input[name='CUID']").val(opt.attr("CUID"));
-    	$("input[name='ERP_ID']").val(opt.attr("ERP_ID"));
-
-    	$("input[name='pay_type']").val(opt.attr("pay_type"));
-    	$("input[name='subpay_type']").val(opt.attr("subpay_type"));
-    	$("input[name='prod_id']").val(opt.attr("prod_id"));
-
-    	$('#choose_form').attr('action', opt.attr("action"));
+        var idx = $('#choose_form .amount_block option').length-1;
+        $('#choose_form .amount_block option').each(function(i,n)
+        {
+            if ($(this).val() == 1000) idx = i;
+        });
+        if (idx > 3) idx = 3;
+        $('#choose_form .amount_block option').eq(idx).click();
+        
+        if ($("input[name='billing_money']").val() == null) $("input[name='amount']").val($("select[name='billing_money']").val());
     }
-
-    $(".gash_global").on("click", function(event)
-	{
-    	$('#choose_form').attr('action', $('#choose_form').attr('action').replace("tw", "global"));
-    });
 
 	$("select[name='game'] option").each(function()
 	{
