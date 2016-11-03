@@ -72,9 +72,12 @@ $(document).ready(function()
 		}
 		else
 		{
-			//window.location = "ios://facebooklogin-_-\"";
+			startFacebookLogin();
+			
+//			window.location = "ios://facebooklogin-_-";
+			
 			var iframe = document.createElement("IFRAME");
-			iframe.setAttribute("src", "ios://facebooklogin-_-\"");
+			iframe.setAttribute("src", "ios://facebooklogin-_-");
 			document.documentElement.appendChild(iframe);
 			iframe.parentNode.removeChild(iframe);
 			iframe = null;
@@ -101,6 +104,10 @@ $(document).ready(function()
 		}
 	});
 });
+
+function startFacebookLogin()
+{
+}
 
 function onFacebookLoginSuccess(appId, uid)
 {
