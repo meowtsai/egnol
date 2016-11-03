@@ -45,7 +45,7 @@ $("#tabs li").click(function(){
 			$(".nav2").fadeIn();
 			return false;
 		});
-		$("#TOP, #HEROS, #service, #footer").click(function(){
+		$(".header, .menu, .new a, .back a, #TOP, #HEROS, #service, #footer").click(function(){
 			$(".nav2").fadeOut();
 			return false;
 		});

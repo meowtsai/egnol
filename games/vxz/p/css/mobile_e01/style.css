@@ -1,0 +1,471 @@
+@charset "utf-8";
+/* CSS Document */
+*{  
+	padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    outline: none;
+	
+}
+
+body,html{
+	width: 100%;
+	display: block;
+	}
+
+.wrapper{
+	width:960px;
+	margin:0 auto;
+	clear: both;
+	overflow:hidden;
+	position:relative;
+	clear:both;
+	}
+	
+.top{
+	display: block;
+	margin: 0 auto;
+	height:1009px;
+	position: relative;
+	background-image:url(../../img/mobile_e01/bg_01.png);
+	background-repeat:no-repeat;
+	background-position: top center;
+	}
+
+
+
+ul li a{
+	display:block;
+	width:100%;
+	height:100%;
+	text-indent:-9999px; /* 隱藏文字 */
+	overflow:hidden;
+}
+
+/* NAV BAR on */
+.header01{
+	width:100%;
+	height:90px;
+	position:fixed;
+	background-color:#0099cc;
+	z-index:1000;
+}
+/* NAV BAR under */
+.header02{
+	width:100%;
+	height:90px;
+	position:fixed;
+	bottom:0px;
+	background-color:#0099cc;
+	z-index:999999;
+}
+.nav{
+	width:960px;
+	height:50px;
+	position:absolute;
+	top:0px;
+	left:50%;
+	margin:0 0 0 -480px;
+	margin-top:20px;
+}
+.nav ul{
+	width:960px; 
+	height:50px;	
+}
+.nav ul li a{
+	display:block;
+	height:50px;
+	float:left;
+	transition: all .2s ease-in-out; /* 變速曲線 */
+}
+.nav ul li:hover,.Hovertab{
+	background-image:url(../../img/mobile_e01/btn_nav_hover.png);
+}
+.Nowtab{
+	background-image:url(../../img/mobile_e01/btn_nav.png);
+}
+
+#btn_NEW{
+	position:absolute;
+	left:18px;
+	width:227px;
+	background-position:left center;
+}
+#btn_CHARACTER{
+	position:absolute;
+	left:245px;
+	width:227px;
+	background-position:-227px;
+}
+#btn_FB{
+	position:absolute;
+	left:472px;
+	width:227px;
+	background-position:-454px;
+}
+#btn_DOWNLOAD{
+	position:absolute;
+	left:699px;
+	width:227px;
+	background-position:-681px;
+}
+#btn_CENTER{
+	position:absolute;
+	left:255px;
+	width:227px;
+	background-position:-908px;
+}
+#btn_TEACH{
+	position:absolute;
+	left:482px;
+	width:227px;
+	background-position:-1135px;
+}
+#btn_SERVICE{
+	position:absolute;
+	left:709px;
+	width:227px;
+	background-position:-1362px;
+}
+
+.icon{
+	position:absolute;
+	bottom:-10px;
+	left:30px;
+}
+
+/*menu_dropdown*/
+.nav2{
+	position: absolute;
+	z-index: 90;
+	display: block;
+	width: 227px;
+	height: 198px;
+	top: 90px;
+	right: 10px;
+}
+.nav2 a{
+	display: block;
+	width: 227px;
+	height: 66px;
+	float: left;
+	margin: 0px;
+	font-size: 0px;
+	text-align: center;
+	background-size:100% auto;
+	-ms-background-size:100% auto;
+	-webkit-background-size:100% auto;
+	-moz-background-size:100% auto;
+	-o-background-size:100% auto;
+}
+
+.ios{
+	background-position: 0px 0px;
+	background-image:url(../../img/mobile_e01/dwon_01.png);
+	
+}
+.google{
+	background-image: url(../../img/mobile_e01/dwon_02.png);
+	background-position: 0px 0px;
+}
+.apk{
+	background-image: url(../../img/mobile_e01/dwon_03.png);
+	background-position: 0px 0px;
+}
+
+/* LOGO */
+.top .logo{
+	width:455px;
+	height:199px;
+	position:absolute;
+	left:50%;
+	top:100px;
+	margin-left:-430px;
+	display: block;
+}
+
+.top .mv{
+	width:643px;
+	height:402px;
+	position:absolute;
+	left:50%;
+	margin-left:-300px;
+	background-image:url(../../img/mobile_e01/mvbg.png);
+	background-repeat:no-repeat;
+	top:340px;
+	}
+
+.top .people1{
+	width:780px;
+	height:672px;
+	position:absolute;
+	left:50%;
+	margin-left:-770px;
+	top:400px;
+	z-index:120px;
+	}
+
+.top .people2{
+	width:894px;
+	height:512px;
+	position:absolute;
+	left:50%;
+	margin-left:-150px;
+	top:50px;
+	}
+
+.top .tt{
+	width:752px;
+	height:262px;
+	position:absolute;
+	left:50%;
+	margin-left:-265px;
+	margin-top:550px;
+	}
+
+.mvbt{
+	width:106px;
+	height:106px;
+	margin:auto 0;
+	position:relative;
+	clear:both;
+	top:490px;
+	left:450px;
+	z-index:100;
+	}
+
+/*------------ 參加事前登錄 ------------*/		
+.section{
+	height:1365px;
+	background-image:url(../../img/mobile_e01/bg_02.png);
+	background-repeat:no-repeat;
+	background-position: center top;
+	}	
+	
+.abgne_tab{
+	clear: both;
+	width: 960px;
+	margin-right: auto;
+	margin-left: auto;
+	position:relative;
+	top:350px;
+	left:25px;
+	height:1000px;
+}
+
+#tabs {
+	display: block;
+	overflow: hidden;
+	width: 790px;
+	height: 90px;
+	clear: both;
+	margin-right: auto;
+	margin-left: auto;
+}
+		
+.btn1_style a{
+	display: block;
+	width: 317px;
+	height: 90px;
+	background-image:url(../../img/mobile_e01/btn01.png);
+	background-repeat:no-repeat;
+	background-position: 0px -90px;
+	float: left;
+	display: block;
+	overflow: hidden;
+	margin-left: 20px;
+	margin-right: 35px;
+	}
+	
+.btn2_style a{
+	display: block;
+	width: 317px;
+	height: 90px;
+	background-image:url(../../img/mobile_e01/btn02.png);
+	background-repeat:no-repeat;
+	background-position: 0px -90px;
+	float: left;
+	display: block;
+	overflow: hidden;
+	margin-left: 35px;
+	margin-right: 35px;
+	}	
+
+#tabs li a:hover {background-position: 0px 0px;}
+#tabs li a.active{background-position: 0px 0px;}
+
+#all_tab{
+	display: block;
+	overflow: hidden;
+	clear: both;
+	margin-right: auto;
+	margin-bottom: 0;
+	margin-left: auto;
+	position:relative;
+}
+
+.BOXS{
+	width: 960px;
+	display: block;
+	clear: both;
+	margin-right: auto;
+	margin-left: auto;
+	overflow: hidden;
+	list-style-type:none;
+	}
+
+
+#btn_1{
+	 width:960px;
+	 height:800px;
+	 background-image:url(../../img/mobile_e01/tab1.png);
+	 background-repeat:no-repeat;
+	 background-position: center top;
+	 display:block;
+ 	 position: relative;
+	 top:45px;
+	 left:-20px;
+	 }
+	 
+#btn_2{
+	width:960px;
+	height:900px;
+	display:none;
+	background-image:url(../../img/mobile_e01/tab2.png);
+	background-repeat:no-repeat;
+	background-position: center top;
+ 	position: relative;
+	top:45px;
+	left:-20px;
+	}	
+	
+.fb-like{
+	position:absolute;
+	left:50%;
+	margin-top:25px;
+	margin-left:-140px;
+	}
+
+input{
+	background-color:transparent;
+	border:0;
+	}
+.t1 , .t2 , .t3{
+	width:377px;
+	height:47px;
+	font-size:16px;
+	font-family:Arial, "微軟正黑體";
+	text-align:center;
+	}
+.t1{
+	margin-left:89px;
+	margin-top:93px;
+	}	
+	
+.t2{
+	margin-left:89px;
+	margin-top:19px;
+	}	
+	
+.t3{
+	margin-left:89px;
+	margin-top:55px;
+	}
+	
+.t4{
+	position:absolute;
+	left:50%;
+	margin-left:-340px;
+	margin-top:90px;
+	}	
+	
+.display{
+	margin-left:100px;
+	margin-top:210px;
+	line-height:32px;
+	font-family:Arial, "微軟正黑體";
+	color:#fff;
+	}	
+.t5 , .t7{
+	font-size:22px;
+	line-height:45px;
+	font-family:Arial, "微軟正黑體";
+	}
+		
+.t6 , .t8{
+	font-size:26px;
+	letter-spacing:1px;
+}
+
+.t9{
+	font-size:20px;
+	margin-left:105px;
+	margin-top:290px;
+	}
+	
+.t10{
+	position:absolute;
+	left:50%;
+	margin-left:-250px;
+	margin-top:25px;
+	}	
+
+
+/*------------ 活動注意事項 ------------*/		
+.article{
+	height:1054px;
+	background-image:url(../../img/mobile_e01/bg_03.png);
+	background-repeat:no-repeat;
+	}
+	
+.box1{
+	width:900px;
+	height:530px;
+	position:absolute;
+	left:50%;
+	margin-top:220px;
+	margin-left:-390px;
+	}
+
+.article p{
+	font-family:"華康黑體 Std W7",sans-serif;
+	font-size:17px;
+	color:#0e1b40;
+	line-height:32px;
+	}
+	
+.box1 .box2{
+	width:500px;
+	font-family:"華康黑體 Std W7",sans-serif;
+	font-size:14px;
+	color:#363d50;
+	line-height:24px;
+	padding-left:30px;
+	}
+
+/*------------------------*/
+	
+.footer{
+	width:960px;
+	height:200px; 
+	overflow:hidden;
+	background-color:#000000;
+}
+.footer img{ 
+	position:absolute;
+	left:50%;
+	margin-top:18px;
+	margin-left:-230px;
+	overflow:hidden;
+}
+
+#gotop {
+	display: none;
+	position: fixed;
+	right: 20px;
+	bottom: 200px;
+	padding: 10px 15px;
+	font-size: 20px;
+	color: white;
+	cursor: pointer;
+}

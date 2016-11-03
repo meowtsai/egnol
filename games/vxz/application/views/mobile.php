@@ -9,9 +9,9 @@
         </ul>
     </div>
     <div class="nav2"  style="display:none">
-        <a class="ios" href="#" target="_blank">APPSTORE</a>
-        <a class="google" href="#" target="_blank">GOOGLEPLAY</a>
-        <a class="apk" href="#" target="_blank">APK</a>
+        <a class="ios" href="#" onclick="javascript:alert('【敬請期待】');">APPSTORE</a>
+        <a class="google" href="#" onclick="javascript:alert('【敬請期待】');">GOOGLEPLAY</a>
+        <a class="apk" href="#" onclick="javascript:alert('【敬請期待】');">APK</a>
     </div>
 </div>
 

@@ -78,7 +78,7 @@ class Event extends MY_Controller
 		}
 		
 		if (!empty($email) && !empty($mobile)) {
-			$check_code_used = $this->db->from("event_serial")->where("event_id", 8)->where("email", $email)->where("mobile", mobile)->get()->row();
+			$check_code_used = $this->db->from("event_serial")->where("event_id", 8)->where("email", $email)->where("mobile", $mobile)->get()->row();
 
 			if (empty($check_code_used)) {
 				$check_used = $this->db->from("event_serial")->where("event_id", 8)->where("email", $email)->or_where("mobile", $mobile)->get()->row();
@@ -149,7 +149,7 @@ class Event extends MY_Controller
 			} else {
 				$earlylogin_serial = $check_code_used->serial;
 				
-				$combo_code = $this->db->from("event_serial")->where("event_id", 9)->where("email", $email)->where("mobile", mobile)->get()->row();
+				$combo_code = $this->db->from("event_serial")->where("event_id", 9)->where("email", $email)->where("mobile", $mobile)->get()->row();
 				
 				if(!empty($combo_code) && $combo_code->status == 1) {
 					$combo_serial = $combo_code->serial;

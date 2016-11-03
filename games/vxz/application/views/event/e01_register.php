@@ -2,18 +2,18 @@
 <div class="header">
 	<div class="nav">
 		<ul class="menu">
-			<li class="new"><a href="#" target="_blank">最新情報</a></li>
-			<li class="center"><a href="#" target="_blank">儲值中心</a></li>
-			<li class="teach"><a href="#" target="_blank">儲值教學</a></li>
-			<li class="fb"><a href="#" target="_blank">粉絲團</a></li>
-			<li class="service"><a href="#" target="_blank">客服中心</a></li>
-			<li class="download"><a href="#">下載遊戲</a></li>
+			<li class="new"><a href="https://game.longeplay.com.tw/news?site=vxz">最新情報</a></li>
+			<li class="center"><a href="https://game.longeplay.com.tw/payment?site=vxz">儲值中心</a></li>
+			<li class="teach"><a href="#" onclick="javascript:alert('【敬請期待】');">儲值教學</a></li>
+			<li class="fb"><a href="https://www.facebook.com/playvxz/?fref=ts" target="_blank">粉絲團</a></li>
+			<li class="service"><a href="https://game.longeplay.com.tw/service?site=vxz">客服中心</a></li>
+			<li class="download"><a href="#" onclick="javascript:alert('【敬請期待】');">下載遊戲</a></li>
 				<div class="nav2" style="display:none">
-					<a class="ios" href="#" target="_blank">APPSTORE</a>
-					<a class="google" href="#" target="_blank">GOOGLEPLAY</a>
-					<a class="apk" href="#" target="_blank">APK</a>
+					<a class="ios" href="#" onclick="javascript:alert('【敬請期待】');">APPSTORE</a>
+					<a class="google" href="#" onclick="javascript:alert('【敬請期待】');">GOOGLEPLAY</a>
+					<a class="apk" href="#" onclick="javascript:alert('【敬請期待】');">APK</a>
 				</div>
-			<li class="back"><a href="#" target="_blank">回官網</a></li>
+			<li class="back"><a href="<?=base_url()?>">回官網</a></li>
 		</ul>
 	</div>
 </div> 
@@ -115,7 +115,7 @@
 <script src="<?=base_url()?>p/js/event/jquery.form.js" type="text/javascript"></script>
 <script src="<?=base_url()?>p/js/event/jquery.validate.min.js" type="text/javascript"></script>
 <script src="<?=base_url()?>p/js/event/default.js" type="text/javascript"></script>
-<script src="<?=base_url()?>p/js/event/validate.js" type="text/javascript"></script>
+<script src="<?=base_url()?>p/js/mobile_e01/validate.js" type="text/javascript"></script>
 <script src="<?=base_url()?>p/js/event/clipboard.js" type="text/javascript"></script>
 <script>
 		$(document).ready(function(){

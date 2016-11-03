@@ -8,9 +8,9 @@
             <li class="fb"><a href="https://www.facebook.com/playvxz/?fref=ts" target="_blank">粉絲團</a></li>
             <li class="download"><a href="#" onclick="javascript:alert('【敬請期待】');">下載遊戲</a></li>
             <div class="nav2" style="display:none">
-                <a class="ios" href="#" target="_blank">APPSTORE</a>
-                <a class="google" href="#" target="_blank">GOOGLEPLAY</a>
-                <a class="apk" href="#" target="_blank">APK</a>
+                <a class="ios" href="#" onclick="javascript:alert('【敬請期待】');">APPSTORE</a>
+                <a class="google" href="#" onclick="javascript:alert('【敬請期待】');">GOOGLEPLAY</a>
+                <a class="apk" href="#" onclick="javascript:alert('【敬請期待】');">APK</a>
             </div>
             <li class="service"><a href="https://game.longeplay.com.tw/service?site=vxz">客服中心</a></li>
             <li class="back"><a class="anchor" href="#TOP">回首頁</a></li>
