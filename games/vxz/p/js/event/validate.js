@@ -14,9 +14,6 @@ $(function()
 				required: "尚未填寫`行動電話`"
 			},
 		},
-		rules:
-		{
-    	},
 		showErrors: function(errorMap, errorList)
 		{
 		   var err = '';
@@ -37,7 +34,7 @@ $(function()
 				{
 					if (json.status == 'success')
 					{
-						location.href = '/member/index?site='+json.site;
+						location.href = '/event/e01_register?site='+json.site;
 						return;
 					}					
 					else

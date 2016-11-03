@@ -32,8 +32,45 @@ class Event extends MY_Controller
 		//$event = $this->db->from("events")->where("id", 3)->get()->row();
 		$email = $this->input->post("email");
 		$mobile = $this->input->post("mobile");
-		$share_code_id = $this->input->get_post("share_code_id");
-
+		$earlylogin_serial = $this->input->post("earlylogin_serial");
+		$combo_serial = $this->input->post("combo_serial");
+		$share_code = $this->input->get_post("share_code");
+		
+		if (!empty($share_code)) {
+			$share_code_used = $this->db->from("event_serials")->where("event_id", 9)->where("email", NULL)->where("mobile", NULL)->where("receive_code", $share_code)->get()->row();
+			
+			if (empty($share_code_used)) {
+				$share_code = "此情緣合擊序號已領取";
+			}
+		}
+		
+		$this->_init_layout()
+			->add_css_link(array('event/default','event/style','event/reset','event/colorbox','event/animate'))
+            ->set("share_code", $share_code)
+            ->set("earlylogin_serial", $earlylogin_serial)
+            ->set("combo_serial", $combo_serial)
+			->api_view();
+	}
+	
+	function e01_register_json()
+	{
+		// 讀取活動資料
+		//$event = $this->db->from("events")->where("id", 3)->get()->row();
+		$email = $this->input->post("email");
+		$mobile = $this->input->post("mobile");
+		$share_code = $this->input->get_post("share_code");
+		$share_success = 0;
+		
+		if (!empty($share_code)) {
+			$share_code_used = $this->db->from("event_serials")->where("event_id", 9)->where("email", NULL)->where("mobile", NULL)->where("receive_code", $share_code)->get()->row();
+			
+			if (empty($share_code_used)) {
+				die(json_failure('此情緣合擊序號已領取'));
+			} else {
+				$share_success = 1;
+			}
+		}
+		
 		if (!empty($email) && !empty($mobile)) {
 			$check_code_used = $this->db->from("event_serials")->where("event_id", 8)->where("email", $email)->where("mobile", mobile)->get()->row();
 
@@ -43,17 +80,81 @@ class Event extends MY_Controller
 				if (empty($check_used)) {
 					$earlylogin_code = $this->db->from("event_serials")->where("event_id", 8)->where("email", NULL)->where("mobile", NULL)->get()->row();
 					
-					$share_code = $this->db->from("event_serials")->where("event_id", 9)->where("email", NULL)->where("mobile", NULL)->get()->row();
+					$earlylogin_data = array(
+					   'email' => $email,
+					   'mobile' => $mobile
+					);
+
+					$this->db->where('id', $earlylogin_code->id);
+					$this->db->update('event_serials', $earlylogin_data); 
+					
+					
+					if ($share_success) {
+						$combo_code1 = $this->db->from("event_serials")->where("event_id", 9)->where("share_code", $share_code)->get()->row();
+						
+						$combo_data1 = array(
+						   'status' => 1
+						);
+						
+						$this->db->where('id', $combo_code1->id);
+						$this->db->update('event_serials', $combo_data1); 
+
+						$combo_code2 = $this->db->from("event_serials")->where("event_id", 9)->where("receive_code", $share_code)->get()->row();
+						
+						$combo_data2 = array(
+						   'status' => 0,
+						   'share_code' => md5($email.$mobile.'9')
+						);
+						
+						$this->db->where('id', $combo_code2->id);
+						$this->db->update('event_serials', $combo_data2); 
+					} else {
+						$combo_code1 = $this->db->from("event_serials")->where("event_id", 9)->where("email", NULL)->where("mobile", NULL)->get()->row();
+						
+						$combo_data1 = array(
+						   'email' => $email,
+						   'mobile' => $mobile,
+						   'status' => 0,
+						   'share_code' => md5($email.$mobile.'9')
+						);
+						
+						$this->db->where('id', $combo_code1->id);
+						$this->db->update('event_serials', $combo_data1); 
+					}
+
+					$combo_code3 = $this->db->from("event_serials")->where("event_id", 9)->where("email", NULL)->where("mobile", NULL)->get()->row();
+
+					$combo_data3 = array(
+					   'status' => 0,
+					   'receive_code' => md5($email.$mobile.'9')
+					);
+
+					$this->db->where('id', $combo_code3->id);
+					$this->db->update('event_serials', $combo_data3); 
+				} else {
+					die(json_failure('用戶資訊已被使用'));
 				}
 			} else {
-
+				$earlylogin_serial = $check_code_used->serial;
+				
+				$combo_code = $this->db->from("event_serials")->where("event_id", 9)->where("email", $email)->where("mobile", mobile)->get()->row();
+				
+				if(!empty($combo_code) && $combo_code->status == 1) {
+					$combo_serial = $combo_code->serial;
+				} else {
+					$combo_serial = "";
+				}
 			}
 		}
 		
+		die(json_message(array("message"=>"成功", "site"=>$site, "site"=>$site), true));
+		
 		$this->_init_layout()
-			->add_css_link(array('event/style','event/reset','event/colorbox','event/animate'))
-                //->set("event", $event)
-				->api_view();
+			->add_css_link(array('event/default','event/style','event/reset','event/colorbox','event/animate'))
+            ->set("share_code", $share_code)
+            ->set("earlylogin_serial", $earlylogin_serial)
+            ->set("combo_serial", $combo_serial)
+			->api_view();
 	}
 
 	// 取得序號
