@@ -1,12 +1,3 @@
-<script src="<?=base_url()?>p/js/event/jquery-1.12.3.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-<script src="<?=base_url()?>p/js/event/wow.js"></script>
-<script src="<?=base_url()?>p/js/event/action.js"></script>
-<script src="<?=base_url()?>p/js/event/jquery.colorbox.js" type="text/javascript"></script>
-<script src="<?=base_url()?>p/js/event/jquery.colorbox-min.js" type="text/javascript"></script>
-<script src="<?=base_url()?>p/js/event/jquery.validate.min.js" type="text/javascript"></script>
-<script src="<?=base_url()?>p/js/event/default.js" type="text/javascript"></script>
-<script src="<?=base_url()?>p/js/event/validate.js" type="text/javascript"></script>
 <!-- 菜單 -->
 <div class="header">
 	<div class="nav">
@@ -62,47 +53,44 @@
 </div>
 <!-- 事前登陸頁面 -->
 	<div class="section">
-	   <div class="abgne_tab">
+	    <div class="abgne_tab">
 
-	   <ul id="tabs">
-		  <li id="btn1" class="btn1_style"><a class="active"></a></li>
-		  <li id="btn2" class="btn2_style"><a></a></li>
-	   </ul>
-
-	   <div id="all_tab">
-		 <div id="btn_1" class="BOXS">
-		   
-           <form id="earlylogin_form" method="post" action="<?=base_url()?>event/e01_register_json">
-		   <div class="fb-like">
-		   <iframe src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2Fhttps%3A%2F%2Fwww.facebook.com%2Fplayvxz%2F%3Ffref%3Dts&width=115&layout=button_count&action=like&size=large&show_faces=false&share=true&height=46&appId" width="115" height="46" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
-		   </div>              
-		   <p><input type="text" id="email" name="email" class="required t1" placeholder="請輸入E-mail"></p>
-		   <p><input type="text" id="mobile" name="mobile" class="required t2" placeholder="請輸入手機號碼"></p>
-		   <p><input type="text" id="share_code" name="share_code" class="t3"><?=$share_code?></p>
-		   <p>
-			   
-           <input name="doLogin" type="submit" id="doSubmit" value="" class="button_submit" style="display:none;" />
-           <div class="t4"><img src="<?=base_url()?>p/img/event/login.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')"></div>
-		   </p>
-		   <div class="display">
-			<ul>
-			 <li class="t5">事前登錄序號<span class="t6"><?=$earlylogin_serial?></span></li>
-			 <li class="t7">情緣合擊分享碼<span class="t8"><?=$combo_serial?></span></li>
+			<ul id="tabs">
+				<li id="btn1" class="btn1_style"><a class="active"></a></li>
+				<li id="btn2" class="btn2_style"><a></a></li>
 			</ul>
-		   </div>
-		   </form>
-		 </div>
-		 <div id="btn_2" class="BOXS">
-		   <ul>
-			 <li class="t9"><span>http://www.longeplay.com.tw/</span></li>
-		   </ul>
-			 <p><a class="t10" href=""><img src="<?=base_url()?>p/img/event/copy.png"></a></p>
-		 </div>
-	  </div>
 
-	 </div>
+			<div id="all_tab">
+				<div id="btn_1" class="BOXS">
 
-   </div>
+					<form id="earlylogin_form" method="post" action="<?=base_url()?>event/e01_register_json">
+						<div class="fb-like">
+							 <iframe src="https://www.facebook.com/plugins/like.php?href=https%3A%2F%2Fdevelopers.facebook.com%2Fdocs%2Fplugins%2Fhttps%3A%2F%2Fwww.facebook.com%2Fplayvxz%2F%3Ffref%3Dts&width=115&layout=button_count&action=like&size=large&show_faces=false&share=true&height=46&appId" width="115" height="46" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowTransparency="true"></iframe>
+						</div>              
+						<p><input type="text" id="email" name="email" class="required email t1" placeholder="請輸入E-mail" value="<?=$email?>"></p>
+						<p><input type="text" id="mobile" name="mobile" class="required mobile isMobile t2" placeholder="請輸入手機號碼" value="<?=$mobile?>"></p>
+						<p><input type="text" id="receive_code" name="receive_code" class="t3" value="<?=$receive_code?>"></p>
+						<p>
+							<input name="doLogin" type="submit" id="doSubmit" value="" class="button_submit" style="display:none;" />
+							<div class="t4"><img src="<?=base_url()?>p/img/event/login.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')"></div>
+						</p>
+						<div class="display">
+							<ul>
+								<li class="t5">事前登錄序號<span class="t6"><?=$earlylogin_serial?></span></li>
+								<li class="t7">情緣合擊序號<span class="t8"><?=$combo_serial?></span></li>
+							</ul>
+						</div>
+					</form>
+				</div>
+				<div id="btn_2" class="BOXS">
+					<ul>
+						<li class="t9"><input type="text" id="website" style="width:480px;" value="<?=($share_code)?base_url()."event/e01_register?receive_code=".$share_code:"";?>" /></li>
+					</ul>
+					<p><div class="t10"><img data-copytarget="#website" onclick="javascript:alert('<?=($share_code)?"分享網址已加入剪貼簿":"請先完成預約登錄"?>')" style="cursor:copy;" src="<?=base_url()?>p/img/event/copy.png"></div></p>
+				</div>
+			</div>
+	    </div>
+    </div>
 <!-- 活動注意事項 -->
 	<div class="article">
 	<div class="box1">
@@ -117,7 +105,18 @@
 	<div class="footer"></div>
 <!-- GO TOP -->	
 	<div id="gotop"><img src="<?=base_url()?>p/img/event/totop_01.png" width="163" height="170"></div>
-<!-- JQ -->         
+<!-- JQ --> 
+<script src="<?=base_url()?>p/js/event/jquery-1.12.3.min.js" type="text/javascript"></script>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="<?=base_url()?>p/js/event/wow.js"></script>
+<script src="<?=base_url()?>p/js/event/action.js"></script>
+<script src="<?=base_url()?>p/js/event/jquery.colorbox.js" type="text/javascript"></script>
+<script src="<?=base_url()?>p/js/event/jquery.colorbox-min.js" type="text/javascript"></script>
+<script src="<?=base_url()?>p/js/event/jquery.form.js" type="text/javascript"></script>
+<script src="<?=base_url()?>p/js/event/jquery.validate.min.js" type="text/javascript"></script>
+<script src="<?=base_url()?>p/js/event/default.js" type="text/javascript"></script>
+<script src="<?=base_url()?>p/js/event/validate.js" type="text/javascript"></script>
+<script src="<?=base_url()?>p/js/event/clipboard.js" type="text/javascript"></script>
 <script>
 		$(document).ready(function(){
 			//Examples of how to assign the Colorbox event to elements

@@ -34,7 +34,7 @@ $(function()
 				{
 					if (json.status == 'success')
 					{
-						location.href = '/event/e01_register?site='+json.site;
+						location.href = '/event/e01_register?earlylogin_serial='+json.earlylogin_serial+'&combo_serial='+json.combo_serial+'&share_code='+json.share_code+'&email='+json.email+'&mobile='+json.mobile;
 						return;
 					}					
 					else
