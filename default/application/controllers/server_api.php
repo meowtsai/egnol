@@ -258,23 +258,30 @@ class Server_api extends MY_Controller
 		$character_id = $this->input->get_post("character_id");
 		$character_name = $this->input->get_post("character_name");
 
-		log_message("error", "user_create_character:{$uid},{$server_id},{$character_id},{$character_name}");
+		//log_message("error", "user_create_character:{$uid},{$server_id},{$character_id},{$character_name}");
+		
+		$post = var_export($this->input->post(), true);
+		$get = var_export($this->input->get(), true);
+		
+        log_message("error", "user_create_character:get=>{$get},post=>{$post}");
 		
         if(!IN_OFFICE)
 		{
             die('0');
         }
-/*		
+		
 		// 若沒設定 server_id, 則找出最近一次登入的 server
 		if(empty($server_id))
 		{
 			$login_game = $this->db->from("log_game_logins")->where("uid", $uid)->order_by("create_time desc")->limit(1)->get()->row();
 			if(!empty($login_game))
 			{
-				$server_id = $login_game->server_id;
+				//$server_id = $login_game->server_id;
+				
+				log_message("error", "user_create_character: guess server_id=>{$login_game->server_id}");
 			}
 		}
-*/		
+		
 		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
 		if (empty($server_info))
 		{
