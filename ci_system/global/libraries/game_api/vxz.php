@@ -55,7 +55,7 @@ class Vxz extends Game_Api
 		$free_point = 0;
 		
 		// 針對 GASH 活動
-		if(!empty($gash_billing_id))
+		/*if(!empty($gash_billing_id))
 		{
 			$gash_billing = $this->CI->db->from("gash_billing")->where("id", $gash_billing_id)->get()->row();
 			if($gash_billing->PAID === 'COPGAM02' || $gash_billing->PAID === 'COPGAM05' || $gash_billing->PAID === 'COPGAM09')
@@ -71,7 +71,7 @@ class Vxz extends Game_Api
 					log_message("error", "transfer: GASH payment event for {$gash_billing->PAID} add {$free_point} points.");
 				}
 			}
-		}
+		}*/
 		
 		// 贈點測試
 		if(intval($order->billing_type) == 4)
