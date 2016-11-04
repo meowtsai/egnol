@@ -42,7 +42,7 @@ class Vxz extends Game_Api
 		$uid = $order->uid;
 		$transaction_id = $order->order_no;
 		$partner_order_id = $order->partner_order_id;
-		$product_id = "vxz_" . $amount;
+		$product_id = "vxzweb_" . $amount;
 		$price = $amount;
 		$currency = "TWD";
 		
