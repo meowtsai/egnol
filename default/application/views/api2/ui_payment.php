@@ -76,7 +76,7 @@ function cancelButton () {
 					<tr>
 						<th>遊戲名稱</th>
 						<td>
-                            <? if($game_id && $game_name):?>
+                            <? if($game_id):?>
                                 <input type="hidden" name="game" value="<?=$game_id?>"><?=$game_name?>
                             <? else:?>
                                 <select name="game" class="required" style="width:85%;">
