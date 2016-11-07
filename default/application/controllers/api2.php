@@ -1125,10 +1125,6 @@ class Api2 extends MY_Controller
 			if (empty($set_server))
 			{
 				$set_server = $this->db->from("servers")->where("address", $server_id)->get()->row();
-				if (empty($server_info))
-				{
-					die(json_encode(array("result"=>"0", "error"=>"伺服器不存在")));
-				}
 
 				$server_id = $set_server->server_id;
 			}
