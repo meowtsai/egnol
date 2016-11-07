@@ -157,7 +157,7 @@ function cancelButton () {
 				</div>
 
 				<ul class="notes">
-					<li id="payment_msg">點數比值與相關訊息...</li>
+					<li id="payment_msg"><?=($set_message)?$set_message:"點數比值與相關訊息..."?></li>
 				</ul>
 			</div>
 		</form>
