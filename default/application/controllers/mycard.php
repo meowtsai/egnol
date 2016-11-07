@@ -49,6 +49,7 @@ class Mycard extends MY_Controller {
 		$_SESSION['payment_server']		= $this->input->post('server');
 		$_SESSION['payment_character']	= $this->input->post('character');
 		$_SESSION['payment_api_call']   = $this->input->post('api_call');
+		$_SESSION['payment_partner_order_id'] = $this->input->post('partner_order_id');
 		//$_SESSION['payment_type']		= $this->input->post('billing_type');
 		//$_SESSION['payment_channel']	= $this->input->post('billing_channel');
         //print_r($this->input->post());
@@ -128,7 +129,7 @@ class Mycard extends MY_Controller {
                 */
 				$mycard_ingame_url = $this->mycard_conf['pay_url']."?AuthCode=".$result->AuthCode;
                 $this->load->library("g_wallet");
-                $this->g_wallet->produce_mycard_order($this->g_user->uid, $mycard_billing_id, "mycard_billing", $amount, $_SESSION['payment_character'], "1", $_SESSION['payment_server']);
+                $this->g_wallet->produce_mycard_order($this->g_user->uid, $mycard_billing_id, "mycard_billing", $amount, $_SESSION['payment_character'], $_SESSION['payment_partner_order_id'], "1", $_SESSION['payment_server']);
                 
 				header('location:'.$mycard_ingame_url);
 				exit();

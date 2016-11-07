@@ -165,7 +165,7 @@ WHERE x.uid={$uid}";
     		->update("user_billing", $data);
     }
     
-    function produce_mycard_order($uid, $mycard_billing_id, $transaction_type, $amount, $character_id, $result='1', $server_id='')
+    function produce_mycard_order($uid, $mycard_billing_id, $transaction_type, $amount, $character_id, $partner_order_id='', $result='1', $server_id='')
 	{	
 		if ( ! in_array($transaction_type, array("mycard_ingame", "mycard_billing"))) return $this->_return_error("transaction_type 錯誤");
 		$cnt = $this->CI->db->from("user_billing")->where("mycard_billing_id", $mycard_billing_id)->where("result", "1")->count_all_results();
@@ -185,6 +185,7 @@ WHERE x.uid={$uid}";
 				'server_id'    => $server_id,
 				'character_id'  => $character_id,
 				'country_code'  => $country_code,
+				'partner_order_id' => $partner_order_id
     		);
     	
     	$this->CI->db->set("create_time", "now()", false)->insert("user_billing", $user_billing_data);
