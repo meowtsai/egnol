@@ -1121,6 +1121,17 @@ class Api2 extends MY_Controller
         
         if ($server_id && $character_id) {
             $set_server = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
+			
+			if (empty($set_server))
+			{
+				$set_server = $this->db->from("servers")->where("address", $server_id)->get()->row();
+				if (empty($server_info))
+				{
+					die(json_encode(array("result"=>"0", "error"=>"伺服器不存在")));
+				}
+
+				$server_id = $set_server->server_id;
+			}
             $set_game = $this->db->from("games")->where("game_id", $set_server->game_id)->get()->row();
         }
 

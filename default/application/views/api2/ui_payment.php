@@ -92,7 +92,7 @@ function cancelButton () {
 					<tr>
 						<th>伺服器</th>
 						<td>
-                            <? if($server_id):?>
+                            <? if($server_id && $server_name):?>
                                 <input type="hidden" name="server" value="<?=$server_id?>"><?=$server_name?>
                             <? else:?>
                                 <select name="server" class="required" style="width:85%;">
