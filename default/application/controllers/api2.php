@@ -1133,7 +1133,7 @@ class Api2 extends MY_Controller
 			->set("set_money", $set_money)
 			->add_css_link("login_api_no_img")
 			->add_css_link("money")
-			->add_js_include("payment/index2")
+			->add_js_include("payment/index")
 			->api_view();
 	}
 
