@@ -1064,6 +1064,11 @@ class Api2 extends MY_Controller
 		$set_money = $this->input->get_post("money");
 		
 		$_SESSION['site'] = $site;
+		
+		$post = var_export($this->input->post(), true);
+		$get = var_export($this->input->get(), true);
+		
+        log_message("error", "ui_payment:get=>{$get},post=>{$post}");
 			
 		if(!$this->g_user->is_login())
 		{
