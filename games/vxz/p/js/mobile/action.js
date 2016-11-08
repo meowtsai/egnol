@@ -41,7 +41,7 @@
 
 	$("#goTop a").click(function(){
 	$("html,body").animate({scrollTop:0},1000);
-	$(".menu li .anchor").removeClass("Hovertab").addClass("Nowtab");
+	//$(".menu li .anchor").removeClass("Hovertab").addClass("Nowtab");
 	return false;
 	});
 	});	
