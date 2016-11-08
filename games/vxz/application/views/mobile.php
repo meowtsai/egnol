@@ -10,7 +10,7 @@
     </div>
     <div class="nav2"  style="display:none">
         <a class="ios" href="#" onclick="javascript:alert('【敬請期待】');">APPSTORE</a>
-        <a class="google" href="http://hyperurl.co/vxz.onelink">GOOGLEPLAY</a>
+        <a class="google" href="https://play.google.com/store/apps/details?id=com.longe.NetEase.VXZcb">GOOGLEPLAY</a>
         <a class="apk" href="#" onclick="javascript:alert('【敬請期待】');">APK</a>
     </div>
 </div>
