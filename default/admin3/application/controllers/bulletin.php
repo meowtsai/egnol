@@ -126,6 +126,19 @@ class Bulletin extends MY_Controller {
 				$insert_id = $this->bulletins->insert_bulletin($data);
 			}
 			
+			if ($this->input->post("bulletin_type")==99) {
+				$filePath = "p/file/";
+				$filePath .= ($this->input->post("bulletin_title")) ? $this->input->post("bulletin_title") : "";
+				$filePath .= ($this->input->post("game_id")) ? "_".$this->input->post("game_id") : "";
+				$filePath .= ".txt";
+
+				$file = fopen($filePath, "w+");
+
+				fwrite($file, $content);
+
+				fclose($file);
+			}
+			
 			$back_url = $this->input->post("back_url") ?
 							$this->input->post("back_url") :
 							site_url("picture/get_list?game_id={$this->input->post("game_id")}");

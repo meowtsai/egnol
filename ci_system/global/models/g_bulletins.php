@@ -28,6 +28,7 @@ class G_Bulletins extends CI_Model {
 	function get_list($game_id, $type, $limit=0, $offset=0)
 	{
 		if ($type) $this->db->where("type", $type);
+		else $this->db->where("type !=", 0);
 		
 		if ($offset) $this->db->limit($limit, $offset);
 		else if ($limit) $this->db->limit($limit);
