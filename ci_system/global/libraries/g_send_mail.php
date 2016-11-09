@@ -12,9 +12,9 @@
         
         /** 環境 **/
         public $smtp_host = "mail.longeplay.com.tw";
-        public $smtp_user= "no-reply@mail.longeplay.com.tw";  // SMTP username
+        public $smtp_user= "no-reply@longeplay.com.tw";  // SMTP username
         public $smtp_passwd= "noxj/6u4reply"; // SMTP password
-        public $smtp_from= "no-reply@mail.longeplay.com.tw";
+        public $smtp_from= "no-reply@longeplay.com.tw";
         public $smtp_from_name= "longeplay service";
         public $smtp_subject= "LongE Service";
 
