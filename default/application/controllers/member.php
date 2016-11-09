@@ -535,6 +535,7 @@ class Member extends MY_Controller
 			}
 			else
 			{
+        log_message("error", "reset_password_json: 4");
 				die(json_failure("E-Mail 發送失敗。"));
 			}
 		}
