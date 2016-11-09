@@ -498,6 +498,7 @@ class Member extends MY_Controller
 		$email = $this->input->post("email");
 		$site = $this->_get_site();
 
+        log_message("error", "reset_password_json: 1");
 		header('content-type:text/html; charset=utf-8');
 		if ( empty($email) ) {
 			die(json_failure("尚有資料未填"));
@@ -518,9 +519,11 @@ class Member extends MY_Controller
 
 			$this->load->library("g_send_mail");
 
+        log_message("error", "reset_password_json: 2");
 			if($this->g_send_mail->passwdResetMail($email, $new))
 			{
 
+        log_message("error", "reset_password_json: 3");
                 $log_data = array(
                     "uid" => $user->uid,
                     "content" => "RESET PASSWORD: [email]".$email

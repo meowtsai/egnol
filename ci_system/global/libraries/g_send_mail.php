@@ -30,6 +30,7 @@
 
         function send_view($toAddress, $subject, $view, $data, $imgs=null)
 		{
+        log_message("error", "send_view: 1");
 			$this->ClearAddresses();
 			$this->ClearReplyTos();
 			$this->ClearAttachments();
@@ -48,18 +49,22 @@
 
 			if(!empty($imgs))
 			{
+        log_message("error", "send_view: 2");
 				foreach($imgs as $imgName => $imgPath)
 				{
 					$this->AddEmbeddedImage($imgPath, $imgName);
 				}
 			}
+        log_message("error", "send_view: 3");
 			$this->Body = $this->CI->load->view("mail/".$view, $data, true);
             $this->AltBody = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
 
             if(!$this->Send())
 			{
+        log_message("error", "send_view: 4");
               return false;
             } else {
+        log_message("error", "send_view: 5");
               return true;
             }
         }
