@@ -46,9 +46,9 @@
 			$this->email->to($toAddress); 
 
 			$this->email->subject($subject);
+        log_message("error", "send_view: 2".$this->CI->load->view("mail/".$view, $data, true));
 			$this->email->message($this->CI->load->view("mail/".$view, $data, true));	
 
-        log_message("error", "send_view: 2");
             if(!$this->email->send())
 			{
         log_message("error", "send_view: 3");
