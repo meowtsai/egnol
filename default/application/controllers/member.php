@@ -519,6 +519,7 @@ class Member extends MY_Controller
 			
 	        $this->load->library('email');
 
+			$config['protocol'] = 'smtp';
 			$config['smtp_user'] = 'no-reply@longeplay.com.tw';
 			$config['smtp_pass'] = 'noxj/6u4reply';
 			$config['smtp_host'] = 'mail.longeplay.com.tw';
