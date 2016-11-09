@@ -30,6 +30,7 @@
 
         function send_view($toAddress, $subject, $view, $data, $imgs=null)
 		{
+        log_message("error", "send_view: 1");
 			$this->load->library('email');
 
 			$config['protocol'] = 'smtp';
@@ -40,17 +41,20 @@
 
 			$this->email->initialize($config);
 
-			$this->email->from('no-reply@longeplay.com.tw', '龍邑自動回覆系統');
+			$this->email->from($this->smtp_from, '龍邑自動回覆系統');
 
 			$this->email->to($toAddress); 
 
 			$this->email->subject($subject);
 			$this->email->message($this->CI->load->view("mail/".$view, $data, true));	
 
+        log_message("error", "send_view: 2");
             if(!$this->email->send())
 			{
+        log_message("error", "send_view: 3");
               return false;
             } else {
+        log_message("error", "send_view: 4");
               return true;
             }
         }
