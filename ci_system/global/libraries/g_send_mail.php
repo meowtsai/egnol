@@ -31,25 +31,25 @@
         function send_view($toAddress, $subject, $view, $data, $imgs=null)
 		{
         log_message("error", "send_view: 1");
-			$this->load->library('email');
+			$this->CI->load->library('email');
 
+        log_message("error", "send_view: 2");
 			$config['protocol'] = 'smtp';
 			$config['smtp_user'] = $this->smtp_user;
 			$config['smtp_pass'] = $this->smtp_passwd;
 			$config['smtp_host'] = $this->smtp_host;
 			$config['mailtype']  = 'html';
 
-			$this->email->initialize($config);
+			$this->CI->email->initialize($config);
 
-			$this->email->from($this->smtp_from, '龍邑自動回覆系統');
+			$this->CI->email->from($this->smtp_from, '龍邑自動回覆系統');
 
-			$this->email->to($toAddress); 
+			$this->CI->email->to($toAddress); 
 
-			$this->email->subject($subject);
-        log_message("error", "send_view: 2".$this->CI->load->view("mail/".$view, $data, true));
-			$this->email->message($this->CI->load->view("mail/".$view, $data, true));	
+			$this->CI->email->subject($subject);
+			$this->CI->email->message($this->CI->load->view("mail/".$view, $data, true));	
 
-            if(!$this->email->send())
+            if(!$this->CI->email->send())
 			{
         log_message("error", "send_view: 3");
               return false;
