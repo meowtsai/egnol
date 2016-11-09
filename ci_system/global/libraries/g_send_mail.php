@@ -30,41 +30,27 @@
 
         function send_view($toAddress, $subject, $view, $data, $imgs=null)
 		{
-        log_message("error", "send_view: 1");
-			$this->ClearAddresses();
-			$this->ClearReplyTos();
-			$this->ClearAttachments();
-			
-            $this->IsSMTP();
-            $this->SMTPAuth = true;
-            $this->Host = $this->smtp_host;
-            $this->Port = 25;
-            $this->Username = $this->smtp_user;
-            $this->Password = $this->smtp_passwd;
-            $this->AddReplyTo($this->smtp_from, $this->smtp_from_name);
-            $this->SetFrom($this->smtp_from, $this->smtp_from_name);
-            $this->AddAddress($toAddress);
-            $this->Subject = $subject;
-			$this->IsHTML(true);
+			$this->load->library('email');
 
-			if(!empty($imgs))
-			{
-        log_message("error", "send_view: 2");
-				foreach($imgs as $imgName => $imgPath)
-				{
-					$this->AddEmbeddedImage($imgPath, $imgName);
-				}
-			}
-        log_message("error", "send_view: 3");
-			$this->Body = $this->CI->load->view("mail/".$view, $data, true);
-            $this->AltBody = "To view the message, please use an HTML compatible email viewer!"; // optional, comment out and test
+			$config['protocol'] = 'smtp';
+			$config['smtp_user'] = $this->smtp_user;
+			$config['smtp_pass'] = $this->smtp_passwd;
+			$config['smtp_host'] = $this->smtp_host;
+			$config['mailtype']  = 'html';
 
-            if(!$this->Send())
+			$this->email->initialize($config);
+
+			$this->email->from('no-reply@longeplay.com.tw', '龍邑自動回覆系統');
+
+			$this->email->to($toAddress); 
+
+			$this->email->subject($subject);
+			$this->email->message($this->CI->load->view("mail/".$view, $data, true));	
+
+            if(!$this->email->send())
 			{
-        log_message("error", "send_view: 4");
               return false;
             } else {
-        log_message("error", "send_view: 5");
               return true;
             }
         }

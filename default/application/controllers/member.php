@@ -517,32 +517,7 @@ class Member extends MY_Controller
 			}
 		    $this->db->where("email", $email)->update("users", array("password" => $md5_new));
 			
-	        $this->load->library('email');
-
-			$config['protocol'] = 'smtp';
-			$config['smtp_user'] = 'no-reply@longeplay.com.tw';
-			$config['smtp_pass'] = 'noxj/6u4reply';
-			$config['smtp_host'] = 'mail.longeplay.com.tw';
-			$config['mailtype']  = 'html';
-
-			$this->email->initialize($config);
-
-			$this->email->from('no-reply@longeplay.com.tw', '龍邑自動報表系統');
-
-			$this->email->to($email); 
-
-			$this->email->subject('龍邑會員密碼通知信<'.date("Y/m/d").'>');
-			$this->email->message($new);	
-
-			if (!$this->email->send()) {
-				log_message("error", "reset_password_json: 4");
-				die(json_failure("E-Mail 發送失敗。"));
-			} else {
-                
-        log_message("error", "reset_password_json: 3");
-				die(json_message(array("message"=>"新密碼已發送到您的 E-Mail 信箱。", "site"=>$site)));
-			}
-			/*$this->load->library("g_send_mail");
+			$this->load->library("g_send_mail");
 
         log_message("error", "reset_password_json: 2");
 			if($this->g_send_mail->passwdResetMail($email, $new))
@@ -562,7 +537,7 @@ class Member extends MY_Controller
 			{
         log_message("error", "reset_password_json: 4");
 				die(json_failure("E-Mail 發送失敗。"));
-			}*/
+			}
 		}
 		else
 		{
