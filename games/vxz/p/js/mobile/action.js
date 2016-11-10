@@ -15,14 +15,14 @@
 	$("html,body").animate({
 	scrollTop: $($(this).attr("href")).offset().top
 	}, 1000);
-	$(".box").hide();	
+	//$(".box").hide();	
 	});
 
 
 	$(".menu li").click( function(){
 	var NN = $(this).index();
 	$(this).siblings().removeClass("Hovertab").addClass("Nowtab");
-	$(".box").show();
+	//$(".box").show();
 	$(".menu li").eq(NN).removeClass().addClass("Hovertab");
 
 

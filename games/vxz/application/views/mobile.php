@@ -42,7 +42,7 @@
 
     <!-- NEW -->
     <div id="NEW">
-    <div class="box"></div>
+        <div class="box"></div>
         <div class="inner_box">
             <div id="newsbox"> 
                 <h2><img src="<?=base_url()?>p/img/mobile/h2_news.png"></h2>
