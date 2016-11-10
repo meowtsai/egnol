@@ -302,7 +302,7 @@ class Daily_report extends MY_Controller {
         
         $this->email->from('no-reply@smail.longeplay.com.tw', '龍邑自動報表系統');
         
-        $tos = $this->DB2->where_in("role", array("admin", "pm", "cs_master", "mo"))->where('password IS NULL', null, false)->get("admin_users");
+        $tos = $this->DB2->where_in("role", array("dev", "pm", "cs_master", "mo"))->where('password IS NULL', null, false)->get("admin_users");
         
         $tos_string = '';
         if ($tos) {
