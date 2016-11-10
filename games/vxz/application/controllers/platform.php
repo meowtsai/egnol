@@ -52,4 +52,8 @@ ga('stmTracker.send', 'pageview');
 			echo "<script>window.top.location.href='https://www.facebook.com/notes/%E7%B5%95%E4%BB%A3%E9%9B%99%E9%A9%95/%E7%B5%95%E4%BB%A3%E9%9B%99%E9%A9%95%E5%84%B2%E5%80%BC%E6%B5%81%E7%A8%8B%E6%95%99%E5%AD%B8/814485948656231'</script>";
 		}
 	}
+	
+	function googleeef6880946397d9e() {
+		$this->load->view('googleeef6880946397d9e');
+	}
 }
