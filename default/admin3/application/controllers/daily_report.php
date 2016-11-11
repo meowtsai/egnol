@@ -293,14 +293,15 @@ class Daily_report extends MY_Controller {
         
         $this->load->library('email');
         
-        $config['smtp_user'] = 'no-reply@smail.longeplay.com.tw';
+		$config['protocol']  = 'smtp';
+        $config['smtp_user'] = 'no-reply@longeplay.com.tw';
         $config['smtp_pass'] = 'noxj/6u4reply';
-        $config['smtp_host'] = 'smail.longeplay.com.tw';
+        $config['smtp_host'] = 'mail.longeplay.com.tw';
         $config['mailtype']  = 'html';
 
         $this->email->initialize($config);
         
-        $this->email->from('no-reply@smail.longeplay.com.tw', '龍邑自動報表系統');
+        $this->email->from('no-reply@longeplay.com.tw', '龍邑自動報表系統');
         
         $tos = $this->DB2->where_in("role", array("dev", "pm", "cs_master", "mo"))->where('password IS NULL', null, false)->get("admin_users");
         

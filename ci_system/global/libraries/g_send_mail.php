@@ -30,10 +30,8 @@
 
         function send_view($toAddress, $subject, $view, $data, $imgs=null)
 		{
-        log_message("error", "send_view: 1");
 			$this->CI->load->library('email');
 
-        log_message("error", "send_view: 2");
 			$config['protocol'] = 'smtp';
 			$config['smtp_user'] = $this->smtp_user;
 			$config['smtp_pass'] = $this->smtp_passwd;
@@ -51,10 +49,8 @@
 
             if(!$this->CI->email->send())
 			{
-        log_message("error", "send_view: 3");
               return false;
             } else {
-        log_message("error", "send_view: 4");
               return true;
             }
         }
