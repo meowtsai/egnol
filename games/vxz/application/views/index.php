@@ -143,7 +143,7 @@
         </div>   
         <div class="QR02"><img src="<?=base_url()?>p/img/QR.png">
             <a href="#" class="btn_IOS02" title="IOS" target="_blank"><img src="<?=base_url()?>p/img/APPSTORE.png"></a>
-            <a href="#" class="btn_Android02" title="Android" target="_blank"><img src="<?=base_url()?>p/img/GOOGLEPLAY.png"></a>
+            <a href="https://play.google.com/store/apps/details?id=com.longe.NetEase.VXZcb" class="btn_Android02" title="Android"><img src="<?=base_url()?>p/img/GOOGLEPLAY.png"></a>
             <a href="#" class="btn_APK02" title="APK" target="_blank"><img src="<?=base_url()?>p/img/APK.png"></a>				
         </div>					
     </div>

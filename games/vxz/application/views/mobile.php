@@ -158,7 +158,7 @@
                 <? endif;?>
             </div>
             <a href="#" class="btn_IOS02" title="IOS"><img src="<?=base_url()?>p/img/mobile/APPSTORE.png"></a>
-            <a href="#" class="btn_Android02" title="Android"><img src="<?=base_url()?>p/img/mobile/GOOGLEPLAY.png"></a>
+            <a href="https://play.google.com/store/apps/details?id=com.longe.NetEase.VXZcb" class="btn_Android02" title="Android"><img src="<?=base_url()?>p/img/mobile/GOOGLEPLAY.png"></a>
             <a href="#" class="btn_APK02" title="APK"><img src="<?=base_url()?>p/img/mobile/APK.png"></a>
         </div>
     </div>
