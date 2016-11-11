@@ -2048,10 +2048,10 @@ class Api2 extends MY_Controller
 		// 取得 server 資料
 		$server_num = $server_id;
 		
-		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
+		$server_info = $this->db->from("servers")->where("server_id", $server_id)->where("game_id !=", "r2g")->get()->row();
 		if (empty($server_info))
 		{
-			$server_info = $this->db->from("servers")->where("address", $server_id)->get()->row();
+			$server_info = $this->db->from("servers")->where("address", $server_id)->where("game_id !=", "r2g")->get()->row();
 			if (empty($server_info))
 			{
                 log_message("error", "android_verify_receipt_1: App server not exist.");
