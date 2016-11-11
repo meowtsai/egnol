@@ -256,6 +256,7 @@ class Server_api extends MY_Controller
 	// 玩家在遊戲中創角色
 	function user_create_character()
 	{
+		$game_id = $this->input->get_post("game_Id");
 		$server_id = $this->input->get_post("server_id");
 		$uid = $this->input->get_post("uid");
 		$character_id = $this->input->get_post("character_id");
@@ -285,9 +286,26 @@ class Server_api extends MY_Controller
 			}
 		}
 		
+		if($game_id)
+		{
+			$game_info = $this->db->from("games")->where("game_id", $game_id)->get()->row();
+			if (empty($game_info))
+			{
+				$game_info = $this->db->from("games")->where("vendor_game_id", $game_id)->get()->row();
+				if (empty($game_info))
+				{
+					die('0');
+				}
+
+				$game_id = $game_info->game_id;
+			}
+		}
+		
+		if ($game_id) $this->db->where("game_id", $game_id);
 		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
 		if (empty($server_info))
 		{
+			if ($game_id) $this->db->where("game_id", $game_id);
 			$server_info = $this->db->from("servers")->where("address", $server_id)->get()->row();
 			if (empty($server_info))
 			{
