@@ -45,7 +45,7 @@
             <h1 class="wow fadeInUp" data-wow-delay="0.2s"><img src="<?=base_url()?>p/img/mobile/LOGO.png"></h1> 
             <!-- APP 下載點 -->
             <a href="#" class="btn_IOS01" title="IOS" onclick="javascript:alert('【敬請期待】');"><img src="<?=base_url()?>p/img/mobile/APPSTORE.png"></a>
-            <a href="http://hyperurl.co/vxz.onelink" class="btn_Android01" title="Android"><img src="<?=base_url()?>p/img/mobile/GOOGLEPLAY.png"></a>
+            <a href="https://play.google.com/store/apps/details?id=com.longe.NetEase.VXZcb" class="btn_Android01" title="Android"><img src="<?=base_url()?>p/img/mobile/GOOGLEPLAY.png"></a>
             <a href="#" class="btn_APK01" title="APK" onclick="javascript:alert('【敬請期待】');"><img src="<?=base_url()?>p/img/mobile/APK.png"></a>
         </div>
     </div>
