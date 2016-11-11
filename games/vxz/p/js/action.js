@@ -92,7 +92,7 @@ $(function(){
 			$(".nav2").fadeIn();
 			return false;
 		});
-		$(".menu li .anchor, .new a, .charater a, .back a, #footer").click(function(){
+		$(".menu li .anchor, .new a, .charater a, .back a, #TOP, #HEROS, #footer").not("#TOP a, #HEROS a").click(function(){
 			$(".nav2").fadeOut();
 			return false;
 		});

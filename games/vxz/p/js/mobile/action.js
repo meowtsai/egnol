@@ -118,7 +118,7 @@
 	return false;
 	});
 
-	$(".menu .anchor, .back a, #SLIDERBOX, #footer").click(function(){
+	$(".menu .anchor, .back a, #SLIDERBOX, #TOP, #HEROS, #footer").not("#TOP a, #HEROS a").click(function(){
 	$(".nav2").fadeOut();
 	return false;
 	});
