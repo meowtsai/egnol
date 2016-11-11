@@ -16,16 +16,16 @@
     
     switch ($type) {
         case "新增用戶":
-            $site_url=site_url("user_statistics/game_length_new");
+            $this_url=site_url("user_statistics/game_length_new");
             break;
         case "新增儲值用戶":
-            $site_url=site_url("user_statistics/game_length_new_deposit");
+            $this_url=site_url("user_statistics/game_length_new_deposit");
             break;
         case "儲值用戶":
-            $site_url=site_url("user_statistics/game_length_deposit");
+            $this_url=site_url("user_statistics/game_length_deposit");
             break;
         default:
-            $site_url=site_url("user_statistics/game_length_all");
+            $this_url=site_url("user_statistics/game_length_all");
             break;
     }
 ?>
@@ -72,7 +72,7 @@
     </li>
 </ul>
 
-<form method="get" action="<?=$site_url?>" class="form-search">
+<form method="get" action="<?=$this_url?>" class="form-search">
 	<!--input type="hidden" name="game_id" value="<?=$this->game_id?>"-->
 	<input type="hidden" name="span" value="<?=$this->input->get("span")?>">
 	<div class="control-group">

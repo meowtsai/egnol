@@ -209,7 +209,7 @@ class User_statistics extends MY_Controller {
 		->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
-			->render("statistics/game_length");
+			->render("user_statistics/game_length");
 	}
 	
 	function game_length_all()
@@ -286,7 +286,7 @@ class User_statistics extends MY_Controller {
 		->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
-			->render("statistics/game_length");
+			->render("user_statistics/game_length");
 	}
 	
 	function game_length_deposit()
@@ -363,7 +363,7 @@ class User_statistics extends MY_Controller {
 		->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
-			->render("statistics/game_length");
+			->render("user_statistics/game_length");
 	}
 	
 	function game_length_new_deposit()
@@ -440,7 +440,7 @@ class User_statistics extends MY_Controller {
 		->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
-			->render("statistics/game_length");
+			->render("user_statistics/game_length");
 	}
 	
 	function deposit_level()
