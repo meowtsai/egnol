@@ -1972,17 +1972,65 @@ class Api2 extends MY_Controller
             log_message("error", "android_verify_receipt_1: Order not found.");
 			die(json_encode(array("result"=>0, "msg"=>"Order not found.")));
 		}
+		
+		// 向 google 要access_token
+		$result = $this->_refresh_google_token();
+        
+        
+        if(empty($result->access_token))
+        {
+         
+            log_message("error", "android_verify_receipt_1: _refresh_google_token_result:".$result->error .$result->error_description);
+            die(json_encode(array("result"=>0, "msg"=>"Cannot get google token.")));
+        }
+        $myToken = $result->access_token;
+        // 向 google 查詢某筆購買的狀況
+        $receipt_dataJson = json_decode(urldecode($receipt_data);
+        
+        $packagename =$receipt_dataJson->packageName;
+        $productid =$receipt_dataJson->productId;
+        $purchasetoken =$receipt_dataJson->purchaseToken;
+                                        
+        $result = $this->_review_google_purchasestate($packagename,$productid,urlencode($purchasetoken),$myToken);
+        //log_message("error", "android_verify_receipt_1: _review_google_purchasestate({$packagename},{$productid},{$purchasetoken},{$myToken}):".$result);
+
+                   
+
+        if(empty($result->developerPayload))
+        {
+
+            log_message("error", "android_verify_receipt_1: _review_google_purchasestate:".json_encode($result));
+            die(json_encode(array("result"=>0, "msg"=>"Failure to retrieve data from Google")));
+        }
+                                        
+                                        
+        $purchaseState = $result->purchaseState;
+        
+        if ($purchaseState !=0)
+        {
+            log_message("error", "android_verify_receipt_1: _review_google_purchasestate:Fake order Detected!!".json_encode($result));
+            die(json_encode(array("result"=>0, "msg"=>"Fake order.")));
+            
+        }
+		
 		$amount = $price;
 		
 		// 若不是台幣, 要取得台幣價格
 		if($currency !== "TWD")
 		{
 			log_message("error", "android_verify_receipt: User {$uid} using {$currency} for payment.");
-			$pos = strpos($product_id, ".");
-			if($pos === false)
-				$pos = strpos($product_id, "_");
-			if($pos !== false)
-				$amount = intval(substr($product_id, $pos + 1));
+			
+            //向 google 查詢SKU 取得正確台幣價格
+            $result =  $this->_get_google_inappproducts($packagename,$productid,$myToken);
+            
+            if (empty($result->packageName))
+            {
+                log_message("error", "android_verify_receipt_1: unable to retrieve SKU detail".$result->error->code .$result->error->message );
+                die(json_encode(array("result"=>0, "msg"=>"failure to retrieve SKU data from Google.")));
+            }
+
+            //echo ("{$result->packageName}的產品{$result->sku}的價錢是".$result->defaultPrice->priceMicros/1000000);    
+            $amount=$result->defaultPrice->priceMicros/1000000;
 		}
 		/*
 		$check_dup = $this->db->from("user_billing")->where("order_no", $transaction_id)->get()->row();
@@ -2096,6 +2144,58 @@ class Api2 extends MY_Controller
 		
 		$this->g_wallet->complete_order($order);
 		die(json_encode(array("result"=>1)));
+	}
+										
+    function _refresh_google_token()
+	{
+		$this->load->config("g_google");
+		
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, 'https://www.googleapis.com//oauth2/v3/token');
+        curl_setopt($ch, CURLOPT_POST, true); // 啟用POST
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query( array( "client_secret"=>$apiConfig['oauth2_client_secret'], "grant_type"=>"refresh_token", "refresh_token"=>'1/Y-8U4eh7UUwQeBPIY0P9etD-K9engnryL_OlWBiZRYU',"client_id"=>$apiConfig['oauth2_client_id']) )); 
+        
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		
+        
+        $curl_res =curl_exec($ch); 
+        curl_close($ch);
+        
+        return json_decode($curl_res);
+	}
+    
+    function _review_google_purchasestate($packagename, $productid, $purchasetoken, $access_token)
+	{
+        $ch = curl_init();
+        $header = array();
+        $header[] = 'Authorization: Bearer '.$access_token;
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/androidpublisher/v2/applications/{$packagename}/purchases/products/{$productid}/tokens/{$purchasetoken}");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		
+        $curl_res =curl_exec($ch);
+        curl_close($ch); 
+        
+        return json_decode($curl_res);
+	}
+    
+    function _get_google_inappproducts($packagename,$productid,$access_token)
+	{
+        $ch = curl_init();
+        $header = array();
+        $header[] = 'Authorization: Bearer '.$access_token;
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+        
+        curl_setopt($ch, CURLOPT_URL, "https://www.googleapis.com/androidpublisher/v2/applications/{$packagename}/inappproducts/{$productid}");
+     
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true); 
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		
+        $curl_res =curl_exec($ch);
+        curl_close($ch); 
+        return json_decode($curl_res);
 	}
     
 	// 客服頁面
