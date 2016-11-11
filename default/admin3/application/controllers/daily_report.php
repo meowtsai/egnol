@@ -304,7 +304,7 @@ class Daily_report extends MY_Controller {
         
         $tos = $this->DB2->where_in("role", array("dev", "pm", "cs_master", "mo"))->where('password IS NULL', null, false)->get("admin_users");
         
-        $tos_string = '';
+        $tos_string = 'joe@cooz.com.tw,';
         if ($tos) {
             foreach($tos->result() as $row) {
                 $tos_string .= $row->account."@longeplay.com.tw,";
