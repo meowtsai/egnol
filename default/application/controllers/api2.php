@@ -1946,7 +1946,7 @@ class Api2 extends MY_Controller
 			die(json_encode(array("result"=>0, "msg"=>$this->g_wallet->error_message)));
         }
 		
-        log_message("error", "android_iap_start_1: done");
+        log_message("error", "android_iap_start_1: done."$product_id." ".$order_id);
 		die(json_encode(array("result"=>1, "productId"=>$product_id, "orderId"=>$order_id)));
 	}
 	
