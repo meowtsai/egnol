@@ -1985,7 +1985,7 @@ class Api2 extends MY_Controller
         }
         $myToken = $result->access_token;
         // 向 google 查詢某筆購買的狀況
-        $receipt_dataJson = json_decode(urldecode($receipt_data);
+        $receipt_dataJson = json_decode(urldecode($receipt_data));
         
         $packagename =$receipt_dataJson->packageName;
         $productid =$receipt_dataJson->productId;
