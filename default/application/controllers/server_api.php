@@ -98,7 +98,10 @@ class Server_api extends MY_Controller
 		$uid = $this->input->get_post("uid");
 		$server_id = $this->input->get_post("server_id");
 		
-        log_message("error", "user_login_complete:{$uid},{$vendor_server_id}");
+		$post = var_export($this->input->post(), true);
+		$get = var_export($this->input->get(), true);
+		
+        log_message("error", "user_login_complete:get=>{$get},post=>{$post}");
         
         if(!IN_OFFICE) die('0');
         
