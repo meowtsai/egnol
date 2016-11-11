@@ -2148,6 +2148,7 @@ class Api2 extends MY_Controller
 										
     function _refresh_google_token()
 	{	
+		require_once(BASEPATH."../global/config/g_google.php");
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://www.googleapis.com//oauth2/v3/token');
         curl_setopt($ch, CURLOPT_POST, true); // 啟用POST
