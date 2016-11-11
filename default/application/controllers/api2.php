@@ -1327,11 +1327,11 @@ class Api2 extends MY_Controller
 		$currency = $this->input->post("currency");
 		$character_id = $this->input->post("character_id");
 		
-		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
+		$server_info = $this->db->from("servers")->where("server_id", $server_id)->where("game_id !=", "r2g")->get()->row();
 		
 		if (empty($server_info))
 		{
-			$server_info = $this->db->from("servers")->where("address", $server_id)->get()->row();
+			$server_info = $this->db->from("servers")->where("address", $server_id)->where("game_id !=", "r2g")->get()->row();
 			if (empty($server_info))
 			{
                 log_message("error", "ios_iap_start_1: 伺服器不存在");
@@ -1918,10 +1918,10 @@ class Api2 extends MY_Controller
 		$verify_code = $this->input->post("verify_code");
 		$partner_order_id = $this->input->post("partner_order_id");
 		
-		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
+		$server_info = $this->db->from("servers")->where("server_id", $server_id)->where("game_id !=", "r2g")->get()->row();
 		if (empty($server_info))
 		{
-			$server_info = $this->db->from("servers")->where("address", $server_id)->get()->row();
+			$server_info = $this->db->from("servers")->where("address", $server_id)->where("game_id !=", "r2g")->get()->row();
 			if (empty($server_info))
 			{
                 log_message("error", "android_iap_start_1: 伺服器不存在");
