@@ -1918,6 +1918,11 @@ class Api2 extends MY_Controller
 		$verify_code = $this->input->post("verify_code");
 		$partner_order_id = $this->input->post("partner_order_id");
 		
+		$post = var_export($this->input->post(), true);
+		$get = var_export($this->input->get(), true);
+		
+        log_message("error", "android_iap_start_1:get=>{$get},post=>{$post}");
+		
 		$server_info = $this->db->from("servers")->where("server_id", $server_id)->where("game_id !=", "r2g")->get()->row();
 		if (empty($server_info))
 		{
@@ -1960,7 +1965,12 @@ class Api2 extends MY_Controller
 		$server_id = $this->input->post("server_id");
 		$character_id = $this->input->post("character_id");
 		$verify_code = $this->input->post("verify_code");
-		log_message("error", "android_verify_receipt: order_id-{$order_id}");
+		log_message("error", "android_verify_receipt_1: order_id-{$order_id}");
+		
+		$post = var_export($this->input->post(), true);
+		$get = var_export($this->input->get(), true);
+		
+        log_message("error", "android_verify_receipt_1:get=>{$get},post=>{$post}");
 		
 		// 先讀取資料庫的訂單
 		$this->load->library("g_wallet");
