@@ -63,7 +63,7 @@ ga('stmTracker.send', 'pageview');
 		if($tab == "tab1")
 		{
 			// APK 下載
-			echo "<script>window.top.location.href='http://cdn.longeplay.com.tw/r2g/apk/LongE_R2G_0705.APK'</script>";
+			echo "<script>window.top.location.href='http://cdn.longeplay.com.tw/vxz/apk/LongE_VXZ.APK'</script>";
 		}
 		else if($tab == "tab2")
 		{
@@ -73,7 +73,7 @@ ga('stmTracker.send', 'pageview');
 		else if($tab == "tab3")
 		{
 			// 儲值教學
-			echo "<script>window.top.location.href='https://www.facebook.com/notes/%E7%B5%95%E4%BB%A3%E9%9B%99%E9%A9%95/%E7%B5%95%E4%BB%A3%E9%9B%99%E9%A9%95%E5%84%B2%E5%80%BC%E6%B5%81%E7%A8%8B%E6%95%99%E5%AD%B8/814485948656231'</script>";
+			echo "<script>window.top.location.href='https://www.facebook.com/notes/%E5%B0%8F%E6%9D%8E%E9%A3%9B%E5%88%80%E6%89%8B%E6%A9%9F%E7%89%88/%E5%B0%8F%E6%9D%8E%E9%A3%9B%E5%88%80%E5%84%B2%E5%80%BC%E6%95%99%E5%AD%B8/1864211137136113'</script>";
 		}
 	}
 	
