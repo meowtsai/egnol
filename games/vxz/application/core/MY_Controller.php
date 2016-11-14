@@ -63,7 +63,7 @@ class MY_Controller extends CI_Controller
 
 		return $this->g_layout
 			//->add_js_include(array('jquery.validate.min', 'jquery.metadata', 'jquery.form'))
-			->set_meta("title", "絕代雙驕玩家獨享元寶活動")
+			->set_meta("title", "《{$this->game_name}》龍邑遊戲_繁體中文網站")
 			->set_meta("keywords", "小李飛刀,小李飛刀手機版,小李飛刀手遊,小李飛刀3D手遊,古龍,武俠,經典,小說,飛刀現江湖,躺著也中刀,飛刀,熱門手機遊戲,網易,龍邑,李尋歡,阿飛, PVP,合擊,Q版,小李他媽的飛刀,兵器譜,林仙兒,九陰真經,射鵰英雄傳3D,倚天屠龍記,RPG,角色扮演,動作遊戲,ARPG,動作RPG,策略遊戲,跨服對戰,情緣合擊")
 			->set_meta("description", " 3D情義新動作武俠手遊《小李飛刀》！華人武俠世界的巨擘古龍再掀手機遊戲新浪潮。兵器譜排行高手-李尋歡、上官金虹、天機老人、藍蠍子，與其他知名英雄阿飛、林仙兒、孫小紅等人，各自為了情義、名利和權勢而引發了一場江湖腥風血雨…");
 	}
