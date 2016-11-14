@@ -23,7 +23,7 @@ div{
 .header{
 	clear: both;
 	height:826px;
-	background-image:url(../img/bg_01.jpg);
+	background-image:url(../../img/event/e02/bg_01.jpg);
 	background-repeat:no-repeat;
 	background-position: center top;
 	overflow: hidden;
@@ -32,7 +32,7 @@ div{
 	
 .content{
 	height:369px;
-	background-image:url(../img/bg_02.jpg);
+	background-image:url(../../img/event/e02/bg_02.jpg);
 	background-repeat:no-repeat;
 	background-position: center top;
 	}
@@ -48,14 +48,14 @@ div{
 	
 .article{
 	height:505px;
-	background-image:url(../img/bg_03.jpg);
+	background-image:url(../../img/event/e02/bg_03.jpg);
 	background-repeat:no-repeat;
 	background-position: center top;
 	}
 	
 .footer{
 	height:100px;
-	background-image:url(../img/footer.jpg);
+	background-image:url(../../img/event/e02/footer.jpg);
 	background-repeat:no-repeat;
 	background-position: center top;
 	}	

@@ -416,20 +416,23 @@ class Event extends MY_Controller
 		$this->_e01_inc_counter((int)$this->input->post('i'));
     }
 	
-	// --------------------------------------------------------------------------------------------------------
-	// GASH 活動
-	function e02_gash()
+	function e02_r2g_transfer()
 	{
-		if(check_mobile())
-		{
-			die("<script>window.location.href='https://r2g.longeplay.com.tw/event/e02_gash_m'</script>");
-		}
-		
-		$this->_init_layout()->view();
+		$this->_init_layout()
+			->set_meta("title", "絕代雙驕玩家獨享元寶活動")
+			->add_css_link(array('event/e02_style','event/e02_reset'))
+			->api_view();
 	}
 	
-	function e02_gash_m()
+	function e02_content()
 	{
-		$this->_init_layout()->view();
+		$email = $this->input->get_post("email");
+		$mobile = $this->input->get_post("mobile");
+		
+		$this->_init_layout()
+			->set_meta("title", "絕代雙驕玩家獨享元寶活動")
+            ->set("email", $email)
+            ->set("mobile", $mobile)
+			->mobile_view();
 	}
 }
