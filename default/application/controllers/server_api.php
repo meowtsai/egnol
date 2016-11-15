@@ -120,6 +120,8 @@ class Server_api extends MY_Controller
 			}
 		}
 		
+        log_message("error", "user_login_complete: game_id".$game_id);
+		
 		if ($game_id) $this->db->where("game_id", $game_id);
 		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
 		if (empty($server_info))
@@ -134,6 +136,8 @@ class Server_api extends MY_Controller
 			$game_id = $server_info->game_id;
 		}
         
+        log_message("error", "user_login_complete: server_id".$server_id);
+		
 		$query = $this->db->from("log_game_logins")
 		           ->where("uid", $uid)
 				   ->where("is_recent", "1")
