@@ -129,7 +129,7 @@ class Mycard extends MY_Controller {
                 */
 				$mycard_ingame_url = $this->mycard_conf['pay_url']."?AuthCode=".$result->AuthCode;
                 $this->load->library("g_wallet");
-                $this->g_wallet->produce_mycard_order($this->g_user->uid, $mycard_billing_id, "mycard_billing", $amount, $_SESSION['payment_character'], $_SESSION['payment_partner_order_id'], "1", $_SESSION['payment_server']);
+                $this->g_wallet->produce_mycard_order($this->g_user->uid, $mycard_billing_id, "mycard_billing", $amount, $_SESSION['payment_character'], $_SESSION['payment_partner_order_id'], "0", $_SESSION['payment_server']);
                 
 				header('location:'.$mycard_ingame_url);
 				exit();
@@ -265,10 +265,13 @@ class Mycard extends MY_Controller {
                 $this->mycards->update_billing(array("cash_out" => 1, "status" => 4, "cash_out_time" => date('Y-m-d H:i:s'), "result" => 1), array("fac_trade_seq" => $mycard_billing->fac_trade_seq));
 
                 $user_billing = $this->db->where("mycard_billing_id", $mycard_billing->id)->get("user_billing")->row();
-
+				
+				$this->load->library("g_wallet");
+				$this->g_wallet->complete_order($user_billing);
+				
                 $this->load->library("game");
                 $this->game->payment_transfer($mycard_billing->uid, $mycard_billing->server_id, $confirm_result->Amount, $user_billing->partner_order_id, $user_billing->character_id, $mycard_billing->trade_seq, "", $mycard_billing->id);
-
+					
                 if ($is_get_order) return 1;
                 go_payment_result(1, 1, $confirm_result->Amount, $error_message);
             } else {
