@@ -33,8 +33,8 @@
         <ul class="menu">
             <div class="ICON"><img src="<?=base_url()?>p/img/mobile/ICON.png"></div>
             <!--li id="btn_CENTER" class="Nowtab"><a href="https://game.longeplay.com.tw/payment?site=vxz">儲值中心</a></li-->
-            <li id="btn_CENTER" class="Nowtab"><a href="#" onclick="javascript:alert('【敬請期待】');">儲值中心</a></li>
-            <li id="btn_TEACH" class="Nowtab"><a href="#" onclick="javascript:alert('【敬請期待】');">儲值教學</a></li>
+            <li id="btn_CENTER" class="Nowtab"><a href="https://game.longeplay.com.tw/payment?site=vxz">儲值中心</a></li>
+            <li id="btn_TEACH" class="Nowtab"><a href="https://game.longeplay.com.tw/news/detail/113?site=vxz">儲值教學</a></li>
             <li id="btn_SERVICE" class="Nowtab"><a href="https://game.longeplay.com.tw/service?site=vxz">客服中心</a></li>
         </ul>
     </div>
