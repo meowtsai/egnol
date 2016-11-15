@@ -94,7 +94,7 @@ class Server_api extends MY_Controller
 	// 玩家在遊戲 server 中完成遊戲本身的登入程序(在龍邑的登入程序之後)
 	function user_login_complete()
 	{
-		$game_id = $this->input->get_post("game_id");
+		$game_id = $this->input->get_post("game_Id");
 		$uid = $this->input->get_post("uid");
 		$server_id = $this->input->get_post("server_id");
 		
