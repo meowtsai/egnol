@@ -19,9 +19,11 @@
             <li class="fb"><a href="https://www.facebook.com/playvxz/?fref=ts" target="_blank">粉絲團</a></li>
             <li class="download"><a href="#">下載遊戲</a></li>
             <div class="nav2" style="display:none">
-                <a class="ios" href="#" onclick="javascript:alert('【敬請期待】');">APPSTORE</a>
-                <a class="google" href="#" onclick="javascript:alert('【敬請期待】');">GOOGLEPLAY</a>
-                <a class="apk" href="#" onclick="javascript:alert('【敬請期待】');">APK</a>
+                <a class="ios" href="https://itunes.apple.com/tw/app/xiao-li-fei-dao/id1014250315?l=zh
+<https://itunes.apple.com/tw/app/xiao-li-fei-dao/id1014250315?l=zh&ls=1&mt=8
+&ls=1&mt=8">APPSTORE</a>
+                <a class="google" href="https://play.google.com/store/apps/details?id=com.longe.NetEase.VXZ">GOOGLEPLAY</a>
+                <a class="apk" href="http://cdn.longeplay.com.tw/vxz/apk/LongE_VXZ.APK">APK</a>
             </div>
             <li class="service"><a href="https://game.longeplay.com.tw/service?site=vxz">客服中心</a></li>
             <li class="back"><a class="anchor" href="#TOP">回首頁</a></li>
@@ -36,9 +38,11 @@
             <img src="<?=base_url()?>p/img/LOGO.png" alt="">
         </h1> 			
         <div class="QR01"><img src="<?=base_url()?>p/img/QR.png">
-            <a href="#" title="IOS" onclick="javascript:alert('【敬請期待】');"><img src="<?=base_url()?>p/img/APPSTORE.png"></a>
-            <a href="#" title="Android" onclick="javascript:alert('【敬請期待】');"><img src="<?=base_url()?>p/img/GOOGLEPLAY.png"></a>
-            <a href="#" title="APK" onclick="javascript:alert('【敬請期待】');"><img src="<?=base_url()?>p/img/APK.png"></a>
+            <a href="https://itunes.apple.com/tw/app/xiao-li-fei-dao/id1014250315?l=zh
+<https://itunes.apple.com/tw/app/xiao-li-fei-dao/id1014250315?l=zh&ls=1&mt=8
+&ls=1&mt=8" title="IOS"><img src="<?=base_url()?>p/img/APPSTORE.png"></a>
+            <a href="https://play.google.com/store/apps/details?id=com.longe.NetEase.VXZ" title="Android"><img src="<?=base_url()?>p/img/GOOGLEPLAY.png"></a>
+            <a href="https://cdn.longeplay.com.tw/vxz/apk/LongE_VXZ.APK" title="APK"><img src="<?=base_url()?>p/img/APK.png"></a>
         </div>
     </div>
 
@@ -142,9 +146,11 @@
             <? endif;?>
         </div>   
         <div class="QR02"><img src="<?=base_url()?>p/img/QR.png">
-            <a href="#" class="btn_IOS02" title="IOS" onclick="javascript:alert('【敬請期待】');"><img src="<?=base_url()?>p/img/APPSTORE.png"></a>
-            <a href="#" class="btn_Android02" title="Android" onclick="javascript:alert('【敬請期待】');"><img src="<?=base_url()?>p/img/GOOGLEPLAY.png"></a>
-            <a href="#" class="btn_APK02" title="APK" onclick="javascript:alert('【敬請期待】');"><img src="<?=base_url()?>p/img/APK.png"></a>				
+            <a href="https://itunes.apple.com/tw/app/xiao-li-fei-dao/id1014250315?l=zh
+<https://itunes.apple.com/tw/app/xiao-li-fei-dao/id1014250315?l=zh&ls=1&mt=8
+&ls=1&mt=8" class="btn_IOS02" title="IOS"><img src="<?=base_url()?>p/img/APPSTORE.png"></a>
+            <a href="https://play.google.com/store/apps/details?id=com.longe.NetEase.VXZ" class="btn_Android02" title="Android"><img src="<?=base_url()?>p/img/GOOGLEPLAY.png"></a>
+            <a href="https://cdn.longeplay.com.tw/vxz/apk/LongE_VXZ.APK" class="btn_APK02" title="APK"><img src="<?=base_url()?>p/img/APK.png"></a>				
         </div>					
     </div>
 

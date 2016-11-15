@@ -31,9 +31,11 @@ a{
 </style>
 	
 <div class="content">
-	<form>
-    	<input type="name" class="box1" placeholder="請輸入帳號">
-        <input type="password" class="box2" placeholder="請輸入密碼">
+	<form id="login_form" class="login-form" method="post" action="<?=$longe_url?>member/login_json?site=<?=$site?>">
+		<input type="hidden" id="redirect_url" value="<?=base_url()?>event/e02_content">
+    	<input type="name" name="account" id="name" class="box1 required" placeholder="請輸入帳號">
+        <input type="password" name="pwd" id="name" class="box2 required" placeholder="請輸入密碼">
+		<input name="doLogin" type="submit" id="doSubmit" value="" style="display:none;" />
     </form>
-    <a href="display.html"><img src="<?=base_url()?>p/img/event/e02/btn.png"></a>
+	<div class="login-button"><a href="#" title="login"><img src="<?=base_url()?>p/img/event/e02/btn.png"></a></div>
 </div>

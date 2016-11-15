@@ -426,13 +426,75 @@ class Event extends MY_Controller
 	
 	function e02_content()
 	{
-		$email = $this->input->get_post("email");
-		$mobile = $this->input->get_post("mobile");
-		
-		$this->_init_layout()
-			->set_meta("title", "絕代雙驕玩家獨享元寶活動")
-            ->set("email", $email)
-            ->set("mobile", $mobile)
-			->mobile_view();
+		if ($this->g_user->uid) {
+			
+			$check_transfered = $this->db->from("r2g_transferlist")->where("uid", $this->g_user->uid)->get()->row();
+			
+			if ($check_transfered) {
+				$this->_init_layout()
+					->set_meta("title", "絕代雙驕玩家獨享元寶活動")
+					->mobile_view("event/e02_transferred.php");
+			} elseif ($this->input->post("character_id")) {
+				
+				$billing_str = "SELECT SUM(amount) AS sum
+							FROM user_billing 
+							WHERE
+								uid='{$this->g_user->uid}'
+								AND transaction_type='top_up_account' 
+								AND result = 1 
+								AND server_id LIKE 'r2g%' 
+								GROUP BY uid";
+				$billing_sum = $this->db->query($billing_str)->row();
+				
+				$amount = (isset($billing_sum->sum))?$billing_sum->sum:0;
+				$transfer_amount = $amount*0.4;
+				
+				$transfer_data = array(
+					"uid" => $this->g_user->uid,
+					"character_id" => $this->input->post("character_id"),
+					"amount" => $amount,
+					"transfer_amount" => $transfer_amount
+				);
+
+				$this->db->insert("r2g_transferlist", $transfer_data);
+				
+				$this->_init_layout()
+					->set_meta("title", "絕代雙驕玩家獨享元寶活動")
+					->mobile_view("event/e02_transferred.php");
+			} else {
+
+				$characters_str = "SELECT c.id, c.name AS character_name, s.server_id, s.name AS server_name
+							FROM characters c 
+							JOIN servers s ON c.server_id=s.server_id
+							WHERE
+								s.game_id='vxz'
+								AND c.uid='{$this->g_user->uid}'";
+				$characters = $this->db->query($characters_str);
+
+				$billing_str = "SELECT SUM(amount) AS sum
+							FROM user_billing 
+							WHERE
+								uid='{$this->g_user->uid}'
+								AND transaction_type='top_up_account' 
+								AND result = 1 
+								AND server_id LIKE 'r2g%' 
+								GROUP BY uid";
+				$billing_sum = $this->db->query($billing_str)->row();
+
+				$this->_init_layout()
+					->set_meta("title", "絕代雙驕玩家獨享元寶活動")
+					->set("uid", $this->g_user->uid)
+					->set("characters", $characters)
+					->set("billing_sum", (isset($billing_sum->sum))?$billing_sum->sum:0)
+					->mobile_view("event/e02_choose");
+			}
+		} else {
+
+			$this->_init_layout()
+				->set_meta("title", "絕代雙驕玩家獨享元寶活動")
+				->add_css_link(array('event/default','event/reset','event/colorbox'))
+				->add_js_include(array('jquery-1.12.3.min', 'event/jquery.colorbox-min', 'jquery.validate.min', 'jquery.metadata', 'jquery.form', 'default', 'event/login'))
+				->mobile_view();
+		}
 	}
 }
