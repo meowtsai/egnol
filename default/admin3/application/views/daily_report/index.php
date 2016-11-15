@@ -153,15 +153,15 @@
 				<td style="text-align:right"><?=$row->total?></td>
 			</tr>
 			<tr>
-				<td>GASH</td>
-				<td style="text-align:right"><?=$row->y6_gash_total?></td>
-				<td style="text-align:right"><?=$row->y5_gash_total?></td>
-				<td style="text-align:right"><?=$row->y4_gash_total?></td>
-				<td style="text-align:right"><?=$row->y3_gash_total?></td>
-				<td style="text-align:right"><?=$row->y2_gash_total?></td>
-				<td style="text-align:right"><?=$row->y_gash_total?></td>
-				<td style="text-align:right"><?=$row->t_gash_total?></td>
-				<td style="text-align:right"><?=$row->gash_total?></td>
+				<td>Mycard</td>
+				<td style="text-align:right"><?=$row->y6_mycard_total?></td>
+				<td style="text-align:right"><?=$row->y5_mycard_total?></td>
+				<td style="text-align:right"><?=$row->y4_mycard_total?></td>
+				<td style="text-align:right"><?=$row->y3_mycard_total?></td>
+				<td style="text-align:right"><?=$row->y2_mycard_total?></td>
+				<td style="text-align:right"><?=$row->y_mycard_total?></td>
+				<td style="text-align:right"><?=$row->t_mycard_total?></td>
+				<td style="text-align:right"><?=$row->mycard_total?></td>
 			</tr>
 			<tr>
 				<td>AppStore</td>
