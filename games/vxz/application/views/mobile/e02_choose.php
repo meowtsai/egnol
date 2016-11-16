@@ -17,8 +17,14 @@ header('Access-Control-Allow-Origin: *');
 	font-family:Arial,"微軟正黑體";
 	text-align:center;
 	color:#FFF;
-	}	
+	}
 	
+.sw{
+	font-size:12px;
+	font-family:Arial,"微軟正黑體";
+	text-align:center;
+	color:#EEE;
+}	
 .t1{
 	width:350px;
 	height:30px;
@@ -72,7 +78,7 @@ select{
 }	
 .t7{
 	position:relative;
-	top:112px;	
+	top:110px;	
 	left:190px;
 }
 </style>
@@ -93,6 +99,6 @@ select{
 		<input name="doLogin" type="submit" id="doSubmit" value="" class="button_submit" style="display:none;" />
     </form>
     <a href="<?=base_url()?>mobile/e02_billinglist" class="t6"><img src="<?=base_url()?>p/img/mobile/e02/btn0.png"></a>
-	<div class="login-button t7"><img src="<?=base_url()?>p/img/mobile/e02/btn.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')"></div>
-	<div><a href="#" onclick="javascript:location.href='<?=base_url()?>mobile/logout?site=vxz'"></a>切換帳號</div>
+	<div class="login-button t7"><img src="<?=base_url()?>p/img/mobile/e02/btn.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')"><br>
+	<a href="#" class="sw" onclick="javascript:location.href='<?=base_url()?>mobile/logout?site=vxz'">切換帳號</a></div>
 </div>

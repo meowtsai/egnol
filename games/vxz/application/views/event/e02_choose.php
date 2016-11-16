@@ -24,6 +24,13 @@ header('Access-Control-Allow-Origin: *');
 	color:#FFF;
 	}	
 	
+.sw{
+	font-size:16px;
+	font-family:Arial,"微軟正黑體";
+	text-align:center;
+	color:#EEE;
+}	
+	
 .t1{
 	width:350px;
 	height:30px;
@@ -74,7 +81,7 @@ select{
 }	
 .t7{
 	position:relative;
-	top:110px;
+	top:102px;
 	left:339px;	
 }		
 
@@ -99,8 +106,8 @@ select{
     </form>
     <a href="<?=base_url()?>event/e02_billinglist" class="t6"><img src="<?=base_url()?>p/img/event/e02/btn0.png"></a>
 	<div class="login-button t7">
-		<img src="<?=base_url()?>p/img/event/e02/btn.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')">
-		<a href="#" onclick="javascript:location.href='<?=base_url()?>mobile/logout?site=vxz'">切換帳號</a>
+		<img src="<?=base_url()?>p/img/event/e02/btn.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')"><br>
+		<a href="#" class="sw" onclick="javascript:location.href='<?=base_url()?>mobile/logout?site=vxz'">切換帳號</a>
 	</div>
 </div>
 </body>
