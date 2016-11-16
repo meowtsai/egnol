@@ -70,8 +70,8 @@ select{
 }	
 .t7{
 	position:relative;
-	top:150px;
-	left:137px;	
+	top:110px;
+	left:339px;	
 }		
 
 </style>
@@ -82,19 +82,19 @@ select{
     <p class="t1"><?=$uid;?></p>
     <p class="t2"><?=$billing_sum;?></p>
     <p class="t3"><?=$billing_sum*0.4;?></p>
-    <form>
-    	<select name="character_id" id="character_id" class="t4">
-        	<option>請選擇</option>
+    <form id="choose_form" method="post" action="<?=base_url()?>event/e02_content">
+    	<select name="character_id" id="character_id" class="t4 required">
+        	<option value="">請選擇</option>
 			<?if($characters->num_rows > 0): ?>
 			    <?foreach($characters->result() as $row):?>
-					<option value="<?=$row->character_id?>"><?=$row->character_name.'('.$row->server_name.')';?></option>
+					<option value="<?=$row->id?>"><?=$row->character_name.'('.$row->server_name.')';?></option>
 				<?endforeach;?>
 			<?endif;?>
         </select>
-		<input name="doLogin" type="submit" id="doSubmit" value="" style="display:none;" />
+		<input name="doLogin" type="submit" id="doSubmit" value="" class="button_submit" style="display:none;" />
     </form>
-    <a href="#" class="t6"><img src="<?=base_url()?>p/img/event/e02/btn0.png"></a>
-	<div class="login-button"><a href="#" title="login" class="t7"><img src="<?=base_url()?>p/img/event/e02/btn.png"></a></div>
+    <a href="<?=base_url()?>event/e02_billinglist" class="t6"><img src="<?=base_url()?>p/img/event/e02/btn0.png"></a>
+	<div class="login-button t7"><img src="<?=base_url()?>p/img/event/e02/btn.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')"></div>
 </div>
 </body>
 </html>

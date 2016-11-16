@@ -433,7 +433,7 @@ class Event extends MY_Controller
 			if ($check_transfered) {
 				$this->_init_layout()
 					->set_meta("title", "絕代雙驕玩家獨享元寶活動")
-					->mobile_view("event/e02_transferred.php");
+					->mobile_view("event/e02_transferred");
 			} elseif ($this->input->post("character_id")) {
 				
 				$billing_str = "SELECT SUM(amount) AS sum
@@ -458,9 +458,7 @@ class Event extends MY_Controller
 
 				$this->db->insert("r2g_transferlist", $transfer_data);
 				
-				$this->_init_layout()
-					->set_meta("title", "絕代雙驕玩家獨享元寶活動")
-					->mobile_view("event/e02_transferred.php");
+				die(json_message(array("message"=>"成功"), true));
 			} else {
 
 				$characters_str = "SELECT c.id, c.name AS character_name, s.server_id, s.name AS server_name
@@ -486,6 +484,8 @@ class Event extends MY_Controller
 					->set("uid", $this->g_user->uid)
 					->set("characters", $characters)
 					->set("billing_sum", (isset($billing_sum->sum))?$billing_sum->sum:0)
+					->add_css_link(array('event/default','event/reset','event/colorbox'))
+					->add_js_include(array('jquery-1.12.3.min', 'event/jquery.colorbox-min', 'jquery.validate.min', 'jquery.metadata', 'jquery.form', 'default', 'event/validate2'))
 					->mobile_view("event/e02_choose");
 			}
 		} else {
@@ -495,6 +495,31 @@ class Event extends MY_Controller
 				->add_css_link(array('event/default','event/reset','event/colorbox'))
 				->add_js_include(array('jquery-1.12.3.min', 'event/jquery.colorbox-min', 'jquery.validate.min', 'jquery.metadata', 'jquery.form', 'default', 'event/login'))
 				->mobile_view();
+		}
+	}
+	
+	function e02_billinglist() {
+		
+		if ($this->g_user->uid) {
+			
+			$billing_str = "SELECT u.*, c.name
+						FROM user_billing u
+						JOIN characters c ON u.character_id=c.id
+						WHERE
+							u.uid='{$this->g_user->uid}'
+							AND u.transaction_type='top_up_account' 
+							AND u.result = 1 
+							AND u.server_id LIKE 'r2g%' 
+							GROUP BY u.uid";
+			$billing_list = $this->db->query($billing_str);
+			
+			$this->_init_layout()
+				->set_meta("title", "絕代雙驕玩家獨享元寶活動")
+				->set("billing_list", $billing_list)
+				->mobile_view();
+		} else {
+			
+			redirect('/event/e02_content', 'refresh');
 		}
 	}
 }

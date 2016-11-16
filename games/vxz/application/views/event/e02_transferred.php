@@ -5,7 +5,7 @@
 .content{
 	width:885px;
 	height:368px;
-	background-image: background-image:url('<?=base_url()?>p/img/event/e02/carryout.png');
+	background-image: url('<?=base_url()?>p/img/event/e02/carryout.png');
 	}
 /*a{
 	position:relative;
