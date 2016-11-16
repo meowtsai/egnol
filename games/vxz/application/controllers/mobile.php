@@ -225,7 +225,7 @@ class Mobile extends MY_Controller
 
 				$this->_init_layout()
 					->set_meta("title", "絕代雙驕玩家獨享元寶活動")
-					->set("uid", $this->g_user->uid)
+					->set("account", ($this->g_user->email)?$this->g_user->email:$this->g_user->mobile)
 					->set("characters", $characters)
 					->set("billing_sum", (isset($billing_sum->sum))?$billing_sum->sum:0)
 					->add_css_link(array('event/reset','event/colorbox'))
@@ -248,7 +248,7 @@ class Mobile extends MY_Controller
 			
 			$billing_str = "SELECT u.*, c.name
 						FROM user_billing u
-						JOIN characters c ON u.character_id=c.id
+						LEFT JOIN characters c ON u.character_id=c.id
 						WHERE
 							u.uid='{$this->g_user->uid}'
 							AND u.transaction_type='top_up_account' 

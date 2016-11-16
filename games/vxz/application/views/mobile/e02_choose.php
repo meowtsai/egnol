@@ -78,7 +78,7 @@ select{
 </style>
 
 <div class="content">
-    <p class="t1"><?=$uid;?></p>
+    <p class="t1"><?=$account;?></p>
     <p class="t2"><?=$billing_sum;?></p>
     <p class="t3"><?=$billing_sum*0.4;?></p>
     <form id="choose_form" method="post" action="<?=base_url()?>mobile/e02_content">
