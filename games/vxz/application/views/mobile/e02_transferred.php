@@ -16,7 +16,7 @@ header('Access-Control-Allow-Origin: *');
 	top:271px;
 	left:350px;
 }	*/
-	.sw{
+.sw{
 	font-size:12px;
 	font-family:Arial,"微軟正黑體";
 	text-align:center;
@@ -29,5 +29,5 @@ header('Access-Control-Allow-Origin: *');
 
 <div class="content">
 	<!--a href="signin.html"><img src="img/btn.png"></a-->
-	<div class="sw"><a href="#" onclick="javascript:location.href='<?=base_url()?>mobile/logout?site=vxz'">切換帳號</a></div>
+	<a href="#" class="sw" onclick="javascript:location.href='<?=base_url()?>mobile/logout?site=vxz'">切換帳號</a>
 </div>
