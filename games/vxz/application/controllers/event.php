@@ -447,12 +447,14 @@ class Event extends MY_Controller
 			
 			$check_transfered = $this->db->from("r2g_transferlist")->where("uid", $this->g_user->uid)->get()->row();
 			
-			/*if ($check_transfered) {
 				$this->_init_layout()
 					->set_meta("title", "絕代雙驕玩家獨享元寶活動")
 					->mobile_view("event/e02_transferred");
-			} else*/
-				if ($this->input->post("character_id")) {
+			if ($check_transfered) {
+				$this->_init_layout()
+					->set_meta("title", "絕代雙驕玩家獨享元寶活動")
+					->mobile_view("event/e02_transferred");
+			} elseif ($this->input->post("character_id")) {
 				
 				$billing_str = "SELECT SUM(amount) AS sum
 							FROM user_billing 
