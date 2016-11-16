@@ -1,4 +1,4 @@
-<?php header('X-Frame-Options: SAMEORIGIN'); ?>
+<?php header('ALLOW-FROM https://vxz.longeplay.com/'); ?>
 <style>
 *{
 	margin:auto 0;}
