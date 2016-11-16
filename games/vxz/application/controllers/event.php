@@ -484,16 +484,16 @@ class Event extends MY_Controller
 					->set("uid", $this->g_user->uid)
 					->set("characters", $characters)
 					->set("billing_sum", (isset($billing_sum->sum))?$billing_sum->sum:0)
-					->add_css_link(array('event/default','event/reset','event/colorbox'))
-					->add_js_include(array('jquery-1.12.3.min', 'event/jquery.colorbox-min', 'jquery.validate.min', 'jquery.metadata', 'jquery.form', 'default', 'event/validate2'))
+					->add_css_link(array('event/reset','event/colorbox'))
+					->add_js_include(array('jquery-1.12.3.min', 'event/jquery.colorbox-min', 'jquery.validate.min', 'jquery.metadata', 'jquery.form', 'event/default', 'event/validate2'))
 					->mobile_view("event/e02_choose");
 			}
 		} else {
 
 			$this->_init_layout()
 				->set_meta("title", "絕代雙驕玩家獨享元寶活動")
-				->add_css_link(array('event/default','event/reset','event/colorbox'))
-				->add_js_include(array('jquery-1.12.3.min', 'event/jquery.colorbox-min', 'jquery.validate.min', 'jquery.metadata', 'jquery.form', 'default', 'event/login'))
+				->add_css_link(array('event/reset','event/colorbox'))
+				->add_js_include(array('jquery-1.12.3.min', 'event/jquery.colorbox-min', 'jquery.validate.min', 'jquery.metadata', 'jquery.form', 'event/default', 'event/login'))
 				->mobile_view();
 		}
 	}
