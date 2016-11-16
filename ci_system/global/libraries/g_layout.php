@@ -214,8 +214,6 @@ class G_Layout
     	$this->template_data['meta'] = $this->meta;
     	$this->template_data['layout_content'] = $this->CI->load->view($view, $this->data, true);
     	$this->template_data['css_link'] = $this->produce_css_link();
-		unset($this->template_data['js_include']);
-    	$this->template_data['js_include'] = array();
     	$this->template_data['js_include'] = $this->produce_js_include();
 
     	echo $this->CI->load->view("g_mobile_view", $this->template_data, true);
