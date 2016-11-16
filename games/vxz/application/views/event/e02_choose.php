@@ -1,3 +1,4 @@
+<?php header('X-Frame-Options: SAMEORIGIN'); ?>
 <!doctype html>
 <html>
 <head>

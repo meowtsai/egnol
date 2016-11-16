@@ -1,3 +1,4 @@
+<?php header('X-Frame-Options: SAMEORIGIN'); ?>
 <? 
 $r2g_servers = array(
 	"r2g01" => "移花宮",

@@ -1,3 +1,4 @@
+<?php header('X-Frame-Options: SAMEORIGIN'); ?>
 <style>
 *{
 	margin:auto 0;}
