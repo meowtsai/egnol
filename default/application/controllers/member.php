@@ -65,7 +65,6 @@ class Member extends MY_Controller
 	function login_json()
 	{
 		header('content-type:text/html; charset=utf-8');
-		header('Access-Control-Allow-Origin: *');  
 
 		$site = $this->_get_site();
 
