@@ -17,7 +17,7 @@ header('Access-Control-Allow-Origin: *');
 	left:350px;
 }	*/
 .sw{
-	font-size:12px;
+	font-size:16px;
 	font-family:Arial,"微軟正黑體";
 	text-align:center;
 	color:#EEE;

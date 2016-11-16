@@ -447,9 +447,6 @@ class Event extends MY_Controller
 			
 			$check_transfered = $this->db->from("r2g_transferlist")->where("uid", $this->g_user->uid)->get()->row();
 			
-				$this->_init_layout()
-					->set_meta("title", "絕代雙驕玩家獨享元寶活動")
-					->mobile_view("event/e02_transferred");
 			if ($check_transfered) {
 				$this->_init_layout()
 					->set_meta("title", "絕代雙驕玩家獨享元寶活動")
