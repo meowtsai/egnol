@@ -23,7 +23,7 @@ header('Access-Control-Allow-Origin: *');
 	color:#EEE;
 	position:relative;
 	top:240px;	
-	left:150px;
+	left:255px;
 }
 </style>
 
