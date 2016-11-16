@@ -22,8 +22,8 @@ header('Access-Control-Allow-Origin: *');
 	text-align:center;
 	color:#EEE;
 	position:relative;
-	top:102px;
-	left:339px;	
+	top:222px;
+	left:410px;	
 }	
 </style>
 
