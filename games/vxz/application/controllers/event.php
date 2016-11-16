@@ -522,4 +522,46 @@ class Event extends MY_Controller
 			redirect('/event/e02_content', 'refresh');
 		}
 	}
+	
+	function login_json()
+	{
+		header('content-type:text/html; charset=utf-8');
+
+		$site = $this->input->get_post("site");
+
+		$_SESSION['site'] = $site;
+
+		// 檢查 e-mail or mobile
+		$account = $this->input->post("account");
+		if(empty($account))
+		{
+			die(json_failure('電子郵件或行動電話未填寫'));
+		}
+
+		$pwd = $this->input->post("pwd");
+		if (empty($pwd))
+		{
+			die(json_failure('密碼尚未填寫'));
+		}
+
+		$email = '';
+		$mobile = '';
+		if(filter_var($account, FILTER_VALIDATE_EMAIL))
+		{
+			$email = $account;
+		}
+		else
+		{
+			$mobile = $account;
+		}
+
+		if ( $this->g_user->verify_account($email, $mobile, $pwd) === true )
+		{
+			die(json_message(array("message"=>"成功", "site"=>$site), true));
+		}
+		else
+		{
+			die(json_failure($this->g_user->error_message));
+		}
+	}
 }

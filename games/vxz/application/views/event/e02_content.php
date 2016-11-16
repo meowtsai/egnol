@@ -1,5 +1,5 @@
 <?php 
-header('ALLOW-FROM https://vxz.longeplay.com/'); 
+//header('ALLOW-FROM https://vxz.longeplay.com/'); 
 header('Access-Control-Allow-Origin: *');  
 ?>
 <style>
@@ -35,7 +35,7 @@ a{
 </style>
 	
 <div class="content">
-	<form id="login_form" class="login-form" method="post" action="<?=$longe_url?>member/login_json?site=<?=$site?>">
+	<form id="login_form" class="login-form" method="post" action="<?=base_url()?>event/login_json?site=<?=$site?>">
 		<input type="hidden" id="redirect_url" value="<?=base_url()?>event/e02_content">
     	<input type="name" name="account" id="name" class="box1 required" placeholder="請輸入帳號">
         <input type="password" name="pwd" id="name" class="box2 required" placeholder="請輸入密碼">
