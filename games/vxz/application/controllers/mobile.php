@@ -190,7 +190,7 @@ class Mobile extends MY_Controller
 				$billing_sum = $this->db->query($billing_str)->row();
 				
 				$amount = (isset($billing_sum->sum))?$billing_sum->sum:0;
-				$transfer_amount = $amount*0.4;
+				$transfer_amount = ceil($amount*0.4);
 				
 				$transfer_data = array(
 					"uid" => $this->g_user->uid,

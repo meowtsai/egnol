@@ -80,7 +80,7 @@ select{
 <div class="content">
     <p class="t1"><?=$account;?></p>
     <p class="t2"><?=$billing_sum;?></p>
-    <p class="t3"><?=$billing_sum*0.4;?></p>
+    <p class="t3"><?=ceil($billing_sum*0.4);?></p>
     <form id="choose_form" method="post" action="<?=base_url()?>mobile/e02_content">
     	<select name="character_id" id="character_id" class="t4 required">
         	<option value="">請選擇</option>
