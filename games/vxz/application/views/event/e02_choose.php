@@ -106,8 +106,8 @@ select{
     </form>
     <a href="<?=base_url()?>event/e02_billinglist" class="t6"><img src="<?=base_url()?>p/img/event/e02/btn0.png"></a>
 	<div class="login-button t7">
-		<img src="<?=base_url()?>p/img/event/e02/btn.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')"><br>
-		&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="sw" onclick="javascript:location.href='<?=base_url()?>mobile/logout?site=vxz'">切換帳號</a>
+		<p><img src="<?=base_url()?>p/img/event/e02/btn.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')"></p>
+		<p><a href="#" class="sw" onclick="javascript:location.href='<?=base_url()?>mobile/logout?site=vxz'">切換帳號</a></p>
 	</div>
 </div>
 </body>
