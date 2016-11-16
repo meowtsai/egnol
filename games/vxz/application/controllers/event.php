@@ -466,7 +466,8 @@ class Event extends MY_Controller
 							JOIN servers s ON c.server_id=s.server_id
 							WHERE
 								s.game_id='vxz'
-								AND c.uid='{$this->g_user->uid}'";
+								AND c.uid='{$this->g_user->uid}'
+								AND c.server_id not in ('vxz-test01', 'vxz-server0')";
 				$characters = $this->db->query($characters_str);
 
 				$billing_str = "SELECT SUM(amount) AS sum

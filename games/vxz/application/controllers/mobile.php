@@ -158,4 +158,154 @@ class Mobile extends MY_Controller
 		
 		die(json_message(array("message"=>"成功", "email"=>$email, "mobile"=>$mobile, "earlylogin_serial"=>$earlylogin_serial, "combo_serial"=>$combo_serial, "share_code"=>$share_code), true));
 	}
+	
+	function e02_r2g_transfer()
+	{
+		$this->_init_layout()
+			->set_meta("title", "絕代雙驕玩家獨享元寶活動")
+			->add_css_link(array('mobile/e02/style','mobile/e02/reset'))
+			->api_view();
+	}
+	
+	function e02_content()
+	{
+		if ($this->g_user->uid) {
+			
+			$check_transfered = $this->db->from("r2g_transferlist")->where("uid", $this->g_user->uid)->get()->row();
+			
+			if ($check_transfered) {
+				$this->_init_layout()
+					->set_meta("title", "絕代雙驕玩家獨享元寶活動")
+					->mobile_view("mobile/e02_transferred");
+			} elseif ($this->input->post("character_id")) {
+				
+				$billing_str = "SELECT SUM(amount) AS sum
+							FROM user_billing 
+							WHERE
+								uid='{$this->g_user->uid}'
+								AND transaction_type='top_up_account' 
+								AND result = 1 
+								AND server_id LIKE 'r2g%' 
+								GROUP BY uid";
+				$billing_sum = $this->db->query($billing_str)->row();
+				
+				$amount = (isset($billing_sum->sum))?$billing_sum->sum:0;
+				$transfer_amount = $amount*0.4;
+				
+				$transfer_data = array(
+					"uid" => $this->g_user->uid,
+					"character_id" => $this->input->post("character_id"),
+					"amount" => $amount,
+					"transfer_amount" => $transfer_amount
+				);
+
+				$this->db->insert("r2g_transferlist", $transfer_data);
+				
+				die(json_message(array("message"=>"成功"), true));
+			} else {
+
+				$characters_str = "SELECT c.id, c.name AS character_name, s.server_id, s.name AS server_name
+							FROM characters c 
+							JOIN servers s ON c.server_id=s.server_id
+							WHERE
+								s.game_id='vxz'
+								AND c.uid='{$this->g_user->uid}'
+								AND c.server_id not in ('vxz-test01', 'vxz-server0')";
+				$characters = $this->db->query($characters_str);
+
+				$billing_str = "SELECT SUM(amount) AS sum
+							FROM user_billing 
+							WHERE
+								uid='{$this->g_user->uid}'
+								AND transaction_type='top_up_account' 
+								AND result = 1 
+								AND server_id LIKE 'r2g%' 
+								GROUP BY uid";
+				$billing_sum = $this->db->query($billing_str)->row();
+
+				$this->_init_layout()
+					->set_meta("title", "絕代雙驕玩家獨享元寶活動")
+					->set("uid", $this->g_user->uid)
+					->set("characters", $characters)
+					->set("billing_sum", (isset($billing_sum->sum))?$billing_sum->sum:0)
+					->add_css_link(array('event/reset','event/colorbox'))
+					->add_js_include(array('jquery-1.12.3.min', 'event/jquery.colorbox-min', 'jquery.validate.min', 'jquery.metadata', 'jquery.form', 'event/default', 'event/validate2'))
+					->mobile_view("mobile/e02_choose");
+			}
+		} else {
+
+			$this->_init_layout()
+				->set_meta("title", "絕代雙驕玩家獨享元寶活動")
+				->add_css_link(array('event/reset','event/colorbox'))
+				->add_js_include(array('jquery-1.12.3.min', 'event/jquery.colorbox-min', 'jquery.validate.min', 'jquery.metadata', 'jquery.form', 'event/default', 'event/login'))
+				->mobile_view();
+		}
+	}
+	
+	function e02_billinglist() {
+		
+		if ($this->g_user->uid) {
+			
+			$billing_str = "SELECT u.*, c.name
+						FROM user_billing u
+						JOIN characters c ON u.character_id=c.id
+						WHERE
+							u.uid='{$this->g_user->uid}'
+							AND u.transaction_type='top_up_account' 
+							AND u.result = 1 
+							AND u.server_id LIKE 'r2g%' 
+							GROUP BY u.uid";
+			$billing_list = $this->db->query($billing_str);
+			
+			$this->_init_layout()
+				->set_meta("title", "絕代雙驕玩家獨享元寶活動")
+				->set("billing_list", $billing_list)
+				->mobile_view();
+		} else {
+			
+			redirect('/mobile/e02_content', 'refresh');
+		}
+	}
+	
+	function login_json()
+	{
+		header('content-type:text/html; charset=utf-8');
+
+		$site = $this->input->get_post("site");
+
+		$_SESSION['site'] = $site;
+
+		// 檢查 e-mail or mobile
+		$account = $this->input->post("account");
+		if(empty($account))
+		{
+			die(json_failure('電子郵件或行動電話未填寫'));
+		}
+
+		$pwd = $this->input->post("pwd");
+		if (empty($pwd))
+		{
+			die(json_failure('密碼尚未填寫'));
+		}
+
+		$email = '';
+		$mobile = '';
+		if(filter_var($account, FILTER_VALIDATE_EMAIL))
+		{
+			$email = $account;
+		}
+		else
+		{
+			$mobile = $account;
+		}
+
+		if ( $this->g_user->verify_account($email, $mobile, $pwd) === true )
+		{
+			die(json_message(array("message"=>"成功", "site"=>$site), true));
+		}
+		else
+		{
+			die(json_failure($this->g_user->error_message));
+		}
+	}
 }
