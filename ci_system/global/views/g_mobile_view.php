@@ -9,6 +9,7 @@
 <meta name="keywords" content="">
 <meta name="description" content="" />
 <meta name="viewport" content="width=1000px, user-scalable=1">
+<script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
 
 <?
 	unset($meta["title"]);
