@@ -493,7 +493,7 @@ class Event extends MY_Controller
 			$this->_init_layout()
 				->set_meta("title", "絕代雙驕玩家獨享元寶活動")
 				->add_css_link(array('event/reset','event/colorbox'))
-				->add_js_include(array('jquery-1.12.3.min', 'event/jquery.colorbox-min', 'jquery.validate.min', 'jquery.metadata', 'jquery.form', 'event/default', 'event/login'))
+				//->add_js_include(array('jquery-1.12.3.min', 'event/jquery.colorbox-min', 'jquery.validate.min', 'jquery.metadata', 'jquery.form', 'event/default', 'event/login'))
 				->mobile_view();
 		}
 	}
