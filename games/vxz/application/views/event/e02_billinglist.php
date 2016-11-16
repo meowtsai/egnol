@@ -1,4 +1,7 @@
-<?php header('X-Frame-Options: SAMEORIGIN'); ?>
+<?php 
+header('ALLOW-FROM https://vxz.longeplay.com/'); 
+header('Access-Control-Allow-Origin: *');  
+?>
 <? 
 $r2g_servers = array(
 	"r2g01" => "移花宮",
