@@ -98,7 +98,10 @@ select{
 		<input name="doLogin" type="submit" id="doSubmit" value="" class="button_submit" style="display:none;" />
     </form>
     <a href="<?=base_url()?>event/e02_billinglist" class="t6"><img src="<?=base_url()?>p/img/event/e02/btn0.png"></a>
-	<div class="login-button t7"><img src="<?=base_url()?>p/img/event/e02/btn.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')"></div>
+	<div class="login-button t7">
+		<img src="<?=base_url()?>p/img/event/e02/btn.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')">
+		<a href="#" onclick="javascript:location.href='<?=base_url()?>mobile/logout?site=vxz'">切換帳號</a>
+	</div>
 </div>
 </body>
 </html>

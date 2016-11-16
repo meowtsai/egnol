@@ -447,11 +447,12 @@ class Event extends MY_Controller
 			
 			$check_transfered = $this->db->from("r2g_transferlist")->where("uid", $this->g_user->uid)->get()->row();
 			
-			if ($check_transfered) {
+			/*if ($check_transfered) {
 				$this->_init_layout()
 					->set_meta("title", "絕代雙驕玩家獨享元寶活動")
 					->mobile_view("event/e02_transferred");
-			} elseif ($this->input->post("character_id")) {
+			} else*/
+				if ($this->input->post("character_id")) {
 				
 				$billing_str = "SELECT SUM(amount) AS sum
 							FROM user_billing 
@@ -580,5 +581,16 @@ class Event extends MY_Controller
 		{
 			die(json_failure($this->g_user->error_message));
 		}
+	}
+	
+	// 登出
+	function logout()
+	{
+		$site = $this->input->get_post("site");
+
+		$this->g_user->logout();
+
+		header('Content-type:text/html; Charset=UTF-8');
+		echo "<script type='text/javascript'>alert('成功登出系統'); location.href='/event/e02_content?site={$site}';</script>";
 	}
 }

@@ -20,4 +20,5 @@ header('Access-Control-Allow-Origin: *');
 
 <div class="content">
 	<!--a href="signin.html"><img src="img/btn.png"></a-->
+	<div><a href="#" onclick="javascript:location.href='<?=base_url()?>event/logout?site=vxz'">切換帳號</a></div>
 </div>
