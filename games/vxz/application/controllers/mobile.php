@@ -164,7 +164,7 @@ class Mobile extends MY_Controller
 		$this->_init_layout()
 			->set_meta("title", "絕代雙驕玩家獨享元寶活動")
 			->add_css_link(array('mobile/e02/reset', 'mobile/e02/style'))
-			->api_view();
+			->mobile_view();
 	}
 	
 	function e02_content()
