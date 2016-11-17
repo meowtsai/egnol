@@ -527,8 +527,7 @@ class Event extends MY_Controller
 							u.uid='{$this->g_user->uid}'
 							AND u.transaction_type='top_up_account' 
 							AND u.result = 1 
-							AND u.server_id LIKE 'r2g%' 
-							GROUP BY u.uid";
+							AND u.server_id LIKE 'r2g%'";
 			$billing_list = $this->db->query($billing_str);
 			
 			$this->_init_layout()

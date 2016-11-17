@@ -37,7 +37,7 @@ class Mobile extends MY_Controller
 		}
 		
 		$this->_init_layout()
-			->add_css_link(array('mobile_e01/default','mobile_e01/style','mobile_e01/reset','mobile_e01/colorbox','mobile_e01/animate'))
+			->add_css_link(array('mobile_e01/reset','mobile_e01/default','mobile_e01/style','mobile_e01/colorbox','mobile_e01/animate'))
             ->set("email", $email)
             ->set("mobile", $mobile)
             ->set("share_code", ($share_code)?$share_code:"")
@@ -163,7 +163,7 @@ class Mobile extends MY_Controller
 	{
 		$this->_init_layout()
 			->set_meta("title", "絕代雙驕玩家獨享元寶活動")
-			->add_css_link(array('mobile/e02/style','mobile/e02/reset'))
+			->add_css_link(array('mobile/e02/reset', 'mobile/e02/style'))
 			->api_view();
 	}
 	
@@ -253,8 +253,7 @@ class Mobile extends MY_Controller
 							u.uid='{$this->g_user->uid}'
 							AND u.transaction_type='top_up_account' 
 							AND u.result = 1 
-							AND u.server_id LIKE 'r2g%' 
-							GROUP BY u.uid";
+							AND u.server_id LIKE 'r2g%'";
 			$billing_list = $this->db->query($billing_str);
 			
 			$this->_init_layout()
