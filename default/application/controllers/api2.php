@@ -251,81 +251,7 @@ class Api2 extends MY_Controller
 	}
 	
 	function ui_login_game_json()
-	{
-        /*
-		header('content-type:text/html; charset=utf-8');
-        
-        $is_duplicate_login = $this->_check_duplicate_login();
-        if ($is_duplicate_login) die(json_failure('此帳號已於其他裝置進行遊戲中，請先將其登出。'));
-        
-		$site = $this->_get_site();
-
-		if (isset($_SESSION['server_mode']) && $_SESSION['server_mode'] == 1) {
-			$server = $this->input->post("server");
-			if(empty($server))
-			{
-				die(json_failure('請選擇伺服器'));
-			}
-		} else {
-			$single_server = $this->db->from("servers")->where("game_id", $site)->order_by("server_id")->get()->row();
-			
-			$server = $single_server->server_id;
-		}
-
-		$query = $this->db->from("log_game_logins")
-		           ->where("uid", $_SESSION['user_id'])
-				   ->where("is_first", "1")
-				   ->where("server_id", $server)
-				   ->where("game_id", $site)->get();
-		if (empty($query) || $query->num_rows() == 0)
-		{
-			$is_first = '1';
-		} else {
-			$is_first = '0';
-	        $this->db->where("uid", $_SESSION['user_id'])
-			  ->where("is_recent", '1')
-			  ->where("server_id", $server)
-			  ->where("game_id", $site)->update("log_game_logins", array("is_recent" => '0'));
-		}	
-		$ad = $this->input->get('ad') ? $this->input->get('ad') : (empty($_SESSION['ad']) ? '' : $_SESSION['ad']);
-		
-		$data = array(
-			'uid' => $_SESSION['user_id'],
-			'ip' => $_SERVER["REMOTE_ADDR"],
-			//'create_time' => now(),
-			'is_recent' => '1',
-			'is_first' => $is_first,
-			'ad' => $ad,
-			'server_id' => $server,
-			'game_id' => $site,
-            'device_id' => $_SESSION['login_deviceid'],
-			'token' => $this->g_user->token
-		);
-
-        $this->_set_logout_time();
-        
-		$this->db->insert("log_game_logins", $data);	
-        
-		if ( $this->db->insert_id() )
-		{
-            $bulk = new MongoDB\Driver\BulkWrite;
-            $bulk->insert(["uid" => intval($this->g_user->uid), "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "device_id" => $_SESSION['login_deviceid'], "latest_update_time" => time()]);
-            
-            $this->mongo_log->executeBulkWrite("longe_log.users", $bulk);
-            
-            unset($bulk);
-            
-		    $_SESSION['server_id'] = $server;
-            //return 1;
-			die(json_message(array("message"=>"成功", "site"=>$site, "token"=>$this->g_user->token), true));
-		}
-		else
-		{
-            //return 0;
-			die(json_failure('登入伺服器錯誤'));
-		}
-        */
-        
+	{   
         $is_login_game = $this->_login_game();
 		if ($is_login_game)
 		{
@@ -351,64 +277,51 @@ class Api2 extends MY_Controller
 			{
 				die(json_failure('請選擇伺服器'));
 			}
-		} else {
-			$single_server = $this->db->from("servers")->where("game_id", $site)->order_by("server_id")->get()->row();
 			
-			$server = $single_server->server_id;
-		}
+			$query = $this->db->from("user_server_first_logins")
+					   ->where("uid", $_SESSION['user_id'])
+					   ->where("server_id", $server)
+					   ->where("game_id", $site)->get();
+			if (empty($query) || $query->num_rows() == 0)
+			{
+				$first_logins_data = array(
+					'uid' => $_SESSION['user_id'],
+					'server_id' => $server,
+					'game_id' => $site
+				);
 
-		$query = $this->db->from("log_game_logins")
-		           ->where("uid", $_SESSION['user_id'])
-				   ->where("is_first", "1")
-				   ->where("server_id", $server)
-				   ->where("game_id", $site)->get();
-		if (empty($query) || $query->num_rows() == 0)
-		{
-			$is_first = '1';
-		} else {
-			$is_first = '0';
-	        $this->db->where("uid", $_SESSION['user_id'])
-			  ->where("is_recent", '1')
-			  ->where("server_id", $server)
-			  ->where("game_id", $site)->update("log_game_logins", array("is_recent" => '0'));
-		}	
-		$ad = $this->input->get('ad') ? $this->input->get('ad') : (empty($_SESSION['ad']) ? '' : $_SESSION['ad']);
+				$this->db->insert("user_server_first_logins", $first_logins_data);	
+			}
+			
+			$ad = $this->input->get('ad') ? $this->input->get('ad') : (empty($_SESSION['ad']) ? '' : $_SESSION['ad']);
+
+			$data = array(
+				'uid' => $_SESSION['user_id'],
+				'ip' => $_SERVER["REMOTE_ADDR"],
+				'ad' => $ad,
+				'server_id' => $server,
+				'game_id' => $site,
+				'device_id' => $_SESSION['login_deviceid'],
+				'token' => $this->g_user->token
+			);
+
+			$this->_set_logout_time();
+
+			$this->db->insert("log_game_logins", $data);	
+
+			if (empty($this->db->insert_id())) return 0;
+		}
 		
-		$data = array(
-			'uid' => $_SESSION['user_id'],
-			'ip' => $_SERVER["REMOTE_ADDR"],
-			//'create_time' => now(),
-			'is_recent' => '1',
-			'is_first' => $is_first,
-			'ad' => $ad,
-			'server_id' => $server,
-			'game_id' => $site,
-            'device_id' => $_SESSION['login_deviceid'],
-			'token' => $this->g_user->token
-		);
+		$bulk = new MongoDB\Driver\BulkWrite;
+		$bulk->insert(["uid" => intval($this->g_user->uid), "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "device_id" => $_SESSION['login_deviceid'], "ip" => $_SERVER["REMOTE_ADDR"], "latest_update_time" => time()]);
 
-        $this->_set_logout_time();
-        
-		$this->db->insert("log_game_logins", $data);	
-        
-		if ( $this->db->insert_id() )
-		{
-            $bulk = new MongoDB\Driver\BulkWrite;
-            $bulk->insert(["uid" => intval($this->g_user->uid), "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "device_id" => $_SESSION['login_deviceid'], "latest_update_time" => time()]);
-            
-            $this->mongo_log->executeBulkWrite("longe_log.users", $bulk);
-            
-            unset($bulk);
-            
-		    $_SESSION['server_id'] = $server;
-            return 1;
-			//die(json_message(array("message"=>"成功", "site"=>$site, "token"=>$this->g_user->token), true));
-		}
-		else
-		{
-            return 0;
-			//die(json_failure('登入伺服器錯誤'));
-		}
+		$this->mongo_log->executeBulkWrite("longe_log.users", $bulk);
+
+		unset($bulk);
+
+		$_SESSION['server_id'] = $server;
+		
+		return 1;
 	}
 
 	// 直接登入
@@ -1300,10 +1213,6 @@ class Api2 extends MY_Controller
 			
 			$server_id = $server_info->server_id;
 		}
-        
-        // 為了絕代ios server_id傳錯，用uid去補
-        $last_login = $this->db->from("log_game_logins")->where("uid", $uid)->where("is_recent", "1")->order_by("id", "desc")->limit(1)->get()->row();
-        $server_id = $last_login->server_id;
 		
 		$this->load->library("g_wallet");
 
@@ -1593,11 +1502,6 @@ class Api2 extends MY_Controller
 			
 			$server_id = $server_info->server_id;
 		}
-        
-        // 為了絕代ios server_id傳錯，用uid去補
-        $last_login = $this->db->from("log_game_logins")->where("uid", $uid)->where("is_recent", "1")->order_by("id", "desc")->limit(1)->get()->row();
-        $server_id = $last_login->server_id;
-        
 
 		// 驗證訂單
 		if(intval($order->result) != 0)

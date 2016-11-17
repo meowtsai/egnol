@@ -42,8 +42,6 @@ class Server_api extends MY_Controller
 	}
 	
     function validate_token() {
-        
-        log_message("error", "validate_token");
 		
         if ($this->input->get_post("uid")) $uid = $this->input->get_post("uid");
         else return $this->_return_error("欄位不齊全");
@@ -75,7 +73,6 @@ class Server_api extends MY_Controller
         ]);
     
         $cursor = $this->mongo_log->executeQuery("longe_log.users", $query);
-
         $result = [];
         
         foreach ($cursor as $document) {
@@ -135,50 +132,53 @@ class Server_api extends MY_Controller
 			$game_id = $server_info->game_id;
 		}
 		
-		$query = $this->db->from("log_game_logins")
-		           ->where("uid", $uid)
-				   ->where("is_recent", "1")
-				   ->where("game_id", $game_id)->order_by('id desc')->limit(1)->get()->row();
-                   
-        if ($query) {
-            
-            $default_server_id = $query->server_id;
-            $new_log_id = $query->id;
-            
-            if ($default_server_id==$server_id) {
-                $this->db->where("id", $new_log_id)->update("log_game_logins", array("create_time" => date('Y-m-d H:i:s')));
-            } else {                
-                $is_first_query = $this->db->from("log_game_logins")
-                   ->where("uid", $uid)
-                   ->where("is_first", "1")
-                   ->where("server_id", $server_id)
-                   ->where("game_id", $game_id)->get();
-                   
-                if (empty($is_first_query) || $is_first_query->num_rows() == 0)
-                {
-                    $is_first = '1';
-                } else {
-                    $is_first = '0';
-                }	
-                
-                $this->db->where("id", $new_log_id)->update("log_game_logins", array("create_time" => date('Y-m-d H:i:s'), "server_id" => $server_id, "is_first" => $is_first));
-            }
-            
-            $previous_record = $this->db->from("log_game_logins")->where("id !=", $new_log_id)->where("game_id", $game_id)->where("uid", $uid)->order_by('id desc')->limit(1)->get()->row();
-                
-            if (!empty($previous_record) && $previous_record->server_id<>$server_id) {
-                $this->db->where("id", $previous_record->id)->update("log_game_logins", array("is_recent" => '1'));
-                $this->db->where("id !=", $new_log_id)->where("server_id", $server_id)->where("uid", $uid)->where("game_id", $game_id)->order_by('id desc')->limit(1)->update("log_game_logins", array("is_recent" => '0'));
-            } elseif (!empty($previous_record) && $previous_record->server_id==$server_id) {
-                $this->db->where("id", $previous_record->id)->update("log_game_logins", array("is_recent" => '0'));
-            }
+		$query = $this->db->from("user_server_first_logins")
+				   ->where("uid", $uid)
+				   ->where("server_id", $server_id)
+				   ->where("game_id", $site)->get();
+		if (empty($query) || $query->num_rows() == 0)
+		{
+			$first_logins_data = array(
+				'uid' => $uid,
+				'server_id' => $server_id,
+				'game_id' => $game_id
+			);
 
-            $bulk = new MongoDB\Driver\BulkWrite;
-            //$bulk->insert(["uid" => intval($uid), "game_id" => $game_id, "server_id" => $server_id, "token" => $query->token, "device_id" => $query->device_id, "latest_update_time" => time()]);
-            
-            //$this->mongo_log->executeBulkWrite("longe_log.users", $bulk);
-            
-            unset($bulk);
+			$this->db->insert("user_server_first_logins", $first_logins_data);	
+		}
+
+		$ad = $this->input->get_post('ad') ? $this->input->get_post('ad') : (empty($_SESSION['ad']) ? '' : $_SESSION['ad']);
+		
+        $query = new MongoDB\Driver\Query([
+            "uid" => intval($uid),
+            "game_id" => $game_id
+        ]);
+    
+        $cursor = $this->mongo_log->executeQuery("longe_log.users", $query);
+        $result = [];
+        
+        foreach ($cursor as $document) {
+            $result[] = $document;
+        }
+		$ip = ($result[0]->ip)?$result[0]->ip:"";
+		$device_id = ($result[0]->device_id)?$result[0]->device_id:"";
+		$token = ($result[0]->token)?$result[0]->token:"";
+
+		$data = array(
+			'uid' => $uid,
+			'ip' => $ip,
+			'ad' => $ad,
+			'server_id' => $server_id,
+			'game_id' => $game_id,
+			'device_id' => $device_id,
+			'token' => $token
+		);
+
+		$this->_set_logout_time();
+
+		$this->db->insert("log_game_logins", $data);
+                   
+        if ($this->db->insert_id()) {
             
             $filter = ['device_id' => $query->device_id, 'game_id' => $game_id, 'uid' => null];
             $newObj = ['$set' => ['uid' => intval($uid)]];
@@ -290,18 +290,6 @@ class Server_api extends MY_Controller
 		{
             die('0');
         }
-		
-		// 若沒設定 server_id, 則找出最近一次登入的 server
-		if(empty($server_id))
-		{
-			$login_game = $this->db->from("log_game_logins")->where("uid", $uid)->order_by("create_time desc")->limit(1)->get()->row();
-			if(!empty($login_game))
-			{
-				//$server_id = $login_game->server_id;
-				
-				log_message("error", "user_create_character: guess server_id=>{$login_game->server_id}");
-			}
-		}
 		
 		if($game_id)
 		{

@@ -263,6 +263,23 @@ CREATE TABLE `log_game_logins` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `user_server_first_logins`
+--
+
+DROP TABLE IF EXISTS `user_server_first_logins`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user_server_first_logins` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `uid` int(11) NOT NULL,
+  `server_id` varchar(20) DEFAULT NULL,
+  `game_id` varchar(20) DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `log_logins`
 --
 
