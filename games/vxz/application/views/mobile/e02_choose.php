@@ -99,6 +99,8 @@ select{
 		<input name="doLogin" type="submit" id="doSubmit" value="" class="button_submit" style="display:none;" />
     </form>
     <a href="<?=base_url()?>mobile/e02_billinglist" class="t6"><img src="<?=base_url()?>p/img/mobile/e02/btn0.png"></a>
-	<p><div class="login-button t7"><img src="<?=base_url()?>p/img/mobile/e02/btn.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')"></p>
-	<p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#" class="sw" onclick="javascript:location.href='<?=base_url()?>mobile/logout?site=vxz'">切換帳號</a></p></div>
+	<div class="login-button t7">
+		<p><img src="<?=base_url()?>p/img/mobile/e02/btn.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')"></p>
+	    <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="sw" onclick="javascript:location.href='<?=base_url()?>mobile/logout?site=vxz'">切換帳號</span></p>
+	</div>
 </div>
