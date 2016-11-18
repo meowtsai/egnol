@@ -318,7 +318,7 @@ class Api2 extends MY_Controller
 		}
 		
 		$bulk = new MongoDB\Driver\BulkWrite;
-		$bulk->insert(["uid" => intval($this->g_user->uid), "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "device_id" => $_SESSION['login_deviceid'], "ip" => $_SERVER["REMOTE_ADDR"], "latest_update_time" => time()]);
+		$bulk->insert(["uid" => intval($this->g_user->uid), "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "latest_update_time" => time()]);
 
 		$this->mongo_log->executeBulkWrite("longe_log.users", $bulk);
 
