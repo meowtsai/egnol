@@ -148,6 +148,7 @@ class Api2 extends MY_Controller
 	{
 		$site	= $this->_get_site();
             
+		log_message("error", "_ui_member ".$_SESSION['skip_pick_server']." - ".$_SESSION['server_id']);
 		if (!isset($_SESSION['skip_pick_server']) && !isset($_SESSION['server_id']))
 		{
 			// 已登入, 改顯示會員畫面
@@ -310,6 +311,8 @@ class Api2 extends MY_Controller
 			$this->db->insert("log_game_logins", $data);	
 
 			if (empty($this->db->insert_id())) return 0;
+		} else {
+			$_SESSION['skip_pick_server'] = 1;
 		}
 		
 		$bulk = new MongoDB\Driver\BulkWrite;
