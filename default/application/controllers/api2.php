@@ -182,6 +182,8 @@ class Api2 extends MY_Controller
 			$mobile = !empty($this->g_user->mobile) ? $this->g_user->mobile : "";
 			$external_id = !empty($this->g_user->external_id) ? $this->g_user->external_id : "";
 			
+			if ($site=='r2g') $_SESSION['server_id'] = 'r2g01';
+			
 			header('Content-type:text/html; Charset=UTF-8');
 			//echo "<script type='text/javascript'>LongeAPI.onLogoutSuccess()</script>";
 			$ios_str = $this->g_user->uid."-_-".$email."-_-".$mobile."-_-".$external_id."-_-".$_SESSION['server_id']."-_-".$this->g_user->token."-_-".$_SESSION['login_channel'];
