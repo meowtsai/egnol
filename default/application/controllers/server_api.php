@@ -135,7 +135,7 @@ class Server_api extends MY_Controller
 		$query = $this->db->from("user_server_first_logins")
 				   ->where("uid", $uid)
 				   ->where("server_id", $server_id)
-				   ->where("game_id", $site)->get();
+				   ->where("game_id", $game_id)->get();
 		if (empty($query) || $query->num_rows() == 0)
 		{
 			$first_logins_data = array(
@@ -174,7 +174,7 @@ class Server_api extends MY_Controller
 			'token' => $token
 		);
 
-		$this->_set_logout_time();
+		$this->_set_logout_time($game_id, $server_id);
 
 		$this->db->insert("log_game_logins", $data);
                    
@@ -346,4 +346,45 @@ class Server_api extends MY_Controller
 		
 		die('1');
 	}
+    
+    function _set_logout_time($game_id, $server_id)
+    { 
+		$site = $game_id;
+        
+		$uc_query = new MongoDB\Driver\Query([
+			"game_id" => $site,
+			"server_id" => $server
+		]);
+
+		$uc_cursor = $this->mongo_log->executeQuery("longe_log.user_count", $uc_query);
+
+		$uc_result = [];
+
+		foreach ($uc_cursor as $document) {
+			$uc_result[] = $document;
+		}
+
+		if (isset($uc_result[0]->count) && $uc_result[0]->count > 0) { 
+			$new_count = $uc_result[0]->count - 1;
+
+			$uc2_filter = ['game_id' => $site, "server_id" => $server];
+			$uc2_newObj = ['$set' => ['count' => $new_count]];
+
+			$uc2_options = ["multi" => false, "upsert" => true];
+
+			$bulk = new MongoDB\Driver\BulkWrite;
+			$bulk->update($uc2_filter, $uc2_newObj, $uc2_options);
+
+			$this->mongo_log->executeBulkWrite("longe_log.user_count", $bulk);
+			unset($bulk);
+		}
+        
+        $filter = ["uid" => intval($this->g_user->uid), "game_id" => $site];
+        $options = ["limit" => 0];
+
+        $bulk = new MongoDB\Driver\BulkWrite;
+        $bulk->delete($filter, $options);
+
+        $result = $this->mongo_log->executeBulkWrite("longe_log.users", $bulk);
+    }
 }

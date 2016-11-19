@@ -2903,45 +2903,33 @@ class Api2 extends MY_Controller
     { 
 		$site = $this->_get_site();
         
-		$query = $this->db->from("log_game_logins")->where("uid", $this->g_user->uid)
-          ->where("game_id", $site)
-          ->where("logout_time", "0000-00-00 00:00")->get()->row();
-        if (isset($query->server_id)) {
-            $server = $query->server_id;
-            $uc_query = new MongoDB\Driver\Query([
-                "game_id" => $site,
-                "server_id" => $server
-            ]);
-        
-            $uc_cursor = $this->mongo_log->executeQuery("longe_log.user_count", $uc_query);
+		$uc_query = new MongoDB\Driver\Query([
+			"game_id" => $site
+		]);
 
-            $uc_result = [];
-            
-            foreach ($uc_cursor as $document) {
-                $uc_result[] = $document;
-            }
-            
-            if (isset($uc_result[0]->count) && $uc_result[0]->count > 0) { 
-                $new_count = $uc_result[0]->count - 1;
-                
-                $uc2_filter = ['game_id' => $site, "server_id" => $server];
-                $uc2_newObj = ['$set' => ['count' => $new_count]];
-                
-                $uc2_options = ["multi" => false, "upsert" => true];
-                
-                $bulk = new MongoDB\Driver\BulkWrite;
-                $bulk->update($uc2_filter, $uc2_newObj, $uc2_options);
+		$uc_cursor = $this->mongo_log->executeQuery("longe_log.user_count", $uc_query);
 
-                $this->mongo_log->executeBulkWrite("longe_log.user_count", $bulk);
-                unset($bulk);
-            }
-        }
+		$uc_result = [];
+
+		foreach ($uc_cursor as $document) {
+			$uc_result[] = $document;
+		}
+
+		if (isset($uc_result[0]->count) && $uc_result[0]->count > 0) { 
+			$new_count = $uc_result[0]->count - 1;
+
+			$uc2_filter = ['game_id' => $site];
+			$uc2_newObj = ['$set' => ['count' => $new_count]];
+
+			$uc2_options = ["multi" => false, "upsert" => true];
+
+			$bulk = new MongoDB\Driver\BulkWrite;
+			$bulk->update($uc2_filter, $uc2_newObj, $uc2_options);
+
+			$this->mongo_log->executeBulkWrite("longe_log.user_count", $bulk);
+			unset($bulk);
+		}
         
-        $this->db->where("uid", $this->g_user->uid)
-          ->where("game_id", $site)
-          ->where("logout_time", "0000-00-00 00:00")->update("log_game_logins", array("logout_time" => now()));
-              
-        //$this->mongo_log->where(array("uid" => (string)$this->g_user->uid, "game_id" => $site))->delete_all('users');
         $filter = ["uid" => intval($this->g_user->uid), "game_id" => $site];
         $options = ["limit" => 0];
 
