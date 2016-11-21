@@ -1892,7 +1892,7 @@ class Api2 extends MY_Controller
 			die(json_encode(array("result"=>0, "msg"=>"Order not found.")));
 		}
 		
-        $checkorder=$this->g_wallet->check_isOrderCompleted($transaction_id);
+        $checkorder=$this->g_wallet->check_isGPOrderCompleted($transaction_id);
         if ($checkorder==1)
         {
             //如果偵測到已經[支付成功]也已經[給點]就直接回傳成功不再繼續做下去, 好讓SDK那邊能繼續把物品consume掉
