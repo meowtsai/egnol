@@ -444,25 +444,24 @@ class Cron extends CI_Controller {
                     SELECT 
                         lgl2.game_id,
                         1 'is_retention',
-                        CASE WHEN lgl.external_id LIKE '%facebook' THEN 1 ELSE NULL END 'facebook_login',
-                        CASE WHEN lgl.external_id LIKE '%google' THEN 1 ELSE NULL END 'google_login',
-                        CASE WHEN lgl.external_id IS NULL THEN 1 ELSE NULL END 'longe_login',
-                        CASE WHEN lgl.external_id LIKE '%device' THEN 1 ELSE NULL END 'quick_login'
+                        CASE WHEN lgl2.external_id LIKE '%facebook' THEN 1 ELSE NULL END 'facebook_login',
+                        CASE WHEN lgl2.external_id LIKE '%google' THEN 1 ELSE NULL END 'google_login',
+                        CASE WHEN lgl2.external_id IS NULL THEN 1 ELSE NULL END 'longe_login',
+                        CASE WHEN lgl2.external_id LIKE '%device' THEN 1 ELSE NULL END 'quick_login'
                     FROM
                     (
                         SELECT 
-                            l.uid, l.game_id, MIN(l.create_time), MIN(u.external_id) 'external_id'
+                            l.uid, l.game_id, MIN(l.create_time)
                         FROM
-                            log_game_logins l
+                            ".(($is_first) ? "user_server_first_logins" : "log_game_logins")." l
                         JOIN users u ON l.uid=u.uid
                         WHERE
                             DATE(l.create_time) = '{$date}'
-                                ".(($is_first) ? " AND l.is_first = 1 " : "")."
                         GROUP BY l.uid, l.game_id
                     ) AS lgl,
                     (
                         SELECT 
-                            uid, game_id, MIN(create_time)
+                            uid, game_id, MIN(create_time), MIN(u.external_id) 'external_id'
                         FROM
                             log_game_logins l
                         WHERE
@@ -512,10 +511,9 @@ class Cron extends CI_Controller {
                         SELECT 
                             uid, game_id, MIN(create_time)
                         FROM
-                            log_game_logins
+                            ".(($is_first) ? "user_server_first_logins" : "log_game_logins")."
                         WHERE
                             ".$span_query1."
-                                ".(($is_first) ? " AND is_first = 1 " : "")."
                         GROUP BY uid, game_id
                     ) AS lgl,
                     (

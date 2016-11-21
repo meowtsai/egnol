@@ -244,7 +244,8 @@ class Mycard extends MY_Controller {
                     "amount" => $confirm_result->Amount, 
                     "mycard_trade_seq" => $confirm_result->MyCardTradeNo, 
                     "mycard_type" => $confirm_result->MyCardType, 
-                    "payment_type" => $confirm_result->PaymentType), 
+                    "payment_type" => $confirm_result->PaymentType,
+                    "promo_code" => $confirm_result->PromoCode), 
                 array("fac_trade_seq" => $mycard_billing->fac_trade_seq));
 
             $billing_url = $this->mycard_conf["billing_url"]."?AuthCode=".$mycard_billing->auth_code;
@@ -327,8 +328,8 @@ class Mycard extends MY_Controller {
         if (!$mycard_trade_seq && !$start_time) die("未傳遞參數");
         
         if ($mycard_trade_seq) $this->db->where("mycard_trade_seq", $mycard_trade_seq);
-        if ($start_time) $this->db->where("create_time >=", date('Y-m-d H:i:s', strtotime($start_time)-4800));
-        if ($end_time) $this->db->where("create_time <=", date('Y-m-d H:i:s', strtotime($end_time)-4800));
+        if ($start_time) $this->db->where("create_time >=", date('Y-m-d H:i:s', strtotime($start_time)));
+        if ($end_time) $this->db->where("create_time <=", date('Y-m-d H:i:s', strtotime($end_time)));
         
 		$mycard_billing = $this->db->from("mycard_billing")->where("result", "1")->order_by("trade_seq asc")->get();
         

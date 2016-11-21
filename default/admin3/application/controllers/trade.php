@@ -472,7 +472,7 @@ class Trade extends MY_Controller {
 					header("Content-type:application/vnd.ms-excel;");
 					header("Content-Disposition: filename={$filename};");
 					
-					$content = "id,uid,euid,信箱,手機,交易管道,訂單號,Mycard訂單號,卡號,遊戲伺服器,金額,結果,訊息,原廠單號,建立日期\n";
+					$content = "id,uid,euid,信箱,手機,交易管道,訂單號,Mycard訂單號,卡號,遊戲伺服器,金額,結果,活動代號,訊息,原廠單號,建立日期\n";
 					
 					foreach($query->result() as $row) {
 						$trade_channel = '';
@@ -485,7 +485,7 @@ class Trade extends MY_Controller {
 							}
 						}
 						$mycard_trade_seq = empty($row->trade_code) ? $row->mycard_trade_seq : $row->trade_code;
-						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$trade_channel},\"{$row->trade_seq}\",{$mycard_trade_seq},{$row->mycard_card_id},".strtr($row->item_code, array("long_e"=>"")).",".($row->result=='1' ? '成功' : '失敗').",{$row->note},{$row->partner_order_id},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
+						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$trade_channel},\"{$row->trade_seq}\",{$mycard_trade_seq},{$row->mycard_card_id},".strtr($row->item_code, array("long_e"=>"")).",".($row->result=='1' ? '成功' : '失敗').",{$row->promo_code},{$row->note},{$row->partner_order_id},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
 					}
 					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
 					exit();						

@@ -182,6 +182,7 @@ CREATE TABLE `mycard_billing` (
   `mycard_trade_seq` varchar(255) DEFAULT NULL,
   `fac_trade_seq` varchar(20) DEFAULT NULL,
   `item_code` varchar(20) DEFAULT NULL,
+  `promo_code` varchar(20) DEFAULT NULL,
   `status` tinyint(3) NOT NULL,
   `result` tinyint(1) NOT NULL DEFAULT '0',
   `currency` varchar(4) DEFAULT NULL,
