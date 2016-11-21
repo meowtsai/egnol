@@ -1892,6 +1892,22 @@ class Api2 extends MY_Controller
 			die(json_encode(array("result"=>0, "msg"=>"Order not found.")));
 		}
 		
+        $checkorder=$this->g_wallet->check_isOrderCompleted($transaction_id);
+        if ($checkorder==1)
+        {
+            //如果偵測到已經[支付成功]也已經[給點]就直接回傳成功不再繼續做下去, 好讓SDK那邊能繼續把物品consume掉
+            log_message("checkOK", "android_verify_receipt_1: Order has already been completed.");
+			die(json_encode(array("result"=>1, "transactionId"=>$transaction_id, "productId"=>$product_id)));
+            
+        }
+        
+        //小李飛刀原廠在iapInitialize之後才呼叫setServerid 和setCharacter 導致中斷訂單資訊不足無法繼續, 這段要補齊伺服器和角色資料
+        if (empty($server_id) && empty($character_id))
+        {
+            $server_id =$order->server_id;
+            $character_id = $this->db->from("characters")->where("uid", $uid)->where("server_id", $server_id)->get()->row()->in_game_id;      
+        }
+		
 		// 向 google 要access_token
 		$result = $this->_refresh_google_token();
         

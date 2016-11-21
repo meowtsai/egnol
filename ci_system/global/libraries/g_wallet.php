@@ -287,6 +287,14 @@ WHERE x.uid={$uid}";
 			
     	return $this->CI->db->insert_id();
     }
+	
+	//檢查Google訂單是否已經完成支付和給點, 如果回傳1 veryify就不再繼續 直接回覆原廠成功
+    function check_isGPOrderCompleted($transaction_id)
+    {
+        $checkOrder_sql = "SELECT IF(((SELECT count(*) FROM user_billing WHERE order_no='{$transaction_id}' AND transaction_type='inapp_billing_google' AND result=1)=1) AND (SELECT COUNT(*) FROM user_billing WHERE order_no='{$transaction_id}' AND transaction_type='top_up_account' AND result=1)=1,true,false ) AS result";
+    	$order_result = $this->CI->db->query($checkOrder_sql)->row();
+        return $order_result->result;
+    }
     
     function _return_error($msg) {
     	$this->error_message = $msg;
