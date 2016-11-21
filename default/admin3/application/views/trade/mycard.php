@@ -103,6 +103,7 @@
 			<th style="width:50px;">交易<br>授權碼</th>
 			<th style="width:35px;">金額</th>
 			<th style="width:50px;">結果(狀態碼)</th>
+			<th style="width:90px;">活動</th>
 			<th style="width:90px;">訊息</th>
 			<th style="width:70px;">建立日期</th>	
 		</tr>
@@ -161,6 +162,7 @@
 			<!--td><?=strtr($row->item_code, array("long_e"=>""))?></td-->
 			<td><?=$row->amount ?></td>
 			<td><?=$row->result=='1' ? '成功' : '失敗'?>(<?=$row->status?>)</td>
+			<td style="font-size:13px;"><?=$row->promo_code?></td>
 			<td style="font-size:13px;"><?=$row->note?></td>
 			<td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>							
 		</tr>
