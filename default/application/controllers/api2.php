@@ -308,14 +308,14 @@ class Api2 extends MY_Controller
 				'token' => $this->g_user->token
 			);
 
-			$this->_set_logout_time();
-
 			$this->db->insert("log_game_logins", $data);	
 
 			if (empty($this->db->insert_id())) return 0;
 		} else {
 			$_SESSION['skip_pick_server'] = 1;
 		}
+		
+		$this->_set_logout_time();
 		
 		$bulk = new MongoDB\Driver\BulkWrite;
 		$bulk->insert(["uid" => intval($this->g_user->uid), "game_id" => $site, "server_id" => $server, "token" => $this->g_user->token, "latest_update_time" => time()]);
