@@ -444,7 +444,7 @@ class Daily_report extends MY_Controller {
             FROM user_billing u
             JOIN servers s ON u.server_id=s.server_id
             JOIN games g ON s.game_id=g.game_id
-            WHERE g.is_active='1' AND s.is_test_server=0 AND u.billing_type=1 AND u.result=1 ".(($this->testaccounts)?" AND u.uid NOT IN (".$this->testaccounts.") ":"")."
+            WHERE g.is_active='1' AND s.is_test_server=0 AND u.billing_type=2 AND u.result=1 ".(($this->testaccounts)?" AND u.uid NOT IN (".$this->testaccounts.") ":"")."
             GROUP BY g.game_id
 		");
         
