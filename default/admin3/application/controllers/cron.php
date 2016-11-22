@@ -410,7 +410,7 @@ class Cron extends CI_Controller {
 			case "weekly":
 				$span_query1 = "create_time BETWEEN '".date("Y-m-d", strtotime("-6 days", strtotime($date)))."'
 								AND '".date("Y-m-d", strtotime($date))." 23:59:59'";
-				$span_query2 = "create_time BETWEEN '".date("Y-m-d", strtotime("+1 day", strtotime($date)))."'
+				$span_query2 = "l.create_time BETWEEN '".date("Y-m-d", strtotime("+1 day", strtotime($date)))."'
 								AND '".date("Y-m-d", strtotime("+7 days", strtotime($date)))." 23:59:59'";
 				$save_table = "weekly_operation_statistics";
 				break;
@@ -418,14 +418,14 @@ class Cron extends CI_Controller {
 			case "monthly":
 				$span_query1 = "create_time BETWEEN '".date("Y-m", strtotime($date))."-01'
 								AND '".date("Y-m-t", strtotime($date))." 23:59:59'";
-				$span_query2 = "create_time BETWEEN '".date("Y-m", strtotime("+1 day", strtotime($date)))."-01'
+				$span_query2 = "l.create_time BETWEEN '".date("Y-m", strtotime("+1 day", strtotime($date)))."-01'
 								AND '".date("Y-m-t", strtotime("+1 day", strtotime($date)))." 23:59:59'";
 				$save_table = "monthly_operation_statistics";
 				break;
 				
 			default:
 			    $span_query1 = "DATE(create_time) = '{$date}'";
-			    $span_query2 = " DATE(create_time) = DATE_ADD(DATE('{$date}'), INTERVAL {$interval} DAY)";
+			    $span_query2 = " DATE(l.create_time) = DATE_ADD(DATE('{$date}'), INTERVAL {$interval} DAY)";
 				$save_table = "operation_statistics";
 				break;
 		}
@@ -461,12 +461,13 @@ class Cron extends CI_Controller {
                     ) AS lgl,
                     (
                         SELECT 
-                            uid, game_id, MIN(create_time), MIN(u.external_id) 'external_id'
+                            l.uid, l.game_id, MIN(l.create_time), MIN(u.external_id) 'external_id'
                         FROM
                             log_game_logins l
+                        JOIN users u ON l.uid=u.uid
                         WHERE
                             ".$span_query2."
-                        GROUP BY uid, game_id
+                        GROUP BY l.uid, l.game_id
                     ) AS lgl2
                     WHERE
                         lgl2.uid = lgl.uid
@@ -518,12 +519,12 @@ class Cron extends CI_Controller {
                     ) AS lgl,
                     (
                         SELECT 
-                            uid, game_id, MIN(create_time)
+                            l.uid, l.game_id, MIN(l.create_time)
                         FROM
-                            log_game_logins
+                            log_game_logins l
                         WHERE
                             ".$span_query2."
-                        GROUP BY uid, game_id
+                        GROUP BY l.uid, l.game_id
                     ) AS lgl2
                     WHERE
                         lgl2.uid = lgl.uid
