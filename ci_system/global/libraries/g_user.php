@@ -128,6 +128,14 @@ class G_User
 				return $this->_return_error("停權");
 			}
 
+			if ($user_row->external_id) {
+				$pos = strpos($external_id, '02:00:00:00:00:00_mac');
+
+				if ($pos !== false) {
+					return $this->_return_error('此設備無法直接玩，請改用註冊帳號或第三方登入');
+				}
+			}
+			
 			$this->set_user($user_row->uid, $user_row->email, $user_row->mobile, $user_row->external_id);
 			return true;
 		} 
@@ -214,6 +222,12 @@ class G_User
 			if(empty($external_id))
 			{
 	            return $this->_return_error('第三方登入帳號錯誤');
+			} else {
+				$pos = strpos($external_id, '02:00:00:00:00:00_mac');
+
+				if ($pos !== false) {
+					return $this->_return_error('此設備無法直接玩，請改用註冊帳號或第三方登入');
+				}
 			}
 		}
 
