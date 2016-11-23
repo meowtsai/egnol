@@ -458,8 +458,6 @@ class Cron extends CI_Controller {
 								uid, game_id, MIN(create_time)
 							FROM
 								".(($is_first) ? "user_server_first_logins" : "log_game_logins")."
-							WHERE
-								DATE(create_time) = '{$date}'
 							GROUP BY uid, game_id
 						) as fl
                         WHERE
@@ -523,12 +521,10 @@ class Cron extends CI_Controller {
 								uid, game_id, MIN(create_time)
 							FROM
 								".(($is_first) ? "user_server_first_logins" : "log_game_logins")."
-							WHERE
-								".$span_query1."
 							GROUP BY uid, game_id
 						) as fl
                         WHERE
-                            DATE(create_time) = '{$date}'
+                            ".$span_query1."
                     ) AS lgl,
                     (
                         SELECT 
