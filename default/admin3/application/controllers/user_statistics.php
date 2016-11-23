@@ -988,7 +988,7 @@ class User_statistics extends MY_Controller {
 		$this->_init_statistics_layout();			
 		$this->load->helper("output_table");
 		
-		$this->zacl->check("game_statistics", "read");
+		$this->zacl->check("whale_users_statistics", "read");
 		
 		$game_id = $this->input->get("game_id");
 		
