@@ -455,7 +455,7 @@ class Cron extends CI_Controller {
                         FROM
                         (
 							SELECT 
-								uid, game_id, MIN(create_time)
+								uid, game_id, MIN(create_time) 'create_time'
 							FROM
 								".(($is_first) ? "user_server_first_logins" : "log_game_logins")."
 							GROUP BY uid, game_id
@@ -518,7 +518,7 @@ class Cron extends CI_Controller {
                         FROM
                         (
 							SELECT 
-								uid, game_id, MIN(create_time)
+								uid, game_id, MIN(create_time) 'create_time'
 							FROM
 								".(($is_first) ? "user_server_first_logins" : "log_game_logins")."
 							GROUP BY uid, game_id
