@@ -976,6 +976,7 @@ CREATE TABLE `vip_events` (
   `end_date` timestamp NULL DEFAULT NULL,
   `auth_admin_uid` int(11) DEFAULT NULL,
   `auth_time` timestamp NULL DEFAULT NULL,
+  `product_id` varchar(60) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='VIP活動';
 /*!40101 SET character_set_client = @saved_cs_client */;

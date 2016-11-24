@@ -33,7 +33,7 @@ class Vxz extends Game_Api
 	}
 	
 	// 第三方金流入點
-    function transfer($server, $order, $amount, $rate, $gash_billing_id='')
+    function transfer($server, $order, $amount, $rate, $product_id='')
     {
 		$partner_api = $this->CI->config->item("partner_api");
 		$game_api = $this->CI->config->item("game_api");
@@ -42,7 +42,7 @@ class Vxz extends Game_Api
 		$uid = $order->uid;
 		$transaction_id = $order->order_no;
 		$partner_order_id = $order->partner_order_id;
-		$product_id = "vxzweb_" . $amount;
+		$product_id = ($product_id) ? $product_id : "vxzweb_" . $amount;
 		$price = $amount;
 		$currency = "TWD";
 		

@@ -51,6 +51,10 @@
 		<tr>
 			<td style="vertical-align:top">標題：</td>
 			<td colspan="5" style="word-break: break-all"><?=$vip_event->title?></td>
+		</tr>	
+		<tr>
+			<td style="vertical-align:top">遊戲串接設定：</td>
+			<td colspan="5" style="word-break: break-all"><?=$vip_event->product_id?></td>
 		</tr>				
 		<tr>
 			<td style="vertical-align:top">描述：</td>
@@ -204,7 +208,8 @@
                     <? elseif ($this->input->get("ticket_status")==2 && $modify_acl):?>
                         <td> 
                             <input type="hidden" name="action" value="3">	
-                            <input type="submit" class="btn btn-small btn-success" value="派發完成">
+                            <input type="hidden" name="product_id" value="<?=$vip_event->product_id?>">	
+                            <input type="submit" class="btn btn-small btn-success" value="派發">
                         </td>
                     </form>  	
                     <form id="cancel_ticket_form" method="post" action="<?=site_url("vip/modify_ticket_json")?>" style="margin:0">
@@ -259,7 +264,14 @@
                     <td><input type="text" name="line" class="required" style="width:120px;" value=""></td>
                     <td></td>
                     <td></td>
-                    <td><input type="text" name="cost" class="required" style="width:60px;" value=""></td>
+                    <td>
+						<?if($vip_event->product_id):?>
+							<input type="hidden" name="cost" class="required" style="width:60px;" value="<?=$vip_event->cost?>">
+							<?=$vip_event->cost?>
+						<?else:?>
+							<input type="text" name="cost" class="required" style="width:60px;" value="">
+						<?endif;?>
+					</td>
                     <td></td>
                     <td></td>
                     <td></td>

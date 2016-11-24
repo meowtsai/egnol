@@ -48,6 +48,10 @@
 			<td><input type="text" name="title" class="required" maxlength="60" style="width:300px;" value="<?=$vip ? preg_replace('/<br\\s*?\/??>/i','',$vip->title): ''?>"></td>
 		</tr>		
 		<tr>
+			<td>遊戲串接設定：</td>
+			<td><input type="text" name="product_id" maxlength="60" style="width:300px;" value="<?=$vip ? $vip->product_id?>"></td>
+		</tr>	
+		<tr>
 			<td style="vertical-align:top">描述：</td>
 			<td><textarea rows="8" minlength="5" style="width:100%;" name="content" class="required"><?=$vip ? preg_replace('/<br\\s*?\/??>/i','',$vip->content): ''?></textarea></td>
 		</tr>

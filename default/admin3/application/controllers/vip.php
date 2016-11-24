@@ -124,6 +124,7 @@ class Vip extends MY_Controller {
 			'is_active' => $this->input->post("is_active"),
 			'start_date' => $this->input->post("start_date"),
 			'end_date' => $this->input->post("end_date"),
+			'product_id' => $this->input->post("product_id"),
 		);
         
         if (!is_dir(set_realpath("p/upload/vip_event{$vip_id}"))) {
@@ -276,13 +277,17 @@ class Vip extends MY_Controller {
                     $this->g_wallet->complete_order($order);
                     break;
                 case '3':
-                    /*
                     $transfer_id = $this->g_wallet->produce_order($user_billing->uid, "top_up_account", "2", $user_billing->amount, $user_billing->server_id, "", $user_billing->character_id, "", $ticket_id);
                     
                     $transfer_order = $this->g_wallet->get_order($transfer_id);
-
                     $this->g_wallet->complete_order($transfer_order);
-                    */
+					
+					
+					$server = $this->DB2->from("servers")->where("server_id", $user_billing->server_id)->get()->row();
+					$this->load->library("game_api/{$server->game_id}");
+					
+					$game = $this->DB2->from("games")->where("game_id", $game_id)->get()->row();
+					$res = $this->{$server->game_id}->transfer($user_billing->server_id, $transfer_order, $user_billing->amount, $game->exchange_rate, $this->input->post("product_id"));
                     break;
             }
 		} else {
