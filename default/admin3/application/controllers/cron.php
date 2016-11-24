@@ -178,7 +178,7 @@ class Cron extends CI_Controller {
                     (SELECT
                         game_id, uid, MIN(create_time) 'create_time'
                     FROM 
-                        log_game_logins
+                        user_server_first_logins
                     WHERE
                         1=1
                             ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
@@ -450,6 +450,7 @@ class Cron extends CI_Controller {
                         CASE WHEN lgl2.external_id LIKE '%device' THEN 1 ELSE NULL END 'quick_login'
                     FROM
                     (
+						".(($is_first) ? "
                         SELECT 
                             uid, game_id, create_time
                         FROM
@@ -457,11 +458,20 @@ class Cron extends CI_Controller {
 							SELECT 
 								uid, game_id, MIN(create_time) 'create_time'
 							FROM
-								".(($is_first) ? "user_server_first_logins" : "log_game_logins")."
+								user_server_first_logins
 							GROUP BY uid, game_id
 						) as fl
                         WHERE
                             DATE(create_time) = '{$date}'
+						" : "
+						SELECT 
+							uid, game_id, MIN(create_time) 'create_time'
+						FROM
+							log_game_logins
+						WHERE
+							DATE(create_time) = '{$date}'
+						GROUP BY uid, game_id
+						")."
                     ) AS lgl,
                     (
                         SELECT 
@@ -513,18 +523,28 @@ class Cron extends CI_Controller {
                         lgl2.game_id, 1 'is_retention'
                     FROM
                     (
-                        SELECT 
+						".(($is_first) ? "
+                         SELECT 
                             uid, game_id, create_time
                         FROM
                         (
 							SELECT 
 								uid, game_id, MIN(create_time) 'create_time'
 							FROM
-								".(($is_first) ? "user_server_first_logins" : "log_game_logins")."
+								user_server_first_logins
 							GROUP BY uid, game_id
 						) as fl
                         WHERE
-                            ".$span_query1."
+                            {$span_query1}
+						" : "
+						SELECT 
+							uid, game_id, MIN(create_time) 'create_time'
+						FROM
+							log_game_logins
+						WHERE
+							{$span_query1}
+						GROUP BY uid, game_id
+						")."
                     ) AS lgl,
                     (
                         SELECT 
