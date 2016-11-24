@@ -49,7 +49,7 @@
 		</tr>		
 		<tr>
 			<td>遊戲串接設定：</td>
-			<td><input type="text" name="product_id" maxlength="60" style="width:300px;" value="<?=$vip ? $vip->product_id?>"></td>
+			<td><input type="text" name="product_id" maxlength="60" style="width:300px;" value="<?=$vip ? $vip->product_id : ''?>"></td>
 		</tr>	
 		<tr>
 			<td style="vertical-align:top">描述：</td>
