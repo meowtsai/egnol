@@ -183,7 +183,7 @@ class Cron extends CI_Controller {
                         1=1
                             ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
                     GROUP BY game_id, uid
-                    ) all_first ON lgl.game_id=all_first.game_id AND lgl.uid=all_first.uid
+                    ) all_first ON lgl.game_id=all_first.game_id AND lgl.uid=all_first.uid AND DATE(lgl.create_time)=DATE(all_first.create_time)
 				) tmp
             JOIN users u ON tmp.uid=u.uid
 			GROUP BY tmp.game_id");	
