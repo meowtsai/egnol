@@ -387,16 +387,16 @@ class Cron extends CI_Controller {
 			case 1:
 			    $retention_text = 'one_retention';
 				break;
-			case 3:
+			case 2:
 			    $retention_text = 'three_retention';
 				break;
-			case 7:
+			case 6:
 			    $retention_text = 'seven_retention';
 				break;
-			case 14:
+			case 13:
 			    $retention_text = 'fourteen_retention';
 				break;
-			case 30:
+			case 29:
 			    $retention_text = 'thirty_retention';
 				break;
 			default:
@@ -1562,10 +1562,10 @@ class Cron extends CI_Controller {
 	    } else {
 			$check_date=$date;
 		    $date_1=date("Y-m-d",strtotime("-1 days", strtotime($date)));
-		    $date_3=date("Y-m-d",strtotime("-3 days", strtotime($date)));
-		    $date_7=date("Y-m-d",strtotime("-7 days", strtotime($date)));
-		    $date_14=date("Y-m-d",strtotime("-14 days", strtotime($date)));
-		    $date_30=date("Y-m-d",strtotime("-30 days", strtotime($date)));
+		    $date_3=date("Y-m-d",strtotime("-2 days", strtotime($date)));
+		    $date_7=date("Y-m-d",strtotime("-6 days", strtotime($date)));
+		    $date_14=date("Y-m-d",strtotime("-13 days", strtotime($date)));
+		    $date_30=date("Y-m-d",strtotime("-29 days", strtotime($date)));
 		}
         
         $this->generate_statistics_blank($date);
@@ -1573,10 +1573,10 @@ class Cron extends CI_Controller {
 		$this->generate_new_character_statistics($date);
 		$this->generate_device_statistics($date);
 		$this->generate_retention_statistics($date_1, 1);
-		$this->generate_retention_statistics($date_3, 3);
-		$this->generate_retention_statistics($date_7, 7);
-		$this->generate_retention_statistics($date_14, 14);
-		$this->generate_retention_statistics($date_30, 30);
+		$this->generate_retention_statistics($date_3, 2);
+		$this->generate_retention_statistics($date_7, 6);
+		$this->generate_retention_statistics($date_14, 13);
+		$this->generate_retention_statistics($date_30, 29);
 		$this->generate_retention_statistics($date_1, 1, 'daily', FALSE);
 		$this->generate_return_statistics($date, 1);
 		$this->generate_return_statistics($date, 3);
