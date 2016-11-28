@@ -22,7 +22,8 @@ class Bulletins extends CI_Model {
 	{
 		$bulletin_type && $this->db->where("type", $bulletin_type);
 		return $this->db->select("count(*) cnt")
-		    ->where("(target like '%{$game_id},%')", null, false)
+		    //->where("(target like '%{$game_id},%')", null, false)
+		    ->where("game_id", $game_id)
 			->from("bulletins")
 			->get()->row()->cnt;
 	}
