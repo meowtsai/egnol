@@ -278,7 +278,6 @@
                         <th>原廠角色ID</th>
                         <th>廣告來源</th>
                         <th>創建時間</th>
-                        <th>最後登入時間</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -290,7 +289,6 @@
                         <td><?=$row->in_game_id?></td>
                         <td><?=array_key_exists($row->ad, $ad_channels) ? $ad_channels[$row->ad] : '無'?></td>
                         <td><?=$row->create_time?></td>
-                        <td><?=$row->last_login_time?></td>
                     </tr>
                     <? endforeach;?>
                   <? else:?>

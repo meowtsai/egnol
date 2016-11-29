@@ -367,11 +367,33 @@ class Trade extends MY_Controller {
         
 		if ($this->input->post()) 
 		{	
-            if (!$this->input->post("amount")) $err_message = "請準確填寫金額";
-            if (!$this->input->post("order_no")) $err_message = "請準確填寫訂單號";
+			$amount = ($this->input->post("amount")) ? $this->input->post("amount") : $row->amount;
+			$order_no = ($this->input->post("order_no")) ? $this->input->post("order_no") : $row->order_no;
+            if (!$amount) $err_message = "請準確填寫金額";
+            if (!$order_no) $err_message = "請準確填寫訂單號";
             
             if (!$err_message) {
-                $this->g_wallet->re_complete_order($row, $this->input->post('amount'), $this->input->post('order_no'));
+				
+				$server_info = $this->DB2->where("server_id", $server_id)->from("server")->get()->row();
+				
+                $transfer_order = $this->g_wallet->re_complete_order($row, $amount, $order_no);
+				
+				switch ($row->transaction_type) {
+					case "inapp_billing_google":
+						
+						break;
+					case "inapp_billing_ios":
+						
+						break;
+					case "mycard_billing":
+						
+						break;
+				}
+				
+				// 呼叫遊戲入點機制
+				$this->load->library("game_api/{$server_info->game_id}");
+				$res = $this->{$server_info->game_id}->iap_transfer($transfer_order, $server_info, "app_store", $product_id, $amount, 'TWD');
+				$err_message = $this->{$server_info->game_id}->error_message;
                 header("location:".current_url());
             }
 		}
