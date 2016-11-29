@@ -120,8 +120,8 @@
 		<tr>
             <th>註冊時間</th>
             <td><?=$user->create_time?></td>
-            <th>最後登入時間</th>
-            <td><?=$user->last_login_date?>&nbsp;</td>
+            <th> </th>
+            <td><?//=$user->last_login_date?>&nbsp;</td>
 		</tr>
 		<tr>
 			<th>備註：</th>

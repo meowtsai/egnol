@@ -124,7 +124,7 @@ class Member extends MY_Controller {
 		$user = $this->DB2
 					->select("u.*, lgl.create_time as last_login_date, ui.ident, ui.ban_reason, ui.ban_date, ui.name, ui.sex, ui.street, ui.birthday, ui.note, ui.line")
 					->from("users u")->where("u.uid", $uid)
-					->join("user_server_first_logins lgl", "u.uid=lgl.uid", "left")
+					->join("log_game_logins lgl", "u.uid=lgl.uid", "left")
 					->join("user_info ui", "u.uid=ui.uid", "left")
 					->order_by("lgl.create_time desc")
 					->get()->row();
@@ -151,11 +151,10 @@ class Member extends MY_Controller {
         }
 		
 		
-		$role = $this->DB2->select("gsr.*, g.name as game_name, gi.name as server_name, lgl.create_time as last_login_time")
+		$role = $this->DB2->select("gsr.*, g.name as game_name, gi.name as server_name")
 			->from("characters gsr")
 			->join("servers gi", "gi.server_id=gsr.server_id")
 			->join("games g", "g.game_id=gi.game_id")
-			->join("log_game_logins lgl", "lgl.server_id=gsr.server_id and lgl.uid=gsr.uid and lgl.is_recent=1")
 			->where("gsr.uid", $user->uid)->order_by("gsr.create_time desc")->get();
             
 		$questions = $this->DB2->from('questions')->where('uid', $uid)->order_by("create_time desc")->limit(10)->get();
