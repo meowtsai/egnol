@@ -120,7 +120,8 @@
 		<tr>
 			<th style="width:60px;">訂單號</th>
 			<th style="width:60px;">uid<div style="color:#777">euid</div></th>	
-			<th style="width:60px;">轉點管道</th>			
+			<th style="width:60px;">轉點管道</th>		
+			<th style="width:35px;">品項</th>		
 			<th style="width:35px;">金額</th>
 			<th style="width:80px;">遊戲伺服器</th>
 			<th style="width:40px;">結果</th>
@@ -154,6 +155,7 @@
 					<? endif;?>
 				</div>
 			</td>
+			<td><?=$row->product_id?></td>
 			<td><?=$row->amount?></td>
 			<td><?= $row->billing_type=='2' ? "({$row->game_abbr_name}){$row->server_name}" : "" ?></td>
 			<td><?=$result_table[$row->result]["name"]?>
@@ -173,11 +175,6 @@
 					</button>	
 					<ul class="dropdown-menu pull-right">
 						<li><a href="<?=site_url("trade/modify_order/{$row->id}")?>"><i class="icon-pencil"></i> 編輯</a></li>
-						<? if (in_array($row->result, array("0", "3", "4"))):?>
-						<li><a href="javascript:;" class="json_post_alert" url="/ajax/resend_transfer/<?=$row->id?>" ><i class="icon-repeat"></i> 重送交易</a></li>
-						<? elseif ($row->result == '2' && $row->transaction_type == 'rc_billing'):?>
-						<li><a href="javascript:;" class="json_post_alert" url="/ajax/resend_failed_order/<?=$row->id?>" ><i class="icon-repeat"></i> 重建訂單發送交易</a></li>
-						<? endif;?>
 					</ul>
 				</div>			
 			</td>				

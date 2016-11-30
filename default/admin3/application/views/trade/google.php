@@ -77,7 +77,8 @@
 			<th style="width:50px;">#</th>
 			<th style="width:70px;">uid
 				<div style="color:#777;">euid</div></th>	
-			<th style="width:100px;">訂單號</th>					
+			<th style="width:100px;">訂單號</th>	
+			<th style="width:35px;">品項</th>							
 			<th style="width:35px;">金額</th>
 			<th style="width:80px;">遊戲伺服器</th>
 			<th style="width:50px;">結果</th>
@@ -107,6 +108,7 @@
 				<div style="color:#777;"><?=$this->g_user->encode($row->uid)?></div>
 			</td>
 			<td><?=$row->order_no?></td>
+			<td><?=$row->product_id?></td>
 			<td><?=$row->amount?></td>
 			<td><?= "({$row->game_abbr_name}){$row->server_name}" ?></td>
 			<td><? if ($row->result == '1') {
@@ -128,7 +130,7 @@
 					</button>	
 					<? if ($row->result<>'1'):?>
 					<ul class="dropdown-menu pull-right">
-						<li><a href="<?=site_url("/trade/re_complete_order/{$row->id}")?>" ><i class="icon-repeat"></i>　補單</a></li>
+						<li><a href="<?=site_url("trade/modify_order/{$row->id}")?>"><i class="icon-pencil"></i> 編輯</a></li>
 					</ul>
 					<? endif;?>
 				</div>			

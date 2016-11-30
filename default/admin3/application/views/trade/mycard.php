@@ -100,7 +100,8 @@
 			<th style="width:80px;">Mycard訂單號	
 			<th style="width:80px;">Longe訂單號
 				<div style="color:#777;">卡號</div></th>
-			<th style="width:50px;">交易<br>授權碼</th>
+			<th style="width:50px;">交易<br>授權碼</th>	
+			<th style="width:35px;">品項</th>		
 			<th style="width:35px;">金額</th>
 			<th style="width:50px;">結果(狀態碼)</th>
 			<th style="width:90px;">活動</th>
@@ -160,6 +161,7 @@
 				<? endif;?>
 			</td>
 			<!--td><?=strtr($row->item_code, array("long_e"=>""))?></td-->
+			<td><?=$row->product_id?></td>
 			<td><?=$row->amount ?></td>
 			<td><?=$row->result=='1' ? '成功' : '失敗'?>(<?=$row->status?>)</td>
 			<td style="font-size:13px;"><?=$row->promo_code?></td>
