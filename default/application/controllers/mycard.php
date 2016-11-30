@@ -271,7 +271,7 @@ class Mycard extends MY_Controller {
 				$this->g_wallet->complete_order($user_billing);
 				
                 $this->load->library("game");
-                $this->game->payment_transfer($mycard_billing->uid, $mycard_billing->server_id, $confirm_result->Amount, $user_billing->partner_order_id, $user_billing->character_id, $mycard_billing->trade_seq, "", $mycard_billing->id);
+                $this->game->payment_transfer($mycard_billing->uid, $mycard_billing->server_id, $confirm_result->Amount, $user_billing->partner_order_id, $user_billing->character_id, $mycard_billing->trade_seq, "", "");
 					
                 if ($is_get_order) return 1;
                 go_payment_result(1, 1, $confirm_result->Amount, $error_message);
