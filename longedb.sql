@@ -1048,14 +1048,20 @@ CREATE TABLE `user_billing` (
   `server_id` varchar(20) DEFAULT NULL,
   `plug` tinyint(1) DEFAULT NULL,
   `order_no` varchar(50) DEFAULT NULL,
+  `product_id` varchar(30) DEFAULT NULL,
+  `verify_code` varchar(50) DEFAULT NULL,
   `country_code` varchar(3) DEFAULT NULL,
   `gash_billing_id` int(11) DEFAULT NULL,
   `mycard_billing_id` int(11) DEFAULT NULL,
   `vip_ticket_id` int(11) DEFAULT NULL,
   `character_id` int(11) DEFAULT NULL,
   `is_confirmed` tinyint(1) DEFAULT 0,
+  `question_id` int(11) DEFAULT NULL,
+  `transfer_result` tinyint(3) DEFAULT NULL,
+  `transfer_message` varchar(50) DEFAULT NULL,
   `create_time` timestamp NULL DEFAULT NULL,
   `update_time` timestamp NULL DEFAULT NULL,
+  `transfer_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;

@@ -257,7 +257,7 @@ WHERE x.uid={$uid}";
     }      
     
 	// iOS/Android in-app purchase 訂單
-    function produce_iap_order($uid, $transaction_type, $billing_type, $server_id, $partner_order_id, $note, $character_id = '')
+    function produce_iap_order($uid, $transaction_type, $billing_type, $server_id, $partner_order_id, $product_id, $verify_code, $character_id = '')
     {	
 		$cnt = $this->CI->db->from("user_billing")->where("partner_order_id", $partner_order_id)->where_in("result", array("1","3"))->count_all_results();
 		if($cnt > 0)
@@ -273,7 +273,8 @@ WHERE x.uid={$uid}";
     		'server_id' 	=> $server_id,
     		'ip'		 	=> $_SERVER['REMOTE_ADDR'],
     		'result'		=> '0',
-    		'note'			=> $note,
+    		'product_id'	=> $product_id,
+    		'verify_code'	=> $verify_code,
 			'country_code'  => $country_code,
 			'partner_order_id' => $partner_order_id,
     	);    	

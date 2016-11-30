@@ -380,20 +380,21 @@ class Trade extends MY_Controller {
 				
 				switch ($row->transaction_type) {
 					case "inapp_billing_google":
-						
+						// 呼叫遊戲入點機制
+						$this->load->library("game_api/{$server_info->game_id}");
+						$res = $this->{$server_info->game_id}->iap_transfer($transfer_order, $server_info, "google_play", $product_id, $amount, 'TWD');
+						$err_message = $this->{$server_info->game_id}->error_message;
 						break;
 					case "inapp_billing_ios":
-						
+						// 呼叫遊戲入點機制
+						$this->load->library("game_api/{$server_info->game_id}");
+						$res = $this->{$server_info->game_id}->iap_transfer($transfer_order, $server_info, "app_store", $product_id, $amount, 'TWD');
+						$err_message = $this->{$server_info->game_id}->error_message;
 						break;
 					case "mycard_billing":
 						
 						break;
 				}
-				
-				// 呼叫遊戲入點機制
-				$this->load->library("game_api/{$server_info->game_id}");
-				$res = $this->{$server_info->game_id}->iap_transfer($transfer_order, $server_info, "app_store", $product_id, $amount, 'TWD');
-				$err_message = $this->{$server_info->game_id}->error_message;
                 header("location:".current_url());
             }
 		}

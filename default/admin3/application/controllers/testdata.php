@@ -11,6 +11,30 @@ class Testdata extends CI_Controller {
 		echo "MUHUAHAA";
 	}
 	
+	function free_user_billing_note() 
+	{
+		ini_set("memory_limit","2048M");
+		ini_set('max_execution_time', 9999);
+		$this->lang->load('db_lang', 'zh-TW');
+		
+		$query = $this->db->get("user_billing");
+		
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+				if ($row->note) {
+					$note = explode("|", $row->note);
+					
+					$data = array(
+						'product_id'  => $note[0],
+						'verify_code' => $note[1]
+					);
+					
+					$this->db->where("id", $row->id)->update("user_billing", $data);
+				}
+			}
+		}
+	}
+	
 	function generate_logout_time()
 	{
 		ini_set('max_execution_time', 9999);

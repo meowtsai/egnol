@@ -1221,7 +1221,7 @@ class Api2 extends MY_Controller
 		
 		$this->load->library("g_wallet");
 
-		$order_id = $this->g_wallet->produce_iap_order($uid, "inapp_billing_ios", "1", $server_id, $partner_order_id, $product_id . "|" . $verify_code);
+		$order_id = $this->g_wallet->produce_iap_order($uid, "inapp_billing_ios", "1", $server_id, $partner_order_id, $product_id , $verify_code);
 		if(empty($order_id))
 			die(json_encode(array("result"=>0, "msg"=>$this->g_wallet->error_message)));
 		
@@ -1262,7 +1262,7 @@ class Api2 extends MY_Controller
 		if(empty($order))
 		{
 			// 訂單不存在, 建立新的
-			$order_id = $this->g_wallet->produce_iap_order($uid, "inapp_billing_ios", "1", $server_id, $partner_order_id, $product_id, $character_id);
+			$order_id = $this->g_wallet->produce_iap_order($uid, "inapp_billing_ios", "1", $server_id, $partner_order_id, $product_id, "", $character_id);
 			if(empty($order_id)) {
                 log_message("error", "ios_iap_start_1: ".$this->g_wallet->error_message);
 				die(json_encode(array("result"=>0, "msg"=>$this->g_wallet->error_message)));
@@ -1517,11 +1517,11 @@ class Api2 extends MY_Controller
 			die(json_encode(array("result"=>0, "msg"=>"Order status error.")));
 		}
 		
-		$vc = $product_id . "|" . $verify_code;
-
+		$vc = $product_id.'|'.$verify_code;
 		if($order->uid !== $uid ||
 			$order->server_id !== $server_id ||
-			$order->note !== $vc ||
+			($order->verify_code !== $verify_code && $order->note !== $vc) ||
+			$order->product_id !== $product_id ||
 			$order->partner_order_id !== $partner_order_id)
 		{
 			// 未通過資料核對, 關閉訂單
@@ -1656,7 +1656,7 @@ class Api2 extends MY_Controller
 		
 		$this->load->library("g_wallet");
 		
-		$order_id = $this->g_wallet->produce_iap_order($uid, "inapp_billing_google", "1", $server_id, $partner_order_id, $product_id . "|" . $verify_code);
+		$order_id = $this->g_wallet->produce_iap_order($uid, "inapp_billing_google", "1", $server_id, $partner_order_id, $product_id, $verify_code);
 		
 		if(empty($order_id))
 			die(json_encode(array("result"=>0, "msg"=>$this->g_wallet->error_message)));
@@ -1757,12 +1757,12 @@ class Api2 extends MY_Controller
 			
 			die(json_encode(array("result"=>0, "msg"=>"Order status error.")));
 		}
-		
-		$vc = $product_id . "|" . $verify_code;
 
+		$vc = $product_id.'|'.$verify_code;
 		if($order->uid !== $uid ||
 			$order->server_id !== $server_id ||
-			$order->note !== $vc ||
+			($order->verify_code !== $verify_code && $order->note !== $vc) ||
+			$order->product_id !== $product_id ||
 			$order->partner_order_id !== $partner_order_id)
 		{
 			// 未通過資料核對, 關閉訂單
@@ -1848,7 +1848,7 @@ class Api2 extends MY_Controller
 		
 		$this->load->library("g_wallet");
 		
-		$order_id = $this->g_wallet->produce_iap_order($uid, "inapp_billing_google", "1", $server_id, $partner_order_id, $product_id . "|" . $verify_code);
+		$order_id = $this->g_wallet->produce_iap_order($uid, "inapp_billing_google", "1", $server_id, $partner_order_id, $product_id, $verify_code);
 		
 		if(empty($order_id)) {
             log_message("error", "android_iap_start_1: ".$this->g_wallet->error_message);
@@ -2005,10 +2005,11 @@ class Api2 extends MY_Controller
 			die(json_encode(array("result"=>0, "msg"=>"Order status error.")));
 		}
 		
-		$vc = $product_id . "|" . $verify_code;
+		$vc = $product_id.'|'.$verify_code;
 		if($order->uid !== $uid ||
 			$order->server_id !== $server_id ||
-			$order->note !== $vc ||
+			($order->verify_code !== $verify_code && $order->note !== $vc) ||
+			$order->product_id !== $product_id ||
 			$order->partner_order_id !== $partner_order_id)
 		{
 			// 未通過資料核對, 關閉訂單
