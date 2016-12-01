@@ -39,7 +39,7 @@ class Ajax extends MY_Controller {
 		$this->load->model("g_games");
 		
 		$server = $this->DB2->from("servers")->where("server_id", $order->server_id)->get()->row() or die(json_failure("遊戲資訊不正確"));
-		$query = $this->db->from("games")->where("game_id", $server->game_id)->get();
+		$query = $this->DB2->from("games")->where("game_id", $server->game_id)->get();
 		$game = ( $query->num_rows() > 0 ? $query->row() : false) or die(json_failure("遊戲資訊不正確"));
 		if ($order->billing_type <> 2) {
             $transfer_order = $this->g_wallet->re_complete_order($order, $order->amount, $order->order_no);
