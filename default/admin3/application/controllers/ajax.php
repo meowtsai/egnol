@@ -65,16 +65,16 @@ class Ajax extends MY_Controller {
 		}		
 
 		if ($re === "1") {
-			$this->g_wallet->complete_order($order);
+			$this->g_wallet->complete_order($transfer_order);
 			die(json_success());
 		}
 		else if ($re === "-1") {			
-			$this->g_wallet->cancel_timeout_order($order);		
+			$this->g_wallet->cancel_timeout_order($transfer_order);		
 			die(json_failure("遊戲伺服器無回應"));			
 		}
 		else {
 			$error_message = $this->{$server->game_id}->error_message;
-			$this->g_wallet->cancel_order($order, $error_message);
+			$this->g_wallet->cancel_order($transfer_order, $error_message);
 			die(json_failure($error_message));	
 		}				
 	}

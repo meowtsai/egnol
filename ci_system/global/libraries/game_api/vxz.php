@@ -146,7 +146,7 @@ class Vxz extends Game_Api
 		}
 		else
 		{
-            return $this->_return_error("點數轉入錯誤：" . $res->msg);
+            return $this->_return_error("點數轉入錯誤：" . $res->msg . " => ".$str);
 		}
 	}
 	
