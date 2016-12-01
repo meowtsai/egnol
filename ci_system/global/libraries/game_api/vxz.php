@@ -141,7 +141,7 @@ class Vxz extends Game_Api
 		}
 
 		$transfer_result = (intval($res->code) == 200) ? 1 : 0;
-		$this->CI->db->where("id", $order_id)->update("user_billing", array("transfer_result" => $transfer_result, "transfer_message" => $res->msg));
+		$this->CI->db->where("id", $order_id)->update("user_billing", array("transfer_result" => $transfer_result, "transfer_message" => $res->msg, "transfer_time" => "now()"));
 		
 		if(intval($res->code) == 200)
 		{
