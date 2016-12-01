@@ -140,6 +140,9 @@ class Vxz extends Game_Api
 			log_message("error", "transfer:".json_encode($res));
 		}
 
+		$transfer_result = (intval($res->code) == 200) ? 1 : 0;
+		$this->CI->db->where("id", $order_id)->update("user_billing", array("transfer_result" => $transfer_result, "transfer_message" => $res->msg));
+		
 		if(intval($res->code) == 200)
 		{
 			return "1";
@@ -193,6 +196,9 @@ class Vxz extends Game_Api
 
 		log_message("error", "iap_transfer:".json_encode($res));
 
+		$transfer_result = (intval($res->code) == 200) ? 1 : 0;
+		$this->CI->db->where("id", $order_id)->update("user_billing", array("transfer_result" => $transfer_result, "transfer_message" => $res->msg));
+		
 		if(intval($res->code) == 200)
 		{
 			return "1";

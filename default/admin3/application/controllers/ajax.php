@@ -36,7 +36,6 @@ class Ajax extends MY_Controller {
 		$this->load->library("g_wallet");
 		$order = $this->g_wallet->get_order($order_id);
 		if (empty($order)) die(json_failure("交易不存在"));
-		$this->load->model("g_games");
 		
 		$server = $this->DB2->from("servers")->where("server_id", $order->server_id)->get()->row() or die(json_failure("遊戲資訊不正確"));
 		$query = $this->DB2->from("games")->where("game_id", $server->game_id)->get();
