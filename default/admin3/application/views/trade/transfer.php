@@ -125,6 +125,7 @@
 			<th style="width:35px;">金額</th>
 			<th style="width:80px;">遊戲伺服器</th>
 			<th style="width:40px;">結果</th>
+			<th style="width:40px;">呼叫入點</th>
 			<th style="width:80px;">訊息</th>			
 			<th style="width:80px;">第三方單號</th>
 			<th style="width:80px;">原廠單號</th>
@@ -159,9 +160,13 @@
 			<td><?=$row->amount?></td>
 			<td><?= $row->billing_type=='2' ? "({$row->game_abbr_name}){$row->server_name}" : "" ?></td>
 			<td><?=$result_table[$row->result]["name"]?>
+			<td><?=($row->transfer_result)?"成功":""?></td>
 			</td>
 			<td>
-				<div style="width:80px; overflow:hidden;" title="<?=htmlspecialchars($row->note)?>">
+				<div style="width:80px; overflow:scroll;" title="<?=htmlspecialchars($row->note)?>">
+					<? if($row->question_id):?>
+						<a href="<?=site_url("service/view/{$row->question_id}")?>">#<?=$row->question_id;?></a>
+					<? endif;?>
 					<?=htmlspecialchars($row->note)?>
 				</div>
 			</td>
