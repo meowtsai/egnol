@@ -41,6 +41,9 @@
     	<label for="note">備註</label>
    		<input type="text" id="note" name="note" style="width:600px" value="<?=$row->note?>">
    		
+    	<label for="note">客服單號</label>
+   		<input type="text" id="note" name="question_id" style="width:100px" value="<?=$row->question_id?>">
+		
    		<? if (in_array($row->result, array("0", "3", "4"))):?>
    		
    		<label for="result">設定結果</label>
@@ -57,9 +60,6 @@
    		</div>
 		  
 		<legend>補發轉點單</legend>
-		
-    	<label for="note">客服單號</label>
-   		<input type="text" id="note" name="question_id" style="width:100px" value="">
    				
    		<div class="form-actions">
    			<button type="button" class="btn json_post_alert" url="/ajax/resend_transfer/<?=$row->id?>" ><i class="icon-repeat"></i> 重送交易</button>
