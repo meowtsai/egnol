@@ -152,9 +152,9 @@ WHERE x.uid={$uid}";
     	$this->CI->db->where("id", $order->id)->update("user_billing", array("result" => "5"));
     }
 
-    function update_order_note($order, $note='')
+    function update_order_note($order, $note='', $question_id='')
     {
-    	$this->CI->db->where("id", $order->id)->update("user_billing", array("note" => $note));
+    	$this->CI->db->where("id", $order->id)->update("user_billing", array("note" => $note, "question_id" => $question_id));
 	}		
 	
     function update_order($order, $data) 
