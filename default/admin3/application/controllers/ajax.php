@@ -29,13 +29,11 @@ class Ajax extends MY_Controller {
 	
 	//補轉點數用
 	function resend_transfer($order_id)
-	{		
-		$question_id = $this->input->get_post("question_id");
-		if (empty($question_id)) die(json_failure("需填寫客服單號"));
-		
+	{				
 		$this->load->library("g_wallet");
 		$order = $this->g_wallet->get_order($order_id);
 		if (empty($order)) die(json_failure("交易不存在"));
+		if (empty($order->question_id)) die(json_failure("請先記錄客服單號"));
 		
 		$server = $this->DB2->from("servers")->where("server_id", $order->server_id)->get()->row() or die(json_failure("遊戲資訊不正確"));
 		$query = $this->DB2->from("games")->where("game_id", $server->game_id)->get();

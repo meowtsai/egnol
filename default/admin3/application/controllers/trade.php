@@ -347,7 +347,7 @@ class Trade extends MY_Controller {
 					break;
 			} 
 			
-			$this->g_wallet->update_order_note($row, $this->input->post("note"));
+			$this->g_wallet->update_order_note($row, $this->input->post("note"), $this->input->get_post("question_id"));
 			header("location:".current_url());
 		}
 		
