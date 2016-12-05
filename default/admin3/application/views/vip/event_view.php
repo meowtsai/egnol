@@ -266,8 +266,9 @@
                     <td></td>
                     <td>
 						<?if($vip_event->product_id):?>
-							<input type="hidden" name="cost" class="required" style="width:60px;" value="<?=$vip_event->cost?>">
-							<?=$vip_event->cost?>
+							<input type="hidden" name="cost" class="required" value="<?=$vip_event->cost?>">
+							<input type="hidden" name="product_id" class="required" value="<?=$vip_event->product_id?>">
+							<?=$vip_event->product_id?>
 						<?else:?>
 							<input type="text" name="cost" class="required" style="width:60px;" value="">
 						<?endif;?>

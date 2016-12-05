@@ -248,6 +248,9 @@ class Vip extends MY_Controller {
                     ->update("user_info", array("line" => $this->input->post("line")));
             }
             
+			$cost = ($this->input->post("cost"))?$this->input->post("cost"):0;
+			$product_id = ($this->input->post("product_id"))?$this->input->post("product_id"):"";
+			
             $data = array(
                 "uid" => $uid,
                 "vip_event_id" => $this->input->post("vip_event_id"),
@@ -255,6 +258,7 @@ class Vip extends MY_Controller {
                 "character_id" => $character_id,
                 "status" => $this->input->post("status"),
                 "cost" => $this->input->post("cost"),
+                "product_id" => $this->input->post("product_id"),
                 'admin_uid' => $_SESSION['admin_uid'],
             );
         }
