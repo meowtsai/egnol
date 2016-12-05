@@ -213,11 +213,10 @@ class Vip extends MY_Controller {
                 "billing_name" => $this->input->post("billing_name"),
                 "status" => 2,
             );
-        } elseif ($this->input->post("action") == '0') {
+        } elseif ($this->input->post("action") == 'cancelled') {
             $new_status = 0;
             $data = array(
                 "status" => 0,
-                "note" => $this->input->post("note"),
             );
         } elseif ($this->input->post("action") == '3') {
             $new_status = 3;
@@ -274,8 +273,8 @@ class Vip extends MY_Controller {
             $order = $this->g_wallet->get_order($user_billing->id);
             
             switch($this->input->post("action")) {
-                case '0':
-                    $this->g_wallet->cancel_order($order);
+                case 'cancelled':
+                    $this->g_wallet->cancel_order($order, $this->input->post("note"));
                     break;
                 case '2':
                     $this->g_wallet->complete_order($order);

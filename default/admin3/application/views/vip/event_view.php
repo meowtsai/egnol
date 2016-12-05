@@ -199,7 +199,7 @@
                     </form>  	
                     <form id="cancel_ticket_form" method="post" action="<?=site_url("vip/modify_ticket_json")?>" style="margin:0">
                         <input type="hidden" name="vip_event_id" value="<?=$vip_event->id?>">	
-                        <input type="hidden" name="action" value="0">	
+                        <input type="hidden" name="action" value="cancelled">	
                         <input type="hidden" name="ticket_id" value="<?=$row->id?>">	
                         <td> 
                             <input type="submit" class="btn btn-small btn-inverse" value="取消訂單">
@@ -214,7 +214,7 @@
                     </form>  	
                     <form id="cancel_ticket_form" method="post" action="<?=site_url("vip/modify_ticket_json")?>" style="margin:0">
                         <input type="hidden" name="vip_event_id" value="<?=$vip_event->id?>">	
-                        <input type="hidden" name="action" value="0">	
+                        <input type="hidden" name="action" value="cancelled">	
                         <input type="hidden" name="ticket_id" value="<?=$row->id?>">	
                         <td> 
                             <input type="submit" class="btn btn-small btn-inverse" value="取消訂單">
@@ -228,7 +228,7 @@
                     </form>  	
                     <form id="cancel_ticket_form" method="post" action="<?=site_url("vip/modify_ticket_json")?>" style="margin:0">
                         <input type="hidden" name="vip_event_id" value="<?=$vip_event->id?>">	
-                        <input type="hidden" name="action" value="0">	
+                        <input type="hidden" name="action" value="cancelled">	
                         <input type="hidden" name="ticket_id" value="<?=$row->id?>">	
                         <td>
                             <input type="submit" class="btn btn-small btn-inverse" value="取消訂單">
