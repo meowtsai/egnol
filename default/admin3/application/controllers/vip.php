@@ -399,8 +399,9 @@ class Vip extends MY_Controller {
 		$ticket_status = (null !== $this->input->get_post("ticket_status"))?$this->input->get_post("ticket_status"):1;
         
 		$vip_tickets = $this->DB2
-			->select("vt.*, au.name as admin_uname, ui.line, s.name as server_name, c.name as character_name, c.in_game_id as in_game_id")
+			->select("vt.*, au.name as admin_uname, ui.line, s.name as server_name, c.name as character_name, c.in_game_id as in_game_id, ub.note as note")
 			->from("vip_tickets vt")
+			->join("user_billing ub", "ub.vip_ticket_id=vt.id and ub.transaction_type='vip_billing'", "left")
 			->join("servers s", "s.server_id=vt.server_id", "left")
 			->join("characters c", "c.id=vt.character_id", "left")
 			->join("admin_users au", "au.uid=vt.admin_uid", "left")
