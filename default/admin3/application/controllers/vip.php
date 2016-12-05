@@ -281,7 +281,7 @@ class Vip extends MY_Controller {
                     $this->g_wallet->complete_order($order);
                     break;
                 case '3':
-                    $transfer_id = $this->g_wallet->produce_order($user_billing->uid, "top_up_account", "2", $user_billing->amount, $user_billing->server_id, "", $user_billing->character_id, "", $ticket_id);
+                    $transfer_id = $this->g_wallet->produce_order($user_billing->uid, "top_up_account", "2", $user_billing->amount, $user_billing->server_id, "", $user_billing->character_id, "", $ticket_id, $this->input->post("product_id"));
                     
                     $transfer_order = $this->g_wallet->get_order($transfer_id);
                     $this->g_wallet->complete_order($transfer_order);
