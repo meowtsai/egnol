@@ -274,7 +274,10 @@ class Vip extends MY_Controller {
             
             switch($this->input->post("action")) {
                 case 'cancelled':
+					$transfer_order = $this->DB2->where("vip_ticket_id", $ticket_id)->where("transaction_type", "top_up_account")->from("user_billing")->get()->row();
+					
                     $this->g_wallet->cancel_order($order, $this->input->post("note"));
+                    $this->g_wallet->cancel_order($transfer_order, $this->input->post("note"));
                     break;
                 case '2':
                     $this->g_wallet->complete_order($order);
