@@ -240,7 +240,7 @@ class Vip extends MY_Controller {
             
             $row = $character->result();
             $uid = $row[0]->uid;
-            $character_id = $row[0]->id;
+            $character_id = $row[0]->in_game_id;
             
             if ($this->input->post("line")) {
                 $this->DB1
