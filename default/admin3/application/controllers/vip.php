@@ -301,7 +301,7 @@ class Vip extends MY_Controller {
 				->insert("vip_tickets", $data);	
 			$ticket_id = $this->DB1->insert_id();		
             
-            $order_id = $this->g_wallet->produce_order($uid, "vip_billing", "1", $this->input->post("cost"), $this->input->post("server"), "", $character_id, "", $ticket_id);
+            $order_id = $this->g_wallet->produce_order($uid, "vip_billing", "1", $this->input->post("cost"), $this->input->post("server"), "", $character_id, "", $ticket_id, $this->input->post("product_id"));
 		}
 		
 		//die(json_message(array("redirect_url"=> base_url("vip/event_view/".$this->input->post("vip_event_id")), "ticket_status"=>($this->input->post("action"))?$this->input->post("action"):"1"), true));		

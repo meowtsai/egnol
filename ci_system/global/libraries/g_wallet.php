@@ -51,7 +51,7 @@ WHERE x.uid={$uid}";
     }
             
     //billing_type: 1購買,2轉點,3回補,4贈送
-    function produce_order($uid, $transaction_type, $billing_type, $amount, $pay_server_id='', $partner_order_id='', $character_id='', $order_no='', $vip_ticket_id='')
+    function produce_order($uid, $transaction_type, $billing_type, $amount, $pay_server_id='', $partner_order_id='', $character_id='', $order_no='', $vip_ticket_id='', $product_id='')
     {	
 /*  	if ($order_no) {
 	    	$cnt = $this->CI->db->from("user_billing")->where("order_no", $order_no)->where_in("result", array("1","3"))->count_all_results();
@@ -71,6 +71,7 @@ WHERE x.uid={$uid}";
     		'result'		=> '0',
     		'note'			=> '',
 			'country_code'  => $country_code,
+			'product_id'    => $product_id,
     	);    	
     	$partner_order_id && $user_billing_data["partner_order_id"] = $partner_order_id;
     	$character_id && $user_billing_data["character_id"] = $character_id;
