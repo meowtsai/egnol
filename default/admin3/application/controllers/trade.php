@@ -515,7 +515,7 @@ class Trade extends MY_Controller {
 							}
 						}
 						$mycard_trade_seq = empty($row->trade_code) ? $row->mycard_trade_seq : $row->trade_code;
-						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$trade_channel},\"{$row->trade_seq}\",{$mycard_trade_seq},{$row->mycard_card_id},".strtr($row->item_code, array("long_e"=>"")).",".($row->result=='1' ? '成功' : '失敗').",{$row->promo_code},{$row->note},{$row->partner_order_id},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
+						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$trade_channel},\"{$row->trade_seq}\",{$mycard_trade_seq},{$row->mycard_card_id},{$row->server_name},".strtr($row->item_code, array("long_e"=>"")).",".($row->result=='1' ? '成功' : '失敗').",{$row->promo_code},{$row->note},{$row->partner_order_id},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
 					}
 					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
 					exit();						
