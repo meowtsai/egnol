@@ -434,9 +434,10 @@ class Trade extends MY_Controller {
 			$this->input->get("result") && $this->DB2->where("mb.result", $this->input->get("result"));
 			
 			$this->DB2
-				->select("mb.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name")
+				->select("mb.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name, ub.partner_order_id")
 				->select("coalesce(trade_code, mycard_trade_seq) as mycard_key", false)
 				->from("mycard_billing mb")
+				->join("user_billing ub", "ub.mycard_billing_id=mb.id", "left")
 				->join("servers gi", "gi.server_id=mb.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
 				->join("users u", "u.uid=mb.uid", "left");
