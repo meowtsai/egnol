@@ -499,13 +499,19 @@ class Trade extends MY_Controller {
 					$content = "id,uid,euid,信箱,手機,交易管道,訂單號,Mycard訂單號,卡號,遊戲伺服器,金額,結果,活動代號,訊息,原廠單號,建立日期\n";
 					
 					foreach($query->result() as $row) {
+						
 						$trade_channel = '';
-						if ( ! empty ($row->mycard_key)) {
-							foreach ($mycard_channel as $key => $chnnel) {
-								if (strpos($row->mycard_key, $key) === 0) {
-									$trade_channel =  $chnnel;
+						if ( ! empty ($row->payment_type)) {
+							switch($row->payment_type) {
+								case "INGAME":
+									$trade_channel = "實體卡";
 									break;
-								}
+								case "COSTPOINT":
+									$trade_channel = "會員扣點";
+									break;
+								default:
+									$trade_channel = "小額付費";
+									break;
 							}
 						}
 						$mycard_trade_seq = empty($row->trade_code) ? $row->mycard_trade_seq : $row->trade_code;
