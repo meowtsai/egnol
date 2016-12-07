@@ -409,7 +409,7 @@ class Vip extends MY_Controller {
 			->join("servers s", "s.server_id=vt.server_id", "left")
 			->join("characters c", "c.id=vt.character_id", "left")
 			->join("admin_users au", "vt.admin_uid=au.uid", "left")
-			->join("auth_admin_users aau", "vt.admin_uid=aau.uid", "left")
+			->join("admin_users aau", "vt.auth_admin_uid=aau.uid", "left")
 			->join("users u", "u.uid=vt.uid", "left")
 			->join("user_info ui", "ui.uid=vt.uid", "left")
 			->where("vt.vip_event_id", $id)
