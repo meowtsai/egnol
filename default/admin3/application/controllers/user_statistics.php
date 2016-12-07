@@ -593,8 +593,10 @@ class User_statistics extends MY_Controller {
 			FROM user_billing
 				JOIN servers ON user_billing.server_id=servers.server_id
 			WHERE create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-				AND billing_type = 1
-				AND result = 1
+				AND billing_type = 2
+				AND result = 1 
+				AND servers.is_test_server=0 
+				".(($this->testaccounts)?" AND user_billing.uid NOT IN (".$this->testaccounts.") ":"")."
 			GROUP BY YEAR(create_time), {$date_group}(create_time)
 		    ORDER BY YEAR(create_time) DESC, {$date_group}(create_time) DESC
 		");
