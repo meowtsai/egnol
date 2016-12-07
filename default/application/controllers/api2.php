@@ -1284,9 +1284,27 @@ class Api2 extends MY_Controller
 		if($currency !== "TWD")
 		{
 			log_message("error", "ios_iap_start_1: User {$uid} using {$currency} for payment.");
-			$pos = strpos($product_id, "_");
-			if($pos !== false)
-				$amount = intval(substr($product_id, $pos + 1));
+            ///1206 取得商品台幣價格
+            
+            $product=$this->g_wallet->get_product_by_prodid($product_id);
+            if (empty($product))
+            {
+                //如果沒有設定該商品先fallback 用舊的方法解析
+                log_message("error", "ios_iap_start_1: No such product in database: {$product_id}");
+                $pos = strpos($product_id, "_");
+			     if($pos !== false)
+				    $amount = intval(substr($product_id, $pos + 1));
+            }
+            else
+            {
+                //取得db中設定的台幣價格
+                $amount=$product->price_in_twd;
+			
+            }
+            
+            
+            ///END 1206 取得商品台幣價格
+            
 		}
 		if(intval($order->result) == 0)
 		{
@@ -1954,18 +1972,32 @@ class Api2 extends MY_Controller
 		if($currency !== "TWD")
 		{
 			log_message("error", "android_verify_receipt: User {$uid} using {$currency} for payment.");
-			
-            //向 google 查詢SKU 取得正確台幣價格
-            $result =  $this->_get_google_inappproducts($packagename,$productid,$myToken);
+             ///1206 取得商品台幣價格
             
-            if (empty($result->packageName))
+            $product=$this->g_wallet->get_product_by_prodid($product_id);
+            if (empty($product))
             {
-                log_message("error", "android_verify_receipt_1: unable to retrieve SKU detail".$result->error->code .$result->error->message );
-                die(json_encode(array("result"=>0, "msg"=>"failure to retrieve SKU data from Google.")));
-            }
+                log_message("error", "android_verify_receipt_1: No such product in database: {$product_id}");
+                //die(json_encode(array("result"=>0, "msg"=>"No such product {$product_id}")));
+                //在DB中找不到這個產品時fallback 向 google 查詢SKU 取得正確台幣價格
+                    $result =  $this->_get_google_inappproducts($packagename,$productid,$myToken);
 
-            //echo ("{$result->packageName}的產品{$result->sku}的價錢是".$result->defaultPrice->priceMicros/1000000);    
-            $amount=$result->defaultPrice->priceMicros/1000000;
+                    if (empty($result->packageName))
+                    {
+                        log_message("error", "android_verify_receipt_1: unable to retrieve SKU detail".$result->error->code .$result->error->message );
+                        die(json_encode(array("result"=>0, "msg"=>"failure to retrieve SKU data from Google.")));
+                    }
+
+                    //echo ("{$result->packageName}的產品{$result->sku}的價錢是".$result->defaultPrice->priceMicros/1000000);    
+                    $amount=$result->defaultPrice->priceMicros/1000000;
+            }
+            else
+            {
+                $amount=$product->price_in_twd;
+            }
+            ///END 1206 取得商品台幣價格
+			
+            
 		}
 		/*
 		$check_dup = $this->db->from("user_billing")->where("order_no", $transaction_id)->get()->row();
