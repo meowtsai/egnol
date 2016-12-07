@@ -153,7 +153,8 @@
                 <th>遊戲ID</th>
                 <th>LINE</th>
                 <th>訂購時間</th>
-                <th>處理人</th>
+                <th>建單人</th>
+                <th>派發人</th>
                 <th>交易金額</th>
                 <th>匯款時間</th>
                 <th>匯款帳號</th>
@@ -177,6 +178,7 @@
                     <td><?=$row->line?></td>
                     <td><?=$row->create_time?></td>
                     <td><?=$row->admin_uname?></td>
+                    <td><?=$row->auth_admin_uname?></td>
                     <td><?=$row->cost?></td>
                     <? if ($this->input->get("ticket_status")!=='0' && (!$this->input->get("ticket_status") || $this->input->get("ticket_status")==1)): ?>
                         <td><input type="text" name="billing_time" class="date required" value="" style="width:120px"></td>
