@@ -577,28 +577,28 @@ class User_statistics extends MY_Controller {
 		
 		$query = $this->DB2->query("
 			SELECT
-				YEAR(create_time) 'year',
-				{$date_group}(create_time) 'date',
-				SUM(amount) 'sum',
-				SUM(CASE WHEN transaction_type='inapp_billing_ios' THEN amount ELSE 0 END) 'ios_sum',
-				SUM(CASE WHEN transaction_type='inapp_billing_google' THEN amount ELSE 0 END) 'android_sum',
-				SUM(CASE WHEN transaction_type='gash_billing' THEN amount ELSE 0 END) 'gash_sum',
-				SUM(CASE WHEN transaction_type not in ('inapp_billing_ios','inapp_billing_google','gash_billing') THEN amount ELSE 0 END) 'other_billing_sum',
-				SUM(CASE WHEN country_code='TWN' THEN amount ELSE 0 END) 'twn_sum',
-				SUM(CASE WHEN country_code='HKG' THEN amount ELSE 0 END) 'hkg_sum',
-				SUM(CASE WHEN country_code='MAC' THEN amount ELSE 0 END) 'mac_sum',
-				SUM(CASE WHEN country_code='SGP' THEN amount ELSE 0 END) 'sgp_sum',
-				SUM(CASE WHEN country_code='MYS' THEN amount ELSE 0 END) 'mys_sum',
-				SUM(CASE WHEN country_code not in ('TWN','HKG','MAC','SGP','MYS') THEN amount ELSE 0 END) 'other_country_sum'
-			FROM user_billing
-				JOIN servers ON user_billing.server_id=servers.server_id
-			WHERE create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
-				AND billing_type = 2
-				AND result = 1 
-				AND servers.is_test_server=0 
-				".(($this->testaccounts)?" AND user_billing.uid NOT IN (".$this->testaccounts.") ":"")."
-			GROUP BY YEAR(create_time), {$date_group}(create_time)
-		    ORDER BY YEAR(create_time) DESC, {$date_group}(create_time) DESC
+				YEAR(ub.create_time) 'year',
+				{$date_group}(ub.create_time) 'date',
+				SUM(ub.amount) 'sum',
+				SUM(CASE WHEN ub.transaction_type='inapp_billing_ios' THEN amount ELSE 0 END) 'ios_sum',
+				SUM(CASE WHEN ub.transaction_type='inapp_billing_google' THEN amount ELSE 0 END) 'android_sum',
+				SUM(CASE WHEN ub.transaction_type='gash_billing' THEN amount ELSE 0 END) 'gash_sum',
+				SUM(CASE WHEN ub.transaction_type not in ('inapp_billing_ios','inapp_billing_google','gash_billing') THEN amount ELSE 0 END) 'other_billing_sum',
+				SUM(CASE WHEN ub.country_code='TWN' THEN ub.amount ELSE 0 END) 'twn_sum',
+				SUM(CASE WHEN ub.country_code='HKG' THEN ub.amount ELSE 0 END) 'hkg_sum',
+				SUM(CASE WHEN ub.country_code='MAC' THEN ub.amount ELSE 0 END) 'mac_sum',
+				SUM(CASE WHEN ub.country_code='SGP' THEN ub.amount ELSE 0 END) 'sgp_sum',
+				SUM(CASE WHEN ub.country_code='MYS' THEN ub.amount ELSE 0 END) 'mys_sum',
+				SUM(CASE WHEN ub.country_code not in ('TWN','HKG','MAC','SGP','MYS') THEN ub.amount ELSE 0 END) 'other_country_sum'
+			FROM user_billing ub
+				JOIN servers s ON ub.server_id=s.server_id
+			WHERE ub.create_time BETWEEN DATE('{$start_date}') AND DATE('{$end_date}')
+				AND ub.billing_type = 1
+				AND ub.result = 1 
+				AND s.is_test_server=0 
+				".(($this->testaccounts)?" AND ub.uid NOT IN (".$this->testaccounts.") ":"")."
+			GROUP BY YEAR(ub.create_time), {$date_group}(ub.create_time)
+		    ORDER BY YEAR(ub.create_time) DESC, {$date_group}(ub.create_time) DESC
 		");
         
 		$this->load->library('jpgraph');
