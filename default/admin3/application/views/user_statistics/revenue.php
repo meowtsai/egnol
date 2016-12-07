@@ -43,7 +43,7 @@
         <input type="submit" class="btn btn-small <?=($this->input->get("action")=='總儲點' || $this->input->get("action")=='營收統計')?'btn-inverse':''?>" name="action" value="總儲點">
         <input type="submit" class="btn btn-small <?=($this->input->get("action")=='iOS')?'btn-inverse':''?>" name="action" value="iOS">
         <input type="submit" class="btn btn-small <?=($this->input->get("action")=='Android')?'btn-inverse':''?>" name="action" value="Android">
-        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='GASH')?'btn-inverse':''?>" name="action" value="GASH">
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='MyCard')?'btn-inverse':''?>" name="action" value="GASH">
         <input type="submit" class="btn btn-small <?=($this->input->get("action")=='其他儲點')?'btn-inverse':''?>" name="action" value="其他儲點">
     </div>
     <div>&nbsp;</div>
@@ -55,7 +55,7 @@
 				<th style="width:70px">總儲點</th>
 				<th style="width:70px">iOS</th>
 				<th style="width:70px">Android</th>
-				<th style="width:70px">GASH</th>
+				<th style="width:70px">MyCard</th>
 				<th style="width:70px">其他儲點</th>
 				<th style="width:70px">儲值地區-台灣</th>
 				<th style="width:70px">儲值地區-香港</th>
@@ -101,7 +101,7 @@
 				<td style="text-align:right"><?=number_format($row->sum)?></td>
 				<td style="text-align:right"><?=number_format($row->ios_sum)?></td>
 				<td style="text-align:right"><?=number_format($row->android_sum)?></td>
-				<td style="text-align:right"><?=number_format($row->gash_sum)?></td>
+				<td style="text-align:right"><?=number_format($row->mycard_sum)?></td>
 				<td style="text-align:right"><?=number_format($row->other_billing_sum)?></td>
 				<td style="text-align:right"><?=number_format($row->twn_sum)?></td>
 				<td style="text-align:right"><?=number_format($row->hkg_sum)?></td>
