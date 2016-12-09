@@ -78,6 +78,7 @@
 			<th style="width:70px;">uid
 				<div style="color:#777;">euid</div></th>	
 			<th style="width:70px;">龍邑單號</th>
+			<th style="width:70px;">轉點單號</th>
 			<th style="width:100px;">VIP訂單編號</th>	
 			<th style="width:80px;">遊戲伺服器</th>					
 			<th style="width:35px;">金額</th>
@@ -108,6 +109,7 @@
 				<div style="color:#777;"><?=$this->g_user->encode($row->uid)?></div>
 			</td>
 			<td><?=$row->ubid?></td>
+			<td><?=$row->ubtid?></td>
 			<td><a href="<?=site_url("vip/event_view/{$row->vip_event_id}?ticket_status={$row->status}#tickets")?>"><?=$row->id?></a></td>
 			<td><?= "({$row->game_abbr_name}){$row->server_name}" ?></td>
 			<td><?=$row->cost?></td>

@@ -100,7 +100,7 @@ class Trade extends MY_Controller {
 					->join("games g", "g.game_id=gi.game_id", "left")
 					->join("users u", "u.uid=ub.uid", "left");
             
-            $this->DB2->where("ub.transaction_type !=", "vip_billing");
+            //$this->DB2->where("ub.transaction_type !=", "vip_billing");
 									
 			if ($this->input->get("start_date")) {
 				$start_date = $this->DB2->escape($this->input->get("start_date"));
@@ -1020,11 +1020,12 @@ class Trade extends MY_Controller {
 			$this->DB2->start_cache();
             
 			$this->DB2
-				->select("vt.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name, ub.id ubid")
+				->select("vt.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name, ub.id ubid, ubt.id ubtid")
 				->from("vip_tickets vt")
 				->join("servers gi", "gi.server_id=vt.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
 				->join("user_billing ub", "ub.vip_ticket_id=vt.id", "left")
+				->join("user_billing ubt", "ubt.vip_ticket_id=vt.id and ubt.transaction_type='top_up_account'", "left")
 				->join("users u", "u.uid=vt.uid", "left");		
             $this->DB2->where("ub.transaction_type", "vip_billing");
 			
