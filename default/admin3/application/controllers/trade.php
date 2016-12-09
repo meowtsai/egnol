@@ -1030,6 +1030,7 @@ class Trade extends MY_Controller {
             $this->DB2->where("ub.transaction_type", "vip_billing");
 			
 			$this->input->get("vip_ticket_id") && $this->DB2->where("vt.id", $this->input->get("vip_ticket_id"));
+			$this->input->get("transfer_id") && $this->DB2->where("ubt.id", $this->input->get("transfer_id"));
 			$this->input->get("uid") && $this->DB2->where("vt.uid", $this->input->get("uid"));
 			$this->input->get("euid") && $this->DB2->where("vt.uid", $this->g_user->decode($this->input->get("euid")));			
 			if ($this->input->get("account")) {

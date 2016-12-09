@@ -43,6 +43,7 @@
 	<div class="control-group">
 		
 		<input type="text" name="id" value="<?=$this->input->get("id")?>" class="input-small" placeholder="#id">
+		<input type="text" name="transfer_id" value="<?=$this->input->get("transfer_id")?>" class="input-small" placeholder="轉點單號#id">
 		<input type="text" name="uid" value="<?=$this->input->get("uid")?>" class="input-small" placeholder="uid">		
 		<input type="text" name="euid" value="<?=$this->input->get("euid")?>" class="input-small" placeholder="euid">
 		<input type="text" name="account" value="<?=$this->input->get("account")?>" class="input-medium" placeholder="帳號">			
