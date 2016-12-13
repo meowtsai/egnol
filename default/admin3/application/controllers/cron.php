@@ -58,6 +58,9 @@ class Cron extends CI_Controller {
 
 		        if ($query2->num_rows() > 0) {
 					
+					$this->DB1->where("date", $date)->where("game_id", $row->game_id)->delete($save_table1);
+					$this->DB1->where("date", $date)->where("game_id", $row->game_id)->delete($save_table2);
+					
 			        $data = array(
 			            'game_id' => $row->game_id,
 			            'date' => $date
@@ -1540,7 +1543,7 @@ class Cron extends CI_Controller {
 		
 		if ($statistics->num_rows() > 0) {
             echo "[update]";
-        if ($save_table=='marketing_statistics') $this->DB1->where("platform", $data['platform'])->where("country_code", $data['country_code'])->where("media", $data['media']);
+        	if ($save_table=='marketing_statistics') $this->DB1->where("platform", $data['platform'])->where("country_code", $data['country_code'])->where("media", $data['media']);
 			$this->DB1->where("game_id", $data['game_id'])->where("date", $data['date'])->update($save_table, $data);
 		} else {
             echo "[insert]";
@@ -1605,8 +1608,8 @@ class Cron extends CI_Controller {
         
 		if ("7"==date("N", strtotime($check_date))) {
             
-            $this->generate_device_statistics($date, 'weekly');
             $this->generate_statistics_blank($date, 'weekly');
+            $this->generate_device_statistics($date, 'weekly');
 			$this->generate_login_statistics($date, 'weekly');
 			$this->generate_return_statistics($date, 1, 'weekly');
             $this->generate_new_user_billing_statistics($date, 'weekly');
@@ -1618,8 +1621,8 @@ class Cron extends CI_Controller {
 		
 		if ($date==date("Y-m-t", strtotime($check_date))) {
             
-            $this->generate_device_statistics($date, 'monthly');
 		    $this->generate_statistics_blank($date, 'monthly');
+            $this->generate_device_statistics($date, 'monthly');
 			$this->generate_login_statistics($date, 'monthly');
 			$this->generate_return_statistics($date, 1, 'monthly');
             $this->generate_new_user_billing_statistics($date, 'monthly');

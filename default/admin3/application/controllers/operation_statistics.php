@@ -213,7 +213,7 @@ class Operation_statistics extends MY_Controller {
 		    (SELECT 
 		        YEARWEEK((stc.date),3) 'date',
 			    stc.game_id 'game_id',
-			    SUM(stc.login_count) 'login_count',
+			    SUM(stc3.login_count) 'login_count',
 			    SUM(stc.new_login_count) 'new_login_count',
 			    SUM(stc2.login_count) 'y_login_count',
 			    SUM(stc2.new_login_count) 'y_new_login_count',
@@ -225,10 +225,10 @@ class Operation_statistics extends MY_Controller {
 		    FROM user_statistics stc
 		    LEFT JOIN user_statistics stc2 ON stc.game_id=stc2.game_id 
 				AND stc.date=DATE_ADD(stc2.date, interval 1 week)
-			LEFT JOIN weekly_user_statistics stc3 ON stc3.game_id=stc2.game_id 
-				AND stc3.date=stc2.date
-			LEFT JOIN weekly_operation_statistics stc4 ON stc4.game_id=stc2.game_id 
-				AND stc4.date=stc2.date
+			LEFT JOIN weekly_user_statistics stc3 ON stc3.game_id=stc.game_id 
+				AND stc3.date=stc.date
+			LEFT JOIN weekly_operation_statistics stc4 ON stc4.game_id=stc.game_id 
+				AND stc4.date=stc.date
 		    WHERE 
 				stc.date BETWEEN '{$start_date}' AND '{$end_date}'
 					AND stc.game_id = '{$game_id}'
@@ -239,7 +239,7 @@ class Operation_statistics extends MY_Controller {
 		    (SELECT 
 		        YEARWEEK((stc.date),3) 'date',
 			    stc.game_id 'game_id',
-			    SUM(stc.login_count) 'login_count',
+			    SUM(stc3.login_count) 'login_count',
 			    SUM(stc.new_login_count) 'new_login_count',
 			    SUM(stc2.login_count) 'y_login_count',
 			    SUM(stc2.new_login_count) 'y_new_login_count',
@@ -251,10 +251,10 @@ class Operation_statistics extends MY_Controller {
 		    FROM statistics stc
 		    RIGHT JOIN statistics stc2 ON stc.game_id=stc2.game_id 
 				AND stc.date=DATE_ADD(stc2.date, interval 1 week)
-			LEFT JOIN weekly_statistics stc3 ON stc3.game_id=stc2.game_id 
-				AND stc3.date=stc2.date
-			LEFT JOIN weekly_operation_statistics stc4 ON stc4.game_id=stc2.game_id 
-				AND stc4.date=stc2.date
+			LEFT JOIN weekly_statistics stc3 ON stc3.game_id=stc.game_id 
+				AND stc3.date=stc.date
+			LEFT JOIN weekly_operation_statistics stc4 ON stc4.game_id=stc.game_id 
+				AND stc4.date=stc.date
 		    WHERE 
 				stc.date BETWEEN '{$start_date}' AND '{$end_date}'
 					AND stc.game_id = '{$game_id}'
