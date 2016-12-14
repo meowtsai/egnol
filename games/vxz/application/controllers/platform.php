@@ -63,7 +63,7 @@ ga('stmTracker.send', 'pageview');
 		if($tab == "tab1")
 		{
 			// APK 下載
-			echo "<script>window.top.location.href='http://cdn.longeplay.com.tw/vxz/apk/LongE_VXZ.APK'</script>";
+			echo "<script>window.top.location.href='http://cdn.longeplay.com.tw/vxz/apk/LongE_VXZ.apk'</script>";
 		}
 		else if($tab == "tab2")
 		{
