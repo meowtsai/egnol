@@ -207,7 +207,7 @@
 						<th>E-MAIL</th><td><input type="text" maxlength="50" name="email" value="<?=$data->email?>" class="required email" size="33"></td>
 					</tr>
 					<tr>
-						<th>手機號碼</th><td><input type="text" maxlength="10" name="mobile" value="<?=$data->mobile?>" class="mobile isMobile" size="33"></td>
+						<th>手機號碼</th><td><input type="text" maxlength="11" name="mobile" value="<?=$data->mobile?>" class="mobile isMobile" size="33"></td>
 					</tr>
 				</table>
 
