@@ -119,6 +119,7 @@
                     }
 	            } else {
 		            if ($question->email) echo $question->email;
+                    echo "<br />";
 		            echo $question->mobile;
 	            }
 				?>
