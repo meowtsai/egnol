@@ -23,7 +23,7 @@
 <https://itunes.apple.com/tw/app/xiao-li-fei-dao/id1014250315?l=zh&ls=1&mt=8
 &ls=1&mt=8">APPSTORE</a>
         <a class="google" href="https://play.google.com/store/apps/details?id=com.longe.NetEase.VXZ">GOOGLEPLAY</a>
-        <a class="apk" href="http://cdn.longeplay.com.tw/vxz/apk/LongE_VXZ.apk">APK</a>
+        <a class="apk" href="https://cdn.longeplay.com.tw/vxz/apk/LongE_VXZ.apk">APK</a>
     </div>
 </div>
 
@@ -50,7 +50,7 @@
 <https://itunes.apple.com/tw/app/xiao-li-fei-dao/id1014250315?l=zh&ls=1&mt=8
 &ls=1&mt=8" class="btn_IOS01" title="IOS"><img src="<?=base_url()?>p/img/mobile/APPSTORE.png"></a>
             <a href="https://play.google.com/store/apps/details?id=com.longe.NetEase.VXZ" class="btn_Android01" title="Android"><img src="<?=base_url()?>p/img/mobile/GOOGLEPLAY.png"></a>
-            <a href="http://cdn.longeplay.com.tw/vxz/apk/LongE_VXZ.apk" class="btn_APK01" title="APK"><img src="<?=base_url()?>p/img/mobile/APK.png"></a>
+            <a href="https://cdn.longeplay.com.tw/vxz/apk/LongE_VXZ.apk" class="btn_APK01" title="APK"><img src="<?=base_url()?>p/img/mobile/APK.png"></a>
         </div>
     </div>
 
@@ -165,7 +165,7 @@
 <https://itunes.apple.com/tw/app/xiao-li-fei-dao/id1014250315?l=zh&ls=1&mt=8
 &ls=1&mt=8" class="btn_IOS02"><img src="<?=base_url()?>p/img/mobile/APPSTORE.png"></a>
             <a href="https://play.google.com/store/apps/details?id=com.longe.NetEase.VXZ" class="btn_Android02" title="Android"><img src="<?=base_url()?>p/img/mobile/GOOGLEPLAY.png"></a>
-            <a href="http://cdn.longeplay.com.tw/vxz/apk/LongE_VXZ.apk" class="btn_APK02"><img src="<?=base_url()?>p/img/mobile/APK.png"></a>
+            <a href="https://cdn.longeplay.com.tw/vxz/apk/LongE_VXZ.apk" class="btn_APK02"><img src="<?=base_url()?>p/img/mobile/APK.png"></a>
         </div>
     </div>
 
