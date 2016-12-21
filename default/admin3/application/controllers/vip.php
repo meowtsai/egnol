@@ -289,12 +289,13 @@ class Vip extends MY_Controller {
                     $transfer_order = $this->g_wallet->get_order($transfer_id);
                     $this->g_wallet->complete_order($transfer_order);
 					
-					
-					$server = $this->DB2->from("servers")->where("server_id", $user_billing->server_id)->get()->row();
-					$this->load->library("game_api/{$server->game_id}");
-					
-					$game = $this->DB2->from("games")->where("game_id", $server->game_id)->get()->row();
-					$res = $this->{$server->game_id}->transfer($user_billing->server_id, $transfer_order, $user_billing->amount, $game->exchange_rate, $this->input->post("product_id"));
+					if ($this->input->post("product_id")) {
+						$server = $this->DB2->from("servers")->where("server_id", $user_billing->server_id)->get()->row();
+						$this->load->library("game_api/{$server->game_id}");
+
+						$game = $this->DB2->from("games")->where("game_id", $server->game_id)->get()->row();
+						$res = $this->{$server->game_id}->transfer($user_billing->server_id, $transfer_order, $user_billing->amount, $game->exchange_rate, $this->input->post("product_id"));
+					}
                     break;
             }
 		} else {
