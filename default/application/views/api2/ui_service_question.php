@@ -73,14 +73,20 @@
 						<td style="white-space:pre-wrap;">圖檔可接受格式：jpg、png、gif、bmp<br/>最大尺寸 6144x6144 畫素，容量最大 6MB。</td>
 					</tr>
 					*/ ?>
+                    
+                    <tr>
+						<th></th>
+                        <td>
+                            <div class="login-button">
+                                <p>
+                                    <input name="doSubmit" type="submit" id="doSubmit" value="" style="display:none;" />
+                                    <img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-back-btn1.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')" />&nbsp;
+                                    <img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-back-btn2.png" class="button_submit" onclick="javascript:history.back();" />
+                                </p>
+                            </div>
+                        </td>
+					</tr>
 				</table>
-				<div class="login-button">
-					<p>
-						<input name="doSubmit" type="submit" id="doSubmit" value="" style="display:none;" />
-                        <img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-back-btn1.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')" />&nbsp;
-						<img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-back-btn2.png" class="button_submit" onclick="javascript:history.back();" />
-					</p>
-				</div>
 			</div>
 		</form>
 	</div>

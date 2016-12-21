@@ -31,9 +31,9 @@ body {
     -ms-flex-align: center;
     align-items: center;
     display: -webkit-box;
-    display: -webkit-flex;
+    /*display: -webkit-flex;
     display: -ms-flexbox;
-    display: flex;
+    display: flex;*/
     -webkit-box-orient: horizontal;
     -webkit-box-direction: normal;
     -webkit-flex-direction: row;
@@ -190,7 +190,8 @@ ul,li{
 	display:block;
 }
 /*---------------*/
-@media all and (orientation : landscape){ 
+/*@media all and (orientation : landscape){ */
+@media (min-width:400px) and (orientation : landscape){ 
 h1{
 	line-height: 22px;
 	font-size: 24px;
