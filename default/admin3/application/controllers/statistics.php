@@ -2020,6 +2020,42 @@ class Statistics extends MY_Controller {
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
 	}
+    function user_count_by_country()
+	{			
+		$this->_init_statistics_layout();			
+		$this->load->helper("output_table");
+		
+		$this->zacl->check("game_statistics", "read");
+		
+		//$span = $this->input->get("span");
+		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
+		$end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
+		if (empty($this->input->get("start_date")) && empty($this->input->get("end_date"))) {
+			$start_date = date("Y-m-d",strtotime("-8 days"));
+			$end_date = date("Y-m-d",strtotime("-1 days"));
+		} 
+		$game_id = $this->input->get("game_id");
+    
+        $query = $this->DB2->query("
+             select b.country, count(distinct a.uid) as login_count
+             from log_game_logins a inner join user_info b 
+             on a.uid=b.uid 
+             WHERE a.game_id = '{$game_id}'
+             AND a.create_time BETWEEN '{$start_date}' AND '{$end_date}'
+             group by b.country order by 2 desc;
+        ");
+		
+		$this->g_layout
+			->set("query", isset($query) ? $query : false)
+			->set("game_id", $game_id)
+			->set("start_date", $start_date)
+			->set("end_date", $end_date)
+			//->set("span", $span)
+			->set("servers", $this->DB2->where("game_id", $this->game_id)->from("servers")->order_by("server_id")->get())
+			->add_js_include("game/statistics")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
 }
 
 /* End of file search.php */
