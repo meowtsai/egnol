@@ -1971,7 +1971,8 @@ class Cron extends CI_Controller {
         if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
         $resultString="";
         //找出user_info 中國家欄位是空的
-        $query = $this->DB1->from("user_info")->where("country",NULL)->order_by("id desc")->limit(10, 20)->get();
+        $query = $this->DB1->from("user_info")->where("country",NULL)->order_by("id desc")->limit(300, 20)->get();
+        var $tmpCount=0;
 
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
@@ -1984,13 +1985,15 @@ class Cron extends CI_Controller {
                     if (!empty($user_countryCode))
                     {
                     $this->DB1->where("uid", $row->uid)->update("user_info", array("country" =>$user_countryCode ));
+                    $tmpCount++;
                     
-                    echo "Update_Country_by_ip :" .$row->uid." to ".$user_countryCode;
                     }
 
                 }
             }
         }
+        
+        echo "Update_Country_by_ip DONE, Total records updated: ".$tmpCount ;
 
     }
 
