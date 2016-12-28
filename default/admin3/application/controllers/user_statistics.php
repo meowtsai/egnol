@@ -1198,9 +1198,9 @@ class User_statistics extends MY_Controller {
         FROM
         (SELECT distinct Date_format(create_time,'%Y-%m-%d') AS create_time,uid 
         FROM log_game_logins 
-        WHERE game_id='{$game_id}' and create_time BETWEEN '{$start_date}' AND '{$end_date}) a 
+        WHERE game_id='{$game_id}' and create_time BETWEEN '{$start_date}' AND '{$end_date} 23:59:59') a 
         INNER JOIN user_info b on a.uid=b.uid ) tmp
-        GROUP BY country";
+        GROUP BY country order by 2 desc";
         
         $query = $this->DB2->query($qString);
 		
