@@ -75,17 +75,18 @@
 	</div>
 		
 </form>
-<?=$qString?>
+
 <?
     if ($query):?>
 	<? if ($query->num_rows() == 0): echo '<div class="none">查無資料</div>'; else: ?>
+<?$fields = $query->field_data();?>
+
 
 
 
 	<table class="table table-striped table-bordered" style="width:auto;">
 		<thead>
 			<tr>
-				<th>國家</th>
                 <?foreach ($query->list_fields() as $field):?>
 				<th><?=$field?></th>
 				<? endforeach;?>
@@ -93,13 +94,16 @@
 		</thead>
 		<tbody>
 		<? $color = array('00aa00', '448800', '776600', 'aa4400', 'dd2200', 'ff0000');
-			foreach($query->result() as $row):
+            foreach ($query->result_array() as $row):
 		?>  
-			<tr>			
-				<td nowrap="nowrap"><?=$row->country?></td>
-                <?foreach ($query->list_fields() as $field):?>
-                <td style="text-align:right"><?=$row[$field]?></td>
-				<? endforeach;?>
+			<tr>	
+                <?foreach ($fields as $field):
+                $colname=$field->name;
+                ?>
+                <td style="text-align:right"><?=$row[$colname]?></td>
+                <? endforeach;?>
+                
+				
 				
 								
 			</tr>

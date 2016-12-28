@@ -1191,7 +1191,7 @@ class User_statistics extends MY_Controller {
             
         } 
         
-        $qString ="SELECT country,
+        $qString ="SELECT country as '國家',
         {$tmQuery}
         FROM
         (SELECT a.create_time,a.uid,b.country
