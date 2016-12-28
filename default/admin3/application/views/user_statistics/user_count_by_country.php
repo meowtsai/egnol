@@ -79,7 +79,7 @@
 <?
     if ($query):?>
 	<? if ($query->num_rows() == 0): echo '<div class="none">查無資料</div>'; else: ?>
-<?$fields = $query->field_data();?>
+<?$fields = $query->list_fields();?>
 
 
 
@@ -87,10 +87,8 @@
 	<table class="table table-striped table-bordered" style="width:auto;">
 		<thead>
 			<tr>
-                <?foreach ($fields as $field):
-                $colname=$field->name;
-                ?>
-				<th><?=$colname?></th>
+                <?foreach ($fields as $field):?>
+				<th><?=$field?></th>
 				<? endforeach;?>
 			</tr>
 		</thead>
@@ -99,10 +97,10 @@
             foreach ($query->result_array() as $row):
 		?>  
 			<tr>	
-                <?foreach ($fields as $field):
-                $colname=$field->name;
-                ?>
-                <td style="text-align:right"><?=$row[$colname]?></td>
+                <?foreach ($fields as $field):?>
+                
+                
+                <td style="text-align:right"><?=$row[$field]?></td>
                 <? endforeach;?>
                 
 				
