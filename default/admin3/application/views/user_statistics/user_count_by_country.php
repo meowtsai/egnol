@@ -87,8 +87,10 @@
 	<table class="table table-striped table-bordered" style="width:auto;">
 		<thead>
 			<tr>
-                <?foreach ($query->list_fields() as $field):?>
-				<th><?=$field?></th>
+                <?foreach ($fields as $field):
+                $colname=$field->name;
+                ?>
+				<th><?=$colname?></th>
 				<? endforeach;?>
 			</tr>
 		</thead>
