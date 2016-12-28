@@ -79,15 +79,16 @@
 <?
     if ($query):?>
 	<? if ($query->num_rows() == 0): echo '<div class="none">查無資料</div>'; else: ?>
-    <?$field_array = $query->fetch_fields();		
-printf($field_array);
-    ?>
+
+
+
 	<table class="table table-striped table-bordered" style="width:auto;">
 		<thead>
 			<tr>
 				<th>國家</th>
-				<th>登入用戶數</th>
-				
+                <?foreach ($query->list_fields() as $field)?>
+				<th><?=$field?></th>
+				<? endforeach;?>
 			</tr>
 		</thead>
 		<tbody>
@@ -96,7 +97,10 @@ printf($field_array);
 		?>  
 			<tr>			
 				<td nowrap="nowrap"><?=$row->country?></td>
-				<td style="text-align:right"></td>
+                <?foreach ($query->list_fields() as $field)?>
+                <td style="text-align:right"><?=$row[$field]?></td>
+				<? endforeach;?>
+				
 								
 			</tr>
 		<? endforeach;?>
