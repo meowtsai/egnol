@@ -86,7 +86,7 @@
 		<thead>
 			<tr>
 				<th>國家</th>
-                <?foreach ($query->list_fields() as $field)?>
+                <?foreach ($query->list_fields() as $field):?>
 				<th><?=$field?></th>
 				<? endforeach;?>
 			</tr>
@@ -97,7 +97,7 @@
 		?>  
 			<tr>			
 				<td nowrap="nowrap"><?=$row->country?></td>
-                <?foreach ($query->list_fields() as $field)?>
+                <?foreach ($query->list_fields() as $field):?>
                 <td style="text-align:right"><?=$row[$field]?></td>
 				<? endforeach;?>
 				
