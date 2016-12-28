@@ -23,7 +23,7 @@
 </div>
 
 <ul class="nav nav-tabs">
-    <li class="active">
+    <li class="">
         <a href="<?=site_url("user_statistics/new_users?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">新增分析</a>
     </li>
     <li class="">
@@ -41,7 +41,7 @@
     <li class="">
         <a href="<?=site_url("operation_statistics/user_return_by_login?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">回流率(依登入)</a>
     </li>
-    <li class="">
+    <li class="active">
         <a href="<?=site_url("operation_statistics/user_count_by_country?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">國家別登入用戶數</a>
     </li>
 
@@ -70,7 +70,7 @@
 		<input type="text" name="end_date" class="date" value="<?=$this->input->get("end_date")?>" style="width:120px" placeholder="現在">
 		<a href="javascript:;" class="clear_date"><i class="icon-remove-circle" title="清除"></i></a>
 		
-		<input type="submit" class="btn btn-small btn-inverse" name="action" value="查看國家別登入用戶數">	
+		<input type="submit" class="btn btn-small btn-inverse" name="action" value="新增用戶分析">	
 	
 	</div>
 		
