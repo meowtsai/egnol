@@ -42,7 +42,7 @@
         <a href="<?=site_url("operation_statistics/user_return_by_login?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">回流率(依登入)</a>
     </li>
     <li class="active">
-        <a href="<?=site_url("operation_statistics/user_count_by_country?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">國家別登入用戶數</a>
+        <a href="<?=site_url("user_statistics/user_count_by_country?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">國家別登入用戶數</a>
     </li>
 
 </ul>

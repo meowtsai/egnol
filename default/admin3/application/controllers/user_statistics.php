@@ -1173,8 +1173,6 @@ class User_statistics extends MY_Controller {
 			$end_date = date("Y-m-d",strtotime("-1 days"));
 		} 
 		$game_id = $this->input->get("game_id");
-        
-        
         $datetime1 = date_create($start_date);
         $datetime2 = date_create($end_date);
 
@@ -1208,7 +1206,7 @@ class User_statistics extends MY_Controller {
 		
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
-            ->set("$qString", isset($qString) ? $qString : false)
+            ->set("qString", isset($qString) ? $qString : false)
 			->set("game_id", $game_id)
 			->set("start_date", $start_date)
 			->set("end_date", $end_date)
@@ -1217,7 +1215,9 @@ class User_statistics extends MY_Controller {
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
+
 	}
+    
 }
 
 /* End of file search.php */
