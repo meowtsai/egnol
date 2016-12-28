@@ -1193,9 +1193,7 @@ class User_statistics extends MY_Controller {
             
         } 
         
-    
-        $query = $this->DB2->query("        
-        SELECT country,
+        $qString ="SELECT country,
         {$tmQuery}
         FROM
         (SELECT a.create_time,a.uid,b.country
@@ -1204,12 +1202,13 @@ class User_statistics extends MY_Controller {
         FROM log_game_logins 
         WHERE game_id='{$game_id}' and create_time BETWEEN '{$start_date}' AND '{$end_date}) a 
         INNER JOIN user_info b on a.uid=b.uid ) tmp
-        GROUP BY country
-
-        ");
+        GROUP BY country";
+        
+        $query = $this->DB2->query($qString);
 		
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
+            ->set("$qString", isset($qString) ? $qString : false)
 			->set("game_id", $game_id)
 			->set("start_date", $start_date)
 			->set("end_date", $end_date)

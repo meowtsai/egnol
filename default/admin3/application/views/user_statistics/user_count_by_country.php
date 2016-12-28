@@ -70,12 +70,12 @@
 		<input type="text" name="end_date" class="date" value="<?=$this->input->get("end_date")?>" style="width:120px" placeholder="現在">
 		<a href="javascript:;" class="clear_date"><i class="icon-remove-circle" title="清除"></i></a>
 		
-		<input type="submit" class="btn btn-small btn-inverse" name="action" value="新增用戶分析">	
+		<input type="submit" class="btn btn-small btn-inverse" name="action" value="國家別登入用戶數查詢">	
 	
 	</div>
 		
 </form>
-
+<?=$qString?>
 <?
     if ($query):?>
 	<? if ($query->num_rows() == 0): echo '<div class="none">查無資料</div>'; else: ?>
