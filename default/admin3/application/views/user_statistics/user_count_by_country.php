@@ -24,29 +24,31 @@
 
 <ul class="nav nav-tabs">
     <li class="active">
-        <a href="<?=site_url("statistics/user_new?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">新增分析</a>
+        <a href="<?=site_url("user_statistics/new_users?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">新增分析</a>
     </li>
     <li class="">
-        <a href="<?=site_url("statistics/user_new_by_login?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">新增分析(依登入)</a>
+        <a href="<?=site_url("user_statistics/new_users_by_login?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">新增分析(依登入)</a>
     </li>
     <li class="">
-        <a href="<?=site_url("statistics/user_retention?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">留存率</a>
+        <a href="<?=site_url("operation_statistics/user_retention?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">留存率</a>
     </li>
     <li class="">
-        <a href="<?=site_url("statistics/user_retention_by_login?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">留存率(依登入)</a>
+        <a href="<?=site_url("operation_statistics/user_retention_by_login?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">留存率(依登入)</a>
     </li>
     <li class="">
-        <a href="<?=site_url("statistics/user_return?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">回流率</a>
+        <a href="<?=site_url("operation_statistics/user_return?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">回流率</a>
     </li>
     <li class="">
-        <a href="<?=site_url("statistics/user_return_by_login?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">回流率(依登入)</a>
+        <a href="<?=site_url("operation_statistics/user_return_by_login?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">回流率(依登入)</a>
     </li>
     <li class="">
-        <a href="<?=site_url("statistics/user_count_by_country?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">國家別登入數</a>
+        <a href="<?=site_url("operation_statistics/user_count_by_country?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">國家別登入用戶數</a>
     </li>
+
 </ul>
 
-<form method="get" action="<?=site_url("statistics/user_count_by_country")?>" class="form-search">
+
+<form method="get" action="<?=site_url("user_statistics/user_count_by_country")?>" class="form-search">
 	<!--input type="hidden" name="game_id" value="<?=$this->input->get("span")?>"-->
 	<input type="hidden" name="span" value="<?=$this->input->get("span")?>">
 	<div class="control-group">
@@ -77,6 +79,9 @@
 <?
     if ($query):?>
 	<? if ($query->num_rows() == 0): echo '<div class="none">查無資料</div>'; else: ?>
+    <?$field_array = $query->fetch_fields();		
+printf($field_array);
+    ?>
 	<table class="table table-striped table-bordered" style="width:auto;">
 		<thead>
 			<tr>
@@ -91,7 +96,7 @@
 		?>  
 			<tr>			
 				<td nowrap="nowrap"><?=$row->country?></td>
-				<td style="text-align:right"><?=number_format(($row->login_count)?$row->login_count:0, 2)?></td>
+				<td style="text-align:right"></td>
 								
 			</tr>
 		<? endforeach;?>
