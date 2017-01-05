@@ -49,7 +49,8 @@ class Cron extends CI_Controller {
 				break;
 		}
 
-        $query = $this->DB2->from("games")->where("is_active", 1)->get();
+        //$query = $this->DB2->from("games")->where("is_active", 1)->get();
+        $query = $this->DB2->from("games")->where("game_id", "r2g")->get();
 
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {

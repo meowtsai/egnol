@@ -193,6 +193,33 @@ WHERE x.uid={$uid}";
     	return $this->CI->db->insert_id();
     }    
     
+    function produce_funapp_order($uid, $funapp_billing_id, $transaction_type, $amount, $character_id, $partner_order_id='', $result='1', $server_id='')
+	{	
+		if ( ! in_array($transaction_type, array("funapp_ingame", "funapp_billing"))) return $this->_return_error("transaction_type 錯誤");
+		$cnt = $this->CI->db->from("user_billing")->where("funapp_billing_id", $funapp_billing_id)->where("result", "1")->count_all_results();
+		if ($cnt > 0)  return $this->_return_error("ID已被使用");		
+    	
+		$country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
+		$country_code = ($country_code) ? $country_code : null;
+		
+    	$user_billing_data = array(
+    			'uid' 			=> $uid,
+    			'transaction_type' => $transaction_type,
+    			'billing_type'	=> '1',
+    			'amount' 		=> $amount,
+    			'ip'		 	=> $_SERVER['REMOTE_ADDR'],
+    			'result'		=> $result,
+    			'funapp_billing_id' => $funapp_billing_id,
+				'server_id'     => $server_id,
+				'character_id'  => $character_id,
+				'country_code'  => $country_code,
+				'partner_order_id' => $partner_order_id
+    		);
+    	
+    	$this->CI->db->set("create_time", "now()", false)->insert("user_billing", $user_billing_data);
+    	return $this->CI->db->insert_id();
+    } 
+    
     function produce_gash_order($uid, $gash_billing_id, $amount, $character_id, $coid, $partner_order_id, $result='1', $server_id='')
 	{	
 		$cnt = $this->CI->db->from("user_billing")->where("gash_billing_id", $gash_billing_id)->where("result", "1")->count_all_results();

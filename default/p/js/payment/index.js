@@ -92,7 +92,7 @@ $(function()
 	{
         var html = '';
 
-        $.each(mycard_amount, function(key, val)
+        $.each(payment_amount, function(key, val)
         {
             //if (eval(val) > opt.attr("maximum")) return;
             //if (eval(val) < opt.attr("minimum")) return;

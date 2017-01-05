@@ -202,6 +202,32 @@ CREATE TABLE `mycard_billing` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `funapp_billing`
+--
+
+DROP TABLE IF EXISTS `funapp_billing`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `funapp_billing` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `uid` int(10) unsigned NOT NULL,
+  `payment_type` varchar(20) DEFAULT NULL,
+  `trans_no` varchar(30) DEFAULT NULL,
+  `iap_id` varchar(20) DEFAULT NULL,
+  `status` tinyint(3) NOT NULL,
+  `result` tinyint(1) NOT NULL DEFAULT '0',
+  `update_time` datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `create_time` datetime NOT NULL,
+  `note` tinytext,
+  `amount` int(10) NOT NULL DEFAULT '0',
+  `server_id` varchar(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `trans_no` (`trans_no`),
+  KEY `uid` (`uid`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `log_admin_actions`
 --
 
@@ -1054,6 +1080,7 @@ CREATE TABLE `user_billing` (
   `country_code` varchar(3) DEFAULT NULL,
   `gash_billing_id` int(11) DEFAULT NULL,
   `mycard_billing_id` int(11) DEFAULT NULL,
+  `funapp_billing_id` int(11) DEFAULT NULL,
   `vip_ticket_id` int(11) DEFAULT NULL,
   `character_id` int(11) DEFAULT NULL,
   `is_confirmed` tinyint(1) DEFAULT 0,

@@ -1,6 +1,5 @@
 <?
-	$mycard_conf = $this->config->item("mycard");
-	$options = $this->config->item("payment_options");
+	$payment_amount = $this->config->item("payment_amount");
     $convert_rate = $this->config->item("convert_rate");
 	
 // 判斷是否為行動裝置, 電腦版才要顯示 QR Code
@@ -40,7 +39,7 @@ if (file_exists($filename)) {
 ?>
 
 <script type="text/javascript">
-var mycard_amount = ['<?= implode("','", $mycard_conf["amount"])?>'];
+var payment_amount = ['<?= implode("','", $payment_amount)?>'];
 var convert_rate = {<?
     foreach ($convert_rate as $key => $val){
         echo $key.":".$val;
@@ -152,7 +151,11 @@ function cancelButton () {
 
 				<div class="login-button">
 					<input name="doSubmit" type="submit" id="doSubmit" value="" style="display:none;" />
-                    <p><a id="submit-btn" href="#" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click');">確認送出</a></p>
+                    <!--p><a id="submit-btn" href="#" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click');">確認送出</a></p-->
+					<p><img style="cursor:pointer;" src="<?=$longe_url?>p/image/money/mycard_logo.png" onclick="document.getElementById('choose_form').action='<?=$this->config->item("mycard_url")?>';javascript:$('#doSubmit').trigger('click')" /></p>
+					<? if(IN_OFFICE): ?>
+						<p><img style="cursor:pointer;" src="<?=$longe_url?>p/image/money/funapp_logo.png" onclick="document.getElementById('choose_form').action='<?=$this->config->item("funapp_url")?>';javascript:$('#doSubmit').trigger('click')" /></p>
+                    <? endif;?>
                     <p><a id="cancel-btn" href="#" class="button_submit" onclick="javascript:cancelButton();">取消</a></p>
 				</div>
 

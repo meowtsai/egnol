@@ -1,6 +1,5 @@
 <?
-	$mycard_conf = $this->config->item("mycard");
-	$options = $this->config->item("payment_options");	
+	$payment_amount = $this->config->item("payment_amount");
     $convert_rate = $this->config->item("convert_rate");
 	
 // 判斷是否為行動裝置, 電腦版才要顯示 QR Code
@@ -41,7 +40,7 @@ if (file_exists($filename)) {
 ?>
 
 <script type="text/javascript">
-var mycard_amount = ['<?= implode("','", $mycard_conf["amount"])?>'];
+var payment_amount = ['<?= implode("','", $payment_amount)?>'];
 var convert_rate = {<?
     foreach ($convert_rate as $key => $val){
         echo $key.":".$val;
@@ -126,12 +125,20 @@ var convert_rate = {<?
                             <? endif;?>
 						</td>
 					</tr>
+					<tr>
+						<th style="vertical-align: top;">付費管道</th>
+						<td>
+							<div class="login-button">
+								<input name="doSubmit" type="submit" id="doSubmit" value="" style="display:none;" />
+								<img style="cursor:pointer;" src="<?=$longe_url?>p/image/money/mycard_logo.png" onclick="document.getElementById('choose_form').action='<?=$this->config->item("mycard_url")?>';javascript:$('#doSubmit').trigger('click')" />
+								<br>
+								<? if(IN_OFFICE): ?>
+								<img style="cursor:pointer;" src="<?=$longe_url?>p/image/money/funapp_logo.png" onclick="document.getElementById('choose_form').action='<?=$this->config->item("funapp_url")?>';javascript:$('#doSubmit').trigger('click')" />
+                            	<? endif;?>
+							</div>
+						</td>
+					</tr>
 				</table>
-
-				<div class="login-button">
-					<input name="doSubmit" type="submit" id="doSubmit" value="" style="display:none;" />
-                    <img style="cursor:pointer;" src="<?=$longe_url?>p/image/money/confirm-btn.png" onclick="javascript:$('#doSubmit').trigger('click')" />
-				</div>
 
 				<ul class="notes">
 					<li id="payment_msg">點數比值與相關訊息...</li>

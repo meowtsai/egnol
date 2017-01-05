@@ -44,8 +44,9 @@ class Payment extends MY_Controller
 
 		$_SESSION['site'] = $site;
 
+		$this->load->config("g_payment");
 		$this->load->config("g_mycard");
-		$this->load->config("g_payment_mycard");
+		$this->load->config("g_funapp");
 
 		// 讀取遊戲列表
 		$games = $this->db->from("games")->where("is_active", "1")->get();
