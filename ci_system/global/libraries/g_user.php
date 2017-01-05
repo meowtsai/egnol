@@ -247,6 +247,9 @@ class G_User
 			if(!empty($email)) $data['email'] = $email;
 			if(!empty($mobile)) $data['mobile'] = $mobile;
 			if(!empty($external_id)) $data['external_id'] = $external_id;
+            
+            $country_code = geoip_country_code3_by_name($_SERVER['REMOTE_ADDR']);
+            $country_code = ($country_code) ? $country_code : null;
 
 			$this->CI->db->insert("users", $data);
 			$uid = $this->CI->db->insert_id();
@@ -257,7 +260,8 @@ class G_User
 			else
 			{
 			    $user_info_data = array(
-				    'uid'	=> $uid
+				    'uid'	=> $uid,
+                    'country'	=> $country_code
 			    );
 				$this->CI->db->insert("user_info", $user_info_data);
 			}

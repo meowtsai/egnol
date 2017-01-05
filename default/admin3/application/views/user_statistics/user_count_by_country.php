@@ -23,7 +23,7 @@
 </div>
 
 <ul class="nav nav-tabs">
-    <li class="active">
+    <li class="">
         <a href="<?=site_url("user_statistics/new_users?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">新增分析</a>
     </li>
     <li class="">
@@ -41,12 +41,14 @@
     <li class="">
         <a href="<?=site_url("operation_statistics/user_return_by_login?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">回流率(依登入)</a>
     </li>
-    <li class="">
+    <li class="active">
         <a href="<?=site_url("user_statistics/user_count_by_country?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">DAU(依國別)</a>
     </li>
+
 </ul>
 
-<form method="get" action="<?=site_url("user_statistics/new_users")?>" class="form-search">
+
+<form method="get" action="<?=site_url("user_statistics/user_count_by_country")?>" class="form-search">
 	<!--input type="hidden" name="game_id" value="<?=$this->input->get("span")?>"-->
 	<input type="hidden" name="span" value="<?=$this->input->get("span")?>">
 	<div class="control-group">
@@ -68,7 +70,7 @@
 		<input type="text" name="end_date" class="date" value="<?=$this->input->get("end_date")?>" style="width:120px" placeholder="現在">
 		<a href="javascript:;" class="clear_date"><i class="icon-remove-circle" title="清除"></i></a>
 		
-		<input type="submit" class="btn btn-small btn-inverse" name="action" value="新增用戶分析">	
+		<input type="submit" class="btn btn-small btn-inverse" name="action" value="國家別登入用戶數查詢">	
 	
 	</div>
 		
@@ -77,24 +79,33 @@
 <?
     if ($query):?>
 	<? if ($query->num_rows() == 0): echo '<div class="none">查無資料</div>'; else: ?>
+<?$fields = $query->list_fields();?>
+
+
+
+
 	<table class="table table-striped table-bordered" style="width:auto;">
 		<thead>
 			<tr>
-				<th>日期</th>
-				<th>新增用戶</th>
-				<th>新增登入設備</th>
-				<th>帳號轉化率</th>			 	
+                <?foreach ($fields as $field):?>
+				<th><?=$field?></th>
+				<? endforeach;?>
 			</tr>
 		</thead>
 		<tbody>
 		<? $color = array('00aa00', '448800', '776600', 'aa4400', 'dd2200', 'ff0000');
-			foreach($query->result() as $row):
+            foreach ($query->result_array() as $row):
 		?>  
-			<tr>			
-				<td nowrap="nowrap"><?=$row->date?></td>
-				<td style="text-align:right"><?=number_format(($row->new_login_count)?$row->new_login_count:0, 2)?></td>
-				<td style="text-align:right"><?=number_format(($row->new_device_count)?$row->new_device_count:0, 2)?></td>
-				<td style="text-align:right"><?=number_format(($row->new_device_count)?$row->new_login_count/$row->new_device_count*100:0, 2)."%"?></td>													
+			<tr>	
+                <?foreach ($fields as $field):?>
+                
+                
+                <td style="text-align:right"><?=$row[$field]?></td>
+                <? endforeach;?>
+                
+				
+				
+								
 			</tr>
 		<? endforeach;?>
 		</tbody>

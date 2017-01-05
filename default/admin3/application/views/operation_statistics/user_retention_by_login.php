@@ -38,6 +38,9 @@
     <li class="">
         <a href="<?=site_url("operation_statistics/user_return_by_login?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">回流率(依登入)</a>
     </li>
+    <li class="">
+        <a href="<?=site_url("user_statistics/user_count_by_country?game_id={$this->game_id}&start_date={$start_date}&end_date={$end_date}")?>">DAU(依國別)</a>
+    </li>
 </ul>
 
 <form method="get" action="<?=site_url("operation_statistics/user_retention_by_login")?>" class="form-search">

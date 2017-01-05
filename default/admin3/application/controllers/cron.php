@@ -1964,6 +1964,40 @@ class Cron extends CI_Controller {
 			$this->appsflyer_data($run_date);
 		}
 	}
+    
+    
+    function Update_Country_by_ip($date="")
+    {
+        
+        if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
+        $resultString="";
+        //找出user_info 中國家欄位是空的
+        $query = $this->DB1->from("user_info")->where("country",NULL)->order_by("id desc")->limit(300)->get();
+        //var $tmpCount=0;
+
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+
+                // 用uid 到 login_logs 找出ip
+                $queryIP = $this->DB1->from("log_logins")->where("uid",$row->uid)->order_by("create_time desc")->limit(1)->get()->row()->ip;
+                if (!empty($queryIP)  ) { 
+                // geoip_country_code3_by_name 找出國家
+                    $user_countryCode= geoip_country_code3_by_name($queryIP);
+                    if (!empty($user_countryCode))
+                    {
+                    $this->DB1->where("uid", $row->uid)->update("user_info", array("country" =>$user_countryCode ));
+                    //$tmpCount++;
+                    
+                    }
+
+                }
+            }
+        }
+        
+       // echo "Update_Country_by_ip DONE, Total records updated: ".$tmpCount ;
+
+    }
+
 }
 
 /* End of file search.php */
