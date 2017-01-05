@@ -198,7 +198,7 @@ class Mycard extends MY_Controller {
 		}
 		
 		$_SESSION['payment_type']		= $post['PaymentType'];
-		$_SESSION['payment_channel']	= $post['PaymentType'];
+		$_SESSION['payment_channel']	= $post['MyCardType'];
 		$_SESSION['cuid']	            = $post['Currency'];
 		$_SESSION['oid']	            = $post['MyCardTradeNo'];
         
