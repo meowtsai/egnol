@@ -59,7 +59,7 @@ class Funapp extends MY_Controller {
 			'contentID'          => $iap_id,
 			'extraInfo'          => urlencode($funapp_billing_id),
 			'notifyUrl'          => base_url()."funapp/return_url/{$funapp_billing_id}",
-			'successRedirectUrl' => base_url()."funapp/payment_result/{$amount}",
+			'successRedirectUrl' => base_url()."funapp/payment_result",
 			'backUrl'            => "",
 			'reSelectUrl'        => ($_SESSION['payment_api_call'] == 'true')?"":base_url()."payment/result",
 		);
@@ -231,11 +231,16 @@ class Funapp extends MY_Controller {
 		}
 	}
 	
-	function payment_result($amount=0)
+	function payment_result()
 	{
 		$post = $this->input->post();
 		
-        go_payment_result(1, 1, $amount, '');
+		$_SESSION['payment_type']    = "funapp";
+		$_SESSION['payment_channel'] = $post["payType"];
+		$_SESSION['cuid']	         = 'TWD';
+		$_SESSION['oid']	         = $post["transNo"];
+		
+        go_payment_result(1, 1, $post["paidPrice"], '');
 	}
 }
 
