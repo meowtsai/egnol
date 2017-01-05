@@ -102,9 +102,9 @@ class Funapp extends MY_Controller {
 		}
 		
 		$_SESSION['payment_type']    = "funapp";
-		$_SESSION['payment_channel'] = $post['payType'];
+		$_SESSION['payment_channel'] = "funapp";
 		$_SESSION['cuid']	         = 'TWD';
-		$_SESSION['oid']	         = $post['transNo'];
+		$_SESSION['oid']	         = "funapp";
         
         $data = array(
             'result'	   => '1',
