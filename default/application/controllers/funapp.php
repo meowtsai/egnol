@@ -101,8 +101,8 @@ class Funapp extends MY_Controller {
 			die($post['errorMsg']);
 		}
 		
-		$_SESSION['payment_type']    = $post['payType'];
-		$_SESSION['payment_channel'] = $post['payType'];
+		$_SESSION['payment_type']    = "FunApp";
+		$_SESSION['payment_channel'] = "FunApp";
 		$_SESSION['cuid']	         = 'TWD';
 		$_SESSION['oid']	         = $post['transNo'];
         
