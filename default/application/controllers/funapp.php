@@ -101,8 +101,8 @@ class Funapp extends MY_Controller {
 			die($post['errorMsg']);
 		}
 		
-		$_SESSION['payment_type']    = "FunApp";
-		$_SESSION['payment_channel'] = "FunApp";
+		$_SESSION['payment_type']    = "funapp";
+		$_SESSION['payment_channel'] = $post['payType'];
 		$_SESSION['cuid']	         = 'TWD';
 		$_SESSION['oid']	         = $post['transNo'];
         
@@ -140,11 +140,17 @@ class Funapp extends MY_Controller {
         }
         
         if ($confirm_result->returnCode === "000" && $confirm_result->body["0"]->transType == "2") {
+		
+			$_SESSION['payment_channel'] = $confirm_result->body["0"]->payType;
+			$_SESSION['oid']	         = $confirm_result->body["0"]->transNo;
+			
             $this->funapps->update_billing(
                 array(
-                    "result" => 1, 
-                    "status" => 2, 
-                    "amount" => $confirm_result->body["0"]->paidPrice,
+                    "result"       => 1, 
+                    "status"       => 2, 
+					'trans_no'     => $confirm_result->body["0"]->transNo,
+					'payment_type' => $confirm_result->body["0"]->payType,
+                    "amount"       => $confirm_result->body["0"]->paidPrice,
 				), 
                 array("id" => $funapp_billing->id));
 
