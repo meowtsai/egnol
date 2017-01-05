@@ -1090,10 +1090,11 @@ class Api2 extends MY_Controller
 		$payment_game		= $_SESSION['payment_game'];
 		$payment_server		= $_SESSION['payment_server'];
 		$payment_character	= $_SESSION['payment_character'];
-		$payment_type		= $_SESSION['payment_type'];
-		$payment_channel	= $_SESSION['payment_channel'];
-		$cuid	            = $_SESSION['cuid'];
-		$oid	            = $_SESSION['oid'];
+		$payment_type		= ($_SESSION['payment_type'])?$_SESSION['payment_type']:"none";
+		$payment_channel	= ($_SESSION['payment_channel'])?$_SESSION['payment_channel']:"none";
+		$cuid	            = ($_SESSION['cuid'])?$_SESSION['cuid']:"TWD";
+		$oid	            = ($_SESSION['oid'])?$_SESSION['oid']:"none";
+		
 
 		//$_SESSION['site']				= '';
 		$_SESSION['payment_game']		= '';
