@@ -1106,7 +1106,7 @@ class Trade extends MY_Controller {
 					$content = "id,uid,euid,信箱,手機,龍邑單號,VIP訂單號,遊戲伺服器,金額,結果,匯款帳戶末5碼,匯款姓名,匯款時間,建立日期\n";
 					
 					foreach($query->result() as $row) {
-						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$row->ubid}\",{$id},\"({$row->game_abbr_name}){$row->server_name}\",{$row->AMOUNT},".($row->status=='2' ? '成功' : ($row->status=='1' ? '未請款' : '失敗')).",{$row->note},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
+						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$row->ubid}\",{$id},\"({$row->game_abbr_name}){$row->server_name}\",{$row->cost},".($row->status>='2' ? '成功' : '失敗').",{$row->billing_account},{$row->billing_name},".date("Y-m-d H:i", strtotime($row->billing_time)).",".date("Y-m-d H:i", strtotime($row->create_time))."\n";
 					}
 					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
 					exit();						
