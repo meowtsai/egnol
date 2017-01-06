@@ -542,6 +542,133 @@ class Trade extends MY_Controller {
 			->render();
 	}
 	
+	function funapp()
+	{
+		$this->zacl->check("funapp", "read");	
+		
+		$this->load->config("g_funapp");
+		$this->_init_trade_layout();
+		
+		if ($this->input->get("action")) 
+		{
+			header("Cache-Control: private");			 
+					
+			$this->DB2->start_cache();
+			
+			$this->input->get("id") && $this->DB2->where("fb.id", $this->input->get("id"));
+			$this->input->get("uid") && $this->DB2->where("fb.uid", $this->input->get("uid"));
+			$this->input->get("euid") && $this->DB2->where("fb.uid", $this->g_user->decode($this->input->get("euid")));			
+			if ($this->input->get("account")) {
+				$this->DB2->where("u.email", trim($this->input->get("account")));		
+				$this->DB2->or_where("u.mobile", trim($this->input->get("account")));
+			}		
+			
+			
+			$this->input->get("trans_no") && $this->DB2->where("fb.trans_no", $this->input->get("trans_no"));
+			$this->input->get("payment_type") && $this->DB2->where("fb.payment_type", $this->input->get("payment_type"));
+			$this->input->get("result") && $this->DB2->where("fb.result", $this->input->get("result"));
+			
+			$this->DB2
+				->select("fb.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name, ub.partner_order_id")
+				->from("funapp_billing fb")
+				->join("user_billing ub", "ub.funapp_billing_id=fb.id", "left")
+				->join("servers gi", "gi.server_id=fb.server_id", "left")
+				->join("games g", "g.game_id=gi.game_id", "left")
+				->join("users u", "u.uid=fb.uid", "left");
+									
+			if ($this->input->get("start_date")) {
+				$start_date = $this->DB2->escape($this->input->get("start_date"));
+				if ($this->input->get("end_date")) {
+					$end_date = $this->DB2->escape($this->input->get("end_date").":59");
+					$this->DB2->where("fb.create_time between {$start_date} and {$end_date}", null, false);	
+				}	
+				else $this->DB2->where("fb.create_time >= {$start_date}", null, false);
+			}
+			
+			if ($this->input->get("test") == 'no') {
+				$this->DB2->where("fb.uid not in (select uid from testaccounts)");
+			}
+			else if ($this->input->get("test") == 'only') {
+				$this->DB2->where("fb.uid in (select uid from testaccounts)");
+			}
+		
+			switch ($this->input->get("action"))
+			{
+				case "查詢": 					
+					$this->DB2->stop_cache();
+
+					$total_rows = $this->DB2->count_all_results();
+					$query = $this->DB2->limit(100, $this->input->get("record"))->order_by("fb.id desc")->get();					
+
+					$get = $this->input->get();					
+					unset($get["record"]);
+					$query_string = http_build_query($get);
+					
+					$this->load->library('pagination');
+					$this->pagination->initialize(array(
+							'base_url'	=> site_url("trade/funapp?{$query_string}"),
+							'total_rows'=> $total_rows,
+							'per_page'	=> 100
+						));				
+					
+					$this->g_layout->set("total_rows", $total_rows);
+					break;
+					
+				case "輸出":
+					ini_set("memory_limit","2048M");
+								
+					$query = $this->DB2->get();
+						
+					$filename = "output.csv";					
+					header("Content-type:application/vnd.ms-excel;");
+					header("Content-Disposition: filename={$filename};");
+					
+					$content = "id,uid,euid,信箱,手機,交易管道,天天賺訂單號,遊戲伺服器,金額,結果,訊息,原廠單號,建立日期\n";
+					
+					foreach($query->result() as $row) {
+						
+						$trade_channel = '';
+						if ( ! empty ($row->payment_type)) {
+							switch($row->payment_type) {
+								case "M":
+									$trade_channel = "MyCard";
+									break;
+								case "C":
+									$trade_channel = "信用卡";
+									break;
+								default:
+									$trade_channel = "電信帳單";
+									break;
+							}
+						}
+						$mycard_trade_seq = empty($row->trade_code) ? $row->mycard_trade_seq : $row->trade_code;
+						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$trade_channel},{$row->trans_no},{$row->server_name},{$row->amount},".($row->result=='1' ? '成功' : '失敗').",{$row->note},{$row->partner_order_id},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
+					}
+					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
+					exit();						
+					break;		
+			}
+			
+			$this->DB2->stop_cache();
+			$this->DB2->flush_cache();
+		}
+		else {
+			$default_value = array(
+				'use_default' => true,
+				'start_date' => date('Y-m-d')." 00:00",
+				'test' => 'no',
+			);
+			$_GET = $default_value;			
+		}		
+		
+		$this->g_layout
+			->add_breadcrumb("天天賺儲值查詢")
+			->set("query", isset($query) ? $query : false)
+			->add_js_include("trade/payment")
+			->add_js_include("jquery-ui-timepicker-addon")	
+			->render();
+	}
+	
 	function gash()
 	{
 		$this->zacl->check("gash", "read");	

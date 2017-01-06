@@ -1,17 +1,16 @@
 <?php 
-	$mycard_channel = $this->config->item("mycard_channel");
-	$channels = $this->config->item('channels');
+	$funapp_channel = array("M" => "MyCard","C" => "信用卡","B" => "電信帳單");
 ?>
 
-<form method="get" action="<?=site_url("trade/mycard")?>" class="form-search">
+<form method="get" action="<?=site_url("trade/funapp")?>" class="form-search">
 
 	<div class="control-group">
 						
 		交易管道 
-		<select name="mycard_channel" class="span2">
+		<select name="funapp_channel" class="span2">
 			<option value="">--</option>
-			<? foreach($mycard_channel as $key => $channel):?>
-			<option value="<?=$key?>" <?=($this->input->get("mycard_channel")==$key ? 'selected="selected"' : '')?>><?=$channel?></option>
+			<? foreach($funapp_channel as $key => $channel):?>
+			<option value="<?=$key?>" <?=($this->input->get("funapp_channel")==$key ? 'selected="selected"' : '')?>><?=$channel?></option>
 			<? endforeach;?>
 		</select>				
 				
@@ -46,9 +45,7 @@
 	
 	<div class="control-group">
 	
-		<input type="text" name="trade_seq" value="<?=$this->input->get("trade_seq")?>" class="input-medium" placeholder="訂單號">
-		<input type="text" name="mycard_trade_seq" value="<?=$this->input->get("mycard_trade_seq")?>" class="input-medium" placeholder="Mycard訂單號">
-		<input type="text" name="mycard_card_id" value="<?=$this->input->get("mycard_card_id")?>" class="input-medium" placeholder="Mycard卡號">
+		<input type="text" name="trans_no" value="<?=$this->input->get("trans_no")?>" class="input-medium" placeholder="天天賺訂單號">
 		
 	
 	</div>
@@ -95,15 +92,10 @@
 			<th style="width:50px;">#</th>
 			<th style="width:70px;">uid
 				<div style="color:#777;">euid</div></th>	
-			<th style="width:100px;">交易管道</th>
-			<th style="width:100px;">訂單號</th>			
-			<th style="width:80px;">Mycard訂單號	
-			<th style="width:80px;">Longe訂單號
-				<div style="color:#777;">卡號</div></th>
-			<th style="width:50px;">交易<br>授權碼</th>	
+			<th style="width:100px;">交易管道</th>		
+			<th style="width:80px;">天天賺訂單號	
 			<th style="width:35px;">金額</th>
 			<th style="width:50px;">結果(狀態碼)</th>
-			<th style="width:90px;">活動</th>
 			<th style="width:90px;">訊息</th>
 			<th style="width:70px;">建立日期</th>	
 		</tr>
@@ -124,45 +116,30 @@
 	            }
 				?>">
 				<a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?></a>
-				<a href="<?=site_url("trade/mycard?uid={$row->uid}&action=查詢")?>"><i class="icon-search"></i></a>
+				<a href="<?=site_url("trade/funapp?uid={$row->uid}&action=查詢")?>"><i class="icon-search"></i></a>
 				<div style="color:#777;"><?=$this->g_user->encode($row->uid)?></div>
 			</td>
 			<td>
 				<? 
 					if ( ! empty ($row->payment_type)) {
 						switch($row->payment_type) {
-                            case "INGAME":
-                                echo "實體卡";
-                                break;
-                            case "COSTPOINT":
-                                echo "會員扣點";
-                                break;
-                            default:
-                                echo "小額付費";
-                                break;
+							case "M":
+								echo "MyCard";
+								break;
+							case "C":
+								echo "信用卡";
+								break;
+							default:
+								echo "電信帳單";
+								break;
                         }
 					}
 				?>
 			</td>
-			<td><!--a href="<?=site_url("trade/mycard_api?trade_seq={$row->trade_seq}&action=查詢")?>" target="_blank" title="查詢這筆Mycard交易狀態"><?=$row->trade_seq?></a--><?=$row->trade_seq?>
-			</td>
-			<td>
-			<?
-				if ( ! empty($row->trade_code) ) echo $row->trade_code;
-				else echo $row->mycard_trade_seq;
-			?>
-			<div style="color:#777;"><?=$row->mycard_card_id?></div>
-			</td>
-			<td><?=$row->fac_trade_seq ?></td>
-			<td>
-				<? if ( ! empty($row->auth_code)):?>
-				<input type="text" value="<?=$row->auth_code?>" style="width:36px;" onclick="this.select()">
-				<? endif;?>
-			</td>
+			<td><?=$row->trans_no ?></td>
 			<!--td><?=strtr($row->item_code, array("long_e"=>""))?></td-->
 			<td><?=$row->amount ?></td>
 			<td><?=$row->result=='1' ? '成功' : '失敗'?>(<?=$row->status?>)</td>
-			<td style="font-size:13px;"><?=$row->promo_code?></td>
 			<td style="font-size:13px;"><?=$row->note?></td>
 			<td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>							
 		</tr>
