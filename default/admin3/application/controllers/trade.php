@@ -1094,8 +1094,6 @@ class Trade extends MY_Controller {
 					
 				case "輸出":
 					ini_set("memory_limit","2048M");
-
-					$gash_conf = $this->config->item('gash');
 					
 					$query = $this->DB2->get();
 						
@@ -1106,7 +1104,7 @@ class Trade extends MY_Controller {
 					$content = "id,uid,euid,信箱,手機,龍邑單號,VIP訂單號,遊戲伺服器,金額,結果,匯款帳戶末5碼,匯款姓名,匯款時間,建立日期\n";
 					
 					foreach($query->result() as $row) {
-						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$row->ubid}\",{$id},\"({$row->game_abbr_name}){$row->server_name}\",{$row->cost},".($row->status>='2' ? '成功' : '失敗').",{$row->billing_account},{$row->billing_name},".date("Y-m-d H:i", strtotime($row->billing_time)).",".date("Y-m-d H:i", strtotime($row->create_time))."\n";
+						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$row->ubid}\",{$row->ubtid},\"({$row->game_abbr_name}){$row->server_name}\",{$row->cost},".($row->status>='2' ? '成功' : '失敗').",{$row->billing_account},{$row->billing_name},".date("Y-m-d H:i", strtotime($row->billing_time)).",".date("Y-m-d H:i", strtotime($row->create_time))."\n";
 					}
 					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
 					exit();						
