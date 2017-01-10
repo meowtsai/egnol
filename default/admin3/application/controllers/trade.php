@@ -452,9 +452,9 @@ class Trade extends MY_Controller {
 			}
 
 			if ($channel = $this->input->get("mycard_channel")) {
-				if ($this->input->get("mycard_channel") == 'SW') {
-					$this->DB2->like("mb.mycard_trade_seq", $this->input->get("mycard_channel"), 'after');	
-				} else $this->DB2->like("mb.trade_code", $this->input->get("mycard_channel"), 'after');
+				if ($this->input->get("mycard_channel") == 'PHONEBILL') {
+					$this->DB2->where_not_in("mb.payment_type", array("COSTPOINT", "INGAME"));	
+				} else $this->DB2->where("mb.payment_type", $this->input->get("mycard_channel"));
 			}
 			
 			if ($this->input->get("test") == 'no') {
@@ -488,8 +488,7 @@ class Trade extends MY_Controller {
 					
 				case "輸出":
 					ini_set("memory_limit","2048M");
-				
-					$mycard_channel = $this->config->item("mycard_channel");					
+								
 					$query = $this->DB2->get();
 						
 					$filename = "output.csv";					
@@ -567,6 +566,7 @@ class Trade extends MY_Controller {
 			$this->input->get("trans_no") && $this->DB2->where("fb.trans_no", $this->input->get("trans_no"));
 			$this->input->get("payment_type") && $this->DB2->where("fb.payment_type", $this->input->get("payment_type"));
 			$this->input->get("result") && $this->DB2->where("fb.result", $this->input->get("result"));
+			$this->input->get("funapp_channel") && $this->DB2->where("fb.payment_type", $this->input->get("funapp_channel"));
 			
 			$this->DB2
 				->select("fb.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name, ub.partner_order_id")
@@ -591,7 +591,7 @@ class Trade extends MY_Controller {
 			else if ($this->input->get("test") == 'only') {
 				$this->DB2->where("fb.uid in (select uid from testaccounts)");
 			}
-		
+			
 			switch ($this->input->get("action"))
 			{
 				case "查詢": 					
@@ -641,7 +641,6 @@ class Trade extends MY_Controller {
 									break;
 							}
 						}
-						$mycard_trade_seq = empty($row->trade_code) ? $row->mycard_trade_seq : $row->trade_code;
 						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$trade_channel},{$row->trans_no},{$row->server_name},{$row->amount},".($row->result=='1' ? '成功' : '失敗').",{$row->note},{$row->partner_order_id},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
 					}
 					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
@@ -1285,9 +1284,9 @@ class Trade extends MY_Controller {
 			}
 
 			if ($channel = $this->input->get("mycard_channel")) {
-				if ($this->input->get("mycard_channel") == 'SW') {
-					$this->DB2->like("mb.mycard_trade_seq", $this->input->get("mycard_channel"), 'after');	
-				} else $this->DB2->like("mb.trade_code", $this->input->get("mycard_channel"), 'after');
+				if ($this->input->get("mycard_channel") == 'PHONEBILL') {
+					$this->DB2->where_not_in("mb.payment_type", array("COSTPOINT", "INGAME"));	
+				} else $this->DB2->where("mb.payment_type", $this->input->get("mycard_channel"));
 			}
 		
 			switch ($this->input->get("action"))

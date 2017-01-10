@@ -748,11 +748,29 @@ class Cron extends CI_Controller {
 		echo "generate_".$interval."_return_".$span."_statistics done - ".$date.PHP_EOL;
 	}
 	
-	function generate_billing_statistics($date="")
+	function generate_billing_statistics($date="", $span="daily")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
 		
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
+		
+        switch($span) {
+			case "weekly":
+			    $span_query = "YEAR(ub.create_time) = YEAR('{$date}') AND WEEKOFYEAR(ub.create_time) = WEEKOFYEAR('{$date}')";
+				$save_table = "weekly_user_statistics";
+				break;
+			
+			case "monthly":
+			    $span_query = "YEAR(ub.create_time)=YEAR('{$date}') AND MONTH(ub.create_time)=MONTH('{$date}')";
+				$save_table = "monthly_user_statistics";
+				break;
+				
+			default:
+				$span_query = "DATE(ub.create_time) = '{$date}'";
+				$save_table = "user_statistics";
+				break;
+		}
+		
 		$query = $this->DB2->query("
 			SELECT 
 				game_id,
@@ -783,7 +801,7 @@ class Cron extends CI_Controller {
 					user_billing ub
 				JOIN servers sv ON ub.server_id = sv.server_id
 				WHERE
-					DATE(ub.create_time) = '{$date}'
+					{$span_query}
 						AND ub.billing_type = 2
 						AND ub.result = 1
                         ".(($this->testaccounts)?" AND ub.uid NOT IN (".$this->testaccounts.") ":"")."
@@ -801,7 +819,7 @@ class Cron extends CI_Controller {
 				    'new_deposit_user_count' => $row->new_deposit_user_count
 			    );
 				
-			    $this->save_statistics($data);
+			    $this->save_statistics($data, $save_table);
 		    }
 		}
 		echo "generate_billing_statistics done - ".$date.PHP_EOL;
@@ -1572,7 +1590,8 @@ class Cron extends CI_Controller {
 		    $date_30=date("Y-m-d",strtotime("-29 days", strtotime($date)));
 		}
         
-        $this->generate_statistics_blank($date);
+        /*
+		$this->generate_statistics_blank($date);
 		$this->generate_login_statistics($date);
 		$this->generate_new_character_statistics($date);
 		$this->generate_device_statistics($date);
@@ -1605,7 +1624,7 @@ class Cron extends CI_Controller {
 		$this->generate_new_user_lifetime_value_statistics($date, 14);
 		$this->generate_new_user_lifetime_value_statistics($date, 30);
 		$this->generate_new_user_lifetime_value_statistics($date, 60);
-		$this->generate_new_user_lifetime_value_statistics($date, 90);
+		$this->generate_new_user_lifetime_value_statistics($date, 90);*/
         
 		if ("7"==date("N", strtotime($check_date))) {
             
@@ -1613,6 +1632,7 @@ class Cron extends CI_Controller {
             $this->generate_device_statistics($date, 'weekly');
 			$this->generate_login_statistics($date, 'weekly');
 			$this->generate_return_statistics($date, 1, 'weekly');
+            $this->generate_billing_statistics($date, 'weekly');
             $this->generate_new_user_billing_statistics($date, 'weekly');
             
 			$date_week=date("Y-m-d",strtotime("-1 week", strtotime($check_date)));
@@ -1626,6 +1646,7 @@ class Cron extends CI_Controller {
             $this->generate_device_statistics($date, 'monthly');
 			$this->generate_login_statistics($date, 'monthly');
 			$this->generate_return_statistics($date, 1, 'monthly');
+            $this->generate_billing_statistics($date, 'monthly');
             $this->generate_new_user_billing_statistics($date, 'monthly');
             
 			$date_month=date("Y-m-t",strtotime("-31 days", strtotime($check_date)));

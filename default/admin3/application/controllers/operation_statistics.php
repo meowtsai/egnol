@@ -219,8 +219,8 @@ class Operation_statistics extends MY_Controller {
 			    SUM(stc2.login_count) 'y_login_count',
 			    SUM(stc2.new_login_count) 'y_new_login_count',
                 SUM(stc4.one_retention_count) 'y_one_retention_count',
-                SUM(stc.deposit_user_count) 'deposit_user_count',
-                SUM(stc.deposit_total) 'deposit_total',
+                SUM(stc2.deposit_user_count) 'deposit_user_count',
+                SUM(stc2.deposit_total) 'deposit_total',
 			    SUM(stc3.new_user_deposit_count) 'new_user_deposit_count',
                 SUM(stc3.new_user_deposit_total) 'new_user_deposit_total'
 		    FROM user_statistics stc
@@ -238,33 +238,6 @@ class Operation_statistics extends MY_Controller {
 		    ORDER BY date DESC
 		
 		    ");
-		   /* UNION
-		
-		    (SELECT 
-		        YEARWEEK((stc.date),3) 'date',
-			    stc.game_id 'game_id',
-			    SUM(stc3.login_count) 'login_count',
-			    SUM(stc3.new_login_count) 'new_login_count',
-			    SUM(stc2.login_count) 'y_login_count',
-			    SUM(stc2.new_login_count) 'y_new_login_count',
-                SUM(stc4.one_retention_count) 'y_one_retention_count',
-                SUM(stc.deposit_user_count) 'deposit_user_count',
-                SUM(stc.deposit_total) 'deposit_total',
-			    SUM(stc3.new_user_deposit_count) 'new_user_deposit_count',
-                SUM(stc3.new_user_deposit_total) 'new_user_deposit_total'
-		    FROM user_statistics stc
-		    RIGHT JOIN weekly_user_statistics stc2 ON stc.game_id=stc2.game_id 
-				AND stc.date=DATE_ADD(stc2.date, interval 1 week)
-			LEFT JOIN weekly_statistics stc3 ON stc3.game_id=stc.game_id 
-				AND stc3.date=stc.date
-			LEFT JOIN weekly_operation_statistics stc4 ON stc4.game_id=stc.game_id 
-				AND stc4.date=stc.date
-		    WHERE 
-				stc.date BETWEEN '{$start_date}' AND '{$end_date}'
-					AND stc.game_id = '{$game_id}'
-		    GROUP BY YEARWEEK((stc.date),3))
-		    ORDER BY date DESC
-		    ");*/
 		}
 		else
 		{
@@ -274,56 +247,33 @@ class Operation_statistics extends MY_Controller {
 			$last_day = date('Y-m-d', strtotime('last day of previous month'));
 		    $query = $this->DB2->query("
 				SELECT 
-					stc.*,
-					stc2.y_login_count,
-					stc2.y_new_login_count,
-					stc4.one_retention_count 'y_one_retention_count',
-					stc3.login_count 'login_count',
-					stc3.new_login_count 'new_login_count',
-					stc3.new_user_deposit_count 'new_user_deposit_count',
-					stc3.new_user_deposit_total 'new_user_deposit_total'
+					YEAR(stc.date) 'year',
+					MONTH(stc.date) 'date',
+					stc.game_id 'game_id',
+					stc.deposit_user_count 'deposit_user_count',
+					stc.deposit_total 'deposit_total',
+					stc2.login_count 'y_login_count',
+					stc2.new_login_count 'y_new_login_count',
+					stc3.one_retention_count 'y_one_retention_count',
+					stc.login_count 'login_count',
+					stc.new_login_count 'new_login_count',
+					stc.new_user_deposit_count 'new_user_deposit_count',
+					stc.new_user_deposit_total 'new_user_deposit_total'
 				FROM
-					(
-						SELECT 
-							YEAR(stc.date) 'year',
-							MONTH(stc.date) 'date',
-							stc.game_id 'game_id',
-							SUM(stc.deposit_user_count) 'deposit_user_count',
-							SUM(stc.deposit_total) 'deposit_total'
-						FROM
-							user_statistics stc
-						WHERE
-							stc.date BETWEEN '{$start_date}' AND '{$end_date}'
-								AND stc.date <= '{$last_day}'
-								AND stc.game_id = '{$game_id}'
-						GROUP BY YEAR(stc.date) , MONTH(stc.date)
-					) stc
+					monthly_user_statistics stc
 						LEFT JOIN
-					(
-						SELECT 
-							game_id,
-							YEAR(date) 'year',
-							MONTH(date) 'date',
-							SUM(login_count) 'y_login_count',
-							SUM(new_login_count) 'y_new_login_count'
-						FROM
-							user_statistics
-						WHERE
-							game_id = '{$game_id}'
-								AND date BETWEEN '{$stc2_start_date}' AND '{$stc2_end_date}'
-						GROUP BY YEAR(date) , MONTH(date)
-					) stc2 ON stc.game_id = stc2.game_id
-						AND stc2.year = YEAR(DATE_ADD(CONCAT(stc.year, '-', stc.date, '-01'), INTERVAL - 1 MONTH))
-						AND stc2.date = MONTH(DATE_ADD(CONCAT(stc.year, '-', stc.date, '-01'), INTERVAL - 1 MONTH))
+					monthly_user_statistics stc2 ON stc.game_id = stc2.game_id
+						AND YEAR(stc2.date) = YEAR(DATE_ADD(stc.date, INTERVAL - 1 MONTH))
+						AND MONTH(stc2.date) = MONTH(DATE_ADD(stc.date, INTERVAL - 1 MONTH))
 						LEFT JOIN
-					monthly_user_statistics stc3 ON stc3.game_id = stc.game_id
-						AND YEAR(stc3.date) = stc.year
-						AND MONTH(stc3.date) = stc.date
-						LEFT JOIN
-					monthly_operation_statistics stc4 ON stc4.game_id = stc2.game_id
-						AND YEAR(stc4.date) = stc2.year
-						AND MONTH(stc4.date) = stc2.date
-				ORDER BY stc.year DESC, stc.date DESC
+					monthly_operation_statistics stc3 ON stc3.game_id = stc2.game_id
+						AND YEAR(stc3.date) = YEAR(stc2.date)
+						AND MONTH(stc3.date) = MONTH(stc2.date)
+				WHERE
+					stc.date BETWEEN '{$start_date}' AND '{$end_date}'
+						AND stc.date <= '{$last_day}'
+						AND stc.game_id = '{$game_id}'
+				ORDER BY stc.date DESC
 		    ");
 		}
         

@@ -1,6 +1,5 @@
 <?php 
-	$mycard_channel = $this->config->item("mycard_channel");
-	$channels = $this->config->item('channels');
+	$mycard_channel = array("INGAME" => "點卡", "COSTPOINT" => "會員扣點", "PHONEBILL" => "小額付費");
 ?>
 
 <form method="get" action="<?=site_url("trade/mycard")?>" class="form-search">
