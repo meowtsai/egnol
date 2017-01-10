@@ -1590,7 +1590,6 @@ class Cron extends CI_Controller {
 		    $date_30=date("Y-m-d",strtotime("-29 days", strtotime($date)));
 		}
         
-        /*
 		$this->generate_statistics_blank($date);
 		$this->generate_login_statistics($date);
 		$this->generate_new_character_statistics($date);
@@ -1624,7 +1623,7 @@ class Cron extends CI_Controller {
 		$this->generate_new_user_lifetime_value_statistics($date, 14);
 		$this->generate_new_user_lifetime_value_statistics($date, 30);
 		$this->generate_new_user_lifetime_value_statistics($date, 60);
-		$this->generate_new_user_lifetime_value_statistics($date, 90);*/
+		$this->generate_new_user_lifetime_value_statistics($date, 90);
         
 		if ("7"==date("N", strtotime($check_date))) {
             
