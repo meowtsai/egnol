@@ -82,7 +82,7 @@ class Datafix extends CI_Controller {
 					->where("uid", $row->uid)
 					->where("transaction_type", "top_up_account")
 					->where("result", "1")
-					->where("character_id", $row->character_id)
+					->where("server_id", $row->server_id)
 					->where("amount", $row->amount)
 					->where("create_time >=", $row->cash_out_time)
 					->order_by("create_time", "asc")
