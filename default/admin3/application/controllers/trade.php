@@ -434,10 +434,11 @@ class Trade extends MY_Controller {
 			$this->input->get("result") && $this->DB2->where("mb.result", $this->input->get("result"));
 			
 			$this->DB2
-				->select("mb.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name, ub.partner_order_id")
+				->select("mb.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name, ub.partner_order_id, ubt.id ubtid")
 				->select("coalesce(trade_code, mycard_trade_seq) as mycard_key", false)
 				->from("mycard_billing mb")
 				->join("user_billing ub", "ub.mycard_billing_id=mb.id", "left")
+				->join("user_billing ubt", "ubt.transaction_id=ub.transaction_id and ubt.transaction_type='top_up_account'", "left")
 				->join("servers gi", "gi.server_id=mb.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
 				->join("users u", "u.uid=mb.uid", "left");
@@ -495,7 +496,7 @@ class Trade extends MY_Controller {
 					header("Content-type:application/vnd.ms-excel;");
 					header("Content-Disposition: filename={$filename};");
 					
-					$content = "id,uid,euid,信箱,手機,交易管道,訂單號,Mycard訂單號,卡號,遊戲伺服器,金額,結果,活動代號,訊息,原廠單號,建立日期\n";
+					$content = "id,uid,euid,信箱,手機,轉點單號,交易管道,訂單號,Mycard訂單號,卡號,遊戲伺服器,金額,結果,活動代號,訊息,原廠單號,建立日期\n";
 					
 					foreach($query->result() as $row) {
 						
@@ -514,7 +515,7 @@ class Trade extends MY_Controller {
 							}
 						}
 						$mycard_trade_seq = empty($row->trade_code) ? $row->mycard_trade_seq : $row->trade_code;
-						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$trade_channel},\"{$row->trade_seq}\",{$mycard_trade_seq},{$row->mycard_card_id},{$row->server_name},{$row->amount},".($row->result=='1' ? '成功' : '失敗').",{$row->promo_code},{$row->note},{$row->partner_order_id},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
+						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",\"{$row->ubtid}\",{$trade_channel},\"{$row->trade_seq}\",{$mycard_trade_seq},{$row->mycard_card_id},{$row->server_name},{$row->amount},".($row->result=='1' ? '成功' : '失敗').",{$row->promo_code},{$row->note},{$row->partner_order_id},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
 					}
 					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
 					exit();						

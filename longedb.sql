@@ -1071,7 +1071,7 @@ CREATE TABLE `user_billing` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `uid` int(11) NOT NULL,
   `transaction_type` varchar(20) DEFAULT NULL,
-  `transaction_id` int(11) DEFAULT NULL,
+  `transaction_id` varchar(50) DEFAULT NULL,
   `partner_order_id` varchar(100) DEFAULT NULL,
   `billing_type` tinyint(3) DEFAULT NULL,
   `amount` int(6) DEFAULT NULL,

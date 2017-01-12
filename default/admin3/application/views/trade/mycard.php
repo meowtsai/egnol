@@ -93,12 +93,14 @@
 		<tr>
 			<th style="width:50px;">#</th>
 			<th style="width:70px;">uid
-				<div style="color:#777;">euid</div></th>	
+				<div style="color:#777;">euid</div></th>				
+			<th style="width:80px;">轉點單號</th>
 			<th style="width:100px;">交易管道</th>
 			<th style="width:100px;">訂單號</th>			
-			<th style="width:80px;">Mycard訂單號	
+			<th style="width:80px;">Mycard訂單號</th>
 			<th style="width:80px;">Longe訂單號
 				<div style="color:#777;">卡號</div></th>
+			<th style="width:80px;">原廠訂單號</th>
 			<th style="width:50px;">交易<br>授權碼</th>	
 			<th style="width:35px;">金額</th>
 			<th style="width:50px;">結果(狀態碼)</th>
@@ -126,6 +128,7 @@
 				<a href="<?=site_url("trade/mycard?uid={$row->uid}&action=查詢")?>"><i class="icon-search"></i></a>
 				<div style="color:#777;"><?=$this->g_user->encode($row->uid)?></div>
 			</td>
+			<td><?=$row->ubtid ?></td>
 			<td>
 				<? 
 					if ( ! empty ($row->payment_type)) {
@@ -153,6 +156,7 @@
 			<div style="color:#777;"><?=$row->mycard_card_id?></div>
 			</td>
 			<td><?=$row->fac_trade_seq ?></td>
+			<td><?=$row->partner_order_id ?></td>
 			<td>
 				<? if ( ! empty($row->auth_code)):?>
 				<input type="text" value="<?=$row->auth_code?>" style="width:36px;" onclick="this.select()">

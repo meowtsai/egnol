@@ -62,6 +62,38 @@ class Datafix extends CI_Controller {
 		    }
 		}
 	}
+	
+	
+	function fix_mycard_billing_transaction_id()
+	{
+		$this->lang->load('db_lang', 'zh-TW');
+        
+    	$query = $this->DB2->from("mycard_billing")
+			->where("status", "4")
+			->where("result", "1")
+			->where("is_confirm", "1")
+			->get();
+        
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+                $this->DB1->where("mycard_billing_id", $row->id)->update('user_billing', array('transaction_id' => $row->trade_seq));
+				
+                $query2 = $this->DB2->select("id")->from("user_billing")
+					->where("uid", $row->uid)
+					->where("transaction_type", "top_up_account")
+					->where("result", "1")
+					->where("character_id", $row->character_id)
+					->where("amount", $row->amount)
+					->where("create_time >=", $row->cash_out_time)
+					->order_by("create_time", "asc")
+					->get()->row();
+			   
+                if ($query2 && $query2->id) {
+                	$this->DB1->where("id", $query2->id)->update('user_billing', array('transaction_id' => $row->trade_seq));
+                }
+		    }
+		}
+	}
 }
 
 /* End of file search.php */
