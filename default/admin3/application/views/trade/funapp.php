@@ -92,8 +92,9 @@
 			<th style="width:50px;">#</th>
 			<th style="width:70px;">uid
 				<div style="color:#777;">euid</div></th>	
+			<th style="width:80px;">轉點單號</th>
 			<th style="width:100px;">交易管道</th>		
-			<th style="width:80px;">天天賺訂單號	
+			<th style="width:80px;">天天賺訂單號</th>
 			<th style="width:35px;">金額</th>
 			<th style="width:50px;">結果(狀態碼)</th>
 			<th style="width:90px;">訊息</th>
@@ -119,6 +120,7 @@
 				<a href="<?=site_url("trade/funapp?uid={$row->uid}&action=查詢")?>"><i class="icon-search"></i></a>
 				<div style="color:#777;"><?=$this->g_user->encode($row->uid)?></div>
 			</td>
+			<td><?=$row->ubtid?></td>
 			<td>
 				<? 
 					if ( ! empty ($row->payment_type)) {

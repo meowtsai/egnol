@@ -160,7 +160,7 @@ class Funapp extends MY_Controller {
 			$this->g_wallet->complete_order($user_billing);
 				
             $this->load->library("game");
-            $this->game->payment_transfer($funapp_billing->uid, $funapp_billing->server_id, $confirm_result->body["0"]->paidPrice, $user_billing->partner_order_id, $user_billing->character_id, "", "", "");
+            $this->game->payment_transfer($funapp_billing->uid, $funapp_billing->server_id, $confirm_result->body["0"]->paidPrice, $user_billing->partner_order_id, $user_billing->character_id, $confirm_result->body["0"]->transNo, "", "");
 					
             if ($is_get_order) return 1;
             go_payment_result(1, 1, $confirm_result->body["0"]->paidPrice, $error_message);
@@ -223,7 +223,7 @@ class Funapp extends MY_Controller {
 					$this->g_wallet->complete_order($user_billing);
 
 					$this->load->library("game");
-					$this->game->payment_transfer($funapp_billing->uid, $funapp_billing->server_id, $row->paidPrice, $user_billing->partner_order_id, $user_billing->character_id, "", "", "");
+					$this->game->payment_transfer($funapp_billing->uid, $funapp_billing->server_id, $row->paidPrice, $user_billing->partner_order_id, $user_billing->character_id, $row->transNo, "", "");
 				}
 			}
         } else {

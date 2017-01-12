@@ -570,9 +570,10 @@ class Trade extends MY_Controller {
 			$this->input->get("funapp_channel") && $this->DB2->where("fb.payment_type", $this->input->get("funapp_channel"));
 			
 			$this->DB2
-				->select("fb.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name, ub.partner_order_id")
+				->select("fb.*, u.email, u.mobile, u.external_id, gi.name server_name, g.name game_name, g.abbr game_abbr_name, ub.partner_order_id, ubt.id ubtid")
 				->from("funapp_billing fb")
 				->join("user_billing ub", "ub.funapp_billing_id=fb.id", "left")
+				->join("user_billing ubt", "ubt.order_no=fb.trans_no and ubt.transaction_type='top_up_account'", "left")
 				->join("servers gi", "gi.server_id=fb.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
 				->join("users u", "u.uid=fb.uid", "left");
@@ -624,7 +625,7 @@ class Trade extends MY_Controller {
 					header("Content-type:application/vnd.ms-excel;");
 					header("Content-Disposition: filename={$filename};");
 					
-					$content = "id,uid,euid,信箱,手機,交易管道,天天賺訂單號,遊戲伺服器,金額,結果,訊息,原廠單號,建立日期\n";
+					$content = "id,uid,euid,信箱,手機,轉點單號,交易管道,天天賺訂單號,遊戲伺服器,金額,結果,訊息,原廠單號,建立日期\n";
 					
 					foreach($query->result() as $row) {
 						
@@ -642,7 +643,7 @@ class Trade extends MY_Controller {
 									break;
 							}
 						}
-						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",{$trade_channel},{$row->trans_no},{$row->server_name},{$row->amount},".($row->result=='1' ? '成功' : '失敗').",{$row->note},{$row->partner_order_id},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
+						$content .= "{$row->id},{$row->uid},".$this->g_user->encode($row->uid).",\"{$row->email}\",\"{$row->mobile}\",\"{$row->ubtid}\",{$trade_channel},{$row->trans_no},{$row->server_name},{$row->amount},".($row->result=='1' ? '成功' : '失敗').",{$row->note},{$row->partner_order_id},".date("Y-m-d H:i", strtotime($row->create_time))."\n";
 					}
 					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
 					exit();						
