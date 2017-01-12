@@ -438,7 +438,7 @@ class Trade extends MY_Controller {
 				->select("coalesce(trade_code, mycard_trade_seq) as mycard_key", false)
 				->from("mycard_billing mb")
 				->join("user_billing ub", "ub.mycard_billing_id=mb.id", "left")
-				->join("user_billing ubt", "ubt.transaction_id=ub.transaction_id and ubt.transaction_type='top_up_account'", "left")
+				->join("user_billing ubt", "ubt.order_no=mb.trade_seq and ubt.transaction_type='top_up_account'", "left")
 				->join("servers gi", "gi.server_id=mb.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
 				->join("users u", "u.uid=mb.uid", "left");
