@@ -132,9 +132,7 @@ var convert_rate = {<?
 								<input name="doSubmit" type="submit" id="doSubmit" value="" style="display:none;" />
 								<img style="cursor:pointer;" src="<?=$longe_url?>p/image/money/mycard_logo.png" onclick="document.getElementById('choose_form').action='<?=$this->config->item("mycard_url")?>';javascript:$('#doSubmit').trigger('click')" />
 								<br>
-								<? if(IN_OFFICE): ?>
 								<img style="cursor:pointer;" src="<?=$longe_url?>p/image/money/funapp_logo.png" onclick="document.getElementById('choose_form').action='<?=$this->config->item("funapp_url")?>';javascript:$('#doSubmit').trigger('click')" />
-                            	<? endif;?>
 							</div>
 						</td>
 					</tr>
