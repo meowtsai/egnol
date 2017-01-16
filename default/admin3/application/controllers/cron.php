@@ -121,7 +121,7 @@ class Cron extends CI_Controller {
 		
         switch($span) {
 			case "weekly":
-			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND WEEKOFYEAR(create_time) = WEEKOFYEAR('{$date}')";
+			    $span_query = "YEARWEEK(create_time, 3) = YEARWEEK('{$date}', 3)";
 				$save_table = "weekly_user_statistics";
                 $span_select= "
                     COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'new_login_facebook_count',
@@ -290,7 +290,7 @@ class Cron extends CI_Controller {
 		
         switch($span) {
 			case "weekly":
-			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND WEEKOFYEAR(create_time) = WEEKOFYEAR('{$date}')";
+			    $span_query = "YEARWEEK(create_time, 3) = YEARWEEK('{$date}', 3)";
 				$save_table = "weekly_user_statistics";
 				break;
 			
@@ -593,7 +593,7 @@ class Cron extends CI_Controller {
 			case "weekly":
                 $return_text = 'return';
 				$update_field = 'return_count';
-			    $span_query1 = "YEAR(l.create_time) = YEAR('{$date}') AND WEEKOFYEAR(l.create_time) = WEEKOFYEAR('{$date}')";
+			    $span_query1 = "YEARWEEK(l.create_time, 3) = YEARWEEK('{$date}', 3)";
                 $date_1_week_ago=date("Y-m-d",strtotime("-1 week", strtotime($date)));
                 $date_2_week_ago=date("Y-m-d",strtotime("-2 week", strtotime($date)));
                 $span_query2 = "create_time <= DATE('{$date_1_week_ago}') AND create_time > DATE('{$date_2_week_ago}')";
@@ -756,7 +756,7 @@ class Cron extends CI_Controller {
 		
         switch($span) {
 			case "weekly":
-			    $span_query = "YEAR(ub.create_time) = YEAR('{$date}') AND WEEKOFYEAR(ub.create_time) = WEEKOFYEAR('{$date}')";
+			    $span_query = "YEARWEEK(ub.create_time, 3) = YEARWEEK('{$date}', 3)";
 				$save_table = "weekly_user_statistics";
 				break;
 			
@@ -833,8 +833,8 @@ class Cron extends CI_Controller {
 		
         switch($span) {
 			case "weekly":
-			    $span_query1 = "YEAR(lgl.create_time) = YEAR(ub.create_time) AND WEEKOFYEAR(lgl.create_time) = WEEKOFYEAR(ub.create_time)";
-			    $span_query2 = "YEAR(ub.create_time) = YEAR('{$date}') AND WEEKOFYEAR(ub.create_time) = WEEKOFYEAR('{$date}')";
+			    $span_query1 = "YEARWEEK(lgl.create_time, 3) = YEARWEEK(ub.create_time, 3)";
+			    $span_query2 = "YEARWEEK(ub.create_time, 3) = YEARWEEK('{$date}', 3)";
 				$save_table = "weekly_user_statistics";
 				break;
 			
