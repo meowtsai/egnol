@@ -121,7 +121,7 @@ class Cron extends CI_Controller {
 		
         switch($span) {
 			case "weekly":
-			    $span_query = "YEARWEEK(create_time, 3) = YEARWEEK('{$date}', 3)";
+			    $span_query = "YEARWEEK(create_time, 3) = YEARWEEK('{$date}', 3) AND DATE(create_time)<='{$date}'";
 				$save_table = "weekly_user_statistics";
                 $span_select= "
                     COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'new_login_facebook_count',
@@ -135,7 +135,7 @@ class Cron extends CI_Controller {
 				break;
 			
 			case "monthly":
-			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}')";
+			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}') AND DATE(create_time)<='{$date}'";
 				$save_table = "monthly_user_statistics";
                 $span_select= "
                     COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'new_login_facebook_count',
@@ -290,12 +290,12 @@ class Cron extends CI_Controller {
 		
         switch($span) {
 			case "weekly":
-			    $span_query = "YEARWEEK(create_time, 3) = YEARWEEK('{$date}', 3)";
+			    $span_query = "YEARWEEK(create_time, 3) = YEARWEEK('{$date}', 3) AND DATE(create_time)<='{$date}'";
 				$save_table = "weekly_user_statistics";
 				break;
 			
 			case "monthly":
-			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}')";
+			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}') AND DATE(create_time)<='{$date}'";
 				$save_table = "monthly_user_statistics";
 				break;
 				
@@ -593,7 +593,7 @@ class Cron extends CI_Controller {
 			case "weekly":
                 $return_text = 'return';
 				$update_field = 'return_count';
-			    $span_query1 = "YEARWEEK(l.create_time, 3) = YEARWEEK('{$date}', 3)";
+			    $span_query1 = "YEARWEEK(l.create_time, 3) = YEARWEEK('{$date}', 3) AND DATE(l.create_time)<='{$date}'";
                 $date_1_week_ago=date("Y-m-d",strtotime("-1 week", strtotime($date)));
                 $date_2_week_ago=date("Y-m-d",strtotime("-2 week", strtotime($date)));
                 $span_query2 = "create_time <= DATE('{$date_1_week_ago}') AND create_time > DATE('{$date_2_week_ago}')";
@@ -604,7 +604,7 @@ class Cron extends CI_Controller {
 			case "monthly":
                 $return_text = 'return';
 				$update_field = 'return_count';
-			    $span_query1 = "YEAR(l.create_time) = YEAR('{$date}') AND MONTH(l.create_time) = MONTH('{$date}')";
+			    $span_query1 = "YEAR(l.create_time) = YEAR('{$date}') AND MONTH(l.create_time) = MONTH('{$date}') AND DATE(l.create_time)<='{$date}'";
                 $date_1_month_ago=date("Y-m-t",strtotime("-31 days", strtotime($date)));
                 $date_2_month_ago=date("Y-m-t",strtotime("-62 days", strtotime($date)));
                 $span_query2 = "create_time <= DATE('{$date_1_month_ago}') AND create_time > DATE('{$date_2_month_ago}')";
@@ -756,12 +756,12 @@ class Cron extends CI_Controller {
 		
         switch($span) {
 			case "weekly":
-			    $span_query = "YEARWEEK(ub.create_time, 3) = YEARWEEK('{$date}', 3)";
+			    $span_query = "YEARWEEK(ub.create_time, 3) = YEARWEEK('{$date}', 3) AND DATE(ub.create_time)<='{$date}'";
 				$save_table = "weekly_user_statistics";
 				break;
 			
 			case "monthly":
-			    $span_query = "YEAR(ub.create_time)=YEAR('{$date}') AND MONTH(ub.create_time)=MONTH('{$date}')";
+			    $span_query = "YEAR(ub.create_time)=YEAR('{$date}') AND MONTH(ub.create_time)=MONTH('{$date}') AND DATE(ub.create_time)<='{$date}'";
 				$save_table = "monthly_user_statistics";
 				break;
 				
@@ -822,7 +822,7 @@ class Cron extends CI_Controller {
 			    $this->save_statistics($data, $save_table);
 		    }
 		}
-		echo "generate_billing_statistics done - ".$date.PHP_EOL;
+		echo "generate_billing_{$span}_statistics done - ".$date.PHP_EOL;
 	}
 	
 	function generate_new_user_billing_statistics($date="", $span="daily")
@@ -834,13 +834,13 @@ class Cron extends CI_Controller {
         switch($span) {
 			case "weekly":
 			    $span_query1 = "YEARWEEK(lgl.create_time, 3) = YEARWEEK(ub.create_time, 3)";
-			    $span_query2 = "YEARWEEK(ub.create_time, 3) = YEARWEEK('{$date}', 3)";
+			    $span_query2 = "YEARWEEK(ub.create_time, 3) = YEARWEEK('{$date}', 3) AND DATE(ub.create_time)<='{$date}'";
 				$save_table = "weekly_user_statistics";
 				break;
 			
 			case "monthly":
 			    $span_query1 = "YEAR(lgl.create_time)=YEAR(ub.create_time) AND MONTH(lgl.create_time)=MONTH(ub.create_time)";
-			    $span_query2 = "YEAR(ub.create_time) = YEAR('{$date}') AND MONTH(ub.create_time) = MONTH('{$date}')";
+			    $span_query2 = "YEAR(ub.create_time) = YEAR('{$date}') AND MONTH(ub.create_time) = MONTH('{$date}') AND DATE(ub.create_time)<='{$date}'";
 				$save_table = "monthly_user_statistics";
 				break;
 				
@@ -1625,33 +1625,40 @@ class Cron extends CI_Controller {
 		$this->generate_new_user_lifetime_value_statistics($date, 60);
 		$this->generate_new_user_lifetime_value_statistics($date, 90);
         
-		if ("7"==date("N", strtotime($check_date))) {
-            
-            $this->generate_statistics_blank($date, 'weekly');
-            $this->generate_device_statistics($date, 'weekly');
-			$this->generate_login_statistics($date, 'weekly');
-			$this->generate_return_statistics($date, 1, 'weekly');
-            $this->generate_billing_statistics($date, 'weekly');
-            $this->generate_new_user_billing_statistics($date, 'weekly');
-            
-			$date_week=date("Y-m-d",strtotime("-1 week", strtotime($check_date)));
-			$this->generate_retention_statistics($date_week, 1, 'weekly');
-			$this->generate_retention_statistics($date_week, 1, 'weekly', FALSE);
-		}
 		
-		if ($date==date("Y-m-t", strtotime($check_date))) {
-            
-		    $this->generate_statistics_blank($date, 'monthly');
-            $this->generate_device_statistics($date, 'monthly');
-			$this->generate_login_statistics($date, 'monthly');
-			$this->generate_return_statistics($date, 1, 'monthly');
-            $this->generate_billing_statistics($date, 'monthly');
-            $this->generate_new_user_billing_statistics($date, 'monthly');
-            
-			$date_month=date("Y-m-t",strtotime("-31 days", strtotime($check_date)));
-			$this->generate_retention_statistics($date_month, 1, 'monthly');
-			$this->generate_retention_statistics($date_month, 1, 'monthly', FALSE);
+		if ("7"==date("N", strtotime($check_date))) {
+			$this_sunday = $date;
+			$date_week=date("Y-m-d",strtotime("-1 week", strtotime($check_date)));
+		} else {
+			if ("1"==date("N", strtotime($check_date))) {$start_monday = date("Y-m-d");}
+			else {$start_monday = date("Y-m-d", strtotime('last monday'));}
+
+			$this_sunday = date("Ymd", strtotime($start_monday.' this sunday'));
+			$date_week=date("Y-m-d",strtotime("-1 week", strtotime($this_sunday)));
 		}
+		$this->generate_statistics_blank($this_sunday, 'weekly');
+		$this->generate_device_statistics($this_sunday, 'weekly');
+		$this->generate_login_statistics($this_sunday, 'weekly');
+		$this->generate_return_statistics($this_sunday, 1, 'weekly');
+		$this->generate_billing_statistics($this_sunday, 'weekly');
+		$this->generate_new_user_billing_statistics($this_sunday, 'weekly');
+
+		$this->generate_retention_statistics($date_week, 1, 'weekly');
+		$this->generate_retention_statistics($date_week, 1, 'weekly', FALSE);
+		
+		
+		$month_end = date("Y-m-t", strtotime($check_date));
+
+		$this->generate_statistics_blank($month_end, 'monthly');
+		$this->generate_device_statistics($month_end, 'monthly');
+		$this->generate_login_statistics($month_end, 'monthly');
+		$this->generate_return_statistics($month_end, 1, 'monthly');
+		$this->generate_billing_statistics($month_end, 'monthly');
+		$this->generate_new_user_billing_statistics($month_end, 'monthly');
+
+		$date_month=date("Y-m-t",strtotime("-31 days", strtotime($check_date)));
+		$this->generate_retention_statistics($date_month, 1, 'monthly');
+		$this->generate_retention_statistics($date_month, 1, 'monthly', FALSE);
 	}
 	
 	function echo_passed_time($start_time) {

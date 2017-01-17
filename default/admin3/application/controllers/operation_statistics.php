@@ -214,25 +214,22 @@ class Operation_statistics extends MY_Controller {
 		    (SELECT 
 		        YEARWEEK((stc.date),3) 'date',
 			    stc.game_id 'game_id',
-			    SUM(stc3.login_count) 'login_count',
-			    SUM(stc3.new_login_count) 'new_login_count',
+			    SUM(stc.login_count) 'login_count',
+			    SUM(stc.new_login_count) 'new_login_count',
 			    SUM(stc2.login_count) 'y_login_count',
 			    SUM(stc2.new_login_count) 'y_new_login_count',
-                SUM(stc4.one_retention_count) 'y_one_retention_count',
+                SUM(stc3.one_retention_count) 'y_one_retention_count',
                 SUM(stc2.deposit_user_count) 'deposit_user_count',
                 SUM(stc2.deposit_total) 'deposit_total',
-			    SUM(stc3.new_user_deposit_count) 'new_user_deposit_count',
-                SUM(stc3.new_user_deposit_total) 'new_user_deposit_total'
-		    FROM user_statistics stc
+			    SUM(stc.new_user_deposit_count) 'new_user_deposit_count',
+                SUM(stc.new_user_deposit_total) 'new_user_deposit_total'
+		    FROM weekly_user_statistics stc
 		    LEFT JOIN weekly_user_statistics stc2 ON stc.game_id=stc2.game_id 
 				AND stc.date=DATE_ADD(stc2.date, interval 1 week)
-			LEFT JOIN weekly_user_statistics stc3 ON stc3.game_id=stc.game_id 
-				AND stc3.date=stc.date
-			LEFT JOIN weekly_operation_statistics stc4 ON stc4.game_id=stc.game_id 
-				AND stc.date=DATE_ADD(stc4.date, interval 1 week)
+			LEFT JOIN weekly_operation_statistics stc3 ON stc3.game_id=stc.game_id 
+				AND stc.date=DATE_ADD(stc3.date, interval 1 week)
 		    WHERE 
 				stc.date BETWEEN '{$start_date}' AND '{$end_date}'
-					AND stc.date <= '{$last_sunday}'
 					AND stc.game_id = '{$game_id}'
 		    GROUP BY YEARWEEK((stc.date),3))
 		    ORDER BY date DESC
@@ -271,7 +268,6 @@ class Operation_statistics extends MY_Controller {
 						AND MONTH(stc3.date) = MONTH(stc2.date)
 				WHERE
 					stc.date BETWEEN '{$start_date}' AND '{$end_date}'
-						AND stc.date <= '{$last_day}'
 						AND stc.game_id = '{$game_id}'
 				ORDER BY stc.date DESC
 		    ");
