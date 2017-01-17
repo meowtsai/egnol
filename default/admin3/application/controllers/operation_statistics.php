@@ -209,7 +209,7 @@ class Operation_statistics extends MY_Controller {
 		}
 		elseif('weekly'==$span)
 		{
-			$last_sunday = date('Y-m-d', strtotime('last Sunday', time()));
+			$this_sunday = date('Y-m-d', strtotime('this Sunday', strtotime($end_date)));
 		    $query = $this->DB2->query("
 		    (SELECT 
 		        YEARWEEK((stc.date),3) 'date',
@@ -229,7 +229,7 @@ class Operation_statistics extends MY_Controller {
 			LEFT JOIN weekly_operation_statistics stc3 ON stc3.game_id=stc.game_id 
 				AND stc.date=DATE_ADD(stc3.date, interval 1 week)
 		    WHERE 
-				stc.date BETWEEN '{$start_date}' AND '{$end_date}'
+				stc.date BETWEEN '{$start_date}' AND '{$this_sunday}'
 					AND stc.game_id = '{$game_id}'
 		    GROUP BY YEARWEEK((stc.date),3))
 		    ORDER BY date DESC
@@ -241,7 +241,7 @@ class Operation_statistics extends MY_Controller {
 			$stc2_start_date = date("Y-m", strtotime('-1 month', strtotime($start_date)))."-01";
 			$stc2_end_date = date("Y-m-t", strtotime('-1 month', strtotime($end_date)));
 			
-			$last_day = date('Y-m-d', strtotime('last day of previous month'));
+			$last_day = date('Y-m-d', strtotime('last day of this month', strtotime($end_date)));
 		    $query = $this->DB2->query("
 				SELECT 
 					YEAR(stc.date) 'year',
@@ -267,7 +267,7 @@ class Operation_statistics extends MY_Controller {
 						AND YEAR(stc3.date) = YEAR(stc2.date)
 						AND MONTH(stc3.date) = MONTH(stc2.date)
 				WHERE
-					stc.date BETWEEN '{$start_date}' AND '{$end_date}'
+					stc.date BETWEEN '{$start_date}' AND '{$last_day}'
 						AND stc.game_id = '{$game_id}'
 				ORDER BY stc.date DESC
 		    ");
