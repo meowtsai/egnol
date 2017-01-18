@@ -81,9 +81,9 @@
 		<thead>
 			<tr>
 				<th nowrap="nowrap" rowspan="3">日期</th>
-				<th style="width:70px" rowspan="2" colspan="5">新增用戶</th>
-				<th style="width:70px" rowspan="2" colspan="5">創角數</th>
-				<th style="width:70px" rowspan="2" colspan="5">創角<Br>留存率</th>
+				<th style="width:70px" rowspan="2" colspan="5">新增登入數</th>
+				<th style="width:70px" rowspan="2" colspan="5">新增創角數</th>
+				<th style="width:70px" rowspan="2" colspan="5">創角<Br>轉換率</th>
 				<th style="width:140px" colspan="10">次日</th>
 				<th style="width:140px" colspan="10">3天</th>
 				<th style="width:140px" colspan="10">7天</th>

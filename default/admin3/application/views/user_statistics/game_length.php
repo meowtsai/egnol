@@ -111,7 +111,7 @@
 		<thead>
 			<tr>
 				<th nowrap="nowrap">日期</th>
-				<th style="width:70px">用戶人數</th>
+				<th style="width:70px"><?=($type=="新增用戶")?"新增登入數":"DAU"?></th>
 				<th style="width:140px" colspan="2">在線15分鐘以下</th>
 				<th style="width:140px" colspan="2">在線15~30分鐘</th>	
 				<th style="width:140px" colspan="2">在線30~60分鐘</th>
