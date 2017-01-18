@@ -35,6 +35,14 @@ class G_Characters extends CI_Model {
 		return $this->db->insert_id();
 	}
 	
+	function update_character($data, $where_array)
+	{
+		$this->db->where($where_array)
+			->update("characters", $data);
+		
+		return $this->db->affected_rows();
+	}
+	
 	function chk_character_exists($server, $uid, $name)
 	{
 		$this->db->from("characters")

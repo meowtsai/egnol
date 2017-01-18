@@ -329,7 +329,18 @@ class Server_api extends MY_Controller
 		$this->load->model("g_characters");
 		if ($this->g_characters->chk_character_exists($server_info, $uid, $character_name))
 		{
-			die('0');
+			$affected_rows = $this->g_characters->create_character(
+				array(
+					"uid" => $uid,
+					"server_id" => $server_id,
+					'name' => $character_name
+				),
+				array(
+					'name' => $character_name
+				));
+			
+			if ($affected_rows) die('1');
+			else die('0');
 		}
 		
 		$insert_id = $this->g_characters->create_character($server_info,
