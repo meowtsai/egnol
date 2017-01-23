@@ -1,5 +1,6 @@
 <?
-	$payment_amount = $this->config->item("payment_amount");
+	if (IN_OFFICE) $payment_amount = $this->config->item("in_office_payment_amount");
+	else $payment_amount = $this->config->item("payment_amount");
     $convert_rate = $this->config->item("convert_rate");
 	
 // 判斷是否為行動裝置, 電腦版才要顯示 QR Code
