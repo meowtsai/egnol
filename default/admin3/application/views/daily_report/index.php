@@ -175,6 +175,17 @@
 				<td style="text-align:right"><?=$row->funapp_total?></td>
 			</tr>
 			<tr>
+				<td>VIP</td>
+				<td style="text-align:right"><?=$row->y6_vip_total?></td>
+				<td style="text-align:right"><?=$row->y5_vip_total?></td>
+				<td style="text-align:right"><?=$row->y4_vip_total?></td>
+				<td style="text-align:right"><?=$row->y3_vip_total?></td>
+				<td style="text-align:right"><?=$row->y2_vip_total?></td>
+				<td style="text-align:right"><?=$row->y_vip_total?></td>
+				<td style="text-align:right"><?=$row->t_vip_total?></td>
+				<td style="text-align:right"><?=$row->vip_total?></td>
+			</tr>
+			<tr>
 				<td>AppStore</td>
 				<td style="text-align:right"><?=$row->y6_ios_total?></td>
 				<td style="text-align:right"><?=$row->y5_ios_total?></td>
