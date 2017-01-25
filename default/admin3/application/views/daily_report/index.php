@@ -164,6 +164,17 @@
 				<td style="text-align:right"><?=$row->mycard_total?></td>
 			</tr>
 			<tr>
+				<td>天天賺</td>
+				<td style="text-align:right"><?=$row->y6_funapp_total?></td>
+				<td style="text-align:right"><?=$row->y5_funapp_total?></td>
+				<td style="text-align:right"><?=$row->y4_funapp_total?></td>
+				<td style="text-align:right"><?=$row->y3_funapp_total?></td>
+				<td style="text-align:right"><?=$row->y2_funapp_total?></td>
+				<td style="text-align:right"><?=$row->y_funapp_total?></td>
+				<td style="text-align:right"><?=$row->t_funapp_total?></td>
+				<td style="text-align:right"><?=$row->funapp_total?></td>
+			</tr>
+			<tr>
 				<td>AppStore</td>
 				<td style="text-align:right"><?=$row->y6_ios_total?></td>
 				<td style="text-align:right"><?=$row->y5_ios_total?></td>
