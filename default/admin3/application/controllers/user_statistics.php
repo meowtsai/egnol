@@ -583,6 +583,7 @@ class User_statistics extends MY_Controller {
 				SUM(CASE WHEN ub.transaction_type='inapp_billing_ios' THEN amount ELSE 0 END) 'ios_sum',
 				SUM(CASE WHEN ub.transaction_type='inapp_billing_google' THEN amount ELSE 0 END) 'android_sum',
 				SUM(CASE WHEN ub.transaction_type='mycard_billing' THEN amount ELSE 0 END) 'mycard_sum',
+				SUM(CASE WHEN ub.transaction_type='funapp_billing' THEN amount ELSE 0 END) 'funapp_sum',
 				SUM(CASE WHEN ub.transaction_type='vip_billing' THEN amount ELSE 0 END) 'vip_sum',
 				SUM(CASE WHEN ub.country_code='TWN' THEN ub.amount ELSE 0 END) 'twn_sum',
 				SUM(CASE WHEN ub.country_code='HKG' THEN ub.amount ELSE 0 END) 'hkg_sum',
@@ -619,6 +620,9 @@ class User_statistics extends MY_Controller {
                 break;
             case "MyCard":
                 $sum_type = 'mycard_sum';
+                break;
+            case "天天賺":
+                $sum_type = 'funapp_sum';
                 break;
             case "其他儲點":
                 $sum_type = 'vip_sum';

@@ -44,6 +44,7 @@
         <input type="submit" class="btn btn-small <?=($this->input->get("action")=='iOS')?'btn-inverse':''?>" name="action" value="iOS">
         <input type="submit" class="btn btn-small <?=($this->input->get("action")=='Android')?'btn-inverse':''?>" name="action" value="Android">
         <input type="submit" class="btn btn-small <?=($this->input->get("action")=='MyCard')?'btn-inverse':''?>" name="action" value="MyCard">
+        <input type="submit" class="btn btn-small <?=($this->input->get("action")=='天天賺')?'btn-inverse':''?>" name="action" value="天天賺">
         <input type="submit" class="btn btn-small <?=($this->input->get("action")=='VIP')?'btn-inverse':''?>" name="action" value="VIP">
     </div>
     <div>&nbsp;</div>
@@ -56,6 +57,7 @@
 				<th style="width:70px">iOS</th>
 				<th style="width:70px">Android</th>
 				<th style="width:70px">MyCard</th>
+				<th style="width:70px">天天賺</th>
 				<th style="width:70px">VIP</th>
 				<th style="width:70px">儲值地區-台灣</th>
 				<th style="width:70px">儲值地區-香港</th>
@@ -102,6 +104,7 @@
 				<td style="text-align:right"><?=number_format($row->ios_sum)?></td>
 				<td style="text-align:right"><?=number_format($row->android_sum)?></td>
 				<td style="text-align:right"><?=number_format($row->mycard_sum)?></td>
+				<td style="text-align:right"><?=number_format($row->funapp_sum)?></td>
 				<td style="text-align:right"><?=number_format($row->vip_sum)?></td>
 				<td style="text-align:right"><?=number_format($row->twn_sum)?></td>
 				<td style="text-align:right"><?=number_format($row->hkg_sum)?></td>
