@@ -1002,6 +1002,7 @@ class User_statistics extends MY_Controller {
 			SELECT 
 				whales.uid 'uid',
 				chr.name 'character_name',
+                chr.in_game_id  'character_in_game_id',
 				whales.server_name 'server_name',
 				whales.deposit_total 'deposit_total',
 				gm.exchange_rate*whales.deposit_total 'currency_total',
@@ -1038,7 +1039,7 @@ class User_statistics extends MY_Controller {
 						uid,
 						server_id,
 						MIN(create_time) 'create_time',
-						name
+						name, in_game_id
 					FROM characters
 					GROUP BY server_id, uid
 				) chr ON chr.uid = whales.uid

@@ -48,15 +48,13 @@
 			<tr>
 				<th nowrap="nowrap" rowspan="2">排名</th>
 				<th style="width:70px" rowspan="2">帳號</th>
-				<th style="width:70px" rowspan="2">角色</th>
-				<th style="width:70px" rowspan="2">所在伺服器</th>
+				<th style="width:110px" rowspan="2">角色</th>
+                <th style="width:70px" rowspan="2">原廠ID</th>
+				<th style="width:110px" rowspan="2">所在伺服器</th>
 				<th style="width:70px" rowspan="2">儲值累積金額</th>
-				<th style="width:70px" rowspan="2">獲得點數</th>
-				<th style="width:70px" rowspan="2">剩餘點數</th>
-				<th style="width:70px" rowspan="2">累積消費點數</th>
-				<th style="width:70px" rowspan="2">帳號創立時間</th>				 	
-                <th style="width:70px" rowspan="2">最後上線時間</th>				 	
-                <th style="width:70px" rowspan="2">距今(日)</th>				 	
+				<th style="width:110px" rowspan="2">帳號創立時間</th>				 	
+                <th style="width:140px" rowspan="2">最後上線時間</th>				 	
+                <th style="width:50px" rowspan="2">距今(日)</th>				 	
 			</tr>
 		</thead>
 		<tbody>
@@ -69,11 +67,9 @@
 				<td nowrap="nowrap"><?=$seq++?></td>
 				<td style="text-align:right"><a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?></a></td>
 				<td style="text-align:right"><?=$row->character_name?></td>
+                <td style="text-align:right"><?=$row->character_in_game_id?></td>
 				<td style="text-align:right"><?=$row->server_name?></td>
 				<td style="text-align:right"><?=number_format($row->deposit_total)?></td>
-				<td style="text-align:right"><?=number_format($row->currency_total)?></td>
-				<td style="text-align:right"><?=number_format($row->currency_total-$row->currency_consumed)?></td>
-				<td style="text-align:right"><?=number_format($row->currency_consumed)?></td>
 				<td style="text-align:right"><?=$row->create_date?></td>
                 <td style="text-align:right"><?=$row->last_login?></td>
                 <td style="text-align:right"><?=$row->days_since?></td>

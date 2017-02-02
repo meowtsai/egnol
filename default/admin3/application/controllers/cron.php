@@ -2024,6 +2024,104 @@ class Cron extends CI_Controller {
        // echo "Update_Country_by_ip DONE, Total records updated: ".$tmpCount ;
 
     }
+    function Update_Whale_Users()
+    {
+        
+            $game_id='vxz';
+            $query = $this->DB1->query("
+			SELECT 
+				whales.uid 'uid',
+				chr.name 'character_name',
+                chr.in_game_id  'character_in_game_id',
+				whales.server_name 'server_name',
+				whales.deposit_total 'deposit_total',
+				gm.exchange_rate*whales.deposit_total 'currency_total',
+				DATE(chr.create_time) 'create_date',
+				csm.consume_sum 'currency_consumed'
+			FROM
+				(	
+					SELECT 
+						ub.uid 'uid',
+						ub.server_id 'server_id',
+						svr.game_id 'game_id',
+						svr.name 'server_name',
+						SUM(ub.amount) 'deposit_total'                        
+					FROM
+						user_billing ub
+						JOIN servers svr ON svr.server_id = ub.server_id
+						LEFT JOIN testaccounts ta ON ub.uid = ta.uid
+					WHERE
+						ub.billing_type = 2
+						AND ub.result = 1
+						AND svr.game_id = '{$game_id}'
+						AND ta.uid IS NULL
+					GROUP BY ub.uid
+                    HAVING SUM(ub.amount) >= 10000
+					ORDER BY SUM(ub.amount) DESC
+				) whales
+					JOIN games gm ON whales.game_id = gm.game_id
+					LEFT JOIN 
+				( 
+					SELECT
+						uid,
+						server_id,
+						MIN(create_time) 'create_time',
+						name, in_game_id
+					FROM characters
+					GROUP BY server_id, uid
+				) chr ON chr.uid = whales.uid
+						AND chr.server_id = whales.server_id
+					LEFT JOIN
+				(
+					SELECT
+						uid,
+						server_id,
+						SUM(amount) 'consume_sum'
+					FROM
+						log_game_consumes
+					WHERE
+						game_id = '{$game_id}'
+					GROUP BY server_id, uid
+				) csm ON csm.uid = whales.uid
+					AND csm.server_id = whales.server_id
+                    
+                    
+		");
+		
+        //run那個很複雜的query 把京魚用戶找出
+        
+  
+    
+        if ($query->num_rows() > 0) {
+            foreach ($query->result() as $row) {
+
+                // 用uid 找最後上線紀錄
+
+                $last_login = $this->DB1->from("log_game_logins")->where("uid",$row->uid)->order_by("create_time desc")->limit(1)->get()->row()->create_time;
+                if (!empty($last_login)  ) { 
+                    $updateSql="INSERT INTO whale_users (uid,char_name,char_in_game_id,server_name,deposit_total,account_create_time,last_login) 
+                        VALUES('$row->uid','{$row->character_name}' ,'{$row->character_in_game_id}', '{$row->server_name}', '{$row->deposit_total}', '{$row->create_date}', '{$last_login}')
+                        ON DUPLICATE KEY UPDATE    
+                        last_login='{$last_login}',deposit_total='{$row->deposit_total}'";
+
+                    // 一筆一筆查看whale_users 中是否存在, 存在的就更新最後上線日期和目前儲值點數的欄位, 不存在就整筆新增
+
+                    $query = $this->DB1->query($updateSql);
+
+
+                }
+            }
+        }
+    
+    
+    
+
+        
+    
+        
+       // echo "Update_Country_by_ip DONE, Total records updated: ".$tmpCount ;
+
+    }
 
 }
 

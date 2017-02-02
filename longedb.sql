@@ -1254,3 +1254,17 @@ CREATE TABLE `iap_receipts` (
   `receipt` text NOT NULL,
   PRIMARY KEY (`id`),
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+DROP TABLE IF EXISTS `whale_users`;
+CREATE TABLE `whale_users` (
+`uid` int(11) NOT NULL ,
+`char_name` varchar(50),
+`char_in_game_id` varchar(50),
+`server_name` varchar(255),
+`deposit_total`  int(10),
+`account_create_time` timestamp  NULL DEFAULT NULL,
+`last_login` Datetime,
+`is_added` tinyint(1) DEFAULT '0',
+`create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+PRIMARY KEY (`uid`)) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ;
