@@ -2028,7 +2028,7 @@ class Cron extends CI_Controller {
     {
         
             $game_id='vxz';
-            $query = $this->DB1->query("
+            $query = $this->DB2->query("
 			SELECT 
 				whales.uid 'uid',
 				chr.name 'character_name',
@@ -2097,7 +2097,7 @@ class Cron extends CI_Controller {
 
                 // 用uid 找最後上線紀錄
 
-                $last_login = $this->DB1->from("log_game_logins")->where("uid",$row->uid)->order_by("create_time desc")->limit(1)->get()->row()->create_time;
+                $last_login = $this->DB2->from("log_game_logins")->where("uid",$row->uid)->order_by("create_time desc")->limit(1)->get()->row()->create_time;
                 if (!empty($last_login)  ) { 
                     $updateSql="INSERT INTO whale_users (uid,char_name,char_in_game_id,server_name,deposit_total,account_create_time,last_login) 
                         VALUES('$row->uid','{$row->character_name}' ,'{$row->character_in_game_id}', '{$row->server_name}', '{$row->deposit_total}', '{$row->create_date}', '{$last_login}')
