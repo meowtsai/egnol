@@ -997,7 +997,8 @@ class User_statistics extends MY_Controller {
 		$this->zacl->check("whale_users_statistics", "read");
 		
 		$game_id = $this->input->get("game_id");
-		/*
+		if ($game_id!="vxz")
+        {
 		$query = $this->DB2->query("
 			SELECT 
 				whales.uid 'uid',
@@ -1060,11 +1061,12 @@ class User_statistics extends MY_Controller {
                     
                     
 		");
-        */
-        
-        $query = $this->DB2->query("select uid,char_name 'character_name',char_in_game_id 'character_in_game_id',server_name,deposit_total,account_create_time 'create_date',
+        }
+        else
+        {
+        $query = $this->DB2->query("select uid,char_name 'character_name',char_in_game_id 'character_in_game_id',server_name,deposit_total,DATE(account_create_time) 'create_date',
         last_login 'last_login',TIMESTAMPDIFF(DAY, last_login, NOW()) 'days_since' from whale_users order by deposit_total desc");
-		
+		}
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
