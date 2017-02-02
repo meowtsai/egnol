@@ -70,7 +70,7 @@
                 <td style="text-align:right"><?=$row->character_in_game_id?></td>
 				<td style="text-align:right"><?=$row->server_name?></td>
 				<td style="text-align:right"><?=number_format($row->deposit_total)?></td>
-				<td style="text-align:right"><?=date_format($row->create_date,"Y/m/d")?></td>
+				<td style="text-align:right"><?=date("Y/m/d",$row->create_date)?></td>
                 <td style="text-align:right"><?=$row->last_login?></td>
                 <td style="text-align:right"><?=$row->days_since?></td>
 			</tr>
