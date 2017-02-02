@@ -1006,7 +1006,9 @@ class User_statistics extends MY_Controller {
 				whales.deposit_total 'deposit_total',
 				gm.exchange_rate*whales.deposit_total 'currency_total',
 				DATE(chr.create_time) 'create_date',
-				csm.consume_sum 'currency_consumed'
+				csm.consume_sum 'currency_consumed',
+                whales.LastLogin 'last_login',
+                ,TIMESTAMPDIFF(DAY, whales.LastLogin, NOW()) 'days_since'
 			FROM
 				(	
 					SELECT 
@@ -1015,6 +1017,7 @@ class User_statistics extends MY_Controller {
 						svr.game_id 'game_id',
 						svr.name 'server_name',
 						SUM(ub.amount) 'deposit_total'
+                        ,(select create_time from log_game_logins lgl where lgl.game_id='{$game_id}' and lgl.uid= ub.uid order by create_time desc limit 1)  'LastLogin'
 					FROM
 						user_billing ub
 						JOIN servers svr ON svr.server_id = ub.server_id
@@ -1025,7 +1028,7 @@ class User_statistics extends MY_Controller {
 						AND svr.game_id = '{$game_id}'
 						AND ta.uid IS NULL
 					GROUP BY ub.uid
-                    HAVING SUM(ub.amount) >= 5000
+                    HAVING SUM(ub.amount) >= 10000
 					ORDER BY SUM(ub.amount) DESC
 				) whales
 					JOIN games gm ON whales.game_id = gm.game_id
@@ -1053,6 +1056,8 @@ class User_statistics extends MY_Controller {
 					GROUP BY server_id, uid
 				) csm ON csm.uid = whales.uid
 					AND csm.server_id = whales.server_id
+                    
+                    
 		");
 		
 		$this->g_layout

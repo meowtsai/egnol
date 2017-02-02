@@ -55,6 +55,8 @@
 				<th style="width:70px" rowspan="2">剩餘點數</th>
 				<th style="width:70px" rowspan="2">累積消費點數</th>
 				<th style="width:70px" rowspan="2">帳號創立時間</th>				 	
+                <th style="width:70px" rowspan="2">最後上線時間</th>				 	
+                <th style="width:70px" rowspan="2">距今(日)</th>				 	
 			</tr>
 		</thead>
 		<tbody>
@@ -73,6 +75,8 @@
 				<td style="text-align:right"><?=number_format($row->currency_total-$row->currency_consumed)?></td>
 				<td style="text-align:right"><?=number_format($row->currency_consumed)?></td>
 				<td style="text-align:right"><?=$row->create_date?></td>
+                <td style="text-align:right"><?=$row->last_login?></td>
+                <td style="text-align:right"><?=$row->days_since?></td>
 			</tr>
 		<? endforeach;?>
 		</tbody>
