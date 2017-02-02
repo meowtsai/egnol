@@ -1008,7 +1008,7 @@ class User_statistics extends MY_Controller {
 				DATE(chr.create_time) 'create_date',
 				csm.consume_sum 'currency_consumed',
                 whales.LastLogin 'last_login',
-                ,TIMESTAMPDIFF(DAY, whales.LastLogin, NOW()) 'days_since'
+                TIMESTAMPDIFF(DAY, whales.LastLogin, NOW()) 'days_since'
 			FROM
 				(	
 					SELECT 
