@@ -47,7 +47,7 @@
 		<thead>
 			<tr>
 				<th nowrap="nowrap" rowspan="2">排名</th>
-				<th style="width:80px" rowspan="2">帳號</th>
+				<th style="width:110px" rowspan="2">帳號</th>
 				<th style="width:160px" rowspan="2">角色</th>
                 <th style="width:70px" rowspan="2">原廠ID</th>
 				<th style="width:110px" rowspan="2">所在伺服器</th>
