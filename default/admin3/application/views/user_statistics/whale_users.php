@@ -48,7 +48,7 @@
 			<tr>
 				<th nowrap="nowrap" rowspan="2">排名</th>
 				<th style="width:70px" rowspan="2">帳號</th>
-				<th style="width:110px" rowspan="2">角色</th>
+				<th style="width:160px" rowspan="2">角色</th>
                 <th style="width:70px" rowspan="2">原廠ID</th>
 				<th style="width:110px" rowspan="2">所在伺服器</th>
 				<th style="width:70px" rowspan="2">儲值累積</th>
@@ -65,11 +65,19 @@
 		?>
 			<tr>			
 				<td nowrap="nowrap"><?=$seq++?></td>
-				<td style="text-align:right"><a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?>  </a></td>
+				<td style="text-align:right">
+                    <a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?>  </a>
+            
+                    <?=$row->character_name?> 
+                    <? if ($row->days_inserted==0):?>
+                    <span class="label label-important">New</span>
+                    <? endif;?>
+            
+                </td>
 				<td style="text-align:center">
                     <?=$row->character_name?> 
                     <? if ($row->is_added == 1):?>
-                    <span class="label label-info">已加入</span>
+                    &nbsp;&nbsp;&nbsp;<span class="label label-success">Line</span>
                     <? endif;?>
                 </td>
                 <td style="text-align:right"><?=$row->character_in_game_id?></td>

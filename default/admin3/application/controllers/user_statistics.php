@@ -1071,7 +1071,8 @@ class User_statistics extends MY_Controller {
         DATE(account_create_time) 'create_date',
         last_login 'last_login',
         TIMESTAMPDIFF(DAY, last_login, NOW()) 'days_since' ,
-        is_added
+        is_added,
+        TIMESTAMPDIFF(DAY, create_time, NOW()) 'days_inserted' 
         from whale_users order by deposit_total desc");
 		}
 		$this->g_layout
