@@ -2099,8 +2099,8 @@ class Cron extends CI_Controller {
 
                 $last_login = $this->DB2->from("log_game_logins")->where("uid",$row->uid)->order_by("create_time desc")->limit(1)->get()->row()->create_time;
                 if (!empty($last_login)  ) { 
-                    $updateSql="INSERT INTO whale_users (uid,char_name,char_in_game_id,server_name,deposit_total,account_create_time,last_login) 
-                        VALUES('$row->uid','{$row->character_name}' ,'{$row->character_in_game_id}', '{$row->server_name}', '{$row->deposit_total}', '{$row->create_date}', '{$last_login}')
+                    $updateSql="INSERT INTO whale_users (uid,char_name,char_in_game_id,server_name,deposit_total,account_create_time,last_login,site) 
+                        VALUES('$row->uid','{$row->character_name}' ,'{$row->character_in_game_id}', '{$row->server_name}', '{$row->deposit_total}', '{$row->create_date}', '{$last_login}','{$game_id}')
                         ON DUPLICATE KEY UPDATE    
                         last_login='{$last_login}',deposit_total='{$row->deposit_total}'";
 

@@ -1064,8 +1064,15 @@ class User_statistics extends MY_Controller {
         }
         else
         {
-        $query = $this->DB2->query("select uid,char_name 'character_name',char_in_game_id 'character_in_game_id',server_name,deposit_total,DATE(account_create_time) 'create_date',
-        last_login 'last_login',TIMESTAMPDIFF(DAY, last_login, NOW()) 'days_since' from whale_users order by deposit_total desc");
+        $query = $this->DB2->query("select uid,char_name 'character_name',
+        char_in_game_id 'character_in_game_id',
+        server_name,
+        deposit_total,
+        DATE(account_create_time) 'create_date',
+        last_login 'last_login',
+        TIMESTAMPDIFF(DAY, last_login, NOW()) 'days_since' ,
+        is_added
+        from whale_users order by deposit_total desc");
 		}
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)

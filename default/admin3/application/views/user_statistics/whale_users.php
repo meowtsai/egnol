@@ -54,7 +54,7 @@
 				<th style="width:70px" rowspan="2">儲值累積</th>
 				<th style="width:110px" rowspan="2">帳號創立時間</th>				 	
                 <th style="width:140px" rowspan="2">最後上線時間</th>				 	
-                <th style="width:50px" rowspan="2">距今(日)</th>				 	
+                <th style="width:70px" rowspan="2">距今</th>				 	
 			</tr>
 		</thead>
 		<tbody>
@@ -65,8 +65,13 @@
 		?>
 			<tr>			
 				<td nowrap="nowrap"><?=$seq++?></td>
-				<td style="text-align:right"><a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?></a></td>
-				<td style="text-align:right"><?=$row->character_name?></td>
+				<td style="text-align:right"><a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?>  </a></td>
+				<td style="text-align:center">
+                    <?=$row->character_name?> 
+                    <? if ($row->is_added == 1):?>
+                    <span class="label label-info">已加入</span>
+                    <? endif;?>
+                </td>
                 <td style="text-align:right"><?=$row->character_in_game_id?></td>
 				<td style="text-align:right"><?=$row->server_name?></td>
 				<td style="text-align:right"><?=number_format($row->deposit_total)?></td>

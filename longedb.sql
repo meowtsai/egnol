@@ -1259,6 +1259,7 @@ CREATE TABLE `iap_receipts` (
 DROP TABLE IF EXISTS `whale_users`;
 CREATE TABLE `whale_users` (
 `uid` int(11) NOT NULL ,
+`site` varchar(50) ,
 `char_name` varchar(50),
 `char_in_game_id` varchar(50),
 `server_name` varchar(255),
