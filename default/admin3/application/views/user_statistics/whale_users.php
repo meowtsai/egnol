@@ -57,6 +57,7 @@
                 <th style="width:70px" rowspan="2">距今</th>				 	
                 <th style="width:50px" rowspan="2">Line?</th>				 	
                 <th style="width:50px" rowspan="2">New?</th>				 	
+                <th style="width:50px" rowspan="2"></th>				 	
                 
 			</tr>
 		</thead>
