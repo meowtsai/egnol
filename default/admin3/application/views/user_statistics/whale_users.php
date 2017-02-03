@@ -82,12 +82,12 @@
                 <td style="text-align:right"><?=$row->days_since?></td>
                 <td style="text-align:right">
                     <? if ($row->is_added==1):?>
-                    <span class="label label-success">V</span>
+                    V
                     <? endif;?>
                 </td>
                 <td style="text-align:right">
                     <? if ($row->days_inserted==0):?>
-                    <span class="label label-important">New!</span>
+                    New
                     <? endif;?>
                 </td>
 			</tr>
