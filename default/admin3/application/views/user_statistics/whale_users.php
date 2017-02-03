@@ -47,14 +47,17 @@
 		<thead>
 			<tr>
 				<th nowrap="nowrap" rowspan="2">排名</th>
-				<th style="width:110px" rowspan="2">帳號</th>
-				<th style="width:160px" rowspan="2">角色</th>
+				<th style="width:80px" rowspan="2">帳號</th>
+				<th style="width:140px" rowspan="2">角色</th>
                 <th style="width:70px" rowspan="2">原廠ID</th>
 				<th style="width:110px" rowspan="2">所在伺服器</th>
 				<th style="width:70px" rowspan="2">儲值累積</th>
 				<th style="width:110px" rowspan="2">帳號創立時間</th>				 	
                 <th style="width:140px" rowspan="2">最後上線時間</th>				 	
                 <th style="width:70px" rowspan="2">距今</th>				 	
+                <th style="width:50px" rowspan="2">Line?</th>				 	
+                <th style="width:50px" rowspan="2">New?</th>				 	
+                
 			</tr>
 		</thead>
 		<tbody>
@@ -67,16 +70,9 @@
 				<td nowrap="nowrap"><?=$seq++?></td>
 				<td style="text-align:right">
                     <a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?>  </a>
-                    <? if ($row->days_inserted==0):?>
-                    <span class="label label-important">New</span>
-                    <? endif;?>
-            
                 </td>
 				<td style="text-align:center">
                     <?=$row->character_name?> 
-                    <? if ($row->is_added == 1):?>
-                    &nbsp;&nbsp;&nbsp;<span class="label label-success">Line</span>
-                    <? endif;?>
                 </td>
                 <td style="text-align:right"><?=$row->character_in_game_id?></td>
 				<td style="text-align:right"><?=$row->server_name?></td>
@@ -84,6 +80,16 @@
 				<td style="text-align:right"><?=$row->create_date?></td>
                 <td style="text-align:right"><?=$row->last_login?></td>
                 <td style="text-align:right"><?=$row->days_since?></td>
+                <td style="text-align:right">
+                    <? if ($row->is_added==1):?>
+                    <span class="label label-success">V</span>
+                    <? endif;?>
+                </td>
+                <td style="text-align:right">
+                    <? if ($row->days_inserted==0):?>
+                    <span class="label label-important">New!</span>
+                    <? endif;?>
+                </td>
 			</tr>
 		<? endforeach;?>
 		</tbody>
