@@ -55,7 +55,13 @@
 				<th style="width:110px" rowspan="2">帳號創立時間</th>				 	
                 <th style="width:140px" rowspan="2">最後上線時間</th>				 	
                 <th style="width:70px" rowspan="2">距今</th>				 	
-                <th style="width:50px" rowspan="2">Line?</th>				 	
+                <th style="width:50px" rowspan="2">
+                    <div class="btn-group">
+				        <a href="<?=site_url("user_statistics/whale_users?orderby=is_added")?>" class="btn btn-mini">Line?</a>	
+                    </div>
+                    
+                
+                </th>				 	
                 <th style="width:50px" rowspan="2">New?</th>				 	
                 <th style="width:50px" rowspan="2"></th>				 	
                 
