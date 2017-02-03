@@ -2142,7 +2142,7 @@ class Cron extends CI_Controller {
 						LEFT JOIN testaccounts ta ON ub.uid = ta.uid
 					WHERE
                         ub.uid in('16069','120538','114478','31863','120414','107690','29748','80848','104696','59680','94859','75821','81044','78252','72022')
-						ub.billing_type = 2
+						AND ub.billing_type = 2
 						AND ub.result = 1
 						AND svr.game_id = '{$game_id}'
 						AND ta.uid IS NULL

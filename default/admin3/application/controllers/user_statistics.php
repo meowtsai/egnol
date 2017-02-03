@@ -1085,7 +1085,7 @@ class User_statistics extends MY_Controller {
     
     function whale_users_set_status($uid, $status)
 	{
-		if ( ! $this->zacl->check("whale_users_statistics", "read");) die(json_failure("沒有權限"));
+		//if ( ! $this->zacl->check("whale_users_statistics", "read") die(json_failure("沒有權限"));
         
 		
 		$this->DB1->where("uid", $uid)
