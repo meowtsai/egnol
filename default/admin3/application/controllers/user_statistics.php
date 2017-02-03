@@ -1082,6 +1082,15 @@ class User_statistics extends MY_Controller {
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
 	}
+    
+    function whale_users_set_status($uid, $status)
+	{
+		//if ( ! $this->zacl->check_acl("server", "modify")) die(json_failure("沒有權限"));
+		
+		$this->DB1->where("uid", $uid)
+		->set("is_added", $status)->update("whale_users");
+		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure("無變更");
+	}
 	    
     function level_analysis() {
 		$this->zacl->check_login(true);

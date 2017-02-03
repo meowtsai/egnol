@@ -90,6 +90,22 @@
                     New
                     <? endif;?>
                 </td>
+                <td>
+                    <? if ($row->is_added==0):?>
+                    <div class="btn-group">
+                        <a href="#" class="btn btn-mini">修改</a>		
+                            <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                            <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu">
+                                <li><a href="javascript:;" class="json_post" url="<?=site_url("user_statistics/whale_users_set_status/{$row->uid}/1")?>">設為已經加入Line</a></li>
+                            </ul>				
+                    </div>
+
+                    
+                    <? endif;?>
+                    
+                </td>
+
+
 			</tr>
 		<? endforeach;?>
 		</tbody>
