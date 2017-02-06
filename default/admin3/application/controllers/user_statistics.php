@@ -997,8 +997,22 @@ class User_statistics extends MY_Controller {
 		$this->zacl->check("whale_users_statistics", "read");
 		
 		$game_id = $this->input->get("game_id");
+        $orderby = $this->input->get("orderby");
         
-       
+        
+         switch($orderby) {
+			case "is_added":
+			    $orderby = 'is_added';
+				break;
+			
+			case "is_new":
+			    $orderby = 'days_inserted';
+				break;
+				
+			default:
+			    $orderby = 'deposit_total';
+				break;
+		}	
         
         
 		if ($game_id!="vxz")
@@ -1077,7 +1091,7 @@ class User_statistics extends MY_Controller {
         TIMESTAMPDIFF(DAY, last_login, NOW()) 'days_since' ,
         is_added,
         TIMESTAMPDIFF(DAY, create_time, NOW()) 'days_inserted' 
-        from whale_users order by deposit_total desc");
+        from whale_users order by {$orderby} desc");
 		}
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
