@@ -35,11 +35,11 @@
 			endforeach;?>	
 	    </select>
         
-                
+            排序方法:    
         <select name="orderby">
-            <option value="">儲值金額</option>
-            <option value="is_added">Line?</option>
-            <option value="is_new">New?</option>
+            <option value="deposit_total" <?=($orderby=="deposit_total" ? 'selected="selected"' : '')?>>儲值金額</option>
+            <option value="is_added" <?=($orderby=="is_added" ? 'selected="selected"' : '')?>>Line?</option>
+            <option value="days_inserted" <?=($orderby=="days_inserted" ? 'selected="selected"' : '')?>>New?</option>
         </select>
 		
 		<input type="submit" class="btn btn-small btn-inverse" name="action" value="鯨魚用戶統計">	

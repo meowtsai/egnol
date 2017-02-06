@@ -1000,19 +1000,7 @@ class User_statistics extends MY_Controller {
         $orderby = $this->input->get("orderby");
         
         
-         switch($orderby) {
-			case "is_added":
-			    $orderby = 'is_added';
-				break;
-			
-			case "is_new":
-			    $orderby = 'days_inserted';
-				break;
-				
-			default:
-			    $orderby = 'deposit_total';
-				break;
-		}	
+        
         
         
 		if ($game_id!="vxz")
@@ -1096,6 +1084,7 @@ class User_statistics extends MY_Controller {
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
+            ->set("orderby", $orderby)
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
