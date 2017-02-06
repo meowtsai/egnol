@@ -1079,7 +1079,7 @@ class User_statistics extends MY_Controller {
         TIMESTAMPDIFF(DAY, last_login, NOW()) 'days_since' ,
         is_added,
         TIMESTAMPDIFF(DAY, create_time, NOW()) 'days_inserted' 
-        from whale_users order by {$orderby} desc");
+        from whale_users order by {$orderby} ");
 		}
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
