@@ -306,6 +306,9 @@ class Server_api extends MY_Controller
 			}
 		}
 		
+		//小李合服特別判斷
+		if ($game_id && $game_id=='vxz') $server_id="vxz-server".substr($character_id, -2);
+		
 		if ($game_id) $this->db->where("game_id", $game_id);
 		$server_info = $this->db->from("servers")->where("server_id", $server_id)->get()->row();
 		if (empty($server_info))
