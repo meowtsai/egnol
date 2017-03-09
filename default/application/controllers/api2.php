@@ -1050,7 +1050,11 @@ class Api2 extends MY_Controller
             $set_game = $this->db->from("games")->where("game_id", $set_server->game_id)->get()->row();
 			
 		    //小李合服特別判斷
-		    if ($set_game->game_id && $set_game->game_id=='vxz') $server_id="vxz-server".substr($character_id, -2);
+		    if ($set_game->game_id && $set_game->game_id=='vxz') {
+				$server_id="vxz-server".substr($character_id, -2);
+			
+            	$set_server = $this->db->from("servers")->where("server_id", $server_id)->where("game_id !=", "r2g")->get()->row();
+			}
 			
 			$set_message = '『'.$set_game->name.'』台幣兌換遊戲中『'.$set_game->currency.'』比值為 <span style="color:#c00">1:'.$set_game->exchange_rate.'</span>。<br />(每 <span style="color:#c00">100</span> 台幣可獲得 <span style="color:#c00">'.($set_game->exchange_rate*100).'</span> '.$set_game->currency.')<br />儲值成功後，重新登入遊戲即可獲得'.$set_game->currency.'。';
 			
