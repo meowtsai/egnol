@@ -1049,13 +1049,16 @@ class Api2 extends MY_Controller
 			
             $set_game = $this->db->from("games")->where("game_id", $set_server->game_id)->get()->row();
 			
+		    //小李合服特別判斷
+		    if ($set_game->game_id && $set_game->game_id=='vxz') $server_id="vxz-server".substr($character_id, -2);
+			
 			$set_message = '『'.$set_game->name.'』台幣兌換遊戲中『'.$set_game->currency.'』比值為 <span style="color:#c00">1:'.$set_game->exchange_rate.'</span>。<br />(每 <span style="color:#c00">100</span> 台幣可獲得 <span style="color:#c00">'.($set_game->exchange_rate*100).'</span> '.$set_game->currency.')<br />儲值成功後，重新登入遊戲即可獲得'.$set_game->currency.'。';
 			
 			$set_character = $this->db->from("characters")->where("server_id", $server_id)->where("in_game_id", $character_id)->get()->row();
 			
 			if (empty($set_character))
 			{
-				$set_character = $this->db->from("characters")->where("server_id", $set_server->server_id)->where("id", $server_id)->get()->row();
+				$set_character = $this->db->from("characters")->where("server_id", $server_id)->where("id", $server_id)->get()->row();
 			}
 			$character_id = $set_character->id;
         }
@@ -1065,7 +1068,7 @@ class Api2 extends MY_Controller
 			->set("servers", $servers)
 			->set("game_id", (isset($set_game->game_id))?$set_game->game_id:"")
 			->set("game_name", (isset($set_game->name))?$set_game->name:"")
-			->set("server_id", (isset($set_server->server_id))?$set_server->server_id:"")
+			->set("server_id", (isset($server_id))?$server_id:"")
 			->set("server_name", (isset($set_server->name))?$set_server->name:"")
 			->set("characters", $characters)
 			->set("character_id", $character_id)
