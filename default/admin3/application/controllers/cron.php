@@ -2205,6 +2205,29 @@ class Cron extends CI_Controller {
 
     }
 
+	function bulletin_news()
+	{
+		$query = $this->DB2
+			->where("type", 99)
+			->where("now() between start_time and end_time", null, false)
+			->order_by("game_id, start_time")->get("bulletins");
+		
+		if ($query->num_rows() > 0) {
+		    foreach ($query->result() as $row) {
+				
+				$filePath = "p/file/";
+				$filePath .= "news";
+				$filePath .= ($row->game_id) ? "_".$row->game_id : "";
+				$filePath .= ".txt";
+
+				$file = fopen($filePath, "w+");
+
+				fwrite($file, $row->content);
+
+				fclose($file);
+			}
+		}
+	}
 }
 
 /* End of file search.php */
