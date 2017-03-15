@@ -25,7 +25,6 @@
 			<p>
 			</p>
 			<p>
-				<span style="vertical-align:text-bottom;">遊戲進行以外的問題可先參考</span>
 				<a href="<?=$longe_url?>member/service_agreement?site=<?=$site?>" style="vertical-align:text-bottom;color:#a50000">會員服務條款</a><span style="vertical-align:text-bottom;">、</span>
 				<a href="<?=$longe_url?>member/member_agreement?site=<?=$site?>" style="vertical-align:text-bottom;color:#a50000">個資同意書</a><span style="vertical-align:text-bottom;">與</span>
 				<a href="<?=$longe_url?>member/privacy_agreement?site=<?=$site?>"  style="vertical-align:text-bottom;color:#a50000">隱私權政策</a>
