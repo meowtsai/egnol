@@ -385,7 +385,7 @@ class Vip extends MY_Controller {
 			->where("t.id", $id)
 			->from("vip_events t")
 			->join("games g", "g.game_id=t.game_id", "left")
-			->join("admin_users u", "u.uid=t.admin_uid")
+			->join("admin_users u", "u.uid=t.admin_uid", "left")
 			->join("admin_users auth", "auth.uid=t.auth_admin_uid", "left")
 			->join("(
                 SELECT 
@@ -440,7 +440,7 @@ class Vip extends MY_Controller {
 		$vip = $this->DB2->select("t.*, g.name as game_name, u.name, au.name allocate_user_name, ccu.name cc_user_name")
 			->where("t.id", $id)
 			->from("vips t")
-			->join("admin_users u", "u.uid=t.admin_uid")
+			->join("admin_users u", "u.uid=t.admin_uid", "left")
 			->join("games g", "g.game_id=t.game_id", "left")
 			->join("admin_users au", "au.uid=t.allocate_admin_uid", "left")
 			->join("admin_users ccu", "ccu.uid=t.cc_admin_uid", "left")
