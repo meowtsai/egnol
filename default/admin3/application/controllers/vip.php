@@ -332,7 +332,7 @@ class Vip extends MY_Controller {
                 vt.closed_count as closed_count
             FROM 
                 vip_events t
-            JOIN admin_users u ON u.uid=t.admin_uid
+            LEFT JOIN admin_users u ON u.uid=t.admin_uid
             LEFT JOIN games g ON g.game_id=t.game_id
             LEFT JOIN admin_users au ON au.uid=t.auth_admin_uid
             LEFT JOIN 
