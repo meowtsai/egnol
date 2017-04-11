@@ -148,6 +148,15 @@ class Api2 extends MY_Controller
 	{
 		$site	= $this->_get_site();
             
+		$email = !empty($this->g_user->email) ? $this->g_user->email : "";
+		$mobile = !empty($this->g_user->mobile) ? $this->g_user->mobile : "";
+		$external_id = !empty($this->g_user->external_id) ? $this->g_user->external_id : "";
+		
+		if (strpos($external_id, "@google") && empty($this->g_user->email) && empty($this->g_user->mobile)) {
+			$_SESSION['skip_pick_server'] = '';
+			unset($_SESSION['skip_pick_server']);
+		}
+		
 		log_message("error", "_ui_member ".$_SESSION['skip_pick_server']." - ".$_SESSION['server_id']);
 		if (!isset($_SESSION['skip_pick_server']) && !isset($_SESSION['server_id']))
 		{
@@ -177,10 +186,6 @@ class Api2 extends MY_Controller
 		else
 		{
             $is_login_game = $this->_login_game();
-        
-			$email = !empty($this->g_user->email) ? $this->g_user->email : "";
-			$mobile = !empty($this->g_user->mobile) ? $this->g_user->mobile : "";
-			$external_id = !empty($this->g_user->external_id) ? $this->g_user->external_id : "";
 			
 			if ($site=='r2g') $_SESSION['server_id'] = 'r2g01';
 			
