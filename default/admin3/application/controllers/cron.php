@@ -2210,7 +2210,7 @@ class Cron extends CI_Controller {
 		$query = $this->DB2
 			->where("type", 99)
 			->where("now() between start_time and end_time", null, false)
-			->order_by("game_id, start_time")->get("bulletins");
+			->order_by("game_id, start_time desc")->get("bulletins");
 		
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
@@ -2225,6 +2225,8 @@ class Cron extends CI_Controller {
 				fwrite($file, $row->content);
 
 				fclose($file);
+				
+				break;
 			}
 		}
 	}
