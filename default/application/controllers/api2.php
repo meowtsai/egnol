@@ -1268,11 +1268,6 @@ class Api2 extends MY_Controller
 			
 			$server_id = $server_info->server_id;
 		}
-
-		//小李合服特別判斷
-		if ($server_info->game_id && $server_info->game_id=='vxz') {
-			$server_id="vxz-server".substr($character_id, -2);
-		}
 		
 		// 先讀取資料庫的訂單
 		$this->load->library("g_wallet");
@@ -1543,11 +1538,6 @@ class Api2 extends MY_Controller
 			}
 			
 			$server_id = $server_info->server_id;
-		}
-
-		//小李合服特別判斷
-		if ($server_info->game_id && $server_info->game_id=='vxz') {
-			$server_id="vxz-server".substr($character_id, -2);
 		}
 
 		// 驗證訂單
@@ -2050,11 +2040,6 @@ class Api2 extends MY_Controller
 			}
 			
 			$server_id = $server_info->server_id;
-		}
-
-		//小李合服特別判斷
-		if ($server_info->game_id && $server_info->game_id=='vxz') {
-			$server_id="vxz-server".substr($character_id, -2);
 		}
 		
 		// 驗證訂單

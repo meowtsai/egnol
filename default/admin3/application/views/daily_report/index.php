@@ -72,7 +72,7 @@
 				<td style="text-align:right"><?=$row->newuser_google_count?></td>
 			</tr>
 			<tr>
-				<td>行動裝置</td>
+				<td>直接玩</td>
 				<td style="text-align:right"><?=$row->y6_newuser_quick_count?></td>
 				<td style="text-align:right"><?=$row->y5_newuser_quick_count?></td>
 				<td style="text-align:right"><?=$row->y4_newuser_quick_count?></td>
