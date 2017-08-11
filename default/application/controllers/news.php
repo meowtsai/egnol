@@ -49,15 +49,24 @@ class News extends MY_Controller {
 	{
 		$site = $this->_get_site();
         
+		$bodyonly = $this->input->get("bodyonly");
+        
 		$this->load->model("g_bulletins");
 		$row = $this->g_bulletins->get_bulletin($site, $id);
 		if ($row == false || $row->priority == 0) {die("無此記錄");}
 		
-        
-		$this->_init_layout()
-			->add_css_link("login")
-			->add_css_link("news")
-			->set("row", $row)
-			->standard_view();
+        if ($bodyonly) {
+            $this->_init_layout()
+                ->add_css_link("login")
+                ->add_css_link("news")
+                ->set("row", $row)
+                ->view("news/detail_bodyonly");
+        } else {
+            $this->_init_layout()
+                ->add_css_link("login")
+                ->add_css_link("news")
+                ->set("row", $row)
+                ->standard_view();
+        }
 	}
 }
