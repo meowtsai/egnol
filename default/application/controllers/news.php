@@ -53,6 +53,7 @@ class News extends MY_Controller {
 		$row = $this->g_bulletins->get_bulletin($site, $id);
 		if ($row == false || $row->priority == 0) {die("無此記錄");}
 		
+        
 		$this->_init_layout()
 			->add_css_link("login")
 			->add_css_link("news")
