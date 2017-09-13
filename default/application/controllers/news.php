@@ -21,7 +21,6 @@ class News extends MY_Controller {
 				'per_page'	=> 7
 		));	
 		
-		//$news = $this->db->where("game_id", $site)->order_by("create_time", "desc")->get("news", 10);
         $this->_init_layout()
             ->add_css_link("login")
             ->add_css_link("news")
