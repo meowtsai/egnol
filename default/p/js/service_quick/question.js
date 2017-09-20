@@ -69,7 +69,7 @@ $(function()
 				{
 					if (json.status == 'success')
 					{
-		                leOpenDialog('玩家提問', '提問成功！', leDialogType.MESSAGE, function()
+		                leOpenDialog('玩家提問', json.message, leDialogType.MESSAGE, function()
 						{
 		                    location.href = '/service_quick/listing?site=' + json.site;
 						});

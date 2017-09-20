@@ -102,6 +102,7 @@ class Service_quick extends MY_Controller {
 			->add_css_link("server")
 			->mobile_view();
 	}
+    
 	function question_ajax()
 	{
 		$site = $this->_get_site();
@@ -117,7 +118,7 @@ class Service_quick extends MY_Controller {
 		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問，若有未說明問題，請以原提問進行補述!")));
         */
 		
-        $md5_str = md5("egnol".$this->input->post("mobile").time().$this->input->post("email")."yalp");
+        $check_id = base_convert(time(), 10, 32);
         
 		$data = array(
 			"uid" => 0,
@@ -130,7 +131,7 @@ class Service_quick extends MY_Controller {
 			//'admin_uid' => $_SESSION['admin_uid'],
 			'phone' => $this->input->post("mobile"),
 			'email' => $this->input->post("email"),
-			'check_id' => $md5_str,
+			'check_id' => $check_id,
 			'is_quick' => 1,
 		);	
         
@@ -198,22 +199,27 @@ class Service_quick extends MY_Controller {
 			->set("create_time", "now()", false)
 			->set("update_time", "now()", false)
 			->insert("questions", $data);
-
-		//die(json_encode(array("status"=>"success", "site"=> $site)));
         
         if (!$this->input->post("partner_uid")) {
 
             header('content-type:text/html; charset=utf-8');
 
-            if(filter_var($email, FILTER_VALIDATE_EMAIL))
+            if(filter_var($this->input->post("email"), FILTER_VALIDATE_EMAIL))
             {
-                if($this->g_send_mail->send_view($email,
+                $msg = "後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件：<br>".$check_id;
+                
+			    $this->load->library("g_send_mail");
+                
+                if($this->g_send_mail->send_view($this->input->post("email"),
 									$_SESSION['game_name']."客服代碼通知信[".date("Y/m/d H:i:s")."]",
 									"g_blank_mail",
-									array("game_name" => $_SESSION['game_name'], "md5_str" => $md5_str),
+									array("game_name" => $_SESSION['game_name'], "msg" => $msg),
 									array("headerimg" => FCPATH."/p/image/mail/header.jpg")))
                 {
-		            die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件：".$md5_str)));
+                    $_SESSION['check_id'] = $check_id;
+                    $_SESSION['email'] = $this->input->post("email");
+                    $_SESSION['mobile'] = $this->input->post("mobile");
+		            die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件：".$check_id)));
                 }
                 else
                 {
@@ -223,26 +229,31 @@ class Service_quick extends MY_Controller {
             else
             {
                 // 手機號碼的話要發送簡訊
-                $msg = "後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件：".$md5_str;
+                $msg = "後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件：".$check_id;
 
                 $this->load->library("g_send_sms");
 
                 if($this->g_send_sms->send($site, $this->input->post("mobile"), $msg))
                 {
-		            die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件：".$md5_str)));
+                    $_SESSION['check_id'] = $check_id;
+                    $_SESSION['email'] = $this->input->post("email");
+                    $_SESSION['mobile'] = $this->input->post("mobile");
+		            die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件：".$check_id)));
                 }
                 else
                 {
 				    die(json_encode(array("status"=>"failure", "message"=>"簡訊發送失敗。請確認輸入手機為有效號碼。")));
                 }
             }
+        } else {
+		    die(json_encode(array("status"=>"success", "site"=> $site)));
         }
 	}
 	
 	function listing()
 	{
-        $email   = $this->input->get_post("email");
-        $mobile  = $this->input->get_post("mobile");
+        $email    = ($this->input->get_post("email")) ? $this->input->get_post("email") : $_SESSION['email'];
+        $mobile   = ($this->input->get_post("mobile")) ? $this->input->get_post("mobile") : $_SESSION['mobile'];
         $check_id = ($this->input->get_post("check_id")) ? $this->input->get_post("check_id") : $_SESSION['check_id'];
         
         if ($_SESSION['partner_uid']) {

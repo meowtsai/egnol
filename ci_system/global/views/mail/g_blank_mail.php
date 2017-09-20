@@ -40,8 +40,7 @@ table  {max-width:100%; width:100%;}
 <td class="post-cell" valign="top" style='color:#333333; font-size:14px; line-height:20px;font-family:"微軟正黑體", "Microsoft JhengHei", Arial, Helvetica, sans-serif;'>
 <div class="pcont-text">
 <h1 style='font-size:18px; font-weight:bold; line-height:30px;'>親愛的<?=$game_name?>玩家您好，</h1>
-<p style="line-height:30px;">後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件：<br/>
-※ 客服代碼 : <?=$md5_str?> <br />
+<p style="line-height:30px;"><?=$msg?><br />
 <br />
 <br />
 <?=$game_name?>遊戲團隊敬上<br />
