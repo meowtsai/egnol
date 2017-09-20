@@ -38,7 +38,7 @@ class Service_quick extends MY_Controller {
         
         $_SESSION['game_name']	= $game_info->name;
         
-        if (isset($server_name) && isset($character_name)) {
+        if (!empty($server_name) && !empty($character_name)) {
             $server_info = $this->db->from("servers")->where("game_id", $game_info->game_id)->where("name", $server_name)->get()->row();
             $character_info = $this->db->from("characters")->where("server_id", $server_info->server_id)->where("in_game_id", $in_game_id)->get()->row();
             
@@ -256,8 +256,9 @@ class Service_quick extends MY_Controller {
         $email    = ($this->input->get_post("email")) ? $this->input->get_post("email") : $_SESSION['email'];
         $mobile   = ($this->input->get_post("mobile")) ? $this->input->get_post("mobile") : $_SESSION['mobile'];
         $check_id = ($this->input->get_post("check_id")) ? $this->input->get_post("check_id") : $_SESSION['check_id'];
+        $partner_uid = $_SESSION['partner_uid'];
         
-        if (isset($_SESSION['partner_uid'])) {
+        if (!empty($_SESSION['partner_uid'])) {
             
             $this->db->select("*")
                 ->where("partner_uid", $_SESSION['partner_uid'])
@@ -275,7 +276,7 @@ class Service_quick extends MY_Controller {
         } elseif ($check_id) {
             $this->db->select("*")
                 ->where("check_id", $check_id)
-                ->where("(email <> '' and email='{$email}') or (phone <> '' and phone='{$mobile}')")
+                //->where("((email <> '' and email is not null and email='{$email}') or (phone <> '' and phone is not null and phone='{$mobile}'))")
                 ->from("questions")
                 ->order_by("id", "desc");
 
@@ -320,7 +321,7 @@ class Service_quick extends MY_Controller {
         if ($check_id) {
             $this->db->select("*")
                 ->where("check_id", $check_id)
-                ->where("(email <> '' and email='{$email}') or (phone <> '' and phone='{$mobile}')")
+                ->where("((email <> '' and email is not null and email='{$email}') or (phone <> '' and phone is not null and phone='{$mobile}'))")
                 ->from("questions")
                 ->order_by("id", "desc");
 
