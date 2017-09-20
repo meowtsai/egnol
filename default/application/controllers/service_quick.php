@@ -227,15 +227,8 @@ class Service_quick extends MY_Controller {
 
                 $this->load->library("g_send_sms");
 
-                if($this->g_send_sms->send($site, $mobile, $msg))
+                if($this->g_send_sms->send($site, $this->input->post("mobile"), $msg))
                 {
-                    $log_data = array(
-                        "uid" => $user->uid,
-                        "content" => $_SESSION['game_name']."客服代碼: ".$md5_str
-                    );
-
-                    $this->db->insert("log_user_updates", $log_data);
-
 		            die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件：".$md5_str)));
                 }
                 else
