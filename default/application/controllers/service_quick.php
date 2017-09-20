@@ -199,7 +199,7 @@ class Service_quick extends MY_Controller {
 			->set("update_time", "now()", false)
 			->insert("questions", $data);
 
-		die(json_encode(array("status"=>"success", "site"=> $site)));
+		//die(json_encode(array("status"=>"success", "site"=> $site)));
         
         if (!$this->input->post("partner_uid")) {
 
