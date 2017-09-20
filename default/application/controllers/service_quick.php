@@ -16,22 +16,23 @@ class Service_quick extends MY_Controller {
         $server_name	= $this->input->get_post("server_name");
         $character_name	= $this->input->get_post("character_name");
 
-        unset($_SESSION['vendor_game_id']);
-        unset($_SESSION['partner_uid']);
-        unset($_SESSION['in_game_id']);
-        unset($_SESSION['server_name']);
-        unset($_SESSION['character_name']);
-        unset($_SESSION['server_id']);
-        unset($_SESSION['game_name']);
-        unset($_SESSION['email']);
-        unset($_SESSION['mobile']);
-        unset($_SESSION['check_id']);
-        
-        $_SESSION['vendor_game_id']	= $vendor_game_id;
-        $_SESSION['partner_uid']	= $partner_uid;
-        $_SESSION['in_game_id']	    = $in_game_id;
-        $_SESSION['server_name']	= $server_name;
-        $_SESSION['character_name']	= $character_name;
+        if ($partner_uid) {
+            unset($_SESSION['vendor_game_id']);
+            unset($_SESSION['partner_uid']);
+            unset($_SESSION['in_game_id']);
+            unset($_SESSION['server_name']);
+            unset($_SESSION['character_name']);
+            unset($_SESSION['server_id']);
+            unset($_SESSION['game_name']);
+            unset($_SESSION['email']);
+            unset($_SESSION['mobile']);
+            unset($_SESSION['check_id']);
+            $_SESSION['vendor_game_id']	= $vendor_game_id;
+            $_SESSION['partner_uid']	= $partner_uid;
+            $_SESSION['in_game_id']	    = $in_game_id;
+            $_SESSION['server_name']	= $server_name;
+            $_SESSION['character_name']	= $character_name;
+        }
         
 		$game_info = $this->db->from("games")->where("vendor_game_id", $vendor_game_id)->get()->row();
         
