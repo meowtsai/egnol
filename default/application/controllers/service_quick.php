@@ -257,7 +257,7 @@ class Service_quick extends MY_Controller {
         $mobile   = ($this->input->get_post("mobile")) ? $this->input->get_post("mobile") : $_SESSION['mobile'];
         $check_id = ($this->input->get_post("check_id")) ? $this->input->get_post("check_id") : $_SESSION['check_id'];
         
-        if ($_SESSION['partner_uid']) {
+        if (isset($_SESSION['partner_uid'])) {
             
             $this->db->select("*")
                 ->where("partner_uid", $_SESSION['partner_uid'])
