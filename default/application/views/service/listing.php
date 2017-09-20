@@ -9,7 +9,7 @@
 <div id="content-login">
 	<div class="login-ins">
 		<div class="bread cf" typeof="v:Breadcrumb">
-			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>service?site=<?=$site?>" title="客服中心" rel="v:url" property="v:title">客服中心</a> > <a href="<?=$longe_url?>service/listing?site=<?=$site?>" title="線上回報" rel="v:url" property="v:title">線上回報</a>
+			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>service?site=<?=$site?>" title="客服中心" rel="v:url" property="v:title">客服中心</a> > <a href="<?=$longe_url?>service/listing?site=<?=$site?>" title="回報紀錄" rel="v:url" property="v:title">線上回報</a>
 		</div>
 		<div class="login-form">
 			<p class="p1">案件資訊(含編號、回報內容、時間、處理狀態)<br>▼點擊查看案件▼</p>

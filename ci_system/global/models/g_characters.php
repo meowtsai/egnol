@@ -5,7 +5,7 @@ class G_Characters extends CI_Model {
 	function create_character($server, $data)
 	{
 		if (is_array($server)) $server = (object)$server;
-		if ($data["uid"] == "0") return false; 
+		if ($data["uid"] == "0" && $data["partner_uid"] == "0") return false; 
 		
 		$create_status = 1;
 		$cnt = $this->db->from("characters gr")->where("uid", $data["uid"])->count_all_results();

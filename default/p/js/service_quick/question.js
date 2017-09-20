@@ -31,7 +31,6 @@ $(function()
 				required: ""
 			},
 			game: "尚未選擇遊戲",
-			server: "尚未選擇伺服器",
 			character_name: "尚未填寫角色",
 			question_type: "尚未選擇問題類型",
 			content: {
@@ -43,10 +42,10 @@ $(function()
 		rules:
 		{
 			email: {
-				required: "#mobile:blank"
+				required: function(element) { return ($("#mobile").val() == '' && $("#partner_uid").val() == ''); }
 			},
 			mobile: {
-				required: "#email:blank"
+				required: function(element) { return ($("#email").val() == '' && $("#partner_uid").val() == ''); }
 			}
     	},
 		showErrors: function(errorMap, errorList)

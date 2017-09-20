@@ -9,12 +9,14 @@
 <div id="content-login">
 	<div class="login-ins">
 		<div class="bread cf" typeof="v:Breadcrumb">
-			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>service?site=<?=$site?>" title="客服中心" rel="v:url" property="v:title">客服中心</a> > <a href="<?=$longe_url?>service/listing?site=<?=$site?>" title="線上回報" rel="v:url" property="v:title">線上回報</a>
+			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>service_quick?site=<?=$site?>" title="客服中心" rel="v:url" property="v:title">客服中心</a> > <a href="<?=$longe_url?>service_quick/listing?site=<?=$site?>" title="回報紀錄" rel="v:url" property="v:title">線上回報</a>
 		</div>
+        <? if($check_id || $partner_uid):?>
 		<div class="login-form">
 			<p class="p1">案件資訊(含編號、回報內容、時間、處理狀態)<br>▼點擊查看案件▼</p>
 		</div>
 		<ul class="server_case">
+            <?if($query):?>
 			<? $no = $query->num_rows();
 				foreach($query->result() as $row):?>
 				<a href="<?=$longe_url?>service_quick/view/<?=$row->id?>?site=<?=$site?>">
@@ -40,6 +42,37 @@
 					</li>
 				</a>
 			<? endforeach;?>
+			<? endif;?>
 		</ul>
+        <? else:?>
+        <form id="listing_form" enctype="multipart/form-data" method="post" action="<?=$longe_url?>service_quick/listing_ajax?site=<?=$site?>">
+			<div class="login-form">
+				<table class="member_info">
+					<tr>
+						<th>E-mail</th>
+						<td><input type="text" name="email" class="email" id="email" size="33"></td>
+					</tr>
+					<tr>
+						 <th>手機號碼</th>
+						 <td><input type="text" name="mobile" class="mobile isMobile" id="mobile" size="33"></td>
+					<tr>
+						 <th></th>
+						 <td>E-mail與手機號碼至少需填寫其中一個</td>
+					</tr>
+					<tr>
+						 <th>客服代碼</th>
+						 <td><input type="text" name="check_id" class="required" id="check_id" size="100"></td>
+					<tr>
+				</table>
+				<div class="login-button">
+					<p>
+						<input name="doSubmit" type="submit" id="doSubmit" value="" style="display:none;" />
+                        <img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-back-btn1.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click')" />&nbsp;
+						<img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-back-btn2.png" class="button_submit" onclick="javascript:history.back();" />
+					</p>
+				</div>
+			</div>
+		</form>
+		<? endif;?>
 	</div>
 </div>

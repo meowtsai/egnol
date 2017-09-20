@@ -1,7 +1,7 @@
 <div id="content-login">
 	<div class="login-ins">
 		<div class="bread cf" typeof="v:Breadcrumb">
-			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>service?site=<?=$site?>" title="客服中心" rel="v:url" property="v:title">客服中心</a> > <a href="" title="提問查詢" rel="v:url" property="v:title">提問查詢</a>
+			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>service_quick?site=<?=$site?>" title="客服中心" rel="v:url" property="v:title">客服中心</a> > <a href="" title="提問查詢" rel="v:url" property="v:title">提問查詢</a>
 		</div>
 		<div class="login-form">
 <? if ($question):?>
@@ -43,7 +43,7 @@
 					<th>提問描述　|</th>
 					<td style="overflow:visible; text-overflow:clip; white-space:normal; word-wrap: break-word;"><?=$question->content?></td>
 				</tr>
-				<tr>
+				<!--tr>
 					<th>截圖　|</th>
 					<td>
 		        	<? if ($question->pic_path1):?>
@@ -68,7 +68,7 @@
 					</div>
 					<? endif;?>
 					</td>
-				</tr>
+				</tr-->
 				<tr>
 					<th>處理狀態　|</th>
 					<td>
@@ -85,7 +85,7 @@
 								</div>
 								<? if ($row->is_official == '1' && $question->status <> '4' && $no == 1):?>
 								<div style="float:right; padding:0 0 20px 20px;">
-									<a href="javascript:;" url="<?=site_url("service/close_question/{$question->id}")?>" site="<?=$site?>" class="close_question">[我沒問題了]</a>
+									<a href="javascript:;" url="<?=site_url("service_quick/close_question/{$question->id}")?>" site="<?=$site?>" class="close_question">[我沒問題了]</a>
 									<a href="#go_to_reply">[我還有疑問]</a>
 								</div>
 								<? endif;?>
@@ -103,7 +103,7 @@
 				<tr>
 					<td colspan="2" style="overflow:visible; text-overflow:clip; white-space:normal; word-wrap: break-word;">
 					<? if ($question->status <> '4' && $replies->num_rows() > 0):?>
-					<form method="post" action="<?=site_url("service/insert_reply_json")?>">
+					<form method="post" action="<?=site_url("service_quick/insert_reply_json")?>">
 						<input type="hidden" name="question_id" value="<?=$question->id?>">
 
 					<div style="padding:15px;">
