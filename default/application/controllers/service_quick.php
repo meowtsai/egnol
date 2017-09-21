@@ -39,7 +39,7 @@ class Service_quick extends MY_Controller {
         $_SESSION['game_name']	= $game_info->name;
         
         if (!empty($server_name) && !empty($character_name)) {
-            $server_info = $this->db->from("servers")->where("game_id", $game_info->game_id)->where("name", $server_name)->get()->row();
+            $server_info = $this->db->from("servers")->where("game_id", $game_info->game_id)->where("address", $server_name)->get()->row();
             $character_info = $this->db->from("characters")->where("server_id", $server_info->server_id)->where("in_game_id", $in_game_id)->get()->row();
             
             if (isset($server_info->server_id)) $_SESSION['server_id'] = $server_info->server_id;
@@ -345,6 +345,22 @@ class Service_quick extends MY_Controller {
         } else {
             die(json_encode(array("status"=>"failure", "message"=>"查無此客服紀錄。")));
         }
+	}
+    
+	function listing_reset_ajax()
+	{
+        unset($_SESSION['vendor_game_id']);
+        unset($_SESSION['partner_uid']);
+        unset($_SESSION['in_game_id']);
+        unset($_SESSION['server_name']);
+        unset($_SESSION['character_name']);
+        unset($_SESSION['server_id']);
+        unset($_SESSION['game_name']);
+        unset($_SESSION['email']);
+        unset($_SESSION['mobile']);
+        unset($_SESSION['check_id']);
+        
+        die(json_encode(array("status"=>"success", "site"=> $site)));
 	}
 	
 	function view($id)

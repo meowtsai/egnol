@@ -44,6 +44,16 @@
 			<? endforeach;?>
 			<? endif;?>
 		</ul>
+        <form id="listing_reset_form" enctype="multipart/form-data" method="post" action="<?=$longe_url?>service_quick/listing_reset_ajax?site=<?=$site?>">
+			<div class="login-form">
+				<div class="login-button">
+					<p>
+						<input name="doSubmit" type="submit" id="doSubmit" value="" style="display:none;" />
+                        <a onclick="javascript:$('#doSubmit').trigger('click')">[查詢其他客服單號]</a>
+					</p>
+				</div>
+			</div>
+		</form>
         <? else:?>
         <form id="listing_form" enctype="multipart/form-data" method="post" action="<?=$longe_url?>service_quick/listing_ajax?site=<?=$site?>">
 			<div class="login-form">

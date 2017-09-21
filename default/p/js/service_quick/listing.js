@@ -54,4 +54,42 @@ $(function()
 			});
 		}
 	});
+    
+    $("#listing_reset_form").validate({
+		onfocusout: false,
+		onkeyup: false,
+		onclick: false,
+		messages: {},
+		rules: {},
+		showErrors: function(errorMap, errorList)
+		{
+		   var err = '';
+		   $(errorList).each(function(i, v)
+		   {
+			   err += v.message + "<br/>";
+		   });
+		   if (err)
+		   {
+				leOpenDialog('輸入錯誤', err, leDialogType.MESSAGE);
+			}
+		},
+		submitHandler: function(form)
+		{
+			$(form).ajaxSubmit(
+			{
+				dataType: 'json',
+				success: function(json)
+				{
+					if (json.status == 'success')
+					{
+		                location.href = '/service_quick/listing?site=' + json.site;
+					}
+					else
+					{
+						leOpenDialog('輸入錯誤', json.message, leDialogType.MESSAGE);
+					}
+				}
+			});
+		}
+	});
 });
