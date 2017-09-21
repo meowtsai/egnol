@@ -37,7 +37,7 @@
 				</tr>
 				<tr>
 					<th>手機號碼　|</th>
-					<td><?=$question->mobile?></td>
+					<td><?=$question->phone?></td>
 				</tr>
 				<tr>
 					<th>提問描述　|</th>
