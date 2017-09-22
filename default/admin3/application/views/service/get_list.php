@@ -76,6 +76,7 @@
 		<input type="text" name="replies" value="<?=$this->input->get("replies")?>" style="width:120px" placeholder="回覆內容">
 		<input type="text" name="question_id" value="<?=$this->input->get("question_id")?>" style="width:90px" placeholder="#id">
 		<input type="text" name="uid" value="<?=$this->input->get("uid")?>" style="width:90px" placeholder="uid">
+		<input type="text" name="原廠uid" value="<?=$this->input->get("partner_uid")?>" style="width:90px" placeholder="原廠uid">
 		<input type="text" name="account" value="<?=$this->input->get("account")?>" style="width:90px" placeholder="帳號">
 		<input type="text" name="character_name" value="<?=$this->input->get("character_name")?>" style="width:90px" placeholder="角色名稱">
 		
@@ -123,6 +124,7 @@
                 <th style="width:85px">提問類型</th>
                 <th style="width:300px">描述</th>
                 <th style="width:90px;">uid</th>
+                <th style="width:90px;">原廠uid</th>
                 <th style="width:110px;"><a href="?<?=$query_string?>">轉點金額</a><?=$this->input->get("sort") == 'expense' ? ' <i class="icon icon-chevron-down"></i>' : ''?></th>
                 <th style="width:80px;">狀態</th>
                 <th style="width:80px;">處理人</th>
@@ -178,8 +180,16 @@
                     <a href="<?=site_url("service/view/{$row->id}")?>"><?=mb_strimwidth(strip_tags($row->content), 0, 66, '...', 'utf-8')?></a>
                 </td>			
                 <td>
+                    <? if($row->uid):?>
                     <a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?></a>
                     <a href="<?=site_url("service/get_list?uid={$row->uid}&action=查詢")?>"><i class="icon-search"></i></a>
+                    <? endif;?>
+                </td>		
+                <td>
+                    <? if($row->uid):?>
+                    <?=$row->partner_uid?>
+                    <a href="<?=site_url("service/get_list?partner_uid={$row->partner_uid}&action=查詢")?>"><i class="icon-search"></i></a>
+                    <? endif;?>
                 </td>
                 <td><?=$row->expense?></td>
                 <td><?=($row->close_admin_uid)?"":"玩家"?><?=$question_status[$row->status]?>

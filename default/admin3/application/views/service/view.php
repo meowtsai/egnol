@@ -101,24 +101,32 @@
 		</tr>
 		<? if ($question->type <> '9'):?>
 		<tr>
+		    <? if ($question->is_quick):?>
+			<th>原廠uid：</th>
+			<td colspan="3">
+				<?=$question->partner_uid?>
+				<a href="<?=site_url("service/get_list?partner_uid={$question->partner_uid}&action=查詢")?>"><i class="icon-search"></i></a>
+			</td>
+            <? else:?>
 			<th>uid：</th>
 			<td colspan="3">
 				<a href="<?=site_url("member/view/{$question->uid}")?>" target="_blank"><?=$question->uid?></a>
 				<a href="<?=site_url("service/get_list?uid={$question->uid}&action=查詢")?>"><i class="icon-search"></i></a>
 			</td>
+		    <? endif;?>	
 		</tr>			
 		<tr>
 			<th>帳號：</th>
 			<td colspan="3">
 				<?
-	            if (!$question->email && !$question->mobile) {
+	            if (!$question->user_email && !$question->mobile) {
 		            $ex_id = explode("@",$question->external_id); 
                     if (isset($ex_id[1])) {
                         if ('device' == $ex_id[1]) echo "快速登入";
                         else echo $ex_id[1];
                     }
 	            } else {
-		            if ($question->email) echo $question->email;
+		            if ($question->user_email) echo $question->user_email;
                     echo "<br />";
 		            echo $question->mobile;
 	            }
@@ -128,7 +136,9 @@
 		<? endif;?>	
 		<tr>
 			<th>角色名稱：</th>
-			<td colspan="3"><?=$question->character_name?></td>
+			<td><?=$question->character_name?></td>
+			<th>原廠角色id：</th>
+			<td><?=$question->in_game_id?></td>
 		</tr>		
 		<tr>
 			<th>提問日期：</th>
@@ -140,7 +150,7 @@
 			<th style="vertical-align:top">提問描述：</th>
 			<td colspan="3" style="word-break: break-all"><?=$question->content?></td>
 		</tr>		
-		<? if ($question->type <> '9'):?>		
+		<? if ($question->type <> '9' && !$question->is_quick):?>		
 		<tr>
 			<th>截圖：</th>
 			<td colspan="3">
@@ -165,7 +175,7 @@
 			<th>聯絡電話：</th>
 			<td><?=$question->mobile?></td>
 			<th>E-mail：</th>
-			<td><?=$question->email?></td>
+			<td><?=$question->user_email?></td>
 		</tr>	
 		<? else:?>
 		<tr>

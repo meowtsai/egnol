@@ -297,6 +297,7 @@ class Service extends MY_Controller {
 			
 			$this->input->get("question_id") && $this->DB2->where("q.id", $this->input->get("question_id"));
 			$this->input->get("uid") && $this->DB2->where("q.uid", $this->input->get("uid"));
+			$this->input->get("partner_uid") && $this->DB2->where("q.partner_uid", $this->input->get("partner_uid"));
 			$this->input->get("status")<>'' && $this->DB2->where("q.status", $this->input->get("status"));
 			$this->input->get("type") && $this->DB2->where("q.type", $this->input->get("type"));
 			$this->input->get("game") && $this->DB2->where("gi.game_id", $this->input->get("game"));
@@ -412,13 +413,14 @@ class Service extends MY_Controller {
 	{
 		$this->zacl->check("service", "modify");
 
-		$question = $this->DB2->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email, u.external_id, u.uid, au.name allocate_user_name")
+		$question = $this->DB2->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email user_email, u.external_id, u.uid, au.name allocate_user_name, c.in_game_id")
 			->where("q.id", $id)
 			->from("questions q")
 			->join("servers gi", "gi.server_id=q.server_id", "left")
 			->join("games g", "g.game_id=gi.game_id", "left")
 			->join("users u", "u.uid=q.uid", "left")
 			->join("admin_users au", "au.uid=q.allocate_admin_uid", "left")
+			->join("characters c", "c.server_id=q.server_id and c.name=q.character_name", "left")
 			->get()->row();
 		
 		if ($question->status == '1') {
@@ -455,6 +457,7 @@ class Service extends MY_Controller {
 			
 			$this->input->get("question_id") && $this->DB2->where("q.id", $this->input->get("question_id"));
 			$this->input->get("uid") && $this->DB2->where("q.uid", $this->input->get("uid"));
+			$this->input->get("partner_uid") && $this->DB2->where("q.partner_uid", $this->input->get("partner_uid"));
 			$this->input->get("status")<>'' && $this->DB2->where("q.status", $this->input->get("status"));
 			$this->input->get("type") && $this->DB2->where("q.type", $this->input->get("type"));
 			$this->input->get("game") && $this->DB2->where("gi.game_id", $this->input->get("game"));
