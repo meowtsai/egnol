@@ -156,7 +156,7 @@
                         <? endforeach;?>
                     </select>
                 </td>
-                <td colspan="3">
+                <td colspan="4">
                     <a href="<?=site_url("service/view/{$row->id}")?>"><?=mb_strimwidth(strip_tags($row->content), 0, 98, '...', 'utf-8')?></a>
                 </td>
                 <td><?=$question_status[$row->status]?>
