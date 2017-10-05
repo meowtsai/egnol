@@ -79,7 +79,8 @@
 					<tr>
 						<th>問題描述</th><td><textarea name="content" class="required" minlength="5" maxlength="500"></textarea></td>
 					</tr>
-					<!--tr>
+                    <? if (!$is_ingame):?>
+					<tr>
 						<th>圖片附件</th><td style="white-space:pre-wrap;"><img src="<?=$longe_url?>p/image/server/server-pic-btn1.png" class="pic_btn"> <input type="file" name="file01" class="pic_input" /></td>
 					</tr>
 					<tr>
@@ -91,7 +92,7 @@
 					<tr>
 						<th></th>
 						<td style="white-space:pre-wrap;">圖檔可接受格式：jpg、png、gif、bmp<br/>最大尺寸 6144x6144 畫素，容量最大 6MB。</td>
-					</tr-->
+                    <? endif;?>
 				</table>
 				<div class="login-button">
 					<p>

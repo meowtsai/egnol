@@ -149,8 +149,7 @@
 		<tr>
 			<th style="vertical-align:top">提問描述：</th>
 			<td colspan="3" style="word-break: break-all"><?=$question->content?></td>
-		</tr>		
-		<? if ($question->type <> '9' && !$question->is_quick):?>		
+		</tr>			
 		<tr>
 			<th>截圖：</th>
 			<td colspan="3">
@@ -170,7 +169,8 @@
 				</a>
 				<? endif;?>								
 			</td>
-		</tr>				
+		</tr>	
+		<? if ($question->type <> '9' && !$question->is_quick):?>				
 		<tr>
 			<th>聯絡電話：</th>
 			<td><?=$question->mobile?></td>

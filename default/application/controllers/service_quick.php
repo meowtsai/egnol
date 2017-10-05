@@ -89,7 +89,9 @@ class Service_quick extends MY_Controller {
 
 		// 讀取玩家角色列表
 		//$characters = $this->db->from("characters")->where("partner_uid", $partner_uid)->get();
-
+        
+        $is_ingame = ($_SESSION['vendor_game_id']) ? 1 : 0;
+        
 		$this->_init_layout()
 			->add_js_include("service_quick/question")
 			->set("games", $games)
@@ -98,6 +100,7 @@ class Service_quick extends MY_Controller {
 			->set("server_id", $_SESSION['server_id'])
 			->set("server_name", $_SESSION['server_name'])
 			->set("character_name", $_SESSION['character_name'])
+			->set("is_ingame", $is_ingame)
 			->add_css_link("login")
 			->add_css_link("money")
 			->add_css_link("server")
