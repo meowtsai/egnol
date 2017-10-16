@@ -188,24 +188,61 @@ class Service extends MY_Controller {
 	
 	function index()
 	{
+        $where_allow_games = (in_array('all_game', $this->zacl->allow_games))?"":" and s.game_id in ('".implode("','",$this->zacl->allow_games)."')";
+        
 		$stat = $this->DB2->query("
 			select 
-				(select count(*) from questions where create_time>=CURDATE()) as 'all',
-				(select count(*) from questions where create_time>=CURDATE() and status='1') as 'new',
-				(select count(*) from questions where create_time>=CURDATE() and status='2') as 'success',
-				(select count(*) from questions where create_time>=CURDATE() and status='4') as 'close',
-				(select count(*) from questions where create_time>=CURDATE() and type='9') as 'phone',
-				(select count(*) from questions where status='1') as 'new_total',
-				(select count(*) from questions where status='2') as 'success_total',
-				(select count(*) from questions where status='4') as 'close_total',
-				(select count(*) from questions where status='0') as 'hidden_total',
-				(select count(*) from questions where type='9') as 'phone_total'
+				(select count(*) 
+                    from questions q 
+                    left join servers s on s.server_id=q.server_id
+                    where q.create_time>=CURDATE() {$where_allow_games}) as 'all',
+				(select count(*) 
+                    from questions q 
+                    left join servers s on s.server_id=q.server_id
+                    where q.create_time>=CURDATE() 
+                    and q.status='1' {$where_allow_games}) as 'new',
+				(select count(*) 
+                    from questions q 
+                    left join servers s on s.server_id=q.server_id
+                    where q.create_time>=CURDATE() 
+                    and q.status='2' {$where_allow_games}) as 'success',
+				(select count(*) 
+                    from questions q 
+                    left join servers s on s.server_id=q.server_id
+                    where q.create_time>=CURDATE() 
+                    and q.status='4' {$where_allow_games}) as 'close',
+				(select count(*) 
+                    from questions q 
+                    left join servers s on s.server_id=q.server_id
+                    where q.create_time>=CURDATE() 
+                    and q.type='9' {$where_allow_games}) as 'phone',
+				(select count(*) 
+                    from questions q 
+                    left join servers s on s.server_id=q.server_id
+                    where q.status='1' {$where_allow_games}) as 'new_total',
+				(select count(*) 
+                    from questions q 
+                    left join servers s on s.server_id=q.server_id
+                    where q.status='2' {$where_allow_games}) as 'success_total',
+				(select count(*) 
+                    from questions q 
+                    left join servers s on s.server_id=q.server_id
+                    where q.status='4' {$where_allow_games}) as 'close_total',
+				(select count(*) 
+                    from questions q 
+                    left join servers s on s.server_id=q.server_id
+                    where q.status='0' {$where_allow_games}) as 'hidden_total',
+				(select count(*) 
+                    from questions q 
+                    left join servers s on s.server_id=q.server_id
+                    where q.type='9' {$where_allow_games}) as 'phone_total'
 		")->row();
 		
 		$query = $this->DB2->query("
 				select q.allocate_status, au.uid, au.name, count(*) cnt from questions q
+                left join servers s on s.server_id=q.server_id
 				left join admin_users au on au.uid = q.allocate_admin_uid
-				where allocate_status in ('1','2')
+				where allocate_status in ('1','2') {$where_allow_games}
 				group by allocate_status, uid				
 		");
 		$allocate = array();
@@ -221,6 +258,7 @@ class Service extends MY_Controller {
 	
 	function add()
 	{		
+        if (!in_array('all_game', $this->zacl->allow_games)) $this->DB2->where_in("game_id", $this->zacl->allow_games);
 		$games = $this->DB2->from("games")->where("is_active", "1")->get();
 		$servers = $this->DB2->where_in("server_status", array("public", "maintenance"))->order_by("server_id")->get("servers");	
 		
@@ -235,6 +273,7 @@ class Service extends MY_Controller {
 	
 	function edit($id)
 	{		
+        if (!in_array('all_game', $this->zacl->allow_games)) $this->DB2->where_in("game_id", $this->zacl->allow_games);
 		$games = $this->DB2->from("games")->where("is_active", "1")->get();
 		$servers = $this->DB2->where_in("server_status", array("public", "maintenance"))->order_by("server_id")->get("servers");
 
@@ -308,8 +347,10 @@ class Service extends MY_Controller {
 			$this->input->get("allocate_auid") && $this->DB2->where("q.allocate_admin_uid", $this->input->get("allocate_auid"));
 			$this->input->get("allocate_status") && $this->DB2->where("q.allocate_status", $this->input->get("allocate_status"));
 					
-			$this->input->get("todo") && $this->DB2->where("(q.status=1 or q.allocate_status=2 and q.status<>4)", null, false);
+			$this->input->get("todo") && $this->DB2->where("(q.status=1 or q.allocate_status=2 and q.status<>4) ", null, false);
 			
+            if (!in_array('all_game', $this->zacl->allow_games)) $this->DB2->where_in("gi.game_id", $this->zacl->allow_games);
+            
 			$this->DB2
 				->select("q.*, g.name as game_name, au.name as admin_uname, gi.name as server_name")
 				->select("(select sum(amount) from user_billing where uid=q.uid and billing_type=2 and result=1) as expense")
@@ -395,6 +436,7 @@ class Service extends MY_Controller {
 			$_GET = $default_value;			
 		}
 					
+        if (!in_array('all_game', $this->zacl->allow_games)) $this->DB2->where_in("game_id", $this->zacl->allow_games);
 		$games = $this->DB2->from("games")->get();
 		$cs_admins = $this->DB2->from("admin_users")->where_in("role", array("cs", "cs_master"))->get();
 		

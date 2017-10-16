@@ -4,7 +4,7 @@ class Zacl
 {
 	// Set the instance variable
 	var $CI;
-	var $allow_games=array();
+	public $allow_games=array();
 
 	function __construct()
 	{
@@ -69,6 +69,21 @@ class Zacl
 	function check_login($redirect_url='')
 	{
 		if ( ! empty($_SESSION['admin_uid'])) {
+            
+            $role = $_SESSION['admin_role'];
+            
+		    if ($role == 'admin' || $this->acl->isAllowed($role, 'all_game', 'all')) $this->allow_games[] = 'all_game';
+            elseif(empty($this->allow_games)) {
+                
+                $query = $this->CI->db->from('admin_permissions p')
+                    ->join('admin_resources rs', 'p.resource=rs.resource')
+                    ->where('p.role', $role)
+                    ->where('rs.parent', 'all_game')->get();
+                foreach($query->result() AS $row) {
+                    $this->allow_games[] = $row->resource;
+                }
+            }
+            
 			return true;
 		}
 		else {
