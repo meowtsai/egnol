@@ -1,11 +1,16 @@
 <?php
 	$channels = $this->config->item('channels'); 
 ?>
+
+<? if ($is_game_statistics):?>
 <div id="func_bar">
 	<a href="<?=site_url("platform/schedule")?>" class="btn btn-primary" role="button">行事曆</a>
 </div>
 
 <legend>龍邑平台帳號數據(即時)</legend>
+<? else:?>
+<legend>龍邑平台</legend>
+<? endif;?>
 <? if ($account_query):?>
 	<? if ($account_query->num_rows() == 0):
 		echo '<div class="none">查無資料</div>'; 

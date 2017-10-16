@@ -43,17 +43,22 @@ class Daily_report extends MY_Controller {
 		$this->_init_statistics_layout();			
 		$this->load->helper("output_table");
 		
-		//$this->zacl->check("game_statistics", "read");
-		$account_query = $this->account_data();
-		$statistics_query = $this->statistics_data();
-		$billing_query = $this->billing_data();
-		$event_query = $this->event_data();
+		if ($this->zacl->check_acl("game_statistics", "read")) {
+            
+            $account_query = $this->account_data();
+            $statistics_query = $this->statistics_data();
+            $billing_query = $this->billing_data();
+            $event_query = $this->event_data();
+            
+            $is_game_statistics = true;
+        }
 		
 		$this->g_layout
 			->set("account_query", isset($account_query) ? $account_query : false)
 			->set("statistics_query", isset($statistics_query) ? $statistics_query : false)
 			->set("billing_query", isset($billing_query) ? $billing_query : false)
 			->set("event_query", isset($event_query) ? $event_query : false)
+			->set("is_game_statistics", isset($is_game_statistics) ? $is_game_statistics : false)
 			->render();
 	}
     
