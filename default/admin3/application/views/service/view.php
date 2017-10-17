@@ -44,7 +44,7 @@
 		<tr>
 			<th style="width:80px;">案件狀態：</th>
 			<td colspan="3">
-            <?=($question->close_admin_uid)?"":"玩家"?>
+            <?=($question->status == '4' && !$question->close_admin_uid)?"玩家":""?>
 			<?
 				$status = $this->config->item("question_status");
 				echo $status[$question->status];
