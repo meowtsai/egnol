@@ -77,12 +77,13 @@
 		<input type="text" name="question_id" value="<?=$this->input->get("question_id")?>" style="width:90px" placeholder="#id">
 		<input type="text" name="uid" value="<?=$this->input->get("uid")?>" style="width:90px" placeholder="uid">
 		<input type="text" name="原廠uid" value="<?=$this->input->get("partner_uid")?>" style="width:90px" placeholder="原廠uid">
-		<input type="text" name="account" value="<?=$this->input->get("account")?>" style="width:90px" placeholder="帳號">
+		<input type="text" name="account" value="<?=$this->input->get("account")?>" style="width:90px" placeholder="龍邑帳號">
 		<input type="text" name="character_name" value="<?=$this->input->get("character_name")?>" style="width:90px" placeholder="角色名稱">
 		
 		<span class="sptl"></span>
 		
 		<input type="text" name="email" value="<?=$this->input->get("email")?>" style="width:90px" placeholder="Email">
+		<input type="text" name="mobile" value="<?=$this->input->get("mobile")?>" style="width:90px" placeholder="手機">
 		
 		<span class="sptl"></span>
 		
@@ -192,7 +193,7 @@
                     <? endif;?>
                 </td>
                 <td><?=$row->expense?></td>
-                <td><?=($row->close_admin_uid)?"":"玩家"?><?=$question_status[$row->status]?>
+                <td><?=$question_status[$row->status]?>
                     <div style="font-size:11px;"> 
 
                     <?  if ($row->status == '2' || $row->status == '4'):?>				
