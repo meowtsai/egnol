@@ -11,6 +11,7 @@ class Faq extends MY_Controller {
 	{
 		$site = $this->_get_site();
 		$bodyonly = $this->input->get_post("bodyonly");
+		$hidetitle = $this->input->get_post("hidetitle");
 		$search_string = $this->input->get_post("search_string") ? $this->input->get_post("search_string") : "home";
 		
 		//$this->load->model("g_bulletins");		
@@ -27,6 +28,7 @@ class Faq extends MY_Controller {
                 ->add_css_link("faq")
                 ->add_css_link("jquery.mCustomScrollbar")
 			    ->set("bodyonly", $bodyonly)
+			    ->set("hidetitle", $hidetitle)
                 ->set("row", $row)
                 ->view("faq/index");
         } else {
@@ -36,6 +38,7 @@ class Faq extends MY_Controller {
                 ->add_css_link("faq")
                 ->add_css_link("jquery.mCustomScrollbar")
 			    ->set("bodyonly", $bodyonly)
+			    ->set("hidetitle", $hidetitle)
                 ->set("row", $row)
                 ->standard_view();
         }

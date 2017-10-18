@@ -20,9 +20,11 @@
                     <div class="hd" >
                     </div>
                     <div class="bd" >
+                        <? if(!$hidetitle):?>
                         <div style="font-size:18px; color:#222; font-weight:bold;">
                             <?=($row->title=='home')?"":$row->title?>
                         </div>
+                        <? endif;?>
                         <div class="fixck">
                             <?=$row->content?>
                         </div>
