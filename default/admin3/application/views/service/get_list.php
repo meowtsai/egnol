@@ -187,7 +187,7 @@
                     <? endif;?>
                 </td>		
                 <td>
-                    <? if($row->uid):?>
+                    <? if($row->partner_uid):?>
                     <?=$row->partner_uid?>
                     <a href="<?=site_url("service/get_list?partner_uid={$row->partner_uid}&action=查詢")?>"><i class="icon-search"></i></a>
                     <? endif;?>
