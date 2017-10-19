@@ -250,7 +250,7 @@ class Service_quick extends MY_Controller {
                 }
             }
         } else {
-		    die(json_encode(array("status"=>"success", "site"=> $site)));
+		    die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"提問成功!")));
         }
 	}
 	
