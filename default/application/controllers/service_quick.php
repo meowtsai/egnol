@@ -93,8 +93,8 @@ class Service_quick extends MY_Controller {
         $is_ingame = ($_SESSION['vendor_game_id']) ? 1 : 0;
         
 		$this->_init_layout()
-			->add_js_include("service_quick/question")
 			->add_js_include("jquery.blockUI")
+			->add_js_include("service_quick/question")
 			->set("games", $games)
 			->set("servers", $servers)
 			->set("partner_uid", $_SESSION['partner_uid'])

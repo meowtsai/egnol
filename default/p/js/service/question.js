@@ -61,11 +61,13 @@ $(function()
 		},
 		submitHandler: function(form)
 		{
+            $.blockUI({ message: '<h1><img src="/p/image/loading.gif" /> 飛鴿傳書中...</h1>' });
 			$(form).ajaxSubmit(
 			{
 				dataType: 'json',
 				success: function(json)
 				{
+                    $.unblockUI();
 					if (json.status == 'success')
 					{
 		                leOpenDialog('玩家提問', '提問成功！', leDialogType.MESSAGE, function()

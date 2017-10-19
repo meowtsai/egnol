@@ -42,6 +42,7 @@ class Service extends MY_Controller {
 		$characters = $this->db->from("characters")->where("uid", $this->g_user->uid)->get();
 
 		$this->_init_layout()
+			->add_js_include("jquery.blockUI")
 			->add_js_include("service/question")
 			->set("games", $games)
 			->set("servers", $servers)
