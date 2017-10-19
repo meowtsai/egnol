@@ -218,6 +218,7 @@ class Platform extends MY_Controller {
 	function schedule()
 	{		
 		$this->zacl->check_login(true);
+        $this->zacl->check_acl("event", "read")
 		
         $year = $this->input->get_post("year") ? $this->input->get_post("year") : "";
         $month = $this->input->get_post("month") ? $this->input->get_post("month") : "";

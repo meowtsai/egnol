@@ -23,6 +23,8 @@ class Game extends MY_Controller {
 	
 	function index()
 	{
+		$this->zacl->check("game_setting", "read");
+        
 		$query = $this->DB2->from("games")->order_by("rank")->get();
 		$this->_init_game_layout()
 			->set("query", $query)

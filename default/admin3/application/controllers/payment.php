@@ -55,7 +55,7 @@ class Payment extends MY_Controller {
     
 	function test_points()
 	{
-		//$this->zacl->check("payment_settings", "read");
+		$this->zacl->check("payment_settings", "read");
 		
 		$this->init_payment_layout();
 		//$this->load->config("g_payment_gash");
