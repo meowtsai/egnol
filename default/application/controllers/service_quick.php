@@ -94,6 +94,7 @@ class Service_quick extends MY_Controller {
         
 		$this->_init_layout()
 			->add_js_include("service_quick/question")
+			->add_js_include("jquery.blockUI")
 			->set("games", $games)
 			->set("servers", $servers)
 			->set("partner_uid", $_SESSION['partner_uid'])
