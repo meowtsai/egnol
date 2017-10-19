@@ -26,7 +26,7 @@ table  {max-width:100%; width:100%;}
 <td align="center">
 <table cellspacing="0" cellpadding="0" border="0">
 <tr>
-<td bgcolor="#fff" class="nl-top-cell-with-bg" width="600" height="100" valign="middle"><img src="cid:headerimg" /><table width="100%" cellspacing="0" valign="middle" cellpadding="0">
+<td bgcolor="#fff" class="nl-top-cell-with-bg" width="600" height="100" valign="middle"><table width="100%" cellspacing="0" valign="middle" cellpadding="0">
 </td>
 </tr>
 </table>

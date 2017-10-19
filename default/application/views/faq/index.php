@@ -26,7 +26,11 @@
                         </div>
                         <? endif;?>
                         <div class="fixck">
+                            <? if(isset($row->content)):?>
                             <?=$row->content?>
+                            <? else:?>
+                            查無資料，請嘗試其他關鍵字!
+                            <? endif;?>
                         </div>
                     </div>
                     <div class="ft">
