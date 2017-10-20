@@ -7,7 +7,6 @@
       width: 100%;
     }
     body #content-login {
-      overflow: hidden!important;
       width: 100%;
       height: 100%;
     }
