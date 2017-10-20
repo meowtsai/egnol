@@ -5,7 +5,6 @@
       margin: 0;
       height: 100%;
       width: 100%;
-      pointer-events: none;
     }
     body #content-login {
       overflow: hidden!important;
