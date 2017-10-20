@@ -14,7 +14,7 @@
     .search_box .search_string{width:73%; height:33px; text-align:left; font-weight: bold; background-color:#E7DAB8;}
     .search_box .search_btn{width:12%; height:33px; text-align:center; font-size:16px; color:#E8C899; background-color:#784C25; border-bottom-color:#92714B; border-left-width: 0px; border-top-width: 0px; border-right-width: 0px;}
     body{background-color:#FEF7DE; color:#5C5C5C;}
-    .fixck {font-size:12px!important;}
+    .fixck {font-size:12px;}
 </style>
 <? endif;?>
 <div id="content-login">
