@@ -517,7 +517,7 @@ class Service extends MY_Controller {
 			$this->input->get("allocate_auid") && $this->DB2->where("q.allocate_admin_uid", $this->input->get("allocate_auid"));
 			$this->input->get("allocate_status") && $this->DB2->where("q.allocate_status", $this->input->get("allocate_status"));
 					
-			$this->input->get("todo") && $this->DB2->where("(q.status=1 or q.allocate_status=2 and q.status<>4)", null, false);
+			$this->input->get("todo") && $this->DB2->where("(q.status=1 or q.allocate_status=1 and q.status<>4)", null, false);
 			
 			$this->DB2
 				->select("COUNT(*) as cnt, au.name as admin_uname")
