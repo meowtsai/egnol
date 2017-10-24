@@ -10,5 +10,8 @@
 				<img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-btn2.png" class="button_submit" onclick="javascript:location.href='<?=$longe_url?>service_quick/listing?site=<?=$site?>'" />
 			</p>
 		</div>
+        <? if ($is_ingame):?>
+            <div class="notes" style="text-align:center;padding:5px;">提醒大俠：需附檔案回報時，請直接利用官網線上提問，謝謝。</div>
+        <? endif;?>
 	</div>
 </div>

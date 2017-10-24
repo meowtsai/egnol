@@ -68,10 +68,13 @@ class Service_quick extends MY_Controller {
             }
         }
         
+        $is_ingame = ($_SESSION['vendor_game_id']) ? 1 : 0;
+        
 		$this->_init_layout()
 			->set("site", $game_info->game_id)
 			->set("not_read_cnt", $not_read_cnt)
 			->set("question_cnt", $question_cnt)
+			->set("is_ingame", $is_ingame)
 			->add_css_link("login")
 			->add_css_link("server")
 			->mobile_view();

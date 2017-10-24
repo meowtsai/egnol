@@ -92,6 +92,12 @@
 					<tr>
 						<th></th>
 						<td style="white-space:pre-wrap;">圖檔可接受格式：jpg、png、gif、bmp<br/>最大尺寸 6144x6144 畫素，容量最大 6MB。</td>
+                    </tr>
+                    <? else:?>
+					<tr>
+						<td style="white-space:pre-wrap;">
+            <div class="notes" style="text-align:center;padding:5px;">提醒大俠：需附檔案回報時，請直接利用官網線上提問，謝謝。</div></td>
+                    </tr>
                     <? endif;?>
 				</table>
 				<div class="login-button">
