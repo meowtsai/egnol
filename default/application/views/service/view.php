@@ -1,3 +1,7 @@
+<? 
+    $this->load->library("Parsedown");
+    $Parsedown = new Parsedown();
+?>
 <div id="content-login">
 	<div class="login-ins">
 		<div class="bread cf" typeof="v:Breadcrumb">
@@ -41,7 +45,10 @@
 				</tr>
 				<tr>
 					<th>提問描述　|</th>
-					<td style="overflow:visible; text-overflow:clip; white-space:normal; word-wrap: break-word;"><?=$question->content?></td>
+					<td style="overflow:visible; text-overflow:clip; white-space:normal; word-wrap: break-word;">
+                        <?//=$question->content?>
+                        <? echo $Parsedown->text($question->content);?>
+                    </td>
 				</tr>
 				<tr>
 					<th>截圖　|</th>
@@ -81,7 +88,8 @@
 							<td style="overflow:visible; text-overflow:clip; white-space:normal; word-wrap: break-word;">
 								<?//=($row->is_official ? '《客服回覆》' : '《再次提問》') ?>
 								<div style="background-color: rgba(255, 255, 255, 0.3);border-radius: 5px; padding:5px; word-wrap: break-word;">
-								    <?=$row->content?>
+								    <?//=$row->content?>
+                                    <? echo $Parsedown->text($row->content);?>
 								</div>
 								<? if ($row->is_official == '1' && $question->status <> '4' && $no == 1):?>
 								<div style="float:right; padding:0 0 20px 20px;">
