@@ -354,7 +354,7 @@ class Service extends MY_Controller {
 			$this->input->get("allocate_auid") && $this->DB2->where("q.allocate_admin_uid", $this->input->get("allocate_auid"));
 			$this->input->get("allocate_status") && $this->DB2->where("q.allocate_status", $this->input->get("allocate_status"));
 					
-			$this->input->get("todo") && $this->DB2->where("(q.status=1 or q.allocate_status=1 and q.status<>4) ", null, false);
+			$this->input->get("todo") && $this->DB2->where("q.status=1", null, false);
 			
             if (!in_array('all_game', $this->zacl->allow_games)) $this->DB2->where_in("gi.game_id", $this->zacl->allow_games);
             
@@ -482,7 +482,17 @@ class Service extends MY_Controller {
 			->join("admin_users au", "au.uid=qt.admin_uid", "left")
 			->where("question_id", $id)->order_by("qt.id", "asc")->get();
 
-		$allocate_users = $this->DB2->from('admin_users')->where_in('role', array('pm', 'admin', 'cs_master', 'pd_chang', 'RC'))->order_by("role")->get();
+        $allocate_groups = array('pm', 'admin', 'cs_master', 'pd_chang', 'RC');
+        
+		$service_users = $this->DB2->from('admin_permissions')->where('resource', 'service')->order_by("role")->get();
+        
+        foreach($service_users->result() as $row) {
+            $allocate_groups[] = $row->role;
+        }
+        
+        $allocate_groups = array_unique($allocate_groups);
+        
+		$allocate_users = $this->DB2->from('admin_users')->where_in('role', $allocate_groups)->order_by("role")->get();
 		
 		$this->_init_service_layout()
 			->add_breadcrumb("檢視")
@@ -517,7 +527,7 @@ class Service extends MY_Controller {
 			$this->input->get("allocate_auid") && $this->DB2->where("q.allocate_admin_uid", $this->input->get("allocate_auid"));
 			$this->input->get("allocate_status") && $this->DB2->where("q.allocate_status", $this->input->get("allocate_status"));
 					
-			$this->input->get("todo") && $this->DB2->where("(q.status=1 or q.allocate_status=1 and q.status<>4)", null, false);
+			$this->input->get("todo") && $this->DB2->where("q.status=1", null, false);
 			
 			$this->DB2
 				->select("COUNT(*) as cnt, au.name as admin_uname")
