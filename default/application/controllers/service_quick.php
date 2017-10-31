@@ -70,7 +70,7 @@ class Service_quick extends MY_Controller {
         
         $is_ingame = ($_SESSION['vendor_game_id']) ? 1 : 0;
         
-		$this->_init_layout()
+		$this->_init_layout("客服中心")
 			->set("site", $game_info->game_id)
 			->set("not_read_cnt", $not_read_cnt)
 			->set("question_cnt", $question_cnt)
@@ -95,7 +95,7 @@ class Service_quick extends MY_Controller {
         
         $is_ingame = ($_SESSION['vendor_game_id']) ? 1 : 0;
         
-		$this->_init_layout()
+		$this->_init_layout("客服中心")
 			->add_js_include("jquery.blockUI")
 			->add_js_include("service_quick/question")
 			->set("games", $games)
@@ -309,7 +309,7 @@ class Service_quick extends MY_Controller {
             }
         }
 		
-		$this->_init_layout()
+		$this->_init_layout("客服中心")
 			->add_js_include("service_quick/listing")
 			->set("check_id", $_SESSION['check_id'])
 			->set("partner_uid", $_SESSION['partner_uid'])
@@ -405,7 +405,7 @@ class Service_quick extends MY_Controller {
 			$replies = false;
 		}
 		
-		$this->_init_layout()
+		$this->_init_layout("客服中心")
 			->add_css_link("login")
 			->add_css_link("server")
 			->add_js_include("service_quick/view")

@@ -16,7 +16,7 @@ class MY_Controller extends CI_Controller
 		$this->load->database('long_e');
 	}
 
-	function _init_layout()
+	function _init_layout($title="龍邑遊戲‧LongE Play")
 	{
 		$this->load->library("g_layout");
 		
@@ -59,7 +59,7 @@ class MY_Controller extends CI_Controller
 
 		return $this->g_layout
 			->add_js_include(array('jquery-1.7.2.min', 'jquery.validate.min', 'jquery.metadata', 'jquery.form', 'default'))
-			->set_meta("title", "龍邑遊戲‧LongE Play");
+			->set_meta("title", $title);
 	}
 
 	// 檢查並要求登入
