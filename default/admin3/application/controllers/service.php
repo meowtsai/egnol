@@ -359,13 +359,14 @@ class Service extends MY_Controller {
             if (!in_array('all_game', $this->zacl->allow_games)) $this->DB2->where_in("gi.game_id", $this->zacl->allow_games);
             
 			$this->DB2
-				->select("q.*, g.name as game_name, au.name as admin_uname, gi.name as server_name")
+				->select("q.*, g.name as game_name, au.name as admin_uname, gi.name as server_name, c.name as in_game_name")
 				->select("(select sum(amount) from user_billing where uid=q.uid and billing_type=2 and result=1) as expense")
 				->from("questions q")
 				->join("servers gi", "gi.server_id=q.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
 				->join("users u", "u.uid=q.uid", "left")
-				->join("admin_users au", "au.uid=q.admin_uid", "left");
+				->join("admin_users au", "au.uid=q.admin_uid", "left")
+			    ->join("characters c", "c.partner_uid=q.partner_uid and c.server_id=q.server_id and c.name=q.character_name", "left");
 						
 			if ($this->input->get("account")) {
 				$this->DB2->join("users u", "u.uid=q.uid", "left")
@@ -462,14 +463,14 @@ class Service extends MY_Controller {
 	{
 		$this->zacl->check("service", "modify");
 
-		$question = $this->DB2->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email user_email, u.external_id, u.uid, au.name allocate_user_name, c.in_game_id")
+		$question = $this->DB2->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email user_email, u.external_id, u.uid, au.name allocate_user_name, c.in_game_id, c.name as in_game_name")
 			->where("q.id", $id)
 			->from("questions q")
 			->join("servers gi", "gi.server_id=q.server_id", "left")
 			->join("games g", "g.game_id=gi.game_id", "left")
 			->join("users u", "u.uid=q.uid", "left")
 			->join("admin_users au", "au.uid=q.allocate_admin_uid", "left")
-			->join("characters c", "c.server_id=q.server_id and c.name=q.character_name", "left")
+			->join("characters c", "c.partner_uid=q.partner_uid and c.server_id=q.server_id and c.name=q.character_name", "left")
 			->get()->row();
 		
 		if ($question->status == '1') {
