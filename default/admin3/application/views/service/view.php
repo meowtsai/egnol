@@ -136,7 +136,7 @@
 		<? endif;?>	
 		<tr>
 			<th>角色名稱：</th>
-			<td><?=$question->character_name?><? if ($question->partner_uid && !$question->in_game_name):?> <span style="color:#090">(玩家填寫)</span><? endif;?></td>
+			<td><?=$question->character_name?><? if (($question->partner_uid && !$question->uid && !$question->in_game_name) || !$question->partner_uid):?> <span style="font-size:11px;color:#090">(玩家填寫)</span><? endif;?></td>
 			<th>原廠角色id：</th>
 			<td><?=$question->in_game_id?></td>
 		</tr>		
