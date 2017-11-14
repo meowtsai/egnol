@@ -118,6 +118,7 @@ CREATE TABLE `games` (
   `rank` tinyint(4) DEFAULT NULL,
   `is_active` tinyint(1) DEFAULT '0',
   `fanpage` varchar(255) DEFAULT NULL,
+  `theme_id` int(11) NULL,
   PRIMARY KEY (`game_id`),
   UNIQUE KEY `game_id_UNIQUE` (`game_id`),
   UNIQUE KEY `name_UNIQUE` (`name`)

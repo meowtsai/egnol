@@ -71,12 +71,6 @@
 	<input type="text" name="end_time" class="" value="<?=$bulletin && $bulletin->end_time<'2038-01-01' ? date('Y-m-d H:i', strtotime($bulletin->end_time)) : ''?>">
 	<span class="help-inline">(非必填，設定後消息將於指定時間關閉)</span>
 
-	<label>套用主題</label>
-	<select name="bulletin_theme">
-		<? foreach($theme_list->result() as $row):?>
-		<option value="<?=$row->id?>" <?= $bulletin->theme_id == $row->id ? 'selected="selected"' : ''?>><?=$row->title?></option>
-		<? endforeach;?>
-	</select>
 
 	<div class="form-actions">
   		<button type="submit" class="btn ">確認送出</button>

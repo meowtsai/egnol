@@ -60,7 +60,6 @@ class Bulletin extends MY_Controller {
 			->set("bulletin", $bulletin)
 			->set("bulletin_type_list", $this->config->item('bulletin_type'))
 			->set("server_list", $this->DB2->where("game_id", $this->game_id)->order_by("server_id")->get("servers"))
-			->set("theme_list", $this->DB2->get("themes"))
 			->render("bulletin/form");
 	}
 
@@ -83,7 +82,6 @@ class Bulletin extends MY_Controller {
 			->set("bulletin", false)
 			->set("bulletin_type_list", $this->config->item('bulletin_type'))
 			->set("server_list", $this->DB2->where("game_id", $this->game_id)->order_by("server_id")->get("servers"))
-			->set("theme_list", $this->DB2->get("themes"))
 			->render("bulletin/form");
 	}
 
@@ -113,7 +111,6 @@ class Bulletin extends MY_Controller {
 				'content'  => $content,
 				'priority' => $this->input->post("priority"),
 				'target'   => $this->input->post("target") ? implode(",", $this->input->post("target"))."," : ",",
-				'theme_id' => $this->input->post("bulletin_theme"),
 			);
 
 

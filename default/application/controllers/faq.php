@@ -18,10 +18,9 @@ class Faq extends MY_Controller {
         if ($search_string == "home") $this->db->where("title", $search_string);
         elseif (intval($search_string) > 0) $this->db->where("id", $search_string);
         else $this->db->like("title", $search_string);
-
         $row = $this->db->where("game_id", $site)->where("game_id", $site)->order_by("create_time", "desc")->get("bulletins")->row();
 
-				$theme_id = $row->theme_id;
+				$theme_id = $this->db->where("game_id", $site)->get("games")->row()->theme_id;
 				if ($theme_id) {
 					$row_theme = $this->db->where("id", $theme_id)->get("themes")->row();
 				}
