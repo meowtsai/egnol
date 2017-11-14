@@ -11,9 +11,9 @@
       height: 100%;
     }
     .login-ins .search_box{max-width:725px; width:100%; height:33px; display:block; margin:5px auto;}
-    .search_box .search_string{width:73%; height:33px; text-align:left; font-weight: bold; background-color:#E7DAB8;}
-    .search_box .search_btn{width:12%; height:33px; text-align:center; font-size:16px; color:#E8C899; background-color:#784C25; border-bottom-color:#92714B; border-left-width: 0px; border-top-width: 0px; border-right-width: 0px;}
-    body{background-color:#FEF7DE; color:#5C5C5C;}
+    .search_box .search_string{width:73%; height:33px; text-align:left; font-weight: bold; background-color:#<?=$row_theme->input_bgcolor?>;}
+    .search_box .search_btn{width:12%; height:33px; text-align:center; font-size:16px; color:#<?=$row_theme->btn_fgcolor?>; background-color:#<?=$row_theme->btn_bgcolor?>; border-bottom-color:#<?=$row_theme->btn_bordercolor?>; border-left-width: 0px; border-top-width: 0px; border-right-width: 0px;}
+    body{background-color:#<?=$row_theme->body_bgcolor?>; color:#<?=$row_theme->body_fgcolor?>;}
     .fixck {font-size:12px;}
 </style>
 <? endif;?>
@@ -29,7 +29,7 @@
                 </form>
 			<div class="login_member">
 				<div class="login_info">
-                    
+
                     <div class="hd" >
                     </div>
                     <div class="bd" >

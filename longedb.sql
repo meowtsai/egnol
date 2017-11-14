@@ -1269,3 +1269,23 @@ CREATE TABLE `whale_users` (
 `is_added` tinyint(1) DEFAULT '0',
 `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
 PRIMARY KEY (`uid`)) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ;
+
+
+DROP TABLE IF EXISTS `themes`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `themes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(30) NOT NULL,
+  `input_bgcolor` varchar(6) NOT NULL,
+  `btn_bgcolor` varchar(6) NOT NULL,
+  `btn_fgcolor` varchar(6) NOT NULL,
+  `btn_bordercolor` varchar(6) NOT NULL,
+  `body_bgcolor` varchar(6) NOT NULL,
+  `body_fgcolor` varchar(6) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+
+INSERT INTO `themes` VALUES (1,'茶色','E7DAB8','784C25','E8C899','92714B','FEF7DE','5C5C5C'),(2,'綠色','9BD770','375F1B','66B032','1B3409','EBF7E3','1B3409'),(3,'藍色','678FFE','012998','DBE5FF','091534','DBE5FF','091534'),(4,'桃色','EC6988','7B0F28','FBDFE6','340913','FBDFE6','340913'),(5,'黃色','FEF590','C0B002','FFFCDC','343009','FFFCDC','343009'),(6,'紅色','FE8176','A70F01','FFDEDB','340D09','FFDEDB','340D09'),(7,'橙色','FE9F6D','9D3802','FFE8DC','341809','FFE8DC','341809'),(8,'萊姆','F1F791','A5B00C','FBFDDE','313409','FBFDDE','313409'),(9,'墨綠','79BEA8','23483C','E7F3EF','093426','E7F3EF','093426'),(10,'藍綠','67AFCB','1A3E4C','E4F1F6','092834','E4F1F6','092834'),(11,'酒紅','F37C84','950E17','FCDEE0','34090C','FCDEE0','34090C'),(12,'紫色','A33AF2','36065B','EFDDFD','210934','EFDDFD','210934');
