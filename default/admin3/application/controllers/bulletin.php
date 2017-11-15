@@ -24,18 +24,23 @@ class Bulletin extends MY_Controller {
 		$this->_chk_game_id();
 		$this->_init_layout();
 
+		$keyword = $this->input->post('input_keyword', TRUE);
+
 		$this->load->library('pagination');
 		$this->pagination->initialize(array(
 					'base_url'	=> site_url("bulletin/get_list/{$type}?game_id={$this->game_id}"),
-					'total_rows'=> $this->bulletins->get_bulletin_count($this->game_id, $type),
+					'total_rows'=> $this->bulletins->get_bulletin_count($this->game_id, $type, $keyword),
 					'per_page'	=> 10
 				));
 
+		//add keyword search
+		//echo '[keyword]'.$keyword;
 		$this->g_layout
 			->add_breadcrumb("最新消息")
 			->add_js_include("bulletin/list")
 			->set("bulletin_type", $type)
-			->set("query", $this->bulletins->get_bulletin_data($this->game_id, $type, 10, $this->input->get("record")))
+			->set("keyword", $keyword)
+			->set("query", $this->bulletins->get_bulletin_data($this->game_id, $type, 10, $this->input->get("record"), $keyword))
 			->set("bulletin_type_list", $this->config->item('bulletin_type'))
 			->render();
 	}
