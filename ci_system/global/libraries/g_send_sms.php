@@ -75,7 +75,7 @@
             $this->message = "手機號碼格式錯誤: {$result['status']}";
           default:
             $this->message = "簡訊發送失敗: {$result['status']}";
-            log_message("error", "G_Send_sms  - URL is ".$url." - Status is".$result['status']);
+            log_message("error", "G_Send_sms  - phone is ".$phone_number." - Status is ".$result['status']);
         }
 				return false;
 
