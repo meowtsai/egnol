@@ -1,6 +1,6 @@
 <?php
     /**
-     * 
+     *
      *  yoyo8 簡訊系統發送
      *
      */
@@ -30,7 +30,7 @@
 			return 'undefined';
 		}
 
-        function send($product_id, $phone_number, $msg)
+    function send($product_id, $phone_number, $msg)
 		{
             srand((double)microtime()*1000000);
 			$msg_id = time().rand(1,9999);
@@ -70,11 +70,18 @@
 			}
 			else
 			{
-				// 失敗
-				$this->message = "簡訊發送失敗: {$result['status']}";
-				return false;
-			}
+        switch($result['status']) {
+          case '1':
+            $this->message = "手機號碼格式錯誤: {$result['status']}";
+          default:
+            $this->message = "簡訊發送失敗: {$result['status']}";
+            log_message("error", "G_Send_sms  - URL is ".$url." - Status is".$result['status']);
         }
+				return false;
+
+
+			}
+    }
 
 		function get_message()
 		{
