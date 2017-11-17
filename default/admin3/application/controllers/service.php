@@ -361,6 +361,7 @@ class Service extends MY_Controller {
 			$this->DB2
 				//->select("q.*, g.name as game_name, au.name as admin_uname, gi.name as server_name, c.name as in_game_name")
 				->select("q.*, g.name as game_name, au.name as admin_uname, gi.name as server_name")
+				->select("(select name from `characters` where partner_uid=q.partner_uid and server_id=q.server_id and name=q.character_name) as in_game_name")
 				->select("(select sum(amount) from user_billing where uid=q.uid and billing_type=2 and result=1) as expense")
 				->from("questions q")
 				->join("servers gi", "gi.server_id=q.server_id", "left")

@@ -81,7 +81,7 @@
 		<input type="text" name="character_name" value="<?=$this->input->get("character_name")?>" style="width:90px" placeholder="角色名稱">
 
 		<span class="sptl"></span>
-		
+
 		<input type="text" name="email" value="<?=$this->input->get("email")?>" style="width:90px" placeholder="Email">
 		<input type="text" name="mobile" value="<?=$this->input->get("mobile")?>" style="width:90px" placeholder="手機">
 
@@ -148,7 +148,7 @@
             <tr>
                 <td><a href="<?=site_url("service/view/{$row->id}")?>"><?=$row->id?></a></td>
                 <td><?=$row->game_name?></td>
-                <td><?=$row->character_name?>(<?=$row->server_name?>)</td>
+                <td><?=$row->character_name?>(<?=$row->server_name?>)<? if (($row->partner_uid && !$row->uid && !$row->in_game_name) || !$row->partner_uid):?> <span style="font-size:11px;color:#090">(玩家填寫)</span><? endif;?></td>
                 <? if ($row->type == '9'):?>
                 <td>
                     <select name="new_type" style="width:100px">
