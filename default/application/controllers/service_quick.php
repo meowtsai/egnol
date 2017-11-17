@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Service_quick extends MY_Controller {
-	
+
 	function __construct()
 	{
 		parent::__construct();
@@ -33,19 +33,19 @@ class Service_quick extends MY_Controller {
             $_SESSION['server_name']	= $server_name;
             $_SESSION['character_name']	= $character_name;
         }
-        
+
 		$game_info = $this->db->from("games")->where("vendor_game_id", $vendor_game_id)->get()->row();
-        
+
         $_SESSION['game_name']	= $game_info->name;
-        
+
         if (!empty($server_name) && !empty($character_name)) {
             $server_info = $this->db->from("servers")->where("game_id", $game_info->game_id)->where("address", $server_name)->get()->row();
             $character_info = $this->db->from("characters")->where("server_id", $server_info->server_id)->where("in_game_id", $in_game_id)->get()->row();
-            
+
             if (isset($server_info->server_id)) $_SESSION['server_id'] = $server_info->server_id;
-                                          
+
             if (isset($server_info->server_id) && !isset($character_info->id)) {
-                
+
 		        $this->load->model("g_characters");
                 $insert_id = $this->g_characters->create_character($server_info,
                     array(
@@ -55,7 +55,7 @@ class Service_quick extends MY_Controller {
                         'in_game_id' => $in_game_id
                     ));
             } else if ($character_info->name <> $character_name) {
-                
+
 		        $this->load->model("g_characters");
                 $affected_rows = $this->g_characters->update_character(
                     array(
@@ -67,9 +67,9 @@ class Service_quick extends MY_Controller {
                     ));
             }
         }
-        
+
         $is_ingame = ($_SESSION['vendor_game_id']) ? 1 : 0;
-        
+
 		$this->_init_layout("客服中心")
 			->set("site", $game_info->game_id)
 			->set("not_read_cnt", $not_read_cnt)
@@ -79,22 +79,22 @@ class Service_quick extends MY_Controller {
 			->add_css_link("server")
 			->mobile_view();
 	}
-    
+
 	function question()
 	{
 		//$this->_require_login();
-		
+
 		$server = $this->db->from("servers gi")
 			->join("games g", "gi.game_id=g.game_id")->get();
-		
+
 		$games = $this->db->from("games")->where("is_active", "1")->get();
 		$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("server_id")->get("servers");
 
 		// 讀取玩家角色列表
 		//$characters = $this->db->from("characters")->where("partner_uid", $partner_uid)->get();
-        
+
         $is_ingame = ($_SESSION['vendor_game_id']) ? 1 : 0;
-        
+
 		$this->_init_layout("客服中心")
 			->add_js_include("jquery.blockUI")
 			->add_js_include("service_quick/question")
@@ -110,7 +110,7 @@ class Service_quick extends MY_Controller {
 			->add_css_link("server")
 			->mobile_view();
 	}
-    
+
 	function question_ajax()
 	{
 		$site = $this->_get_site();
@@ -120,14 +120,14 @@ class Service_quick extends MY_Controller {
 		if ( ! $this->input->post("question_type")) die(json_encode(array("status"=>"failure", "message"=>"尚未選擇問題類型")));
 		if ( ! $this->input->post("content")) die(json_encode(array("status"=>"failure", "message"=>"尚未填寫問題描述")));
 		if ( ! $this->input->post("partner_uid") && ! $this->input->post("mobile") &&  ! $this->input->post("email") ) die(json_encode(array("status"=>"failure", "message"=>"請擇一填寫電子郵件信箱或手機")));
-		
+
 		/*
-        $query = $this->db->query("SELECT count(*) > (3-1) as chk FROM questions WHERE uid={$this->g_user->uid} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");		
+        $query = $this->db->query("SELECT count(*) > (3-1) as chk FROM questions WHERE uid={$this->g_user->uid} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");
 		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問，若有未說明問題，請以原提問進行補述!")));
         */
-		
+
         $check_id = base_convert(time(), 10, 32);
-        
+
 		$data = array(
 			"uid" => 0,
 			"partner_uid" => $_SESSION['partner_uid'],
@@ -141,18 +141,18 @@ class Service_quick extends MY_Controller {
 			'email' => $this->input->post("email"),
 			'check_id' => $check_id,
 			'is_quick' => 1,
-		);	
-        
+		);
+
         /*
 		$data = array(
-			"uid" => $this->g_user->uid,				
+			"uid" => $this->g_user->uid,
 			'type' => $this->input->post("question_type"),
 			'server_id' => $this->input->post("server"),
 			'character_name' => htmlspecialchars($this->input->post("character_name")),
 			'content' => nl2br(htmlspecialchars($this->input->post("content"))),
 		);
         */
-		
+
 		$this->load->library('upload');
 		$config['upload_path'] = realpath("p/upload");
 		$config['allowed_types'] = 'gif|jpg|bmp|png';
@@ -160,7 +160,7 @@ class Service_quick extends MY_Controller {
 		$config['max_width'] = '6144';
 		$config['max_height'] = '6144';
 		$config['encrypt_name'] = true;
-		
+
 		$upload_cnt = 0;
 		if ( ! empty($_FILES["file01"]["name"]))
 		{
@@ -172,10 +172,10 @@ class Service_quick extends MY_Controller {
 			else
 			{
 				$upload_data = $this->upload->data();
-				$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");					
+				$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");
 			}
 		}
-		
+
 		if ( ! empty($_FILES["file02"]["name"]))
 		{
 			$this->upload->initialize($config);
@@ -186,7 +186,7 @@ class Service_quick extends MY_Controller {
 			else
 			{
 				$upload_data = $this->upload->data();
-				$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");					
+				$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");
 			}
 		}
 		if ( ! empty($_FILES["file03"]["name"]))
@@ -199,7 +199,7 @@ class Service_quick extends MY_Controller {
 			else
 			{
 				$upload_data = $this->upload->data();
-				$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");					
+				$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");
 			}
 		}
 
@@ -207,7 +207,7 @@ class Service_quick extends MY_Controller {
 			->set("create_time", "now()", false)
 			->set("update_time", "now()", false)
 			->insert("questions", $data);
-        
+
         if (!$this->input->post("partner_uid")) {
 
             header('content-type:text/html; charset=utf-8');
@@ -215,9 +215,9 @@ class Service_quick extends MY_Controller {
             if(filter_var($this->input->post("email"), FILTER_VALIDATE_EMAIL))
             {
                 $msg = "後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件：<br>".$check_id;
-                
+
 			    $this->load->library("g_send_mail");
-                
+
                 if($this->g_send_mail->send_view($this->input->post("email"),
 									$_SESSION['game_name']."客服代碼通知信[".date("Y/m/d H:i:s")."]",
 									"g_blank_mail",
@@ -250,23 +250,23 @@ class Service_quick extends MY_Controller {
                 }
                 else
                 {
-				    die(json_encode(array("status"=>"failure", "message"=>"簡訊發送失敗。請確認輸入手機為有效號碼。")));
+				    die(json_encode(array("status"=>"failure", "message"=>"簡訊發送失敗。請確認輸入手機為有效號碼或是改為填寫E-mail欄位。")));
                 }
             }
         } else {
 		    die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"提問成功!")));
         }
 	}
-	
+
 	function listing()
 	{
         $email    = ($this->input->get_post("email")) ? $this->input->get_post("email") : $_SESSION['email'];
         $mobile   = ($this->input->get_post("mobile")) ? $this->input->get_post("mobile") : $_SESSION['mobile'];
         $check_id = ($this->input->get_post("check_id")) ? $this->input->get_post("check_id") : $_SESSION['check_id'];
         $partner_uid = $_SESSION['partner_uid'];
-        
+
         if (!empty($_SESSION['partner_uid'])) {
-            
+
             $this->db->select("*")
                 ->where("partner_uid", $_SESSION['partner_uid'])
                 ->from("questions")
@@ -277,7 +277,7 @@ class Service_quick extends MY_Controller {
             }
             else {
                 $this->db->where("status >", "0");
-            } 
+            }
 
             $query = $this->db->get();
         } elseif ($check_id) {
@@ -292,10 +292,10 @@ class Service_quick extends MY_Controller {
             }
             else {
                 $this->db->where("status >", "0");
-            } 
+            }
 
             $query = $this->db->get();
-            
+
             if ($query->num_rows() > 0) {
                 $_SESSION['check_id'] = $check_id;
                 $_SESSION['email'] = $email;
@@ -308,7 +308,7 @@ class Service_quick extends MY_Controller {
                 //die(json_encode(array("status"=>"failure", "message"=>"查無此客服紀錄。")));
             }
         }
-		
+
 		$this->_init_layout("客服中心")
 			->add_js_include("service_quick/listing")
 			->set("check_id", $_SESSION['check_id'])
@@ -318,13 +318,13 @@ class Service_quick extends MY_Controller {
 			->add_css_link("server")
 			->mobile_view();
 	}
-	
+
 	function listing_ajax()
 	{
         $email   = $this->input->get_post("email");
         $mobile  = $this->input->get_post("mobile");
         $check_id = ($this->input->get_post("check_id"));
-        
+
         if ($check_id) {
             $this->db->select("*")
                 ->where("check_id", $check_id)
@@ -337,10 +337,10 @@ class Service_quick extends MY_Controller {
             }
             else {
                 $this->db->where("status >", "0");
-            } 
+            }
 
             $query = $this->db->get();
-            
+
             if ($query->num_rows() > 0) {
                 $_SESSION['check_id'] = $check_id;
                 $_SESSION['email'] = $email;
@@ -353,7 +353,7 @@ class Service_quick extends MY_Controller {
             die(json_encode(array("status"=>"failure", "message"=>"查無此客服紀錄。")));
         }
 	}
-    
+
 	function listing_reset_ajax()
 	{
         unset($_SESSION['vendor_game_id']);
@@ -366,10 +366,10 @@ class Service_quick extends MY_Controller {
         unset($_SESSION['email']);
         unset($_SESSION['mobile']);
         unset($_SESSION['check_id']);
-        
+
         die(json_encode(array("status"=>"success", "site"=> $site)));
 	}
-	
+
 	function view($id)
 	{
         if ($_SESSION['partner_uid']) {
@@ -393,18 +393,18 @@ class Service_quick extends MY_Controller {
                         //->join("users u", "u.uid=q.uid")
                         ->get()->row();
         }
-		
+
 		if ($question)
 		{
 			if ($question->status == '2' || $question->status == '4') {
 				$this->db->where("id", $id)->update("questions", array("is_read"=>'1'));
-			}		
+			}
 			$replies = $this->db->from("question_replies")->where("question_id", $id)->order_by("id", "asc")->get();
 		}
 		else {
 			$replies = false;
 		}
-		
+
 		$this->_init_layout("客服中心")
 			->add_css_link("login")
 			->add_css_link("server")
@@ -415,39 +415,39 @@ class Service_quick extends MY_Controller {
 			->set("question", $question)
 			->mobile_view();
 	}
-	
+
 	function insert_reply_json()
 	{
 		//if ( ! $this->g_user->is_login()) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
-		
+
 		$question_id = $this->input->post("question_id");
-        
-		$query = $this->db->query("SELECT count(*) > (3-1) as chk FROM question_replies WHERE question_id={$question_id} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");		
-		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問!")));		
-		
+
+		$query = $this->db->query("SELECT count(*) > (3-1) as chk FROM question_replies WHERE question_id={$question_id} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");
+		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問!")));
+
 		$data = array(
 			"uid" => 0,
 			"question_id" => $question_id,
 			'content' => nl2br(htmlspecialchars($this->input->post("content"))),
-		);		
-		
+		);
+
 		$this->db
 			->set("create_time", "now()", false)
 			->insert("question_replies", $data);
-		
-		$this->db->where("id", $question_id)->update("questions", array("is_read"=>'0', "status"=>'1'));		
-		
-		die(json_encode(array("status"=>"success")));		
+
+		$this->db->where("id", $question_id)->update("questions", array("is_read"=>'0', "status"=>'1'));
+
+		die(json_encode(array("status"=>"success")));
 	}
-	
+
 	function close_question($id)
 	{
 		//if ( ! $this->g_user->is_login()) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
-		
+
 		$question = $this->db->where("id", $id)->from("questions q")->get()->row();
 		//if ($question->uid <> $this->g_user->uid) die(json_encode(array("status"=>"failure", "message"=>"權限不足")));
-		
+
 		$this->db->set("status", "4")->where("id", $id)->update("questions");
-		die(json_encode(array("status"=>"success")));	
+		die(json_encode(array("status"=>"success")));
 	}
 }
