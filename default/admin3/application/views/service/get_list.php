@@ -229,7 +229,7 @@
             </tr>
             <? endforeach;?>
 
-    <? if ($_SERVER['REQUEST_URI'] == '/service/todo'):?>
+    <? if ($_SERVER['REQUEST_URI'] == '/service/todo' || ($this->input->get("todo"))):?>
     <script language="JavaScript">
     title_tmp1 = document.title;
     if (title_tmp1.indexOf(">>")!=-1) {
