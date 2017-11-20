@@ -16,6 +16,21 @@ class Service_quick extends MY_Controller {
         $server_name	= $this->input->get_post("server_name");
         $character_name	= $this->input->get_post("character_name");
 
+				$diffgame	= $this->input->get("param_game_id");
+				if ($diffgame)
+				{
+					unset($_SESSION['vendor_game_id']);
+					unset($_SESSION['partner_uid']);
+					unset($_SESSION['in_game_id']);
+					unset($_SESSION['server_name']);
+					unset($_SESSION['character_name']);
+					unset($_SESSION['server_id']);
+					unset($_SESSION['game_name']);
+					unset($_SESSION['email']);
+					unset($_SESSION['mobile']);
+					unset($_SESSION['check_id']);
+					$vendor_game_id = $diffgame;
+				}
         if ($partner_uid) {
             unset($_SESSION['vendor_game_id']);
             unset($_SESSION['partner_uid']);
@@ -33,10 +48,12 @@ class Service_quick extends MY_Controller {
             $_SESSION['server_name']	= $server_name;
             $_SESSION['character_name']	= $character_name;
         }
-
-		$game_info = $this->db->from("games")->where("vendor_game_id", $vendor_game_id)->get()->row();
-
-        $_SESSION['game_name']	= $game_info->name;
+				if (!$vendor_game_id)
+				{
+					$vendor_game_id = 'h35naxx1hmt';
+				}
+				$game_info = $this->db->from("games")->where("vendor_game_id", $vendor_game_id)->get()->row();
+		    $_SESSION['game_name']	= $game_info->name;
 
         if (!empty($server_name) && !empty($character_name)) {
             $server_info = $this->db->from("servers")->where("game_id", $game_info->game_id)->where("address", $server_name)->get()->row();
@@ -72,6 +89,7 @@ class Service_quick extends MY_Controller {
 
 		$this->_init_layout("客服中心")
 			->set("site", $game_info->game_id)
+			//->set("site", 'g83tw')
 			->set("not_read_cnt", $not_read_cnt)
 			->set("question_cnt", $question_cnt)
 			->set("is_ingame", $is_ingame)
