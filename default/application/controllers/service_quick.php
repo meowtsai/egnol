@@ -105,7 +105,9 @@ class Service_quick extends MY_Controller {
 		$server = $this->db->from("servers gi")
 			->join("games g", "gi.game_id=g.game_id")->get();
 
-		$games = $this->db->from("games")->where("is_active", "1")->get();
+
+		//$games = $this->db->from("games")->where("is_active", "1")->get();
+		$games = $this->db->from("games")->where_in("is_active", array("1", "2"))->get();
 		$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("server_id")->get("servers");
 
 		// 讀取玩家角色列表

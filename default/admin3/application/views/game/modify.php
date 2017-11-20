@@ -18,6 +18,7 @@
 		<select name="is_active" style="width:120px;">
 			<option value="1" <?=$row ? ($row->is_active=='1' ? 'selected' : '') : ''?>>o開啟遊戲</option>
 			<option value="0" <?=$row ? ($row->is_active=='0' ? 'selected' : '') : ''?>>x關閉遊戲</option>
+			<option value="2" <?=$row ? ($row->is_active=='2' ? 'selected' : '') : ''?>>2內部測試</option>
 		</select>
 
 		<label>遊戲簡稱</label>
@@ -54,7 +55,7 @@
 		<label>套用主題</label>
 		<select name="game_theme">
 			<? foreach($theme_list->result() as $theme_row):?>
-			<option value="<?=$theme_row->id?>" <?= $row->theme_id == $theme_row->id ? 'selected="selected"' : ''?>><?=$theme_row->title?></option>
+			<option value="<?=$theme_row->id?>" <?=$row ? ($row->theme_id == $theme_row->id ? 'selected="selected"' : '') : ''?>><?=$theme_row->title?></option>
 			<? endforeach;?>
 		</select>
 

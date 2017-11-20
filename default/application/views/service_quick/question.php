@@ -30,7 +30,9 @@
 						<td>
 							<select name="game" class="required" style="width:90%;">
 								<option value="">--請選擇--</option>
-								<? foreach($games->result() as $row):?>
+								<?
+								foreach($games->result() as $row):
+								if ( IN_OFFICE == false && in_array($row->is_active, array("2", "0"))) continue;?>
 								<option value="<?=$row->game_id?>" <?=($site==$row->game_id ? 'selected="selected"' : '')?>><?=$row->name?></option>
 								<? endforeach;?>
 							</select>
