@@ -54,8 +54,16 @@ class Service_quick extends MY_Controller {
             unset($_SESSION['check_id']);
 
 						//這邊表示從遊戲中帶出 需要檢查加密字串是否合法
-						$str_to_encrypt = "game_id={$vendor_game_id}&partner_uid={$partner_uid}&in_game_id={$in_game_id}&server_name={$server_name}&character_name={$character_name}&level={$level}&usr_device={$usr_device}&os_ver={$os_ver}&app_ver=2.0.0_197509&time_zone={$time_zone}&network={$network}&key={$key}";
+						$encode_server_name =urlencode($server_name);
+						$encode_c_name =urlencode($character_name);
+
+						$str_to_encrypt = "game_id={$vendor_game_id}&partner_uid={$partner_uid}&in_game_id={$in_game_id}&server_name={$encode_server_name}&character_name={$encode_c_name}&level={$level}&usr_device={$usr_device}&os_ver={$os_ver}&app_ver=2.0.0_197509&time_zone={$time_zone}&network={$network}&key={$key}";
 				    $sig = MD5($str_to_encrypt);
+
+						//echo 記得拿掉
+						//echo $str_to_encrypt.'<br />';
+						//echo urlencode($str_to_encrypt).'<br />';
+						//echo $sig.'<br />';
 						//先關閉判斷 11/29再打開測試
 						//if ($sig ===$key_string)
 						//{

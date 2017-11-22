@@ -36,6 +36,105 @@ class Service extends MY_Controller {
 		$this->get_list();
 	}
 
+
+	function daily_report()
+	{
+
+		$question_type = $this->config->item('question_type');
+		$question_status = $this->config->item('question_status');
+
+		$this->_init_service_layout();
+
+		if ($this->input->get("action"))
+		{
+			header("Cache-Control: private");
+			$this->DB2->start_cache();
+			if ($this->input->get("start_date")) {
+				$start_date = $this->DB2->escape($this->input->get("start_date"));
+				if ($this->input->get("end_date")) {
+					$end_date = $this->DB2->escape($this->input->get("end_date").":59");
+				}
+
+			}
+
+			//echo '$start_date='.$start_date;
+			//echo '$end_date='.$end_date;
+
+			$report_result = [];
+
+			switch ($this->input->get("action"))
+			{
+				case "查詢":
+					$report_result = $this->DB2->query("SELECT g.name as game_name, id, create_time, type, gi.name as server_name, character_name, partner_uid,
+									 (SELECT in_game_id from characters where partner_uid =q.partner_uid and server_id=q.server_id and name=q.character_name) as gid,
+									 phone, email, content, status, adm.name as adm_username, update_time,
+									 CASE WHEN (pic_path1 is not null OR pic_path2 is not null OR pic_path3 is not null) THEN 'Y' ELSE 'N' END as has_pic
+									  FROM questions q LEFT JOIN servers gi
+									  ON gi.server_id=q.server_id
+									  LEFT JOIN games g on g.game_id=gi.game_id
+									  LEFT JOIN admin_users adm on adm.uid=q.admin_uid
+									  WHERE  create_time BETWEEN {$start_date} AND {$end_date}")->result();
+					break;
+
+					case "輸出":
+						ini_set("memory_limit","2048M");
+
+						$report_result = $this->DB2->query("SELECT g.name as game_name, id, create_time, type, gi.name as server_name, character_name, partner_uid,
+										 (SELECT in_game_id from characters where partner_uid =q.partner_uid and server_id=q.server_id and name=q.character_name) as gid,
+										 phone, email, content, status, adm.name as adm_username, update_time,
+										 CASE WHEN (pic_path1 is not null OR pic_path2 is not null OR pic_path3 is not null) THEN 'Y' ELSE 'N' END as has_pic
+										  FROM questions q LEFT JOIN servers gi
+										  ON gi.server_id=q.server_id
+										  LEFT JOIN games g on g.game_id=gi.game_id
+										  LEFT JOIN admin_users adm on adm.uid=q.admin_uid
+										  WHERE  create_time BETWEEN  {$start_date} AND {$end_date} ")->result();
+
+						$filename = "output.csv";
+						header("Content-type:application/vnd.ms-excel;");
+						header("Content-Disposition: filename={$filename};");
+
+						$content = "遊戲,	提問單號,	進件時間,	提問單類型,	伺服器,	暱稱,	原廠UID,	角色 GID,	手機,	EMAIL,	玩家提問,	狀態,	回覆人員,	回覆時間,	圖片\n";
+						foreach($report_result as $row) {
+							$content .= "{$row->game_name},{$row->id},{$row->create_time},";
+							$content .= "{$question_type[$row->type]},{$row->server_name},{$row->character_name},";
+							$content .= "{$row->partner_uid},{$row->gid},";
+							$content .= ($row->phone==="0"?",": " \"{$row->phone}\" ,");
+							$content .= ($row->email==="0"?",":"{$row->email},");
+							$content .= "\"{$row->content}\",{$question_status[$row->status]},";
+							$content .= "{$row->adm_username},{$row->update_time},{$row->has_pic},";
+
+							$content .= "\n";
+						}
+
+						echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
+						exit();
+						break;
+			}
+
+			$this->DB2->stop_cache();
+			$this->DB2->flush_cache();
+
+		}
+		else {
+			$default_value = array(
+				'use_default' => true,
+				'start_date' => date('Y-m-d')." 00:00",
+				'end_date' => date('Y-m-d')." 23:59",
+			);
+			$_GET = $default_value;
+		}
+
+		$myFields = ['遊戲',	'提問單號',	'進件時間',	'提問單類型',	'伺服器',	'暱稱',	'原廠UID',	'角色 GID',	'手機',	'EMAIL',	'玩家提問',	'狀態',	'回覆人員',	'回覆時間',	'圖片'];
+		$this->g_layout
+			->add_breadcrumb("每日進件數據")
+			->set("fields", $myFields)
+			->set("report_result", $report_result)
+			->add_js_include("service/get_list")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+
+
 	function question_assign($type='')
 	{
 		$this->_init_service_layout();
