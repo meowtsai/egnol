@@ -44,7 +44,7 @@ class Service extends MY_Controller {
 		$question_status = $this->config->item('question_status');
 
 		$this->_init_service_layout();
-
+		$report_result = [];
 		if ($this->input->get("action"))
 		{
 			header("Cache-Control: private");
@@ -60,7 +60,7 @@ class Service extends MY_Controller {
 			//echo '$start_date='.$start_date;
 			//echo '$end_date='.$end_date;
 
-			$report_result = [];
+
 
 			switch ($this->input->get("action"))
 			{
@@ -116,10 +116,11 @@ class Service extends MY_Controller {
 
 		}
 		else {
+
 			$default_value = array(
 				'use_default' => true,
-				'start_date' => date('Y-m-d')." 00:00",
-				'end_date' => date('Y-m-d')." 23:59",
+				'start_date' => date('Y-m-d',(strtotime ( '-1 day' , strtotime ( date('Y-m-d')) ) ))." 00:00",
+				'end_date' => date('Y-m-d',(strtotime ( '-1 day' , strtotime (date('Y-m-d')) ) ))." 23:59",
 			);
 			$_GET = $default_value;
 		}
