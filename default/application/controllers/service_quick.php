@@ -16,6 +16,15 @@ class Service_quick extends MY_Controller {
         $server_name	= $this->input->get_post("server_name");
         $character_name	= $this->input->get_post("character_name");
 
+				$level	= $this->input->get_post("level");
+				$usr_device	= $this->input->get_post("usr_device");
+				$os_ver	= $this->input->get_post("os_ver");
+				$app_ver	= $this->input->get_post("app_ver");
+				$time_zone	= $this->input->get_post("time_zone");
+				$network	= $this->input->get_post("network");
+				$key_string	= $this->input->get_post("key");
+				$key	= $this->config->item("question_key")[$vendor_game_id];
+
 				$diffgame	= $this->input->get("param_game_id");
 				if ($diffgame)
 				{
@@ -43,11 +52,21 @@ class Service_quick extends MY_Controller {
             unset($_SESSION['email']);
             unset($_SESSION['mobile']);
             unset($_SESSION['check_id']);
-            $_SESSION['vendor_game_id']	= $vendor_game_id;
-            $_SESSION['partner_uid']	= $partner_uid;
-            $_SESSION['in_game_id']	    = $in_game_id;
-            $_SESSION['server_name']	= $server_name;
-            $_SESSION['character_name']	= $character_name;
+
+						//這邊表示從遊戲中帶出 需要檢查加密字串是否合法
+						$str_to_encrypt = "game_id={$vendor_game_id}&partner_uid={$partner_uid}&in_game_id={$in_game_id}&server_name={$server_name}&character_name={$character_name}&level={$level}&usr_device={$usr_device}&os_ver={$os_ver}&app_ver=2.0.0_197509&time_zone={$time_zone}&network={$network}&key={$key}";
+				    $sig = MD5($str_to_encrypt);
+						//先關閉判斷 11/29再打開測試
+						//if ($sig ===$key_string)
+						//{
+							$_SESSION['vendor_game_id']	= $vendor_game_id;
+	            $_SESSION['partner_uid']	= $partner_uid;
+	            $_SESSION['in_game_id']	    = $in_game_id;
+	            $_SESSION['server_name']	= $server_name;
+	            $_SESSION['character_name']	= $character_name;
+							$_SESSION['q_note']	=  "等級={$level}, 系統={$usr_device}, os={$os_ver}, app_ver=2.0.0_197509,time_zone={$time_zone},network={$network}";
+						//}
+
         }
 				if (!$vendor_game_id)
 				{
@@ -164,6 +183,7 @@ class Service_quick extends MY_Controller {
 			'email' => $this->input->post("email"),
 			'check_id' => $check_id,
 			'is_quick' => 1,
+			"note" => $_SESSION['q_note'],
 		);
 
         /*
