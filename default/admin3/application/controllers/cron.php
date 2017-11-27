@@ -1,48 +1,48 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Cron extends CI_Controller {
-	
-	function __construct() 
+
+	function __construct()
 	{
-		parent::__construct();	
+		parent::__construct();
 		$this->global_dir = BASEPATH.'../global/';
 		$this->load->add_package_path($this->global_dir);
 		$this->load->helper("g_common");
-        
+
 		$this->DB1 = $this->load->database('long_e', TRUE);
         $this->DB2 = $this->load->database('long_e_2', TRUE);
-			
+
     	$query = $this->DB2->select("uid")->from("testaccounts")->get();
 
         $testaccounts = array();
-        
+
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
 			    $testaccounts[] = $row->uid;
 		    }
 		}
-        
+
         $testaccounts_str = implode(",", $testaccounts);
         $this->testaccounts = $testaccounts_str;
 	}
-	
+
 	function generate_statistics_blank($date="", $span="daily")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
+
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
-		
+
         switch($span) {
 			case "weekly":
 				$save_table1 = "weekly_user_statistics";
 				$save_table2 = "weekly_operation_statistics";
 				break;
-			
+
 			case "monthly":
 				$save_table1 = "monthly_user_statistics";
 				$save_table2 = "monthly_operation_statistics";
 				break;
-				
+
 			default:
 				$save_table1 = "user_statistics";
 				$save_table2 = "operation_statistics";
@@ -54,47 +54,47 @@ class Cron extends CI_Controller {
 
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
-				
+
                 $query2 = $this->DB2->from($save_table1)->where("game_id", $row->game_id)->limit(1)->get();
 
 		        if ($query2->num_rows() > 0) {
-					
+
 					$this->DB1->where("date", $date)->where("game_id", $row->game_id)->delete($save_table1);
 					$this->DB1->where("date", $date)->where("game_id", $row->game_id)->delete($save_table2);
-					
+
 			        $data = array(
 			            'game_id' => $row->game_id,
 			            'date' => $date
 			        );
-			
+
 			        $this->save_statistics($data, $save_table1);
 			        $this->save_statistics($data, $save_table2);
-					
+
 		        } elseif($span=="daily") {
-					
+
 			        $date_blanks = date("Y-m-d",strtotime("-32 days"));
 		            for ($i=$date_blanks;$i <= $date;$i = date("Y-m-d",strtotime("+1 day", strtotime($i)))) {
 			            $data2 = array(
 				            'game_id' => $row->game_id,
 				            'date' => $i
 			            );
-			
+
 			            $this->save_statistics($data2, $save_table1);
 			            $this->save_statistics($data2, $save_table2);
 		            }
 		        }
 		    }
 		}
-		
+
 		echo "generate_".$span."_statistics_blank done - ".$date.PHP_EOL;
 	}
-	
+
 	function generate_nation_by_ip($date="")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
+
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
-			
+
     	$query = $this->DB2->select("uid")->from("user_info")
     		->where("nation", NULL)->get();
 
@@ -105,20 +105,20 @@ class Cron extends CI_Controller {
 				    'date' => $date,
 				    'new_character_count' => $row->character_cnt
 			    );
-			
+
 			    $this->save_statistics($data);
 		    }
 		}
-		
+
 		echo "generate_new_character_statistics done - ".$date.PHP_EOL;
 	}
-	
+
 	function generate_login_statistics($date="", $span="daily")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
+
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
-		
+
         switch($span) {
 			case "weekly":
 			    $span_query = "YEARWEEK(create_time, 3) = YEARWEEK('{$date}', 3) AND DATE(create_time)<='{$date}'";
@@ -133,7 +133,7 @@ class Cron extends CI_Controller {
                     COUNT(CASE WHEN u.external_id IS NULL THEN 1 ELSE NULL END) 'login_longe_count',
                     COUNT(CASE WHEN u.external_id LIKE '%device' THEN 1 ELSE NULL END) 'login_quick_count'";
 				break;
-			
+
 			case "monthly":
 			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}') AND DATE(create_time)<='{$date}'";
 				$save_table = "monthly_user_statistics";
@@ -147,7 +147,7 @@ class Cron extends CI_Controller {
                     COUNT(CASE WHEN u.external_id IS NULL THEN 1 ELSE NULL END) 'login_longe_count',
                     COUNT(CASE WHEN u.external_id LIKE '%device' THEN 1 ELSE NULL END) 'login_quick_count'";
 				break;
-				
+
 			default:
 				$span_query = "DATE(create_time) = '{$date}'";
 				$save_table = "user_statistics";
@@ -158,11 +158,11 @@ class Cron extends CI_Controller {
                     COUNT(CASE WHEN tmp.first_login IS NOT NULL AND u.external_id LIKE '%device' THEN 1 ELSE NULL END) 'new_login_quick_count'";
 				break;
 		}
-            
+
         $query = $this->DB2->query("
 			SELECT
-				tmp.game_id, 
-                COUNT(tmp.uid) 'login_count', 
+				tmp.game_id,
+                COUNT(tmp.uid) 'login_count',
                 COUNT(tmp.first_login) 'new_login_count',
 				{$span_select}
 			FROM
@@ -171,7 +171,7 @@ class Cron extends CI_Controller {
 				FROM
                     (SELECT
                         game_id, uid, MIN(create_time) 'create_time'
-                    FROM 
+                    FROM
                         log_game_logins
                     WHERE
                         ".$span_query."
@@ -181,7 +181,7 @@ class Cron extends CI_Controller {
 				LEFT JOIN
                     (SELECT
                         game_id, uid, MIN(create_time) 'create_time'
-                    FROM 
+                    FROM
                         user_server_first_logins
                     WHERE
                         1=1
@@ -190,7 +190,7 @@ class Cron extends CI_Controller {
                     ) all_first ON lgl.game_id=all_first.game_id AND lgl.uid=all_first.uid AND DATE(lgl.create_time)=DATE(all_first.create_time)
 				) tmp
             JOIN users u ON tmp.uid=u.uid
-			GROUP BY tmp.game_id");	
+			GROUP BY tmp.game_id");
 
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
@@ -200,36 +200,36 @@ class Cron extends CI_Controller {
 				    'login_count' => $row->login_count,
 				    'new_login_count' => $row->new_login_count
 			    );
-                
+
                 if ($span=='weekly' || $span=='monthly') {
                     $data['login_facebook_count'] = $row->login_facebook_count;
                     $data['login_google_count'] = $row->login_google_count;
                     $data['login_longe_count'] = $row->login_longe_count;
                     $data['login_quick_count'] = $row->login_quick_count;
                 }
-                
+
                 $data['new_login_facebook_count'] = $row->new_login_facebook_count;
                 $data['new_login_google_count'] = $row->new_login_google_count;
                 $data['new_login_longe_count'] = $row->new_login_longe_count;
                 $data['new_login_quick_count'] = $row->new_login_quick_count;
-                
+
 			    $this->save_statistics($data, $save_table);
 		    }
 		}
-		
+
 		echo "generate_login_".$span."_statistics done - ".$date.PHP_EOL;
 	}
-	
+
 	function generate_new_character_statistics($date="")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
+
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
-		$stop_time=date("Y-m-d H:i:s", strtotime("+1 days 4 hours", strtotime($date))); 
-			
+		$stop_time=date("Y-m-d H:i:s", strtotime("+1 days 4 hours", strtotime($date)));
+
         $query = $this->DB2->query("
-			SELECT 
-				game_id, 
+			SELECT
+				game_id,
                 SUM(new_character) 'character_cnt',
                 COUNT(facebook_login) 'facebook_count',
                 COUNT(google_login) 'google_count',
@@ -237,8 +237,8 @@ class Cron extends CI_Controller {
                 COUNT(quick_login) 'quick_count'
 			FROM
 			(
-				SELECT 
-					new_ch.game_id, 
+				SELECT
+					new_ch.game_id,
                     1 'new_character',
                     CASE WHEN u.external_id LIKE '%facebook' THEN 1 ELSE NULL END 'facebook_login',
                     CASE WHEN u.external_id LIKE '%google' THEN 1 ELSE NULL END 'google_login',
@@ -246,7 +246,7 @@ class Cron extends CI_Controller {
                     CASE WHEN u.external_id LIKE '%device' THEN 1 ELSE NULL END 'quick_login'
 				FROM
                     (
-                        SELECT 
+                        SELECT
                             ch.uid, servers.game_id, MIN(ch.create_time) 'create_time'
                         FROM
                             characters as ch
@@ -261,7 +261,7 @@ class Cron extends CI_Controller {
                     DATE(new_ch.create_time) = '{$date}'
 				GROUP BY new_ch.game_id , new_ch.uid
 			) AS tmp
-			GROUP BY game_id");	
+			GROUP BY game_id");
 
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
@@ -274,37 +274,37 @@ class Cron extends CI_Controller {
 				    'new_character_longe_count' => $row->longe_count,
 				    'new_character_quick_count' => $row->quick_count
 			    );
-			
+
 			    $this->save_statistics($data);
 		    }
 		}
-		
+
 		echo "generate_new_character_statistics done - ".$date.PHP_EOL;
 	}
-	
+
 	function generate_device_statistics($date="", $span="daily")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
+
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
-		
+
         switch($span) {
 			case "weekly":
 			    $span_query = "YEARWEEK(create_time, 3) = YEARWEEK('{$date}', 3) AND DATE(create_time)<='{$date}'";
 				$save_table = "weekly_user_statistics";
 				break;
-			
+
 			case "monthly":
 			    $span_query = "YEAR(create_time) = YEAR('{$date}') AND MONTH(create_time) = MONTH('{$date}') AND DATE(create_time)<='{$date}'";
 				$save_table = "monthly_user_statistics";
 				break;
-				
+
 			default:
 				$span_query = "DATE(create_time) = '{$date}'";
 				$save_table = "user_statistics";
 				break;
 		}
-            
+
         $query = $this->DB2->query("
 			SELECT
 				game_id, COUNT(device_id) 'device_count'
@@ -318,7 +318,7 @@ class Cron extends CI_Controller {
                     AND device_id IS NOT NULL
                         ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
 				GROUP BY game_id, device_id) tmp
-			GROUP BY game_id");	
+			GROUP BY game_id");
 
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
@@ -327,15 +327,15 @@ class Cron extends CI_Controller {
 				    'date' => $date,
 				    'device_count' => $row->device_count
 			    );
-			
+
 			    $this->save_statistics($data, $save_table);
 		    }
 		}
-        
+
         if ($span=="daily") {
             $new_query = $this->DB2->query("
                 SELECT
-                    game_id, 
+                    game_id,
                     COUNT(device_id) 'new_device_count',
                     COUNT(CASE WHEN external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'new_device_facebook_count',
                     COUNT(CASE WHEN external_id LIKE '%google' THEN 1 ELSE NULL END) 'new_device_google_count',
@@ -372,21 +372,21 @@ class Cron extends CI_Controller {
                         'new_device_longe_count' => $row->new_device_longe_count,
                         'new_device_quick_count' => $row->new_device_quick_count
                     );
-                
+
                     $this->save_statistics($data, $save_table);
                 }
             }
         }
-		
+
 		echo "generate_device_".$span."_statistics done - ".$date.PHP_EOL;
 	}
-	
+
 	function generate_retention_statistics($date="", $interval=1, $span="daily", $is_first=TRUE)
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
+
 		if (empty($date)) $date=date("Y-m-d",strtotime("-".($interval+1)." days"));
-		
+
 		switch ($interval) {
 			case 1:
 			    $retention_text = 'one_retention';
@@ -407,7 +407,7 @@ class Cron extends CI_Controller {
 			    echo "Only 1,3,7,14,30 allowed for second parameter!";
 				return 0;
 		}
-		
+
 		$update_field = ($is_first) ?  $retention_text.'_count' : $retention_text.'_all_count';
 
         switch($span) {
@@ -418,7 +418,7 @@ class Cron extends CI_Controller {
 								AND '".date("Y-m-d", strtotime("+7 days", strtotime($date)))." 23:59:59'";
 				$save_table = "weekly_operation_statistics";
 				break;
-			
+
 			case "monthly":
 				$span_query1 = "create_time BETWEEN '".date("Y-m", strtotime($date))."-01'
 								AND '".date("Y-m-t", strtotime($date))." 23:59:59'";
@@ -426,17 +426,17 @@ class Cron extends CI_Controller {
 								AND '".date("Y-m-t", strtotime("+1 day", strtotime($date)))." 23:59:59'";
 				$save_table = "monthly_operation_statistics";
 				break;
-				
+
 			default:
 			    $span_query1 = "DATE(create_time) = '{$date}'";
 			    $span_query2 = " DATE(l.create_time) = DATE_ADD(DATE('{$date}'), INTERVAL {$interval} DAY)";
 				$save_table = "operation_statistics";
 				break;
 		}
-        
+
 		if ($span=="daily") {
             $query = $this->DB2->query("
-                SELECT 
+                SELECT
                     game_id,
                     SUM(is_retention) 'retention',
                     COUNT(facebook_login) 'facebook_count',
@@ -445,7 +445,7 @@ class Cron extends CI_Controller {
                     COUNT(quick_login) 'quick_count'
                 FROM
                 (
-                    SELECT 
+                    SELECT
                         lgl2.game_id,
                         1 'is_retention',
                         CASE WHEN lgl2.external_id LIKE '%facebook' THEN 1 ELSE NULL END 'facebook_login',
@@ -455,11 +455,11 @@ class Cron extends CI_Controller {
                     FROM
                     (
 						".(($is_first) ? "
-                        SELECT 
+                        SELECT
                             uid, game_id, create_time
                         FROM
                         (
-							SELECT 
+							SELECT
 								uid, game_id, MIN(create_time) 'create_time'
 							FROM
 								user_server_first_logins
@@ -468,7 +468,7 @@ class Cron extends CI_Controller {
                         WHERE
                             DATE(create_time) = '{$date}'
 						" : "
-						SELECT 
+						SELECT
 							uid, game_id, MIN(create_time) 'create_time'
 						FROM
 							log_game_logins
@@ -478,7 +478,7 @@ class Cron extends CI_Controller {
 						")."
                     ) AS lgl,
                     (
-                        SELECT 
+                        SELECT
                             l.uid, l.game_id, MIN(l.create_time), MIN(u.external_id) 'external_id'
                         FROM
                             log_game_logins l
@@ -492,7 +492,7 @@ class Cron extends CI_Controller {
                             AND lgl2.game_id = lgl.game_id
                             ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
                 ) AS tmp
-                GROUP BY game_id");	
+                GROUP BY game_id");
 
             if ($query->num_rows() > 0) {
                 foreach ($query->result() as $row) {
@@ -513,26 +513,26 @@ class Cron extends CI_Controller {
                             $update_field => $row->retention
                         );
                     }
-                    
+
                     $this->save_statistics($data, $save_table);
                 }
             }
         } else {
             $query = $this->DB2->query("
-                SELECT 
+                SELECT
                     game_id, SUM(is_retention) 'retention'
                 FROM
                 (
-                    SELECT 
+                    SELECT
                         lgl2.game_id, 1 'is_retention'
                     FROM
                     (
 						".(($is_first) ? "
-                         SELECT 
+                         SELECT
                             uid, game_id, create_time
                         FROM
                         (
-							SELECT 
+							SELECT
 								uid, game_id, MIN(create_time) 'create_time'
 							FROM
 								user_server_first_logins
@@ -541,7 +541,7 @@ class Cron extends CI_Controller {
                         WHERE
                             {$span_query1}
 						" : "
-						SELECT 
+						SELECT
 							uid, game_id, MIN(create_time) 'create_time'
 						FROM
 							log_game_logins
@@ -551,7 +551,7 @@ class Cron extends CI_Controller {
 						")."
                     ) AS lgl,
                     (
-                        SELECT 
+                        SELECT
                             l.uid, l.game_id, MIN(l.create_time)
                         FROM
                             log_game_logins l
@@ -564,31 +564,31 @@ class Cron extends CI_Controller {
                             AND lgl2.game_id = lgl.game_id
                             ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
                 ) AS tmp
-                GROUP BY game_id");	
+                GROUP BY game_id");
 
             if ($query->num_rows() > 0) {
                 foreach ($query->result() as $row) {
-            
+
                     $data = array(
                         'game_id' => $row->game_id,
                         'date' => $date,
                         $update_field => $row->retention
                     );
-                    
+
                     $this->save_statistics($data, $save_table);
                 }
             }
         }
-		
+
 		echo "generate_".$interval."_retention_".$span."_statistics(".(($is_first) ? "first" : "all").") done - ".$date.PHP_EOL;
 	}
-	
+
 	function generate_return_statistics($date="", $interval=1, $span="daily")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
+
 		if (empty($date)) $date=date("Y-m-d",strtotime("-".($interval+1)." days"));
-		
+
         switch($span) {
 			case "weekly":
                 $return_text = 'return';
@@ -600,7 +600,7 @@ class Cron extends CI_Controller {
 				$span_query3 = "DATE(l.create_time) <= DATE('{$date_2_week_ago}')";
 				$save_table = "weekly_operation_statistics";
 				break;
-			
+
 			case "monthly":
                 $return_text = 'return';
 				$update_field = 'return_count';
@@ -611,7 +611,7 @@ class Cron extends CI_Controller {
 			    $span_query3 = "DATE(l.create_time) <= DATE('{$date_2_month_ago}')";
 				$save_table = "monthly_operation_statistics";
 				break;
-				
+
 			default:
 				switch ($interval) {
 					case 1:
@@ -629,7 +629,7 @@ class Cron extends CI_Controller {
 				$save_table = "operation_statistics";
 				break;
 		}
-		
+
         $query = $this->DB2->query("
         SELECT
             lgl_return.game_id,
@@ -645,7 +645,7 @@ class Cron extends CI_Controller {
             lgl_total.total_quick_count
         FROM
         (
-			SELECT 
+			SELECT
 				lgl.game_id,
                 COUNT(lgl.uid) '{$return_text}_count',
                 COUNT(CASE WHEN lgl.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'facebook_count',
@@ -654,7 +654,7 @@ class Cron extends CI_Controller {
                 COUNT(CASE WHEN lgl.external_id LIKE '%device' THEN 1 ELSE NULL END) 'quick_count'
 			FROM
 			(
-				SELECT 
+				SELECT
 					l.uid, l.game_id, MIN(l.create_time) 'create_time', MIN(u.external_id) 'external_id'
 				FROM
 					log_game_logins l
@@ -668,7 +668,7 @@ class Cron extends CI_Controller {
             (
                 SELECT
                     uid, game_id, MIN(create_time) 'create_time'
-                FROM 
+                FROM
                     log_game_logins
                 WHERE
                     1=1
@@ -676,7 +676,7 @@ class Cron extends CI_Controller {
             ) AS all_first ON all_first.uid = lgl.uid AND all_first.game_id = lgl.game_id
 				LEFT JOIN
 			(
-				SELECT 
+				SELECT
 					uid, game_id, MIN(create_time)
 				FROM
 					log_game_logins
@@ -692,7 +692,7 @@ class Cron extends CI_Controller {
         ) AS lgl_return
             JOIN
         (
-            SELECT 
+            SELECT
 				lgl_t.game_id,
                 COUNT(lgl_t.uid) 'total_count',
                 COUNT(CASE WHEN lgl_t.external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'total_facebook_count',
@@ -701,12 +701,12 @@ class Cron extends CI_Controller {
                 COUNT(CASE WHEN lgl_t.external_id LIKE '%device' THEN 1 ELSE NULL END) 'total_quick_count'
 			FROM
 			(
-				SELECT 
+				SELECT
 					l.uid, l.game_id, MIN(l.create_time), MIN(u.external_id) 'external_id'
 				FROM
 					(SELECT
                         game_id, uid, MIN(create_time) 'create_time'
-                    FROM 
+                    FROM
                         log_game_logins
                     WHERE
                         1=1
@@ -720,12 +720,12 @@ class Cron extends CI_Controller {
 			) AS lgl_t
 			GROUP BY lgl_t.game_id
         ) AS lgl_total ON lgl_return.game_id=lgl_total.game_id
-		");	
-        
+		");
+
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
                 $return_count = $return_text.'_count';
-		
+
 				$data = array(
 					'game_id' => $row->game_id,
 					'date' => $date,
@@ -740,51 +740,51 @@ class Cron extends CI_Controller {
                     $return_text.'_longe_rate' => ($row->total_longe_count)?$row->longe_count/$row->total_longe_count:0,
                     $return_text.'_quick_rate' => ($row->total_quick_count)?$row->quick_count/$row->total_quick_count:0,
 				);
-				
+
 			    $this->save_statistics($data, $save_table);
 		    }
 		}
-		
+
 		echo "generate_".$interval."_return_".$span."_statistics done - ".$date.PHP_EOL;
 	}
-	
+
 	function generate_billing_statistics($date="", $span="daily")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
+
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
-		
+
         switch($span) {
 			case "weekly":
 			    $span_query = "YEARWEEK(ub.create_time, 3) = YEARWEEK('{$date}', 3) AND DATE(ub.create_time)<='{$date}'";
 				$save_table = "weekly_user_statistics";
 				break;
-			
+
 			case "monthly":
 			    $span_query = "YEAR(ub.create_time)=YEAR('{$date}') AND MONTH(ub.create_time)=MONTH('{$date}') AND DATE(ub.create_time)<='{$date}'";
 				$save_table = "monthly_user_statistics";
 				break;
-				
+
 			default:
 				$span_query = "DATE(ub.create_time) = '{$date}'";
 				$save_table = "user_statistics";
 				break;
 		}
-		
+
 		$query = $this->DB2->query("
-			SELECT 
+			SELECT
 				game_id,
 				COUNT(uid) 'deposit_user_count',
 				SUM(amount_total) 'deposit_total',
 				SUM(is_first) 'new_deposit_user_count'
 			FROM
-			(   
-				SELECT 
+			(
+				SELECT
 					ub.uid,
 					sv.game_id,
 					SUM(ub.amount) 'amount_total',
 					(
-						SELECT 
+						SELECT
 							IF(COUNT(*) > 0, 0, 1)
 						FROM
 							user_billing
@@ -818,47 +818,47 @@ class Cron extends CI_Controller {
 				    'deposit_total' => $row->deposit_total,
 				    'new_deposit_user_count' => $row->new_deposit_user_count
 			    );
-				
+
 			    $this->save_statistics($data, $save_table);
 		    }
 		}
 		echo "generate_billing_{$span}_statistics done - ".$date.PHP_EOL;
 	}
-	
+
 	function generate_new_user_billing_statistics($date="", $span="daily")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
+
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
-		
+
         switch($span) {
 			case "weekly":
 			    $span_query1 = "YEARWEEK(lgl.create_time, 3) = YEARWEEK(ub.create_time, 3)";
 			    $span_query2 = "YEARWEEK(ub.create_time, 3) = YEARWEEK('{$date}', 3) AND DATE(ub.create_time)<='{$date}'";
 				$save_table = "weekly_user_statistics";
 				break;
-			
+
 			case "monthly":
 			    $span_query1 = "YEAR(lgl.create_time)=YEAR(ub.create_time) AND MONTH(lgl.create_time)=MONTH(ub.create_time)";
 			    $span_query2 = "YEAR(ub.create_time) = YEAR('{$date}') AND MONTH(ub.create_time) = MONTH('{$date}') AND DATE(ub.create_time)<='{$date}'";
 				$save_table = "monthly_user_statistics";
 				break;
-				
+
 			default:
 				$span_query1 = "DATE(lgl.create_time)=DATE(ub.create_time)";
 				$span_query2 = "DATE(ub.create_time) = '{$date}'";
 				$save_table = "user_statistics";
 				break;
 		}
-		
+
 		$query = $this->DB2->query("
-			SELECT 
+			SELECT
 				game_id,
 				COUNT(uid) 'new_user_deposit_count',
 				SUM(amount_total) 'new_user_deposit_total'
 			FROM
-			(   
-				SELECT 
+			(
+				SELECT
 					ub.uid,
 					sv.game_id,
 					SUM(ub.amount) 'amount_total'
@@ -867,14 +867,14 @@ class Cron extends CI_Controller {
 				JOIN servers sv ON ub.server_id = sv.server_id
                 JOIN (SELECT
                         game_id, uid, MIN(create_time) 'create_time'
-                    FROM 
+                    FROM
                         log_game_logins
                     WHERE
                         1=1
                             ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
                     GROUP BY game_id, uid
                     ) lgl ON {$span_query1} AND sv.game_id=lgl.game_id AND ub.uid=lgl.uid
-				WHERE 
+				WHERE
                     {$span_query2}
 						AND ub.billing_type = 2
 						AND ub.result = 1
@@ -890,27 +890,27 @@ class Cron extends CI_Controller {
 				    'new_user_deposit_count' => $row->new_user_deposit_count,
 				    'new_user_deposit_total' => $row->new_user_deposit_total,
 			    );
-				
+
 			    $this->save_statistics($data, $save_table);
 		    }
 		}
-		
+
 		echo "generate_new_user_billing_{$span}_statistics done - ".$date.PHP_EOL;
 	}
-	
+
 	function generate_consume_statistics($date="")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
+
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
 		$query = $this->DB2->query("
-			SELECT 
+			SELECT
 				game_id,
 				COUNT(uid) 'consume_user_count',
 				SUM(amount_total) 'consume_total'
 			FROM
 			(
-				SELECT 
+				SELECT
 					lgc.uid,
 					lgc.game_id,
 					SUM(lgc.amount) 'amount_total'
@@ -921,38 +921,38 @@ class Cron extends CI_Controller {
                         ".(($this->testaccounts)?" AND lgc.uid NOT IN (".$this->testaccounts.") ":"")."
 				GROUP BY lgc.uid , lgc.game_id
 			) tmp
-			GROUP BY game_id");	
+			GROUP BY game_id");
 
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
-				
+
 			    $data = array(
 				    'game_id' => $row->game_id,
 				    'date' => $date,
 				    'consume_user_count' => $row->consume_user_count,
 				    'consume_total' => $row->consume_total
 			    );
-				
+
 			    $this->save_statistics($data);
 		    }
 		}
-		
+
 		echo "generate_consume_statistics done - ".$date.PHP_EOL;
-	}	
-	
+	}
+
 	function generate_new_consume_statistics($date="")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
+
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
-			
+
 		$query = $this->DB2->query("
-			SELECT 
+			SELECT
 				game_id,
 				COUNT(uid) 'new_consume_user_count'
 			FROM
 			(
-				SELECT 
+				SELECT
 					uid, game_id, MIN(create_time) 'first_time'
 				FROM
 					log_game_consumes
@@ -963,36 +963,36 @@ class Cron extends CI_Controller {
 			) AS lgc
 			WHERE
 				DATE(first_time) = '{$date}'
-			GROUP BY game_id");		
+			GROUP BY game_id");
 
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
-				
+
 			    $data = array(
 				    'game_id' => $row->game_id,
 				    'date' => $date,
 				    'new_consume_user_count' => $row->new_consume_user_count
 			    );
-				
+
 			    $this->save_statistics($data);
 		    }
 		}
-		
+
 		echo "generate_new_consume_statistics done - ".$date.PHP_EOL;
 	}
-	
+
 	function generate_game_time_statistics($date="")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
+
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
 		$query = $this->DB2->query("
-			SELECT 
+			SELECT
 				game_id,
 				SUM(game_time) 'total_time'
 			FROM
 			(
-				SELECT 
+				SELECT
 					lgl.uid,
 					lgl.game_id,
 					TIMESTAMPDIFF(SECOND, lgl.create_time, lgl.logout_time) 'game_time'
@@ -1004,43 +1004,43 @@ class Cron extends CI_Controller {
                         ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
 				GROUP BY lgl.uid , lgl.game_id
 			) tmp
-			GROUP BY game_id");		
+			GROUP BY game_id");
 
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
-				
+
 			    $data = array(
 				    'game_id' => $row->game_id,
 				    'date' => $date,
 				    'total_time' => $row->total_time
 			    );
-			
+
 			    $this->save_statistics($data);
 		    }
 		}
 		echo "generate_game_time_statistics done - ".$date.PHP_EOL;
 	}
-	
+
 	function generate_paid_game_time_statistics($date="")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
+
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
-			
+
 		$query = $this->DB2->query("
-			SELECT 
+			SELECT
 				game_id,
 				SUM(paid_game_time) 'paid_total_time'
 			FROM
 			(
-				SELECT 
+				SELECT
 					lgl.uid,
 					lgl.game_id,
 					TIMESTAMPDIFF(SECOND, lgl.create_time, lgl.logout_time) 'paid_game_time'
 				FROM
 					log_game_logins lgl,
 					(
-						SELECT 
+						SELECT
 							uid, game_id, MIN(create_time)
 						FROM
 							user_billing
@@ -1059,31 +1059,31 @@ class Cron extends CI_Controller {
 						AND lgl.game_id = paid_users.game_id
 				GROUP BY lgl.uid , lgl.game_id
 			) tmp
-			GROUP BY game_id");		
+			GROUP BY game_id");
 
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
-				
+
 			    $data = array(
 				    'game_id' => $row->game_id,
 				    'date' => $date,
 				    'paid_total_time' => $row->paid_total_time
 			    );
-			
+
 			    $this->save_statistics($data);
 		    }
 		}
 		echo "generate_paid_game_time_statistics done - ".$date.PHP_EOL;
 	}
-	
+
 	function generate_peak_statistics($date="")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
-		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));	
-		
+
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
+
 		$query = $this->DB2->query("
-			SELECT 
+			SELECT
 				game_id,
 				SUM(online_0) 'count_0',
 				SUM(online_1) 'count_1',
@@ -1111,7 +1111,7 @@ class Cron extends CI_Controller {
 				SUM(online_23) 'count_23'
 			FROM
 			(
-				SELECT 
+				SELECT
 					game_id,
 						IF(create_time <= '{$date} 00:00:00'
 							AND logout_time > '{$date} 00:00:00', 1, 0) 'online_0',
@@ -1168,7 +1168,7 @@ class Cron extends CI_Controller {
 						OR DATE(logout_time) = '{$date}'
                         ".(($this->testaccounts)?" AND uid NOT IN (".$this->testaccounts.") ":"")."
 			) tmp
-			GROUP BY game_id");	
+			GROUP BY game_id");
 
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
@@ -1201,32 +1201,32 @@ class Cron extends CI_Controller {
 				        'count_22' => $row->count_22,
 				        'count_23' => $row->count_23
 			        );
-					
+
 					$this->save_statistics($online_users_statistics_data, "online_users_statistics");
-					
-				    $peak_user_count = max($row->count_0, $row->count_1, $row->count_2, $row->count_3, $row->count_4, $row->count_5, $row->count_6, 
-					    $row->count_7, $row->count_8, $row->count_9, $row->count_10, $row->count_11, $row->count_12, $row->count_13, $row->count_14, $row->count_15, 
+
+				    $peak_user_count = max($row->count_0, $row->count_1, $row->count_2, $row->count_3, $row->count_4, $row->count_5, $row->count_6,
+					    $row->count_7, $row->count_8, $row->count_9, $row->count_10, $row->count_11, $row->count_12, $row->count_13, $row->count_14, $row->count_15,
 						$row->count_16, $row->count_17, $row->count_18, $row->count_19, $row->count_20, $row->count_21, $row->count_22, $row->count_23);
-					
+
 					$statistics_data = array(
 						'game_id' => $row->game_id,
 						'date' => $date,
 						'peak_user_count' => $peak_user_count
 					);
-				
+
 					$this->save_statistics($statistics_data);
 			    }
 		    }
 		}
 		echo "generate_peak_statistics done - ".$date.PHP_EOL;
 	}
-	
+
 	function generate_user_game_length_statistics($date="")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
-		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));			
-		
+
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
+
 			$query = $this->DB2->query("
 				SELECT game_id, date,
 					login_count_15,
@@ -1235,7 +1235,7 @@ class Cron extends CI_Controller {
 					login_count_90,
 					login_count_120,
 					login_count_more
-				FROM 
+				FROM
 				(
 					SELECT game_id, date,
 						COUNT(uid) 'all_login_count',
@@ -1270,20 +1270,20 @@ class Cron extends CI_Controller {
 						'login_count_120' => $row->login_count_120,
 						'login_count_more' => $row->login_count_more
 			        );
-				
+
 					$this->save_statistics($data);
 			    }
 		    }
 		}
 		echo "generate_user_game_length_statistics done - ".$date.PHP_EOL;
 	}
-	
+
 	function generate_new_user_game_length_statistics($date="")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
-		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));			
-		
+
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
+
 			$query = $this->DB2->query("
 				SELECT game_id, date,
 					new_login_count,
@@ -1293,7 +1293,7 @@ class Cron extends CI_Controller {
 					new_login_count_90,
 					new_login_count_120,
 					new_login_count_more
-				FROM 
+				FROM
 				(
 					SELECT game_id, date,
 						COUNT(uid) 'new_login_count',
@@ -1305,11 +1305,11 @@ class Cron extends CI_Controller {
 						COUNT(CASE WHEN user_game_length >= 7200 THEN 1 ELSE NULL END) 'new_login_count_more'
 					FROM
                     (
-                        SELECT all_first.game_id, DATE(all_first.create_time) 'date', all_first.uid, SUM(TIMESTAMPDIFF(SECOND, all_first.create_time, all_first.logout_time)) 'user_game_length' 
+                        SELECT all_first.game_id, DATE(all_first.create_time) 'date', all_first.uid, SUM(TIMESTAMPDIFF(SECOND, all_first.create_time, all_first.logout_time)) 'user_game_length'
                         FROM
                             (SELECT
                                 game_id, uid, MIN(create_time) 'create_time', MIN(logout_time) 'logout_time'
-                            FROM 
+                            FROM
                                 log_game_logins
                             WHERE
                                 1=1
@@ -1337,20 +1337,20 @@ class Cron extends CI_Controller {
 						'new_login_count_120' => $row->new_login_count_120,
 						'new_login_count_more' => $row->new_login_count_more
 			        );
-				
+
 					$this->save_statistics($data);
 			    }
 		    }
 		}
 		echo "generate_new_user_game_length_statistics done - ".$date.PHP_EOL;
 	}
-	
+
 	function generate_deposit_user_game_length_statistics($date="")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
-		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));			
-		
+
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
+
 			$query = $this->DB2->query("
 				SELECT game_id, date,
 					deposit_login_count,
@@ -1360,7 +1360,7 @@ class Cron extends CI_Controller {
 					deposit_login_count_90,
 					deposit_login_count_120,
 					deposit_login_count_more
-				FROM 
+				FROM
 				(
 					SELECT game_id, date,
 						COUNT(uid) 'deposit_login_count',
@@ -1370,13 +1370,13 @@ class Cron extends CI_Controller {
 						COUNT(CASE WHEN user_game_length >= 3600 AND user_game_length < 5400 THEN 1 ELSE NULL END) 'deposit_login_count_90',
 						COUNT(CASE WHEN user_game_length >= 5400 AND user_game_length < 7200 THEN 1 ELSE NULL END) 'deposit_login_count_120',
 						COUNT(CASE WHEN user_game_length >= 7200 THEN 1 ELSE NULL END) 'deposit_login_count_more'
-					FROM 
+					FROM
                     (
                         SELECT lgl.game_id, DATE(lgl.create_time) 'date', lgl.uid, SUM(TIMESTAMPDIFF(SECOND, lgl.create_time, lgl.logout_time)) 'user_game_length' FROM
                             log_game_logins lgl
                         JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id AND lgl.create_time >= ub.create_time
                         WHERE lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
-                            AND ub.billing_type = 2 
+                            AND ub.billing_type = 2
                             AND ub.result = 1
                             ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
                         GROUP BY lgl.game_id, DATE(lgl.create_time), lgl.uid
@@ -1399,20 +1399,20 @@ class Cron extends CI_Controller {
 						'deposit_login_count_120' => $row->deposit_login_count_120,
 						'deposit_login_count_more' => $row->deposit_login_count_more
 			        );
-				
+
 					$this->save_statistics($data);
 			    }
 		    }
 		}
 		echo "generate_deposit_user_game_length_statistics done - ".$date.PHP_EOL;
 	}
-	
+
 	function generate_new_deposit_user_game_length_statistics($date="")
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
-		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));			
-		
+
+		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
+
 			$query = $this->DB2->query("
 				SELECT game_id, date,
 					new_deposit_login_count,
@@ -1438,7 +1438,7 @@ class Cron extends CI_Controller {
                             log_game_logins lgl
                         JOIN user_billing ub ON lgl.uid=ub.uid AND lgl.server_id=ub.server_id AND DATE(lgl.create_time) = DATE(ub.create_time)
                         WHERE lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
-                            AND ub.billing_type = 2 
+                            AND ub.billing_type = 2
                             AND ub.result = 1
                             ".(($this->testaccounts)?" AND lgl.uid NOT IN (".$this->testaccounts.") ":"")."
                         GROUP BY lgl.game_id, DATE(lgl.create_time), lgl.uid
@@ -1461,21 +1461,21 @@ class Cron extends CI_Controller {
 						'new_deposit_login_count_120' => $row->new_deposit_login_count_120,
 						'new_deposit_login_count_more' => $row->new_deposit_login_count_more
 			        );
-				
+
 					$this->save_statistics($data);
 			    }
 		    }
 		}
 		echo "generate_new_deposit_user_game_length_statistics done - ".$date.PHP_EOL;
 	}
-	
+
 	function generate_new_user_lifetime_value_statistics($date="", $interval=1)
 	{
 		$this->lang->load('db_lang', 'zh-TW');
-		
+
 		if (empty($date)) $date=date("Y-m-d",strtotime("-".($interval+1)." days"));
 		$end_date=date("Y-m-d",strtotime("+".$interval." days", strtotime($date)));
-		
+
 		switch ($interval) {
 			case 1:
 			    $update_field = 'one_ltv';
@@ -1515,17 +1515,17 @@ class Cron extends CI_Controller {
 				return 0;
 				break;
 		}
-		
+
 		$query = $this->DB2->query("
 			SELECT lgl.game_id, DATE(lgl.create_time) 'date',
 				SUM(ub.amount) 'life_time_value'
-			FROM 
+			FROM
 			    user_billing ub
                 JOIN servers s ON ub.server_id=s.server_id
                 JOIN
                 (SELECT
                     game_id, uid, MIN(create_time) 'create_time'
-                FROM 
+                FROM
                     log_game_logins
                 WHERE
                     1=1
@@ -1533,7 +1533,7 @@ class Cron extends CI_Controller {
                 GROUP BY game_id, uid
                 ) lgl ON lgl.uid=ub.uid AND s.game_id=lgl.game_id
 			WHERE lgl.create_time BETWEEN '{$date} 00:00:00' AND '{$date} 23:59:59'
-				AND ub.billing_type = 2 
+				AND ub.billing_type = 2
 				AND ub.result = 1
 				AND ub.create_time BETWEEN '{$date} 00:00:00' AND '{$end_date} 00:00:00'
 			GROUP BY lgl.game_id, DATE(lgl.create_time)
@@ -1547,19 +1547,19 @@ class Cron extends CI_Controller {
 				        'date' => $date,
 						$update_field => $row->life_time_value
 			        );
-				
+
 					$this->save_statistics($data, "operation_statistics");
 			    }
 		    }
 		}
 		echo "generate_new_user_".$interval."_lifetime_value_statistics done - ".$date.PHP_EOL;
 	}
-	
+
 	function save_statistics($data, $save_table="user_statistics") {
-		
+
         if ($save_table=='marketing_statistics') $this->DB2->where("platform", $data['platform'])->where("country_code", $data['country_code'])->where("media", $data['media']);
 		$statistics = $this->DB2->where("game_id", $data['game_id'])->where("date", $data['date'])->get($save_table);
-		
+
 		if ($statistics->num_rows() > 0) {
             echo "[update]";
         	if ($save_table=='marketing_statistics') $this->DB1->where("platform", $data['platform'])->where("country_code", $data['country_code'])->where("media", $data['media']);
@@ -1570,10 +1570,10 @@ class Cron extends CI_Controller {
 		}
         echo "[".$save_table."][".$data['game_id']."][".$data['date']."]";
 	}
-	
+
 	function cron_bundle($date="") {
 		ini_set('max_execution_time', 9999);
-		
+
 		if (empty($date)) {
 			$check_date=date("Y-m-d",strtotime("-1 days"));
 		    $date_1="";
@@ -1589,7 +1589,7 @@ class Cron extends CI_Controller {
 		    $date_14=date("Y-m-d",strtotime("-13 days", strtotime($date)));
 		    $date_30=date("Y-m-d",strtotime("-29 days", strtotime($date)));
 		}
-        
+
 		$this->generate_statistics_blank($date);
 		$this->generate_login_statistics($date);
 		$this->generate_new_character_statistics($date);
@@ -1624,8 +1624,8 @@ class Cron extends CI_Controller {
 		$this->generate_new_user_lifetime_value_statistics($date, 30);
 		$this->generate_new_user_lifetime_value_statistics($date, 60);
 		$this->generate_new_user_lifetime_value_statistics($date, 90);
-        
-		
+
+
 		if ("7"==date("N", strtotime($check_date))) {
 			$this_sunday = $date;
 			$date_week=date("Y-m-d",strtotime("-1 week", strtotime($check_date)));
@@ -1645,8 +1645,8 @@ class Cron extends CI_Controller {
 
 		$this->generate_retention_statistics($date_week, 1, 'weekly');
 		$this->generate_retention_statistics($date_week, 1, 'weekly', FALSE);
-		
-		
+
+
 		$month_end = date("Y-m-t", strtotime($check_date));
 
 		$this->generate_statistics_blank($month_end, 'monthly');
@@ -1660,50 +1660,50 @@ class Cron extends CI_Controller {
 		$this->generate_retention_statistics($date_month, 1, 'monthly');
 		$this->generate_retention_statistics($date_month, 1, 'monthly', FALSE);
 	}
-	
+
 	function echo_passed_time($start_time) {
-		
+
 		$end_time = time();
 		$passed_time = ($end_time - $start_time)/60;
 		echo 'Time spent: '.$passed_time.'m'.PHP_EOL;
-		
+
 		return $end_time;
 	}
-	
+
 	function cron_bundle_que($date) {
 		ini_set('max_execution_time', 99999);
-		
+
 		$run_date = $date;
-		
+
 		for ($run_date; $run_date <= date('Y-m-d'); $run_date=date("Y-m-d",strtotime('+1 day', strtotime($run_date)))) {
 			echo '['.$run_date.']'.PHP_EOL;
 			$this->cron_bundle($run_date);
 		}
 	}
-    
+
     function mongo_log_data($date="") {
-        
+
         $this->load->config('g_mongodb');
         $g_mongodb = $this->config->item('mongo_db');
-        
+
         $manager = new MongoDB\Driver\Manager($g_mongodb['url']);
         $query = new MongoDB\Driver\Query([
             "uid" => null,
             $query_time => ['$gte' => $date]
         ]);
-        
+
         $cursor = $manager->executeQuery("longe_log.le_AppStart", $query);
 
         $result = [];
-        
+
         foreach ($cursor as $document) {
             $result[] = $document;
         }
-            
+
         foreach($result as $row) {
             $user_info = $this->db->from("user_info")
                 ->where("uid", $row['uid'])->get()->row();
-                
+
             if (strcasecmp($row['le_deviceType'], 'Android') == 0 && !$user_info->is_android_device) {
                 $this->db->where("uid", $row['uid'])->update("user_info", array("is_android_device" => 1));
             } elseif(strcasecmp($row['le_deviceType'], 'iOS') == 0 && !$user_info->is_ios_device) {
@@ -1711,31 +1711,31 @@ class Cron extends CI_Controller {
             }
         }
     }
-            
+
     function mongo_user_online_sharp() {
-        $date = date('Y-m-d', time()); 
+        $date = date('Y-m-d', time());
         $hour = date('G', time());
-        
+
         $this->load->config('g_mongodb');
         $g_mongodb = $this->config->item('mongo_db');
-        
+
         $manager = new MongoDB\Driver\Manager($g_mongodb['url']);
         $query = new MongoDB\Driver\Query([]);
-        
+
         $cursor = $manager->executeQuery("longe_log.user_count", $query);
 
         $result = [];
-        
+
         foreach ($cursor as $document) {
             $result[] = $document;
         }
-        
+
         foreach($result as $row) {
             $filter = ['game_id' => $row->game_id, "server_id" => $row->server_id, "date" => $date, "hour" => intval($hour)];
             $newObj = ['$set' => ['sharp' => $row->count]];
-            
+
             $options = ["multi" => false, "upsert" => true];
-            
+
             $bulk = new MongoDB\Driver\BulkWrite;
             $bulk->update($filter, $newObj, $options);
 
@@ -1743,47 +1743,47 @@ class Cron extends CI_Controller {
             unset($bulk);
         }
     }
-            
+
     function mongo_user_recount() {
-        
+
         $this->load->config('g_mongodb');
         $g_mongodb = $this->config->item('mongo_db');
-        
+
         $manager = new MongoDB\Driver\Manager($g_mongodb['url']);
         $bulk = new MongoDB\Driver\BulkWrite;
         $bulk->delete([], ["limit" => 0]);
 
         $deleteresult = $manager->executeBulkWrite("longe_log.user_count", $bulk);
         unset($bulk);
-        
-        
+
+
         $query = new MongoDB\Driver\Query([]);
-        
+
         $cursor = $manager->executeQuery("longe_log.users", $query);
 
         $result = [];
-        
+
         foreach ($cursor as $document) {
             $result[] = $document;
         }
-        
+
         $user_online = array();
-        
+
         foreach($result as $row) {
             if (!isset($user_online[$row->game_id][$row->server_id])) $user_online[$row->game_id][$row->server_id] = 0;
-            
+
             $idle_time = time() - $row->latest_update_time;
-            
+
             if ($idle_time < 2*60*60) $user_online[$row->game_id][$row->server_id]+=1;
         }
-        
+
         foreach($user_online as $game => $servers) {
             foreach($servers as $server => $new_count) {
                 $filter = ['game_id' => $game, "server_id" => $server];
                 $newObj = ['$set' => ['count' => $new_count]];
-                
+
                 $options = ["multi" => false, "upsert" => true];
-                
+
                 $bulk = new MongoDB\Driver\BulkWrite;
                 $bulk->update($filter, $newObj, $options);
 
@@ -1792,21 +1792,21 @@ class Cron extends CI_Controller {
             }
         }
     }
-    
+
     function appannie_data($date="", $device="ios") {
-        
+
 		if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
         $product_id = "328855";
         $countries = array("", "TW", "HK", "MO", "SG", "MY");
-        
+
         foreach ($countries as $country_code) {
-            
+
             $authorization = "Authorization: Bearer 8b042668428cc0edda9b57e34af139c953e6a587";
             $url = "https://api.appannie.com/v1.2/accounts/{$product_id}/sales?start_date={$date}&end_date={$date}";
-            
+
             $url .= ($country_code)?"&countries={$country_code}":"";
             $ch = curl_init();
-            
+
             curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json', $authorization));
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -1814,79 +1814,79 @@ class Cron extends CI_Controller {
             $result = curl_exec($ch);
             $result_json = json_decode($result);
             curl_close($ch);
-            
+
             $update_field = ($country_code)?"{$device}_".strtolower($country_code)."_download_count":"{$device}_download_count";
-            
+
             $data = array(
                 'game_id' => 'stm',
                 'date' => $date,
                 $update_field => (isset($result_json->sales_list[0]->units->product->downloads))?$result_json->sales_list[0]->units->product->downloads:0
             );
-        
+
             $this->save_statistics($data);
         }
     }
-	
+
 	function appannie_que($date) {
 		ini_set('max_execution_time', 99999);
-		
+
 		$run_date = $date;
-		
+
 		for ($run_date; $run_date <= date('Y-m-d'); $run_date=date("Y-m-d",strtotime('+1 day', strtotime($run_date)))) {
 			echo '['.$run_date.']'.PHP_EOL;
 			$this->appannie_data($run_date);
 		}
 	}
-    
+
     function appsflyer_data($start_date="", $end_date="") {
-            
+
 		if (empty($start_date)) $start_date=date("Y-m-d",strtotime("-1 days"));
 		if (empty($end_date)) $end_date=$start_date;
-        
+
         $this->load->config('appsflyer');
         $appsflyer_api = $this->config->item("appsflyer_api");
-        
+
         foreach ($appsflyer_api as $game_id => $devices) {
             foreach ($devices as $device => $codes) {
-                
+
                 $app_id = $codes['app_id'];
                 $api_token = $codes['api_token'];
-                
-                $downloadUrl = "https://hq.appsflyer.com/export/{$app_id}/geo_by_date_report/v4?api_token={$api_token}&from={$start_date}&to={$end_date}";      
+
+                $downloadUrl = "https://hq.appsflyer.com/export/{$app_id}/geo_by_date_report/v4?api_token={$api_token}&from={$start_date}&to={$end_date}";
 
                 $filePath = "p/data/appsflyer.csv";
                 $file = fopen($filePath, "w+");
-                
+
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $downloadUrl);
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                //curl_setopt($ch, CURLOPT_HEADER, true); 
+                //curl_setopt($ch, CURLOPT_HEADER, true);
                 curl_setopt($ch, CURLOPT_BINARYTRANSFER, true);
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-                
+
                 $result = curl_exec($ch);
-                
+
                 fwrite($file, $result);
 
                 fclose($file);
                 curl_close($ch);
-                
+
                 $file = fopen("p/data/appsflyer.csv", "r");
-                
+
                 $insert_arr = array();
                 $title_arr =array();
                 $i = 0;
-                
+
                 while (!feof($file)) {
                     $data = fgetcsv($file);
-                    
+
                     if ($i == 0) {
                         $title_arr = array_flip($data);
                     }
-                    
+
                     if ($i && isset($data[0])) {
                         $d = date("Y-m-d",strtotime($data[0]));
-                        
+
                         $country = $data[1];
                         if (stripos($data[3], "Facebook") !== false) {
                             $media = 'facebook';
@@ -1895,7 +1895,7 @@ class Cron extends CI_Controller {
                         } else {
                             $media = 'organic';
                         }
-                        
+
                         $clicks                         = $data[6];
                         $installs                       = $data[8];
                         $af_login_unique                = $data[$title_arr['af_login (Unique users)']];
@@ -1910,7 +1910,7 @@ class Cron extends CI_Controller {
                         $pay_unique_event_count         = $data[$title_arr['af_purchase (Unique users)']];
                         $pay_event_count                = $data[$title_arr['af_purchase (Event counter)']];
                         $pay_amount                     = $data[$title_arr['af_purchase (Sales in USD)']];
-                        
+
                         if (isset($insert_arr[$d][$country][$media]['clicks'])) $insert_arr[$d][$country][$media]['clicks']                                                 += intval($clicks);
                         else $insert_arr[$d][$country][$media]['clicks'] = intval($clicks);
                         if (isset($insert_arr[$d][$country][$media]['installs'])) $insert_arr[$d][$country][$media]['installs']                                             += intval($installs);
@@ -1942,12 +1942,12 @@ class Cron extends CI_Controller {
                     }
                     $i++;
                 }
-                
+
                 if ($i) {
                     foreach ($insert_arr as $in_date => $countries) {
                         foreach ($countries as $country => $medias) {
                             foreach ($medias as $media => $data) {
-                                
+
                                 $in_data = array(
                                     'date'                           => $in_date,
                                     'game_id'                        => $game_id,
@@ -1969,7 +1969,7 @@ class Cron extends CI_Controller {
                                     'pay_event_count'                => $data['pay_event_count'],
                                     'pay_amount'                     => $data['pay_amount']
                                 );
-                                
+
                                 $this->save_statistics($in_data, 'marketing_statistics');
                             }
                         }
@@ -1980,22 +1980,22 @@ class Cron extends CI_Controller {
             }
         }
     }
-    
+
 	function appsflyer_que($date) {
 		ini_set('max_execution_time', 99999);
-		
+
 		$run_date = $date;
-		
+
 		for ($run_date; $run_date <= date('Y-m-d'); $run_date=date("Y-m-d",strtotime('+1 day', strtotime($run_date)))) {
 			echo '['.$run_date.']'.PHP_EOL;
 			$this->appsflyer_data($run_date);
 		}
 	}
-    
-    
+
+
     function Update_Country_by_ip($date="")
     {
-        
+
         if (empty($date)) $date=date("Y-m-d",strtotime("-1 days"));
         $resultString="";
         //找出user_info 中國家欄位是空的
@@ -2007,29 +2007,53 @@ class Cron extends CI_Controller {
 
                 // 用uid 到 login_logs 找出ip
                 $queryIP = $this->DB1->from("log_logins")->where("uid",$row->uid)->order_by("create_time desc")->limit(1)->get()->row()->ip;
-                if (!empty($queryIP)  ) { 
+                if (!empty($queryIP)  ) {
                 // geoip_country_code3_by_name 找出國家
                     $user_countryCode= geoip_country_code3_by_name($queryIP);
                     if (!empty($user_countryCode))
                     {
                     $this->DB1->where("uid", $row->uid)->update("user_info", array("country" =>$user_countryCode ));
                     //$tmpCount++;
-                    
+
                     }
 
                 }
             }
         }
-        
+
        // echo "Update_Country_by_ip DONE, Total records updated: ".$tmpCount ;
 
     }
+
+
+function find_duplicate_characters()
+{
+	//找出兩筆一樣的資料
+	$query = $this->DB2->query("SELECT name,in_game_id,server_id,partner_uid FROM characters
+				WHERE server_id in(SELECT server_id FROM servers WHERE game_id='h35naxx1hmt')
+				GROUP BY  name,in_game_id,server_id,partner_uid HAVING count(*)>1;");
+	if ($query->num_rows() > 0) {
+		foreach ($query->result() as $row) {
+			$queryId = $this->db->from("characters")
+				->where("name", $row->name)
+				->where("in_game_id", $row->in_game_id)
+				->where("server_id", $row->server_id)
+				->where("partner_uid", $row->partner_uid)->order_by("create_time desc")->limit(1)->get()->row()->id;
+				if (!empty($queryId)) {
+					$this->DB1->delete('characters', array('id' => $queryId));
+				}
+			}
+		}
+	echo "find_duplicate_characters done - ".$date.PHP_EOL;
+}
+
+
     function Update_Whale_Users()
     {
-        
+
             $game_id='vxz';
             $query = $this->DB2->query("
-			SELECT 
+			SELECT
 				whales.uid 'uid',
 				chr.name 'character_name',
                 chr.in_game_id  'character_in_game_id',
@@ -2039,13 +2063,13 @@ class Cron extends CI_Controller {
 				DATE(chr.create_time) 'create_date',
 				csm.consume_sum 'currency_consumed'
 			FROM
-				(	
-					SELECT 
+				(
+					SELECT
 						ub.uid 'uid',
 						ub.server_id 'server_id',
 						svr.game_id 'game_id',
 						svr.name 'server_name',
-						SUM(ub.amount) 'deposit_total'                        
+						SUM(ub.amount) 'deposit_total'
 					FROM
 						user_billing ub
 						JOIN servers svr ON svr.server_id = ub.server_id
@@ -2060,8 +2084,8 @@ class Cron extends CI_Controller {
 					ORDER BY SUM(ub.amount) DESC
 				) whales
 					JOIN games gm ON whales.game_id = gm.game_id
-					LEFT JOIN 
-				( 
+					LEFT JOIN
+				(
 					SELECT
 						uid,
 						server_id,
@@ -2084,24 +2108,24 @@ class Cron extends CI_Controller {
 					GROUP BY server_id, uid
 				) csm ON csm.uid = whales.uid
 					AND csm.server_id = whales.server_id
-                    
-                    
+
+
 		");
-		
+
         //run那個很複雜的query 把京魚用戶找出
-        
-  
-    
+
+
+
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
 
                 // 用uid 找最後上線紀錄
 
                 $last_login = $this->DB2->from("log_game_logins")->where("uid",$row->uid)->order_by("create_time desc")->limit(1)->get()->row()->create_time;
-                if (!empty($last_login)  ) { 
-                    $updateSql="INSERT INTO whale_users (uid,char_name,char_in_game_id,server_name,deposit_total,account_create_time,last_login,site) 
+                if (!empty($last_login)  ) {
+                    $updateSql="INSERT INTO whale_users (uid,char_name,char_in_game_id,server_name,deposit_total,account_create_time,last_login,site)
                         VALUES('$row->uid','{$row->character_name}' ,'{$row->character_in_game_id}', '{$row->server_name}', '{$row->deposit_total}', '{$row->create_date}', '{$last_login}','{$game_id}')
-                        ON DUPLICATE KEY UPDATE    
+                        ON DUPLICATE KEY UPDATE
                         last_login='{$last_login}',deposit_total='{$row->deposit_total}'";
 
                     // 一筆一筆查看whale_users 中是否存在, 存在的就更新最後上線日期和目前儲值點數的欄位, 不存在就整筆新增
@@ -2112,14 +2136,14 @@ class Cron extends CI_Controller {
                 }
             }
         }
-    
-    
-    
+
+
+
         //把第一階段的儲值滿五千且有加入line的15個人加入
-        
-        
+
+
         $query = $this->DB2->query("
-			SELECT 
+			SELECT
 				whales.uid 'uid',
 				chr.name 'character_name',
                 chr.in_game_id  'character_in_game_id',
@@ -2129,13 +2153,13 @@ class Cron extends CI_Controller {
 				DATE(chr.create_time) 'create_date',
 				csm.consume_sum 'currency_consumed'
 			FROM
-				(	
-					SELECT 
+				(
+					SELECT
 						ub.uid 'uid',
 						ub.server_id 'server_id',
 						svr.game_id 'game_id',
 						svr.name 'server_name',
-						SUM(ub.amount) 'deposit_total'                        
+						SUM(ub.amount) 'deposit_total'
 					FROM
 						user_billing ub
 						JOIN servers svr ON svr.server_id = ub.server_id
@@ -2150,8 +2174,8 @@ class Cron extends CI_Controller {
 					ORDER BY SUM(ub.amount) DESC
 				) whales
 					JOIN games gm ON whales.game_id = gm.game_id
-					LEFT JOIN 
-				( 
+					LEFT JOIN
+				(
 					SELECT
 						uid,
 						server_id,
@@ -2174,20 +2198,20 @@ class Cron extends CI_Controller {
 					GROUP BY server_id, uid
 				) csm ON csm.uid = whales.uid
 					AND csm.server_id = whales.server_id
-                    
-                    
+
+
 		");
-        
+
         if ($query->num_rows() > 0) {
             foreach ($query->result() as $row) {
 
                 // 用uid 找最後上線紀錄
 
                 $last_login = $this->DB2->from("log_game_logins")->where("uid",$row->uid)->order_by("create_time desc")->limit(1)->get()->row()->create_time;
-                if (!empty($last_login)  ) { 
-                    $updateSql="INSERT INTO whale_users (uid,char_name,char_in_game_id,server_name,deposit_total,account_create_time,last_login,site) 
+                if (!empty($last_login)  ) {
+                    $updateSql="INSERT INTO whale_users (uid,char_name,char_in_game_id,server_name,deposit_total,account_create_time,last_login,site)
                         VALUES('$row->uid','{$row->character_name}' ,'{$row->character_in_game_id}', '{$row->server_name}', '{$row->deposit_total}', '{$row->create_date}', '{$last_login}','{$game_id}')
-                        ON DUPLICATE KEY UPDATE    
+                        ON DUPLICATE KEY UPDATE
                         last_login='{$last_login}',deposit_total='{$row->deposit_total}'";
 
                     // 一筆一筆查看whale_users 中是否存在, 存在的就更新最後上線日期和目前儲值點數的欄位, 不存在就整筆新增
@@ -2198,9 +2222,9 @@ class Cron extends CI_Controller {
                 }
             }
         }
-        
-    
-        
+
+
+
        // echo "Update_Country_by_ip DONE, Total records updated: ".$tmpCount ;
 
     }
@@ -2211,10 +2235,10 @@ class Cron extends CI_Controller {
 			->where("type", 99)
 			->where("now() between start_time and end_time", null, false)
 			->order_by("game_id, start_time desc")->get("bulletins");
-		
+
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
-				
+
 				$filePath = "p/file/";
 				$filePath .= "news";
 				$filePath .= ($row->game_id) ? "_".$row->game_id : "";
@@ -2225,7 +2249,7 @@ class Cron extends CI_Controller {
 				fwrite($file, $row->content);
 
 				fclose($file);
-				
+
 				break;
 			}
 		}

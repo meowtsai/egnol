@@ -91,8 +91,8 @@ class Service_quick extends MY_Controller {
 
             if (isset($server_info->server_id) && !isset($character_info->id)) {
 
-		        $this->load->model("g_characters");
-                $insert_id = $this->g_characters->create_character($server_info,
+							$this->load->model("g_characters");
+              $insert_id = $this->g_characters->create_character($server_info,
                     array(
                         "uid" => 0,
                         'partner_uid' => $partner_uid,

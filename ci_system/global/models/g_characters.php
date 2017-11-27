@@ -31,10 +31,6 @@ class G_Characters extends CI_Model {
 		if (empty($data["ad"])) $data["ad"] = ""; //預設放空白
 		if (empty($data["create_time"])) $this->db->set("create_time", "now()", false);
 
-		if (new_chk_character_exists($server, $data["uid"], $data["name"],$data["in_game_id"],$data["partner_uid"]))
-		{
-			return false;
-		}
 		$this->db->insert("characters", $data);
 		return $this->db->insert_id();
 	}
@@ -57,18 +53,6 @@ class G_Characters extends CI_Model {
 		return $this->db->count_all_results() > 0;
 	}
 
-	//select count(*) from  characters where name ='癡情男子漢' and in_game_id ='' and server_id ='' and  partner_uid =''
-	function new_chk_character_exists($server, $uid, $name,$in_game_id,$partner_uid)
-	{
-		$this->db->from("characters")
-			->where("uid", $uid)
-			->where("name", $name)
-			->where("server_id", $server->server_id)
-			->where("in_game_id", $in_game_id)
-			->where("partner_uid", $partner_uid);
-
-		return $this->db->count_all_results() > 0;
-	}
 	function get_character($server, $uid, $name)
 	{
 		$query = $this->db->from("characters")
