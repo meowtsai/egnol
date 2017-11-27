@@ -8,7 +8,7 @@ class Payment extends MY_Controller
 	// 儲值中心主頁面
 	//	選擇遊戲、伺服器和儲值管道
 	function index_old()
-	{		
+	{
 		$this->_require_login();
 
 		$site = $this->_get_site();
@@ -33,10 +33,10 @@ class Payment extends MY_Controller
 			->add_css_link("money")
 			->add_js_include("payment/index_old")
 			->standard_view();
-	}	
-    
+	}
+
 	function index()
-	{		
+	{
 		$this->_require_login();
 
 		$site = $this->_get_site();
@@ -49,7 +49,8 @@ class Payment extends MY_Controller
 		$this->load->config("g_funapp");
 
 		// 讀取遊戲列表
-		$games = $this->db->from("games")->where("is_active", "1")->get();
+		$games = $this->db->from("games")->where("is_active", "1")->where("game_id", "vxz")->get();
+
 		// 讀取伺服器列表
 		$servers = $this->db->where("is_transaction_active", "1")->order_by("server_id")->get("servers");
 		// 讀取玩家角色列表
@@ -64,7 +65,7 @@ class Payment extends MY_Controller
 			->add_css_link("money")
 			->add_js_include("payment/index")
 			->standard_view();
-	}	
+	}
 
 	function result()
 	{
@@ -117,60 +118,60 @@ class Payment extends MY_Controller
 	function m_index()
 	{
 		$this->_require_login();
-			
+
 		$this->_init_layout()
-			->set("sid", $this->input->get("sid"))	
+			->set("sid", $this->input->get("sid"))
 			->set("game", $this->input->get("game"))
 			->render("", "mobile");
 	}
-	
+
 	function m_long_e_index()
 	{
 		$this->_require_login();
-			
+
 		$this->_init_layout()
-			->set("sid", $this->input->get("sid"))	
+			->set("sid", $this->input->get("sid"))
 			->set("game", $this->input->get("game"))
 			->render("", "mobile");
 	}
-	
+
 	function m_ios_index()
 	{
 		$this->_require_login();
-			
+
 		$partner = $this->input->get("partner");
 		$game = $this->input->get("game");
-		
+
 		$this->load->config("g_api");
 		$partner_api = $this->config->item('partner_api');
-		
+
 		if (empty($partner) || empty($game)) die("參數錯誤");
-		
-		$products = $partner_api[$partner]['sites'][$game]['ios']['products'];		
-		
+
+		$products = $partner_api[$partner]['sites'][$game]['ios']['products'];
+
 		$this->_init_layout()
 			->set("sid", $this->input->get("sid"))
 			->set("game", $this->input->get("game"))
-			->set("products", $products)	
+			->set("products", $products)
 			->render("payment/m_ios_choose", "mobile");
 	}
-	
+
 	function m_google_index()
 	{
 		$this->_require_login();
-			
+
 		$this->_init_layout()
 			->set("sid", $this->input->get("sid"))
-			->set("game", $this->input->get("game"))	
+			->set("game", $this->input->get("game"))
 			->render("", "mobile");
 	}
-	
+
 // 	function m_index2()
 // 	{
 // 		$this->_require_login();
-				
+
 // 		$this->_init_layout()
-// 			->set("sid", $this->input->get("sid"))	
+// 			->set("sid", $this->input->get("sid"))
 // 			->set("game", $this->input->get("game"))
 // 			->render("", "mobile");
 // 	}
@@ -179,69 +180,69 @@ class Payment extends MY_Controller
 	{
 		$this->load->config("g_gash");
 		$this->_require_login();
-		
-		$type = $this->input->get("type");				
+
+		$type = $this->input->get("type");
 		$this->_init_layout()
 			->set("type", urldecode($type))
 			->set("game", $this->input->get("game"))
-			->render("", "mobile");	
+			->render("", "mobile");
 	}
-	
+
 	function m_choose3()
 	{
 		$this->load->config("g_pepay");
 		$this->_require_login();
-		
-		$type = $this->input->get("type");				
+
+		$type = $this->input->get("type");
 		$this->_init_layout()
 			->set("type", urldecode($type))
 			->set("game", $this->input->get("game"))
-			->render("", "mobile");	
+			->render("", "mobile");
 	}
-	
+
 	function m_google_choose()
 	{
 		$this->_require_login();
-				
-		$this->load->config("g_api");		
+
+		$this->load->config("g_api");
 		$this->partner_conf = $this->config->item("partner_api");
-		
+
 		$partner = $this->input->get("partner");
 		$game = $this->input->get("game");
-		
+
 		$this->load->config("g_api");
 		$partner_api = $this->config->item('partner_api');
-		
+
 		if (empty($partner) || empty($game)) die("參數錯誤");
-		
+
 		if (empty($partner_api[$partner]['sites'][$game]['iab']['products']))
 			$products = $partner_api["google_iab_products"];
 		else $products = $partner_api[$partner]['sites'][$game]['iab']['products'];
-				
+
 		$this->_init_layout()
-			->set("products", $products)	
+			->set("products", $products)
 			->set("sid", $this->input->get("sid"))
 			->set("game", $this->input->get("game"))
-			->render("", "mobile");	
+			->render("", "mobile");
 	}
-	
+
 	function digi_dalent()
 	{
 		//product=wd&server=S12
 		header('location:'.site_url("payment?game=".$this->input->get("product")));
 	}
-	
+
 	function update_payment_disable_list()
 	{
         $this->load->config("g_payment_gash");
-		
-		if ($this->input->post('disable_list') && $this->input->ip_address()==$this->config->item("payment_backend_ip")) 
+
+		if ($this->input->post('disable_list') && $this->input->ip_address()==$this->config->item("payment_backend_ip"))
 		{
             $disable_list = $this->input->post('disable_list');
 			unset($post['submit']);
-            
+
             $filename = "./p/payment_disable_list";
-            
+
             unlink($filename);
             $fp = fopen($filename, 'w');
             fwrite($fp, $disable_list);
