@@ -63,8 +63,8 @@ class G_Characters extends CI_Model {
 		$this->db->from("characters")
 			->where("uid", $uid)
 			->where("name", $name)
-			->where("server_id", $server->server_id);
-			->where("in_game_id", $in_game_id);
+			->where("server_id", $server->server_id)
+			->where("in_game_id", $in_game_id)
 			->where("partner_uid", $partner_uid);
 
 		return $this->db->count_all_results() > 0;
