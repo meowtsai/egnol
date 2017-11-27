@@ -72,7 +72,7 @@ class Service_quick extends MY_Controller {
 	            $_SESSION['in_game_id']	    = $in_game_id;
 	            $_SESSION['server_name']	= $server_name;
 	            $_SESSION['character_name']	= $character_name;
-							$_SESSION['q_note']	=  "等級={$level}, 系統={$usr_device}, os={$os_ver}, app_ver=2.0.0_197509,time_zone={$time_zone},network={$network}";
+							$_SESSION['q_note']	=  "等級={$level}, 系統={$usr_device}, os={$os_ver}, app_ver={$app_ver},time_zone={$time_zone},network={$network}";
 						//}
 
         }
