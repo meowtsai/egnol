@@ -235,10 +235,7 @@
 
 		<div class="form-actions">
 	  		<button type="submit" class="btn ">確認送出</button>
-        <? if ($question->status == '2' && ($question->allocate_status == '0' || $question->allocate_status == '2')):?>
-        <a href="javascript:;" class="pull-right btn btn-danger">預約結案</a>
-        <? endif;?>
-	  		<a href="javascript:;" url="<?=site_url("service/close_question/{$question->id}")?>" class="json_post pull-right btn btn-danger">結案</a>
+        <a href="javascript:;" url="<?=site_url("service/close_question/{$question->id}")?>" class="json_post pull-right btn btn-danger">結案</a>
 	  	</div>
 	</form>
     <? else: ?>
