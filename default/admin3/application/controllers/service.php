@@ -491,6 +491,16 @@ class Service extends MY_Controller {
 				else $this->DB2->where("q.create_time >= {$start_date}", null, false);
 			}
 
+
+			if ($this->input->get("reply_start_date")) {
+				$reply_start_date = $this->DB2->escape($this->input->get("reply_start_date"));
+				if ($this->input->get("reply_end_date")) {
+					$reply_end_date = $this->DB2->escape($this->input->get("reply_end_date").":59");
+					$this->DB2->where("qr.create_time between {$reply_start_date} and {$reply_end_date}", null, false);
+				}
+				else $this->DB2->where("qr.create_time >= {$reply_start_date}", null, false);
+			}
+
 			switch ($this->input->get("action"))
 			{
 				case "查詢":
@@ -633,7 +643,7 @@ class Service extends MY_Controller {
 			$this->input->get("todo") && $this->DB2->where("q.status=1", null, false);
 
 			$this->DB2
-				->select("COUNT(*) as cnt, au.name as admin_uname")
+				->select("COUNT(*) as cnt, au.name as admin_uname, `au`.`uid` as admin_uid")
 				->from("question_replies qr")
 				->join("questions q", "q.id=qr.question_id", "left")
 				->join("servers gi", "gi.server_id=q.server_id", "left")
@@ -656,9 +666,9 @@ class Service extends MY_Controller {
 				$start_date = $this->DB2->escape($this->input->get("start_date"));
 				if ($this->input->get("end_date")) {
 					$end_date = $this->DB2->escape($this->input->get("end_date").":59");
-					$this->DB2->where("q.create_time between {$start_date} and {$end_date}", null, false);
+					$this->DB2->where("qr.create_time between {$start_date} and {$end_date}", null, false);
 				}
-				else $this->DB2->where("q.create_time >= {$start_date}", null, false);
+				else $this->DB2->where("qr.create_time >= {$start_date}", null, false);
 			}
 
 			switch ($this->input->get("action"))
