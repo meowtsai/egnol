@@ -77,6 +77,8 @@
 		<input type="submit" class="btn" value="處理完成"/>
 	  </form>
 	</div>
+
+
 	<? endif;?>
 
 			</td>
@@ -197,6 +199,14 @@
 				</form>
 			</td>
 		</tr>
+    <?  if ($question->status == '4'):?>
+    <tr>
+      <th>結案人員：</th>
+      <td colspan="3">
+         <?=$question->close_admin_name ?>
+      </td>
+    </tr>
+    <? endif;?>
 	</table>
 
 	<?

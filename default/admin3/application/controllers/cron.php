@@ -2052,7 +2052,9 @@ function close_reserved_questions()
 {
 	//1. cron 篩選符合資格 status=7,system_closed=0 的案件,system_closed_start 跟現在距離48小時
   $query = $this->DB2->query("SELECT id, close_admin_uid,TIMEDIFF(now(),system_closed_start) AS diff_hours
-	FROM questions WHERE status=7 AND close_admin_uid IS NOT NULL
+	FROM questions WHERE status=7
+	AND allocate_status!=1
+	AND close_admin_uid IS NOT NULL
 	AND system_closed!=1
 	AND TIMEDIFF(now(),system_closed_start)>'00:05:00';");
 
@@ -2080,9 +2082,9 @@ $content ="親愛的玩家您好，
 				"question_id" => $row->id,
 				'content' => nl2br($content),
 				'is_official' => '1',
-				'admin_uid' => $row->close_admin_uid,
+				'admin_uid' => '113',
 			);
-print_r($data);
+//print_r($data);
 //新增一筆公式回覆
 			$this->DB1
 				->set("create_time", "now()", false)

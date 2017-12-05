@@ -905,6 +905,11 @@ CREATE TABLE `questions` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='客服提問';
 /*!40101 SET character_set_client = @saved_cs_client */;
+ALTER table questions
+ADD system_closed char(1) NOT NULL DEFAULT 0;
+
+ALTER table questions
+ADD system_closed_start datetime NULL;
 
 --
 -- Table structure for table `ticket_replies`
