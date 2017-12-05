@@ -44,7 +44,9 @@
 		<tr>
 			<th style="width:80px;">案件狀態：</th>
 			<td colspan="3">
-            <?=($question->status == '4' && !$question->close_admin_uid)?"玩家":""?>
+
+            <?=($question->status == '4' && !$question->close_admin_uid)?"玩家":"" ?>
+            <?=($question->status == '4' && $question->system_closed=='1')?"系統":"" ?>
 			<?
 				$status = $this->config->item("question_status");
 				echo $status[$question->status];
@@ -235,7 +237,37 @@
 
 		<div class="form-actions">
 	  		<button type="submit" class="btn ">確認送出</button>
-        <a href="javascript:;" url="<?=site_url("service/close_question/{$question->id}")?>" class="json_post pull-right btn btn-danger">結案</a>
+        <a href="javascript:;" url="<?=site_url("service/close_question/{$question->id}")?>" class="json_post pull-right btn btn-danger">立即結案</a>
+
+        <? if ($question->status == '2' && ($question->allocate_status == '0' || $question->allocate_status == '2')):?>
+        <a href="javascript:;" url="<?=site_url("service/reserved_question/{$question->id}")?>" class="json_post pull-right btn btn-warning">預約結案</a>
+        <? endif;?>
+
+        <? if ($question->status == '7'):?>
+
+        <?
+        $datetime1 = new DateTime($question->system_closed_start);
+        //$datetime1->add(new DateInterval('P2D'));
+        $minutes_to_add = 5;
+        $datetime1->add(new DateInterval('PT' . $minutes_to_add . 'M'));
+        $datetime2 = new DateTime(now());
+        //echo date_format($datetime1, 'Y-m-d  H:i:s').'<br />';
+        //echo date_format($datetime2, 'Y-m-d  H:i:s').'<br />';
+        $interval = $datetime2->diff($datetime1);
+        //echo $interval->format('%R%D天 %H小時%I分%S秒');
+
+				?>
+
+
+        <a href="javascript:;" url="<?=site_url("service/cancel_reserved_question/{$question->id}")?>" class="json_post pull-right btn btn-success">取消預約</a>
+          <? if($interval->format('%R%S')>0):  ?>
+            <span class="pull-right badge badge-warning"><?=$interval->format('%R%D天 %H小時%I分%S秒')?>後自動結案</span>
+          <? else:  ?>
+            <span class="pull-right badge badge-warning">即將自動結案</span>
+          <? endif;?>
+        <? endif;?>
+
+
 	  	</div>
 	</form>
     <? else: ?>

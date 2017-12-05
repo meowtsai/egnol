@@ -845,7 +845,7 @@ class Service extends MY_Controller {
 	{
 		if ( ! $this->zacl->check_acl("service", "modify")) die(json_failure("沒有權限"));
 
-		$this->DB1->set("status", "7")->set("close_admin_uid", $_SESSION['admin_uid'])->where("admin_uid is not null", null, false)->where("id", $id)->update("questions");
+		$this->DB1->set("status", "7")->set("close_admin_uid", $_SESSION['admin_uid'])->set("system_closed_start", "now()", false)->where("admin_uid is not null", null, false)->where("id", $id)->update("questions");
 		if ($this->DB1->affected_rows() > 0) {
 			die(json_success());
 		}
@@ -853,6 +853,22 @@ class Service extends MY_Controller {
 			die(json_failure("問題尚未處理"));
 		}
 	}
+
+	function cancel_reserved_question($id)
+	{
+		if ( ! $this->zacl->check_acl("service", "modify")) die(json_failure("沒有權限"));
+
+		//$this->DB1->set("status", "2")->set("close_admin_uid", null)->set("system_closed_start", null)->where("admin_uid is not null", null, false)->where("id", $id)->where("system_closed!=", '1')->update("questions");
+		$this->DB1->set("status", "2")->set("close_admin_uid", null)->set("system_closed_start", null)->where("system_closed!=1", null, false)->where("id", $id)->update("questions");
+		if ($this->DB1->affected_rows() > 0) {
+			die(json_success());
+		}
+		else {
+			die(json_failure("無法取消"));
+		}
+	}
+
+
 
 }
 

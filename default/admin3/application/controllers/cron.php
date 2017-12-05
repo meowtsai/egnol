@@ -2048,6 +2048,63 @@ function find_duplicate_characters()
 }
 
 
+function close_reserved_questions()
+{
+	//1. cron 篩選符合資格 status=7,system_closed=0 的案件,system_closed_start 跟現在距離48小時
+  $query = $this->DB2->query("SELECT id, close_admin_uid,TIMEDIFF(now(),system_closed_start) AS diff_hours
+	FROM questions WHERE status=7 AND close_admin_uid IS NOT NULL
+	AND system_closed!=1
+	AND TIMEDIFF(now(),system_closed_start)>'00:05:00';");
+
+	//2.
+
+$content ="親愛的玩家您好，
+感謝您使用龍邑客服中心線上回報系統
+
+因後續已無收到您的來信反饋，
+客服這邊會先關閉此張提問單，
+若未來還有其他遊戲相關問題，
+歡迎再次利用線上提問系統，
+我們將會盡快為您服務，謝謝。
+
+倘若有任何疑問或是需要進一步瞭解的事項，請直接透過客服中心線上回報，我們將會竭誠為您服務。
+***龍邑客服中心敬上***";
+
+
+
+
+	if ($query->num_rows() > 0) {
+		foreach ($query->result() as $row) {
+			$data = array(
+				"uid" => 0,
+				"question_id" => $row->id,
+				'content' => nl2br($content),
+				'is_official' => '1',
+				'admin_uid' => $row->close_admin_uid,
+			);
+print_r($data);
+//新增一筆公式回覆
+			$this->DB1
+				->set("create_time", "now()", false)
+				->insert("question_replies", $data);
+
+				//把status 改成4, 新欄位 新欄位system_closed char(1) 設定成 1 表示true. update_time = now
+
+			$this->DB1->set("update_time", "now()", false)
+				->where("id", $row->id)->update("questions",
+					array("is_read"=>'0', "status"=>'4',"system_closed"=>'1'));
+
+			}
+		}
+		else {
+			echo "no data found - ";
+		}
+
+	echo "close_reserved_questions done - ".$date.PHP_EOL;
+}
+
+
+
     function Update_Whale_Users()
     {
 
