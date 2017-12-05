@@ -813,7 +813,7 @@ class Service extends MY_Controller {
 	{
 		if ( ! $this->zacl->check_acl("service", "modify")) die(json_failure("沒有權限"));
 
-		$this->DB1->set("status", "4")->set("close_admin_uid", $_SESSION['admin_uid'])->where("admin_uid is not null", null, false)->where("id", $id)->update("questions");
+		$this->DB1->set("status", "4")->set("close_admin_uid", $_SESSION['admin_uid'])->set("system_closed_start", null)->where("admin_uid is not null", null, false)->where("id", $id)->update("questions");
 		if ($this->DB1->affected_rows() > 0) {
 			die(json_success());
 		}

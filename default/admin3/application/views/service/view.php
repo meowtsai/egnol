@@ -257,9 +257,9 @@
 
         <?
         $datetime1 = new DateTime($question->system_closed_start);
-        //$datetime1->add(new DateInterval('P2D'));
-        $minutes_to_add = 5;
-        $datetime1->add(new DateInterval('PT' . $minutes_to_add . 'M'));
+        $datetime1->add(new DateInterval('P2D'));
+        //$minutes_to_add = 5;
+        //$datetime1->add(new DateInterval('PT' . $minutes_to_add . 'M'));
         $datetime2 = new DateTime(now());
         //echo date_format($datetime1, 'Y-m-d  H:i:s').'<br />';
         //echo date_format($datetime2, 'Y-m-d  H:i:s').'<br />';
