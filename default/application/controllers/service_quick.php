@@ -441,7 +441,7 @@ class Service_quick extends MY_Controller {
 
 		if ($question)
 		{
-			if ($question->status == '2' || $question->status == '4') {
+			if ($question->status == '2' || $question->status == '4' || $question->status == '7') {
 				$this->db->where("id", $id)->update("questions", array("is_read"=>'1'));
 			}
 			$replies = $this->db->from("question_replies")->where("question_id", $id)->order_by("id", "asc")->get();
