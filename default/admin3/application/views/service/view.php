@@ -52,7 +52,7 @@
 				echo $status[$question->status];
 			?>
 
-				<?  if ($question->status == '2' || $question->status == '4'):?>
+				<?  if ($question->status == '2' || $question->status == '4' || $question->status == '7'):?>
 					<?= $question->is_read ? '<span style="color:#090">(玩家已讀)</span>' : '<span style="color:#999">(玩家未讀)</span>'; ?>
 				<? endif;?>
 

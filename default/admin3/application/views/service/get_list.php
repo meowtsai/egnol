@@ -196,7 +196,7 @@
                 <td><?=($row->status == '4' && !$row->close_admin_uid)?"玩家":""?><?=($row->status == '4' && $row->system_closed=='1')?"系統":"" ?><?=$question_status[$row->status]?>
                     <div style="font-size:11px;">
 
-                    <?  if ($row->status == '2' || $row->status == '4'):?>
+                    <?  if ($row->status == '2' || $row->status == '4' || $row->status == '7'):?>
                         <?= $row->is_read ? '<span style="color:#090">(已讀)</span>' : '<span style="color:#999">(未讀)</span>'; ?>
                     <? endif;?>
 
