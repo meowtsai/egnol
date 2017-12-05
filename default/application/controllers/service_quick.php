@@ -492,7 +492,7 @@ class Service_quick extends MY_Controller {
 		$question = $this->db->where("id", $id)->from("questions q")->get()->row();
 		//if ($question->uid <> $this->g_user->uid) die(json_encode(array("status"=>"failure", "message"=>"權限不足")));
 
-		$this->db->set("status", "4")->where("id", $id)->update("questions");
+		$this->db->set("status", "4")->set("close_admin_uid", null)->set("system_closed_start", null)->where("id", $id)->update("questions");
 		die(json_encode(array("status"=>"success")));
 	}
 }
