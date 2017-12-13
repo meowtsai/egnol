@@ -313,6 +313,21 @@ group by d
 			->render();
 	}
 
+
+
+	function service_test_internal()
+	{
+		$this->zacl->check("game_setting", "read");
+
+		$query = $this->DB2->where("is_active", "1")->from("games")->order_by("rank")->get();
+		$this->_init_game_layout()
+			->set("query", $query)
+			->add_js_include("game/md5")
+			->add_js_include("game/service_test_internal")
+			->render();
+	}
+
+
 }
 
 /* End of file search.php */

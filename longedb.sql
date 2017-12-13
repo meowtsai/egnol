@@ -1295,3 +1295,23 @@ CREATE TABLE `themes` (
 
 
 INSERT INTO `themes` VALUES (1,'茶色','E7DAB8','784C25','E8C899','92714B','FEF7DE','5C5C5C'),(2,'綠色','9BD770','375F1B','66B032','1B3409','EBF7E3','1B3409'),(3,'藍色','678FFE','012998','DBE5FF','091534','DBE5FF','091534'),(4,'桃色','EC6988','7B0F28','FBDFE6','340913','FBDFE6','340913'),(5,'黃色','FEF590','C0B002','FFFCDC','343009','FFFCDC','343009'),(6,'紅色','FE8176','A70F01','FFDEDB','340D09','FFDEDB','340D09'),(7,'橙色','FE9F6D','9D3802','FFE8DC','341809','FFE8DC','341809'),(8,'萊姆','F1F791','A5B00C','FBFDDE','313409','FBFDDE','313409'),(9,'墨綠','79BEA8','23483C','E7F3EF','093426','E7F3EF','093426'),(10,'藍綠','67AFCB','1A3E4C','E4F1F6','092834','E4F1F6','092834'),(11,'酒紅','F37C84','950E17','FCDEE0','34090C','FCDEE0','34090C'),(12,'紫色','A33AF2','36065B','EFDDFD','210934','EFDDFD','210934');
+
+
+
+CREATE TABLE `complaints` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `game_id` varchar(20) NOT NULL,
+  `server_id` varchar(20) NOT NULL,
+  `reporter_uid` int(11) NOT NULL,
+  `reporter_char_id` int(11) NOT NULL,
+  `reporter_name` varchar(45) NOT NULL,
+  `flagged_player_uid` int(11) NOT NULL,
+  `flagged_player_char_id` int(11) NOT NULL,
+  `flagged_player_name` varchar(45) NOT NULL,
+  `category` char(1) NOT NULL COMMENT '1:言行不雅\\n2:暱稱不雅\\n3:使用外掛\\n4:利用bug\\n5:線下交易\\n6:欺詐行為\\n7:其他',
+  `reason` varchar(300) NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` char(1) NOT NULL DEFAULT '1',
+  `update_time` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='玩家申訴';
