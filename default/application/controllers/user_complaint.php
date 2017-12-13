@@ -115,7 +115,7 @@ class User_complaint extends MY_Controller {
 
 
 			//TODO: block report in less than one minute
-			$query = $this->db->query("SELECT count(*) > (3-3) as chk FROM complaints WHERE game_id='{$game_info->game_id}' and server_id='{$server_info->server_id}' and  reporter_char_id={$reporter_char_id} and create_time > date_sub(now(), INTERVAL 1 HOUR)");
+			$query = $this->db->query("SELECT count(*) > (3-3) as chk FROM complaints WHERE game_id='{$game_info->game_id}' and server_id='{$server_info->server_id}' and  reporter_char_id={$reporter_char_id} and  flagged_player_char_id={$flagged_player_char_id} and create_time > date_sub(now(), INTERVAL 1 HOUR)");
 			if ($query->row()->chk)
 			{
 				$RespObj->status=constant('FAIL');
@@ -130,6 +130,7 @@ class User_complaint extends MY_Controller {
 			->where("game_id", $game_info->game_id)
 			->where("server_id", $server_info->server_id)
 			->where("reporter_char_id", $reporter_char_id)
+      ->where("flagged_player_char_id", $flagged_player_char_id)
       ->where("DATE(create_time) = CURDATE()")
       ->count_all_results();
 
