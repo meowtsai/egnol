@@ -67,10 +67,10 @@ class User_complaint extends MY_Controller {
 //reporter_name=%E5%96%B5%E6%8D%B2&flagged_player_uid=20008&flagged_player_char_id=13982409&flagged_player_name=%E7%8B%BC%E8%80%85%E7%9F%A5%E4%B9%8E&category=1&description=sadsdas&token=asdasdasdsd
 
 		$vendor_game_id = $this->input->get_post("game_id");
-    $reporter_uid    = $this->input->get_post("reporter_uid");
+    //$reporter_uid    = $this->input->get_post("reporter_uid");
     $reporter_char_id	    = $this->input->get_post("reporter_char_id");
     $reporter_name	= $this->input->get_post("reporter_name");
-    $flagged_player_uid	= $this->input->get_post("flagged_player_uid");
+    //$flagged_player_uid	= $this->input->get_post("flagged_player_uid");
     $flagged_player_char_id	= $this->input->get_post("flagged_player_char_id");
     $flagged_player_name	= $this->input->get_post("flagged_player_name");
     $reason	= $this->input->get_post("reason");
@@ -86,9 +86,9 @@ class User_complaint extends MY_Controller {
 
 
 		//TODO: check if value exist
-		if ( empty($vendor_game_id) || empty($reporter_uid) ||
+		if ( empty($vendor_game_id) ||
 				 empty($reporter_char_id) || empty($reporter_name) ||
-				 empty($flagged_player_uid) || empty($flagged_player_char_id) ||
+				 empty($flagged_player_char_id) ||
 				 empty($flagged_player_name) ||
 				 empty($server_name) || empty($category) ||
 				 empty($token) )
@@ -100,12 +100,12 @@ class User_complaint extends MY_Controller {
 
 
     //TODO: check token validatity
-		$str_to_encrypt =  $vendor_game_id.$reporter_uid.$flagged_player_uid.$secret_key;
+		$str_to_encrypt =  $vendor_game_id.$reporter_char_id.$flagged_player_char_id.$secret_key;
 		$sig = MD5($str_to_encrypt);
-		// echo $str_to_encrypt;
-		// echo "<br />";
-		// echo $sig;
-		// echo "<br />";
+		 // echo $str_to_encrypt;
+		 // echo "<br />";
+		 // echo $sig;
+		 // echo "<br />";
 
 		//if (1===1)
     if ($token===$sig)
@@ -145,61 +145,13 @@ class User_complaint extends MY_Controller {
 				die(json_encode($RespObj));
 			}
 
-
-
-
-
-
-
-
-			//TODO: Insert or Update character data
-
-			//print_r($game_info);
-
-			///#### Begin Insert character info
-			if (!empty($server_name) && !empty($reporter_name)) {
-
-					//print_r($server_info);
-					$character_info = $this->db->from("characters")->where("server_id", $server_info->server_id)->where("in_game_id", $reporter_char_id)->get()->row();
-					//print_r($character_info);
-					//if (isset($server_info->server_id)) $_SESSION['server_id'] = $server_info->server_id;
-					if (isset($server_info->server_id) && !isset($character_info->id)) {
-
-						$this->load->model("g_characters");
-						$insert_id = $this->g_characters->create_character($server_info,
-									array(
-											"uid" => 0,
-											'partner_uid' => $reporter_uid,
-											'name' => $reporter_name,
-											'in_game_id' => $reporter_char_id
-									));
-					} else if ($character_info->name <> $character_name) {
-
-					$this->load->model("g_characters");
-							$affected_rows = $this->g_characters->update_character(
-									array(
-											'name' => $reporter_name
-									),
-									array(
-											'server_id' => $server_info->server_id,
-											'in_game_id' => $reporter_char_id
-									));
-					}
-			}
-
-			///#### END Insert character info
-
-
-
       //TODO: Insert a complaint
 
 			$data = array(
 				"game_id" => $vendor_game_id,
 				"server_id" =>  $server_info->server_id,
-				"reporter_uid" => $reporter_uid,
 				"reporter_char_id" => $reporter_char_id,
 				"reporter_name" => htmlspecialchars($reporter_name),
-				"flagged_player_uid" => $flagged_player_uid,
 				"flagged_player_char_id" => $flagged_player_char_id,
 				"flagged_player_name" => htmlspecialchars($flagged_player_name),
 				"category" => $category,

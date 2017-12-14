@@ -1,6 +1,6 @@
 
 <div id="content-login">
-  <form action="https://game.longeplay.com.tw/user_complaint/report"  method="post">
+  <form action="/user_complaint/report"  method="post">
 
   <div class="form-group">
     <label>遊戲</label>
@@ -16,7 +16,6 @@
   </div>
   <div class="form-group">
     <label>舉報人</label>
-    <input type="text" value="15501641" name="reporter_uid" />
     <input type="text" value="119178" name="reporter_char_id" />
     <input type="text" value="喵捲" name="reporter_name" />
 
@@ -24,7 +23,6 @@
   </div>
   <div class="form-group">
     <label>被舉報人</label>
-    <input type="text" value="20008" name="flagged_player_uid" />
     <input type="text" value="13982409" name="flagged_player_char_id" />
     <input type="text" value="狼者知乎" name="flagged_player_name" />
 
@@ -78,7 +76,7 @@
 
 <div class="form-group">
   <label>token</label>
-  <input type="text" value="1eaf518107cabc00831a8dbdfd5f8b00" name="token" />
+  <input type="text" value="d214ae03d06aa83e8221aca9170af296" name="token" />
 
 </div>
 
