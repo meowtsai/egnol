@@ -1,6 +1,6 @@
 
 <div id="content-login">
-  <form action="/user_complaint/report"  method="get">
+  <form action="https://game.longeplay.com.tw/user_complaint/report"  method="post">
 
   <div class="form-group">
     <label>遊戲</label>

@@ -61,7 +61,7 @@ class User_complaint extends MY_Controller {
 
 
 		define('DAILY_LIMIT', 24);
-
+    log_message('complaint', print_r($this->input->post(), true));
 
 //http://test-payment.longeplay.com.tw/user_complaint/?game_id=h35naxx1hmt&reporter_uid=15501641&reporter_char_id=119178&
 //reporter_name=%E5%96%B5%E6%8D%B2&flagged_player_uid=20008&flagged_player_char_id=13982409&flagged_player_name=%E7%8B%BC%E8%80%85%E7%9F%A5%E4%B9%8E&category=1&description=sadsdas&token=asdasdasdsd
