@@ -1315,3 +1315,6 @@ CREATE TABLE `complaints` (
   `update_time` timestamp NULL DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='玩家申訴';
+
+ALTER TABLE complaints DROP COLUMN reporter_uid;
+ALTER TABLE complaints DROP COLUMN flagged_player_uid;
