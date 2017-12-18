@@ -121,6 +121,11 @@ body {
 
 .mastfoot {
   color: rgba(255,255,255,.5);
+  height:100px;
+	background-image:url(../../img/event/e02/footer.jpg);
+	background-repeat:no-repeat;
+	background-position: center top;
+
 }
 
 

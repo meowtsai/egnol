@@ -105,7 +105,7 @@ class Bulletin extends MY_Controller {
 		}
 		else
 		{
-			$content = str_replace("http://manager.longeplay.com.tw", "https://game.longeplay.com.tw", $this->input->post("bulletin_content"));
+			$content = str_replace("https://manager.longeplay.com.tw", "https://game.longeplay.com.tw", $this->input->post("bulletin_content"));
 
 			if ($this->input->post("bulletin_type")==99) $content = preg_replace( "/\n\s+/", "\n", rtrim(html_entity_decode(strip_tags($content))));
 
