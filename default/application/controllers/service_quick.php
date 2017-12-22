@@ -58,6 +58,8 @@ class Service_quick extends MY_Controller {
 
 						$str_to_encrypt = "game_id={$vendor_game_id}&partner_uid={$partner_uid}&in_game_id={$in_game_id}&server_name={$encode_server_name}&character_name={$encode_c_name}&level={$level}&usr_device={$usr_device}&os_ver={$os_ver}&app_ver={$app_ver}&time_zone={$time_zone}&network={$network}&key={$key}";
 				    $sig = MD5($str_to_encrypt);
+						//echo $str_to_encrypt.'<br />';
+						//echo $sig.'<br />';
 
 						if ($sig ===$key_string)
 						{
@@ -81,7 +83,10 @@ class Service_quick extends MY_Controller {
             $server_info = $this->db->from("servers")->where("game_id", $game_info->game_id)->where("address", $server_name)->get()->row();
             $character_info = $this->db->from("characters")->where("server_id", $server_info->server_id)->where("in_game_id", $in_game_id)->get()->row();
 
-            if (isset($server_info->server_id)) $_SESSION['server_id'] = $server_info->server_id;
+            if (isset($server_info->server_id)) {
+							$_SESSION['server_id'] = $server_info->server_id;
+							$_SESSION['server_name'] = $server_info->name;
+						}
 
             if (isset($server_info->server_id) && !isset($character_info->id)) {
 
