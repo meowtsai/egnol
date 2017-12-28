@@ -1,5 +1,6 @@
 <?php
 	$complaints_category = $this->config->item('complaints_category');
+  $complaints_status = $this->config->item('complaints_status');
 ?>
 
 <div id="func_bar">
@@ -9,6 +10,15 @@
 	<input type="hidden" name="game_id" value="<?=$this->game_id?>">
 
 	<div class="control-group">
+    狀態
+		<select name="status" style="width:100px">
+			<option value="">--</option>
+			<? foreach($complaints_status as $key => $status):?>
+			<option value="<?=$key?>" <?=($this->input->get("status")==$key ? 'selected="selected"' : '')?>><?=$status?></option>
+			<? endforeach;?>
+		</select>
+
+		<span class="sptl"></span>
 
 
 		問題類型
@@ -67,15 +77,15 @@
 
 		<? else:?>
 		<? foreach($query->result() as $row):?>
-		<tr>
+		<tr id="tr<?=$row->id?>">
 			<td style="font-size:12px;">
+          <i class='<?=($row->status=="2"?"fas fa-check":"far fa-frown") ?>'></i>
       		<?=$row->server_id?> - <?=$row->server_name?>
           <i class="fas fa-user"></i> <a href="get_list?character_name=<?=$row->reporter_name?>&email=&mobile=&action=查詢"> <?=$row->reporter_name?></a><span style="font-size:11px; color:green;"> <?=$row->reporter_char_id?> </span> 舉報
           <i class="far fa-user"></i><a href="get_list?character_name=<?=$row->flagged_player_name?>&email=&mobile=&action=查詢"> <?=$row->flagged_player_name?></a> <span style="font-size:11px; color:red;"><?=$row->flagged_player_char_id?> </span>  [<?=$complaints_category[$row->category]?>]
 
             <? if ($row->reason): ?>
-
-              <i>  "<?=$row->reason?>"</i>
+                "<?=$row->reason?>"
               <i class="far fa-comment"></i>
             <? endif; ?>
 
@@ -84,11 +94,49 @@
             <div> # <?=$row->id?> - <?=ago($tmp_date)?></div>
 
 			</td>
+      <td style="font-size:12px;">
+        <?=$row->admin_comment?>
+      </td>
+      <td>
+          <div class="btn-group">
+            <? if ($row->status ==1 ): ?>
+            <button type="button" class="btn btn-secondary" onclick="mark_as_read('<?=$row->id?>')">閱</button>
+            <? endif; ?>
+            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#commentModal" onclick="open_modal('<?=$row->id?>')">註解</button>
+
+          </div>
+      </td>
 		</tr>
 		<? endforeach;?>
 		<? endif; ?>
 	</tbody>
 </table>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="commentModal" tabindex="-1" role="dialog" aria-labelledby="commentModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="commentModalLabel">Modal title</h5>
+      </div>
+      <div class="modal-body">
+        <form id="comment_form">
+          <input type="hidden" id="complaint_id" name="complaint_id">
+          <div class="form-group">
+            <label for="comment" class="col-form-label">備註:</label>
+            <input type="text" class="form-control" id="txt_comment" name="txt_comment" style="width:500px">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="complaint_add_comment()">送出</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 
 <? endif; ?>

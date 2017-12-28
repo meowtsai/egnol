@@ -883,6 +883,7 @@ class Service extends MY_Controller {
 		$this->DB2->start_cache();
 
 		$category =  $this->input->get("category");
+		$status =  $this->input->get("status");
 		$character_name =  $this->input->get("character_name");
 
 
@@ -896,6 +897,10 @@ class Service extends MY_Controller {
 		if ($category)
 		{
 			$this->DB2->where("category",$category);
+		}
+		if ($status)
+		{
+			$this->DB2->where("status",$status);
 		}
 
 		if ($character_name)
@@ -950,11 +955,44 @@ class Service extends MY_Controller {
 			->set("games", $games)
 			->set("cs_admins", $cs_admins)
 			->set("total_rows", $total_rows)
-			->add_js_include("service/get_list")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->add_js_include("fontawesome-all")
+			->add_js_include("service/complaints")
 			->render();
 	}
+
+	function complaint_mark_read()
+	{
+		if ( ! $this->zacl->check_acl("service", "modify")) die(json_failure("沒有權限"));
+
+		$id = $this->input->post("id");
+		$this->DB1->set("status", "2")->set("admin_uid", $_SESSION['admin_uid'])->set("update_time", "CURRENT_TIMESTAMP()")->where("id", $id)->update("complaints");
+		if ($this->DB1->affected_rows() > 0) {
+			die(json_success());
+		}
+		else {
+			die(json_failure($query));
+		}
+	}
+
+	function complaint_add_comment()
+	{
+		if ( ! $this->zacl->check_acl("service", "modify")) die(json_failure("沒有權限"));
+
+		$id = $this->input->post("id");
+		$comment = $this->input->post("comment");
+		//$new_comment = $comment."by ".$_SESSION['admin_uid'];
+		//$this->DB1->set("admin_comment", "CONCAT(admin_comment, $comment)",FALSE)->set("admin_uid", $_SESSION['admin_uid'])->set("update_time", "NOW()")->where("id", $id)->update("complaints");
+		$this->DB1->set("admin_comment", $comment)->set("admin_uid", $_SESSION['admin_uid'])->set("update_time", "NOW()")->where("id", $id)->update("complaints");
+		if ($this->DB1->affected_rows() > 0) {
+			die(json_success());
+		}
+		else {
+			die(json_failure($query));
+		}
+	}
+
+
 
 
 
