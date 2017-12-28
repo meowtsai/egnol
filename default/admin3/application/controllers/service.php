@@ -874,6 +874,89 @@ class Service extends MY_Controller {
 	}
 
 
+	function complaints()
+	{
+		//select server_id,reporter_char_id,reporter_name,flagged_player_char_id,flagged_player_name,category,reason,create_time from complaints
+		$this->_init_service_layout();
+
+		header("Cache-Control: private");
+		$this->DB2->start_cache();
+
+		$category =  $this->input->get("category");
+		$character_name =  $this->input->get("character_name");
+
+
+
+
+		$this->DB2
+		->select("c.*, sv.name as server_name")
+		->from("complaints c")
+		->join("servers sv", "sv.server_id=c.server_id", "left");
+
+		if ($category)
+		{
+			$this->DB2->where("category",$category);
+		}
+
+		if ($character_name)
+		{
+			$this->DB2->where("reporter_name",$character_name);
+			$this->DB2->or_where("flagged_player_name",$character_name);
+
+		}
+
+		if ($this->input->get("start_date")) {
+			$start_date = $this->DB2->escape($this->input->get("start_date"));
+			if ($this->input->get("end_date")) {
+				$end_date = $this->DB2->escape($this->input->get("end_date").":59");
+				$this->DB2->where("c.create_time between {$start_date} and {$end_date}", null, false);
+			}
+			else $this->DB2->where("c.create_time >= {$start_date}", null, false);
+		}
+
+
+		$this->DB2->stop_cache();
+		$total_rows = $this->DB2->count_all_results();
+
+		$query = $this->DB2->limit(30, $this->input->get("record"))
+					->order_by("id desc")->get();
+
+
+		$this->DB2->flush_cache();
+		$games = $this->DB2->from("games")->get();
+		$cs_admins = $this->DB2->from("admin_users")->where_in("role", array("cs", "cs_master"))->get();
+
+		$get = $this->input->get();
+		$query_string = '';
+		if ($get) {
+			unset($get["record"]);
+			$query_string = http_build_query($get);
+		}
+
+
+		//$query_string = http_build_query($get);
+
+		$this->load->library('pagination');
+		$this->pagination->initialize(array(
+				'base_url'	=> site_url("service/complaints?.$query_string"),
+				'total_rows'=> $total_rows,
+				'per_page'	=> 30
+			));
+
+
+		$this->g_layout
+			->add_breadcrumb("玩家檢舉")
+			->set("query", isset($query) ? $query : false)
+			->set("games", $games)
+			->set("cs_admins", $cs_admins)
+			->set("total_rows", $total_rows)
+			->add_js_include("service/get_list")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->add_js_include("fontawesome-all")
+			->render();
+	}
+
+
 
 }
 
