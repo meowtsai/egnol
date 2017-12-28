@@ -14,6 +14,8 @@ function mark_as_read(id)
     //$("#tr" + id).hide();
     //let btn = $("#tr" + id).find(".btn-secondary");
     //btn.hide();
+    $("#tr" + id).css("background-color","silver");
+    $("#tr" + id).hide();
     if (result.status == 'success') {
       $("#tr" + id).css("background-color","silver");
       $("#tr" + id).hide();
@@ -61,6 +63,9 @@ function complaint_add_comment()
     //$("#tr" + id).children(":nth-child(2)").text(comment);
     //$("#tr" + id).children(":nth-child(2)").text(comment);
     //$('#commentModal').modal('hide');
+    console.log(result.status);
+    $("#tr" + id).children(":nth-child(2)").text(comment);
+    $('#commentModal').modal('hide');
     if (result.status == 'success') {
       $("#tr" + id).children(":nth-child(2)").text(comment);
       $('#commentModal').modal('hide');
