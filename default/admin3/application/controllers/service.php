@@ -884,10 +884,9 @@ class Service extends MY_Controller {
 
 		$category =  $this->input->get("category");
 		$status =  $this->input->get("status");
+		$server =  $this->input->get("server");
 		$character_name =  $this->input->get("character_name");
-
-
-
+		$character_id =  $this->input->get("character_id");
 
 		$this->DB2
 		->select("c.*, sv.name as server_name")
@@ -909,6 +908,16 @@ class Service extends MY_Controller {
 			$this->DB2->or_where("flagged_player_name",$character_name);
 
 		}
+		if ($character_id)
+		{
+			$this->DB2->where("reporter_char_id",$character_id);
+			$this->DB2->or_where("flagged_player_char_id",$character_id);
+		}
+
+		if ($server)
+		{
+			$this->DB2->where("c.server_id",$server);
+		}
 
 		if ($this->input->get("start_date")) {
 			$start_date = $this->DB2->escape($this->input->get("start_date"));
@@ -929,6 +938,7 @@ class Service extends MY_Controller {
 
 		$this->DB2->flush_cache();
 		$games = $this->DB2->from("games")->get();
+		$servers = $this->DB2->where("game_id","h35naxx1hmt")->where_in("server_status", array("public", "maintenance"))->order_by("server_id")->get("servers");
 		$cs_admins = $this->DB2->from("admin_users")->where_in("role", array("cs", "cs_master"))->get();
 
 		$get = $this->input->get();
@@ -953,11 +963,12 @@ class Service extends MY_Controller {
 			->add_breadcrumb("玩家檢舉")
 			->set("query", isset($query) ? $query : false)
 			->set("games", $games)
+			->set("servers", $servers)
 			->set("cs_admins", $cs_admins)
 			->set("total_rows", $total_rows)
-			->add_js_include("jquery-ui-timepicker-addon")
 			->add_js_include("fontawesome-all")
 			->add_js_include("service/complaints")
+			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
 	}
 
@@ -983,6 +994,8 @@ class Service extends MY_Controller {
 		$comment = $this->input->post("comment");
 		//$new_comment = $comment."by ".$_SESSION['admin_uid'];
 		//$this->DB1->set("admin_comment", "CONCAT(admin_comment, $comment)",FALSE)->set("admin_uid", $_SESSION['admin_uid'])->set("update_time", "NOW()")->where("id", $id)->update("complaints");
+		if ($comment)
+		{
 		$this->DB1->set("admin_comment", $comment)->set("admin_uid", $_SESSION['admin_uid'])->set("update_time", "NOW()")->where("id", $id)->update("complaints");
 		if ($this->DB1->affected_rows() > 0) {
 			die(json_success());
@@ -990,6 +1003,26 @@ class Service extends MY_Controller {
 		else {
 			die(json_failure($query));
 		}
+		}
+		else {
+			die(json_failure("請輸入註解"));
+		}
+	}
+
+
+	function complaints_ranking()
+	{
+		$period = $this->input->post("period");
+		if (!$period)  $period=1;
+		$ranking_report = $this->DB2->query("select server_id,flagged_player_name, flagged_player_char_id,count(*) as cnt
+		from complaints
+		where datediff(now(),create_time) < {$period}
+		group by server_id,flagged_player_name, flagged_player_char_id
+		order by cnt desc limit 5")->result();
+		die(json_success($ranking_report));
+
+
+
 	}
 
 

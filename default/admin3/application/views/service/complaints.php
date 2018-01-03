@@ -6,11 +6,49 @@
 <div id="func_bar">
 </div>
 
+<ul class="nav nav-tabs" id="ranking_tab">
+    <li class="active">
+        <a href="#" onclick="get_ranking_report(1);return false;">1天</a>
+    </li>
+		<li class="">
+        <a href="#" onclick="get_ranking_report(7);return false;">7天</a>
+    </li>
+		<li class="">
+        <a href="#" onclick="get_ranking_report(30);return false;">30天</a>
+    </li>
+</ul>
+
+<table id="ranking_table" class="table table-hover" style="width:auto;">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">伺服器</th>
+      <th scope="col">角色</th>
+      <th scope="col">次數</th>
+    </tr>
+  </thead>
+	<tbody>
+	</tbody>
+</table>
+
+<hr />
+
 <form method="get" action="<?=site_url("service/complaints")?>" class="form-search">
 	<input type="hidden" name="game_id" value="<?=$this->game_id?>">
 
 	<div class="control-group">
-    狀態
+
+		伺服器
+		<select name="server" >
+			<option value="">--</option>
+			<? foreach($servers->result() as $row):?>
+			<option value="<?=$row->server_id?>" <?=($this->input->get("server")==$row->server_id ? 'selected="selected"' : '')?>><?=$row->server_id?> - <?=$row->name?></option>
+			<? endforeach;?>
+		</select>
+
+		<span class="sptl"></span>
+
+		狀態
 		<select name="status" style="width:100px">
 			<option value="">--</option>
 			<? foreach($complaints_status as $key => $status):?>
@@ -36,10 +74,11 @@
 		<input type="text" name="end_date" value="<?=$this->input->get("end_date")?>" style="width:120px" placeholder="現在">
 		<a href="javascript:;" class="clear_date"><i class="icon-remove-circle" title="清除"></i></a>
 
-
-
+	</div>
+	<div class="control-group">
 
 		<input type="text" name="character_name" value="<?=$this->input->get("character_name")?>" style="width:90px" placeholder="角色名稱">
+		<input type="text" name="character_id" value="<?=$this->input->get("character_id")?>" style="width:90px" placeholder="角色id">
 
 		<span class="sptl"></span>
 
@@ -88,10 +127,7 @@
                 "<?=$row->reason?>"
               <i class="far fa-comment"></i>
             <? endif; ?>
-
-            <? $tmp_date = new DateTime($row->create_time) ?>
-
-            <div> # <?=$row->id?> - <?=ago($tmp_date)?></div>
+            <div> # <?=$row->id?> - <?=date("Y-m-d H:i", strtotime($row->create_time))?>  (<?=ago(New DateTime($row->create_time))?>)</div>
 
 			</td>
       <td style="font-size:12px;">
@@ -122,6 +158,9 @@
         <h5 class="modal-title" id="commentModalLabel">Modal title</h5>
       </div>
       <div class="modal-body">
+				<div id="modal-alert" role="alert">
+
+				</div>
         <form id="comment_form">
           <input type="hidden" id="complaint_id" name="complaint_id">
           <div class="form-group">
