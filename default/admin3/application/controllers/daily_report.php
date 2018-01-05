@@ -1,58 +1,58 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Daily_report extends MY_Controller {
-	
-	function __construct() 
+
+	function __construct()
 	{
-		parent::__construct();					
-		
+		parent::__construct();
+
 		//error_reporting(E_ALL);
-		ini_set('display_errors','On');	
+		ini_set('display_errors','On');
 		$this->load->helper("g_common");
-        
+
 		$this->DB1 = $this->load->database('long_e', TRUE);
         $this->DB2 = $this->load->database('long_e_2', TRUE);
-			
+
     	$query = $this->DB2->select("uid")->from("testaccounts")->get();
 
         $testaccounts = array();
-        
+
 		if ($query->num_rows() > 0) {
 		    foreach ($query->result() as $row) {
 			    $testaccounts[] = $row->uid;
 		    }
 		}
-        
+
         $testaccounts_str = implode(",", $testaccounts);
-        $this->testaccounts = $testaccounts_str;	
-	}		
-	
+        $this->testaccounts = $testaccounts_str;
+	}
+
 	function _init_statistics_layout()
 	{
 		$this->zacl->check_login(true);
 		if ($this->zacl->check_acl("all_game", "all") == false) {
 			if ($this->game_id) $this->zacl->check($this->game_id, "read");
 		}
-		
+
 		return $this->_init_layout()
 			->add_breadcrumb("統計", "statistics");
 	}
-	
+
 	function index()
-	{			
-		$this->_init_statistics_layout();			
+	{
+		$this->_init_statistics_layout();
 		$this->load->helper("output_table");
-		
+
 		if ($this->zacl->check_acl("game_statistics", "read")) {
-            
+
             $account_query = $this->account_data();
             $statistics_query = $this->statistics_data();
             $billing_query = $this->billing_data();
             $event_query = $this->event_data();
-            
+
             $is_game_statistics = true;
         }
-		
+
 		$this->g_layout
 			->set("account_query", isset($account_query) ? $account_query : false)
 			->set("statistics_query", isset($statistics_query) ? $statistics_query : false)
@@ -61,18 +61,18 @@ class Daily_report extends MY_Controller {
 			->set("is_game_statistics", isset($is_game_statistics) ? $is_game_statistics : false)
 			->render();
 	}
-    
+
 	function send_mail()
-	{			
-		//$this->_init_statistics_layout();			
+	{
+		//$this->_init_statistics_layout();
 		//$this->load->helper("output_table");
-		
+
 		//$this->zacl->check("game_statistics", "read");
 		$account_query = $this->account_data();
 		$statistics_query = $this->statistics_data();
 		$billing_query = $this->billing_data();
 		$event_query = $this->event_data();
-		
+
         $message = "<html>
             <head>
                 <meta charset='UTF-8'>
@@ -80,10 +80,10 @@ class Daily_report extends MY_Controller {
             </head>
             <body>
                 <p></p>";
-        
+
         if ($account_query) {
             if ($account_query->num_rows() == 0) {
-                $message .= '<div class="none">查無資料</div>'; 
+                $message .= '<div class="none">查無資料</div>';
             } else {
                 $row = $account_query->row();
                 $message .= "<div class='hdr'>龍邑平台帳號數據(即時)</div>
@@ -158,10 +158,10 @@ class Daily_report extends MY_Controller {
                 </td></tr><br />";
             }
         }
-	
+
         if ($statistics_query) {
             $game_id = '';
-            
+
             foreach($statistics_query->result() as $row) {
                 if ($game_id <> '' && $game_id <> $row->game_id) {
                     $message .= "</table><br />";
@@ -180,7 +180,7 @@ class Daily_report extends MY_Controller {
                         <td class='th2'>3日留存率</td>
                     </tr>";
                 }
-                
+
                 $message .= "<tr>
 				<td class='th1'>".date("m/d", strtotime($row->date))."</td>
 				<td>".$row->new_login_count."</td>
@@ -191,10 +191,10 @@ class Daily_report extends MY_Controller {
 				<td>".number_format(($row->new_login_count)?$row->three_retention_count*100/$row->new_login_count:0, 2)."</td>
 			</tr>";
             }
-            
+
             $message .= "</table><br />";
         }
-        
+
         if ($billing_query) {
             foreach($billing_query->result() as $row) {
                 $message .= "<div class='hdr'>".$row->name."儲值數據(即時)</div>
@@ -280,7 +280,7 @@ class Daily_report extends MY_Controller {
                 </td></tr>";
             }
         }
-        
+
         if ($event_query && $event_query->num_rows()>0) {
             $message .= "<div class='hdr'>活動數據(即時)</div>
                 <table>
@@ -313,13 +313,13 @@ class Daily_report extends MY_Controller {
                 </table>
                 </td></tr>";
         }
-        
+
         $message .= "</table>
             </body>
         </html>";
-        
+
         $this->load->library('email');
-        
+
 		$config['protocol']  = 'smtp';
         $config['smtp_user'] = 'no-reply@longeplay.com.tw';
         $config['smtp_pass'] = 'noxj/6u4reply';
@@ -327,11 +327,11 @@ class Daily_report extends MY_Controller {
         $config['mailtype']  = 'html';
 
         $this->email->initialize($config);
-        
+
         $this->email->from('no-reply@longeplay.com.tw', '龍邑自動報表系統');
-        
+
         $tos = $this->DB2->where_in("role", array("dev", "pm", "cs_master", "mo"))->where('password IS NULL', null, false)->get("admin_users");
-        
+
         $tos_string = 'joe@cooz.com.tw,';
         if ($tos) {
             foreach($tos->result() as $row) {
@@ -339,69 +339,28 @@ class Daily_report extends MY_Controller {
             }
         }
         $tos_string = rtrim($tos_string, ",");
-        
-        $this->email->to($tos_string); 
+
+        $this->email->to($tos_string);
 
         $this->email->subject('龍邑活動日報<'.date("Y/m/d").'>');
-        $this->email->message($message);	
+        $this->email->message($message);
 
         $this->email->send();
-        
+
         die();
 	}
-    
+
     function account_data() {
         $query = $this->DB2->query("
-            SELECT 
-                COUNT(*) 'newuser_count',
-                COUNT(CASE WHEN external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'newuser_facebook_count',
-                COUNT(CASE WHEN external_id LIKE '%google' THEN 1 ELSE NULL END) 'newuser_google_count',
-                COUNT(CASE WHEN external_id IS NULL THEN 1 ELSE NULL END) 'newuser_longe_count',
-                COUNT(CASE WHEN external_id LIKE '%device' THEN 1 ELSE NULL END) 'newuser_quick_count',
-                COUNT(CASE WHEN DATE(create_time)=CURDATE() THEN 1 ELSE NULL END) 't_newuser_count',
-                COUNT(CASE WHEN DATE(create_time)=CURDATE() AND external_id LIKE '%facebook' THEN 1 ELSE NULL END) 't_newuser_facebook_count',
-                COUNT(CASE WHEN DATE(create_time)=CURDATE() AND external_id LIKE '%google' THEN 1 ELSE NULL END) 't_newuser_google_count',
-                COUNT(CASE WHEN DATE(create_time)=CURDATE() AND external_id IS NULL THEN 1 ELSE NULL END) 't_newuser_longe_count',
-                COUNT(CASE WHEN DATE(create_time)=CURDATE() AND external_id LIKE '%device' THEN 1 ELSE NULL END) 't_newuser_quick_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) THEN 1 ELSE NULL END) 'y_newuser_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'y_newuser_facebook_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND external_id LIKE '%google' THEN 1 ELSE NULL END) 'y_newuser_google_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND external_id IS NULL THEN 1 ELSE NULL END) 'y_newuser_longe_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND external_id LIKE '%device' THEN 1 ELSE NULL END) 'y_newuser_quick_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) THEN 1 ELSE NULL END) 'y2_newuser_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'y2_newuser_facebook_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND external_id LIKE '%google' THEN 1 ELSE NULL END) 'y2_newuser_google_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND external_id IS NULL THEN 1 ELSE NULL END) 'y2_newuser_longe_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND external_id LIKE '%device' THEN 1 ELSE NULL END) 'y2_newuser_quick_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) THEN 1 ELSE NULL END) 'y3_newuser_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'y3_newuser_facebook_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND external_id LIKE '%google' THEN 1 ELSE NULL END) 'y3_newuser_google_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND external_id IS NULL THEN 1 ELSE NULL END) 'y3_newuser_longe_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND external_id LIKE '%device' THEN 1 ELSE NULL END) 'y3_newuser_quick_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) THEN 1 ELSE NULL END) 'y4_newuser_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'y4_newuser_facebook_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND external_id LIKE '%google' THEN 1 ELSE NULL END) 'y4_newuser_google_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND external_id IS NULL THEN 1 ELSE NULL END) 'y4_newuser_longe_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND external_id LIKE '%device' THEN 1 ELSE NULL END) 'y4_newuser_quick_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) THEN 1 ELSE NULL END) 'y5_newuser_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'y5_newuser_facebook_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND external_id LIKE '%google' THEN 1 ELSE NULL END) 'y5_newuser_google_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND external_id IS NULL THEN 1 ELSE NULL END) 'y5_newuser_longe_count',
-                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND external_id LIKE '%device' THEN 1 ELSE NULL END) 'y5_newuser_quick_count',
-                COUNT(CASE WHEN DATE(create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) THEN 1 ELSE NULL END) 'y6_newuser_count',
-                COUNT(CASE WHEN DATE(create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'y6_newuser_facebook_count',
-                COUNT(CASE WHEN DATE(create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND external_id LIKE '%google' THEN 1 ELSE NULL END) 'y6_newuser_google_count',
-                COUNT(CASE WHEN DATE(create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND external_id IS NULL THEN 1 ELSE NULL END) 'y6_newuser_longe_count',
-                COUNT(CASE WHEN DATE(create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND external_id LIKE '%device' THEN 1 ELSE NULL END) 'y6_newuser_quick_count'
-            FROM users 
+          SELECT * FROM account_data_daily
 		");
-        
+
         return $query;
     }
-    
+
     function statistics_data() {
         $query = $this->DB2->query("
-            SELECT 
+            SELECT
                 g.name,
                 us.game_id,
                 us.date,
@@ -427,73 +386,18 @@ class Daily_report extends MY_Controller {
             WHERE g.is_active=1 AND us.date < CURDATE() AND us.date >= DATE_SUB(CURDATE(), INTERVAL 5 DAY)
             ORDER BY us.game_id DESC, us.date ASC
 		");
-        
+
         return $query;
     }
-    
+
     function billing_data() {
         $query = $this->DB2->query("
-            SELECT 
-                g.name,
-                g.game_id,
-                SUM(u.amount) 'total',
-                SUM(CASE WHEN u.transaction_type='mycard_billing' THEN u.amount ELSE NULL END) 'mycard_total',
-                SUM(CASE WHEN u.transaction_type='funapp_billing' THEN u.amount ELSE NULL END) 'funapp_total',
-                SUM(CASE WHEN u.transaction_type='vip_billing' THEN u.amount ELSE NULL END) 'vip_total',
-                SUM(CASE WHEN u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'ios_total',
-                SUM(CASE WHEN u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'google_total',
-                SUM(CASE WHEN DATE(u.create_time)=CURDATE() THEN u.amount ELSE NULL END) 't_total',
-                SUM(CASE WHEN DATE(u.create_time)=CURDATE() AND u.transaction_type='mycard_billing' THEN u.amount ELSE NULL END) 't_mycard_total',
-                SUM(CASE WHEN DATE(u.create_time)=CURDATE() AND u.transaction_type='funapp_billing' THEN u.amount ELSE NULL END) 't_funapp_total',
-                SUM(CASE WHEN DATE(u.create_time)=CURDATE() AND u.transaction_type='vip_billing' THEN u.amount ELSE NULL END) 't_vip_total',
-                SUM(CASE WHEN DATE(u.create_time)=CURDATE() AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 't_ios_total',
-                SUM(CASE WHEN DATE(u.create_time)=CURDATE() AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 't_google_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) THEN u.amount ELSE NULL END) 'y_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND u.transaction_type='mycard_billing' THEN u.amount ELSE NULL END) 'y_mycard_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND u.transaction_type='funapp_billing' THEN u.amount ELSE NULL END) 'y_funapp_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND u.transaction_type='vip_billing' THEN u.amount ELSE NULL END) 'y_vip_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y_ios_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y_google_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) THEN u.amount ELSE NULL END) 'y2_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND u.transaction_type='mycard_billing' THEN u.amount ELSE NULL END) 'y2_mycard_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND u.transaction_type='funapp_billing' THEN u.amount ELSE NULL END) 'y2_funapp_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND u.transaction_type='vip_billing' THEN u.amount ELSE NULL END) 'y2_vip_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y2_ios_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y2_google_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) THEN u.amount ELSE NULL END) 'y3_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND u.transaction_type='mycard_billing' THEN u.amount ELSE NULL END) 'y3_mycard_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND u.transaction_type='funapp_billing' THEN u.amount ELSE NULL END) 'y3_funapp_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND u.transaction_type='vip_billing' THEN u.amount ELSE NULL END) 'y3_vip_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y3_ios_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y3_google_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) THEN u.amount ELSE NULL END) 'y4_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND u.transaction_type='mycard_billing' THEN u.amount ELSE NULL END) 'y4_mycard_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND u.transaction_type='funapp_billing' THEN u.amount ELSE NULL END) 'y4_funapp_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND u.transaction_type='vip_billing' THEN u.amount ELSE NULL END) 'y4_vip_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y4_ios_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y4_google_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) THEN u.amount ELSE NULL END) 'y5_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND u.transaction_type='mycard_billing' THEN u.amount ELSE NULL END) 'y5_mycard_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND u.transaction_type='funapp_billing' THEN u.amount ELSE NULL END) 'y5_funapp_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND u.transaction_type='vip_billing' THEN u.amount ELSE NULL END) 'y5_vip_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y5_ios_total',
-                SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y5_google_total',
-                SUM(CASE WHEN DATE(u.create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) THEN u.amount ELSE NULL END) 'y6_total',
-                SUM(CASE WHEN DATE(u.create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND u.transaction_type='mycard_billing' THEN u.amount ELSE NULL END) 'y6_mycard_total',
-                SUM(CASE WHEN DATE(u.create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND u.transaction_type='funapp_billing' THEN u.amount ELSE NULL END) 'y6_funapp_total',
-                SUM(CASE WHEN DATE(u.create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND u.transaction_type='vip_billing' THEN u.amount ELSE NULL END) 'y6_vip_total',
-                SUM(CASE WHEN DATE(u.create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y6_ios_total',
-                SUM(CASE WHEN DATE(u.create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y6_google_total'
-            FROM user_billing u
-            JOIN servers s ON u.server_id=s.server_id
-            JOIN games g ON s.game_id=g.game_id
-            WHERE g.is_active='1' AND s.is_test_server=0 AND u.billing_type=1 AND u.result=1 ".(($this->testaccounts)?" AND u.uid NOT IN (".$this->testaccounts.") ":"")."
-            GROUP BY g.game_id
+            SELECT * FROM billing_data_daily;
 		");
-        
+
         return $query;
     }
-    
+
     function event_data() {
         $query = $this->DB2->query("
             SELECT
@@ -518,7 +422,7 @@ class Daily_report extends MY_Controller {
                 AND e.end_time>DATE_SUB(CURDATE(), INTERVAL 7 DAY)
             GROUP BY e.game_id, es.event_id, e.event_name
 		");
-        
+
         return $query;
     }
 }

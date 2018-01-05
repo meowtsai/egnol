@@ -1318,3 +1318,132 @@ CREATE TABLE `complaints` (
 
 ALTER TABLE complaints DROP COLUMN reporter_uid;
 ALTER TABLE complaints DROP COLUMN flagged_player_uid;
+
+
+
+CREATE VIEW billing_data as
+SELECT
+    g.name,
+    g.game_id,
+    SUM(u.amount) 'total',
+    SUM(CASE WHEN u.transaction_type='mycard_billing' THEN u.amount ELSE NULL END) 'mycard_total',
+    SUM(CASE WHEN u.transaction_type='funapp_billing' THEN u.amount ELSE NULL END) 'funapp_total',
+    SUM(CASE WHEN u.transaction_type='vip_billing' THEN u.amount ELSE NULL END) 'vip_total',
+    SUM(CASE WHEN u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'ios_total',
+    SUM(CASE WHEN u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'google_total',
+    SUM(CASE WHEN DATE(u.create_time)=CURDATE() THEN u.amount ELSE NULL END) 't_total',
+    SUM(CASE WHEN DATE(u.create_time)=CURDATE() AND u.transaction_type='mycard_billing' THEN u.amount ELSE NULL END) 't_mycard_total',
+    SUM(CASE WHEN DATE(u.create_time)=CURDATE() AND u.transaction_type='funapp_billing' THEN u.amount ELSE NULL END) 't_funapp_total',
+    SUM(CASE WHEN DATE(u.create_time)=CURDATE() AND u.transaction_type='vip_billing' THEN u.amount ELSE NULL END) 't_vip_total',
+    SUM(CASE WHEN DATE(u.create_time)=CURDATE() AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 't_ios_total',
+    SUM(CASE WHEN DATE(u.create_time)=CURDATE() AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 't_google_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) THEN u.amount ELSE NULL END) 'y_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND u.transaction_type='mycard_billing' THEN u.amount ELSE NULL END) 'y_mycard_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND u.transaction_type='funapp_billing' THEN u.amount ELSE NULL END) 'y_funapp_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND u.transaction_type='vip_billing' THEN u.amount ELSE NULL END) 'y_vip_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y_ios_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y_google_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) THEN u.amount ELSE NULL END) 'y2_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND u.transaction_type='mycard_billing' THEN u.amount ELSE NULL END) 'y2_mycard_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND u.transaction_type='funapp_billing' THEN u.amount ELSE NULL END) 'y2_funapp_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND u.transaction_type='vip_billing' THEN u.amount ELSE NULL END) 'y2_vip_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y2_ios_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y2_google_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) THEN u.amount ELSE NULL END) 'y3_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND u.transaction_type='mycard_billing' THEN u.amount ELSE NULL END) 'y3_mycard_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND u.transaction_type='funapp_billing' THEN u.amount ELSE NULL END) 'y3_funapp_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND u.transaction_type='vip_billing' THEN u.amount ELSE NULL END) 'y3_vip_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y3_ios_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y3_google_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) THEN u.amount ELSE NULL END) 'y4_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND u.transaction_type='mycard_billing' THEN u.amount ELSE NULL END) 'y4_mycard_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND u.transaction_type='funapp_billing' THEN u.amount ELSE NULL END) 'y4_funapp_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND u.transaction_type='vip_billing' THEN u.amount ELSE NULL END) 'y4_vip_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y4_ios_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y4_google_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) THEN u.amount ELSE NULL END) 'y5_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND u.transaction_type='mycard_billing' THEN u.amount ELSE NULL END) 'y5_mycard_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND u.transaction_type='funapp_billing' THEN u.amount ELSE NULL END) 'y5_funapp_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND u.transaction_type='vip_billing' THEN u.amount ELSE NULL END) 'y5_vip_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y5_ios_total',
+    SUM(CASE WHEN DATE(u.create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y5_google_total',
+    SUM(CASE WHEN DATE(u.create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) THEN u.amount ELSE NULL END) 'y6_total',
+    SUM(CASE WHEN DATE(u.create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND u.transaction_type='mycard_billing' THEN u.amount ELSE NULL END) 'y6_mycard_total',
+    SUM(CASE WHEN DATE(u.create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND u.transaction_type='funapp_billing' THEN u.amount ELSE NULL END) 'y6_funapp_total',
+    SUM(CASE WHEN DATE(u.create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND u.transaction_type='vip_billing' THEN u.amount ELSE NULL END) 'y6_vip_total',
+    SUM(CASE WHEN DATE(u.create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND u.transaction_type='inapp_billing_ios' THEN u.amount ELSE NULL END) 'y6_ios_total',
+    SUM(CASE WHEN DATE(u.create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND u.transaction_type='inapp_billing_google' THEN u.amount ELSE NULL END) 'y6_google_total'
+FROM user_billing u
+JOIN servers s ON u.server_id=s.server_id
+JOIN games g ON s.game_id=g.game_id
+WHERE g.is_active='1' AND s.is_test_server=0 AND u.billing_type=1 AND u.result=1
+AND u.uid NOT IN(SELECT uid FROM testaccounts)
+GROUP BY g.game_id
+
+
+CREATE VIEW account_data as
+  SELECT
+                COUNT(*) 'newuser_count',
+                COUNT(CASE WHEN external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'newuser_facebook_count',
+                COUNT(CASE WHEN external_id LIKE '%google' THEN 1 ELSE NULL END) 'newuser_google_count',
+                COUNT(CASE WHEN external_id IS NULL THEN 1 ELSE NULL END) 'newuser_longe_count',
+                COUNT(CASE WHEN external_id LIKE '%device' THEN 1 ELSE NULL END) 'newuser_quick_count',
+                COUNT(CASE WHEN DATE(create_time)=CURDATE() THEN 1 ELSE NULL END) 't_newuser_count',
+                COUNT(CASE WHEN DATE(create_time)=CURDATE() AND external_id LIKE '%facebook' THEN 1 ELSE NULL END) 't_newuser_facebook_count',
+                COUNT(CASE WHEN DATE(create_time)=CURDATE() AND external_id LIKE '%google' THEN 1 ELSE NULL END) 't_newuser_google_count',
+                COUNT(CASE WHEN DATE(create_time)=CURDATE() AND external_id IS NULL THEN 1 ELSE NULL END) 't_newuser_longe_count',
+                COUNT(CASE WHEN DATE(create_time)=CURDATE() AND external_id LIKE '%device' THEN 1 ELSE NULL END) 't_newuser_quick_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) THEN 1 ELSE NULL END) 'y_newuser_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'y_newuser_facebook_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND external_id LIKE '%google' THEN 1 ELSE NULL END) 'y_newuser_google_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND external_id IS NULL THEN 1 ELSE NULL END) 'y_newuser_longe_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 1 DAY) AND external_id LIKE '%device' THEN 1 ELSE NULL END) 'y_newuser_quick_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) THEN 1 ELSE NULL END) 'y2_newuser_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'y2_newuser_facebook_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND external_id LIKE '%google' THEN 1 ELSE NULL END) 'y2_newuser_google_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND external_id IS NULL THEN 1 ELSE NULL END) 'y2_newuser_longe_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 2 DAY) AND external_id LIKE '%device' THEN 1 ELSE NULL END) 'y2_newuser_quick_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) THEN 1 ELSE NULL END) 'y3_newuser_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'y3_newuser_facebook_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND external_id LIKE '%google' THEN 1 ELSE NULL END) 'y3_newuser_google_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND external_id IS NULL THEN 1 ELSE NULL END) 'y3_newuser_longe_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 3 DAY) AND external_id LIKE '%device' THEN 1 ELSE NULL END) 'y3_newuser_quick_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) THEN 1 ELSE NULL END) 'y4_newuser_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'y4_newuser_facebook_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND external_id LIKE '%google' THEN 1 ELSE NULL END) 'y4_newuser_google_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND external_id IS NULL THEN 1 ELSE NULL END) 'y4_newuser_longe_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 4 DAY) AND external_id LIKE '%device' THEN 1 ELSE NULL END) 'y4_newuser_quick_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) THEN 1 ELSE NULL END) 'y5_newuser_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'y5_newuser_facebook_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND external_id LIKE '%google' THEN 1 ELSE NULL END) 'y5_newuser_google_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND external_id IS NULL THEN 1 ELSE NULL END) 'y5_newuser_longe_count',
+                COUNT(CASE WHEN DATE(create_time)=DATE_SUB(CURDATE(), INTERVAL 5 DAY) AND external_id LIKE '%device' THEN 1 ELSE NULL END) 'y5_newuser_quick_count',
+                COUNT(CASE WHEN DATE(create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) THEN 1 ELSE NULL END) 'y6_newuser_count',
+                COUNT(CASE WHEN DATE(create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND external_id LIKE '%facebook' THEN 1 ELSE NULL END) 'y6_newuser_facebook_count',
+                COUNT(CASE WHEN DATE(create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND external_id LIKE '%google' THEN 1 ELSE NULL END) 'y6_newuser_google_count',
+                COUNT(CASE WHEN DATE(create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND external_id IS NULL THEN 1 ELSE NULL END) 'y6_newuser_longe_count',
+                COUNT(CASE WHEN DATE(create_time)<=DATE_SUB(CURDATE(), INTERVAL 6 DAY) AND external_id LIKE '%device' THEN 1 ELSE NULL END) 'y6_newuser_quick_count'
+            FROM users
+
+
+CREATE TABLE account_data_daily AS SELECT * FROM account_data;
+CREATE TABLE billing_data_daily AS SELECT * FROM billing_data;
+
+delimiter |
+CREATE EVENT daily_report_event
+    ON SCHEDULE
+      EVERY 1 MINUTE
+    COMMENT 'retrieve data from an existing view to load faster'
+    DO
+    BEGIN
+    delete from account_data_daily;
+    insert into account_data_daily select * from account_data;
+    delete from billing_data_daily;
+    insert into billing_data_daily select * from billing_data;
+    END |
+delimiter ;
+
+ALTER EVENT daily_report_event
+    ON SCHEDULE
+      EVERY 12 HOUR
+    STARTS CURRENT_TIMESTAMP + INTERVAL 4 HOUR;
