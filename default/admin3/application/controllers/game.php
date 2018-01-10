@@ -98,6 +98,7 @@ class Game extends MY_Controller {
 				$this->DB1->where("game_id", $id)->update("games", $data);
 			} else { //新增
 				$data["game_id"] = $this->input->post("game_id");
+				$data["vendor_game_id"] = $this->input->post("game_id");
 				$this->DB1->insert("games", $data);
 			}
 

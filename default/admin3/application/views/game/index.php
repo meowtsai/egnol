@@ -13,6 +13,7 @@
 			<th>轉點比值</th>
 			<th>遊戲狀態</th>
 			<th></th>
+			<th>回報連結</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -44,6 +45,9 @@
 			</td>
 			<td>
 				<a href="<?=site_url("game/modify?game_id={$row->game_id}")?>" class="btn btn-mini">編輯</a>
+			</td>
+			<td>
+				<a href="https://game.longeplay.com.tw/service_quick?site=long_e&param_game_id=<?=$row->game_id?>" class="btn btn-mini">回報連結</a>
 			</td>
 		</tr>
 		<? endforeach;?>

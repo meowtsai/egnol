@@ -1017,6 +1017,7 @@ class Service extends MY_Controller {
 		$ranking_report = $this->DB2->query("select server_id,flagged_player_name, flagged_player_char_id,count(*) as cnt
 		from complaints
 		where datediff(now(),create_time) < {$period}
+		and status = 1
 		group by server_id,flagged_player_name, flagged_player_char_id
 		order by cnt desc limit 5")->result();
 		die(json_success($ranking_report));
