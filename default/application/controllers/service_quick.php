@@ -258,13 +258,23 @@ class Service_quick extends MY_Controller {
 			->set("update_time", "now()", false)
 			->insert("questions", $data);
 
+			$this->db->select("id")
+					->where("check_id", $check_id)
+					->from("questions")
+					->order_by("id", "desc");
+			$queryId = $this->db->get();
+
+			if ($queryId->num_rows() > 0) {
+					$q_id = $queryId->row()->id;
+				}
+
         if (!$this->input->post("partner_uid")) {
 
             header('content-type:text/html; charset=utf-8');
 
             if(filter_var($this->input->post("email"), FILTER_VALIDATE_EMAIL))
             {
-                $msg = "後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件：<br>".$check_id;
+                $msg = "後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件#".$$q_id."：<br>".$check_id;
 
 			    $this->load->library("g_send_mail");
 
@@ -277,7 +287,7 @@ class Service_quick extends MY_Controller {
                     $_SESSION['check_id'] = $check_id;
                     $_SESSION['email'] = $this->input->post("email");
                     $_SESSION['mobile'] = $this->input->post("mobile");
-		            die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件：".$check_id)));
+		            die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件#".$$q_id."：".$check_id)));
                 }
                 else
                 {
@@ -296,7 +306,7 @@ class Service_quick extends MY_Controller {
                     $_SESSION['check_id'] = $check_id;
                     $_SESSION['email'] = $this->input->post("email");
                     $_SESSION['mobile'] = $this->input->post("mobile");
-		            die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件：".$check_id)));
+		            die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件#".$$q_id."：".$check_id)));
                 }
                 else
                 {

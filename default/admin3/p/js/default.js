@@ -1,5 +1,5 @@
 $(function(){
-		
+
 	if (typeof $.validator != "undefined") {
 		$.validator.messages = {
 		        required: "必填",
@@ -19,18 +19,18 @@ $(function(){
 		        range: jQuery.format("請輸入一個介於 {0} 和 {1} 之間的值"),
 		        max: jQuery.format("請輸入一個最大為 {0} 的值"),
 		        min: jQuery.format("請輸入一個最小為 {0} 的值")
-		};	
+		};
 	}
 	if (typeof $.blockUI != "undefined") {
 		$.extend($.blockUI, {
 			wait: function() {
-				$.blockUI({ 
+				$.blockUI({
 					message: '<h1 style="padding:6px;">請稍候...</h1>',
 					fadeIn: 50,
 					fadeOut: 200,
 					css: {
-			            border: 	'none', 
-			            padding: 	'10px', 
+			            border: 	'none',
+			            padding: 	'10px',
 			            margin:		0,
 			            width:		'30%',
 			            top:		'auto',
@@ -39,21 +39,21 @@ $(function(){
 			            right:		'20px',
 			            textAlign:	'center',
 			            cursor:		'wait',
-			            backgroundColor: '#000', 
-			            '-webkit-border-radius': '10px', 
-			            '-moz-border-radius': '10px', 
-			            opacity: .5, 
-			            color: '#fff' 
+			            backgroundColor: '#000',
+			            '-webkit-border-radius': '10px',
+			            '-moz-border-radius': '10px',
+			            opacity: .5,
+			            color: '#fff'
 				} });
 			}
 		});
 	}
-	
+
 	$.json_post = function(url, data, callback) {
 		if (typeof data == "function") {
-			callback = data; data = {}; 
+			callback = data; data = {};
 		};
-		$.blockUI.wait();			
+		$.blockUI.wait();
 		$.post(url, data, function(json) {
 			if (json.status == 'success') {
 				callback(json);
@@ -62,9 +62,9 @@ $(function(){
 		.error(function(e){
 			alert(e.status + " " + e.statusText);
 		})
-		.complete($.unblockUI);	
+		.complete($.unblockUI);
 	};
-	
+
 	$.fn.json_ajaxSubmit = function(callback) {
 		return this.each(function() {
 			$.blockUI.wait();
@@ -80,7 +80,7 @@ $(function(){
 					alert(e.status + " " + e.statusText + "\nResponse:" + e.responseText);
 				},
 				dataType: 'json'
-			});			
+			});
 	    });
 	};
 
@@ -91,65 +91,65 @@ $(function(){
 			var block = $(this);
 			var a = block.find("a");
 			var ul = block.find("ul");
-			
-			a.click(function(evt){			
+
+			a.click(function(evt){
 				$('.cz_more ul:visible').hide();
 				var os = $(a).offset();
 				ul.show().css('left', os.left-5).css('top', os.top+$(a).height());
 			});
-			block.click(function(evt){evt.stopPropagation();});			
+			block.click(function(evt){evt.stopPropagation();});
 		});
-		
+
 		$("html").click(function(){
 			$('.cz_more ul:visible').hide();
 		});
 	}*/
-	
-	$(".json_post").click(function(){	
+
+	$(".json_post").click(function(){
 		$.json_post($(this).attr("url"), function(){
 			location.reload();
-		});	
-	});	
-	
+		});
+	});
+
 	$(".json_post_confirm").click(function(){
 		if (confirm("確定要執行嗎?")) {
 			$.json_post($(this).attr("url"), function(json){
 				location.reload();
-			});	
+			});
 		}
-	});	
-	
-	$(".json_post_alert").click(function(){	
+	});
+
+	$(".json_post_alert").click(function(){
 		$.json_post($(this).attr("url"), function(json){
 			alert(json.message);
 			location.reload();
-		});	
-	});		
-	
+		});
+	});
+
 	$(".json_del").click(function(){
 		if (confirm("確定要刪除嗎?")) {
 			$.json_post($(this).attr("url"), function(){
 				location.reload();
-			});	
+			});
 		}
-	});		
-	
+	});
+
 	if ($('.table .all_cb').length > 0) {
 		$('.table .all_cb').click(function(){
-			$('.table .cb').attr("checked", $(this).prop("checked"));			
+			$('.table .cb').attr("checked", $(this).prop("checked"));
 		}).attr("title", "全選");
-		
+
 		$('.table .muti_json_post').click(function(){
 			var choose = Array();
 			$('.table .cb').each(function(k,v){
 				if ($(v).prop("checked")) {
 					choose.push($(v).attr("id"));
 				}
-			});			
+			});
 			if (choose.length>0) {
 				$.json_post($(this).attr("url"), {ids: choose}, function(){
 					location.reload();
-				});	
+				});
 			}
 			else alert("請先選擇");
 		});
@@ -158,23 +158,23 @@ $(function(){
 	if ($('.category').length > 0) {
 		$('.category').find("a").on('click', $.blockUI.wait);
 	}
-	
+
 	if ($('form.validation').length > 0) {
 		$("form.validation").validate();
 	}
-	
+
 	$('input, textarea').placeholder();
-	
+
 	$('table.table tr').on("mouseenter", function(){$(this).find(".edit").show();});
 	$('table.table tr').on("mouseleave", function(){$(this).find(".edit").hide();});
-	
+
 	$('.clear_date').on("click", function(){$("input[name='start_date']").val(''); $("input[name='end_date']").val('');});
-	
+
+	$('.clear_another_date').on("click", function(){$("input[name='reply_start_date']").val(''); $("input[name='reply_end_date']").val('');});
+
 	$('a.dropdown-toggle').on("mouseenter", function(){$(this).click();});
 });
 
 function show_error(msg) {
 	alert(msg ? msg : '失敗');
 }
-
-
