@@ -62,11 +62,17 @@
 
 		<span class="sptl"></span>
 
-
 		建檔時間
 		<input type="text" name="start_date" value="<?=$this->input->get("start_date")?>" style="width:120px"> 至
 		<input type="text" name="end_date" value="<?=$this->input->get("end_date")?>" style="width:120px" placeholder="現在">
 		<a href="javascript:;" class="clear_date"><i class="icon-remove-circle" title="清除"></i></a>
+
+		<span class="sptl"></span>
+
+		回覆時間
+		<input type="text" name="reply_start_date" value="<?=$this->input->get("reply_start_date")?>" style="width:120px"> 至
+		<input type="text" name="reply_end_date" value="<?=$this->input->get("reply_end_date")?>" style="width:120px" placeholder="現在">
+		<a href="javascript:;" class="clear_another_date"><i class="icon-remove-circle" title="清除"></i></a>
 
 	</div>
 
@@ -79,7 +85,7 @@
 		<input type="text" name="原廠uid" value="<?=$this->input->get("partner_uid")?>" style="width:90px" placeholder="原廠uid">
 		<input type="text" name="account" value="<?=$this->input->get("account")?>" style="width:90px" placeholder="龍邑帳號">
 		<input type="text" name="character_name" value="<?=$this->input->get("character_name")?>" style="width:90px" placeholder="角色名稱">
-
+		<input type="text" name="check_id" value="<?=$this->input->get("check_id")?>" style="width:90px" placeholder="問題檢核碼">
 		<span class="sptl"></span>
 
 		<input type="text" name="email" value="<?=$this->input->get("email")?>" style="width:90px" placeholder="Email">

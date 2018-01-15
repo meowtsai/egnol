@@ -441,6 +441,8 @@ class Service extends MY_Controller {
 			$this->input->get("type") && $this->DB2->where("q.type", $this->input->get("type"));
 			$this->input->get("game") && $this->DB2->where("gi.game_id", $this->input->get("game"));
 			$this->input->get("character_name") && $this->DB2->where("q.character_name", $this->input->get("character_name"));
+			$this->input->get("check_id") && $this->DB2->where("q.check_id", $this->input->get("check_id"));
+
 			if ($this->input->get("email")) {
                 $this->DB2->where("u.email", $this->input->get("email"));
                 $this->DB2->or_where("q.email", $this->input->get("email"));
@@ -478,8 +480,22 @@ class Service extends MY_Controller {
 
 			if ($this->input->get("replies") || $this->input->get("cs_admin")) {
 				$this->DB2->join("question_replies qr", "q.id=qr.question_id", "left");
-                if ($this->input->get("replies")) $this->DB2->like("qr.content", $this->input->get("replies"), 'both');
-                if ($this->input->get("cs_admin")) $this->DB2->where("qr.admin_uid", $this->input->get("cs_admin"));
+        if ($this->input->get("replies")) $this->DB2->like("qr.content", $this->input->get("replies"), 'both');
+        if ($this->input->get("cs_admin")) $this->DB2->where("qr.admin_uid", $this->input->get("cs_admin"));
+				if ($this->input->get("reply_start_date")) {
+					$reply_start_date = $this->DB2->escape($this->input->get("reply_start_date"));
+					if ($this->input->get("reply_end_date")) {
+						$reply_end_date = $this->DB2->escape($this->input->get("reply_end_date").":59");
+						$this->DB2->where("qr.create_time between {$reply_start_date} and {$reply_end_date}", null, false);
+					}
+						else $this->DB2->where("qr.create_time >= {$reply_start_date}", null, false);
+					}
+
+			}
+
+			else {
+				unset($get["reply_start_date"]);
+				unset($get["reply_end_date"]);
 			}
 
 			if ($this->input->get("start_date")) {
@@ -492,14 +508,7 @@ class Service extends MY_Controller {
 			}
 
 
-			if ($this->input->get("reply_start_date")) {
-				$reply_start_date = $this->DB2->escape($this->input->get("reply_start_date"));
-				if ($this->input->get("reply_end_date")) {
-					$reply_end_date = $this->DB2->escape($this->input->get("reply_end_date").":59");
-					$this->DB2->where("qr.create_time between {$reply_start_date} and {$reply_end_date}", null, false);
-				}
-				else $this->DB2->where("qr.create_time >= {$reply_start_date}", null, false);
-			}
+
 
 			switch ($this->input->get("action"))
 			{
@@ -558,7 +567,7 @@ class Service extends MY_Controller {
 
         if (!in_array('all_game', $this->zacl->allow_games)) $this->DB2->where_in("game_id", $this->zacl->allow_games);
 		$games = $this->DB2->from("games")->get();
-		$cs_admins = $this->DB2->from("admin_users")->where_in("role", array("cs", "cs_master"))->get();
+		$cs_admins = $this->DB2->from("admin_users")->where_in("role", array("cs", "cs_master","glory_service"))->get();
 
 		$this->g_layout
 			->add_breadcrumb("查詢")
@@ -695,7 +704,7 @@ class Service extends MY_Controller {
 		}
 
 		$games = $this->DB2->from("games")->get();
-		$cs_admins = $this->DB2->from("admin_users")->where_in("role", array("cs", "cs_master"))->get();
+		$cs_admins = $this->DB2->from("admin_users")->where_in("role", array("cs", "cs_master","glory_service"))->get();
 
 		$this->g_layout
 			->add_breadcrumb("查詢")
@@ -939,7 +948,7 @@ class Service extends MY_Controller {
 		$this->DB2->flush_cache();
 		$games = $this->DB2->from("games")->get();
 		$servers = $this->DB2->where("game_id","h35naxx1hmt")->where_in("server_status", array("public", "maintenance"))->order_by("server_id")->get("servers");
-		$cs_admins = $this->DB2->from("admin_users")->where_in("role", array("cs", "cs_master"))->get();
+		$cs_admins = $this->DB2->from("admin_users")->where_in("role", array("cs", "cs_master","glory_service"))->get();
 
 		$get = $this->input->get();
 		$query_string = '';
