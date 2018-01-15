@@ -274,7 +274,7 @@ class Service_quick extends MY_Controller {
 
             if(filter_var($this->input->post("email"), FILTER_VALIDATE_EMAIL))
             {
-                $msg = "後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件#".$$q_id."：<br>".$check_id;
+                $msg = "後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件#".$q_id."：<br>".$check_id;
 
 			    $this->load->library("g_send_mail");
 
@@ -287,7 +287,7 @@ class Service_quick extends MY_Controller {
                     $_SESSION['check_id'] = $check_id;
                     $_SESSION['email'] = $this->input->post("email");
                     $_SESSION['mobile'] = $this->input->post("mobile");
-		            die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件#".$$q_id."：".$check_id)));
+		            die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件#".$q_id."：".$check_id)));
                 }
                 else
                 {
@@ -297,7 +297,7 @@ class Service_quick extends MY_Controller {
             else
             {
                 // 手機號碼的話要發送簡訊
-                $msg = "後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件：".$check_id;
+                $msg = "後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件".$q_id."：".$check_id;
 
                 $this->load->library("g_send_sms");
 
@@ -306,7 +306,7 @@ class Service_quick extends MY_Controller {
                     $_SESSION['check_id'] = $check_id;
                     $_SESSION['email'] = $this->input->post("email");
                     $_SESSION['mobile'] = $this->input->post("mobile");
-		            die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件#".$$q_id."：".$check_id)));
+		            die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件#".$q_id."：".$check_id)));
                 }
                 else
                 {
