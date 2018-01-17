@@ -2029,16 +2029,20 @@ class Cron extends CI_Controller {
 function find_duplicate_characters()
 {
 	//找出兩筆一樣的資料
-	$query = $this->DB2->query("SELECT name,in_game_id,server_id,partner_uid FROM characters
-				WHERE server_id in(SELECT server_id FROM servers WHERE game_id='h35naxx1hmt')
-				GROUP BY  name,in_game_id,server_id,partner_uid HAVING count(*)>1;");
+	// $query = $this->DB2->query("SELECT name,in_game_id,server_id,partner_uid FROM characters
+	// 			WHERE server_id in(SELECT server_id FROM servers WHERE game_id='h35naxx1hmt')
+	// 			GROUP BY  name,in_game_id,server_id,partner_uid HAVING count(*)>1;");
+
+	$query = $this->DB2->query("SELECT name,server_id,partner_uid FROM characters
+	      WHERE server_id in(SELECT server_id FROM servers WHERE game_id='h35naxx1hmt')
+      GROUP BY  name,server_id,partner_uid HAVING count(*)>1;");
+
 	if ($query->num_rows() > 0) {
 		foreach ($query->result() as $row) {
 			$queryId = $this->db->from("characters")
 				->where("name", $row->name)
-				->where("in_game_id", $row->in_game_id)
 				->where("server_id", $row->server_id)
-				->where("partner_uid", $row->partner_uid)->order_by("create_time desc")->limit(1)->get()->row()->id;
+				->where("partner_uid", $row->partner_uid)->order_by("create_time asc")->limit(1)->get()->row()->id;
 				if (!empty($queryId)) {
 					$this->DB1->delete('characters', array('id' => $queryId));
 				}
