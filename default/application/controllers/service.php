@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Service extends MY_Controller {
-	
+
 	function __construct()
 	{
 		parent::__construct();
@@ -13,13 +13,13 @@ class Service extends MY_Controller {
 		$this->_require_login();
 
 		//$this->g_user->check_account_channel('service');
-		
+
 		$question_cnt = $this->db->where("uid", $this->g_user->uid)->where("status", "1")
 			->from("questions")->count_all_results();
-		
+
 		$not_read_cnt = $this->db->where("uid", $this->g_user->uid)->where("status", "2")->where("is_read", "0")
 			->from("questions")->count_all_results();
-		
+
 		$this->_init_layout()
 			->set("not_read_cnt", $not_read_cnt)
 			->set("question_cnt", $question_cnt)
@@ -31,11 +31,12 @@ class Service extends MY_Controller {
 	function question()
 	{
 		$this->_require_login();
-		
+
 		$server = $this->db->from("servers gi")
 			->join("games g", "gi.game_id=g.game_id")->get();
-		
-		$games = $this->db->from("games")->where("is_active", "1")->get();
+
+		//$games = $this->db->from("games")->where("is_active", "1")->get();
+		$games = $this->db->from("games")->where("is_active", "1")->where("game_id", "vxz")->get();
 		$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("server_id")->get("servers");
 
 		// 讀取玩家角色列表
@@ -52,7 +53,7 @@ class Service extends MY_Controller {
 			->add_css_link("server")
 			->standard_view();
 	}
-	
+
 	function question_ajax()
 	{
 		$site = $this->_get_site();
@@ -61,18 +62,18 @@ class Service extends MY_Controller {
 		if ( ! $this->input->post("server")) die(json_encode(array("status"=>"failure", "message"=>"尚未選擇伺服器")));
 		if ( ! $this->input->post("question_type")) die(json_encode(array("status"=>"failure", "message"=>"尚未選擇問題類型")));
 		if ( ! $this->input->post("content")) die(json_encode(array("status"=>"failure", "message"=>"尚未填寫問題描述")));
-		
-		$query = $this->db->query("SELECT count(*) > (3-1) as chk FROM questions WHERE uid={$this->g_user->uid} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");		
+
+		$query = $this->db->query("SELECT count(*) > (3-1) as chk FROM questions WHERE uid={$this->g_user->uid} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");
 		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問，若有未說明問題，請以原提問進行補述!")));
-		
+
 		$data = array(
-			"uid" => $this->g_user->uid,				
+			"uid" => $this->g_user->uid,
 			'type' => $this->input->post("question_type"),
 			'server_id' => $this->input->post("server"),
 			'character_name' => htmlspecialchars($this->input->post("character_name")),
 			'content' => nl2br(htmlspecialchars($this->input->post("content"))),
 		);
-		
+
 		$this->load->library('upload');
 		$config['upload_path'] = realpath("p/upload");
 		$config['allowed_types'] = 'gif|jpg|bmp|png';
@@ -80,7 +81,7 @@ class Service extends MY_Controller {
 		$config['max_width'] = '6144';
 		$config['max_height'] = '6144';
 		$config['encrypt_name'] = true;
-		
+
 		$upload_cnt = 0;
 		if ( ! empty($_FILES["file01"]["name"]))
 		{
@@ -92,10 +93,10 @@ class Service extends MY_Controller {
 			else
 			{
 				$upload_data = $this->upload->data();
-				$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");					
+				$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");
 			}
 		}
-		
+
 		if ( ! empty($_FILES["file02"]["name"]))
 		{
 			$this->upload->initialize($config);
@@ -106,7 +107,7 @@ class Service extends MY_Controller {
 			else
 			{
 				$upload_data = $this->upload->data();
-				$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");					
+				$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");
 			}
 		}
 		if ( ! empty($_FILES["file03"]["name"]))
@@ -119,7 +120,7 @@ class Service extends MY_Controller {
 			else
 			{
 				$upload_data = $this->upload->data();
-				$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");					
+				$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");
 			}
 		}
 
@@ -130,35 +131,35 @@ class Service extends MY_Controller {
 
 		die(json_encode(array("status"=>"success", "site"=> $site)));
 	}
-	
+
 	function listing()
 	{
 		$this->_require_login();
-		
+
 		$this->db->select("q.*")
 			->where("q.uid", $this->g_user->uid)->from("questions q")
 			->order_by("id", "desc");
-		
+
 		if ($this->input->get("status")) {
 			$this->db->where("status", $this->input->get("status"));
 		}
 		else {
 			$this->db->where("status >", "0");
-		} 
-		
+		}
+
 		$query = $this->db->get();
-		
+
 		$this->_init_layout()
 			->set("query", $query)
 			->add_css_link("login")
 			->add_css_link("server")
 			->standard_view();
 	}
-	
+
 	function view($id)
 	{
 		$this->_require_login();
-		
+
 		$question = $this->db->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email")
 					->where("q.uid", $this->g_user->uid)
 					->where("q.id", $id)
@@ -168,18 +169,18 @@ class Service extends MY_Controller {
 					->join("games g", "g.game_id=gi.game_id")
 					->join("users u", "u.uid=q.uid")
 					->get()->row();
-		
+
 		if ($question)
 		{
 			if ($question->status == '2' || $question->status == '4') {
 				$this->db->where("id", $id)->update("questions", array("is_read"=>'1'));
-			}		
+			}
 			$replies = $this->db->from("question_replies")->where("question_id", $id)->order_by("id", "asc")->get();
 		}
 		else {
 			$replies = false;
 		}
-		
+
 		$this->_init_layout()
 			->add_css_link("login")
 			->add_css_link("server")
@@ -190,39 +191,39 @@ class Service extends MY_Controller {
 			->set("question", $question)
 			->standard_view();
 	}
-	
+
 	function insert_reply_json()
 	{
 		if ( ! $this->g_user->is_login()) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
-		
-		$query = $this->db->query("SELECT count(*) > (3-1) as chk FROM question_replies WHERE uid={$this->g_user->uid} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");		
-		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問!")));		
-		
+
+		$query = $this->db->query("SELECT count(*) > (3-1) as chk FROM question_replies WHERE uid={$this->g_user->uid} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");
+		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問!")));
+
 		$question_id = $this->input->post("question_id");
-		
+
 		$data = array(
 			"uid" => $this->g_user->uid,
 			"question_id" => $question_id,
 			'content' => nl2br(htmlspecialchars($this->input->post("content"))),
-		);		
-		
+		);
+
 		$this->db
 			->set("create_time", "now()", false)
 			->insert("question_replies", $data);
-		
-		$this->db->where("id", $question_id)->update("questions", array("is_read"=>'0', "status"=>'1'));		
-		
-		die(json_encode(array("status"=>"success")));		
+
+		$this->db->where("id", $question_id)->update("questions", array("is_read"=>'0', "status"=>'1'));
+
+		die(json_encode(array("status"=>"success")));
 	}
-	
+
 	function close_question($id)
 	{
 		if ( ! $this->g_user->is_login()) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
-		
+
 		$question = $this->db->where("id", $id)->from("questions q")->get()->row();
 		if ($question->uid <> $this->g_user->uid) die(json_encode(array("status"=>"failure", "message"=>"權限不足")));
-		
+
 		$this->db->set("status", "4")->where("id", $id)->update("questions");
-		die(json_encode(array("status"=>"success")));	
+		die(json_encode(array("status"=>"success")));
 	}
 }
