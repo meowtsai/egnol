@@ -8,22 +8,24 @@
   ga('send', 'pageview');
 
 </script>
-<!-- MEUN on -->        
-<div class="header01">			
+<!-- MEUN on -->
+<div class="header01">
     <div class="nav">
         <ul class="menu">
             <li id="btn_NEW" class="Nowtab"><a class="anchor" href="#NEW">最新消息</a></li>
             <li id="btn_CHARACTER" class="Nowtab"><a class="anchor" href="#CHARACTER">遊戲特色</a></li>
             <li id="btn_FB" class="Nowtab"><a href="https://www.facebook.com/playvxz/?fref=ts">粉絲團</a></li>
-            <li id="btn_DOWNLOAD" class="Nowtab"><a href="#">下載遊戲</a></li>
+            <li id="btn_SERVICE" class="Nowtab"><a href="https://game.longeplay.com.tw/service?site=vxz">客服中心</a></li>
+            <!-- <li id="btn_DOWNLOAD" class="Nowtab"><a href="#">下載遊戲</a></li> -->
         </ul>
     </div>
     <div class="nav2"  style="display:none">
+      <!--
         <a class="ios" href="https://itunes.apple.com/tw/app/xiao-li-fei-dao/id1014250315?l=zh
 <https://itunes.apple.com/tw/app/xiao-li-fei-dao/id1014250315?l=zh&ls=1&mt=8
 &ls=1&mt=8">APPSTORE</a>
         <a class="google" href="https://play.google.com/store/apps/details?id=com.longe.NetEase.VXZ">GOOGLEPLAY</a>
-        <a class="apk" href="https://www.longeplay.com.tw/vxz/apk/LongE_VXZ.apk">APK</a>
+        <a class="apk" href="https://www.longeplay.com.tw/vxz/apk/LongE_VXZ.apk">APK</a> -->
     </div>
 </div>
 
@@ -32,25 +34,26 @@
     <div class="nav">
         <ul class="menu">
             <div class="ICON"><img src="<?=base_url()?>p/img/mobile/ICON.png"></div>
-            <!--li id="btn_CENTER" class="Nowtab"><a href="https://game.longeplay.com.tw/payment?site=vxz">儲值中心</a></li-->
+            <!--li id="btn_CENTER" class="Nowtab"><a href="https://game.longeplay.com.tw/payment?site=vxz">儲值中心</a></li
             <li id="btn_CENTER" class="Nowtab"><a href="https://game.longeplay.com.tw/payment?site=vxz">儲值中心</a></li>
             <li id="btn_TEACH" class="Nowtab"><a href="https://game.longeplay.com.tw/news/detail/113?site=vxz">儲值教學</a></li>
-            <li id="btn_SERVICE" class="Nowtab"><a href="https://game.longeplay.com.tw/service?site=vxz">客服中心</a></li>
+            <li id="btn_SERVICE" class="Nowtab"><a href="https://game.longeplay.com.tw/service?site=vxz">客服中心</a></li>-->
         </ul>
     </div>
 </div>
 
-<div class="wrapper">		
+<div class="wrapper">
     <!-- TOP -->
     <div id="TOP">
         <div class="inner_box">
-            <h1 class="wow fadeInUp" data-wow-delay="0.2s"><img src="<?=base_url()?>p/img/mobile/LOGO.png"></h1> 
+            <h1 class="wow fadeInUp" data-wow-delay="0.2s"><img src="<?=base_url()?>p/img/mobile/LOGO.png"></h1>
             <!-- APP 下載點 -->
+            <!--
             <a href="https://itunes.apple.com/tw/app/xiao-li-fei-dao/id1014250315?l=zh
 <https://itunes.apple.com/tw/app/xiao-li-fei-dao/id1014250315?l=zh&ls=1&mt=8
 &ls=1&mt=8" class="btn_IOS01" title="IOS"><img src="<?=base_url()?>p/img/mobile/APPSTORE.png"></a>
             <a href="https://play.google.com/store/apps/details?id=com.longe.NetEase.VXZ" class="btn_Android01" title="Android"><img src="<?=base_url()?>p/img/mobile/GOOGLEPLAY.png"></a>
-            <a href="https://www.longeplay.com.tw/vxz/apk/LongE_VXZ.apk" class="btn_APK01" title="APK"><img src="<?=base_url()?>p/img/mobile/APK.png"></a>
+            <a href="https://www.longeplay.com.tw/vxz/apk/LongE_VXZ.apk" class="btn_APK01" title="APK"><img src="<?=base_url()?>p/img/mobile/APK.png"></a> -->
         </div>
     </div>
 
@@ -58,44 +61,44 @@
     <div id="NEW">
         <div class="box"></div>
         <div class="inner_box">
-            <div id="newsbox"> 
+            <div id="newsbox">
                 <h2><img src="<?=base_url()?>p/img/mobile/h2_news.png"></h2>
                 <a href="https://game.longeplay.com.tw/news?site=vxz" class="btn_more" title="MORE"><img src="<?=base_url()?>p/img/mobile/MORE.png"></a>
                 <? if (isset($news)):?>
 					<?
 						foreach($news->result() as $row)
-						{   
+						{
 							if($row->type == 3)
 								$img = "icon_system";
 							else if($row->type == 1)
 								$img = "icon_news";
 							else if($row->type == 2)
 								$img = "icon_event";
-                            
+
                             echo '<li>
-                                      <a class="links" href="https://game.longeplay.com.tw/news/detail/'.$row->id.'?site='.$site.'">	
+                                      <a class="links" href="https://game.longeplay.com.tw/news/detail/'.$row->id.'?site='.$site.'">
                                           <span class="news_icon"><img src="'.base_url().'p/img/'.$img.'.png" width="91" height="47"/></span>
                                           <span class="news_tips_date">'.date("Y-m-d", strtotime($row->start_time)).'</span>
-                                          <span class="news_tips">'.$row->title.'</span>	
-                                      </a> 
+                                          <span class="news_tips">'.$row->title.'</span>
+                                      </a>
                                   </li>';
 						}
 					?>
                 <? endif;?>
-            </div>					
+            </div>
         </div>
     </div>
 
     <!-- SLIDER -->
     <div id="SLIDERBOX">
         <div class="inner_box">
-            <div id="slider"> 
+            <div id="slider">
                 <? if (isset($slider_news_mobile)):?>
                     <?
                         $count=1;
 
                         foreach($slider_news_mobile->result() as $row)
-                        {   
+                        {
                             $count_str = str_pad($count, 2, '0', STR_PAD_LEFT);
                             $count++;
 
@@ -105,7 +108,7 @@
                 <? endif;?>
 			</div>
         </div>
-    </div>	
+    </div>
 
     <!-- CHARACTER -->
     <div id="CHARACTER" class="abgne_tab">
@@ -115,9 +118,9 @@
             <li class="btn_A active"><a class="" href="#tab1"></a></li>
             <li class="btn_B"><a href="#tab2"></a></li>
         </ul>
-        <div class="inner_box">					
+        <div class="inner_box">
             <div id="tab_container">
-                <div id="tab1" class="tab_content">							
+                <div id="tab1" class="tab_content">
                     <div class="slider01">
                         <div id="owl-demo2" class="owl-wrapper-outer">
                             <? if (isset($slider_about_mobile)):?>
@@ -143,7 +146,7 @@
                             ?>
                         <? endif;?>
                     </div>
-                </div>						
+                </div>
             </div>
         </div>
     </div>
@@ -161,11 +164,12 @@
                     ?>
                 <? endif;?>
             </div>
+            <!--
             <a href="https://itunes.apple.com/tw/app/xiao-li-fei-dao/id1014250315?l=zh
 <https://itunes.apple.com/tw/app/xiao-li-fei-dao/id1014250315?l=zh&ls=1&mt=8
 &ls=1&mt=8" class="btn_IOS02"><img src="<?=base_url()?>p/img/mobile/APPSTORE.png"></a>
             <a href="https://play.google.com/store/apps/details?id=com.longe.NetEase.VXZ" class="btn_Android02" title="Android"><img src="<?=base_url()?>p/img/mobile/GOOGLEPLAY.png"></a>
-            <a href="https://www.longeplay.com.tw/vxz/apk/LongE_VXZ.apk" class="btn_APK02"><img src="<?=base_url()?>p/img/mobile/APK.png"></a>
+            <a href="https://www.longeplay.com.tw/vxz/apk/LongE_VXZ.apk" class="btn_APK02"><img src="<?=base_url()?>p/img/mobile/APK.png"></a> -->
         </div>
     </div>
 
@@ -198,7 +202,7 @@
     autoHeight : true,
     });
     });
-</script>	
+</script>
 <script>
 
     $(document).ready(function() {
@@ -211,7 +215,7 @@
     autoHeight : true,
     });
     });
-</script>		
+</script>
 <script src="<?=base_url()?>p/js/mobile/wow.js" type="text/javascript"></script>
 <script src="<?=base_url()?>p/js/mobile/jquery.cycle.all.js" type="text/javascript" ></script>
 <script src="<?=base_url()?>p/js/mobile/lity.js"></script>
