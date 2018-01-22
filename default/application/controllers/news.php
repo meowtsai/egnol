@@ -90,7 +90,7 @@ class News extends MY_Controller {
 			);
 		}
 
-
+		header('Access-Control-Allow-Origin: *');
 		die(json_encode($data));
 	}
 
@@ -98,6 +98,7 @@ class News extends MY_Controller {
 	{
 		//公告=1 活動=2 系統=3
 		$row = $this->db->from("bulletins")->where("id", $news_id)->get()->row();
+		header('Access-Control-Allow-Origin: *'); 
 		die(json_encode($row));
 	}
 }
