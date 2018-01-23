@@ -72,21 +72,38 @@ class News extends MY_Controller {
 	function get_news_list($site)
 	{
 		//公告=1 活動=2 系統=3
-		$query = $this->db->query("SELECT c1.id, c1.title, c1.game_id,c1.type,c1.start_time, c1.is_active
-			FROM bulletins c1
-			LEFT OUTER JOIN bulletins c2
-			  ON (c1.type  = c2.type  AND c1.start_time < c2.start_time)
-			where c1.game_id ='{$site}' and c2.game_id='{$site}' and c1.type <>'99' AND c1.start_time < now()
-			GROUP BY c1.id
-			HAVING COUNT(*) < 5;");
+		$query = $this->db->query("(SELECT id, game_id, title,type,start_time FROM bulletins where game_id ='{$site}' and type=1 limit 5)
+		union (select id, game_id, title,type,start_time from bulletins where game_id ='{$site}' and type=2  limit 5)
+		union (select id, game_id, title,type,start_time from bulletins where game_id ='{$site}' and type=3 limit 5);");
 
 		$data = array();
 		foreach($query->result() as $row) {
 			$data[] = array(
 				'id' => $row->id,
 				'title' => $row->title,
-				'date' =>  date("Y/m/d", strtotime($row->create_time)),
+				'date' =>  date("Y/m/d", strtotime($row->start_time)),
 				'category' => ($row->type == 1? "news": ($row->type == 2?"event":"notice") ),
+			);
+		}
+
+		header('Access-Control-Allow-Origin: *');
+		die(json_encode($data));
+	}
+
+	function get_news_list_preview($site)
+	{
+		//公告=1 活動=2 系統=3
+		$query = $this->db->query("SELECT id, game_id, title,type,start_time, MID(content,instr(content,'src=')+5,84) as hero_image,MID(content,1,100) as preview_content,type FROM bulletins WHERE game_id ='{$site}'");
+//{id:"568", title:" 古龍《三少爺的劍》手遊事前登錄展開", start_time:"2018-01-23", hero_image:"https://game.longeplay.com.tw/p/upload/bulletin/d91fbb4bc1096c42bb4aa30b62705b07.jpg", preview_content:"參加《三少爺的劍》事前登錄搶先拿下紫色武功"},
+		$data = array();
+		foreach($query->result() as $row) {
+			$data[] = array(
+				'id' => $row->id,
+				'title' => $row->title,
+				'date' =>  date("Y/m/d", strtotime($row->start_time)),
+				'category' => ($row->type == 1? "news": ($row->type == 2?"event":"notice") ),
+				'hero_image' => (strrpos($row->hero_image, ".jpg" ,80)? $row->hero_image: ""),
+				'preview_content' => strip_tags($row->preview_content),
 			);
 		}
 
@@ -98,7 +115,7 @@ class News extends MY_Controller {
 	{
 		//公告=1 活動=2 系統=3
 		$row = $this->db->from("bulletins")->where("id", $news_id)->get()->row();
-		header('Access-Control-Allow-Origin: *'); 
+		header('Access-Control-Allow-Origin: *');
 		die(json_encode($row));
 	}
 }

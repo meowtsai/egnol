@@ -65,7 +65,7 @@ class Member extends MY_Controller
 	function login_json()
 	{
 		header('content-type:text/html; charset=utf-8');
-		header('Access-Control-Allow-Origin: *');  
+		header('Access-Control-Allow-Origin: *');
 
 		$site = $this->_get_site();
 
@@ -219,11 +219,11 @@ class Member extends MY_Controller
 				if ($boolResult != true)
 				{
 					$boolResult = $this->g_user->create_account('', '', '', $external_id);
-                    
+
 					if($boolResult == true )
 					{
 						$this->g_user->verify_account('', '', '', $external_id);
-                    
+
                         $log_data = array(
                             "uid" => $this->g_user->uid,
                             "content" => "NEW: [external_id]".$external_id
@@ -312,14 +312,14 @@ class Member extends MY_Controller
 		if ($boolResult==true)
 		{
 			$this->g_user->verify_account($email, $mobile, $pwd);
-                    
+
             $log_data = array(
                 "uid" => $this->g_user->uid,
                 "content" => "NEW: [email]".$email." [mobile]".$mobile
             );
 
             $this->db->insert("log_user_updates", $log_data);
-            
+
 			die(json_message(array("message"=>"成功", "site"=>$site), true));
 		}
 		else
@@ -333,7 +333,7 @@ class Member extends MY_Controller
 	{
 		// 先登入才能綁定
 		$this->_require_login();
-		
+
 		$user_data = $this->g_user->get_user_data();
 
 		if (!empty($user_data->email) || (!empty($user_data->mobile)))
@@ -347,11 +347,11 @@ class Member extends MY_Controller
 			->set("user_data", $user_data)
 			->standard_view();
 	}
-	
+
 	function bind_account_json()
 	{
 		$this->_check_login_json();
-		
+
 		$site = $this->_get_site();
 
 		$email = $this->input->post("email");
@@ -371,25 +371,25 @@ class Member extends MY_Controller
 		{
 			die(json_failure("兩次密碼輸入不同"));
 		}
-	
+
 		$result = $this->g_user->bind_account($this->g_user->uid, $email, $mobile, $pwd);
 		if ($result == true)
 		{
 			$this->g_user->verify_account($email, $mobile, $pwd);
-            
+
             $log_data = array(
                 "uid" => $this->g_user->uid,
                 "content" => "UPDATE: [email]".$email." [mobile]".$mobile
             );
 
             $this->db->insert("log_user_updates", $log_data);
-            
+
 			die(json_message(array("message"=>"成功", "site"=>$site)));
 		}
 		else
 		{
 			die(json_failure($this->g_user->error_message));
-		}	
+		}
 	}
 
 	// 修改會員資料
@@ -408,9 +408,9 @@ class Member extends MY_Controller
 			->add_js_include("member/update_profile")
 			->standard_view();
 	}
-	
+
 	function update_profile_json()
-	{			
+	{
 		$site = $this->_get_site();
 
 		$data = array(
@@ -420,7 +420,7 @@ class Member extends MY_Controller
 			'sex' => $this->input->post("sex"),
 			'street' => $this->input->post("address_road"),
 		);
-        
+
         $log_content = "UPDATE: [name]".$user_info['name']." [sex]".$user_info['sex']." [street]".$user_info['street'];
 		if ($this->input->post("email"))
 		{
@@ -430,7 +430,7 @@ class Member extends MY_Controller
 				die(json_failure("E-MAIL 已被使用"));
 			}
 			$data["email"] = $email;
-            $log_content .= " [email]".$email; 
+            $log_content .= " [email]".$email;
 		}
 		if ($this->input->post("mobile"))
 		{
@@ -440,17 +440,17 @@ class Member extends MY_Controller
 				die(json_failure("手機號碼已被使用"));
 			}
 			$data["mobile"] = $mobile;
-            $log_content .= " [mobile]".$mobile; 
+            $log_content .= " [mobile]".$mobile;
 		}
 		if ($this->input->post("ident")) {
             $data["ident"] = $this->input->post("ident");
-            $log_content .= " [ident]".$ident; 
+            $log_content .= " [ident]".$ident;
         }
 		if ($this->input->post("birthday_y"))
 		{
 			$user_info['birthday'] = "{$this->input->post("birthday_y")}-{$this->input->post("birthday_m")}-{$this->input->post("birthday_d")}";
-            
-            $log_content .= " [birthday]".$birthday; 
+
+            $log_content .= " [birthday]".$birthday;
 		}
 
 		function clear(&$value)
@@ -481,7 +481,7 @@ class Member extends MY_Controller
         );
 
         $this->db->insert("log_user_updates", $log_data);
-        
+
 		die(json_message(array("message"=>"成功", "site"=>$site), true));
 	}
 
@@ -516,7 +516,7 @@ class Member extends MY_Controller
 				die(json_failure("沒有這位使用者或資料填寫錯誤。"));
 			}
 		    $this->db->where("email", $email)->update("users", array("password" => $md5_new));
-			
+
 			$this->load->library("g_send_mail");
 
 			if($this->g_send_mail->passwdResetMail($email, $new))
@@ -528,7 +528,7 @@ class Member extends MY_Controller
                 );
 
                 $this->db->insert("log_user_updates", $log_data);
-                
+
 				die(json_message(array("message"=>"新密碼已發送到您的 E-Mail 信箱。", "site"=>$site)));
 			}
 			else
@@ -560,7 +560,7 @@ class Member extends MY_Controller
                 );
 
                 $this->db->insert("log_user_updates", $log_data);
-                
+
 				die(json_message(array("message"=>"已使用簡訊發送新密碼至您的手機。", "site"=>$site)));
 			}
 			else
@@ -569,7 +569,7 @@ class Member extends MY_Controller
 			}
 		}
 	}
-	
+
 	// 修改密碼
 	function change_password()
 	{
@@ -580,11 +580,11 @@ class Member extends MY_Controller
 			->add_js_include("member/change_password")
 			->standard_view();
 	}
-	
+
 	function change_password_json()
 	{
 		$this->_check_login_json();
-		
+
 		$site = $this->_get_site();
 		$old = $this->input->post("old");
 		$pwd = $this->input->post("pwd");
@@ -602,7 +602,7 @@ class Member extends MY_Controller
 		{
 			die(json_failure("密碼與驗證密碼不同"));
 		}
-		
+
 		if ($this->g_user->is_from_3rd_party())
 		{
 			$row = $this->g_user->get_user_data($this->g_user->uid);
@@ -619,14 +619,14 @@ class Member extends MY_Controller
 		}
 
 		$this->db->where("uid", $this->g_user->uid)->update("users", array("password" => md5(trim($pwd))));
-        
+
         $log_data = array(
             "uid" => $this->g_user->uid,
             "content" => "CHANGE PASSWORD"
         );
 
         $this->db->insert("log_user_updates", $log_data);
-        
+
 		die(json_message(array("message"=>"修改成功", "site"=>$site)));
 	}
 
@@ -648,6 +648,14 @@ class Member extends MY_Controller
 
 	// 個資同意書
 	function member_agreement()
+	{
+		$this->_init_layout()
+			->add_css_link("login")
+			->standard_view();
+	}
+
+	// 所有的同意書
+	function complete_agreement()
 	{
 		$this->_init_layout()
 			->add_css_link("login")
