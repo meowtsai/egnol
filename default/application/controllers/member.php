@@ -630,6 +630,96 @@ class Member extends MY_Controller
 		die(json_message(array("message"=>"修改成功", "site"=>$site)));
 	}
 
+
+	function login_fetchdata_json()
+	{
+		header('content-type:text/html; charset=utf-8');
+		header('Access-Control-Allow-Origin: *');
+
+		$site = $this->_get_site();
+
+		$_SESSION['site'] = $site;
+
+		// 檢查 e-mail or mobile
+		$account = $this->input->post("account");
+		//$account = $this->input->get("account");
+		if(empty($account))
+		{
+			die(json_failure('電子郵件或行動電話未填寫'));
+		}
+
+		$pwd = $this->input->post("pwd");
+		//$pwd = $this->input->get("pwd");
+		if (empty($pwd))
+		{
+			die(json_failure('密碼尚未填寫'));
+		}
+
+		$email = '';
+		$mobile = '';
+		if(filter_var($account, FILTER_VALIDATE_EMAIL))
+		{
+			$email = $account;
+		}
+		else
+		{
+			$mobile = $account;
+		}
+
+		if ( $this->g_user->verify_account($email, $mobile, $pwd) === true )
+		{
+			$uid = $_SESSION['user_id'];
+			//$uid = 49134;
+			$billing_str = "SELECT SUM(amount) AS sum
+						FROM user_billing
+						WHERE uid='{$uid}'
+							AND transaction_type='top_up_account'
+							AND result = 1
+							AND server_id LIKE 'vxz%'";
+
+			$billing_sum = $this->db->query($billing_str)->row();
+
+			$billing_list_str = " SELECT u.id,u.uid, order_no,amount,update_time FROM user_billing u WHERE u.uid='{$uid}' AND u.transaction_type='top_up_account' AND u.result = 1 AND u.server_id LIKE 'vxz%'";
+			$billing_list = $this->db->query($billing_list_str);
+
+			foreach($billing_list->result() as $row) {
+				$data[] = array(
+					'order_id' => $row->id,
+					'order_no' => $row->order_no,
+					'amount' =>  $row->amount,
+					'date' =>  date("Y/m/d", strtotime($row->update_time)),
+				);
+			}
+
+			$l8na_server_str = "SELECT server_id,name FROM servers WHERE game_id ='L8na' AND server_status='public'";
+			$server_list = $this->db->query($l8na_server_str);
+			foreach($server_list->result() as $row) {
+				$server_data[] = array(
+					'server_id' => $row->server_id,
+					'server_name' => $row->name,
+				);
+			}
+
+
+			$user_data =array(
+					"uid" => $this->g_user->uid,
+					"vxz_amount" => $billing_sum->sum,
+					"vxz_billing_data" => $data,
+					"L8na_server_data" => $server_data
+			);
+
+
+
+			//$user_data = $this->g_user->get_user_data($_SESSION['user_id']);
+
+			die(json_message(array("message"=>"成功", "site"=>$site, "user_data" => $user_data), true));
+		}
+		else
+		{
+			die(json_failure($this->g_user->error_message));
+		}
+	}
+
 	// 服務條款
 	function service_agreement()
 	{
