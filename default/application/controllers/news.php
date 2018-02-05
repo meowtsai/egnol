@@ -72,9 +72,10 @@ class News extends MY_Controller {
 	function get_news_list($site)
 	{
 		//公告=1 活動=2 系統=3
-		$query = $this->db->query("(SELECT id, game_id, title,type,DATE_FORMAT(start_time,'%Y-%m-%d') as start_time FROM bulletins where game_id ='{$site}' and type=1 limit 5)
-		union (select id, game_id, title,type,DATE_FORMAT(start_time,'%Y-%m-%d') as start_time from bulletins where game_id ='{$site}' and type=2  limit 5)
-		union (select id, game_id, title,type,DATE_FORMAT(start_time,'%Y-%m-%d') as start_time from bulletins where game_id ='{$site}' and type=3 limit 5);");
+		$query = $this->db->query("(SELECT id, game_id, title,type,DATE_FORMAT(start_time,'%Y-%m-%d') as start_time FROM bulletins where game_id ='{$site}' and type=1 and priority > 0 and now() between start_time and end_time  order by priority desc,  start_time desc  limit 5)
+		union (select id, game_id, title,type,DATE_FORMAT(start_time,'%Y-%m-%d') as start_time from bulletins where game_id ='{$site}' and type=2  and priority > 0 and now() between start_time and end_time  order by priority desc,  start_time desc  limit 5)
+		union (select id, game_id, title,type,DATE_FORMAT(start_time,'%Y-%m-%d') as start_time from bulletins where game_id ='{$site}' and type=3 and priority > 0 and now() between start_time and end_time  order by priority desc,  start_time desc  limit 5);");
+
 
 		$data = array();
 		foreach($query->result() as $row) {
@@ -94,7 +95,7 @@ class News extends MY_Controller {
 	{
 
 		//公告=1 活動=2 系統=3
-		$query = $this->db->query("SELECT id, game_id, title,type,DATE_FORMAT(start_time,'%Y-%m-%d') as start_time, MID(content,instr(content,'src=')+5,84) as hero_image,MID(content,1,100) as preview_content,type FROM bulletins WHERE game_id ='{$site}'");
+		$query = $this->db->query("SELECT id, game_id, title,type,DATE_FORMAT(start_time,'%Y-%m-%d') as start_time, MID(content,instr(content,'src=')+5,84) as hero_image,MID(content,1,100) as preview_content,type FROM bulletins WHERE game_id ='{$site}'  and priority > 0 and now() between start_time and end_time order by priority desc,start_time desc  ");
 //{id:"568", title:" 古龍《三少爺的劍》手遊事前登錄展開", start_time:"2018-01-23", hero_image:"https://game.longeplay.com.tw/p/upload/bulletin/d91fbb4bc1096c42bb4aa30b62705b07.jpg", preview_content:"參加《三少爺的劍》事前登錄搶先拿下紫色武功"},
 		$data = array();
 		foreach($query->result() as $row) {
