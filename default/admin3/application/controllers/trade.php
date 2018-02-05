@@ -1037,7 +1037,15 @@ class Trade extends MY_Controller {
 
 				$get = $this->input->get();
 				unset($get["record"]);
-				$query_string = http_build_query($get);
+				if ($get)
+				{
+					$query_string = http_build_query($get);
+				}
+				else {
+					$query_string="";
+				}
+
+
 
 				$this->load->library('pagination');
 				$this->pagination->initialize(array(
@@ -1045,7 +1053,6 @@ class Trade extends MY_Controller {
 						'total_rows'=> $total_rows,
 						'per_page'	=> 100
 					));
-
 				$this->g_layout->set("total_rows", $total_rows);
 
 

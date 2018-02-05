@@ -8,14 +8,14 @@
 <table class="table table-bordered" style="width:auto">
 	<thead>
 		<tr>
-			<th style="width:100px;">訂單號</th>
+			<th style="width:200px;">訂單號</th>
       <th style="width:100px;">交易方式</th>
       <th style="width:70px;">角色編號</th>
       <th style="width:70px;">角色名稱</th>
 			<th style="width:35px;">品項</th>
 			<th style="width:35px;">金額</th>
 			<th style="width:80px;">遊戲伺服器</th>
-			<th style="width:70px;">建立日期</th>
+			<th style="width:200px;">建立日期</th>
       <th style="width:70px;">IP</th>
 
 		</tr>
