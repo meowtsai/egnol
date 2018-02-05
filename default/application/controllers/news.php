@@ -72,9 +72,9 @@ class News extends MY_Controller {
 	function get_news_list($site)
 	{
 		//公告=1 活動=2 系統=3
-		$query = $this->db->query("(SELECT id, game_id, title,type,DATE_FORMAT(start_time,'%Y-%m-%d') as start_time FROM bulletins where game_id ='{$site}' and type=1 and priority > 0 and now() between start_time and end_time  order by priority desc,  start_time desc  limit 5)
-		union (select id, game_id, title,type,DATE_FORMAT(start_time,'%Y-%m-%d') as start_time from bulletins where game_id ='{$site}' and type=2  and priority > 0 and now() between start_time and end_time  order by priority desc,  start_time desc  limit 5)
-		union (select id, game_id, title,type,DATE_FORMAT(start_time,'%Y-%m-%d') as start_time from bulletins where game_id ='{$site}' and type=3 and priority > 0 and now() between start_time and end_time  order by priority desc,  start_time desc  limit 5);");
+		$query = $this->db->query("select * from ((SELECT id, game_id, title,type,DATE_FORMAT(start_time,'%Y-%m-%d') as start_time,priority FROM bulletins where game_id ='{$site}' and type=1 and priority > 0 and now() between start_time and end_time  order by priority desc,  start_time desc  limit 5)
+		union (select id, game_id, title,type,DATE_FORMAT(start_time,'%Y-%m-%d') as start_time,priority from bulletins where game_id ='{$site}' and type=2  and priority > 0 and now() between start_time and end_time  order by priority desc,  start_time desc  limit 5)
+		union (select id, game_id, title,type,DATE_FORMAT(start_time,'%Y-%m-%d') as start_time,priority from bulletins where game_id ='{$site}' and type=3 and priority > 0 and now() between start_time and end_time  order by priority desc,  start_time desc  limit 5)) a  order by priority desc,  start_time desc   ;");
 
 
 		$data = array();
