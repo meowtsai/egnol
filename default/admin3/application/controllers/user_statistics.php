@@ -998,7 +998,8 @@ class User_statistics extends MY_Controller {
 
 		$game_id = $this->input->get("game_id");
     $orderby = $this->input->get("orderby");
-
+		if ($game_id)
+		{
     switch ($game_id) {
     	case 'vxz':
 			case 'h35naxx1hmt':
@@ -1079,7 +1080,7 @@ class User_statistics extends MY_Controller {
     		break;
     }
 
-
+	}
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
