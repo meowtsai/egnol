@@ -14,6 +14,8 @@
 			<th>遊戲狀態</th>
 			<th></th>
 			<th>回報連結</th>
+			<th>GM工具</th>
+
 		</tr>
 	</thead>
 	<tbody>
@@ -49,6 +51,12 @@
 			<td>
 				<a href="https://game.longeplay.com.tw/service_quick?site=long_e&param_game_id=<?=$row->game_id?>" class="btn btn-mini">回報連結</a>
 			</td>
+			<td>
+				<? if ($row->game_id =='Ma71tw'):?>
+				<a href="<?=$gm_tools_data[$row->game_id]?>" class="btn btn-mini">GM 工具</a>
+				<? endif;?>
+			</td>
+
 		</tr>
 		<? endforeach;?>
 	</tbody>

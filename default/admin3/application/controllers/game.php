@@ -26,8 +26,24 @@ class Game extends MY_Controller {
 		$this->zacl->check("game_setting", "read");
 
 		$query = $this->DB2->from("games")->order_by("rank")->get();
+
+		//"<?="http://test-payment.longeplay.com.tw:3000/ma71gmtools?admin_uid=21&admin_name=mepw&time=1500255122&token=123445")
+		$gm_site = "http://test-payment.longeplay.com.tw:3000";
+		$admin_uid = $_SESSION["admin_uid"];
+		$admin_name = $_SESSION["admin_name"];
+		$secret = '69i57j0l5.1287j0j4';
+		$myTimestamp = time();
+
+    $myToken = md5($admin_uid.$admin_name.$myTimestamp.$secret) ;
+
+		///gm工具的url生成
+		$gm_tools_data = array(
+			"Ma71tw" => "{$gm_site}/ma71gmtools?admin_uid={$admin_uid}&admin_name={$admin_name}&time={$myTimestamp}&token={$myToken}",
+		);
+
 		$this->_init_game_layout()
 			->set("query", $query)
+			->set("gm_tools_data", $gm_tools_data)
 			->render();
 	}
 

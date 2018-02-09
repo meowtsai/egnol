@@ -1320,6 +1320,16 @@ ALTER TABLE complaints DROP COLUMN reporter_uid;
 ALTER TABLE complaints DROP COLUMN flagged_player_uid;
 
 
+CREATE TABLE `log_gm_actions` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `admin_uid` int(11) NOT NULL,
+  `ip` varchar(45) NOT NULL,
+  `action` varchar(45) DEFAULT NULL,
+  `desc` text,
+  `create_time` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='記錄GMTools動作' ;
+
 
 CREATE VIEW billing_data as
 SELECT
@@ -1428,6 +1438,8 @@ CREATE VIEW account_data as
 
 CREATE TABLE account_data_daily AS SELECT * FROM account_data;
 CREATE TABLE billing_data_daily AS SELECT * FROM billing_data;
+
+
 
 delimiter |
 CREATE EVENT daily_report_event

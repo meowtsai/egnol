@@ -10,55 +10,62 @@ class Gameop extends MY_Controller {
 		//ini_set('display_errors','Off');
 	}
 
-	function getroleinfo()
-	{
-    $ch = curl_init();
-    $default_value = array(
-      'controller' => gm,
-      'action' => 'getroleinfo',
-      'playerid' => 15,
-    );
-
-    curl_setopt($ch, CURLOPT_URL,'https://ma71na-public.longeplay.com.tw/main56.php/netease');
-    curl_setopt($ch, CURLOPT_POST, TRUE);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($default_value));
-
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    $server_output = curl_exec ($ch);
-
-    curl_close ($ch);
-    echo "<pre>$server_output</pre>";
-
-	}
 
   function m71_gm_command()
   {
     header('Access-Control-Allow-Origin: *');
-
+    header('Access-Control-Allow-Methods: GET, POST');
+    header("Access-Control-Allow-Headers: content-type");
+    header('Content-Type: application/json');
 
     $data = file_get_contents("php://input");
+		$action = json_decode($data)->{'action'};
+		$admin_uid = json_decode($data)->{'admin_uid'};
+
     if ($data)
     {
       //echo "<pre>$data</pre>";
-    $ch = curl_init();
-    // $default_value = array(
-    //   'controller' => gm,
-    //   'action' => 'getroleinfo',
-    //   'playerid' => 15,
-    // );
+     $ch = curl_init();
+     curl_setopt($ch, CURLOPT_URL,'https://ma71na-public.longeplay.com.tw/main56.php/netease');
+     curl_setopt($ch, CURLOPT_POST, TRUE);
+     curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
 
-    curl_setopt($ch, CURLOPT_URL,'https://ma71na-public.longeplay.com.tw/main56.php/netease');
-    curl_setopt($ch, CURLOPT_POST, TRUE);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+     $server_output = curl_exec ($ch);
+     curl_close ($ch);
+		 //(isset($_SESSION["admin_uid"])?"meow":$_SESSION["admin_uid"])
+		 $log_data = array(
+			 "admin_uid" => $admin_uid,
+			 "ip" => $_SERVER['REMOTE_ADDR'],
+			 "action" => $action,
+			 "desc" => "input:{$data}; output:{$server_output}" ,
+			 "create_time" => now(),
+		 );
 
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		 $this->DB1->insert("log_gm_actions", $log_data);
 
-    $server_output = curl_exec ($ch);
+     die($server_output);
 
-    curl_close ($ch);
-    echo "$server_output";
+
+
     }
+    else {
+      $error_response = array(
+  			'error' => 'no data',
+  		);
+      die(json_encode($error_response));
+    }
+    // // $default_value = array(
+    // //   'controller' => gm,
+    // //   'action' => 'getroleinfo',
+    // //   'playerid' => 15,
+    // // );
+    //
+
+    // }
+    // else {
+    //
+    // }
   }
 
 }
