@@ -25,6 +25,8 @@ class Service_quick extends MY_Controller {
 				$key_string	= $this->input->get_post("key");
 				$key	= $this->config->item("question_key")[$vendor_game_id];
 
+				//echo $_SERVER['SERVER_NAME'];
+
 				$diffgame	= $this->input->get("param_game_id");
 				if ($diffgame)
 				{
@@ -58,8 +60,30 @@ class Service_quick extends MY_Controller {
 
 						$str_to_encrypt = "game_id={$vendor_game_id}&partner_uid={$partner_uid}&in_game_id={$in_game_id}&server_name={$encode_server_name}&character_name={$encode_c_name}&level={$level}&usr_device={$usr_device}&os_ver={$os_ver}&app_ver={$app_ver}&time_zone={$time_zone}&network={$network}&key={$key}";
 				    $sig = MD5($str_to_encrypt);
+
 						//echo $str_to_encrypt.'<br />';
 						//echo $sig.'<br />';
+
+						/// 0212 h35 android sorting problems so we modified the code to fit both scenario
+
+						if ($sig !==$key_string)
+						{
+							parse_str($_SERVER['QUERY_STRING'],$output_query);
+							$str_to_encrypt ='';
+
+							foreach($output_query as $qstringkey => $qstringvalue) {
+								//echo "$key is at $value";
+								if ($qstringkey!='key')
+								{
+									$str_to_encrypt.=$qstringkey.'='.urlencode($qstringvalue).'&';
+								}
+
+							}
+							$str_to_encrypt.="key={$key}";
+							//echo $str_to_encrypt.'<br />';
+							$sig = MD5($str_to_encrypt);
+							//echo $sig.'<br />';
+						}
 
 						if ($sig ===$key_string)
 						{
