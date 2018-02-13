@@ -49,11 +49,12 @@ class Daily_report extends MY_Controller {
 						$h35_stat_query = $this->h35_statistics_data();
 
 						$h35_ranking = array();
+						$h35_type_data = array();
 
 						if ($h35_stat_query->num_rows() > 0) {
 								foreach ($h35_stat_query->result() as $row) {
 									$h35_ranking[$row->oDate] =  $this->h35_daily_top_data($row->oDate)->result();
-
+									$h35_type_data[$row->oDate] =  $this->h35_daily_type_data($row->oDate)->result();
 								}
 						}
 
@@ -66,6 +67,8 @@ class Daily_report extends MY_Controller {
 			->set("h35_stat_query", isset($h35_stat_query) ? $h35_stat_query : false)
 			->set("is_game_statistics", isset($is_game_statistics) ? $is_game_statistics : false)
 			->set("h35_ranking", isset($h35_ranking) ? $h35_ranking : false)
+			->set("h35_type_data", isset($h35_type_data) ? $h35_type_data : false)
+			->add_js_include("fontawesome/js/fontawesome-all")
 			->render();
 	}
 
@@ -380,17 +383,24 @@ class Daily_report extends MY_Controller {
 
 
 		function h35_daily_top_data($date) {
-
-
-
 			$query = $this->DB2->query("
 			SELECT DATE_FORMAT(create_time, '%Y-%m-%d') as oDate,role_name,sum(amount) as oSum
 			FROM h35vip_orders
 			WHERE DATE_FORMAT(create_time, '%Y-%m-%d') ='{$date}'
 			GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d'),role_name
 			ORDER BY oSum desc limit 5");
+			return $query;
+
+		}
 
 
+		function h35_daily_type_data($date) {
+			$query = $this->DB2->query("
+			SELECT DATE_FORMAT(create_time, '%Y-%m-%d') as oDate,transaction_type,sum(amount) as oSum
+			FROM h35vip_orders
+			WHERE DATE_FORMAT(create_time, '%Y-%m-%d') ='{$date}'
+			GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d'),transaction_type"
+			);
 			return $query;
 
 		}

@@ -105,17 +105,41 @@ if ($h35_stat_query):?>
 	<table class="table table-striped table-bordered" style="width:auto;">
 		<thead>
 			<tr>
-				<th style="width:160px">日期</th>
-				<th style="width:160px">VIP 儲值總額</th>
-				<th style="width:160px">儲值人次</th>
+				<th style="width:80px">日期</th>
+				<th style="width:100px">儲值總額</th>
+				<th style="width:460px">渠道分配</th>
+				<th style="width:80px">儲值人次</th>
 				<th >當日儲值前五名</th>
 			</tr>
 		</thead>
+
 		<tbody>
 			<? foreach($h35_stat_query->result() as $row):?>
 			<tr>
 				<td><?=date("m/d", strtotime($row->oDate))?></td>
-				<td style="text-align:right"><?=number_format($row->oSum)?></td>
+				<td style="text-align:right">
+					<?=number_format($row->oSum)?>
+				</td>
+				<td>
+					<? foreach($h35_type_data[$row->oDate] as $type_row):
+						switch ($type_row->transaction_type) {
+							case 'app_store':
+								echo "<i class='fab fa-apple'></i>";
+								break;
+							case 'google_play':
+								echo "<i style='color:A4C639' class='fab fa-android'></i>";
+								break;
+							default:
+								echo "<i class='fa fa-gamepad'></i>";
+								break;
+						}
+						?>
+					$ <?=number_format($type_row->oSum)?>
+					 (<?=number_format(($type_row->oSum / $row->oSum)*100, 2, '.', ',')  ?>%)
+
+					<? endforeach;?>
+
+				</td>
 				<td style="text-align:right"><?=$row->oCount?></td>
 				<td>
 					<? foreach($h35_ranking[$row->oDate] as $ranking_row):?>
