@@ -46,19 +46,26 @@ class Daily_report extends MY_Controller {
 		if ($this->zacl->check_acl("game_statistics", "read")) {
 
             $account_query = $this->account_data();
-            $statistics_query = $this->statistics_data();
-            $billing_query = $this->billing_data();
-            $event_query = $this->event_data();
+						$h35_stat_query = $this->h35_statistics_data();
+
+						$h35_ranking = array();
+
+						if ($h35_stat_query->num_rows() > 0) {
+								foreach ($h35_stat_query->result() as $row) {
+									$h35_ranking[$row->oDate] =  $this->h35_daily_top_data($row->oDate)->result();
+
+								}
+						}
+
 
             $is_game_statistics = true;
         }
 
 		$this->g_layout
 			->set("account_query", isset($account_query) ? $account_query : false)
-			->set("statistics_query", isset($statistics_query) ? $statistics_query : false)
-			->set("billing_query", isset($billing_query) ? $billing_query : false)
-			->set("event_query", isset($event_query) ? $event_query : false)
+			->set("h35_stat_query", isset($h35_stat_query) ? $h35_stat_query : false)
 			->set("is_game_statistics", isset($is_game_statistics) ? $is_game_statistics : false)
+			->set("h35_ranking", isset($h35_ranking) ? $h35_ranking : false)
 			->render();
 	}
 
@@ -357,6 +364,38 @@ class Daily_report extends MY_Controller {
 
         return $query;
     }
+
+
+		function h35_statistics_data() {
+			$query = $this->DB2->query("
+			SELECT DATE_FORMAT(create_time, '%Y-%m-%d') as oDate,
+			SUM(amount) as oSum,
+			COUNT(distinct account) as oCount
+			FROM h35vip_orders
+			WHERE DATEDIFF(create_time ,now())>-13
+			GROUP BY  DATE_FORMAT(create_time, '%Y-%m-%d') ");
+			return $query;
+
+		}
+
+
+		function h35_daily_top_data($date) {
+
+
+
+			$query = $this->DB2->query("
+			SELECT DATE_FORMAT(create_time, '%Y-%m-%d') as oDate,role_name,sum(amount) as oSum
+			FROM h35vip_orders
+			WHERE DATE_FORMAT(create_time, '%Y-%m-%d') ='{$date}'
+			GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d'),role_name
+			ORDER BY oSum desc limit 5");
+
+
+			return $query;
+
+		}
+
+
 
     function statistics_data() {
         $query = $this->DB2->query("

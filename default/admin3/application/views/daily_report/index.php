@@ -1,5 +1,5 @@
 <?php
-	$channels = $this->config->item('channels'); 
+	$channels = $this->config->item('channels');
 ?>
 
 <? if ($is_game_statistics):?>
@@ -13,8 +13,8 @@
 <? endif;?>
 <? if ($account_query):?>
 	<? if ($account_query->num_rows() == 0):
-		echo '<div class="none">查無資料</div>'; 
-	else: 
+		echo '<div class="none">查無資料</div>';
+	else:
 		$row = $account_query->row();
 	?>
 	<table class="table table-striped table-bordered" style="width:auto;">
@@ -87,6 +87,45 @@
 				<td style="text-align:right"><?=$row->t_newuser_quick_count?></td>
 				<td style="text-align:right"><?=$row->newuser_quick_count?></td>
 			</tr>
+		</tbody>
+	</table>
+	<? endif;?>
+<? endif;?>
+
+<?
+
+
+if ($h35_stat_query):?>
+	<? if ($h35_stat_query->num_rows() == 0):
+		echo '<div class="none">查無資料</div>';
+	else:
+
+	?>
+	<legend>光明之戰VIP統計數據</legend>
+	<table class="table table-striped table-bordered" style="width:auto;">
+		<thead>
+			<tr>
+				<th style="width:160px">日期</th>
+				<th style="width:160px">VIP 儲值總額</th>
+				<th style="width:160px">儲值人次</th>
+				<th >當日儲值前五名</th>
+			</tr>
+		</thead>
+		<tbody>
+			<? foreach($h35_stat_query->result() as $row):?>
+			<tr>
+				<td><?=date("m/d", strtotime($row->oDate))?></td>
+				<td style="text-align:right"><?=number_format($row->oSum)?></td>
+				<td style="text-align:right"><?=$row->oCount?></td>
+				<td>
+					<? foreach($h35_ranking[$row->oDate] as $ranking_row):?>
+					<?=$ranking_row->role_name?>($ <?=$ranking_row->oSum?>);
+					<? endforeach;?>
+
+				</td>
+			</tr>
+		<? endforeach;?>
+
 		</tbody>
 	</table>
 	<? endif;?>
