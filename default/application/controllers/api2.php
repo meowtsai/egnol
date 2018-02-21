@@ -3083,8 +3083,8 @@ class Api2 extends MY_Controller
 		header('Content-type:text/html; Charset=UTF-8');
 		switch ($game_id) {
 			case 'g83tw':
-				$gp_link='https://goo.gl/r9L5kC';
-				$apple_link='https://goo.gl/mebsVK';
+				$gp_link='https://goo.gl/rktq4y';
+				$apple_link='https://goo.gl/Z9nG3z';
 				break;
 			default:
 				# code...
