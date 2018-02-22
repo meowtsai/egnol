@@ -79,6 +79,7 @@ class H35vip_statistics extends MY_Controller {
     SUM(CASE WHEN deposit_total >= 1000000  THEN 1 ELSE 0 END) AS 'black'
     from
     (select uid, sum(deposit_total) as deposit_total,server_name from whale_users
+    where site ='h35naxx1hmt'
     group by uid,server_name) a
     group by server_name
     ");
