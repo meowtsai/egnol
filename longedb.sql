@@ -1459,3 +1459,66 @@ ALTER EVENT daily_report_event
     ON SCHEDULE
       EVERY 12 HOUR
     STARTS CURRENT_TIMESTAMP + INTERVAL 4 HOUR;
+
+
+
+
+    CREATE TABLE `h35vip_weekly_data` (
+    `year` int DEFAULT 0,
+     `week` int DEFAULT 0,
+     `general` int DEFAULT 0,
+     `silver` int DEFAULT 0,
+     `gold` int DEFAULT 0,
+     `platinum` int DEFAULT 0,
+     `black` int DEFAULT 0,
+     `accumulated_total` int DEFAULT 0
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+
+    DELIMITER //
+    CREATE PROCEDURE get_yearweek()
+    BEGIN
+      DECLARE done INT DEFAULT FALSE;
+      DECLARE a CHAR(16);
+      DECLARE c_yearweek,c_year, c_week INT;
+      DECLARE cur1 CURSOR FOR
+      SELECT YEARWEEK(create_time)
+      FROM h35vip_orders
+      GROUP BY YEARWEEK(create_time);
+      DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+      OPEN cur1;
+
+      read_loop: LOOP
+        FETCH cur1 INTO c_yearweek;
+        IF done THEN
+          LEAVE read_loop;
+        END IF;
+          INSERT INTO h35vip_weekly_data
+          SELECT LEFT(c_yearweek,4), RIGHT(c_yearweek,2), SUM(CASE WHEN a.VIP_RANK = '普R' THEN 1 ELSE 0 END) AS general,
+          SUM(CASE WHEN a.VIP_RANK = '銀R' THEN 1 ELSE 0 END) AS silver,
+          SUM(CASE WHEN a.VIP_RANK = '金R' THEN 1 ELSE 0 END) AS gold,
+          SUM(CASE WHEN a.VIP_RANK = '白金R' THEN 1 ELSE 0 END) AS platinum,
+          SUM(CASE WHEN a.VIP_RANK = '黑R' THEN 1 ELSE 0 END) AS black,
+          SUM(SUM_Total) as accumulated_total
+          from
+          (select sum(amount) as SUM_Total,
+          CASE
+            WHEN sum(amount) <100000 THEN '普R'
+            WHEN  sum(amount) >= 100000 AND sum(amount) <300000 THEN '銀R'
+            WHEN  sum(amount) >= 300000 AND sum(amount) <600000 THEN '金R'
+            WHEN  sum(amount) >= 600000 AND sum(amount) <1000000 THEN '白金R'
+            ELSE '黑R' END as VIP_RANK
+          from h35vip_orders
+          where YEARWEEK(create_time) <= c_yearweek
+          group by account
+          having sum(amount)> 50000
+          )  a
+          ;
+      END LOOP;
+
+      CLOSE cur1;
+
+    END;
+    //
+    DELIMITER ;
