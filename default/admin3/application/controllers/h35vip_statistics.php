@@ -11,9 +11,8 @@ class H35vip_statistics extends MY_Controller {
   function _init_statistics_layout()
   {
     $this->zacl->check_login(true);
-    if ($this->zacl->check_acl("all_game", "all") == false) {
-      if ($this->game_id) $this->zacl->check($this->game_id, "read");
-    }
+    $this->zacl->check("whale_users_statistics", "read");
+
 
     return $this->_init_layout()
       ->add_breadcrumb("光明之戰VIP統計報表", "h35vip_statistics/overview");
@@ -24,7 +23,7 @@ class H35vip_statistics extends MY_Controller {
 		$this->_init_statistics_layout();
 		$this->load->helper("output_table");
 
-		$this->zacl->check("game_statistics", "read");
+		$this->zacl->check("whale_users_statistics", "read");
 
 		$span = $this->input->get("span");
 		$query = $this->DB2->query("select *,(general + silver+gold+platinum+black) as week_total from h35vip_weekly_data");
@@ -40,7 +39,7 @@ class H35vip_statistics extends MY_Controller {
 		$this->_init_statistics_layout();
 		$this->load->helper("output_table");
 
-		$this->zacl->check("game_statistics", "read");
+		$this->zacl->check("whale_users_statistics", "read");
 
 		$span = $this->input->get("span");
 		$query = $this->DB2->query("
@@ -67,7 +66,7 @@ class H35vip_statistics extends MY_Controller {
 		$this->_init_statistics_layout();
 		$this->load->helper("output_table");
 
-		$this->zacl->check("game_statistics", "read");
+		$this->zacl->check("whale_users_statistics", "read");
 
 		$span = $this->input->get("span");
 		$query = $this->DB2->query("

@@ -1011,7 +1011,8 @@ class User_statistics extends MY_Controller {
 				last_login 'last_login',
 				TIMESTAMPDIFF(DAY, last_login, NOW()) 'days_since' ,
 				is_added,
-				TIMESTAMPDIFF(DAY, create_time, NOW()) 'days_inserted'
+				TIMESTAMPDIFF(DAY, create_time, NOW()) 'days_inserted',
+				ip
 				from whale_users where site = '{$game_id}' order by {$orderby} ");
     		break;
 			default:

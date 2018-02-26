@@ -59,12 +59,12 @@
                 <th style="width:70px" rowspan="2">原廠ID</th>
 				<th style="width:110px" rowspan="2">所在伺服器</th>
 				<th style="width:70px" rowspan="2">儲值累積</th>
-				<th style="width:110px" rowspan="2">帳號創立時間</th>
-                <th style="width:140px" rowspan="2">最後上線時間</th>
-                <th style="width:70px" rowspan="2">距今</th>
-                <th style="width:50px" rowspan="2">Line?</th>
-                <th style="width:50px" rowspan="2">New?</th>
-                <th style="width:50px" rowspan="2"></th>
+				<th style="width:140px" rowspan="2">最後訂單時間</th>
+				<th style="width:140px" rowspan="2">最後訂單登入地區</th>
+        <th style="width:70px" rowspan="2">距今</th>
+        <th style="width:50px" rowspan="2">Line?</th>
+        <th style="width:50px" rowspan="2">New?</th>
+				<th style="width:50px" rowspan="2"></th>
 
 			</tr>
 		</thead>
@@ -86,33 +86,38 @@
                 <td style="text-align:right"><?=$row->character_in_game_id?></td>
 				<td style="text-align:right"><?=$row->server_name?></td>
 				<td style="text-align:right"><?=number_format($row->deposit_total)?></td>
-				<td style="text-align:right"><?=$row->create_date?></td>
-                <td style="text-align:right"><?=$row->last_login?></td>
-                <td style="text-align:right"><?=$row->days_since?></td>
-                <td style="text-align:right">
-                    <? if ($row->is_added==1):?>
-                    V
-                    <? endif;?>
-                </td>
-                <td style="text-align:right">
-                    <? if ($row->days_inserted==0):?>
-                    New
-                    <? endif;?>
-                </td>
-                <td>
-                    <? if ($row->is_added==0):?>
-                    <div class="btn-group">
-                        <a href="#" class="btn btn-mini">修改</a>
-                            <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
-                            <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu">
-                                <li><a href="javascript:;" class="json_post" url="<?=site_url("user_statistics/whale_users_set_status/{$row->uid}/1")?>">設為已經加入Line</a></li>
-                            </ul>
-                    </div>
+				<td><?=$row->last_login?></td>
+				<td>
+            <? if (isset($row->ip)):?>
+            <?=geoip_country_name_by_name($row->ip)?>
+            <? endif;?>
+        </td>
+        <td style="text-align:right"><?=$row->days_since?></td>
+        <td style="text-align:right">
+            <? if ($row->is_added==1):?>
+            V
+            <? endif;?>
+        </td>
+        <td style="text-align:right">
+            <? if ($row->days_inserted==0):?>
+            New
+            <? endif;?>
+        </td>
+
+        <td>
+            <? if ($row->is_added==0):?>
+            <div class="btn-group">
+                <a href="#" class="btn btn-mini">修改</a>
+                    <a class="btn btn-mini dropdown-toggle" data-toggle="dropdown"><span class="caret"></span></a>
+                    <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dropdownMenu">
+                        <li><a href="javascript:;" class="json_post" url="<?=site_url("user_statistics/whale_users_set_status/{$row->uid}/1")?>">設為已經加入Line</a></li>
+                    </ul>
+            </div>
 
 
-                    <? endif;?>
+            <? endif;?>
 
-                </td>
+        </td>
 
 
 			</tr>
