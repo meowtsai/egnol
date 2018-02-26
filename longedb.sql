@@ -1274,6 +1274,8 @@ CREATE TABLE `whale_users` (
 `last_login` Datetime,
 `is_added` tinyint(1) DEFAULT '0',
 `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+`ip` varchar(25) DEFAULT NULL,
+`country` varchar(3) DEFAULT NULL,
 PRIMARY KEY (`uid`)) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ;
 
 

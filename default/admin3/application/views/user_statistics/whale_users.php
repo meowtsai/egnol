@@ -50,7 +50,7 @@
 
 <? if ($query):?>
 	<? if ($query->num_rows() == 0): echo '<div class="none">查無資料</div>'; else: ?>
-	<table class="table table-striped table-bordered" style="width:auto;">
+	<table class="table table-bordered" style="width:auto;">
 		<thead>
 			<tr>
 				<th nowrap="nowrap" rowspan="2">排名</th>
@@ -74,7 +74,7 @@
 			foreach($query->result() as $row):
 
 		?>
-			<tr>
+			<tr bgcolor="<?=vipcolor($row->deposit_total)?>">
 				<td nowrap="nowrap"><?=$seq++?></td>
 				<td style="text-align:right">
 
@@ -126,3 +126,27 @@
 	</table>
 	<? endif;?>
 <? endif;?>
+
+<?
+function vipcolor($deposit_number){
+	if ($deposit_number>=1000000)
+	{
+		return "#FFFFFF";
+	}
+	else if ($deposit_number>=600000 and $deposit_number<1000000)
+	{
+		return "#E5E4E2";
+	}
+	else if ($deposit_number>=300000 and $deposit_number<600000)
+	{
+		return "#D4AF37";
+	}
+	else if ($deposit_number>=100000 and $deposit_number<300000)
+	{
+		return "#C0C0C0";
+	}
+	else {
+		return "#FFFFFF";
+	}
+}
+?>
