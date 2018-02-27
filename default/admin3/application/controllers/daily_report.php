@@ -46,15 +46,26 @@ class Daily_report extends MY_Controller {
 		if ($this->zacl->check_acl("game_statistics", "read")) {
 
             $account_query = $this->account_data();
-						$h35_stat_query = $this->h35_statistics_data();
+						$h35_stat_query = $this->negame_statistics_data('h35');
+						$L8na_stat_query = $this->negame_statistics_data('L8na');
 
 						$h35_ranking = array();
 						$h35_type_data = array();
 
 						if ($h35_stat_query->num_rows() > 0) {
 								foreach ($h35_stat_query->result() as $row) {
-									$h35_ranking[$row->oDate] =  $this->h35_daily_top_data($row->oDate)->result();
-									$h35_type_data[$row->oDate] =  $this->h35_daily_type_data($row->oDate)->result();
+									$h35_ranking[$row->oDate] =  $this->negame_daily_top_data($row->oDate,'h35')->result();
+									$h35_type_data[$row->oDate] =  $this->negame_daily_type_data($row->oDate,'h35')->result();
+								}
+						}
+
+						$L8na_ranking = array();
+						$L8na_type_data = array();
+
+						if ($L8na_stat_query->num_rows() > 0) {
+								foreach ($L8na_stat_query->result() as $row) {
+									$L8na_ranking[$row->oDate] =  $this->negame_daily_top_data($row->oDate,'L8na')->result();
+									$L8na_type_data[$row->oDate] =  $this->negame_daily_type_data($row->oDate,'L8na')->result();
 								}
 						}
 
@@ -65,9 +76,12 @@ class Daily_report extends MY_Controller {
 		$this->g_layout
 			->set("account_query", isset($account_query) ? $account_query : false)
 			->set("h35_stat_query", isset($h35_stat_query) ? $h35_stat_query : false)
+			->set("L8na_stat_query", isset($L8na_stat_query) ? $L8na_stat_query : false)
 			->set("is_game_statistics", isset($is_game_statistics) ? $is_game_statistics : false)
 			->set("h35_ranking", isset($h35_ranking) ? $h35_ranking : false)
 			->set("h35_type_data", isset($h35_type_data) ? $h35_type_data : false)
+			->set("L8na_ranking", isset($L8na_ranking) ? $L8na_ranking : false)
+			->set("L8na_type_data", isset($L8na_type_data) ? $L8na_type_data : false)
 			->add_js_include("fontawesome/js/fontawesome-all")
 			->render();
 	}
@@ -369,12 +383,24 @@ class Daily_report extends MY_Controller {
     }
 
 
-		function h35_statistics_data() {
+		function negame_statistics_data($game_id) {
+			$table_name = 'h35vip_orders';
+			switch ($game_id) {
+				case 'h35':
+					$table_name = 'h35vip_orders';
+					break;
+				case 'L8na':
+					$table_name = 'negame_orders';
+					break;
+				default:
+					# code...
+					break;
+			}
 			$query = $this->DB2->query("
 			SELECT DATE_FORMAT(create_time, '%Y-%m-%d') as oDate,
 			SUM(amount) as oSum,
 			COUNT(distinct account) as oCount
-			FROM h35vip_orders
+			FROM {$table_name}
 			WHERE DATEDIFF(create_time ,now())>-13
 			GROUP BY  DATE_FORMAT(create_time, '%Y-%m-%d') ");
 			return $query;
@@ -382,10 +408,22 @@ class Daily_report extends MY_Controller {
 		}
 
 
-		function h35_daily_top_data($date) {
+		function negame_daily_top_data($date,$game_id) {
+			$table_name = 'h35vip_orders';
+			switch ($game_id) {
+				case 'h35':
+					$table_name = 'h35vip_orders';
+					break;
+				case 'L8na':
+					$table_name = 'negame_orders';
+					break;
+				default:
+					# code...
+					break;
+			}
 			$query = $this->DB2->query("
 			SELECT DATE_FORMAT(create_time, '%Y-%m-%d') as oDate,role_name,sum(amount) as oSum
-			FROM h35vip_orders
+			FROM {$table_name}
 			WHERE DATE_FORMAT(create_time, '%Y-%m-%d') ='{$date}'
 			GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d'),role_name
 			ORDER BY oSum desc limit 5");
@@ -394,10 +432,22 @@ class Daily_report extends MY_Controller {
 		}
 
 
-		function h35_daily_type_data($date) {
+		function negame_daily_type_data($date,$game_id) {
+			$table_name = 'h35vip_orders';
+			switch ($game_id) {
+				case 'h35':
+					$table_name = 'h35vip_orders';
+					break;
+				case 'L8na':
+					$table_name = 'negame_orders';
+					break;
+				default:
+					# code...
+					break;
+			}
 			$query = $this->DB2->query("
 			SELECT DATE_FORMAT(create_time, '%Y-%m-%d') as oDate,transaction_type,sum(amount) as oSum
-			FROM h35vip_orders
+			FROM {$table_name}
 			WHERE DATE_FORMAT(create_time, '%Y-%m-%d') ='{$date}'
 			GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d'),transaction_type"
 			);

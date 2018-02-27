@@ -1003,6 +1003,7 @@ class User_statistics extends MY_Controller {
     switch ($game_id) {
     	case 'vxz':
 			case 'h35naxx1hmt':
+			case 'L8na':
 				$query = $this->DB2->query("select uid,char_name 'character_name',
 				char_in_game_id 'character_in_game_id',
 				server_name,

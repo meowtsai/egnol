@@ -1021,7 +1021,7 @@ class Trade extends MY_Controller {
 		function h35vip_orders($account)
 		{
 
-				$this->zacl->check("google", "read");
+				$this->zacl->check("whale_users_statistics", "read");
 				$this->_init_trade_layout();
 
 				$this->DB2->start_cache();
@@ -1059,6 +1059,54 @@ class Trade extends MY_Controller {
 
 				$this->g_layout
 					->add_breadcrumb("光明之戰VIP玩家儲值明細")
+					->set("query", isset($query) ? $query : false)
+					->add_js_include("trade/payment")
+					->add_js_include("jquery-ui-timepicker-addon")
+					->render();
+
+		}
+
+		function negame_orders($game_id)
+		{
+
+				$this->zacl->check("whale_users_statistics", "read");
+				$this->_init_trade_layout();
+
+				$this->DB2->start_cache();
+				$this->DB2
+						->select("transaction_id,transaction_type,account,role_id,role_name,server,product_id,amount,create_time,ip")
+						->from("negame_orders gb")
+						->where("account", $this->input->get("account"))
+						->where("game_id", $game_id);
+				$this->DB2->stop_cache();
+
+				$total_rows = $this->DB2->count_all_results();
+				$query = $this->DB2->limit(100, $this->input->get("record"))->order_by("gb.create_time desc")->get();
+
+				$get = $this->input->get();
+				unset($get["record"]);
+				if ($get)
+				{
+					$query_string = http_build_query($get);
+				}
+				else {
+					$query_string="";
+				}
+
+
+
+				$this->load->library('pagination');
+				$this->pagination->initialize(array(
+						'base_url'	=> site_url("trade/negame_orders/{$game_id}?{$query_string}"),
+						'total_rows'=> $total_rows,
+						'per_page'	=> 100
+					));
+				$this->g_layout->set("total_rows", $total_rows);
+
+
+
+				$this->g_layout
+					->add_breadcrumb($game_id." 玩家儲值明細")
 					->set("query", isset($query) ? $query : false)
 					->add_js_include("trade/payment")
 					->add_js_include("jquery-ui-timepicker-addon")
