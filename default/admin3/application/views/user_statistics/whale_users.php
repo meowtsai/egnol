@@ -37,9 +37,11 @@
 
             排序方法:
         <select name="orderby">
-            <option value="deposit_total desc" <?=($orderby=="deposit_total desc" ? 'selected="selected"' : '')?>>儲值金額</option>
-            <option value="is_added asc" <?=($orderby=="is_added asc" ? 'selected="selected"' : '')?>>Line?</option>
-            <option value="days_inserted asc" <?=($orderby=="days_inserted asc" ? 'selected="selected"' : '')?>>New?</option>
+					<option value="deposit_total desc" <?=($orderby=="deposit_total desc" ? 'selected="selected"' : '')?>>儲值金額</option>
+					<option value="is_added desc,deposit_total desc" <?=($orderby=="is_added desc,deposit_total desc" ? 'selected="selected"' : '')?>>已加入Line</option>
+          <option value="is_added asc" <?=($orderby=="is_added asc" ? 'selected="selected"' : '')?>>未加入Line</option>
+					<option value="days_inserted asc" <?=($orderby=="days_inserted asc" ? 'selected="selected"' : '')?>>New?</option>
+					<option value="uid asc" <?=($orderby=="days_inserted asc" ? 'selected="selected"' : '')?>>帳號</option>
         </select>
 
 		<input type="submit" class="btn btn-small btn-inverse" name="action" value="鯨魚用戶統計">
@@ -77,8 +79,7 @@
 			<tr bgcolor="<?=vipcolor($row->deposit_total)?>">
 				<td nowrap="nowrap"><?=$seq++?></td>
 				<td style="text-align:right">
-
-                    <a href="<?=($game_id=='h35naxx1hmt' ? site_url("trade/h35vip_orders/{$row->uid}") :$game_id=='L8na' ? site_url("trade/negame_orders/{$game_id}?account={$row->uid}") :site_url("member/view/{$row->uid}"))?>"><?=$row->uid?>  </a>
+					<a href="<?=($game_id=='h35naxx1hmt'?site_url("trade/h35vip_orders/{$row->uid}"):($game_id=='L8na'?site_url("trade/negame_orders/{$game_id}?account={$row->uid}") :site_url("member/view/{$row->uid}"))) ?>"><?=$row->uid?>  </a>
         </td>
 				<td style="text-align:center">
                     <?=$row->character_name?>

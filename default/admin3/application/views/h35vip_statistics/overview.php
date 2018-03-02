@@ -28,6 +28,7 @@ if ($query):
     <thead>
       <tr>
         <th nowrap="nowrap">年/週</th>
+        <th nowrap="nowrap">當周首日</th>
         <th style="width:70px">普R</th>
         <th style="width:70px">銀R</th>
         <th style="width:70px">金R</th>
@@ -73,6 +74,7 @@ if ($query):
 
       <tr>
         <td nowrap="nowrap"><?="{$row->year}/w{$row->week}" ?></td>
+        <td nowrap="nowrap"><?="{$row->first_date}" ?></td>
         <td style="text-align:right"><?=$row->general ?> </td>
         <td style="text-align:right"><?=$row->silver ?></td>
         <td style="text-align:right"><?=$row->gold ?></td>

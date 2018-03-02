@@ -27,6 +27,7 @@ if ($query):
     <thead>
       <tr>
         <th nowrap="nowrap">年/週</th>
+        <th nowrap="nowrap">當周首日</th>
         <th style="width:70px">戰爭領袖</th>
         <th style="width:70px">黎明誓約</th>
         <th style="width:70px">星辰護佑</th>
@@ -44,6 +45,7 @@ if ($query):
 
       <tr>
         <td nowrap="nowrap"><?="{$row->year}/w{$row->week}" ?></td>
+        <td nowrap="nowrap"><?="{$row->first_date}" ?></td>
         <td style="text-align:right"><?=number_format($row->s10001) ?> </td>
         <td style="text-align:right"><?=number_format($row->s10002) ?></td>
         <td style="text-align:right"><?=number_format($row->s10003) ?></td>

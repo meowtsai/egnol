@@ -1086,7 +1086,7 @@ class User_statistics extends MY_Controller {
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
-            ->set("orderby", $orderby)
+      ->set("orderby", $orderby)
 			->add_js_include("game/statistics")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();

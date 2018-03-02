@@ -26,7 +26,7 @@ class H35vip_statistics extends MY_Controller {
 		$this->zacl->check("whale_users_statistics", "read");
 
 		$span = $this->input->get("span");
-		$query = $this->DB2->query("select *,(general + silver+gold+platinum+black) as week_total from h35vip_weekly_data");
+		$query = $this->DB2->query("select *,STR_TO_DATE(CONCAT(year, week,' Sunday') , '%X%V %W') as first_date,(general + silver+gold+platinum+black) as week_total from h35vip_weekly_data");
 
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
@@ -45,12 +45,14 @@ class H35vip_statistics extends MY_Controller {
 		$query = $this->DB2->query("
     select left(myyearweek,4) as year,
     right(myyearweek,2) as week,
+    STR_TO_DATE(CONCAT(myyearweek,' Sunday') , '%X%V %W') as first_date,
     SUM(CASE WHEN a.server = '10001' THEN sumTotal ELSE 0 END) AS 's10001',
     SUM(CASE WHEN a.server = '10002' THEN sumTotal ELSE 0 END) AS 's10002',
     SUM(CASE WHEN a.server = '10003' THEN sumTotal ELSE 0 END) AS 's10003',
     SUM(CASE WHEN a.server = '10004' THEN sumTotal ELSE 0 END) AS 's10004',
     SUM(CASE WHEN a.server = '10005' THEN sumTotal ELSE 0 END) AS 's10005' from
     (select YEARWEEK(create_time) as myyearweek, server ,sum(amount) as sumTotal from h35vip_orders
+    where account in(select uid from  whale_users where site ='h35naxx1hmt' and is_added ='1')
     group by YEARWEEK(create_time),server) a
     group by myyearweek
     ");
