@@ -12,9 +12,33 @@
     <li class="">
         <a href="<?=site_url("h35vip_statistics/vip_distribution")?>">各伺服器各階VIP人數</a>
     </li>
-
-
 </ul>
+
+
+<form method="get" action="<?=site_url("h35vip_statistics/overview")?>" class="form-search">
+	<div class="control-group">
+		<select name="is_added">
+      <option value="">全部</option>
+      <option value="Y" <?=($this->input->get("is_added") =='Y'? 'selected="selected"' : '')?>>已加入Line</option>
+	  </select>
+
+		時間
+    <select name="start_week">
+      <option value="">全部</option>
+      <?foreach($week_data as $w_row):?>
+      <option value="<?=$w_row->myyearweek?>"  <?=($this->input->get("start_week") ==$w_row->myyearweek? 'selected="selected"' : '')?> ><?=substr($w_row->myyearweek, 0,4)?>/<?=$w_row->mymonth?>/w<?=substr($w_row->myyearweek, 4,2)?></option>
+      <?endforeach;?>
+    </select>
+    <select name="end_week">
+      <option value="">全部</option>
+      <?foreach($week_data as $w_row):?>
+      <option value="<?=$w_row->myyearweek?>" <?=($this->input->get("end_week") ==$w_row->myyearweek? 'selected="selected"' : '')?>><?=substr($w_row->myyearweek, 0,4)?>/<?=$w_row->mymonth?>/w<?=substr($w_row->myyearweek, 4,2)?></option>
+      <?endforeach;?>
+    </select>
+		<input type="submit" class="btn btn-small btn-inverse" name="action" value="篩選">
+
+	</div>
+</form>
 
 
 <div id="barchart_material"></div>

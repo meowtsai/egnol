@@ -25,12 +25,45 @@ class H35vip_statistics extends MY_Controller {
 
 		$this->zacl->check("whale_users_statistics", "read");
 
-		$span = $this->input->get("span");
-		$query = $this->DB2->query("select *,STR_TO_DATE(CONCAT(year, week,' Sunday') , '%X%V %W') as first_date,(general + silver+gold+platinum+black) as week_total from h35vip_weekly_data");
+    //is_added=Y&start_week=&end_week=&action=篩選
+
+		///$span = $this->input->get("span");
+
+    $start_week = $this->input->get("start_week");
+    $end_week = $this->input->get("end_week");
+
+
+    if ($this->input->get("is_added"))
+    {
+      $is_added = 1;
+    }
+    else {
+      $is_added = 0;
+    }
+
+    $tmpquery = "select *,STR_TO_DATE(CONCAT(year, week,' Sunday') , '%X%V %W') as first_date,(general + silver+gold+platinum+black) as week_total from h35vip_weekly_data
+    where tag={$is_added}";
+    if ($start_week)
+    {
+      $tmpquery.= " and YEARWEEK(STR_TO_DATE(CONCAT(year, week,' Sunday') , '%X%V %W')) between $start_week";
+    }
+
+    if ($end_week)
+    {
+      $tmpquery.= " and $end_week";
+    }
+		$query = $this->DB2->query($tmpquery);
+
+
+    $week_data = $this->DB2->query("SELECT YEARWEEK as myyearweek, MONTH(STR_TO_DATE(CONCAT(YEARWEEK,' Sunday') , '%X%V %W')) as mymonth
+    from
+    (SELECT YEARWEEK(create_time) as YEARWEEK
+    FROM h35vip_orders
+    GROUP BY YEARWEEK(create_time)) a")->result();
 
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
-			->set("span", $span)
+			->set("week_data", $week_data)
 			->render();
 	}
 
@@ -52,7 +85,7 @@ class H35vip_statistics extends MY_Controller {
     SUM(CASE WHEN a.server = '10004' THEN sumTotal ELSE 0 END) AS 's10004',
     SUM(CASE WHEN a.server = '10005' THEN sumTotal ELSE 0 END) AS 's10005' from
     (select YEARWEEK(create_time) as myyearweek, server ,sum(amount) as sumTotal from h35vip_orders
-    where account in(select uid from  whale_users where site ='h35naxx1hmt' and is_added ='1')
+    where REPLACE(account,'@netease_global.win.163.com','') in(select uid from  whale_users where site ='h35naxx1hmt' and is_added ='1')
     group by YEARWEEK(create_time),server) a
     group by myyearweek
     ");
