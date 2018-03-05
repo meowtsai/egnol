@@ -42,6 +42,42 @@ function mark_as_read(id)
   });;
 }
 
+function complaint_batch_mark(role_id)
+{
+  //alert('role_id=' + role_id);
+  let url = "./complaint_batch_mark";
+  $.ajax({
+    type: "POST",
+    url: url,
+    data: "role_id=" + role_id,
+  }).done(function(result) {
+    //alert( "success" );
+    //{"status":"success","message":"success"}
+    console.log( "Request done: " + result );
+    //$("#tr" + id).css("background-color","silver");
+    //$("#tr" + id).hide();
+    //let btn = $("#tr" + id).find(".btn-secondary");
+    //btn.hide();
+		let obj = JSON.parse(result);
+    if (obj.status == 'success') {
+			console.log('parent',parent);
+			parent.location.reload();
+    }
+    else {
+			alert('錯誤發生');
+    }
+
+  })
+  .fail(function( jqXHR, textStatus ) {
+    console.log( "Request failed: " + textStatus );
+
+  })
+  .always(function() {
+    //alert( "complete" );
+    console.log("complete")
+  });;
+}
+
 function open_modal(id)
 {
   $("#modal-alert").removeClass();
@@ -90,6 +126,7 @@ function get_ranking_report(how_many_days)
       trObj.innerHTML += "<td>"+ item.flagged_player_name +
         "( <a href='complaints?character_name="+ item.flagged_player_name +"&character_id="+ item.flagged_player_char_id +"&action=查詢'>" + item.flagged_player_char_id + "</a>)</td>";
       trObj.innerHTML += "<td>"+ item.cnt +"</td>";
+			trObj.innerHTML += "<td><button onclick=\"complaint_batch_mark('"+ item.flagged_player_char_id  +"')\">批次標示為永久停權</button></td>";
 
       $("#ranking_table tbody").append(trObj);
 

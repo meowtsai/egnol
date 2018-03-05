@@ -1022,7 +1022,7 @@ class Trade extends MY_Controller {
 		{
 
 				$this->zacl->check("whale_users_statistics", "read");
-				$this->_init_trade_layout();
+				$this->_init_layout();
 
 				$this->DB2->start_cache();
 				$this->DB2
@@ -1030,7 +1030,17 @@ class Trade extends MY_Controller {
 						->from("h35vip_orders gb")
 						->join("servers gi", "gi.server_id=gb.server", "left")
 						->where("replace(gb.account,'@netease_global.win.163.com','')", $account);
-				$this->DB2->stop_cache();
+
+				$this->input->get("role_id") && $this->DB2->where("gb.role_id", $this->input->get("role_id"));
+				if ($this->input->get("start_date")) {
+					$start_date = $this->DB2->escape($this->input->get("start_date"));
+					if ($this->input->get("end_date")) {
+						$end_date = $this->DB2->escape($this->input->get("end_date").":59");
+						$this->DB2->where("gb.create_time between {$start_date} and {$end_date}", null, false);
+					}
+					else $this->DB2->where("gb.create_time >= {$start_date}", null, false);
+				}
+
 
 				$total_rows = $this->DB2->count_all_results();
 				$query = $this->DB2->limit(100, $this->input->get("record"))->order_by("gb.create_time desc")->get();
@@ -1054,12 +1064,40 @@ class Trade extends MY_Controller {
 						'per_page'	=> 100
 					));
 				$this->g_layout->set("total_rows", $total_rows);
+				$this->DB2->stop_cache();
+				$this->DB2->flush_cache();
 
 
+				$roles = $this->DB2
+				->select("a.server_name,b.name, char_name,char_in_game_id,site ")
+				->from("whale_users a")
+				->join("servers b", "a.server_name = b.server_id", "left")
+				->where("site", "h35naxx1hmt")
+				->where("uid", $account)->get();
+
+
+				$this->DB2
+					->select("sum(amount) as sum_amount")
+					->from("h35vip_orders gb")
+					->where("replace(gb.account,'@netease_global.win.163.com','')", $account);
+				$this->input->get("role_id") && $this->DB2->where("gb.role_id", $this->input->get("role_id"));
+				if ($this->input->get("start_date")) {
+					$start_date = $this->DB2->escape($this->input->get("start_date"));
+					if ($this->input->get("end_date")) {
+						$end_date = $this->DB2->escape($this->input->get("end_date").":59");
+						$this->DB2->where("gb.create_time between {$start_date} and {$end_date}", null, false);
+					}
+					else $this->DB2->where("gb.create_time >= {$start_date}", null, false);
+				}
+
+				$sum_total = $this->DB2->get()->result()[0]->sum_amount;
 
 				$this->g_layout
 					->add_breadcrumb("光明之戰VIP玩家儲值明細")
 					->set("query", isset($query) ? $query : false)
+					->set("account",$account)
+					->set("roles",$roles)
+					->set("sum_total",$sum_total)
 					->add_js_include("trade/payment")
 					->add_js_include("jquery-ui-timepicker-addon")
 					->render();
