@@ -106,7 +106,7 @@ endif; ?>
            var options = {
              chart: {
                title: '光明之戰vip儲值總覽',
-               subtitle: '分伺服器: 2017年12月',
+               subtitle: '分伺服器:  <? echo $this->input->get("select_month"); ?> ',
              },
              bars: 'vertical',
              vAxis: {format: 'decimal'},
