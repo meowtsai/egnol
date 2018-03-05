@@ -42,7 +42,10 @@
 
 
 <div id="barchart_material"></div>
-
+<button id="cmdSizeIt" onclick="drawChart()">縮小圖表</button>
+<br />
+<br />
+<br />
 <?
 $strGoogleData ="";
 if ($query):
@@ -120,62 +123,80 @@ endif; ?>
 
 
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script type="text/javascript">
+<script type="text/javascript">
 
-      // Load the Visualization API and the corechart package.
-      google.charts.load('current', {'packages':['bar']});
+     // Load the Visualization API and the corechart package.
+     google.charts.load('current', {'packages':['bar']});
 
-      // Set a callback to run when the Google Visualization API is loaded.
-      google.charts.setOnLoadCallback(drawChart);
+     // Set a callback to run when the Google Visualization API is loaded.
+     google.charts.setOnLoadCallback(drawChart);
 
-      // Callback that creates and populates a data table,
-      // instantiates the pie chart, passes in the data and
-      // draws it.
-      function drawChart() {
+     // Callback that creates and populates a data table,
+     // instantiates the pie chart, passes in the data and
+     // draws it.
+     function drawChart() {
+       var x = document.getElementById("cmdSizeIt");
+       var sizeOption = {
+         width:800,
+         height:600,
+       };
+       if (x.innerText=='放大圖表')
+       {
+         sizeOption = {
+           width:1200,
+           height:900,
+         };
+         x.innerText = '縮小圖表'
+       }
+       else {
+         sizeOption = {
+           width:600,
+           height:400,
+         };
+         x.innerText = '放大圖表'
+       }
+       // Create the data table.
 
-        // Create the data table.
-
-        var data = google.visualization.arrayToDataTable([
-          ['VIP 等級','普R:$5萬~10萬', '銀R:$10萬~30萬', '金R:$30萬~60萬', '白金R:$60萬-100萬', '黑R:儲值$100萬以上',{ role: 'annotation' }],
-            <? echo $strGoogleData; ?>
+       var data = google.visualization.arrayToDataTable([
+         ['VIP 等級','普R:$5萬~10萬', '銀R:$10萬~30萬', '金R:$30萬~60萬', '白金R:$60萬-100萬', '黑R:儲值$100萬以上',{ role: 'annotation' }],
+         <? echo $strGoogleData; ?>
              ]);
 
-       //  var data = google.visualization.arrayToDataTable([
-       //   ['等級','普R', '銀R', '金R', '白金R', '黑R',{ role: 'annotation' } ],
-       //   ['2017/46', 2, 0, 0, 0, 0, ''],
-       //   ['2017/47', 7, 2, 0, 0, 0, ''],
-       //   ['2017/48', 27, 3, 1, 0, 0, ''],
-       //   ['2017/49', 46, 13, 3, 0, 0, ''],
-       //   ['2017/50', 63, 20, 3, 0, 0, ''],
-       //   ['2017/51', 73, 37, 4, 1, 0, ''],
-       //   ['2017/52', 100, 52, 4, 1, 0, ''],
-       //   ['2017/53', 125, 69, 5, 0, 1, ''],
-       //   ['2018/1', 152, 72, 6, 2, 1, ''],
-       //   ['2018/2', 168, 81, 5, 5, 1, ''],
-       //   ['2018/3', 181, 89, 5, 5, 2, ''],
-       //   ['2018/4', 187, 99, 6, 4, 3, ''],
-       //   ['2018/5', 194, 113, 8, 4, 3, ''],
-       //   ['2018/6', 202, 142, 11, 3, 4, ''],
-       //   ['2018/7', 220, 145, 13, 3, 4, ''],
-       // ]);
+      //  var data = google.visualization.arrayToDataTable([
+      //   ['等級','普R', '銀R', '金R', '白金R', '黑R',{ role: 'annotation' } ],
+      //   ['2017/46', 2, 0, 0, 0, 0, ''],
+      //   ['2017/47', 7, 2, 0, 0, 0, ''],
+      //   ['2017/48', 27, 3, 1, 0, 0, ''],
+      //   ['2017/49', 46, 13, 3, 0, 0, ''],
+      //   ['2017/50', 63, 20, 3, 0, 0, ''],
+      //   ['2017/51', 73, 37, 4, 1, 0, ''],
+      //   ['2017/52', 100, 52, 4, 1, 0, ''],
+      //   ['2017/53', 125, 69, 5, 0, 1, ''],
+      //   ['2018/1', 152, 72, 6, 2, 1, ''],
+      //   ['2018/2', 168, 81, 5, 5, 1, ''],
+      //   ['2018/3', 181, 89, 5, 5, 2, ''],
+      //   ['2018/4', 187, 99, 6, 4, 3, ''],
+      //   ['2018/5', 194, 113, 8, 4, 3, ''],
+      //   ['2018/6', 202, 142, 11, 3, 4, ''],
+      //   ['2018/7', 220, 145, 13, 3, 4, ''],
+      // ]);
 
 
 
 
-             var options = {
-               width: 600,
-               height: 400,
-               legend: { position: 'top', maxLines: 3 },
-               bar: { groupWidth: '75%' },
-               isStacked: true,
-               colors: ['#d95f02']
-             };
+            var options = {
+              ...sizeOption,
+              legend: { position: 'top', maxLines: 3 },
+              bar: { groupWidth: '75%' },
+              isStacked: true,
+              colors: ['#d95f02']
+            };
 
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.charts.Bar(document.getElementById('barchart_material'));
+       // Instantiate and draw our chart, passing in some options.
+       var chart = new google.charts.Bar(document.getElementById('barchart_material'));
 
-        chart.draw(data, google.charts.Bar.convertOptions(options));
+       chart.draw(data, google.charts.Bar.convertOptions(options));
 
 
-      }
-    </script>
+     }
+   </script>
