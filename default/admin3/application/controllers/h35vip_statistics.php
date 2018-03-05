@@ -125,4 +125,53 @@ class H35vip_statistics extends MY_Controller {
 	}
 
 
+  function daily_topup()
+  {
+    $this->_init_statistics_layout();
+    $this->load->helper("output_table");
+
+    $this->zacl->check("whale_users_statistics", "read");
+
+    $select_month =  date("Y-m");
+
+    if ($this->input->get("select_month")) {
+      $select_month = $this->input->get("select_month");
+    }
+
+
+    if ($this->input->get("is_added"))
+    {
+      $is_added = "AND REPLACE(account,'@netease_global.win.163.com','') in(select uid from  whale_users where site ='h35naxx1hmt' and is_added ='1')";
+    }
+    else {
+      $is_added = "";
+    }
+
+    $span = $this->input->get("span");
+    $query = $this->DB2->query("
+    Select DATE_FORMAT(create_time,'%Y-%m-%d') as day,
+    SUM(CASE WHEN server = '10001' THEN amount ELSE 0 END) AS 's10001',
+    SUM(CASE WHEN server = '10002' THEN amount ELSE 0 END) AS 's10002',
+    SUM(CASE WHEN server = '10003' THEN amount ELSE 0 END) AS 's10003',
+    SUM(CASE WHEN server = '10004' THEN amount ELSE 0 END) AS 's10004',
+    SUM(CASE WHEN server = '10005' THEN amount ELSE 0 END) AS 's10005'
+    from h35vip_orders
+    where DATE_FORMAT(create_time,'%Y-%m')='{$select_month}'
+    {$is_added}
+    group by  DATE_FORMAT(create_time,'%Y-%m-%d')
+    ");
+
+
+    $month_data = $this->DB2->query("Select  distinct DATE_FORMAT(create_time,'%Y-%m') as month
+    from h35vip_orders")->result();
+
+
+
+    $this->g_layout
+      ->set("query", isset($query) ? $query : false)
+      ->set("month_data", $month_data)
+      ->render();
+  }
+
+
 }

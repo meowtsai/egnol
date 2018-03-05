@@ -6,16 +6,38 @@
   <li class="">
       <a href="<?=site_url("h35vip_statistics/overview")?>">VIP 人數成長</a>
   </li>
-  <li class="active">
+  <li class="">
       <a href="<?=site_url("h35vip_statistics/topup_status")?>">各伺服器每週VIP儲值情況</a>
   </li>
   <li class="">
       <a href="<?=site_url("h35vip_statistics/vip_distribution")?>">各伺服器各階VIP人數</a>
   </li>
-  <li class="">
+  <li class="active">
       <a href="<?=site_url("h35vip_statistics/daily_topup")?>">各伺服器by月份儲值總覽</a>
   </li>
 </ul>
+
+<form method="get" action="<?=site_url("h35vip_statistics/daily_topup")?>" class="form-search">
+	<div class="control-group">
+		<select name="is_added">
+      <option value="">全部</option>
+      <option value="Y" <?=($this->input->get("is_added") =='Y'? 'selected="selected"' : '')?>>已加入Line</option>
+	  </select>
+
+		時間
+    <select name="select_month">
+      <option value="">全部</option>
+      <?foreach($month_data as $m_row):?>
+      <option value="<?=$m_row->month?>"  <?=($this->input->get("select_month") ==$m_row->month? 'selected="selected"' : '')?> ><?=$m_row->month ?></option>
+      <?endforeach;?>
+    </select>
+
+		<input type="submit" class="btn btn-small btn-inverse" name="action" value="篩選">
+
+	</div>
+</form>
+
+
 
 
 <div id="barchart_material"></div>
@@ -28,8 +50,7 @@ if ($query):
   <table class="table table-striped table-bordered" style="width:auto;">
     <thead>
       <tr>
-        <th nowrap="nowrap">年/週</th>
-        <th nowrap="nowrap">當周首日</th>
+        <th nowrap="nowrap">日期</th>
         <th style="width:70px">戰爭領袖</th>
         <th style="width:70px">黎明誓約</th>
         <th style="width:70px">星辰護佑</th>
@@ -41,13 +62,13 @@ if ($query):
 
     <?
       foreach($query->result() as $row):
-      $strGoogleData .= "['{$row->year}/w{$row->week}', {$row->s10001}, {$row->s10002}, {$row->s10003}, {$row->s10004}, {$row->s10005}, '']," ;
+      $strGoogleData .= "['{$row->day}', {$row->s10001}, {$row->s10002}, {$row->s10003}, {$row->s10004}, {$row->s10005}]," ;
+
       ?>
 
 
       <tr>
-        <td nowrap="nowrap"><?="{$row->year}/w{$row->week}" ?></td>
-        <td nowrap="nowrap"><?="{$row->first_date}" ?></td>
+        <td nowrap="nowrap"><?="{$row->day}" ?></td>
         <td style="text-align:right"><?=number_format($row->s10001) ?> </td>
         <td style="text-align:right"><?=number_format($row->s10002) ?></td>
         <td style="text-align:right"><?=number_format($row->s10003) ?></td>
@@ -70,7 +91,6 @@ endif; ?>
 
       // Load the Visualization API and the corechart package.
       google.charts.load('current', {'packages':['bar']});
-
       // Set a callback to run when the Google Visualization API is loaded.
       google.charts.setOnLoadCallback(drawChart);
 
@@ -78,49 +98,26 @@ endif; ?>
       // instantiates the pie chart, passes in the data and
       // draws it.
       function drawChart() {
+         var data = google.visualization.arrayToDataTable([
+             ['日期','戰爭領袖', '黎明誓約', '星辰護佑', '裁決之劍', '狂野之怒'],
+             <? echo $strGoogleData; ?>
+           ]);
 
-        // Create the data table.
+           var options = {
+             chart: {
+               title: '光明之戰vip儲值總覽',
+               subtitle: '分伺服器: 2017年12月',
+             },
+             bars: 'vertical',
+             vAxis: {format: 'decimal'},
+             height: 400,
+             colors: ['#1b9e77', '#d95f02', '#7570b3','blue','red']
+           };
 
-        var data = google.visualization.arrayToDataTable([
-          ['伺服器','戰爭領袖', '黎明誓約', '星辰護佑', '裁決之劍', '狂野之怒',{ role: 'annotation' }],
-            <? echo $strGoogleData; ?>
-             ]);
+       var chart = new google.charts.Bar(document.getElementById('barchart_material'));
 
-       //  var data = google.visualization.arrayToDataTable([
-       //   ['等級','普R', '銀R', '金R', '白金R', '黑R',{ role: 'annotation' } ],
-       //   ['2017/46', 2, 0, 0, 0, 0, ''],
-       //   ['2017/47', 7, 2, 0, 0, 0, ''],
-       //   ['2017/48', 27, 3, 1, 0, 0, ''],
-       //   ['2017/49', 46, 13, 3, 0, 0, ''],
-       //   ['2017/50', 63, 20, 3, 0, 0, ''],
-       //   ['2017/51', 73, 37, 4, 1, 0, ''],
-       //   ['2017/52', 100, 52, 4, 1, 0, ''],
-       //   ['2017/53', 125, 69, 5, 0, 1, ''],
-       //   ['2018/1', 152, 72, 6, 2, 1, ''],
-       //   ['2018/2', 168, 81, 5, 5, 1, ''],
-       //   ['2018/3', 181, 89, 5, 5, 2, ''],
-       //   ['2018/4', 187, 99, 6, 4, 3, ''],
-       //   ['2018/5', 194, 113, 8, 4, 3, ''],
-       //   ['2018/6', 202, 142, 11, 3, 4, ''],
-       //   ['2018/7', 220, 145, 13, 3, 4, ''],
-       // ]);
+       chart.draw(data, google.charts.Bar.convertOptions(options));
 
-
-
-
-             var options = {
-               width: 600,
-               height: 400,
-               legend: { position: 'top', maxLines: 3 },
-               bar: { groupWidth: '75%' },
-               isStacked: true,
-               colors: ['#1b9e77']
-             };
-
-        // Instantiate and draw our chart, passing in some options.
-        var chart = new google.charts.Bar(document.getElementById('barchart_material'));
-
-        chart.draw(data, google.charts.Bar.convertOptions(options));
 
 
       }
