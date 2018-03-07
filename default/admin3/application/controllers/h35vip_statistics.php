@@ -174,4 +174,80 @@ class H35vip_statistics extends MY_Controller {
   }
 
 
+  function hourly_topup()
+  {
+    $this->_init_statistics_layout();
+    $this->load->helper("output_table");
+
+    $this->zacl->check("whale_users_statistics", "read");
+
+    $select_month =  date("Y-m");
+
+    if ($this->input->get("select_month")) {
+      $select_month = $this->input->get("select_month");
+    }
+
+
+    if ($this->input->get("is_added"))
+    {
+      $is_added = "AND REPLACE(account,'@netease_global.win.163.com','') in(select uid from  whale_users where site ='h35naxx1hmt' and is_added ='1')";
+    }
+    else {
+      $is_added = "";
+    }
+
+    $span = $this->input->get("span");
+    $query = $this->DB2->query("
+    Select  DATE_FORMAT(create_time,'%H') as hour,
+    SUM(CASE WHEN DATE_FORMAT(create_time,'%a') = 'Sun' THEN amount ELSE 0 END) as 'Sun',
+    SUM(CASE WHEN DATE_FORMAT(create_time,'%a') = 'Mon' THEN amount ELSE 0 END) as 'Mon',
+    SUM(CASE WHEN DATE_FORMAT(create_time,'%a') = 'Tue' THEN amount ELSE 0 END) as 'Tue',
+    SUM(CASE WHEN DATE_FORMAT(create_time,'%a') = 'Wed' THEN amount ELSE 0 END) as 'Wed',
+    SUM(CASE WHEN DATE_FORMAT(create_time,'%a') = 'Thu' THEN amount ELSE 0 END) as 'Thu',
+    SUM(CASE WHEN DATE_FORMAT(create_time,'%a') = 'Fri' THEN amount ELSE 0 END) as 'Fri',
+    SUM(CASE WHEN DATE_FORMAT(create_time,'%a') = 'Sat' THEN amount ELSE 0 END) as 'Sat'
+    from h35vip_orders
+    where DATE_FORMAT(create_time,'%Y-%m')='{$select_month}'
+    {$is_added}
+    group by  DATE_FORMAT(create_time,'%H')
+    order by  DATE_FORMAT(create_time,'%H')
+    ");
+
+
+    $month_data = $this->DB2->query("Select  distinct DATE_FORMAT(create_time,'%Y-%m') as month
+    from h35vip_orders")->result();
+
+
+
+    $this->g_layout
+      ->set("query", isset($query) ? $query : false)
+      ->set("month_data", $month_data)
+      ->render();
+  }
+
+  function country_distribution()
+	{
+		$this->_init_statistics_layout();
+		$this->load->helper("output_table");
+
+		$this->zacl->check("whale_users_statistics", "read");
+
+		$span = $this->input->get("span");
+		$query = $this->DB2->query("
+    SELECT country,
+    count(*) as cnt,
+    SUM(CASE WHEN is_added = '1' THEN 1 ELSE 0 END) AS 'added_cnt',
+    sum(deposit_total) as amount,
+    sum(CASE WHEN is_added = '1' THEN deposit_total ELSE 0 END) as 'added_amount'
+    FROM whale_users WHERE site ='h35naxx1hmt'
+    group by country order by count(*) desc
+    ");
+
+		$this->g_layout
+			->set("query", isset($query) ? $query : false)
+			->set("span", $span)
+			->render();
+	}
+
+
 }

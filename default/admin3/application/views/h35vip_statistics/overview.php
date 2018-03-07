@@ -15,6 +15,12 @@
     <li class="">
         <a href="<?=site_url("h35vip_statistics/daily_topup")?>">各伺服器by月份儲值總覽</a>
     </li>
+    <li class="">
+        <a href="<?=site_url("h35vip_statistics/hourly_topup")?>">by時間儲值總覽</a>
+    </li>
+    <li class="">
+        <a href="<?=site_url("h35vip_statistics/country_distribution")?>">國家別</a>
+    </li>
 </ul>
 
 

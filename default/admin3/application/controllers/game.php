@@ -28,7 +28,7 @@ class Game extends MY_Controller {
 		$query = $this->DB2->from("games")->order_by("rank")->get();
 
 		//"<?="http://test-payment.longeplay.com.tw:3000/ma71gmtools?admin_uid=21&admin_name=mepw&time=1500255122&token=123445")
-		$gm_site = "http://test-payment.longeplay.com.tw:3000";
+		$gm_site = "http://test-payment.longeplay.com.tw:5000";
 		$admin_uid = $_SESSION["admin_uid"];
 		$admin_name = $_SESSION["admin_name"];
 		$secret = '69i57j0l5.1287j0j4';
