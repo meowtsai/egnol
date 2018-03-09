@@ -1009,11 +1009,14 @@ class User_statistics extends MY_Controller {
 				server_name,
 				deposit_total,
 				DATE(account_create_time) 'create_date',
-				last_login 'last_login',
-				TIMESTAMPDIFF(DAY, last_login, NOW()) 'days_since' ,
+				DATE_FORMAT(last_login, '%Y-%m-%d') 'last_login', 
+				latest_topup_date 'latest_topup_date',
+				TIMESTAMPDIFF(DAY, latest_topup_date, NOW()) 'days_since' ,
 				is_added,
 				TIMESTAMPDIFF(DAY, create_time, NOW()) 'days_inserted',
-				ip
+				ip,
+				vip_ranking_updated,
+				TIMESTAMPDIFF(DAY, vip_ranking_updated, NOW()) 'days_vip_updated'
 				from whale_users where site = '{$game_id}' order by {$orderby} ");
     		break;
 			default:
@@ -1087,21 +1090,42 @@ class User_statistics extends MY_Controller {
 			->set("query", isset($query) ? $query : false)
 			->set("game_id", $game_id)
       ->set("orderby", $orderby)
-			->add_js_include("game/statistics")
+			->add_js_include("game/whale_users")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
 	}
 
 
-    function whale_users_set_status($uid, $status)
+function whale_users_set_status($uid, $status)
+{
+	$this->DB1->where("uid", $uid)
+	->set("is_added", $status)->update("whale_users");
+	echo $this->DB1->affected_rows()>0 ? json_success() : json_failure("無變更");
+}
+
+function whale_users_set_lastlogin()
+{
+	if ( ! $this->zacl->check_acl("service", "modify")) die(json_failure("沒有權限"));
+	//$game_id,$role_id, $last_login'
+
+	$game_id = $this->input->post("game_id");
+	$role_id = $this->input->post("role_id");
+	$last_login = $this->input->post("last_login");
+	if ($game_id && $role_id && $last_login)
 	{
-		//if ( ! $this->zacl->check("whale_users_statistics", "read") die(json_failure("沒有權限"));
-
-
-		$this->DB1->where("uid", $uid)
-		->set("is_added", $status)->update("whale_users");
-		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure("無變更");
+		$this->DB1->where("site", $game_id)->where("char_in_game_id", $role_id)
+		->set("last_login", $last_login)->update("whale_users");
+	if ($this->DB1->affected_rows() > 0) {
+		die(json_success());
 	}
+	else {
+		die(json_failure($query));
+	}
+	}
+	else {
+		die(json_failure("請輸入完整資料"));
+	}
+}
 
     function level_analysis() {
 		$this->zacl->check_login(true);

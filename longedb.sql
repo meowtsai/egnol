@@ -1264,19 +1264,23 @@ CREATE TABLE `iap_receipts` (
 
 DROP TABLE IF EXISTS `whale_users`;
 CREATE TABLE `whale_users` (
-`uid` int(11) NOT NULL ,
-`site` varchar(50) ,
-`char_name` varchar(50),
-`char_in_game_id` varchar(50),
-`server_name` varchar(255),
-`deposit_total`  int(10),
-`account_create_time` timestamp  NULL DEFAULT NULL,
-`last_login` Datetime,
-`is_added` tinyint(1) DEFAULT '0',
-`create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
-`ip` varchar(25) DEFAULT NULL,
-`country` varchar(3) DEFAULT NULL,
-PRIMARY KEY (`uid`)) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 ;
+  `uid` int(11) NOT NULL,
+  `char_name` varchar(50) DEFAULT NULL,
+  `char_in_game_id` varchar(50) NOT NULL DEFAULT '',
+  `server_name` varchar(255) DEFAULT NULL,
+  `deposit_total` int(10) DEFAULT NULL,
+  `account_create_time` timestamp NULL DEFAULT NULL,
+  `last_login` datetime DEFAULT NULL,
+  `is_added` tinyint(1) DEFAULT '0',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `site` varchar(50) DEFAULT NULL,
+  `ip` varchar(25) DEFAULT NULL,
+  `country` char(3) DEFAULT NULL,
+  `latest_topup_date` datetime DEFAULT NULL,
+  `vip_ranking` enum('general','silver','gold','platinum','black') DEFAULT NULL,
+  `vip_ranking_updated` datetime DEFAULT NULL,
+  PRIMARY KEY (`uid`,`char_in_game_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 
 DROP TABLE IF EXISTS `themes`;
@@ -1524,3 +1528,26 @@ ALTER EVENT daily_report_event
     END;
     //
     DELIMITER ;
+
+
+drop TRIGGER upd_vip;
+delimiter //
+CREATE TRIGGER upd_vip BEFORE UPDATE ON whale_users
+   FOR EACH ROW
+   BEGIN
+    IF NEW.deposit_total <100000 and NEW.deposit_total>=50000 THEN
+      SET NEW.vip_ranking = 'general';
+    ELSEIF NEW.deposit_total >= 100000 AND NEW.deposit_total <300000  THEN
+      SET NEW.vip_ranking = 'silver';
+    ELSEIF NEW.deposit_total >= 300000 AND NEW.deposit_total <600000  THEN
+      SET NEW.vip_ranking = 'gold';
+    ELSEIF NEW.deposit_total >= 600000 AND NEW.deposit_total <1000000  THEN
+      SET NEW.vip_ranking = 'platinum';
+    ELSEIF NEW.deposit_total >= 100000  THEN
+      SET NEW.vip_ranking = 'platinum';
+    END IF;
+       IF (NEW.vip_ranking <> OLD.vip_ranking) THEN
+          SET NEW.vip_ranking_updated = NOW();
+       END IF;
+   END;//
+delimiter ;
