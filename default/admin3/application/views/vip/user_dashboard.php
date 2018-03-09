@@ -17,9 +17,9 @@
     </tr>
     <tr>
       <th>Line ID</th>
-      <td><?=$vip->line_id?></td>
+      <td></td>
       <th>加入Line時間</th>
-      <td><?=$vip->added_date?></td>
+      <td></td>
     </tr>
     <tr>
       <th>手機</th>
@@ -31,7 +31,7 @@
       <th>居住地區</th>
       <td><?=$vip->country?></td>
       <th>性別</th>
-      <td><?=$vip->gender?></td>
+      <td></td>
     </tr>
   </table>
 </fieldset>
