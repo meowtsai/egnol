@@ -1009,14 +1009,16 @@ class User_statistics extends MY_Controller {
 				server_name,
 				deposit_total,
 				DATE(account_create_time) 'create_date',
-				DATE_FORMAT(last_login, '%Y-%m-%d') 'last_login', 
+				DATE_FORMAT(last_login, '%Y-%m-%d') 'last_login',
 				latest_topup_date 'latest_topup_date',
 				TIMESTAMPDIFF(DAY, latest_topup_date, NOW()) 'days_since' ,
 				is_added,
 				TIMESTAMPDIFF(DAY, create_time, NOW()) 'days_inserted',
 				ip,
 				vip_ranking_updated,
-				TIMESTAMPDIFF(DAY, vip_ranking_updated, NOW()) 'days_vip_updated'
+				CASE
+				  WHEN vip_ranking_updated=null THEN '100'
+				  ELSE TIMESTAMPDIFF(DAY, vip_ranking_updated, NOW())  END as 'days_vip_updated'
 				from whale_users where site = '{$game_id}' order by {$orderby} ");
     		break;
 			default:
