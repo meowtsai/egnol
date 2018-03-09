@@ -106,10 +106,10 @@ class H35vip_statistics extends MY_Controller {
 		$span = $this->input->get("span");
 		$query = $this->DB2->query("
     select   server_name,
-    SUM(CASE WHEN deposit_total <100000 and deposit_total>=50000 THEN 1 ELSE 0 END) AS 'general',
-    SUM(CASE WHEN deposit_total >= 100000 AND deposit_total <300000 THEN 1 ELSE 0 END) AS 'silver',
-    SUM(CASE WHEN deposit_total >= 300000 AND deposit_total <600000 THEN 1 ELSE 0 END) AS 'gold',
-    SUM(CASE WHEN deposit_total >= 600000 AND deposit_total <1000000 THEN 1 ELSE 0 END) AS 'platinum',
+    SUM(CASE WHEN deposit_total <200000 and deposit_total>=150000 THEN 1 ELSE 0 END) AS 'general',
+    SUM(CASE WHEN deposit_total >= 200000 AND deposit_total <400000 THEN 1 ELSE 0 END) AS 'silver',
+    SUM(CASE WHEN deposit_total >= 400000 AND deposit_total <700000 THEN 1 ELSE 0 END) AS 'gold',
+    SUM(CASE WHEN deposit_total >= 700000 AND deposit_total <1000000 THEN 1 ELSE 0 END) AS 'platinum',
     SUM(CASE WHEN deposit_total >= 1000000  THEN 1 ELSE 0 END) AS 'black'
     from
     (select uid, sum(deposit_total) as deposit_total,server_name from whale_users

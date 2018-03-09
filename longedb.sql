@@ -1530,24 +1530,24 @@ ALTER EVENT daily_report_event
     DELIMITER ;
 
 
-drop TRIGGER upd_vip;
-delimiter //
-CREATE TRIGGER upd_vip BEFORE UPDATE ON whale_users
-   FOR EACH ROW
-   BEGIN
-    IF NEW.deposit_total <100000 and NEW.deposit_total>=50000 THEN
-      SET NEW.vip_ranking = 'general';
-    ELSEIF NEW.deposit_total >= 100000 AND NEW.deposit_total <300000  THEN
-      SET NEW.vip_ranking = 'silver';
-    ELSEIF NEW.deposit_total >= 300000 AND NEW.deposit_total <600000  THEN
-      SET NEW.vip_ranking = 'gold';
-    ELSEIF NEW.deposit_total >= 600000 AND NEW.deposit_total <1000000  THEN
-      SET NEW.vip_ranking = 'platinum';
-    ELSEIF NEW.deposit_total >= 100000  THEN
-      SET NEW.vip_ranking = 'platinum';
-    END IF;
-       IF (NEW.vip_ranking <> OLD.vip_ranking) THEN
-          SET NEW.vip_ranking_updated = NOW();
-       END IF;
-   END;//
-delimiter ;
+  drop TRIGGER upd_vip;
+  delimiter //
+  CREATE TRIGGER upd_vip BEFORE UPDATE ON whale_users
+     FOR EACH ROW
+     BEGIN
+      IF NEW.deposit_total <200000 and NEW.deposit_total>=150000 THEN
+        SET NEW.vip_ranking = 'general';
+      ELSEIF NEW.deposit_total >= 200000 AND NEW.deposit_total <400000  THEN
+        SET NEW.vip_ranking = 'silver';
+      ELSEIF NEW.deposit_total >= 400000 AND NEW.deposit_total <700000  THEN
+        SET NEW.vip_ranking = 'gold';
+      ELSEIF NEW.deposit_total >= 700000 AND NEW.deposit_total <1000000  THEN
+        SET NEW.vip_ranking = 'platinum';
+      ELSEIF NEW.deposit_total >= 100000  THEN
+        SET NEW.vip_ranking = 'platinum';
+      END IF;
+         IF (NEW.vip_ranking <> OLD.vip_ranking) THEN
+            SET NEW.vip_ranking_updated = NOW();
+         END IF;
+     END;//
+  delimiter ;

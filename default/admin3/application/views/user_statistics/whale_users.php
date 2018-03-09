@@ -90,7 +90,11 @@
 				<td style="text-align:center">
 					<?=$row->character_name?>
 				</td>
-				<td style="text-align:right"><?=$row->character_in_game_id?></td>
+				<td style="text-align:right">
+					<a href="<?=site_url("vip/user_dashboard/{$game_id}/{$row->character_in_game_id}")?>">
+					<?=$row->character_in_game_id?>
+					</a>
+				</td>
 				<td style="text-align:right"><?=$row->server_name?></td>
 				<td style="text-align:right"><?=number_format($row->deposit_total)?></td>
 				<td><?=$row->latest_topup_date?></td>
@@ -184,17 +188,21 @@ function vipcolor($deposit_number){
 	{
 		return "#FFFFFF";
 	}
-	else if ($deposit_number>=600000 and $deposit_number<1000000)
+	else if ($deposit_number>=700000 and $deposit_number<1000000)
 	{
 		return "#E5E4E2";
 	}
-	else if ($deposit_number>=300000 and $deposit_number<600000)
+	else if ($deposit_number>=400000 and $deposit_number<700000)
 	{
 		return "#D4AF37";
 	}
-	else if ($deposit_number>=100000 and $deposit_number<300000)
+	else if ($deposit_number>=200000 and $deposit_number<400000)
 	{
 		return "#C0C0C0";
+	}
+	else if ($deposit_number>=150000 and $deposit_number<200000)
+	{
+		return "#FAEBD7";
 	}
 	else {
 		return "#FFFFFF";
