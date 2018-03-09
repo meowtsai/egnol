@@ -30,6 +30,9 @@
 
 <?
 $strGoogleData ="";
+$strGoogleData2 ="";
+$strGoogleData3 ="";
+$strGoogleData4 ="";
 if ($query):
   if ($query->num_rows() == 0): echo '<div class="none">查無資料</div>'; else:?>
 
@@ -53,7 +56,7 @@ if ($query):
       $strGoogleData .= "['{$country_full_name}', {$row->cnt}]," ;
       $strGoogleData3 .= "['{$country_full_name}', {$row->amount}]," ;
       $strGoogleData2 .= "['{$country_full_name}', {$row->added_cnt}]," ;
-      $strGoogleData3 .= "['{$country_full_name}', {$row->added_amount}]," ;
+      $strGoogleData4 .= "['{$country_full_name}', {$row->added_amount}]," ;
 
 
       ?>
