@@ -42,6 +42,7 @@
 					<option value="last_login desc,deposit_total desc" <?=($orderby=="last_login desc,deposit_total desc" ? 'selected="selected"' : '')?>>確認流失</option>
           <option value="is_added asc,deposit_total desc" <?=($orderby=="is_added asc,deposit_total desc" ? 'selected="selected"' : '')?>>未加入Line</option>
 					<option value="days_inserted asc" <?=($orderby=="days_inserted asc" ? 'selected="selected"' : '')?>>3日內新人</option>
+					<option value="days_vip_updated asc,deposit_total desc" <?=($orderby=="days_vip_updated asc,deposit_total desc" ? 'selected="selected"' : '')?>>升階</option>
 					<option value="uid asc" <?=($orderby=="days_inserted asc" ? 'selected="selected"' : '')?>>帳號</option>
         </select>
 
