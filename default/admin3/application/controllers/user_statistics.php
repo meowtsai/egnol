@@ -1015,7 +1015,7 @@ class User_statistics extends MY_Controller {
 				is_added,
 				TIMESTAMPDIFF(DAY, create_time, NOW()) 'days_inserted',
 				ip,
-				vip_ranking_updated,
+				DATE_FORMAT(vip_ranking_updated, '%Y-%m-%d') 'vip_ranking_updated',
 				CASE
 				  WHEN vip_ranking_updated is NULL THEN '100'
 				  ELSE TIMESTAMPDIFF(DAY, vip_ranking_updated, NOW())  END as 'days_vip_updated'
