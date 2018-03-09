@@ -1017,7 +1017,7 @@ class User_statistics extends MY_Controller {
 				ip,
 				vip_ranking_updated,
 				CASE
-				  WHEN vip_ranking_updated=null THEN '100'
+				  WHEN vip_ranking_updated is NULL THEN '100'
 				  ELSE TIMESTAMPDIFF(DAY, vip_ranking_updated, NOW())  END as 'days_vip_updated'
 				from whale_users where site = '{$game_id}' order by {$orderby} ");
     		break;
