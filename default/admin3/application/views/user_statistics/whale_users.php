@@ -82,7 +82,7 @@
 			foreach($query->result() as $row):
 
 		?>
-			<tr bgcolor="<?=vipcolor($row->deposit_total)?>" id="tr<?=$row->character_in_game_id?>">
+			<tr bgcolor="<?=vipcolor($game_id,$row->deposit_total)?>" id="tr<?=$row->character_in_game_id?>">
 				<td nowrap="nowrap"><?=$seq++?></td>
 				<td style="text-align:right">
 					<a href="<?=($game_id=='h35naxx1hmt'?site_url("trade/h35vip_orders/{$row->uid}"):($game_id=='L8na'?site_url("trade/negame_orders/{$game_id}?account={$row->uid}") :site_url("member/view/{$row->uid}"))) ?>"><?=$row->uid?>  </a>
@@ -183,29 +183,50 @@
 </div>
 
 <?
-function vipcolor($deposit_number){
-	if ($deposit_number>=1000000)
-	{
-		return "#FFFFFF";
+function vipcolor($game_id,$deposit_number){
+	switch ($game_id) {
+		case 'h35naxx1hmt':
+			if ($deposit_number>=1000000)
+			{
+				return "#FFFFFF";
+			}
+			else if ($deposit_number>=700000 and $deposit_number<1000000)
+			{
+				return "#E5E4E2";
+			}
+			else if ($deposit_number>=400000 and $deposit_number<700000)
+			{
+				return "#D4AF37";
+			}
+			else if ($deposit_number>=200000 and $deposit_number<400000)
+			{
+				return "#C0C0C0";
+			}
+			else if ($deposit_number>=150000 and $deposit_number<200000)
+			{
+				return "#FAEBD7";
+			}
+			else {
+				return "#FFFFFF";
+			}
+			break;
+		case 'L8na':
+			if ($deposit_number>=100000)
+			{
+				return "#C0C0C0";
+			}
+			else if ($deposit_number>=50000 and $deposit_number<100000)
+			{
+				return "#FAEBD7";
+			}
+			else {
+				return "#FFFFFF";
+			}
+			break;
+		default:
+			# code...
+			break;
 	}
-	else if ($deposit_number>=700000 and $deposit_number<1000000)
-	{
-		return "#E5E4E2";
-	}
-	else if ($deposit_number>=400000 and $deposit_number<700000)
-	{
-		return "#D4AF37";
-	}
-	else if ($deposit_number>=200000 and $deposit_number<400000)
-	{
-		return "#C0C0C0";
-	}
-	else if ($deposit_number>=150000 and $deposit_number<200000)
-	{
-		return "#FAEBD7";
-	}
-	else {
-		return "#FFFFFF";
-	}
+
 }
 ?>
