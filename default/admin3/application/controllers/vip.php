@@ -143,7 +143,7 @@ class Vip extends MY_Controller {
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("file01"))
 			{
-				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				die((array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
 			}
 			else
 			{
@@ -563,19 +563,196 @@ function user_dashboard($game_id,$role_id)
 {
 	$this->zacl->check("vip", "modify");
 
-	$vip = $this->DB2->select("uid,char_name,char_in_game_id,server_name,ip,country,vip_ranking")
+	$vip = $this->DB2->select("uid,char_name,char_in_game_id,server_name,ip,country,vip_ranking,site,line_id,line_date")
 		->where("site", $game_id)
 		->where("char_in_game_id", $role_id)
 		->from("whale_users")
 		->get()->row();
 
-	$this->_init_vip_layout()
+	$admins = $this->DB2->select("t.admin_uid,u.name")
+		->where("role_id", $role_id)
+		->from('vip_requests t')
+		->join("admin_users u", "u.uid=t.admin_uid", "left")
+		->group_by(array("admin_uid", "name"))
+		->get();
+
+	$this->_init_layout()
+		->add_breadcrumb("鯨魚用戶","user_statistics/whale_users?game_id={$game_id}&orderby=deposit_total+desc&action=鯨魚用戶統計")
 		->add_breadcrumb("用戶資料檢視")
-		->add_js_include("vip/view")
+		->add_js_include("vip/dashboard")
+		->add_js_include("jquery-ui-timepicker-addon")
 		->set("vip", $vip)
+		->set("admins", $admins)
 		->render();
 }
 
+
+function update_vip_info()
+{
+	$vip_uid = $this->input->post("vip_uid");
+	$game_id = $this->input->post("game_id");
+	$line_id = $this->input->post("line_id");
+	$line_date = $this->input->post("line_date");
+	$data = array(
+		'line_id'	=> $line_id,
+		'line_date' => $line_date,
+	);
+
+	//die(json_success($data));
+	if (empty($vip_uid) || empty($game_id) || (empty($line_id) && empty($line_date))  )
+	{
+		die(json_failure("資料不完整".$data));
+	}
+
+	$this->DB2->where("uid", $vip_uid)->where("site", $game_id)
+		->update("whale_users", $data);
+
+	if ($this->DB2->affected_rows() > 0) {
+		die(json_success());
+	}
+	else {
+		die(json_failure("資料未變更"));
+	}
+
+}
+
+
+function add_vip_request()
+{
+	$role_id = $this->input->post("role_id");
+	$game_id = $this->input->post("game_id");
+	$service_type = $this->input->post("service_type");
+	$request_code = $this->input->post("request_code");
+	$note = $this->input->post("note");
+
+
+	$data = array(
+		'game_id'	=> $game_id,
+		'role_id'	=> $role_id,
+		'service_type'	=> $service_type,
+		'request_code' => $request_code,
+		'note' => $note,
+		'admin_uid' => $_SESSION['admin_uid'],
+	);
+
+	//die(json_success($data));
+	if (empty($role_id) || empty($game_id) || (empty($service_type) && empty($request_code))  )
+	{
+		die(json_failure("資料不完整".$data));
+	}
+
+	$this->DB2->insert("vip_requests", $data);
+	$request_id = $this->DB2->insert_id();
+	if ($request_id > 0) {
+		$record = $this->DB2->select("t.id,t.request_code,t.note,t.create_time,u.name")
+			->where("t.id",$request_id)
+			->from('vip_requests t')
+			->join("admin_users u", "u.uid=t.admin_uid", "left")->get()->result();
+
+
+		die(json_success($record[0]));
+	}
+	else {
+		die(json_failure("資料未變更"));
+	}
+
+}
+//傳入遊戲和角色就得到該角色的服務歷程
+function vip_request_list($game_id,$role_id,$type,$page_num)
+{
+	switch ($type) {
+		case '1':
+			$service_request = $this->config->item('h35vip_service_request');
+			break;
+		case '2':
+			$service_request = $this->config->item('h35vip_service_feedback');
+			break;
+		default:
+		$service_request = $this->config->item('h35vip_service_request');
+		break;
+	}
+
+	//select id,game_id,role_id,service_type, request_code, note, create_time, admin_uid from vip_requests
+	//"request_code=" + request_code +"&note=" + note;
+	$this->DB2->start_cache();
+	$this->DB2->select("t.id,t.request_code,t.note,t.create_time,u.name")
+		->where("role_id", $role_id)
+		->where("game_id", $game_id)
+		->where("service_type", $type)
+		->from('vip_requests t')
+		->join("admin_users u", "u.uid=t.admin_uid", "left");
+
+		if ($request_code = $this->input->get("request_code")) {
+			$this->DB2->where("t.request_code = '{$request_code}'");
+		}
+
+		if ($note = $this->input->get("note")) {
+			$this->DB2->where("t.note like '%{$note}%'");
+		}
+
+		if ($admin_uid = $this->input->get("admin_uid")) {
+			$this->DB2->where("t.admin_uid = '{$admin_uid}'");
+		}
+
+
+
+		//$span = $this->input->get("span");
+		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
+		$end_date = $this->input->get("end_date") ? $this->input->get("end_date")." 23:59:59" : date("Y-m-d");
+		if (!empty($this->input->get("start_date")))  {
+			$this->DB2->where("t.create_time between '{$start_date}' and '{$end_date}'");
+		}
+
+		//die("t.create_time between '{$start_date}' and '{$end_date}'");
+
+
+
+		$this->DB2->stop_cache();
+		$total_rows = $this->DB2->count_all_results();
+		$records =  $this->DB2->limit(10, ($page_num-1)*10)->order_by("t.create_time desc")->get();
+
+		$data = array();
+		foreach($records->result() as $row) {
+			$data[] = array(
+				'id' => $row->id,
+				'request_code' => $row->request_code,
+				'request_text' => $service_request[$row->request_code],
+				'note' => $row->note,
+				'create_time' =>  $row->create_time,
+				'admin_name' =>  $row->name,
+			);
+		}
+
+		$result_obj = new stdClass();
+
+		$result_obj->page_count = ($total_rows % 10) == 0 ? $total_rows/10: ceil($total_rows/10) ;
+		$result_obj->logs = $data ;
+
+
+		//header('Access-Control-Allow-Origin: *');
+		die(json_encode($result_obj));
+}
+
+function del_vip_request()
+{
+	$request_id = $this->input->post("record_id");
+
+	if (empty($request_id))
+	{
+		die(json_failure("資料不完整"));
+	}
+
+	$this->DB2->delete("vip_requests", array('id' => $request_id));
+
+	if ($this->DB2->affected_rows() > 0) {
+		die(json_success());
+	}
+	else {
+		die(json_failure("異常錯誤"));
+	}
+
+
+}
 
 }
 

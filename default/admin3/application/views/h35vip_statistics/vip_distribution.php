@@ -109,7 +109,7 @@ endif; ?>
         // Create the data table.
 
         var data = google.visualization.arrayToDataTable([
-          ['VIP 等級','普R:$5萬~10萬', '銀R:$10萬~30萬', '金R:$30萬~60萬', '白金R:$60萬-100萬', '黑R:儲值$100萬以上',{ role: 'annotation' }],
+          ['VIP 等級','普R:$15萬~20萬', '銀R:$20萬~40萬', '金R:$40萬~70萬', '白金R:$70萬-100萬', '黑R:儲值$100萬以上',{ role: 'annotation' }],
             <? echo $strGoogleData; ?>
              ]);
 
