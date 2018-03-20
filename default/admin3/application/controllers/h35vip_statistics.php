@@ -45,12 +45,12 @@ class H35vip_statistics extends MY_Controller {
     where tag={$is_added}";
     if ($start_week)
     {
-      $tmpquery.= " and YEARWEEK(STR_TO_DATE(CONCAT(year, week,' Sunday') , '%X%V %W')) between $start_week";
+      $tmpquery.= " and YEARWEEK(STR_TO_DATE(CONCAT(year, week,' Sunday') , '%X%V %W')) between '{$start_week}'";
     }
 
     if ($end_week)
     {
-      $tmpquery.= " and $end_week";
+      $tmpquery.= " and '{$end_week}'";
     }
 		$query = $this->DB2->query($tmpquery);
 
