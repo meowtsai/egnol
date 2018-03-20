@@ -4,28 +4,59 @@
 
 <ul class="nav nav-tabs">
   <li class="">
-      <a href="<?=site_url("h35vip_statistics/overview")?>">VIP 人數成長</a>
+      <a href="<?=site_url("h35vip_statistics/overview")?>">【VIP 週人數統計】</a>
   </li>
   <li class="active">
-      <a href="<?=site_url("h35vip_statistics/topup_status")?>">各伺服器每週VIP儲值情況</a>
+      <a href="<?=site_url("h35vip_statistics/topup_status")?>">【VIP 週儲值統計】</a>
   </li>
   <li class="">
-      <a href="<?=site_url("h35vip_statistics/vip_distribution")?>">各伺服器各階VIP人數</a>
+      <a href="<?=site_url("h35vip_statistics/overview_monthly")?>">【VIP 月人數統計】</a>
   </li>
   <li class="">
-      <a href="<?=site_url("h35vip_statistics/daily_topup")?>">各伺服器by月份儲值總覽</a>
+      <a href="<?=site_url("h35vip_statistics/monthly_topup")?>">【累積 VIP 月儲值統計】</a>
   </li>
   <li class="">
+      <a href="<?=site_url("h35vip_statistics/contribution_piechart")?>">【分層貢獻金額佔比】</a>
+  </li>
+  <!-- <li class="">
       <a href="<?=site_url("h35vip_statistics/hourly_topup")?>">by時間儲值總覽</a>
   </li>
   <li class="">
       <a href="<?=site_url("h35vip_statistics/country_distribution")?>">國家別</a>
-  </li>
+  </li> -->
 </ul>
 
+<form method="get" action="<?=site_url("h35vip_statistics/topup_status")?>" class="form-search">
+	<div class="control-group">
+		<select name="is_added">
+      <option value="">全部</option>
+      <option value="Y" <?=($this->input->get("is_added") =='Y'? 'selected="selected"' : '')?>>已加入Line</option>
+      <option value="R" <?=($this->input->get("is_added") =='R'? 'selected="selected"' : '')?>>已加入Line普R以上用戶</option>
+	  </select>
+
+		時間
+    <select name="start_week">
+      <option value="">全部</option>
+      <?foreach($week_data as $w_row):?>
+      <option value="<?=$w_row->myyearweek?>"  <?=($this->input->get("start_week") ==$w_row->myyearweek? 'selected="selected"' : '')?> ><?=substr($w_row->myyearweek, 0,4)?>/<?=$w_row->mymonth?>/w<?=substr($w_row->myyearweek, 4,2)?></option>
+      <?endforeach;?>
+    </select>
+    <select name="end_week">
+      <option value="">全部</option>
+      <?foreach($week_data as $w_row):?>
+      <option value="<?=$w_row->myyearweek?>" <?=($this->input->get("end_week") ==$w_row->myyearweek? 'selected="selected"' : '')?>><?=substr($w_row->myyearweek, 0,4)?>/<?=$w_row->mymonth?>/w<?=substr($w_row->myyearweek, 4,2)?></option>
+      <?endforeach;?>
+    </select>
+		<input type="submit" class="btn btn-small btn-inverse" name="action" value="篩選">
+
+	</div>
+</form>
 
 <div id="barchart_material"></div>
-
+<button id="cmdSizeIt" onclick="drawChart()">縮小圖表</button>
+<br />
+<br />
+<br />
 <?
 $strGoogleData ="";
 if ($query):
@@ -84,6 +115,26 @@ endif; ?>
       // instantiates the pie chart, passes in the data and
       // draws it.
       function drawChart() {
+        var x = document.getElementById("cmdSizeIt");
+        var sizeOption = {
+          width:800,
+          height:600,
+        };
+        if (x.innerText=='放大圖表')
+        {
+          sizeOption = {
+            width:1200,
+            height:900,
+          };
+          x.innerText = '縮小圖表'
+        }
+        else {
+          sizeOption = {
+            width:600,
+            height:400,
+          };
+          x.innerText = '放大圖表'
+        }
 
         // Create the data table.
 
@@ -92,35 +143,18 @@ endif; ?>
             <? echo $strGoogleData; ?>
              ]);
 
-       //  var data = google.visualization.arrayToDataTable([
-       //   ['等級','普R', '銀R', '金R', '白金R', '黑R',{ role: 'annotation' } ],
-       //   ['2017/46', 2, 0, 0, 0, 0, ''],
-       //   ['2017/47', 7, 2, 0, 0, 0, ''],
-       //   ['2017/48', 27, 3, 1, 0, 0, ''],
-       //   ['2017/49', 46, 13, 3, 0, 0, ''],
-       //   ['2017/50', 63, 20, 3, 0, 0, ''],
-       //   ['2017/51', 73, 37, 4, 1, 0, ''],
-       //   ['2017/52', 100, 52, 4, 1, 0, ''],
-       //   ['2017/53', 125, 69, 5, 0, 1, ''],
-       //   ['2018/1', 152, 72, 6, 2, 1, ''],
-       //   ['2018/2', 168, 81, 5, 5, 1, ''],
-       //   ['2018/3', 181, 89, 5, 5, 2, ''],
-       //   ['2018/4', 187, 99, 6, 4, 3, ''],
-       //   ['2018/5', 194, 113, 8, 4, 3, ''],
-       //   ['2018/6', 202, 142, 11, 3, 4, ''],
-       //   ['2018/7', 220, 145, 13, 3, 4, ''],
-       // ]);
-
-
-
-
              var options = {
-               width: 600,
-               height: 400,
+               ...sizeOption,
                legend: { position: 'top', maxLines: 3 },
                bar: { groupWidth: '75%' },
                isStacked: true,
-               colors: ['#1b9e77']
+               series: {
+                 0:{color:'#0080FF'},
+                 1:{color:'#C50047'},
+                 2:{color:'#889F00'},
+                 3:{color:'#9E308E'},
+                 4:{color:'#73B9FF'}
+               }
              };
 
         // Instantiate and draw our chart, passing in some options.

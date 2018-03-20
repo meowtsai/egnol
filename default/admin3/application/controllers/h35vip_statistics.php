@@ -75,6 +75,45 @@ class H35vip_statistics extends MY_Controller {
 		$this->zacl->check("whale_users_statistics", "read");
 
 		$span = $this->input->get("span");
+
+    if ($this->input->get("is_added"))
+    {
+
+      $tmpquery = "where REPLACE(account,'@netease_global.win.163.com','')
+      in(select uid from  whale_users
+      where site ='h35naxx1hmt'
+      and is_added ='1'";
+
+      $is_added = $this->input->get("is_added");
+      if ($is_added=="R")
+      {
+        $tmpquery .= " and vip_ranking is not null)";
+      }
+      else {
+        $tmpquery .= " )";
+      }
+
+    }
+    else {
+      $tmpquery = "where 1=1";
+    }
+
+
+
+
+    $start_week = $this->input->get("start_week");
+    $end_week = $this->input->get("end_week");
+
+    if ($start_week)
+    {
+      $tmpquery.= " and YEARWEEK(create_time) between $start_week";
+    }
+
+    if ($end_week)
+    {
+      $tmpquery.= " and $end_week";
+    }
+
 		$query = $this->DB2->query("
     select left(myyearweek,4) as year,
     right(myyearweek,2) as week,
@@ -85,13 +124,20 @@ class H35vip_statistics extends MY_Controller {
     SUM(CASE WHEN a.server = '10004' THEN sumTotal ELSE 0 END) AS 's10004',
     SUM(CASE WHEN a.server = '10005' THEN sumTotal ELSE 0 END) AS 's10005' from
     (select YEARWEEK(create_time) as myyearweek, server ,sum(amount) as sumTotal from h35vip_orders
-    where REPLACE(account,'@netease_global.win.163.com','') in(select uid from  whale_users where site ='h35naxx1hmt' and is_added ='1')
+    {$tmpquery}
     group by YEARWEEK(create_time),server) a
     group by myyearweek
     ");
 
+    $week_data = $this->DB2->query("SELECT YEARWEEK as myyearweek, MONTH(STR_TO_DATE(CONCAT(YEARWEEK,' Sunday') , '%X%V %W')) as mymonth
+    from
+    (SELECT YEARWEEK(create_time) as YEARWEEK
+    FROM h35vip_orders
+    GROUP BY YEARWEEK(create_time)) a")->result();
+
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
+      ->set("week_data", $week_data)
 			->set("span", $span)
 			->render();
 	}
@@ -245,6 +291,164 @@ class H35vip_statistics extends MY_Controller {
 
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
+			->set("span", $span)
+			->render();
+	}
+
+
+  function monthly_topup()
+  {
+    $this->_init_statistics_layout();
+    $this->load->helper("output_table");
+
+    $this->zacl->check("whale_users_statistics", "read");
+
+    $select_month =  date("Y-m",mktime(0, 0, 0, 11, 15, 2017));
+    $select_month_end =  date("Y-m");
+
+    if ($this->input->get("select_month")) {
+      $select_month = $this->input->get("select_month");
+    }
+
+
+    if ($this->input->get("select_month_end")) {
+      $select_month_end = $this->input->get("select_month_end");
+    }
+
+
+
+
+    if ($this->input->get("is_added"))
+    {
+      $is_added = "AND REPLACE(account,'@netease_global.win.163.com','')
+      in(select uid from  whale_users where site ='h35naxx1hmt' and is_added ='1' ";
+
+      $tmp_val = $this->input->get("is_added");
+      if ($tmp_val=="R")
+      {
+        $is_added .= " and vip_ranking is not null)";
+      }
+      else {
+        $is_added .= " )";
+      }
+    }
+    else {
+      $is_added = "";
+    }
+
+    $span = $this->input->get("span");
+    $query = $this->DB2->query("
+    Select DATE_FORMAT(create_time,'%Y-%m') as month,
+    SUM(CASE WHEN server = '10001' THEN amount ELSE 0 END) AS 's10001',
+    SUM(CASE WHEN server = '10002' THEN amount ELSE 0 END) AS 's10002',
+    SUM(CASE WHEN server = '10003' THEN amount ELSE 0 END) AS 's10003',
+    SUM(CASE WHEN server = '10004' THEN amount ELSE 0 END) AS 's10004',
+    SUM(CASE WHEN server = '10005' THEN amount ELSE 0 END) AS 's10005'
+    from h35vip_orders
+    where DATE_FORMAT(create_time,'%Y-%m') between '{$select_month}' and  '{$select_month_end}'
+    {$is_added}
+    group by  DATE_FORMAT(create_time,'%Y-%m')
+    ");
+
+
+    $month_data = $this->DB2->query("Select  distinct DATE_FORMAT(create_time,'%Y-%m') as month
+    from h35vip_orders")->result();
+
+
+
+    $this->g_layout
+      ->set("query", isset($query) ? $query : false)
+      ->set("month_data", $month_data)
+      ->render();
+  }
+
+  function overview_monthly()
+  {
+    $this->_init_statistics_layout();
+    $this->load->helper("output_table");
+
+    $this->zacl->check("whale_users_statistics", "read");
+
+    $start_month = $this->input->get("start_month");
+    $end_month = $this->input->get("end_month");
+
+    if ($this->input->get("is_added"))
+    {
+      $is_added = 1;
+    }
+    else {
+      $is_added = 0;
+    }
+
+    $tmpquery = "select *,(general + silver+gold+platinum+black) as month_total from h35vip_monthly_data
+    where tag={$is_added}";
+    if ($start_month)
+    {
+      $tmpquery.= " and yearmonth between $start_month";
+    }
+
+    if ($end_month)
+    {
+      $tmpquery.= " and $end_month";
+    }
+    $query = $this->DB2->query($tmpquery);
+
+
+    $week_data = $this->DB2->query("SELECT distinct yearmonth
+    from
+    h35vip_monthly_data ")->result();
+
+    $this->g_layout
+      ->set("query", isset($query) ? $query : false)
+      ->set("month_data", $week_data)
+      ->render();
+  }
+//is_added=Y&start_date=2018-03-01&end_date=2018-03-20&action=篩選
+  function contribution_piechart()
+	{
+		$this->_init_statistics_layout();
+		$this->load->helper("output_table");
+
+		$this->zacl->check("whale_users_statistics", "read");
+
+		$span = $this->input->get("span");
+
+    if ($this->input->get("is_added"))
+    {
+      $is_added = "and is_added ='1'";
+    }
+    else {
+      $is_added = "";
+    }
+
+    $start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d",strtotime("-30 days"));;
+    $end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
+
+		$query = $this->DB2->query("
+    select vip_ranking, sum(range_amount) as range_amount,sum(total_amount) as total_amount
+    FROM
+    (
+    select vip_ranking,sum(amount) as range_amount,0 as total_amount from h35vip_orders a
+    inner join (select char_in_game_id,vip_ranking from whale_users where site ='h35naxx1hmt' and vip_ranking is not null {$is_added}) b
+    on a.role_id = b.char_in_game_id
+    where DATE_FORMAT(create_time,'%Y-%m-%d') between '{$start_date}' and '{$end_date}'
+    group by vip_ranking
+
+    union
+    select vip_ranking,0 as range_amount, sum(amount) as total_amount from h35vip_orders a
+    inner join (select char_in_game_id,vip_ranking from whale_users where site ='h35naxx1hmt' and vip_ranking is not null {$is_added}) b
+    on a.role_id = b.char_in_game_id
+    where DATE_FORMAT(create_time,'%Y-%m-%d') between '2017-11-15' and now()
+    group by vip_ranking
+    ) a
+    group by vip_ranking
+    ORDER BY FIELD(vip_ranking, 'general','silver','gold','platinum','black')
+    ");
+
+		$this->g_layout
+			->set("query", isset($query) ? $query : false)
+      ->set("start_date", $start_date)
+      ->set("end_date", $end_date)
 			->set("span", $span)
 			->render();
 	}

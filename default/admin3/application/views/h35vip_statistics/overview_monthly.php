@@ -3,13 +3,13 @@
 </div>
 
 <ul class="nav nav-tabs">
-    <li class="<?=(empty($span)) ? "active" : ""?>">
+    <li class="">
         <a href="<?=site_url("h35vip_statistics/overview")?>">【VIP 週人數統計】</a>
     </li>
     <li class="">
         <a href="<?=site_url("h35vip_statistics/topup_status")?>">【VIP 週儲值統計】</a>
     </li>
-    <li class="">
+    <li class="active">
         <a href="<?=site_url("h35vip_statistics/overview_monthly")?>">【VIP 月人數統計】</a>
     </li>
     <li class="">
@@ -27,7 +27,7 @@
 </ul>
 
 
-<form method="get" action="<?=site_url("h35vip_statistics/overview")?>" class="form-search">
+<form method="get" action="<?=site_url("h35vip_statistics/overview_monthly")?>" class="form-search">
 	<div class="control-group">
 		<select name="is_added">
       <option value="">全部</option>
@@ -35,18 +35,19 @@
 	  </select>
 
 		時間
-    <select name="start_week">
+    <select name="start_month">
       <option value="">全部</option>
-      <?foreach($week_data as $w_row):?>
-      <option value="<?=$w_row->myyearweek?>"  <?=($this->input->get("start_week") ==$w_row->myyearweek? 'selected="selected"' : '')?> ><?=substr($w_row->myyearweek, 0,4)?>/<?=$w_row->mymonth?>/w<?=substr($w_row->myyearweek, 4,2)?></option>
+      <?foreach($month_data as $m_row):?>
+      <option value="<?=$m_row->yearmonth?>"  <?=($this->input->get("start_month") ==$m_row->yearmonth? 'selected="selected"' : '')?> ><?=$w_row->yearmonth?></option>
       <?endforeach;?>
     </select>
-    <select name="end_week">
+    <select name="end_month">
       <option value="">全部</option>
-      <?foreach($week_data as $w_row):?>
-      <option value="<?=$w_row->myyearweek?>" <?=($this->input->get("end_week") ==$w_row->myyearweek? 'selected="selected"' : '')?>><?=substr($w_row->myyearweek, 0,4)?>/<?=$w_row->mymonth?>/w<?=substr($w_row->myyearweek, 4,2)?></option>
+      <?foreach($month_data as $m_row):?>
+      <option value="<?=$m_row->yearmonth?>"  <?=($this->input->get("end_month") ==$m_row->yearmonth? 'selected="selected"' : '')?> ><?=$w_row->yearmonth?></option>
       <?endforeach;?>
     </select>
+
 		<input type="submit" class="btn btn-small btn-inverse" name="action" value="篩選">
 
 	</div>
@@ -66,8 +67,7 @@ if ($query):
   <table class="table table-striped table-bordered" style="width:auto;">
     <thead>
       <tr>
-        <th nowrap="nowrap">年/週</th>
-        <th nowrap="nowrap">當周首日</th>
+        <th nowrap="nowrap">年/月</th>
         <th style="width:70px">普R</th>
         <th style="width:70px">銀R</th>
         <th style="width:70px">金R</th>
@@ -85,25 +85,25 @@ if ($query):
       $grow_rate = 0;
 
       $prev_accum_data = 0;
-      $topup_this_week = 0;
+      $topup_this_month = 0;
       foreach($query->result() as $row):
-      $strGoogleData .= "['{$row->year}/w{$row->week}', {$row->general}, {$row->silver}, {$row->gold}, {$row->platinum}, {$row->black}, '']," ;
+      $strGoogleData .= "['{$row->yearmonth}', {$row->general}, {$row->silver}, {$row->gold}, {$row->platinum}, {$row->black}, '']," ;
       if ($prev_t_data != 0)
       {
-        $grow_rate = ($row->week_total/$prev_t_data) * 100;
+        $grow_rate = ($row->month_total/$prev_t_data) * 100;
       }
       else {
         $grow_rate = 0;
       }
 
-      $prev_t_data = $row->week_total;
+      $prev_t_data = $row->month_total;
 
       if ($prev_accum_data != 0)
       {
-        $topup_this_week =  $row->accumulated_total - $prev_accum_data ;
+        $topup_this_month =  $row->accumulated_total - $prev_accum_data ;
       }
       else {
-        $topup_this_week = $row->accumulated_total;
+        $topup_this_month = $row->accumulated_total;
       }
 
       $prev_accum_data = $row->accumulated_total;
@@ -112,16 +112,15 @@ if ($query):
 
 
       <tr>
-        <td nowrap="nowrap"><?="{$row->year}/w{$row->week}" ?></td>
-        <td nowrap="nowrap"><?="{$row->first_date}" ?></td>
+        <td nowrap="nowrap"><?="{$row->yearmonth}" ?></td>
         <td style="text-align:right"><?=$row->general ?> </td>
         <td style="text-align:right"><?=$row->silver ?></td>
         <td style="text-align:right"><?=$row->gold ?></td>
         <td style="text-align:right"><?=$row->platinum ?></td>
         <td style="text-align:right"><?=$row->black ?></td>
-        <td style="text-align:right"><?=$row->week_total ?></td>
+        <td style="text-align:right"><?=$row->month_total ?></td>
         <td style="text-align:right"> <span style="color:green"><small>▲ <?=number_format($grow_rate, 2, '.', '') ?>%</small></span></td>
-        <td style="text-align:right"><?=number_format($topup_this_week) ?></td>
+        <td style="text-align:right"><?=number_format($topup_this_month) ?></td>
 
       </tr>
     <?endforeach;?>
