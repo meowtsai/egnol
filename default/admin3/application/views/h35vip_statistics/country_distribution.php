@@ -4,7 +4,7 @@
 
 <ul class="nav nav-tabs">
   <li class="">
-      <a href="<?=site_url("h35vip_statistics/overview")?>">VIP 人數成長</a>
+      <a href="<?=site_url("h35vip_statistics/overview")?>">【VIP週人數統計】</a>
   </li>
   <li class="">
       <a href="<?=site_url("h35vip_statistics/topup_status")?>">各伺服器每週VIP儲值情況</a>

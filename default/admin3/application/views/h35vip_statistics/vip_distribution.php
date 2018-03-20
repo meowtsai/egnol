@@ -4,10 +4,10 @@
 
 <ul class="nav nav-tabs">
   <li class="">
-      <a href="<?=site_url("h35vip_statistics/overview")?>">VIP 人數成長</a>
+      <a href="<?=site_url("h35vip_statistics/overview")?>">【VIP週人數統計】</a>
   </li>
   <li class="">
-      <a href="<?=site_url("h35vip_statistics/topup_status")?>">各伺服器每週VIP儲值情況</a>
+      <a href="<?=site_url("h35vip_statistics/topup_status")?>">【VIP 週儲值統計】</a>
   </li>
   <li class="active">
       <a href="<?=site_url("h35vip_statistics/vip_distribution")?>">各伺服器各階VIP人數</a>
@@ -15,12 +15,12 @@
   <li class="">
       <a href="<?=site_url("h35vip_statistics/daily_topup")?>">各伺服器by月份儲值總覽</a>
   </li>
-  <li class="">
+  <!-- <li class="">
       <a href="<?=site_url("h35vip_statistics/hourly_topup")?>">by時間儲值總覽</a>
   </li>
   <li class="">
       <a href="<?=site_url("h35vip_statistics/country_distribution")?>">國家別</a>
-  </li>
+  </li> -->
 </ul>
 
 
