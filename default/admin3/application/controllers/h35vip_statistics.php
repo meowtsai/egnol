@@ -384,12 +384,12 @@ class H35vip_statistics extends MY_Controller {
     where tag={$is_added}";
     if ($start_month)
     {
-      $tmpquery.= " and yearmonth between $start_month";
+      $tmpquery.= " and yearmonth between '{$start_month}'";
     }
 
     if ($end_month)
     {
-      $tmpquery.= " and $end_month";
+      $tmpquery.= " and '{$end_month}'";
     }
     $query = $this->DB2->query($tmpquery);
 
