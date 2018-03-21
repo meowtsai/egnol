@@ -17,13 +17,13 @@
     <table class="table table-bordered" id="report-table">
       <thead>
         <tr>
-          <th scope="col">#</th>
-          <th scope="col">角色序號</th>
-          <th scope="col">角色</th>
-          <th scope="col">類別</th>
-          <th scope="col">內容</th>
-          <th scope="col">時間</th>
-          <th scope="col">專員</th>
+          <th scope="col" style="width:40px" nowrap="nowrap">#</th>
+          <th scope="col" style="width:40px" nowrap="nowrap">角色序號</th>
+          <th scope="col" style="width:70px" nowrap="nowrap">角色</th>
+          <th scope="col" style="width:70px" nowrap="nowrap">類別</th>
+          <th scope="col" style="width:350px" nowrap="nowrap" width="">內容</th>
+          <th scope="col" style="width:70px" nowrap="nowrap">時間</th>
+          <th scope="col" style="width:70px" nowrap="nowrap">專員</th>
         </tr>
       </thead>
       <tbody>
