@@ -126,7 +126,7 @@ function get_ranking_report(how_many_days)
       trObj.innerHTML += "<td>"+ item.flagged_player_name +
         "( <a href='complaints?character_name="+ item.flagged_player_name +"&character_id="+ item.flagged_player_char_id +"&action=查詢'>" + item.flagged_player_char_id + "</a>)</td>";
       trObj.innerHTML += "<td>"+ item.cnt +"</td>";
-			trObj.innerHTML += "<td><button onclick=\"complaint_batch_mark('"+ item.flagged_player_char_id  +"')\">批次標示為永久停權</button></td>";
+			trObj.innerHTML += "<td><button onclick=\"complaint_batch_mark('"+ item.flagged_player_char_id  +"')\">批次標示為永久停權或禁言</button></td>";
 
       $("#ranking_table tbody").append(trObj);
 

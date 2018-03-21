@@ -73,6 +73,11 @@ $(function() {
 	});
 	$("#line_date").datepicker( "option", "dateFormat", "yy-mm-dd");
 
+
+  $('.alert').hide();
+  $('.alert').html('');
+
+
 });
 
 
@@ -122,6 +127,8 @@ function update_vip_info()
 }
 
 function add_vip_request(service_type) {
+
+
   // role_id = $("input[name=role_id]").val();
   //let game_id =  $("input[name=game_id]").val();
 
@@ -129,17 +136,20 @@ function add_vip_request(service_type) {
   var pageElem = null;
   var addOptionElem = null;
   var addNoteElem = null;
+  var alertDiv = null;
 
   switch (service_type) {
     case '1':
       tableElem = $("#request-log");
       addOptionElem = $("#serviceOptionSelector");
       addNoteElem = $("input[name=inputServiceInfo]");
+      alertDiv = $("#divAdd");
       break;
     case '2':
       tableElem = $("#feedback-log");
       addOptionElem = $("#serviceFeedbackOptionSelector");
       addNoteElem = $("input[name=inputServiceFeedbackInfo]");
+      alertDiv = $("#divFeedbackAdd");
       break;
     default:
       tableElem = $("#request-log");
@@ -148,13 +158,15 @@ function add_vip_request(service_type) {
       break;
   }
 
-
+  alertDiv.find('.alert').hide();
+  alertDiv.find('.alert').html('');
   let request_code = addOptionElem.val();
   let request_text =addOptionElem.find(":selected").text();
   let note = addNoteElem.val();
-
   if (request_code==='')
   {
+    alertDiv.find('.alert').show();
+    alertDiv.find('.alert').html('<strong>請選擇要新增的分類</strong>');
     return;
   }
 

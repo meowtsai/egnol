@@ -1019,7 +1019,7 @@ class Service extends MY_Controller {
 		if ( ! $this->zacl->check_acl("service", "modify")) die(json_failure("沒有權限"));
 
 		$role_id = $this->input->post("role_id");
-		$this->DB1->set("status", "2")->set("admin_comment", "帳號停權")->set("admin_uid", $_SESSION['admin_uid'])->set("update_time", now())->where("flagged_player_char_id", $role_id)->update("complaints");
+		$this->DB1->set("status", "2")->set("admin_comment", "帳號停權或禁言")->set("admin_uid", $_SESSION['admin_uid'])->set("update_time", now())->where("flagged_player_char_id", $role_id)->update("complaints");
 		//die("role_id is" .$role_id );
 		if ($this->DB1->affected_rows() > 0) {
 			die(json_success());

@@ -754,6 +754,79 @@ function del_vip_request()
 
 }
 
+function requests_report($game_id)
+{
+	$this->zacl->check("vip", "modify");
+
+
+	$this->_init_layout()
+		->set("game_id", $game_id)
+		->add_breadcrumb("鯨魚用戶","user_statistics/whale_users?game_id={$game_id}&orderby=deposit_total+desc&action=鯨魚用戶統計")
+		->add_breadcrumb("服務記錄列表")
+		->add_js_include("vip/report")
+		->render();
+}
+
+//傳入遊戲和角色就得到該角色的服務歷程
+function requests_report_data($game_id)
+{
+
+	$service_type = $this->input->get("service_type");
+	switch ($service_type) {
+		case '1':
+			$service_request = $this->config->item('h35vip_service_request');
+			break;
+		case '2':
+			$service_request = $this->config->item('h35vip_service_feedback');
+			break;
+		default:
+		$service_request = $this->config->item('h35vip_service_request');
+		break;
+	}
+	//select id,game_id,role_id,service_type, request_code, note, create_time, admin_uid from vip_requests
+	//"request_code=" + request_code +"&note=" + note;
+	$this->DB2->start_cache();
+	$this->DB2->select("t.id,t.role_id,w.char_name ,t.request_code,t.note,t.create_time,u.name")
+		->where("t.game_id", $game_id)
+		->where("t.service_type", $service_type)
+		->from('vip_requests t')
+		->join("admin_users u", "u.uid=t.admin_uid", "left")
+		->join("whale_users w", "w.char_in_game_id= t.role_id", "left");
+
+
+		//$span = $this->input->get("span");
+		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
+		$end_date = $this->input->get("end_date") ? $this->input->get("end_date")." 23:59:59" : date("Y-m-d");
+		if (!empty($this->input->get("start_date")))  {
+			$this->DB2->where("t.create_time between '{$start_date}' and '{$end_date}'");
+		}
+		$this->DB2->stop_cache();
+		$records =  $this->DB2->order_by("t.create_time desc")->get();
+
+		$data = array();
+		foreach($records->result() as $row) {
+
+
+			$data[] = array(
+				'id' => $row->id,
+				'role_id' => $row->role_id,
+				'role_name' => $row->char_name,
+				'request_code' => $row->request_code,
+				'request_text' => $service_request[$row->request_code],
+				'note' => $row->note,
+				'create_time' =>  $row->create_time,
+				'admin_name' =>  $row->name,
+			);
+		}
+
+		$result_obj = new stdClass();
+
+
+
+		//header('Access-Control-Allow-Origin: *');
+		die(json_encode($data));
+}
+
 }
 
 /* End of file welcome.php */

@@ -111,8 +111,14 @@ if ($vip):?>
         <option value="<?=$key?>" ><?=$request?></option>
         <? endforeach;?>
       </select>
-      <input type="text" id="inputServiceInfo" name="inputServiceInfo" placeholder="備註(選填)" maxlength="120">
+      <input type="text" id="inputServiceInfo" name="inputServiceInfo" placeholder="備註(選填)" maxlength="250">
       <button type="button" class="btn btn-primary btn-sm" onclick="add_vip_request('1')">新增</button>
+
+      <div class="alert">
+
+      </div>
+
+
       </div>
     </div>
   </div>
@@ -180,8 +186,11 @@ if ($vip):?>
         <option value="<?=$key?>" ><?=$feedback?></option>
         <? endforeach;?>
       </select>
-      <input type="text" id="inputServiceFeedbackInfo" name="inputServiceFeedbackInfo" placeholder="對話摘要" style="width:550px" maxlength="120">
+      <input type="text" id="inputServiceFeedbackInfo" name="inputServiceFeedbackInfo" placeholder="對話摘要" style="width:550px" maxlength="250">
       <button type="button" class="btn btn-primary btn-sm" onclick="add_vip_request('2')">新增</button>
+      <div class="alert">
+
+      </div>
       </div>
     </div>
   </div>

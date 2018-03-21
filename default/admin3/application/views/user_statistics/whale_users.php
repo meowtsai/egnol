@@ -50,6 +50,11 @@
 
 		<input type="submit" class="btn btn-small btn-inverse" name="action" value="鯨魚用戶統計">
 
+		<a class="btn btn-info" href="<?=site_url("vip/requests_report/{$game_id}")?>">
+		查看服務列表
+		</a>
+
+
 	</div>
 
 </form>
