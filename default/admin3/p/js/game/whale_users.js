@@ -34,7 +34,7 @@ function confirm_lastlogin(opt)
 	let role_id = $("#role_id").val();
 	let game_id = $("#game_id").val();
 	let last_login = $("#end_date").val();
-	console.log(game_id,role_id,last_login);
+	console.log(game_id,role_id,last_login,opt);
 	if (opt === 'reset')
 	{
 		last_login = "";
