@@ -862,6 +862,11 @@ function inactive_users_report($game_id)
 
 		$data = array();
 		foreach($records->result() as $row) {
+			$vip_ranking_text = "No R";
+			if ($row->vip_ranking)
+			{
+				$vip_ranking_text = $vip_ranking[$row->vip_ranking];
+			}
 
 			$data[] = array(
 				'account' => $row->uid,
@@ -870,7 +875,7 @@ function inactive_users_report($game_id)
 				'last_login' => $row->last_login,
 				'latest_topup_date' => $row->latest_topup_date,
 				'inactive_confirm_date' =>  $row->inactive_confirm_date,
-				'vip_ranking' =>  $vip_ranking[$row->vip_ranking],
+				'vip_ranking' =>  $vip_ranking_text,
 			);
 		}
 
