@@ -55,9 +55,9 @@ function confirm_lastlogin(opt)
     url: url,
     data: "game_id=" + game_id + "&role_id=" + role_id +"&last_login=" + last_login +"&opt=" + opt  ,
   }).done(function(result) {
-
+		console.log( result );
 		var resultObj = JSON.parse(result);
-		console.log( "Request done: " + resultObj.status );
+		//console.log( "Request done: " + resultObj.status );
 		if (resultObj.status == 'success') {
       $("#tr" + role_id).children(":nth-child(14)").text(last_login);
       $('#commentModal').modal('hide');
