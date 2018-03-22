@@ -827,6 +827,60 @@ function requests_report_data($game_id)
 		die(json_encode($data));
 }
 
+
+function inactive_users($game_id)
+{
+	$this->zacl->check("vip", "modify");
+
+	$this->_init_layout()
+		->set("game_id", $game_id)
+		->add_breadcrumb("鯨魚用戶","user_statistics/whale_users?game_id={$game_id}&orderby=deposit_total+desc&action=鯨魚用戶統計")
+		->add_breadcrumb("流失用戶列表")
+		->add_js_include("vip/report")
+		->render();
+}
+
+function inactive_users_report($game_id)
+{
+	$vip_ranking = $this->config->item('vip_ranking');
+
+	$date_column = $this->input->get("date_column");
+
+	$this->DB2->start_cache();
+	$this->DB2->select("t.uid,t.char_name,t.char_in_game_id ,t.vip_ranking,t.last_login,t.latest_topup_date,t.inactive_confirm_date")
+		->where("site", $game_id)
+		->where("last_login is not null")
+		->from('whale_users t');
+
+		$start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d");
+		$end_date = $this->input->get("end_date") ? $this->input->get("end_date")." 23:59:59" : date("Y-m-d");
+		if (!empty($this->input->get("start_date")))  {
+			$this->DB2->where("t.{$date_column} between '{$start_date}' and '{$end_date}'");
+		}
+		$this->DB2->stop_cache();
+		$records =  $this->DB2->order_by("t.{$date_column} desc")->get();
+
+		$data = array();
+		foreach($records->result() as $row) {
+
+			$data[] = array(
+				'account' => $row->uid,
+				'role_id' => $row->char_in_game_id,
+				'role_name' => $row->char_name,
+				'last_login' => $row->last_login,
+				'latest_topup_date' => $row->latest_topup_date,
+				'inactive_confirm_date' =>  $row->inactive_confirm_date,
+				'vip_ranking' =>  $vip_ranking[$row->vip_ranking],
+			);
+		}
+
+		$result_obj = new stdClass();
+
+
+
+		//header('Access-Control-Allow-Origin: *');
+		die(json_encode($data));
+}
 }
 
 /* End of file welcome.php */

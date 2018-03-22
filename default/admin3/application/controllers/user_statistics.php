@@ -1013,9 +1013,12 @@ class User_statistics extends MY_Controller {
 				latest_topup_date 'latest_topup_date',
 				TIMESTAMPDIFF(DAY, latest_topup_date, NOW()) 'days_since' ,
 				is_added,
+				line_date,
 				TIMESTAMPDIFF(DAY, create_time, NOW()) 'days_inserted',
 				ip,
 				DATE_FORMAT(vip_ranking_updated, '%Y-%m-%d') 'vip_ranking_updated',
+				vip_ranking,
+				inactive_confirm_date,
 				CASE
 				  WHEN vip_ranking_updated is NULL THEN '100'
 				  ELSE TIMESTAMPDIFF(DAY, vip_ranking_updated, NOW())  END as 'days_vip_updated'
@@ -1094,6 +1097,7 @@ class User_statistics extends MY_Controller {
       ->set("orderby", $orderby)
 			->add_js_include("game/whale_users")
 			->add_js_include("jquery-ui-timepicker-addon")
+			->add_js_include("fontawesome/js/fontawesome-all")
 			->render();
 	}
 
@@ -1108,25 +1112,37 @@ function whale_users_set_status($uid, $status)
 function whale_users_set_lastlogin()
 {
 	if ( ! $this->zacl->check_acl("service", "modify")) die(json_failure("沒有權限"));
+	//$this->DB1->where("status", "2")->where("is_read", "1")->where("create_time < DATE_SUB(CURDATE(), INTERVAL 3 DAY)", null, false)->update("questions", array("status"=>"4"));
 	//$game_id,$role_id, $last_login'
 
 	$game_id = $this->input->post("game_id");
 	$role_id = $this->input->post("role_id");
 	$last_login = $this->input->post("last_login");
-	if ($game_id && $role_id && $last_login)
+	$opt = $this->input->post("opt");
+	if ($opt== "reset")
 	{
 		$this->DB1->where("site", $game_id)->where("char_in_game_id", $role_id)
-		->set("last_login", $last_login)->update("whale_users");
+		->update("whale_users", array("last_login"=> null,"inactive_confirm_date"=>null));
+	}
+	elseif ($game_id && $role_id && $last_login)
+	{
+		$this->DB1->where("site", $game_id)->where("char_in_game_id", $role_id)
+		->set("last_login", $last_login)
+		->set("inactive_confirm_date", "now()", false)
+		->update("whale_users");
+	}
+	else
+	{
+		die(json_failure("請輸入完整資料"));
+	}
+
 	if ($this->DB1->affected_rows() > 0) {
 		die(json_success());
 	}
 	else {
 		die(json_failure($query));
 	}
-	}
-	else {
-		die(json_failure("請輸入完整資料"));
-	}
+
 }
 
     function level_analysis() {

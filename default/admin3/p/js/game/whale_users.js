@@ -12,22 +12,34 @@ function open_modal(game_id,role_id)
   $("#modal-alert").hide();
   $("#role_id").val(role_id);
 	$("#game_id").val(game_id);
-	console.log($("#tr" + role_id).children(":nth-child(13)").text().trim());
+	console.log($("#tr" + role_id).children(":nth-child(14)").text().trim());
 
-	$("#end_date").val($("#tr" + role_id).children(":nth-child(13)").text().trim());
+	$("#end_date").val($("#tr" + role_id).children(":nth-child(14)").text().trim());
 
   $("#modal-alert").text("");
   $("#commentModalLabel").text("設定角色 " + role_id + "的最後登入日期");
 
+	if ($("#end_date").val() !=="")
+	{
+		$('#commentModal').find(".btn-danger").show();
+	}
+	else {
+		$('#commentModal').find(".btn-danger").hide();
+	}
+
 }
 
-function confirm_lastlogin()
+function confirm_lastlogin(opt)
 {
 	let role_id = $("#role_id").val();
 	let game_id = $("#game_id").val();
 	let last_login = $("#end_date").val();
 	console.log(game_id,role_id,last_login);
-	if (!last_login)
+	if (opt === 'reset')
+	{
+		last_login = "";
+	}
+	if (!last_login && opt !== 'reset')
 	{
 		$("#modal-alert").removeClass();
     $("#modal-alert").addClass( "alert alert-danger" );
@@ -41,13 +53,13 @@ function confirm_lastlogin()
   $.ajax({
     type: "POST",
     url: url,
-    data: "game_id=" + game_id + "&role_id=" + role_id +"&last_login=" + last_login ,
+    data: "game_id=" + game_id + "&role_id=" + role_id +"&last_login=" + last_login +"&opt=" + opt  ,
   }).done(function(result) {
 
 		var resultObj = JSON.parse(result);
 		console.log( "Request done: " + resultObj.status );
 		if (resultObj.status == 'success') {
-      $("#tr" + role_id).children(":nth-child(13)").text(last_login);
+      $("#tr" + role_id).children(":nth-child(14)").text(last_login);
       $('#commentModal').modal('hide');
     }
     else {

@@ -53,6 +53,9 @@
 		<a class="btn btn-info" href="<?=site_url("vip/requests_report/{$game_id}")?>">
 		查看服務列表
 		</a>
+		<a class="btn btn-warning" href="<?=site_url("vip/inactive_users/{$game_id}")?>">
+		查看流失列表
+		</a>
 	<? endif;?>
 
 
@@ -65,20 +68,22 @@
 	<table class="table table-bordered" style="width:auto;">
 		<thead>
 			<tr>
-				<th nowrap="nowrap" rowspan="2">排名</th>
-				<th style="width:80px" rowspan="2">帳號</th>
-				<th style="width:130px" rowspan="2">角色</th>
-        <th style="width:60px" rowspan="2">原廠ID</th>
-				<th style="width:100px" rowspan="2">伺服器</th>
-				<th style="width:70px" rowspan="2">儲值累積</th>
-				<th style="width:140px" rowspan="2">最後訂單時間</th>
-				<th style="width:100px" rowspan="2">地區</th>
-        <th style="width:70px" rowspan="2">未儲值/日</th>
-        <th style="width:80px" rowspan="2">3日內新人</th>
-				<th style="width:75px" rowspan="2">升階</th>
-				<th style="width:60px" rowspan="2">加入Line</th>
-				<th style="width:75px" rowspan="2">確認流失</th>
-				<th style="width:50px" rowspan="2"></th>
+				<th nowrap="nowrap" >排名</th>
+				<th style="width:80px" >帳號</th>
+				<th style="width:130px" >角色</th>
+        <th style="width:60px" >原廠ID</th>
+				<th style="width:50px" >伺服器</th>
+				<th style="width:70px" >儲值累積</th>
+				<th style="width:150px" >最後訂單時間</th>
+				<th style="width:100px" >地區</th>
+        <th style="width:70px" >未儲值/日</th>
+        <th style="width:80px" >3日內新人</th>
+				<th style="width:75px" >升階</th>
+				<th style="width:60px" >加入Line</th>
+				<th style="width:100px" >加入Line日期</th>
+				<th style="width:100px" >最後登入日期</th>
+				<th style="width:150px" >確認流失</th>
+				<th style="width:50px" ></th>
 
 			</tr>
 		</thead>
@@ -95,6 +100,10 @@
         </td>
 				<td style="text-align:center">
 					<?=$row->character_name?>
+
+					<? if ($row->vip_ranking=='black'):?>
+					<i class="fas fa-chess-queen" style="size:16px;color:gold"></i>
+					<? endif;?>
 				</td>
 				<td style="text-align:right">
 					<a href="<?=site_url("vip/user_dashboard/{$game_id}/{$row->character_in_game_id}")?>">
@@ -122,12 +131,18 @@
 						<? endif;?>
 				</td>
 				<td style="text-align:right">
-            <? if ($row->is_added==1):?>
-            V
-            <? endif;?>
+					<? if ($row->is_added=='1'):?>
+					<i class="fas fa-check"></i>
+					<? endif;?>
         </td>
 				<td style="text-align:right">
+						<?=$row->line_date?>
+				</td>
+				<td style="text-align:right">
 					<?=$row->last_login?>
+				</td>
+				<td style="text-align:right">
+					<?=$row->inactive_confirm_date?>
 				</td>
         <td>
 
@@ -181,8 +196,9 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary" onclick="confirm_lastlogin()">送出</button>
+				<button type="button" class="btn btn-danger" data-dismiss="modal" onclick="confirm_lastlogin('reset')">重置狀態(清空最後登入和確認流失欄位)</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">關閉</button>
+        <button type="button" class="btn btn-primary" onclick="confirm_lastlogin('normal')">送出</button>
       </div>
     </div>
   </div>
