@@ -57,9 +57,9 @@ function confirm_lastlogin(opt)
   }).done(function(result) {
 		console.log( result );
 		var resultObj = JSON.parse(result);
-		//console.log( "Request done: " + resultObj.status );
 		if (resultObj.status == 'success') {
       $("#tr" + role_id).children(":nth-child(14)").text(last_login);
+			$("#tr" + role_id).children(":nth-child(15)").text();
       $('#commentModal').modal('hide');
     }
     else {
