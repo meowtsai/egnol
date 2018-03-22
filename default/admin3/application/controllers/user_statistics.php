@@ -1104,9 +1104,9 @@ class User_statistics extends MY_Controller {
 
 function whale_users_set_status($uid, $status)
 {
-	$this->DB1->where("uid", $uid)
+	$this->DB2->where("uid", $uid)
 	->set("is_added", $status)->update("whale_users");
-	echo $this->DB1->affected_rows()>0 ? json_success() : json_failure("無變更");
+	echo $this->DB2->affected_rows()>0 ? json_success() : json_failure("無變更");
 }
 
 function whale_users_set_lastlogin()
@@ -1121,12 +1121,12 @@ function whale_users_set_lastlogin()
 	$opt = $this->input->post("opt");
 	if ($opt== "reset")
 	{
-		$this->DB1->where("site", $game_id)->where("char_in_game_id", $role_id)
+		$this->DB2->where("site", $game_id)->where("char_in_game_id", $role_id)
 		->update("whale_users", array("last_login"=> null,"inactive_confirm_date"=>null));
 	}
 	elseif ($game_id && $role_id && $last_login)
 	{
-		$this->DB1->where("site", $game_id)->where("char_in_game_id", $role_id)
+		$this->DB2->where("site", $game_id)->where("char_in_game_id", $role_id)
 		->set("last_login", $last_login)
 		->set("inactive_confirm_date", "now()", false)
 		->update("whale_users");
@@ -1136,7 +1136,7 @@ function whale_users_set_lastlogin()
 		die(json_failure("請輸入完整資料"));
 	}
 
-	if ($this->DB1->affected_rows() > 0) {
+	if ($this->DB2->affected_rows() > 0) {
 		die(json_success());
 	}
 	else {
