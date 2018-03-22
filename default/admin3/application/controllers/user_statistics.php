@@ -1140,7 +1140,7 @@ function whale_users_set_lastlogin()
 		die(json_success());
 	}
 	else {
-		die(json_failure($game_id.",".$role_id.",".$last_login.",".$opt));
+		die(json_success($game_id.",".$role_id.",".$last_login.",".$opt));
 	}
 
 }
