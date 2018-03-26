@@ -3,31 +3,25 @@
 </div>
 
 <ul class="nav nav-tabs">
-    <li class="">
-        <a href="<?=site_url("h35vip_statistics/overview")?>">【VIP 週人數統計】</a>
-    </li>
-    <li class="">
-        <a href="<?=site_url("h35vip_statistics/topup_status")?>">【VIP 週儲值統計】</a>
-    </li>
-    <li class="active">
-        <a href="<?=site_url("h35vip_statistics/overview_monthly")?>">【VIP 月人數統計】</a>
-    </li>
-    <li class="">
-        <a href="<?=site_url("h35vip_statistics/monthly_topup")?>">【累積 VIP 月儲值統計】</a>
-    </li>
-    <li class="">
-        <a href="<?=site_url("h35vip_statistics/contribution_piechart")?>">【分層貢獻金額佔比】</a>
-    </li>
-    <!-- <li class="">
-        <a href="<?=site_url("h35vip_statistics/hourly_topup")?>">by時間儲值總覽</a>
-    </li>
-    <li class="">
-        <a href="<?=site_url("h35vip_statistics/country_distribution")?>">國家別</a>
-    </li> -->
+  <li class="">
+      <a href="<?=site_url("h35vip_statistics/overview/{$game_id}")?>">【VIP 週人數統計】</a>
+  </li>
+  <li class="">
+      <a href="<?=site_url("h35vip_statistics/topup_status/{$game_id}")?>">【VIP 週儲值統計】</a>
+  </li>
+  <li class="active">
+      <a href="<?=site_url("h35vip_statistics/overview_monthly/{$game_id}")?>">【VIP 月人數統計】</a>
+  </li>
+  <li class="">
+      <a href="<?=site_url("h35vip_statistics/monthly_topup/{$game_id}")?>">【累積 VIP 月儲值統計】</a>
+  </li>
+  <li class="">
+      <a href="<?=site_url("h35vip_statistics/contribution_piechart/{$game_id}")?>">【分層貢獻金額佔比】</a>
+  </li>
 </ul>
 
 
-<form method="get" action="<?=site_url("h35vip_statistics/overview_monthly")?>" class="form-search">
+<form method="get" action="<?=site_url("h35vip_statistics/overview_monthly/{$game_id}")?>" class="form-search">
 	<div class="control-group">
 		<select name="is_added">
       <option value="">全部</option>
@@ -166,10 +160,13 @@ endif; ?>
          };
          x.innerText = '放大圖表'
        }
-       // Create the data table.
-
+       <?
+        $vip_header = ($game_id=='h35naxx1hmt'? "['VIP 等級','普R:$15萬~20萬', '銀R:$20萬~40萬', '金R:$40萬~70萬', '白金R:$70萬-100萬', '黑R:儲值$100萬以上',{ role: 'annotation' }]"
+        :
+         "['VIP 等級','普R:$5萬~10萬', '銀R:$10萬以上', '金R:未定義', '白金R:未定義', '黑R:未定義',{ role: 'annotation' }]");
+       ?>
        var data = google.visualization.arrayToDataTable([
-         ['VIP 等級','普R:$15萬~20萬', '銀R:$20萬~40萬', '金R:$40萬~70萬', '白金R:$70萬-100萬', '黑R:儲值$100萬以上',{ role: 'annotation' }],
+         <? echo $vip_header; ?>,
          <? echo $strGoogleData; ?>
              ]);
 

@@ -4,29 +4,23 @@
 
 <ul class="nav nav-tabs">
   <li class="">
-      <a href="<?=site_url("h35vip_statistics/overview")?>">【VIP 週人數統計】</a>
+      <a href="<?=site_url("h35vip_statistics/overview/{$game_id}")?>">【VIP 週人數統計】</a>
   </li>
   <li class="">
-      <a href="<?=site_url("h35vip_statistics/topup_status")?>">【VIP 週儲值統計】</a>
+      <a href="<?=site_url("h35vip_statistics/topup_status/{$game_id}")?>">【VIP 週儲值統計】</a>
   </li>
   <li class="">
-      <a href="<?=site_url("h35vip_statistics/overview_monthly")?>">【VIP 月人數統計】</a>
+      <a href="<?=site_url("h35vip_statistics/overview_monthly/{$game_id}")?>">【VIP 月人數統計】</a>
   </li>
   <li class="active">
-      <a href="<?=site_url("h35vip_statistics/monthly_topup")?>">【累積 VIP 月儲值統計】</a>
+      <a href="<?=site_url("h35vip_statistics/monthly_topup/{$game_id}")?>">【累積 VIP 月儲值統計】</a>
   </li>
   <li class="">
-      <a href="<?=site_url("h35vip_statistics/contribution_piechart")?>">【分層貢獻金額佔比】</a>
+      <a href="<?=site_url("h35vip_statistics/contribution_piechart/{$game_id}")?>">【分層貢獻金額佔比】</a>
   </li>
-  <!-- <li class="">
-      <a href="<?=site_url("h35vip_statistics/hourly_topup")?>">by時間儲值總覽</a>
-  </li>
-  <li class="">
-      <a href="<?=site_url("h35vip_statistics/country_distribution")?>">國家別</a>
-  </li> -->
 </ul>
 
-<form method="get" action="<?=site_url("h35vip_statistics/monthly_topup")?>" class="form-search">
+<form method="get" action="<?=site_url("h35vip_statistics/monthly_topup/{$game_id}")?>" class="form-search">
 	<div class="control-group">
 		<select name="is_added">
       <option value="">全部</option>
@@ -65,39 +59,48 @@ $strGoogleData ="";
 if ($query):
   if ($query->num_rows() == 0): echo '<div class="none">查無資料</div>'; else:?>
 
+  <?
+    $data_set = $query->result();
+    $array_row = (array)$data_set[0];
+    $array_row_keys =  array_keys($array_row);
+  ?>
+
   <table class="table table-striped table-bordered" style="width:auto;">
     <thead>
       <tr>
         <th nowrap="nowrap">日期</th>
-        <th style="width:70px">戰爭領袖</th>
-        <th style="width:70px">黎明誓約</th>
-        <th style="width:70px">星辰護佑</th>
-        <th style="width:70px">裁決之劍</th>
-        <th style="width:70px">狂野之怒</th>
+        <?
+        for ($x_num = 1; $x_num <= count($array_row_keys)-1; $x_num++) {
+            //echo $servers_data[str_replace($array_row_keys[$x_num],"s","")];
+            $strGoogleHeader .= "'".$array_row_keys[$x_num]."',";
+            echo "<th style='width:70px'>{$array_row_keys[$x_num]}</th>";
+        }
+        ?>
+
         <th style="width:70px">加總</th>
       </tr>
     </thead>
     <tbody>
 
-    <?
-      foreach($query->result() as $row):
-      $strGoogleData .= "['{$row->month}', {$row->s10001}, {$row->s10002}, {$row->s10003}, {$row->s10004}, {$row->s10005}]," ;
-      $sum = $row->s10001 + $row->s10002 + $row->s10003 + $row->s10004 + $row->s10005;
-      ?>
+      <?
+        foreach($query->result() as $row):
+        $strGoogleData .= "['{$row->myyearmonth}'," ;
+        ?>
 
 
-      <tr>
-        <td nowrap="nowrap"><?="{$row->month}" ?></td>
-        <td style="text-align:right"><?=number_format($row->s10001) ?> </td>
-        <td style="text-align:right"><?=number_format($row->s10002) ?></td>
-        <td style="text-align:right"><?=number_format($row->s10003) ?></td>
-        <td style="text-align:right"><?=number_format($row->s10004) ?></td>
-        <td style="text-align:right"><?=number_format($row->s10005) ?></td>
-        <td style="text-align:right"><?=number_format($sum) ?></td>
+        <tr>
+          <td nowrap="nowrap"><?="{$row->myyearmonth}" ?></td>
+          <?
+          for ($x_num = 1; $x_num <= count($array_row_keys)-1; $x_num++) {
+            $strGoogleData .= "{$row->$array_row_keys[$x_num]},";
+              echo "<td style='width:120px'>".number_format((double)$row->$array_row_keys[$x_num])."</td>";
+          }
+           $strGoogleData .= "''],";
+          ?>
 
+        </tr>
+      <?endforeach;?>
 
-      </tr>
-    <?endforeach;?>
     </tbody>
   </table>
   <?endif;
@@ -120,13 +123,14 @@ endif; ?>
       // draws it.
       function drawChart() {
          var data = google.visualization.arrayToDataTable([
-             ['月份','戰爭領袖', '黎明誓約', '星辰護佑', '裁決之劍', '狂野之怒'],
+           ['月份',<? echo $strGoogleHeader; ?> { role: 'annotation' }],
              <? echo $strGoogleData; ?>
-           ]);
+            ]);
+
 
            var options = {
              chart: {
-               title: '光明之戰vip儲值總覽',
+               title: 'vip儲值總覽',
                subtitle: '分伺服器:  <? echo $this->input->get("select_month"); ?> ',
              },
              bars: 'vertical',
@@ -139,7 +143,8 @@ endif; ?>
                1:{color:'#C50047'},
                2:{color:'#889F00'},
                3:{color:'#9E308E'},
-               4:{color:'#73B9FF'}
+               4:{color:'#73B9FF'},
+               5:{color:'#B18904'}
              }
            };
 

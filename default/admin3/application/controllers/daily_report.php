@@ -46,7 +46,7 @@ class Daily_report extends MY_Controller {
 		if ($this->zacl->check_acl("game_statistics", "read")) {
 
             $account_query = $this->account_data();
-						$h35_stat_query = $this->negame_statistics_data('h35');
+						$h35_stat_query = $this->negame_statistics_data('h35naxx1hmt');
 						$L8na_stat_query = $this->negame_statistics_data('L8na');
 
 						$h35_ranking = array();
@@ -54,8 +54,8 @@ class Daily_report extends MY_Controller {
 
 						if ($h35_stat_query->num_rows() > 0) {
 								foreach ($h35_stat_query->result() as $row) {
-									$h35_ranking[$row->oDate] =  $this->negame_daily_top_data($row->oDate,'h35')->result();
-									$h35_type_data[$row->oDate] =  $this->negame_daily_type_data($row->oDate,'h35')->result();
+									$h35_ranking[$row->oDate] =  $this->negame_daily_top_data($row->oDate,'h35naxx1hmt')->result();
+									$h35_type_data[$row->oDate] =  $this->negame_daily_type_data($row->oDate,'h35naxx1hmt')->result();
 								}
 						}
 
@@ -384,24 +384,13 @@ class Daily_report extends MY_Controller {
 
 
 		function negame_statistics_data($game_id) {
-			$table_name = 'h35vip_orders';
-			switch ($game_id) {
-				case 'h35':
-					$table_name = 'h35vip_orders';
-					break;
-				case 'L8na':
-					$table_name = 'negame_orders';
-					break;
-				default:
-					# code...
-					break;
-			}
+
 			$query = $this->DB2->query("
 			SELECT DATE_FORMAT(create_time, '%Y-%m-%d') as oDate,
 			SUM(amount) as oSum,
 			COUNT(distinct account) as oCount
-			FROM {$table_name}
-			WHERE DATEDIFF(create_time ,now())>-13
+			FROM negame_orders
+			WHERE game_id = '{$game_id}' and  DATEDIFF(create_time ,now())>-13
 			GROUP BY  DATE_FORMAT(create_time, '%Y-%m-%d') ");
 			return $query;
 
@@ -409,22 +398,11 @@ class Daily_report extends MY_Controller {
 
 
 		function negame_daily_top_data($date,$game_id) {
-			$table_name = 'h35vip_orders';
-			switch ($game_id) {
-				case 'h35':
-					$table_name = 'h35vip_orders';
-					break;
-				case 'L8na':
-					$table_name = 'negame_orders';
-					break;
-				default:
-					# code...
-					break;
-			}
+
 			$query = $this->DB2->query("
 			SELECT DATE_FORMAT(create_time, '%Y-%m-%d') as oDate,role_name,sum(amount) as oSum
-			FROM {$table_name}
-			WHERE DATE_FORMAT(create_time, '%Y-%m-%d') ='{$date}'
+			FROM negame_orders
+			WHERE  game_id = '{$game_id}' and  DATE_FORMAT(create_time, '%Y-%m-%d') ='{$date}'
 			GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d'),role_name
 			ORDER BY oSum desc limit 5");
 			return $query;
@@ -433,22 +411,11 @@ class Daily_report extends MY_Controller {
 
 
 		function negame_daily_type_data($date,$game_id) {
-			$table_name = 'h35vip_orders';
-			switch ($game_id) {
-				case 'h35':
-					$table_name = 'h35vip_orders';
-					break;
-				case 'L8na':
-					$table_name = 'negame_orders';
-					break;
-				default:
-					# code...
-					break;
-			}
+
 			$query = $this->DB2->query("
 			SELECT DATE_FORMAT(create_time, '%Y-%m-%d') as oDate,transaction_type,sum(amount) as oSum
-			FROM {$table_name}
-			WHERE DATE_FORMAT(create_time, '%Y-%m-%d') ='{$date}'
+			FROM negame_orders
+			WHERE game_id = '{$game_id}' and DATE_FORMAT(create_time, '%Y-%m-%d') ='{$date}'
 			GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d'),transaction_type"
 			);
 			return $query;

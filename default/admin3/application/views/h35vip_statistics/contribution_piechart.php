@@ -3,22 +3,21 @@
 </div>
 
 <ul class="nav nav-tabs">
-    <li class="">
-        <a href="<?=site_url("h35vip_statistics/overview")?>">【VIP 週人數統計】</a>
-    </li>
-    <li class="">
-        <a href="<?=site_url("h35vip_statistics/topup_status")?>">【VIP 週儲值統計】</a>
-    </li>
-    <li class="">
-        <a href="<?=site_url("h35vip_statistics/overview_monthly")?>">【VIP 月人數統計】</a>
-    </li>
-    <li class="">
-        <a href="<?=site_url("h35vip_statistics/monthly_topup")?>">【累積 VIP 月儲值統計】</a>
-    </li>
-    <li class="active">
-        <a href="<?=site_url("h35vip_statistics/contribution_piechart")?>">【分層貢獻金額佔比】</a>
-    </li>
-
+  <li class="">
+      <a href="<?=site_url("h35vip_statistics/overview/{$game_id}")?>">【VIP 週人數統計】</a>
+  </li>
+  <li class="">
+      <a href="<?=site_url("h35vip_statistics/topup_status/{$game_id}")?>">【VIP 週儲值統計】</a>
+  </li>
+  <li class="">
+      <a href="<?=site_url("h35vip_statistics/overview_monthly/{$game_id}")?>">【VIP 月人數統計】</a>
+  </li>
+  <li class="">
+      <a href="<?=site_url("h35vip_statistics/monthly_topup/{$game_id}")?>">【累積 VIP 月儲值統計】</a>
+  </li>
+  <li class="active">
+      <a href="<?=site_url("h35vip_statistics/contribution_piechart/{$game_id}")?>">【分層貢獻金額佔比】</a>
+  </li>
 </ul>
 
 
