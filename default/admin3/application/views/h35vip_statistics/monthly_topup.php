@@ -78,7 +78,7 @@ if ($query):
         }
         ?>
 
-        <th style="width:70px">加總</th>
+        
       </tr>
     </thead>
     <tbody>
