@@ -56,6 +56,7 @@
 
 <?
 $strGoogleData ="";
+$strGoogleHeader ="";
 if ($query):
   if ($query->num_rows() == 0): echo '<div class="none">查無資料</div>'; else:?>
 
