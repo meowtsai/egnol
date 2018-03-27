@@ -1018,7 +1018,7 @@ class Trade extends MY_Controller {
 	}
 
 
-		function h35vip_orders($account)
+		function h35vip_orders($game_id,$account)
 		{
 
 				$this->zacl->check("whale_users_statistics", "read");
@@ -1027,9 +1027,10 @@ class Trade extends MY_Controller {
 				$this->DB2->start_cache();
 				$this->DB2
 						->select("transaction_id,transaction_type,account,role_id,role_name,server,product_id,amount,create_time,ip")
-						->from("h35vip_orders gb")
+						->from("negame_orders gb")
 						->join("servers gi", "gi.server_id=gb.server", "left")
-						->where("replace(gb.account,'@netease_global.win.163.com','')", $account);
+						->where("gb.game_id", $game_id)
+						->where("gb.account", $account);
 
 				$this->input->get("role_id") && $this->DB2->where("gb.role_id", $this->input->get("role_id"));
 				if ($this->input->get("start_date")) {
@@ -1059,7 +1060,7 @@ class Trade extends MY_Controller {
 
 				$this->load->library('pagination');
 				$this->pagination->initialize(array(
-						'base_url'	=> site_url("trade/h35vip_orders/{$account}?{$query_string}"),
+						'base_url'	=> site_url("trade/h35vip_orders/{$game_id}/{$account}?{$query_string}"),
 						'total_rows'=> $total_rows,
 						'per_page'	=> 100
 					));
@@ -1072,14 +1073,15 @@ class Trade extends MY_Controller {
 				->select("a.server_name,b.name, char_name,char_in_game_id,site ")
 				->from("whale_users a")
 				->join("servers b", "a.server_name = b.server_id", "left")
-				->where("site", "h35naxx1hmt")
+				->where("site", $game_id)
 				->where("uid", $account)->get();
 
 
 				$this->DB2
 					->select("sum(amount) as sum_amount")
-					->from("h35vip_orders gb")
-					->where("replace(gb.account,'@netease_global.win.163.com','')", $account);
+					->from("negame_orders gb")
+					->where("gb.account", $account)
+					->where("gb.game_id", $game_id);
 				$this->input->get("role_id") && $this->DB2->where("gb.role_id", $this->input->get("role_id"));
 				if ($this->input->get("start_date")) {
 					$start_date = $this->DB2->escape($this->input->get("start_date"));
@@ -1093,9 +1095,10 @@ class Trade extends MY_Controller {
 				$sum_total = $this->DB2->get()->result()[0]->sum_amount;
 
 				$this->g_layout
-					->add_breadcrumb("光明之戰VIP玩家儲值明細")
+					->add_breadcrumb("{$game_id}VIP玩家儲值明細")
 					->set("query", isset($query) ? $query : false)
 					->set("account",$account)
+					->set("game_id",$game_id)
 					->set("roles",$roles)
 					->set("sum_total",$sum_total)
 					->add_js_include("trade/payment")

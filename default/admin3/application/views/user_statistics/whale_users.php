@@ -96,7 +96,7 @@
 			<tr bgcolor="<?=vipcolor($game_id,$row->deposit_total)?>" id="tr<?=$row->character_in_game_id?>">
 				<td nowrap="nowrap"><?=$seq++?></td>
 				<td style="text-align:right">
-					<a href="<?=($game_id=='h35naxx1hmt'?site_url("trade/h35vip_orders/{$row->uid}"):($game_id=='L8na'?site_url("trade/negame_orders/{$game_id}?account={$row->uid}") :site_url("member/view/{$row->uid}"))) ?>"><?=$row->uid?>  </a>
+					<a href="<?=site_url("trade/h35vip_orders/{$game_id}/{$row->uid}") ?>"><?=$row->uid?>  </a>
         </td>
 				<td style="text-align:center">
 					<?=$row->character_name?>

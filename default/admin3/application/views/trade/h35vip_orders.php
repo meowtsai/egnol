@@ -1,5 +1,5 @@
 
-<form method="get" action="<?=site_url("trade/h35vip_orders/{$account}")?>" class="form-search">
+<form method="get" action="<?=site_url("trade/h35vip_orders/{$game_id}/{$account}")?>" class="form-search">
 
 	<div class="control-group">
 		角色id
@@ -20,7 +20,7 @@
 		<span class="sptl"></span>
 		<input type="submit" class="btn btn-small btn-inverse" name="action" value="查詢">
 
-		
+
 
 	</div>
 
