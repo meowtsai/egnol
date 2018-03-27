@@ -47,11 +47,11 @@ class H35vip_statistics extends MY_Controller {
       $is_added = 0;
     }
 
-    $tmpquery = "SELECT *,STR_TO_DATE(CONCAT(year, week,' Sunday') , '%x%v %W') as first_date,(general + silver+gold+platinum+black) as week_total from h35vip_weekly_data
+    $tmpquery = "SELECT *,STR_TO_DATE(CONCAT(year, week,' Monday') , '%x%v %W') as first_date,(general + silver+gold+platinum+black) as week_total from h35vip_weekly_data
     where tag={$is_added} and game_id='{$game_id}' ";
     if ($start_week)
     {
-      $tmpquery.= " and YEARWEEK(STR_TO_DATE(CONCAT(year, week,' Sunday') , '%x%v %W')) between '{$start_week}'";
+      $tmpquery.= " and YEARWEEK(STR_TO_DATE(CONCAT(year, week,' Monday') , '%x%v %W'),1) between '{$start_week}'";
     }
 
     if ($end_week)
@@ -62,7 +62,7 @@ class H35vip_statistics extends MY_Controller {
 
 
 
-    $week_sql ="SELECT YEARWEEK as myyearweek, MONTH(STR_TO_DATE(CONCAT(YEARWEEK,' Sunday') , '%x%v %W')) as mymonth
+    $week_sql ="SELECT YEARWEEK as myyearweek, MONTH(STR_TO_DATE(CONCAT(YEARWEEK,' Monday') , '%x%v %W')) as mymonth
     from  (SELECT YEARWEEK(create_time,1) as YEARWEEK FROM negame_orders WHERE game_id='{$game_id}' GROUP BY YEARWEEK(create_time,1)) a";
 
 
