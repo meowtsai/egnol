@@ -143,7 +143,7 @@ class H35vip_statistics extends MY_Controller {
 		$query = $this->DB2->query("
     select left(myyearweek,4) as year,
     right(myyearweek,2) as week,
-    STR_TO_DATE(CONCAT(myyearweek,' Sunday') , '%X%V %W') as first_date,
+    STR_TO_DATE(CONCAT(myyearweek,' Monday') , '%X%V %W') as first_date,
     {$query_comp}
     from
     (
@@ -157,7 +157,7 @@ class H35vip_statistics extends MY_Controller {
     group by myyearweek
     ");
 
-    $week_data = $this->DB2->query("SELECT YEARWEEK as myyearweek, MONTH(STR_TO_DATE(CONCAT(YEARWEEK,' Sunday') , '%X%V %W')) as mymonth
+    $week_data = $this->DB2->query("SELECT YEARWEEK as myyearweek, MONTH(STR_TO_DATE(CONCAT(YEARWEEK,' Monday') , '%X%V %W')) as mymonth
     from
     (SELECT YEARWEEK(create_time,1) as YEARWEEK
     FROM negame_orders WHERE game_id='{$game_id}'
