@@ -199,7 +199,15 @@ class Service_quick extends MY_Controller {
 		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問，若有未說明問題，請以原提問進行補述!")));
         */
 
-        $check_id = base_convert(time(), 10, 32);
+    $check_id = base_convert(time(), 10, 32);
+		$ip = $_SERVER['REMOTE_ADDR'];
+		$country_name = "";
+		if ($ip)
+		{
+			$country_name =geoip_record_by_name($ip)["country_name"];
+		}
+
+
 
 		$data = array(
 			"uid" => 0,
@@ -214,10 +222,13 @@ class Service_quick extends MY_Controller {
 			'email' => $this->input->post("email"),
 			'check_id' => $check_id,
 			'is_quick' => 1,
-			"note" => $_SESSION['q_note'],
+			"note" => $_SESSION['q_note']."| IP={$ip}, 國家={$country_name} ",
 		);
 
         /*
+				$info = geoip_record_by_name($_SERVER['REMOTE_ADDR']);
+				//print_r ($info);
+				echo $info["country_name"];
 		$data = array(
 			"uid" => $this->g_user->uid,
 			'type' => $this->input->post("question_type"),
