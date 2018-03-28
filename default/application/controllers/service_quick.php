@@ -249,9 +249,9 @@ class Service_quick extends MY_Controller {
 		$this->load->library('upload');
 		$config['upload_path'] = realpath("p/upload");
 		$config['allowed_types'] = 'gif|jpg|bmp|png';
-		$config['max_size']	= '6144'; //1MB
-		$config['max_width'] = '6144';
-		$config['max_height'] = '6144';
+		$config['max_size']	= '10240'; //1MB
+		$config['max_width'] = '10240';
+		$config['max_height'] = '10240';
 		$config['encrypt_name'] = true;
 
 		$upload_cnt = 0;
