@@ -57,8 +57,13 @@ class Service_quick extends MY_Controller {
 
 						$encode_server_name =urlencode($server_name);
 						$encode_c_name =urlencode($character_name);
+						//$usr_device =rawurlencode($usr_device);
+
+						// echo rawurlencode($usr_device).'<br />';
+						// echo rawurlencode($usr_device).'<br />';
 
 						$str_to_encrypt = "game_id={$vendor_game_id}&partner_uid={$partner_uid}&in_game_id={$in_game_id}&server_name={$encode_server_name}&character_name={$encode_c_name}&level={$level}&usr_device={$usr_device}&os_ver={$os_ver}&app_ver={$app_ver}&time_zone={$time_zone}&network={$network}&key={$key}";
+						//echo $str_to_encrypt.'<br />';
 				    $sig = MD5($str_to_encrypt);
 
 						//echo $str_to_encrypt.'<br />';
@@ -75,14 +80,17 @@ class Service_quick extends MY_Controller {
 								//echo "$key is at $value";
 								if ($qstringkey!='key')
 								{
-									$str_to_encrypt.=$qstringkey.'='.urlencode($qstringvalue).'&';
+									$str_to_encrypt.=$qstringkey.'='.rawurlencode($qstringvalue).'&';
 								}
 
 							}
 							$str_to_encrypt.="key={$key}";
 							//echo $str_to_encrypt.'<br />';
+
 							$sig = MD5($str_to_encrypt);
 							//echo $sig.'<br />';
+							//echo MD5('game_id=g78naxx2hmt&partner_uid=106094919&in_game_id=2004010036&server_name=%E6%AD%A3%E5%BC%8F%E6%9C%8D&character_name=%E4%B8%80%E6%8B%9B%E5%B0%B1%E8%BA%BA&level=6&usr_device=Mi%20A1&os_ver=7.1.2&app_ver=2.1.0&network=1&key=v9nblsfhus').'<br />';
+
 						}
 
 						if ($sig ===$key_string)
