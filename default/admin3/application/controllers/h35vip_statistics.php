@@ -300,7 +300,7 @@ class H35vip_statistics extends MY_Controller {
       ->render();
   }
 
-  function country_distribution()
+  function country_distribution($game_id)
 	{
 		$this->_init_statistics_layout($game_id);
 		$this->load->helper("output_table");
@@ -314,13 +314,13 @@ class H35vip_statistics extends MY_Controller {
     SUM(CASE WHEN is_added = '1' THEN 1 ELSE 0 END) AS 'added_cnt',
     sum(deposit_total) as amount,
     sum(CASE WHEN is_added = '1' THEN deposit_total ELSE 0 END) as 'added_amount'
-    FROM whale_users WHERE site ='h35naxx1hmt'
+    FROM whale_users WHERE site ='{$game_id}'
     group by country order by count(*) desc
     ");
 
 		$this->g_layout
 			->set("query", isset($query) ? $query : false)
-			->set("span", $span)
+			->set("game_id", $game_id)
 			->render();
 	}
 

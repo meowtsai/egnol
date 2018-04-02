@@ -563,7 +563,7 @@ function user_dashboard($game_id,$role_id)
 {
 	$this->zacl->check("vip", "modify");
 
-	$vip = $this->DB2->select("uid,char_name,char_in_game_id,server_name,ip,country,vip_ranking,site,line_id,line_date")
+	$vip = $this->DB2->select("uid,char_name,char_in_game_id,server_name,ip,country,vip_ranking,site,line_id,line_date,mobile")
 		->where("site", $game_id)
 		->where("char_in_game_id", $role_id)
 		->from("whale_users")

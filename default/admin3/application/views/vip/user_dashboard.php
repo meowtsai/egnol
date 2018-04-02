@@ -42,7 +42,7 @@ if ($vip):?>
     </tr>
     <tr>
       <th>手機</th>
-      <td></td>
+      <td><?=$vip->mobile?></td>
       <th>VIP 分層</th>
       <td><?=$vip->vip_ranking?></td>
     </tr>

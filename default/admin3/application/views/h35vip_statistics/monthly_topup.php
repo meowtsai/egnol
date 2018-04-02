@@ -18,6 +18,9 @@
   <li class="">
       <a href="<?=site_url("h35vip_statistics/contribution_piechart/{$game_id}")?>">【分層貢獻金額佔比】</a>
   </li>
+  <li class="">
+      <a href="<?=site_url("h35vip_statistics/country_distribution/{$game_id}")?>">【國家別】</a>
+  </li>
 </ul>
 
 <form method="get" action="<?=site_url("h35vip_statistics/monthly_topup/{$game_id}")?>" class="form-search">
@@ -78,7 +81,7 @@ if ($query):
         }
         ?>
 
-        
+
       </tr>
     </thead>
     <tbody>
