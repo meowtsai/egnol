@@ -24,7 +24,7 @@
 </ul>
 
 
-<form method="get" action="<?=site_url("h35vip_statistics/contribution_piechart")?>" class="form-search">
+<form method="get" action="<?=site_url("h35vip_statistics/contribution_piechart/{$game_id}")?>" class="form-search">
 	<div class="control-group">
 		<select name="is_added">
       <option value="">全部</option>
