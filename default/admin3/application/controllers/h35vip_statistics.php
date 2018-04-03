@@ -329,7 +329,7 @@ class H35vip_statistics extends MY_Controller {
 	{
     $vip_ranking = $this->config->item('vip_ranking');
 // select vip_ranking,count(*) from whale_users where vip_ranking is not null and site='h35naxx1hmt' and deposit_total>150000 and country='tw' group by vip_ranking;
-
+    $is_add_condition = "";
     if ($is_add==1)
     {
       $is_add_condition = "and is_added = '{$is_add}'";
