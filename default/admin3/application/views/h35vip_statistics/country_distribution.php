@@ -169,7 +169,7 @@ endif; ?>
 
       function get_ranking_detail(game_id,country_code,is_add,country_name) {
         //http://test-payment.longeplay.com.tw/default/admin3/h35vip_statistics/ranking_detail/h35naxx1hmt/TW/1
-        let url = "../../h35vip_statistics/ranking_detail/" + game_id +"/" + country_code + "/" + is_add;
+        let url = "/h35vip_statistics/ranking_detail/" + game_id +"/" + country_code + "/" + is_add;
       //service_type,page_num
         var tableElem = $("#detail_info");
 
