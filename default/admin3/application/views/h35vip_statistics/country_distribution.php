@@ -178,6 +178,7 @@ endif; ?>
           url: url,
           data: "",
         }).done(function(result) {
+          console.log(result);
           //resultData = result;
           resultObj =  JSON.parse(result);
           is_add_condition = "";
