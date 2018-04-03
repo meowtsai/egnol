@@ -23,11 +23,27 @@
   </li>
 </ul>
 
+<div class="row">
+  <div class="span4">
+    <span id="donutchart"  style="width: 500px; height: 300px;"></span>
+    <span id="donutchart2"  style="width: 500px; height: 300px;"></span>
+    <span id="donutchart3"  style="width: 500px; height: 300px;"></span>
+  </div>
+  <div class="span4" >
+    <h3 id="detail_heading"></h3>
+    <table id="detail_info" class="table table-striped">
+      <thead>
+        <tr>
+          <th nowrap="nowrap">VIP 層級</th>
+          <th style="width:70px">人數</th>
+        </tr>
+      </thead>
+      <tbody>
 
-<span id="donutchart"  style="width: 500px; height: 300px;"></span>
-<span id="donutchart2"  style="width: 500px; height: 300px;"></span>
-<span id="donutchart3"  style="width: 500px; height: 300px;"></span>
-
+      </tbody>
+    </table>
+  </div>
+  </div>
 <?
 $strGoogleData ="";
 $strGoogleData2 ="";
@@ -53,9 +69,9 @@ if ($query):
     $server_name="";
       foreach($query->result() as $row):
       $country_full_name = code_to_country($row->country);
-      $strGoogleData .= "['{$country_full_name}', {$row->cnt}]," ;
+      $strGoogleData .= "['{$country_full_name}', {$row->cnt},'{$row->country}']," ;
       $strGoogleData3 .= "['{$country_full_name}', {$row->amount}]," ;
-      $strGoogleData2 .= "['{$country_full_name}', {$row->added_cnt}]," ;
+      $strGoogleData2 .= "['{$country_full_name}', {$row->added_cnt},'{$row->country}']," ;
       $strGoogleData4 .= "['{$country_full_name}', {$row->added_amount}]," ;
 
 
@@ -83,37 +99,56 @@ endif; ?>
 
       function drawChart() {
         var data = google.visualization.arrayToDataTable([
-          ['國家','人數'],
+          ['國家','人數','國碼'],
             <? echo $strGoogleData; ?>
              ]);
         var options = {
-         title: '國家佔比',
+         title: '普 R 以上 VIP 國家佔比',
          is3D: true,
         };
 
-
         var chart = new google.visualization.PieChart(document.getElementById('donutchart'));
-        chart.draw(data, options);
 
+      function selectHandler() {
+         var selectedItem = chart.getSelection()[0];
+         if (selectedItem) {
+           var topping = data.getValue(selectedItem.row, 2);
+           var country = data2.getValue(selectedItem.row, 0);
+           get_ranking_detail('<?=$game_id;?>',topping,0,country);
+         }
+       }
+      google.visualization.events.addListener(chart, 'select', selectHandler);
+      chart.draw(data, options);
 
-        var data2 = google.visualization.arrayToDataTable([
-          ['國家','有加line人數'],
+      var data2 = google.visualization.arrayToDataTable([
+          ['國家','有加 line 人數','國碼'],
             <? echo $strGoogleData2; ?>
              ]);
-        var options2 = {
-         title: '有加line VIP 國家佔比',
+      var options2 = {
+         title: '普 R 以上有加 line VIP 國家佔比',
          is3D: true,
         };
 
         var chart2 = new google.visualization.PieChart(document.getElementById('donutchart2'));
+
+        function selectHandler2() {
+         var selectedItem = chart2.getSelection()[0];
+         if (selectedItem) {
+           var topping = data2.getValue(selectedItem.row, 2);
+           var country = data2.getValue(selectedItem.row, 0);
+           //alert('The user selected ' + topping);
+           get_ranking_detail('<?=$game_id;?>',topping,1,country);
+         }
+       }
+       google.visualization.events.addListener(chart2, 'select', selectHandler2);
         chart2.draw(data2, options2);
 
         var data3 = google.visualization.arrayToDataTable([
-          ['國家','有加line人數'],
+          ['國家','普 R 以上有加 line VIP'],
             <? echo $strGoogleData3; ?>
              ]);
         var options3 = {
-         title: '儲值總額',
+         title: '普R以上有加 line VIP 儲值總額',
          is3D: true,
         };
 
@@ -122,6 +157,39 @@ endif; ?>
 
 
 
+      }
+
+
+      function get_ranking_detail(game_id,country_code,is_add,country_name) {
+        //http://test-payment.longeplay.com.tw/default/admin3/h35vip_statistics/ranking_detail/h35naxx1hmt/TW/1
+        let url = "../../h35vip_statistics/ranking_detail/" + game_id +"/" + country_code + "/" + is_add;
+      //service_type,page_num
+        var tableElem = $("#detail_info");
+
+        $.ajax({
+          type: "GET",
+          url: url,
+          data: "",
+        }).done(function(result) {
+          //resultData = result;
+          resultObj =  JSON.parse(result);
+          is_add_condition = "";
+          if (is_add===1)
+          {
+            is_add_condition = "有加 line ";
+          }
+          $("#detail_heading").text(country_name  +is_add_condition + " VIP 層級人數" )
+          tableElem.find('tbody').children().remove();
+          if (resultObj.length>0)
+          {
+
+          }
+      //	角色序號	角色時間	類別	時間	內容	專員
+          for (i = 0; i < resultObj.length; i++) {
+              tableElem.find('tbody')
+                .append($('<tr><th>'+ resultObj[i].vip_ranking +'</th><td>'+ resultObj[i].cnt +'</td></tr>'));
+          }
+        });
       }
     </script>
 

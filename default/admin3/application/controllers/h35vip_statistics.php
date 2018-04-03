@@ -314,7 +314,8 @@ class H35vip_statistics extends MY_Controller {
     SUM(CASE WHEN is_added = '1' THEN 1 ELSE 0 END) AS 'added_cnt',
     sum(deposit_total) as amount,
     sum(CASE WHEN is_added = '1' THEN deposit_total ELSE 0 END) as 'added_amount'
-    FROM whale_users WHERE site ='{$game_id}'
+    FROM whale_users WHERE site ='{$game_id}' and  vip_ranking is not null
+    and deposit_total>150000
     group by country order by count(*) desc
     ");
 
@@ -323,6 +324,42 @@ class H35vip_statistics extends MY_Controller {
 			->set("game_id", $game_id)
 			->render();
 	}
+  function ranking_detail($game_id,$country_code,$is_add)
+	{
+    $vip_ranking = $this->config->item('vip_ranking');
+// select vip_ranking,count(*) from whale_users where vip_ranking is not null and site='h35naxx1hmt' and deposit_total>150000 and country='tw' group by vip_ranking;
+
+    if ($is_add==1)
+    {
+      $is_add_condition = "and is_added = '{$is_add}'";
+    }
+    $query = $this->DB2->query("
+    select vip_ranking,count(*) as cnt
+    FROM whale_users
+    WHERE vip_ranking is not null
+    and site='{$game_id}'
+    and deposit_total>150000
+    and country='{$country_code}'
+    {$is_add_condition}
+    group by vip_ranking");
+
+    $data = array();
+    foreach($query->result() as $row) {
+        if ($row->vip_ranking)
+        {
+          $vip_ranking_text = $vip_ranking[$row->vip_ranking];
+        }
+
+        $data[] = array(
+          'vip_ranking' =>  $row->vip_ranking,
+          'cnt' => $row->cnt,
+        );
+      }
+
+      //$result_obj = new stdClass()
+      //header('Access-Control-Allow-Origin: *');
+      die(json_encode($data));
+  }
 
   function monthly_topup($game_id)
   {
