@@ -29,8 +29,13 @@
     <span id="donutchart2"  style="width: 500px; height: 300px;"></span>
     <span id="donutchart3"  style="width: 500px; height: 300px;"></span>
   </div>
-  <div class="span4" >
+  <div class="span4 well" >
+
     <h3 id="detail_heading"></h3>
+
+    <span id="donutchart_detail"  style="width: 500px; height: 300px;"></span>
+
+
     <table id="detail_info" class="table table-striped">
       <thead>
         <tr>
@@ -160,6 +165,8 @@ endif; ?>
       }
 
 
+
+
       function get_ranking_detail(game_id,country_code,is_add,country_name) {
         //http://test-payment.longeplay.com.tw/default/admin3/h35vip_statistics/ranking_detail/h35naxx1hmt/TW/1
         let url = "../../h35vip_statistics/ranking_detail/" + game_id +"/" + country_code + "/" + is_add;
@@ -180,15 +187,40 @@ endif; ?>
           }
           $("#detail_heading").text(country_name  +is_add_condition + " VIP 層級人數" )
           tableElem.find('tbody').children().remove();
+
+          var data_array = [['VIP層級','人數']];
           if (resultObj.length>0)
           {
+
+
 
           }
       //	角色序號	角色時間	類別	時間	內容	專員
           for (i = 0; i < resultObj.length; i++) {
+              data_array.push([resultObj[i].vip_ranking,Number(resultObj[i].cnt)]);
               tableElem.find('tbody')
                 .append($('<tr><th>'+ resultObj[i].vip_ranking +'</th><td>'+ resultObj[i].cnt +'</td></tr>'));
           }
+          console.log(data_array);
+
+          var data = google.visualization.arrayToDataTable(data_array);
+          var options = {
+           title: 'VIP層級人數占比',
+           is3D: true,
+           slices: {
+                0:{color:'#A75B10'},
+                1:{color:'#808080'},
+                2:{color:'#D4AF37'},
+                3:{color:'#E5E4E2'},
+                4:{color:'#222'}
+              }
+
+          };
+
+          var chart_detail = new google.visualization.PieChart(document.getElementById('donutchart_detail'));
+
+          chart_detail.draw(data, options);
+
         });
       }
     </script>

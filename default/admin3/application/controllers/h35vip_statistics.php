@@ -6,6 +6,7 @@ class H35vip_statistics extends MY_Controller {
     parent::__construct();
 		error_reporting(E_ALL);
 		ini_set('display_errors','On');
+    $this->load->config("vip");
 
 	}
   function _init_statistics_layout($game_id)
@@ -351,13 +352,14 @@ class H35vip_statistics extends MY_Controller {
         }
 
         $data[] = array(
-          'vip_ranking' =>  $row->vip_ranking,
+          'vip_ranking' =>  $vip_ranking_text,
           'cnt' => $row->cnt,
         );
       }
 
       //$result_obj = new stdClass()
       //header('Access-Control-Allow-Origin: *');
+      //die(json_encode($vip_ranking));
       die(json_encode($data));
   }
 
