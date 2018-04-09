@@ -863,7 +863,7 @@ function inactive_users_report($game_id)
 
 		$data = array();
 		foreach($records->result() as $row) {
-			$vip_ranking_text = "No R";
+			$vip_ranking_text = "";
 			if ($row->vip_ranking)
 			{
 				$vip_ranking_text = $vip_ranking[$row->vip_ranking];
