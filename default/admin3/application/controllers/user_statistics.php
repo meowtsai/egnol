@@ -1013,12 +1013,12 @@ class User_statistics extends MY_Controller {
 				latest_topup_date 'latest_topup_date',
 				TIMESTAMPDIFF(DAY, latest_topup_date, NOW()) 'days_since' ,
 				is_added,
-				line_date,
+				DATE_FORMAT(line_date, '%Y-%m-%d') 'line_date',
 				TIMESTAMPDIFF(DAY, create_time, NOW()) 'days_inserted',
 				ip,
 				DATE_FORMAT(vip_ranking_updated, '%Y-%m-%d') 'vip_ranking_updated',
 				vip_ranking,
-				inactive_confirm_date,
+				DATE_FORMAT(inactive_confirm_date, '%Y-%m-%d') 'inactive_confirm_date',
 				CASE
 				  WHEN vip_ranking_updated is NULL THEN '100'
 				  ELSE TIMESTAMPDIFF(DAY, vip_ranking_updated, NOW())  END as 'days_vip_updated'
