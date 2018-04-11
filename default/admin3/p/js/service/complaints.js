@@ -119,8 +119,10 @@ function get_ranking_report(how_many_days)
     //console.log(obj.status);
     //console.log(obj.message);
     $("#ranking_table tbody tr").remove();
+		var anotherObj = "<table>";
     $.each(obj.message, function( index,item ) {
       var trObj = document.createElement("TR");
+
       trObj.innerHTML = "<td>"+ (index + 1) +"</td>";
       trObj.innerHTML += "<td>"+ item.server_id +"</td>";
       trObj.innerHTML += "<td>"+ item.flagged_player_name +
@@ -128,10 +130,13 @@ function get_ranking_report(how_many_days)
       trObj.innerHTML += "<td>"+ item.cnt +"</td>";
 			trObj.innerHTML += "<td><button onclick=\"complaint_batch_mark('"+ item.flagged_player_char_id  +"')\">批次標示為永久停權或禁言</button></td>";
 
+
+			anotherObj += "<tr><td>" + item.server_id + "</td><td>" + item.flagged_player_char_id  + "</td><td>0</td><td>洗頻</td></tr>";
+
       $("#ranking_table tbody").append(trObj);
 
       });
-
+			$("#ranking_table tbody").append("<tr><td colspan='5'><fieldset><legend>快速處理區</legend>" + anotherObj  + "</table></fieldset></td></tr>");
 
   })
 }
