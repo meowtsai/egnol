@@ -78,11 +78,11 @@
 				<th style="width:100px" >地區</th>
         <th style="width:70px" >未儲值/日</th>
         <th style="width:80px" >3日內新人</th>
-				<th style="width:75px" >升階</th>
-				<th style="width:60px" >加入Line</th>
+				<th style="width:100px" >升階</th>
+				<th style="width:80px" >加入Line</th>
 				<th style="width:100px" >加入Line日期</th>
 				<th style="width:100px" >最後登入日期</th>
-				<th style="width:150px" >確認流失</th>
+				<th style="width:100px" >確認流失</th>
 				<th style="width:50px" ></th>
 
 			</tr>
