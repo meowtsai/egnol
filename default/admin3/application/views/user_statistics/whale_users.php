@@ -132,7 +132,7 @@
 				</td>
 				<td style="text-align:right">
 					<? if ($row->is_added=='1'):?>
-					<i class="fas fa-check"></i>
+					V
 					<? endif;?>
         </td>
 				<td style="text-align:right">
