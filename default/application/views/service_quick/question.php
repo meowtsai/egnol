@@ -14,12 +14,12 @@
 						<th>E-mail</th>
 						<td><input type="text" name="email" class="email" id="email" size="33"></td>
 					</tr>
-					<tr style="display:none">
+					<tr>
 						 <th>手機號碼</th>
 						 <td><input type="text" name="mobile" class="mobile isMobile" id="mobile" size="33"></td>
 					<tr>
 						 <th></th>
-						 <td>E-mail欄位必填</td>
+						 <td>E-mail和手機欄位必填</td>
 					</tr>
                     <? else:?>
                     <input type="hidden" name="partner_uid" id="partner_uid" value="<?=$partner_uid?>">

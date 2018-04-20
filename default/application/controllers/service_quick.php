@@ -200,7 +200,7 @@ class Service_quick extends MY_Controller {
 		if ( ! $this->input->post("server")) die(json_encode(array("status"=>"failure", "message"=>"尚未選擇伺服器")));
 		if ( ! $this->input->post("question_type")) die(json_encode(array("status"=>"failure", "message"=>"尚未選擇問題類型")));
 		if ( ! $this->input->post("content")) die(json_encode(array("status"=>"failure", "message"=>"尚未填寫問題描述")));
-		if ( ! $this->input->post("partner_uid") && ! $this->input->post("mobile") &&  ! $this->input->post("email") ) die(json_encode(array("status"=>"failure", "message"=>"請擇一填寫電子郵件信箱或手機")));
+		if ( ! $this->input->post("partner_uid") && (! $this->input->post("mobile") ||  ! $this->input->post("email")) ) die(json_encode(array("status"=>"failure", "message"=>"請填寫電子郵件信箱和手機")));
 
 		/*
         $query = $this->db->query("SELECT count(*) > (3-1) as chk FROM questions WHERE uid={$this->g_user->uid} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");
@@ -317,9 +317,8 @@ class Service_quick extends MY_Controller {
 
             if(filter_var($this->input->post("email"), FILTER_VALIDATE_EMAIL))
             {
-                $msg = "後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件#".$q_id."：<br>".$check_id;
-
-			    $this->load->library("g_send_mail");
+                $msg = "您提問的案件單號為#".$q_id."<br />後續若要追蹤此單號的客服問題請用以下代碼進行查詢：<br /><b>".$check_id."</b>";
+			    			$this->load->library("g_send_mail");
 
                 if($this->g_send_mail->send_view($this->input->post("email"),
 									$_SESSION['game_name']."客服代碼通知信[".date("Y/m/d H:i:s")."]",
@@ -330,31 +329,31 @@ class Service_quick extends MY_Controller {
                     $_SESSION['check_id'] = $check_id;
                     $_SESSION['email'] = $this->input->post("email");
                     $_SESSION['mobile'] = $this->input->post("mobile");
-		            die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件#".$q_id."：".$check_id)));
+		            	die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題#".$q_id."請用提問時信箱或手機及以下代碼查詢：<b>".$check_id."</b>")));
                 }
                 else
                 {
-				    die(json_encode(array("status"=>"failure", "message"=>"E-Mail 發送失敗。請確認E-mail為有效信箱。")));
+				    			die(json_encode(array("status"=>"failure", "message"=>"E-Mail 發送失敗。請確認E-mail為有效信箱。")));
                 }
             }
             else
             {
-                // 手機號碼的話要發送簡訊
-                $msg = "後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件".$q_id."：".$check_id;
-
-                $this->load->library("g_send_sms");
-
-                if($this->g_send_sms->send($site, $this->input->post("mobile"), $msg))
-                {
-                    $_SESSION['check_id'] = $check_id;
-                    $_SESSION['email'] = $this->input->post("email");
-                    $_SESSION['mobile'] = $this->input->post("mobile");
-		            die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件#".$q_id."：".$check_id)));
-                }
-                else
-                {
-				    die(json_encode(array("status"=>"failure", "message"=>"簡訊發送失敗。請確認輸入手機為有效號碼或是改為填寫E-mail欄位。")));
-                }
+            //     // 手機號碼的話要發送簡訊
+            //     $msg = "後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件".$q_id."：".$check_id;
+						//
+            //     $this->load->library("g_send_sms");
+						//
+            //     if($this->g_send_sms->send($site, $this->input->post("mobile"), $msg))
+            //     {
+            //         $_SESSION['check_id'] = $check_id;
+            //         $_SESSION['email'] = $this->input->post("email");
+            //         $_SESSION['mobile'] = $this->input->post("mobile");
+		        //     die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題請用提問時信箱或手機及以下代碼查詢原案件#".$q_id."：".$check_id)));
+            //     }
+            //     else
+            //     {
+				    // die(json_encode(array("status"=>"failure", "message"=>"簡訊發送失敗。請確認輸入手機為有效號碼或是改為填寫E-mail欄位。")));
+            //     }
             }
         } else {
 		    die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"提問成功!")));

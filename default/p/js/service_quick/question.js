@@ -24,11 +24,11 @@ $(function()
 		onclick: false,
 		messages: {
 			email: {
-				required: "`電子信箱`與`行動電話`至少需填寫其中之一",
+				required: "`電子信箱`與`行動電話`必填",
 				email: "請填寫正確的電子信箱位址"
 			},
 			mobile: {
-				required: ""
+				required: "`電子信箱`與`行動電話`必填"
 			},
 			game: "尚未選擇遊戲",
 			character_name: "尚未填寫角色",
@@ -42,10 +42,10 @@ $(function()
 		rules:
 		{
 			email: {
-				required: function(element) { return ($("#mobile").val() == '' && $("#partner_uid").val() == ''); }
+				required: function(element) { return ($("#partner_uid").val() == '' || $("#partner_uid").val() =undefined ); }
 			},
 			mobile: {
-				required: function(element) { return ($("#email").val() == '' && $("#partner_uid").val() == ''); }
+				required: function(element) { return ($("#partner_uid").val() == '' || $("#partner_uid").val() =undefined ); }
 			}
     	},
 		showErrors: function(errorMap, errorList)
