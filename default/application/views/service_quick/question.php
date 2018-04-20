@@ -14,7 +14,7 @@
 						<th>E-mail</th>
 						<td><input type="text" name="email" class="email" id="email" size="33"></td>
 					</tr>
-					<tr>
+					<tr style="display:none">
 						 <th>手機號碼</th>
 						 <td><input type="text" name="mobile" class="mobile isMobile" id="mobile" size="33"></td>
 					<tr>
