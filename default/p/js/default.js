@@ -55,13 +55,13 @@ $(function()
 		$.extend($.blockUI, {
 			wait: function()
 			{
-				$.blockUI({ 
+				$.blockUI({
 					message: '<h1 style="padding:6px;">請稍候...</h1>',
 					fadeIn: 50,
 					fadeOut: 200,
 					css: {
-			            border: 	'none', 
-			            padding: 	'10px', 
+			            border: 	'none',
+			            padding: 	'10px',
 			            margin:		0,
 			            width:		'30%',
 			            top:		'auto',
@@ -70,24 +70,24 @@ $(function()
 			            right:		'20px',
 			            textAlign:	'center',
 			            cursor:		'wait',
-			            backgroundColor: '#000', 
-			            '-webkit-border-radius': '10px', 
-			            '-moz-border-radius': '10px', 
-			            opacity: .5, 
-			            color: '#fff' 
+			            backgroundColor: '#000',
+			            '-webkit-border-radius': '10px',
+			            '-moz-border-radius': '10px',
+			            opacity: .5,
+			            color: '#fff'
 					}
 				});
 			}
 		});
 	}
-	
+
 	$.json_post = function(url, data, callback)
 	{
 		if (typeof data == "function")
 		{
-			callback = data; data = {}; 
+			callback = data; data = {};
 		};
-		$.blockUI.wait();			
+		$.blockUI.wait();
 		$.post(url, data, function(json)
 		{
 			if (json.status == 'success')
@@ -101,9 +101,9 @@ $(function()
 		{
 			alert(e.status + " " + e.statusText);
 		})
-		.complete($.unblockUI);	
+		.complete($.unblockUI);
 	};
-	
+
 	$.fn.json_ajaxSubmit = function(callback)
 	{
 		return this.each(function()
@@ -126,18 +126,18 @@ $(function()
 					alert(e.status + " " + e.statusText + "\nResponse:" + e.responseText);
 				},
 				dataType: 'json'
-			});			
+			});
 	    });
 	};
 
 	$(".json_post").click(function()
-	{	
+	{
 		$.json_post($(this).attr("url"), function()
 		{
 			location.reload();
-		});	
-	});	
-	
+		});
+	});
+
 	$(".json_del").click(function()
 	{
 		if (confirm("確定要刪除嗎?"))
@@ -145,10 +145,10 @@ $(function()
 			$.json_post($(this).attr("url"), function()
 			{
 				location.reload();
-			});	
+			});
 		}
-	});		
-	
+	});
+
 	if ($('.json_form').length > 0)
 	{
 		$(".json_form").validate({
@@ -170,17 +170,17 @@ $(function()
 			}
 		});
 	}
-		
+
 	if ($('form.validation').length > 0)
 	{
 		$("form.validation").validate();
 	}
-	
+
     $("#login_form input").keypress(function(event)
-	{       
+	{
         if (event.keyCode == 13) $("#login_form").submit();
     });
-	
+
     if ($('#captcha_area').length > 0)
 	{
     	refresh_captcha();
@@ -215,24 +215,24 @@ function refresh_captcha()
 	});
 }
 
-var browser = {    
+var browser = {
 	versions: function()
-	{            
-		var u = navigator.userAgent, app = navigator.appVersion;            
-		return {                
-			trident: u.indexOf('Trident') > -1, //IE內核                
-			presto: u.indexOf('Presto') > -1, //opera內核                
-			webKit: u.indexOf('AppleWebKit') > -1, //蘋果、谷歌內核                
-			gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐內核                
-			mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否為移動終端                
-			ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios終端                
-			android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android終端或者uc瀏覽器                
-			iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否為iPhone或者QQHD瀏覽器                
-			iPad: u.indexOf('iPad') > -1, //是否iPad                
-			webApp: u.indexOf('Safari') == -1 //是否web應該程序，沒有頭部與底部           
+	{
+		var u = navigator.userAgent, app = navigator.appVersion;
+		return {
+			trident: u.indexOf('Trident') > -1, //IE內核
+			presto: u.indexOf('Presto') > -1, //opera內核
+			webKit: u.indexOf('AppleWebKit') > -1, //蘋果、谷歌內核
+			gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐內核
+			mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否為移動終端
+			ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios終端
+			android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android終端或者uc瀏覽器
+			iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否為iPhone或者QQHD瀏覽器
+			iPad: u.indexOf('iPad') > -1, //是否iPad
+			webApp: u.indexOf('Safari') == -1 //是否web應該程序，沒有頭部與底部
 		};
 	}()
-} 
+}
 
 //--------------------------------------------------
 function checkMobileRegion(value)
@@ -250,6 +250,12 @@ function checkMobileRegion(value)
 	// 853 澳
 	if(/^8536\d{7}$/.test(phone))
 		return 'mo';
+  // 60 馬來西亞
+  if (/^601\d{8,9}$/.test(phone))
+		return "my";
+	// 65 新加坡
+	if (/^65[6|8|9]\d{7}$/.test(phone))
+		return "sg";
 
 	return 'undefined';
 }
@@ -397,7 +403,7 @@ function leLoading()
 	var u = leAppend(t,"img",{"class":"le_loading_frm"});
 
 	$(u).attr('src', 'https://game.longeplay.com.tw/p/image/loading.gif');
-	
+
 	var s = ($(window).width()-$(u).width())/2,r=($(window).height()-$(u).height())/3+$(document).scrollTop();
 	$(u).css("left",s),$(u).css("top",r);
 }
