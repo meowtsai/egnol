@@ -19,7 +19,7 @@
 						 <td><input type="text" name="mobile" class="mobile isMobile" id="mobile" size="33"></td>
 					<tr>
 						 <th></th>
-						 <td>E-mail與手機號碼至少需填寫其中一個</td>
+						 <td>E-mail欄位必填</td>
 					</tr>
                     <? else:?>
                     <input type="hidden" name="partner_uid" id="partner_uid" value="<?=$partner_uid?>">
