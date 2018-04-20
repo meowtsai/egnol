@@ -24,11 +24,11 @@ $(function()
 		onclick: false,
 		messages: {
 			email: {
-				required: "`電子信箱`與`行動電話`必填",
+				required: "`電子信箱`必填",
 				email: "請填寫正確的電子信箱位址"
 			},
 			mobile: {
-				required: "`電子信箱`與`行動電話`必填"
+				required: "`行動電話`必填"
 			},
 			game: "尚未選擇遊戲",
 			character_name: "尚未填寫角色",
