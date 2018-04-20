@@ -42,10 +42,10 @@ $(function()
 		rules:
 		{
 			email: {
-				required: function(element) { return ($("#partner_uid").val() == '' || $("#partner_uid").val() =undefined ); }
+				required: function(element) { return ($("#partner_uid").val() == '' || $("#partner_uid").val() ==undefined ); }
 			},
 			mobile: {
-				required: function(element) { return ($("#partner_uid").val() == '' || $("#partner_uid").val() =undefined ); }
+				required: function(element) { return ($("#partner_uid").val() == '' || $("#partner_uid").val() ==undefined ); }
 			}
     	},
 		showErrors: function(errorMap, errorList)
