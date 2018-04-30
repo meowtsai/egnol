@@ -104,16 +104,28 @@
 
 		<? else:?>
 
-		<? foreach($query->result() as $row):?>
+		<?
+		$total_cnt = 0;
+		foreach($query->result() as $row):?>
 		<tr>
 			<td width="150px"><?=$row->admin_uname?></td>
 			<td>
 				<a href="get_list?reply_start_date=<?=$this->input->get('start_date')?>&reply_end_date=<?=$this->input->get("end_date")?>&cs_admin=<?=$row->admin_uid?>&action=查詢">
+					<?
+						$total_cnt += $row->cnt;
+					?>
 					<?=$row->cnt?>
 				</a>
 			</td>
 		</tr>
 		<? endforeach;?>
+		<tr>
+			<td width="150px">總計</td>
+			<td>
+					<?=$total_cnt?>
+				
+			</td>
+		</tr>
 		<? endif; ?>
 	</tbody>
 </table>
