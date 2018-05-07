@@ -87,26 +87,28 @@ class H35vip_statistics extends MY_Controller {
 
     if ($this->input->get("is_added"))
     {
-
-      $tmpquery = "and account
-      in(select uid from  whale_users
-      where site ='{$game_id}'
-      and is_added ='1'";
-
-      $is_added = $this->input->get("is_added");
-      if ($is_added=="R")
-      {
-        $tmpquery .= " and vip_ranking is not null)";
+      switch ($this->input->get("is_added")) {
+        case 'G': //普R以上
+          $tmpquery = "and account
+          in(select uid from  whale_users
+          where site ='{$game_id}' and vip_ranking is not null)";
+            break;
+        case 'R': //普R以上
+          $tmpquery = "and account
+          in(select uid from  whale_users
+          where site ='{$game_id}'
+          and is_added ='1'  and vip_ranking is not null)";
+          break;
+        default:
+          $tmpquery = "and account
+          in(select uid from  whale_users
+          where site ='{$game_id}'
+          and is_added ='1')";
+          break;
       }
-      else {
-        $tmpquery .= " )";
-      }
-
     }
     else {
-      $tmpquery = "and account
-      in(select uid from  whale_users
-      where site ='{$game_id}' and vip_ranking is not null)";
+      $tmpquery="";
     }
 
 

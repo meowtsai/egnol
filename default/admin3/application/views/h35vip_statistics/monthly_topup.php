@@ -27,6 +27,7 @@
 	<div class="control-group">
 		<select name="is_added">
       <option value="">全部</option>
+      <option value="G" <?=($this->input->get("is_added") =='G'? 'selected="selected"' : '')?>>儲值50K普R以上用戶</option>
       <option value="Y" <?=($this->input->get("is_added") =='Y'? 'selected="selected"' : '')?>>已加入Line</option>
       <option value="R" <?=($this->input->get("is_added") =='R'? 'selected="selected"' : '')?>>已加入Line普R以上用戶</option>
 	  </select>
