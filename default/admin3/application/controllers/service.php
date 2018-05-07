@@ -427,6 +427,8 @@ class Service extends MY_Controller {
 	function get_list()
 	{
 		$this->_init_service_layout();
+		$question_type = $this->config->item('question_type');
+		$question_status = $this->config->item('question_status');
 
 		if ($this->input->get("action"))
 		{
@@ -530,6 +532,55 @@ class Service extends MY_Controller {
 					$this->g_layout->set("total_rows", $total_rows);
 
 					break;
+				case "輸出":
+					ini_set("memory_limit","2048M");
+					$sort = $this->input->get("sort") ? $this->input->get("sort") : 'id';
+					$query = $this->DB2->order_by("{$sort} desc")->get();
+
+					$filename = "cs_output.csv";
+					header("Content-type:application/vnd.ms-excel;");
+					header("Content-Disposition: filename={$filename};");
+
+					// ->select("q.*, g.name as game_name, au.name as admin_uname, gi.name as server_name")
+					// ->select("(select name from `characters` where partner_uid=q.partner_uid and server_id=q.server_id and name=q.character_name) as in_game_name")
+					// ->select("(select sum(amount) from user_billing where uid=q.uid and billing_type=2 and result=1) as expense")
+
+					$content = "編號,遊戲,角色名稱,提問類型,描述,原廠uid,狀態,處理人,日期\n";
+					foreach($query->result() as $row) {
+						$content .= "{$row->id},{$row->game_name},";
+						$content .= "{$row->character_name}($row->server_name)";
+						if (($row->partner_uid && !$row->uid && !$row->in_game_name) || !$row->partner_uid)
+						{
+							$content .="(玩家填寫)";
+						}
+						$content .= ",";
+						$content .= "{$question_type[$row->type]},";
+						//'\"' +  content.replace('\n', '').replace('<br />', ' , ').encode('utf-8') + '\"' ,
+						$content .= '"'. strip_tags($row->content).'",';
+						$content .= "{$row->partner_uid},";
+						$content .= "{$question_status[$row->status]}";
+
+						if ($row->allocate_status == '1'){
+							$content .= "(後送中)";
+						}
+						elseif ($row->allocate_status == '2') {
+							$content .= "(後送完成)";
+						}
+						$content .= ",";
+						$content .= "{$row->admin_uname},";
+						$content .= date("Y-m-d H:i", strtotime($row->create_time));
+
+						$content .= "\n";
+
+
+
+
+						//$question_type = $this->config->item('question_type');
+
+					}
+					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
+					exit();
+					break;
 			}
 
 			$this->DB2->stop_cache();
@@ -594,6 +645,16 @@ class Service extends MY_Controller {
 			$this->DB2->where("id", $id)->update("questions", array("is_read"=>'1'));
 		}
 
+		$ip_pos = strrpos($question->note,"IP");
+		$ip =  "";
+		$endofip = "";
+		if ( $ip_pos>-1)
+		{
+			$endofip = strpos($question->note,",",$ip_pos);
+			$ip =substr($question->note,$ip_pos+3, $endofip - ($ip_pos+3));
+
+		}
+
 		$replies = $this->DB2
 			->select("qt.*, au.name as admin_uname")
 			->from("question_replies qt")
@@ -618,6 +679,7 @@ class Service extends MY_Controller {
 			->set("question", $question)
 			->set("replies", $replies)
 			->set("allocate_users", $allocate_users)
+			->set("ip", $ip)
 			->render();
 	}
 

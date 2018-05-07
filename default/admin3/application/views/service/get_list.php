@@ -94,6 +94,7 @@
 		<span class="sptl"></span>
 
 		<input type="submit" class="btn btn-small btn-inverse" name="action" value="查詢">
+		<input type="submit" class="btn btn-small btn-warning" name="action" value="輸出">
 
 		<? if ($this->input->get("use_default") == false):?>
 		<span class="sptl"></span>

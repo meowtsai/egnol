@@ -1560,3 +1560,16 @@ ALTER EVENT daily_report_event
 
        END;//
     delimiter ;
+
+
+
+    DROP TABLE IF EXISTS `h55_prereg`;
+    CREATE TABLE `h55_prereg` (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `email` varchar(300) DEFAULT NULL,
+      `ip` varchar(20) DEFAULT NULL,
+      `country` varchar(20) DEFAULT NULL,
+      `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      `status` char(1) NOT NULL DEFAULT '1',
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='第五人格預註冊';

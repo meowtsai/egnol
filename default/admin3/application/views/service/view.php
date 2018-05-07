@@ -197,6 +197,9 @@
 					<textarea name="note" rows="3" style="width:80%" ><?=$question->note?></textarea>
 					<button type="submit" class="btn" style="vertical-align:top;">儲存</button>
 				</form>
+        <?if ($ip): ?>
+        <a target="_blank" href="https://whatismyipaddress.com/ip/<?=$ip?>">查看ip資訊</a>
+        <?endif;?>
 			</td>
 		</tr>
     <?  if ($question->status == '4'):?>

@@ -27,8 +27,11 @@
 <form method="get" action="<?=site_url("h35vip_statistics/contribution_piechart/{$game_id}")?>" class="form-search">
 	<div class="control-group">
 		<select name="is_added">
-      <option value="">全部</option>
+      <option value="V">全部</option>
       <option value="Y" <?=($this->input->get("is_added") =='Y'? 'selected="selected"' : '')?>>已加入Line普R以上用戶</option>
+      <? if ($game_id=="l8na"):?>
+      <option value="A" <?=($this->input->get("is_added") =='A'? 'selected="selected"' : '')?>>總儲值50K以上玩家vs其他玩家</option>
+      <?endif;?>
 	  </select>
 
 		時間

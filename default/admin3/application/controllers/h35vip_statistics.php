@@ -566,25 +566,34 @@ class H35vip_statistics extends MY_Controller {
 		$this->zacl->check("whale_users_statistics", "read");
 
 		$span = $this->input->get("span");
-
-    if ($this->input->get("is_added"))
+    if ($this->input->get("is_added")=="V")
     {
-      $is_added = "and is_added ='1'";
+
+      $is_added = "and vip_ranking is not null";
+    }
+
+    elseif ($this->input->get("is_added")=="Y")
+    {
+      $is_added = "and vip_ranking is not null and is_added ='1'";
+    }
+    elseif ($this->input->get("is_added")=="A")
+    {
+      $is_added = "";
     }
     else {
-      $is_added = "";
+      $is_added = "and vip_ranking is not null";
     }
 
     $start_date = $this->input->get("start_date") ? $this->input->get("start_date") : date("Y-m-d",strtotime("-30 days"));;
     $end_date = $this->input->get("end_date") ? $this->input->get("end_date") : date("Y-m-d");
 
 		$query = $this->DB2->query("
-    select vip_ranking, sum(range_amount) as range_amount,sum(total_amount) as total_amount
+    select IFNULL(vip_ranking,'zero') vip_ranking, sum(range_amount) as range_amount,sum(total_amount) as total_amount
     FROM
     (
     select vip_ranking,sum(amount) as range_amount,0 as total_amount from negame_orders a
     inner join (select char_in_game_id,vip_ranking from whale_users
-    where site ='{$game_id}' and vip_ranking is not null {$is_added}) b
+    where site ='{$game_id}' {$is_added}) b
     on a.role_id = b.char_in_game_id
     where a.game_id='{$game_id}' and DATE_FORMAT(create_time,'%Y-%m-%d') between '{$start_date}' and '{$end_date}'
     group by vip_ranking
@@ -592,13 +601,13 @@ class H35vip_statistics extends MY_Controller {
     union
     select vip_ranking,0 as range_amount, sum(amount) as total_amount from negame_orders a
     inner join (select char_in_game_id,vip_ranking from whale_users
-    where site ='{$game_id}' and vip_ranking is not null {$is_added}) b
+    where site ='{$game_id}'  {$is_added}) b
     on a.role_id = b.char_in_game_id
     where a.game_id='{$game_id}' and DATE_FORMAT(create_time,'%Y-%m-%d') between '2017-11-15' and now()
     group by vip_ranking
     ) a
     group by vip_ranking
-    ORDER BY FIELD(vip_ranking, 'general','silver','gold','platinum','black')
+    ORDER BY FIELD(vip_ranking, 'zero','general','silver','gold','platinum','black')
     ");
 
 		$this->g_layout
@@ -608,6 +617,7 @@ class H35vip_statistics extends MY_Controller {
 			->set("game_id", $game_id)
 			->render();
 	}
+
 
 
 }

@@ -64,7 +64,7 @@ table  {max-width:100%; width:100%;}
 </td>
 </tr>
 <tr>
-<td bgcolor="#FFFFFF" height="60" style='font-family: Arial, Helvetica, sans-serif;color:#666666; font-size:9px;text-align:center'>Long E Co., Ltd © 2015 Copyrights Reserved.</td>
+<td bgcolor="#FFFFFF" height="60" style='font-family: Arial, Helvetica, sans-serif;color:#666666; font-size:9px;text-align:center'>Long E Co., Ltd © 2018 Copyrights Reserved.</td>
 </tr>
 </table>
 </td>
