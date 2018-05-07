@@ -104,7 +104,9 @@ class H35vip_statistics extends MY_Controller {
 
     }
     else {
-      $tmpquery = "";
+      $tmpquery = "and account
+      in(select uid from  whale_users
+      where site ='{$game_id}')";
     }
 
 
@@ -391,8 +393,11 @@ class H35vip_statistics extends MY_Controller {
 
     }
     else {
-      $tmpquery = "";
+      $tmpquery = "and account
+      in(select uid from  whale_users
+      where site ='{$game_id}')";
     }
+
 
     $select_month = $this->input->get("select_month");
     $select_month_end = $this->input->get("select_month_end");
