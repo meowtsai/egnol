@@ -1005,7 +1005,7 @@ class User_statistics extends MY_Controller {
     	case 'vxz':
 			case 'h35naxx1hmt':
 			case 'L8na':
-				$sum_condition = ($game_id=='h35naxx1hmt'?100000:50000);
+				$sum_condition = ($game_id=='h35naxx1hmt'?50000:1);
 				$query = $this->DB2->query("select uid,char_name 'character_name',
 				char_in_game_id 'character_in_game_id',
 				server_name,
