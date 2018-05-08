@@ -998,12 +998,14 @@ class User_statistics extends MY_Controller {
 
 		$game_id = $this->input->get("game_id");
     $orderby = $this->input->get("orderby");
+		$sum_condition = 50000;
 		if ($game_id)
 		{
     switch ($game_id) {
     	case 'vxz':
 			case 'h35naxx1hmt':
 			case 'L8na':
+				$sum_condition = ($game_id=='h35naxx1hmt'?100000:50000);
 				$query = $this->DB2->query("select uid,char_name 'character_name',
 				char_in_game_id 'character_in_game_id',
 				server_name,
@@ -1022,7 +1024,7 @@ class User_statistics extends MY_Controller {
 				CASE
 				  WHEN vip_ranking_updated is NULL THEN '100'
 				  ELSE TIMESTAMPDIFF(DAY, vip_ranking_updated, NOW())  END as 'days_vip_updated'
-				from whale_users where site = '{$game_id}' and deposit_total > 100000 order by {$orderby} ");
+				from whale_users where site = '{$game_id}' and deposit_total > {$sum_condition} order by {$orderby} ");
     		break;
 			default:
 			$query = $this->DB2->query("
