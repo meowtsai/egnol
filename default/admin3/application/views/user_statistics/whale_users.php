@@ -126,9 +126,7 @@
         </td>
 
 				<td>
-						<? if ($row->days_vip_updated<7):?>
 						<?=$row->vip_ranking_updated?>
-						<? endif;?>
 				</td>
 				<td style="text-align:right">
 					<? if ($row->is_added=='1'):?>

@@ -1022,7 +1022,7 @@ class User_statistics extends MY_Controller {
 				CASE
 				  WHEN vip_ranking_updated is NULL THEN '100'
 				  ELSE TIMESTAMPDIFF(DAY, vip_ranking_updated, NOW())  END as 'days_vip_updated'
-				from whale_users where site = '{$game_id}' order by {$orderby} ");
+				from whale_users where site = '{$game_id}' and deposit_total > 100000 order by {$orderby} ");
     		break;
 			default:
 			$query = $this->DB2->query("
