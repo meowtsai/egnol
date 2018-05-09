@@ -26,7 +26,7 @@ function event_submit(e)
   let user_email = $("#user_email").val();
   //console.log("user_email",user_email);
 
-  let url = "http://test-payment.longeplay.com.tw/event/h55_prereg";
+  let url = "http://game.longeplay.com.tw/event/h55_prereg";
   $.ajax({
     type: "POST",
     url: url,
@@ -44,7 +44,7 @@ function event_submit(e)
       $("#event_info").removeClass();
       $("#event_info").addClass("alert alert-success" );
       $("#event_info").show();
-      $("#event_info").text("預註冊登錄成功!")
+      $("#event_info").text("預註冊登錄成功，幫我們忙粉絲頁按個讚喔!")
 
     }
     else {

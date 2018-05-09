@@ -1,7 +1,7 @@
 body{
 	background-color:black;
-	background-image: url(../img/bg_32b881e.jpg);
-	 background-repeat: no-repeat;
+	background-image: url(../img/header.jpg);
+	background-repeat: no-repeat;
     background-position: top center;
 }
 a {
@@ -10,77 +10,55 @@ a {
  outline: medium none;
  color:red;
 }
-
-
+a, button {
+    cursor: pointer;
+}
 
 .header {
-    height:900px;
+	width:1204px;
+    height:1127px;
+	margin:870px auto 0 auto;
+	background-image: url(../img/gift.png);
+	position:relative;
 }
-.toptitle{
-	width:300px;
-	height:100px;
-	margin: 150px auto;
+.idvform{
+
+	width:870px;
+	height:40px;
+	position:absolute;
+	top:290px;
+	left:180px;
+
 }
-.title1{
-	font-size:50px;
-	color:white;
+.idvform input{
+	display:inline-block;
+	width:500px;
+	height:40px;
 }
-.title2{
-	font-size:20px;
-	color:white;
+.idvform button{
+	background-color:#5a4638;
+	border-style: none;
+	margin-left:10px;
+	height:40px;
+}
+.idvform button:hover{
+	background-color:#8b6048;
+
+}
+.notice_a{
+	width:1200px;
+    height:540px;
+	margin:56px auto 0 auto;
+	background-image: url(../img/notice.png);
 }
 
-.row {
-	position: relative;
-	
-}
-.advance {
-	width:400px;
-	height:300px;
-	position: absolute;
-    top:100px;
-    right:0;
-    bottom:0;
-    left:0;
-    margin:auto;
-	color:white;
-}
 
-.advance form li{
- margin-top:20px;	
-	
-}
-.fuli{
-	width:1100px;
-	margin:0 auto;
-}
-.fuli div{
-	width:835px;
-	float:left;
-}
-.fuli9 {
-	float:left;
-	
-}
 .footer{
-margin-top:600px;
-height:90px;
-min-width: 100%;
-text-align: center;
-display: block;
-clear: both;
-overflow: hidden;
+
+margin:90px auto 0 auto;
+width:1201px;
+height:143px;
+display:block;
+clear:both;
+
 }
-.footer p {
-    padding-top:10px;
-	padding-left:20px;
-	height:89px;
-    color: #fff;
-    font-size: 12px;
-    max-width: 500px;
-    text-align: left;
-    display: inline-block;
-    overflow: hidden;
-    line-height: 16px;
-}
-    
