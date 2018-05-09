@@ -83,7 +83,7 @@ function get_inactive_users_report(game_id) {
     }
     for (i = 0; i < resultObj.length; i++) {
         tableElem.find('tbody')
-          .append($('<tr><th>'+ resultObj[i].account +'</th><td>'+ resultObj[i].role_id +'</td><td>'+ resultObj[i].role_name +'</td><td>'+ resultObj[i].vip_ranking +'</td><td>'+ resultObj[i].latest_topup_date +'</td><td>'+ resultObj[i].last_login +'</td><td>'+ resultObj[i].inactive_confirm_date +'</td></tr>'));
+        .append($('<tr><th>'+ resultObj[i].account +'</th><td>'+ resultObj[i].role_id +'</td><td>'+ resultObj[i].role_name +'</td><td>'+ resultObj[i].vip_ranking +'</td><td>'+ resultObj[i].latest_topup_date +'</td><td>'+ resultObj[i].last_login +'</td><td>'+ resultObj[i].inactive_confirm_date +'</td></tr>'));
     }
   });
 }
@@ -148,7 +148,7 @@ function downloadCSV(args) {
     filename = args.rpt_type + ' export.csv';
 
     if (!csv.match(/^data:text\/csv/i)) {
-        csv = 'data:text/csv;charset=utf-8,' + csv;
+        csv = 'data:text/csv;charset=BIG5,' + csv;
     }
     data = encodeURI(csv);
 

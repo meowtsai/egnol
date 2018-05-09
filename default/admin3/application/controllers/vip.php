@@ -873,10 +873,11 @@ function inactive_users_report($game_id)
 				'account' => $row->uid,
 				'role_id' => $row->char_in_game_id,
 				'role_name' => $row->char_name,
-				'last_login' => $row->last_login,
-				'latest_topup_date' => $row->latest_topup_date,
-				'inactive_confirm_date' =>  $row->inactive_confirm_date,
 				'vip_ranking' =>  $vip_ranking_text,
+				'latest_topup_date' => $row->latest_topup_date,
+				'last_login' => $row->last_login,
+				'inactive_confirm_date' =>  $row->inactive_confirm_date,
+
 			);
 		}
 

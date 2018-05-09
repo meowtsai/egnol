@@ -999,14 +999,22 @@ class User_statistics extends MY_Controller {
 		$game_id = $this->input->get("game_id");
     $orderby = $this->input->get("orderby");
 		$sum_condition = 50000;
+		$report_result = [];
 		if ($game_id)
 		{
-    switch ($game_id) {
-    	case 'vxz':
-			case 'h35naxx1hmt':
-			case 'L8na':
-				$sum_condition = ($game_id=='h35naxx1hmt'?50000:1);
-				$query = $this->DB2->query("select uid,char_name 'character_name',
+			header("Cache-Control: private");
+			$this->DB2->start_cache();
+			if ($this->input->get("start_date")) {
+				$start_date = $this->DB2->escape($this->input->get("start_date"));
+				if ($this->input->get("end_date")) {
+					$end_date = $this->DB2->escape($this->input->get("end_date").":59");
+				}
+
+			}
+			//case 'h35naxx1hmt':
+			//case 'L8na':
+			$sum_condition = ($game_id=='h35naxx1hmt'?50000:1);
+			$report_result = $this->DB2->query("select uid,char_name 'character_name',
 				char_in_game_id 'character_in_game_id',
 				server_name,
 				deposit_total,
@@ -1022,79 +1030,39 @@ class User_statistics extends MY_Controller {
 				vip_ranking,
 				DATE_FORMAT(inactive_confirm_date, '%Y-%m-%d') 'inactive_confirm_date',
 				CASE
-				  WHEN vip_ranking_updated is NULL THEN '100'
-				  ELSE TIMESTAMPDIFF(DAY, vip_ranking_updated, NOW())  END as 'days_vip_updated'
-				from whale_users where site = '{$game_id}' and deposit_total > {$sum_condition} order by {$orderby} ");
-    		break;
-			default:
-			$query = $this->DB2->query("
-				SELECT
-					whales.uid 'uid',
-					chr.name 'character_name',
-									chr.in_game_id  'character_in_game_id',
-					whales.server_name 'server_name',
-					whales.deposit_total 'deposit_total',
-					gm.exchange_rate*whales.deposit_total 'currency_total',
-					DATE(chr.create_time) 'create_date',
-					csm.consume_sum 'currency_consumed',
-									whales.LastLogin 'last_login',
-									TIMESTAMPDIFF(DAY, whales.LastLogin, NOW()) 'days_since'
-				FROM
-					(
-						SELECT
-							ub.uid 'uid',
-							ub.server_id 'server_id',
-							svr.game_id 'game_id',
-							svr.name 'server_name',
-							SUM(ub.amount) 'deposit_total'
-													,(select create_time from log_game_logins lgl where lgl.game_id='{$game_id}' and lgl.uid= ub.uid order by create_time desc limit 1)  'LastLogin'
-						FROM
-							user_billing ub
-							JOIN servers svr ON svr.server_id = ub.server_id
-							LEFT JOIN testaccounts ta ON ub.uid = ta.uid
-						WHERE
-							ub.billing_type = 2
-							AND ub.result = 1
-							AND svr.game_id = '{$game_id}'
-							AND ta.uid IS NULL
-						GROUP BY ub.uid
-											HAVING SUM(ub.amount) >= 10000
-						ORDER BY SUM(ub.amount) DESC
-					) whales
-						JOIN games gm ON whales.game_id = gm.game_id
-						LEFT JOIN
-					(
-						SELECT
-							uid,
-							server_id,
-							MIN(create_time) 'create_time',
-							name, in_game_id
-						FROM characters
-						GROUP BY server_id, uid
-					) chr ON chr.uid = whales.uid
-							AND chr.server_id = whales.server_id
-						LEFT JOIN
-					(
-						SELECT
-							uid,
-							server_id,
-							SUM(amount) 'consume_sum'
-						FROM
-							log_game_consumes
-						WHERE
-							game_id = '{$game_id}'
-						GROUP BY server_id, uid
-					) csm ON csm.uid = whales.uid
-						AND csm.server_id = whales.server_id
+					WHEN vip_ranking_updated is NULL THEN '100'
+					ELSE TIMESTAMPDIFF(DAY, vip_ranking_updated, NOW())  END as 'days_vip_updated'
+				from whale_users where site = '{$game_id}' and deposit_total > {$sum_condition} order by {$orderby} ")->result();
 
+			switch ($this->input->get("action"))
+			{
+				case "鯨魚用戶統計":
+					break;
+				case "輸出":
+					ini_set("memory_limit","2048M");
+					$filename = "output.csv";
+					header("Content-type:application/vnd.ms-excel;");
+					header("Content-Disposition: filename={$filename};");
+					//排名	帳號	角色	原廠ID	伺服器	儲值累積	最後訂單時間	地區	未儲值/日	3日內新人	升階	加入Line	加入Line日期	最後登入日期	確認流失
+					$content = "帳號,角色,原廠ID,伺服器,儲值累積,最後訂單時間,地區,未儲值/日,升階,加入Line,加入Line日期,最後登入日期,確認流失\n";
+						foreach($report_result as $row) {
+							$content .= "{$row->uid},{$row->character_name},{$row->character_in_game_id},{$row->server_name},{$row->deposit_total},{$row->latest_topup_date},";
+							$content .= geoip_country_name_by_name($row->ip).",";
+							$content .= "{$row->days_since},{$row->vip_ranking_updated},";
+							$content .= ($row->is_added==1?"V":"").",";
+							$content .= "{$row->line_date},{$row->last_login},{$row->inactive_confirm_date}";
+							$content .= "\n";
+						}
 
-			");
-    		break;
-    }
-
-	}
+						echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
+						exit();
+						break;
+			}
+			$this->DB2->stop_cache();
+			$this->DB2->flush_cache();
+		}
 		$this->g_layout
-			->set("query", isset($query) ? $query : false)
+			->set("report_result", isset($report_result) ? $report_result : false)
 			->set("game_id", $game_id)
       ->set("orderby", $orderby)
 			->add_js_include("game/whale_users")

@@ -49,7 +49,9 @@
 
 
 		<input type="submit" class="btn btn-small btn-inverse" name="action" value="鯨魚用戶統計">
-		<?if ($game_id):?>
+		<?if (count($report_result)>0):?>
+		<input type="submit" class="btn btn-small btn-warning" name="action" value="輸出">
+
 		<a class="btn btn-info" href="<?=site_url("vip/requests_report/{$game_id}")?>">
 		查看服務列表
 		</a>
@@ -63,8 +65,8 @@
 
 </form>
 
-<? if ($query):?>
-	<? if ($query->num_rows() == 0): echo '<div class="none">查無資料</div>'; else: ?>
+<? if ($report_result):?>
+	<? if (count($report_result)==0): echo '<div class="none">查無資料</div>'; else: ?>
 	<table class="table table-bordered" style="width:auto;">
 		<thead>
 			<tr>
@@ -90,7 +92,7 @@
 		<tbody>
 		<? $color = array('00aa00', '448800', '776600', 'aa4400', 'dd2200', 'ff0000');
 			$seq = 1;
-			foreach($query->result() as $row):
+			foreach($report_result as $row):
 
 		?>
 			<tr bgcolor="<?=vipcolor($game_id,$row->deposit_total)?>" id="tr<?=$row->character_in_game_id?>">
