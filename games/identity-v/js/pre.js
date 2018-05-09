@@ -26,7 +26,7 @@ function event_submit(e)
   let user_email = $("#user_email").val();
   //console.log("user_email",user_email);
 
-  let url = "http://game.longeplay.com.tw/event/h55_prereg";
+  let url = "https://game.longeplay.com.tw/event/h55_prereg";
   $.ajax({
     type: "POST",
     url: url,
