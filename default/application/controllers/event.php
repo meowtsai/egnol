@@ -73,9 +73,6 @@ class Event extends MY_Controller
     {
       die(json_encode(array("status"=>"failure", "message"=>"請勿重複發送喔！")));
     }
-
-
-
     if(filter_var($user_email, FILTER_VALIDATE_EMAIL))
     {
         $msg = "我們已經收到您在『第五人格』的預註冊登錄資訊。<br />
@@ -117,11 +114,12 @@ class Event extends MY_Controller
             {
               //發送失敗標註
               $this->db->where("email", $user_email)->update("h55_prereg_insert", array("status" => 0));
-              die(json_encode(array("status"=>"failure", "message"=>"E-Mail 發送失敗。請確認E-mail為有效信箱。(Send Failed)")));
+              die(json_encode(array("status"=>"failure", "message"=>"E-Mail 發送失敗。請確認E-mail為有效信箱。")));
             }
           }
         else {
-          die(json_encode(array("status"=>"failure", "message"=>"E-Mail 格式錯誤。(Invalid Email)")));
+          $this->db->where("email", $user_email)->update("h55_prereg_insert", array("status" => 0));
+          die(json_encode(array("status"=>"failure", "message"=>"E-Mail 格式錯誤。")));
         }
   }
 }
