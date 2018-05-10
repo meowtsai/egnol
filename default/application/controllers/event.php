@@ -113,12 +113,12 @@ class Event extends MY_Controller
             else
             {
               //發送失敗標註
-              $this->db->where("email", $user_email)->update("h55_prereg_insert", array("status" => 0));
+              $this->db->where("email", $user_email)->update("h55_prereg", array("status" => 0));
               die(json_encode(array("status"=>"failure", "message"=>"E-Mail 發送失敗。請確認E-mail為有效信箱。")));
             }
           }
         else {
-          $this->db->where("email", $user_email)->update("h55_prereg_insert", array("status" => 0));
+          $this->db->where("email", $user_email)->update("h55_prereg", array("status" => 0));
           die(json_encode(array("status"=>"failure", "message"=>"E-Mail 格式錯誤。")));
         }
   }
