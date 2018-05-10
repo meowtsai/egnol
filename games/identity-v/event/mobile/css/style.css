@@ -2,7 +2,7 @@ body{
 	background-color:black;
 	background-image: url(../img/header.jpg);
 	background-repeat: no-repeat;
-    background-position: top center;
+    background-size:100%;
 }
 a {
  text-decoration: none;
@@ -15,53 +15,56 @@ a, button {
 }
 
 .header {
-	width:1204px;
-    height:1127px;
-	margin:870px auto 0 auto;
+	width:702px;
+    height:921px;
+	margin:880px auto 0 auto;
 	background-image: url(../img/gift.png);
+	background-repeat: no-repeat;
 	position:relative;
 }
 .idvform{
-
-	width:870px;
+	
+	width:702px;
 	height:40px;
 	position:absolute;
-	top:255px;
-	left:180px;
-
+	top:290px;
+    left:35px;
+	
 }
 .idvform input{
 	display:inline-block;
-	width:600px;
+	width:500px;
 	height:40px;
+	
 }
 .idvform button{
 	background-color:#5a4638;
 	border-style: none;
 	margin-left:10px;
 	height:40px;
-	margin-right:50px;
+	
 }
 .idvform button:hover{
 	background-color:#8b6048;
-
+	
 }
 .idvform form{
 	margin-bottom:10px;
 }
-
 .notice_a{
-	width:1200px;
-    height:540px;
+	width:702px;
+    height:636px;
 	margin:56px auto 0 auto;
-	background-image: url(../img/notice.png);
+	background-image: url(../img/notic.png);
+	background-repeat: no-repeat;
 }
+
 
 .footer{
 
-margin:90px auto 0 auto;
-width:1201px;
-height:143px;
+margin:50px auto 0 auto;
+width:750px;
+height:200px;
 display:block;
 clear:both;
 

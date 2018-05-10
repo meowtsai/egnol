@@ -42,7 +42,7 @@ class Event extends MY_Controller
     $user_email = $this->input->get_post("user_email");
     if (empty($user_email))
     {
-      die(json_encode(array("status"=>"failure", "message"=>"請正確填寫需要的欄未(empty)")));
+      die(json_encode(array("status"=>"failure", "message"=>"請正確填寫需要的欄位")));
     }
     $user_ip = $_SERVER['REMOTE_ADDR'];
     $country_name = "";
@@ -71,7 +71,7 @@ class Event extends MY_Controller
   //  die(json_encode($data[0]["rtn_code"]));
     if ($data[0]["rtn_code"] =="5")
     {
-      die(json_encode(array("status"=>"failure", "message"=>"請勿重複發送喔！(duplicate)")));
+      die(json_encode(array("status"=>"failure", "message"=>"請勿重複發送喔！")));
     }
 
 
@@ -89,10 +89,10 @@ class Event extends MY_Controller
             將會在官網及官方粉絲團中公佈。<br />
 
             『第五人格』官網<br />
-            http://www.onmyojiarena.tw<br />
+            http://www.identity-v.com/<br />
 
             『第五人格』官方粉絲團<br />
-            https://www.facebook.com/onmyojiarenaTW<br />
+            https://www.facebook.com/%E7%AC%AC%E4%BA%94%E4%BA%BA%E6%A0%BC-1925425637491722/<br />
 
             -------------------------------------------------------------------------------<br />
             ※這封郵件是系統自動發送。請勿回覆，謝謝！<br />

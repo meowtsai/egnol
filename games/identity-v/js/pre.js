@@ -44,7 +44,8 @@ function event_submit(e)
       $("#event_info").removeClass();
       $("#event_info").addClass("alert alert-success" );
       $("#event_info").show();
-      $("#event_info").text("預註冊登錄成功，幫我們忙粉絲頁按個讚喔!")
+      $("#event_info").text("預註冊成功，記得幫我們的粉絲專頁按個讚喔！")
+
 
     }
     else {
@@ -53,6 +54,7 @@ function event_submit(e)
       $("#event_info").addClass("alert alert-danger" );
       $("#event_info").show();
       $("#event_info").text(resObj.message)
+      
     }
     //console.log("request done",result);
 
