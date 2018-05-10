@@ -44,6 +44,11 @@ class Event extends MY_Controller
     {
       die(json_encode(array("status"=>"failure", "message"=>"請正確填寫需要的欄位")));
     }
+
+    if(!filter_var($user_email, FILTER_VALIDATE_EMAIL))
+    {
+      die(json_encode(array("status"=>"failure", "message"=>"E-Mail 格式錯誤。")));
+    }
     $user_ip = $_SERVER['REMOTE_ADDR'];
     $country_name = "";
 		if ($user_ip)
@@ -68,6 +73,8 @@ class Event extends MY_Controller
         'rtn_code' => $row->rtn_code,
       );
     }
+
+    $query->free_result();
   //  die(json_encode($data[0]["rtn_code"]));
     if ($data[0]["rtn_code"] =="5")
     {
@@ -113,12 +120,13 @@ class Event extends MY_Controller
             else
             {
               //發送失敗標註
-              $this->db->where("email", $user_email)->update("h55_prereg", array("status" => 0));
+              //$this->db->where("email", $user_email)->update("h55_prereg", array("status" => 0));
               die(json_encode(array("status"=>"failure", "message"=>"E-Mail 發送失敗。請確認E-mail為有效信箱。")));
             }
           }
         else {
-          $this->db->where("email", $user_email)->update("h55_prereg", array("status" => 0));
+          // update h55_prereg set status='0' where email ='event_info2@1.1';
+          //$this->db->where("email", $user_email)->update("h55_prereg", array("status" =>'0'));
           die(json_encode(array("status"=>"failure", "message"=>"E-Mail 格式錯誤。")));
         }
   }
