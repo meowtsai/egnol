@@ -2034,7 +2034,7 @@ function find_duplicate_characters()
 	// 			GROUP BY  name,in_game_id,server_id,partner_uid HAVING count(*)>1;");
 
 	$query = $this->DB2->query("SELECT name,server_id,partner_uid FROM characters
-	      WHERE server_id in(SELECT server_id FROM servers WHERE game_id='h35naxx1hmt')
+	      WHERE server_id in(SELECT server_id FROM servers WHERE game_id in('h35naxx1hmt','g78naxx2hmt'))
       GROUP BY  name,server_id,partner_uid HAVING count(*)>1;");
 
 	if ($query->num_rows() > 0) {
