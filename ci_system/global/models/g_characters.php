@@ -7,24 +7,25 @@ class G_Characters extends CI_Model {
 		if (is_array($server)) $server = (object)$server;
 		if ($data["uid"] == "0" && $data["partner_uid"] == "0") return false;
 
-		$create_status = 1;
-		$cnt = $this->db->from("characters gr")->where("uid", $data["uid"])->count_all_results();
-
-    	if ($cnt > 0) {
-	    	$query = $this->db->from("characters gr")->join("servers gi", "gr.server_id=gi.server_id")
-	    					->where("gi.game_id", $server->game_id)->where("uid", $data["uid"])->get();
-
-	    	if ($query->num_rows() > 0) {
-	    		foreach($query->result() as $row) {
-	    			if ($row->server_id == $server->server_id) {
-	    				$create_status = 0;
-	    				break;
-	    			}
-	    		}
-	    	}
-	    	else $create_status = 2;
-    	}
-    	else $create_status = 3;
+		// $create_status = 1;
+		// $cnt = $this->db->from("characters gr")->where("uid", $data["uid"])->count_all_results();
+		//
+    // 	if ($cnt > 0) {
+		// 		//select * from characters where in_game_id='2052043607' and server_id ='g78na10001' and partner_uid='150642904';
+	  //   	$query = $this->db->from("characters gr")->join("servers gi", "gr.server_id=gi.server_id")
+	  //   					->where("gi.game_id", $server->game_id)->where("uid", $data["uid"])->get();
+		//
+	  //   	if ($query->num_rows() > 0) {
+	  //   		foreach($query->result() as $row) {
+	  //   			if ($row->server_id == $server->server_id) {
+	  //   				$create_status = 0;
+	  //   				break;
+	  //   			}
+	  //   		}
+	  //   	}
+	  //   	else $create_status = 2;
+    // 	}
+    $create_status = 0;
 
 		$data['server_id'] = $server->server_id;
 		$data['create_status'] = $create_status;
