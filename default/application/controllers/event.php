@@ -35,6 +35,44 @@ class Event extends MY_Controller
   }
 
 
+  function h55_prereg_report_summary()
+  {
+    header('Access-Control-Allow-Origin: *');
+    $user_ip = $_SERVER['REMOTE_ADDR'];
+    if ($user_ip!="61.220.44.200")
+    {
+      die(json_encode(array("status"=>"failure", "message"=>"illegal ip")));
+    }
+
+    // $query = $this->db->query("Select country, DATE_FORMAT(create_time,'%Y-%m-%d') as dDate,count(distinct email) as count from h55_prereg
+    // group by country, DATE_FORMAT(create_time,'%Y-%m-%d') order by DATE_FORMAT(create_time,'%Y-%m-%d') desc, count(distinct email) desc");
+
+    $query = $this->db->query("Select DATE_FORMAT(create_time,'%Y-%m-%d') as dDate,count(distinct email) as count from h55_prereg
+    group by DATE_FORMAT(create_time,'%Y-%m-%d') order by DATE_FORMAT(create_time,'%Y-%m-%d') desc, count(distinct email) desc");
+    $data = array();
+    foreach($query->result() as $row) {
+      $data[] = array(
+        'dDate' => $row->dDate,
+        'count' => $row->count,
+      );
+    }
+
+    $query = $this->db->query("Select country,count(distinct email) as count from h55_prereg
+    group by country order by count(distinct email) desc");
+    $data2 = array();
+    foreach($query->result() as $row) {
+      $data2[] = array(
+        'country' => $row->country,
+        'count' => $row->count,
+      );
+    }
+
+    die(json_encode(array("status"=>"success", "message"=>$data, "message2"=>$data2)));
+
+
+  }
+
+
   function h55_prereg()
   {
     header('Access-Control-Allow-Origin: *');
