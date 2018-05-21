@@ -39,7 +39,7 @@ class Event extends MY_Controller
   {
     header('Access-Control-Allow-Origin: *');
     //// TODO:  要改成post, 要視情況擋ip
-    $user_email = $this->input->get_post("user_email");
+    $user_email = $this->input->post("user_email");
     if (empty($user_email))
     {
       die(json_encode(array("status"=>"failure", "message"=>"請正確填寫需要的欄位")));
@@ -96,7 +96,7 @@ class Event extends MY_Controller
             http://www.identity-v.com/<br />
 
             『第五人格』官方粉絲團<br />
-            https://www.facebook.com/%E7%AC%AC%E4%BA%94%E4%BA%BA%E6%A0%BC-1925425637491722/<br />
+            https://www.facebook.com/IdentityVgame/<br />
 
             -------------------------------------------------------------------------------<br />
             ※這封郵件是系統自動發送。請勿回覆，謝謝！<br />
