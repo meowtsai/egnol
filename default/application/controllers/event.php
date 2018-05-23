@@ -11,10 +11,10 @@ class Event extends MY_Controller
   {
     header('Access-Control-Allow-Origin: *');
     $user_ip = $_SERVER['REMOTE_ADDR'];
-    if ($user_ip!="61.220.44.200")
-    {
-      die(json_encode(array("status"=>"failure", "message"=>"illegal ip")));
-    }
+    // if ($user_ip!="61.220.44.200")
+    // {
+    //   die(json_encode(array("status"=>"failure", "message"=>"illegal ip")));
+    // }
 
     $query = $this->db->query('SELECT * FROM h55_prereg ORDER BY ID DESC');
     $data = array();
@@ -39,10 +39,10 @@ class Event extends MY_Controller
   {
     header('Access-Control-Allow-Origin: *');
     $user_ip = $_SERVER['REMOTE_ADDR'];
-    if ($user_ip!="61.220.44.200")
-    {
-      die(json_encode(array("status"=>"failure", "message"=>"illegal ip")));
-    }
+    // if ($user_ip!="61.220.44.200")
+    // {
+    //   die(json_encode(array("status"=>"failure", "message"=>"illegal ip")));
+    // }
 
     // $query = $this->db->query("Select country, DATE_FORMAT(create_time,'%Y-%m-%d') as dDate,count(distinct email) as count from h55_prereg
     // group by country, DATE_FORMAT(create_time,'%Y-%m-%d') order by DATE_FORMAT(create_time,'%Y-%m-%d') desc, count(distinct email) desc");
