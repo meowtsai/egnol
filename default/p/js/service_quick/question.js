@@ -9,6 +9,11 @@ $(function()
 		if (typeof game !== 'undefined' && game !== '')
 		{
 			server_pool.find("option."+game).clone().appendTo(server);
+			if (server_pool.find("option."+game).length==1)
+			{
+				server[0].selectedIndex = 1;
+			}
+
 		}
 	};
 	server.change_game(game.val());

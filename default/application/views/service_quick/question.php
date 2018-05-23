@@ -65,7 +65,7 @@
 					<tr>
 						<th>角色名稱</th>
                         <? if ($character_name == ""):?>
-				        <td><input type="text" name="character_name" id="character_name" size="33"></td>
+				        <td><input type="text" name="character_name" id="character_name" size="33" placeholder="(選填)"></td>
                         <? else:?>
 				        <td><input type="hidden" name="character_name" id="character_name" value="<?=$character_name?>"><?=$character_name?></td>
                         <? endif;?>
