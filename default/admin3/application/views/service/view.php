@@ -256,7 +256,7 @@
 			<td style="word-break:break-all"><?=$row->content?>
       <?
       if (sizeof($array_pic)>0):
-        if ($array_pic[$row->id]):
+        if (isset($array_pic[$row->id])):
           ?>
         <?for($count = 0; $count < sizeof($array_pic[$row->id]);$count++):?>
           <span>
