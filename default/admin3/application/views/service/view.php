@@ -254,17 +254,20 @@
 
 			</td>
 			<td style="word-break:break-all"><?=$row->content?>
+      <?
+      if (sizeof($array_pic)>0):
+        if ($array_pic[$row->id]):
+          ?>
+        <?for($count = 0; $count < sizeof($array_pic[$row->id]);$count++):?>
+          <span>
+            <a href="<?=$array_pic[$row->id][$count]?>" target="_blank" style="color:blue;font-size:9pt">
+              <附圖>
+            </a>
+          </span>
+        <?endfor;
+          endif;
+          endif;?>
 
-      <? if ($array_pic[$row->id]): ?>
-      <?for($count = 0; $count < sizeof($array_pic[$row->id]);$count++):?>
-        <span>
-          <a href="<?=$array_pic[$row->id][$count]?>" target="_blank" style="color:blue;font-size:9pt">
-            <附圖>
-          </a>
-        </span>
-      <?endfor;?>
-      <?endif;?>
-      
 				<? if ($row->is_official): ?>
 				<div><a href="<?=site_url("service/edit_reply/{$row->id}")?>">編輯</a></div>
 				<? endif;?>
