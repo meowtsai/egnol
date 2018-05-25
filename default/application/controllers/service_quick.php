@@ -260,7 +260,7 @@ class Service_quick extends MY_Controller {
 
 		$this->load->library('upload');
 		$config['upload_path'] = realpath("p/upload");
-		$config['allowed_types'] = 'gif|jpg|bmp|png';
+		$config['allowed_types'] = 'gif|jpg|jpeg|bmp|png';
 		$config['max_size']	= '10240'; //1MB
 		$config['max_width'] = '10240';
 		$config['max_height'] = '10240';
@@ -272,8 +272,9 @@ class Service_quick extends MY_Controller {
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("file01"))
 			{
-				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
-				//die(json_encode(array("status"=>"failure", "message"=>"附件1上傳失敗, 請檢查檔案是否符合規定")));
+				//die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				//die(json_encode(array("status"=>"failure", "message"=>$this->upload->allowed_types." and ".$this->upload->file_type." and ".$this->upload->ext)));
+				die(json_encode(array("status"=>"failure", "message"=>"附件1上傳失敗, 請檢查檔案是否符合規定")));
 			}
 			else
 			{
@@ -287,8 +288,8 @@ class Service_quick extends MY_Controller {
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("file02"))
 			{
-				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
-				//die(json_encode(array("status"=>"failure", "message"=>"附件2上傳失敗, 請檢查檔案是否符合規定")));
+				//die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				die(json_encode(array("status"=>"failure", "message"=>"附件2上傳失敗, 請檢查檔案是否符合規定")));
 			}
 			else
 			{
@@ -301,8 +302,8 @@ class Service_quick extends MY_Controller {
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("file03"))
 			{
-				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
-				//die(json_encode(array("status"=>"failure", "message"=>"附件3上傳失敗, 請檢查檔案是否符合規定")));
+				//die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				die(json_encode(array("status"=>"failure", "message"=>"附件3上傳失敗, 請檢查檔案是否符合規定")));
 			}
 			else
 			{
@@ -318,8 +319,8 @@ class Service_quick extends MY_Controller {
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("file04"))
 			{
-				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
-				//die(json_encode(array("status"=>"failure", "message"=>"附件4上傳失敗, 請檢查檔案是否符合規定")));
+				//die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				die(json_encode(array("status"=>"failure", "message"=>"附件4上傳失敗, 請檢查檔案是否符合規定")));
 			}
 			else
 			{
@@ -340,8 +341,8 @@ class Service_quick extends MY_Controller {
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("file05"))
 			{
-				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
-				//die(json_encode(array("status"=>"failure", "message"=>"附件5上傳失敗, 請檢查檔案是否符合規定")));
+				//die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				die(json_encode(array("status"=>"failure", "message"=>"附件5上傳失敗, 請檢查檔案是否符合規定")));
 			}
 			else
 			{
@@ -361,8 +362,8 @@ class Service_quick extends MY_Controller {
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("file06"))
 			{
-				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
-				//die(json_encode(array("status"=>"failure", "message"=>"附件6上傳失敗, 請檢查檔案是否符合規定")));
+				//die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				die(json_encode(array("status"=>"failure", "message"=>"附件6上傳失敗, 請檢查檔案是否符合規定")));
 			}
 			else
 			{
@@ -640,7 +641,7 @@ class Service_quick extends MY_Controller {
 
 		$this->load->library('upload');
 		$config['upload_path'] = realpath("p/upload");
-		$config['allowed_types'] = 'gif|jpg|bmp|png';
+		$config['allowed_types'] = 'gif|jpg|jpeg|bmp|png';
 		$config['max_size']	= '10240'; //1MB
 		$config['max_width'] = '10240';
 		$config['max_height'] = '10240';
