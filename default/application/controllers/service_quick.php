@@ -268,7 +268,8 @@ class Service_quick extends MY_Controller {
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("file01"))
 			{
-				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				//die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				die(json_encode(array("status"=>"failure", "message"=>"附件1上傳失敗, 請檢查檔案是否符合規定")));
 			}
 			else
 			{
@@ -282,7 +283,7 @@ class Service_quick extends MY_Controller {
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("file02"))
 			{
-				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				die(json_encode(array("status"=>"failure", "message"=>"附件2上傳失敗, 請檢查檔案是否符合規定")));
 			}
 			else
 			{
@@ -295,7 +296,7 @@ class Service_quick extends MY_Controller {
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("file03"))
 			{
-				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				die(json_encode(array("status"=>"failure", "message"=>"附件3上傳失敗, 請檢查檔案是否符合規定")));
 			}
 			else
 			{
@@ -311,7 +312,7 @@ class Service_quick extends MY_Controller {
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("file04"))
 			{
-				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				die(json_encode(array("status"=>"failure", "message"=>"附件4上傳失敗, 請檢查檔案是否符合規定")));
 			}
 			else
 			{
@@ -332,7 +333,7 @@ class Service_quick extends MY_Controller {
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("file05"))
 			{
-				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				die(json_encode(array("status"=>"failure", "message"=>"附件5上傳失敗, 請檢查檔案是否符合規定")));
 			}
 			else
 			{
@@ -352,7 +353,7 @@ class Service_quick extends MY_Controller {
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("file06"))
 			{
-				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				die(json_encode(array("status"=>"failure", "message"=>"附件6上傳失敗, 請檢查檔案是否符合規定")));
 			}
 			else
 			{
@@ -642,7 +643,8 @@ class Service_quick extends MY_Controller {
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("reply_file01"))
 			{
-				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				//die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				die(json_encode(array("status"=>"failure", "message"=>"附件1上傳失敗, 請檢查檔案是否符合規定")));
 			}
 			else
 			{
@@ -655,7 +657,7 @@ class Service_quick extends MY_Controller {
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("reply_file02"))
 			{
-				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				die(json_encode(array("status"=>"failure", "message"=>"附件2上傳失敗, 請檢查檔案是否符合規定")));
 			}
 			else
 			{
@@ -668,7 +670,7 @@ class Service_quick extends MY_Controller {
 			$this->upload->initialize($config);
 			if ( ! $this->upload->do_upload("reply_file03"))
 			{
-				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+				die(json_encode(array("status"=>"failure", "message"=>"附件3上傳失敗, 請檢查檔案是否符合規定")));
 			}
 			else
 			{
