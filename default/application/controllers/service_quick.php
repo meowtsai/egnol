@@ -204,6 +204,10 @@ class Service_quick extends MY_Controller {
 	{
 		$site = $this->_get_site();
 
+		if (isset($_SERVER["CONTENT_LENGTH"]))
+		if($_SERVER["CONTENT_LENGTH"]>((int)ini_get('post_max_size')*1024*1024))
+		die(json_encode(array("status"=>"failure", "message"=>"所有附件加總大小請勿超過".ini_get('post_max_size').", ")));
+
 		//if ( ! $this->g_user->is_login()) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
 		if ( ! $this->input->post("server")) die(json_encode(array("status"=>"failure", "message"=>"尚未選擇伺服器")));
 		if ( ! $this->input->post("question_type")) die(json_encode(array("status"=>"failure", "message"=>"尚未選擇問題類型")));
