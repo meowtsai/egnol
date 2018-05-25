@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Test extends MY_Controller {
-	
+
 	function __construct()
 	{
 		parent::__construct();
@@ -10,9 +10,9 @@ class Test extends MY_Controller {
 	function index()
 	{
 		$site = $this->_get_site();
-		
+
 		$news = $this->db->where("game_id", $site)->order_by("create_time", "desc")->get("news", 10);
-		
+
 		$this->_init_layout()
 			->add_css_link("login")
 			->add_css_link("news")
@@ -22,16 +22,39 @@ class Test extends MY_Controller {
 			->set("news", $news)
 			->standard_view();
 	}
-	
+
+
+	function test_array()
+	{
+		//0523 per cs request - add 3 addtional pics columns
+		$addtional_pics = array();
+		array_push($addtional_pics,"pic1");
+		//array_push($addtional_pics,"pic2");
+		array_push($addtional_pics,"pic3");
+
+
+		$queryId = 123;
+
+		for($count = 0; $count < sizeof($addtional_pics);$count++)
+		{
+			//$this->db->insert("question_pictures", ("question_id"=>$queryId,"pic_path"=>$addtional_pics[i]));
+			print_r(array("question_id"=>$queryId,"pic_path"=>$addtional_pics[$count]));
+			//echo $addtional_pics[$count];
+		}
+
+			die();
+
+	}
+
 	function get_news()
 	{
 		$site = $this->input->get("site");
 		$offset = $this->input->get("o");
-		
+
 		$query = $this->db->where("game_id", $site)->order_by("create_time", "desc")->get("news", $offset, 5);
-		
+
 		$result = array();
-		
+
 		foreach($query->result() as $row)
 		{
 			$news = array(
@@ -41,21 +64,21 @@ class Test extends MY_Controller {
 				"time"=>$row->create_time,
 				"link"=>$row->link
 			);
-			
+
 			array_push($result, $news);
 		}
 
 		die(json_encode($result));
 	}
-	
+
 	function _make_trade_seq()
 	{
 		$rnd = rand(1000, 9999);
   		$trade_seq = "FREE".date("YmdHis")."{$rnd}";
-		
+
 		return $trade_seq;
 	}
-	
+
 	function ap()
 	{
 		if(!IN_OFFICE)
@@ -75,12 +98,12 @@ class Test extends MY_Controller {
 </html>
 		<?
 	}
-	
+
 	function free_points()
 	{
 		if(!IN_OFFICE)
 			die();
-		
+
 		$uid = intval($this->input->post("uid"));
 		$server_id = $this->input->post("server_id");
 		$points = intval($this->input->post("points"));
@@ -93,30 +116,30 @@ class Test extends MY_Controller {
 		{
 			die("點數超出範圍!");
 		}
-		
+
 		$this->load->model("games");
 		$server = $this->games->get_server($server_id);
 		if(empty($server))
 		{
 			die("遊戲伺服器不存在");
 		}
-		
+
 		$character = $this->db->where("server_id", $server_id)->where("uid", $uid)->from("characters")->get()->row();
 		if(empty($character))
 		{
 			die("沒有角色!");
 		}
-		
+
 //		$order_no = $this->_make_trade_seq();
-		
+
 		echo "帳號: {$uid}<br/>";
 		echo "伺服器: {$server_id}<br/>";
 		echo "角色 ID: {$character->id}<br/>";
 		echo "角色名稱: {$character->name}<br/>";
 		echo "點數: {$points}<br/>";
-		
+
 		$this->load->library("g_wallet");
-		
+
 		$order_id = $this->g_wallet->produce_order($uid, "free_points", "4", $points, $server_id, '', $character->id);//, $order_no);
 		$order = $this->g_wallet->get_order($order_id);
 

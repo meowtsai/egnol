@@ -172,6 +172,34 @@
 					<img src="<?=$question->pic_path3?>" style="max-width:400px;">
 				</a>
 				<? endif;?>
+
+        <? $last_reply_id =0;
+          $array_pic = array();
+        ?>
+        <?if ($pic_plus->num_rows() > 0):
+          $p_no = 3;
+          //print_r($pic_plus->result()) ;
+          foreach($pic_plus->result() as $row):
+            if ($row->reply_id==0):
+        ?>
+            <span>
+              <a href="<?=$row->pic_path?>" target="_blank" style="color:blue;font-size:9pt">
+                / 附圖<?=++$p_no?>
+              </a>
+            </span>
+          <?
+            else:
+              $cur_reply_id = $row->reply_id;
+              if ($cur_reply_id==$last_reply_id):
+                array_push($array_pic[$cur_reply_id],$row->pic_path);
+              else:
+                $array_pic[$cur_reply_id] = [$row->pic_path];
+              endif;
+              $last_reply_id = $cur_reply_id;
+            endif;
+          endforeach;
+        endif;?>
+
 			</td>
 		</tr>
 		<? if ($question->type <> '9' && !$question->is_quick):?>
@@ -223,8 +251,20 @@
 				<? if ($row->admin_uname):?>
 				<div style="font-size:12px; color:#129;">(<?=$row->admin_uname?>)</div>
 				<? endif;?>
+
 			</td>
 			<td style="word-break:break-all"><?=$row->content?>
+
+      <? if ($array_pic[$row->id]): ?>
+      <?for($count = 0; $count < sizeof($array_pic[$row->id]);$count++):?>
+        <span>
+          <a href="<?=$array_pic[$row->id][$count]?>" target="_blank" style="color:blue;font-size:9pt">
+            <附圖>
+          </a>
+        </span>
+      <?endfor;?>
+      <?endif;?>
+      
 				<? if ($row->is_official): ?>
 				<div><a href="<?=site_url("service/edit_reply/{$row->id}")?>">編輯</a></div>
 				<? endif;?>

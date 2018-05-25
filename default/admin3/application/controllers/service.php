@@ -661,6 +661,8 @@ class Service extends MY_Controller {
 			->join("admin_users au", "au.uid=qt.admin_uid", "left")
 			->where("question_id", $id)->order_by("qt.id", "asc")->get();
 
+		$pic_plus = $this->DB2->from("question_pictures")->where("question_id", $id)->order_by("id", "asc")->get();
+
         $allocate_groups = array('pm', 'admin', 'cs_master', 'pd_chang', 'RC');
 
 		$service_users = $this->DB2->from('admin_permissions')->where('resource', 'service')->order_by("role")->get();
@@ -678,6 +680,7 @@ class Service extends MY_Controller {
 			->add_js_include("service/view")
 			->set("question", $question)
 			->set("replies", $replies)
+			->set("pic_plus", $pic_plus)
 			->set("allocate_users", $allocate_users)
 			->set("ip", $ip)
 			->render();

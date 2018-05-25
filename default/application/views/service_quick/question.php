@@ -83,7 +83,7 @@
 					<tr>
 						<th>問題描述</th><td><textarea name="content" class="required" minlength="5" maxlength="500"></textarea></td>
 					</tr>
-                    <? if (!$is_ingame):?>
+					<? if (!$is_ingame):?>
 					<tr>
 						<th>圖片附件</th><td style="white-space:pre-wrap;"><img src="<?=$longe_url?>p/image/server/server-pic-btn1.png" class="pic_btn"> <input type="file" name="file01" class="pic_input" /></td>
 					</tr>
@@ -94,10 +94,19 @@
 						<th>&nbsp;</th><td style="white-space:pre-wrap;"><img src="<?=$longe_url?>p/image/server/server-pic-btn3.png" class="pic_btn"> <input type="file" name="file03" class="pic_input"></td>
 					</tr>
 					<tr>
+						<th>&nbsp;</th><td style="white-space:pre-wrap;"><img src="<?=$longe_url?>p/image/server/server-pic-btn4.png" class="pic_btn"> <input type="file" name="file04" class="pic_input" /></td>
+					</tr>
+					<tr>
+						<th>&nbsp;</th><td style="white-space:pre-wrap;"><img src="<?=$longe_url?>p/image/server/server-pic-btn5.png" class="pic_btn"> <input type="file" name="file05" class="pic_input"></td>
+					</tr>
+					<tr>
+						<th>&nbsp;</th><td style="white-space:pre-wrap;"><img src="<?=$longe_url?>p/image/server/server-pic-btn6.png" class="pic_btn"> <input type="file" name="file06" class="pic_input"></td>
+					</tr>
+					<tr>
 						<th></th>
 						<td style="white-space:pre-wrap;">圖檔可接受格式：jpg、png、gif、bmp<br/>最大尺寸 6144x6144 畫素，容量最大 6MB。</td>
-                    </tr>
-                    <? else:?>
+          </tr>
+          <? else:?>
 					<tr>
 						<td style="white-space:pre-wrap;" colspan="2">
             <div class="notes" style="text-align:center;padding:5px;">提醒您：需附檔案回報時，請直接利用官網線上提問，謝謝。</div></td>

@@ -304,20 +304,98 @@ class Service_quick extends MY_Controller {
 			}
 		}
 
+		//0523 per cs request - add 3 addtional pics columns
+		$addtional_pics = array();
+		if ( ! empty($_FILES["file04"]["name"]))
+		{
+			$this->upload->initialize($config);
+			if ( ! $this->upload->do_upload("file04"))
+			{
+				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+			}
+			else
+			{
+				$upload_data = $this->upload->data();
+				if ($upload_cnt>=3)
+				{
+					array_push($addtional_pics,site_url("p/upload/{$upload_data['file_name']}"));
+				}
+				else {
+					$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");
+				}
+
+			}
+		}
+
+		if ( ! empty($_FILES["file05"]["name"]))
+		{
+			$this->upload->initialize($config);
+			if ( ! $this->upload->do_upload("file05"))
+			{
+				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+			}
+			else
+			{
+				$upload_data = $this->upload->data();
+				if ($upload_cnt>=3)
+				{
+					array_push($addtional_pics,site_url("p/upload/{$upload_data['file_name']}"));
+				}
+				else {
+					$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");
+				}
+			}
+		}
+
+		if ( ! empty($_FILES["file06"]["name"]))
+		{
+			$this->upload->initialize($config);
+			if ( ! $this->upload->do_upload("file06"))
+			{
+				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+			}
+			else
+			{
+				$upload_data = $this->upload->data();
+				if ($upload_cnt>=3)
+				{
+					array_push($addtional_pics,site_url("p/upload/{$upload_data['file_name']}"));
+				}
+				else {
+					$data['pic_path'.(++$upload_cnt)] = site_url("p/upload/{$upload_data['file_name']}");
+				}
+			}
+		}
+
+
 		$this->db
 			->set("create_time", "now()", false)
 			->set("update_time", "now()", false)
 			->insert("questions", $data);
 
-			$this->db->select("id")
-					->where("check_id", $check_id)
-					->from("questions")
-					->order_by("id", "desc");
-			$queryId = $this->db->get();
+			$q_id = $this->db->insert_id();
 
-			if ($queryId->num_rows() > 0) {
-					$q_id = $queryId->row()->id;
-				}
+			// $this->db->select("id")
+			// 		->where("check_id", $check_id)
+			// 		->from("questions")
+			// 		->order_by("id", "desc");
+			//
+			// $queryId = $this->db->get();
+
+			for($count = 0; $count < sizeof($addtional_pics);$count++)
+			{
+				$this->db->insert("question_pictures", array("question_id"=>$q_id,"pic_path"=>$addtional_pics[$count]));
+			}
+
+
+
+
+
+
+
+			// if ($queryId->num_rows() > 0) {
+			// 		$q_id = $queryId->row()->id;
+			// 	}
 
         if (!$this->input->post("partner_uid")) {
 
@@ -504,15 +582,22 @@ class Service_quick extends MY_Controller {
                         ->get()->row();
         }
 
+		$is_ingame = ($_SESSION['vendor_game_id']) ? 1 : 0;
 		if ($question)
 		{
 			if ($question->status == '2' || $question->status == '4' || $question->status == '7') {
 				$this->db->where("id", $id)->update("questions", array("is_read"=>'1'));
 			}
 			$replies = $this->db->from("question_replies")->where("question_id", $id)->order_by("id", "asc")->get();
+			$pic_plus = $this->db->from("question_pictures")->where("question_id", $id)->order_by("id", "asc")->get();
+
+
+
+
 		}
 		else {
 			$replies = false;
+			$pic_plus= false;
 		}
 
 		$this->_init_layout("客服中心")
@@ -522,7 +607,9 @@ class Service_quick extends MY_Controller {
 			->add_js_include("jquery.blockUI")
 			->add_js_include("default")
 			->set("replies", $replies)
+			->set("pic_plus", $pic_plus)
 			->set("question", $question)
+			->set("is_ingame", $is_ingame)
 			->mobile_view();
 	}
 
@@ -541,13 +628,72 @@ class Service_quick extends MY_Controller {
 			'content' => nl2br(htmlspecialchars($this->input->post("content"))),
 		);
 
+		$this->load->library('upload');
+		$config['upload_path'] = realpath("p/upload");
+		$config['allowed_types'] = 'gif|jpg|bmp|png';
+		$config['max_size']	= '10240'; //1MB
+		$config['max_width'] = '10240';
+		$config['max_height'] = '10240';
+		$config['encrypt_name'] = true;
+
+		$addtional_pics = array();
+		if (!empty($_FILES["reply_file01"]["name"]))
+		{
+			$this->upload->initialize($config);
+			if ( ! $this->upload->do_upload("reply_file01"))
+			{
+				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+			}
+			else
+			{
+				$upload_data = $this->upload->data();
+					array_push($addtional_pics,site_url("p/upload/{$upload_data['file_name']}"));
+			}
+		}
+		if (!empty($_FILES["reply_file02"]["name"]))
+		{
+			$this->upload->initialize($config);
+			if ( ! $this->upload->do_upload("reply_file02"))
+			{
+				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+			}
+			else
+			{
+				$upload_data = $this->upload->data();
+					array_push($addtional_pics,site_url("p/upload/{$upload_data['file_name']}"));
+			}
+		}
+		if (!empty($_FILES["reply_file03"]["name"]))
+		{
+			$this->upload->initialize($config);
+			if ( ! $this->upload->do_upload("reply_file03"))
+			{
+				die(json_encode(array("status"=>"failure", "message"=>$this->upload->display_errors('', ''))));
+			}
+			else
+			{
+				$upload_data = $this->upload->data();
+					array_push($addtional_pics,site_url("p/upload/{$upload_data['file_name']}"));
+			}
+		}
+
 		$this->db
 			->set("create_time", "now()", false)
 			->insert("question_replies", $data);
+		$reply_q_id = $this->db->insert_id();
+
+		for($count = 0; $count < sizeof($addtional_pics);$count++)
+		{
+			$this->db->insert("question_pictures", array("question_id"=>$question_id,"reply_id"=>$reply_q_id,"pic_path"=>$addtional_pics[$count]));
+		}
+
+
+
 
 		$this->db->where("id", $question_id)->update("questions", array("is_read"=>'0', "status"=>'1'));
 
 		die(json_encode(array("status"=>"success")));
+
 	}
 
 	function close_question($id)

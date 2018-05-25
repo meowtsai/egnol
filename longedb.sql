@@ -911,6 +911,17 @@ ADD system_closed char(1) NOT NULL DEFAULT 0;
 ALTER table questions
 ADD system_closed_start datetime NULL;
 
+
+
+DROP TABLE IF EXISTS `question_pictures`;
+CREATE TABLE `question_pictures` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `question_id` int(11) NOT NULL,
+  `pic_path` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
 --
 -- Table structure for table `ticket_replies`
 --
