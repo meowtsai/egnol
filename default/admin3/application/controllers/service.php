@@ -641,9 +641,9 @@ class Service extends MY_Controller {
 			->join("characters c", "c.partner_uid=q.partner_uid and c.server_id=q.server_id and c.name=q.character_name", "left")
 			->get()->row();
 
-		if ($question->status == '1') {
-			$this->DB2->where("id", $id)->update("questions", array("is_read"=>'1'));
-		}
+		// if ($question->status == '1') {
+		// 	$this->DB2->where("id", $id)->update("questions", array("is_read"=>'1'));
+		// }
 
 		$ip_pos = strrpos($question->note,"IP");
 		$ip =  "";
