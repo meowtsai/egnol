@@ -209,6 +209,10 @@ class Service_quick extends MY_Controller {
 		die(json_encode(array("status"=>"failure", "message"=>"所有附件加總大小請勿超過".ini_get('post_max_size').", ")));
 
 		//if ( ! $this->g_user->is_login()) die(json_encode(array("status"=>"failure", "message"=>"請先登入")));
+		if(!filter_var($this->input->post("email"), FILTER_VALIDATE_EMAIL))
+		{
+			die(json_encode(array("status"=>"failure", "message"=>"E-Mail 格式錯誤。")));
+		}
 		if ( ! $this->input->post("server")) die(json_encode(array("status"=>"failure", "message"=>"尚未選擇伺服器")));
 		if ( ! $this->input->post("question_type")) die(json_encode(array("status"=>"failure", "message"=>"尚未選擇問題類型")));
 		if ( ! $this->input->post("content")) die(json_encode(array("status"=>"failure", "message"=>"尚未填寫問題描述")));
