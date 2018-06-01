@@ -36,6 +36,9 @@ class Service_quick extends MY_Controller {
 				//echo $_SERVER['SERVER_NAME'];
 
 				$diffgame	= $this->input->get("param_game_id");
+				$evt_code	= $this->input->get("evt_code");
+				$_SESSION['evt_code']	= $evt_code;
+
 				if ($diffgame)
 				{
 					unset($_SESSION['vendor_game_id']);
@@ -50,6 +53,7 @@ class Service_quick extends MY_Controller {
 					unset($_SESSION['check_id']);
 
 					$vendor_game_id = $diffgame;
+
 				}
         if ($partner_uid) {
             unset($_SESSION['vendor_game_id']);
@@ -193,6 +197,7 @@ class Service_quick extends MY_Controller {
 			->set("server_id", $_SESSION['server_id'])
 			->set("server_name", $_SESSION['server_name'])
 			->set("character_name", $_SESSION['character_name'])
+			->set("evt_code", $_SESSION['evt_code'])
 			->set("is_ingame", $is_ingame)
 			->add_css_link("login")
 			->add_css_link("money")

@@ -75,9 +75,13 @@
 						<td>
 							<select name="question_type" class="required" style="width:90%;">
 								<option value="">--請選擇--</option>
-								<? foreach($this->config->item("question_type") as $id => $type):?>
-								<option value="<?=$id?>"><?=$type?></option>
-								<? endforeach;?>
+								<? if ($evt_code):?>
+									<option value="e" selected><?=$this->config->item("question_type")["e"];?></option>
+								<?else:?>
+									<? foreach($this->config->item("question_type") as $id => $type):?>
+										<option value="<?=$id?>"><?=$type?></option>
+									<? endforeach;?>
+								<? endif;?>
 							</select>
 						</td>
 					<tr>

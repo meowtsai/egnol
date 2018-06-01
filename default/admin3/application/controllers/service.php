@@ -857,6 +857,7 @@ class Service extends MY_Controller {
 			->set('allocate_date', 'NOW()', false)
 			->set('allocate_status', '1')
 			->set('allocate_result', $result)
+			->set("status", "2")
 			->set("close_admin_uid", null)
 			->set("system_closed_start", null)
 			->update("questions", array('allocate_admin_uid' => $this->input->post("allocate_admin_uid")));
@@ -916,9 +917,17 @@ class Service extends MY_Controller {
 
 	function reserved_question($id)
 	{
-		if ( ! $this->zacl->check_acl("service", "modify")) die(json_failure("沒有權限"));
 
-		$this->DB1->set("status", "7")->set("close_admin_uid", $_SESSION['admin_uid'])->set("system_closed_start", "now()", false)->where("admin_uid is not null", null, false)->where("id", $id)->update("questions");
+		if ( ! $this->zacl->check_acl("service", "modify")) die(json_failure("沒有權限"));
+		// if ($question->status == '2' && ($question->allocate_status == '0' || $question->allocate_status == '2')):
+
+
+		$this->DB1->set("status", "7")->set("close_admin_uid", $_SESSION['admin_uid'])
+		->set("system_closed_start", "now()", false)
+		->where("admin_uid is not null", null, false)
+		->where("status", "2")
+		->where("(allocate_status='2' or allocate_status='0')", null, false)
+		->where("id", $id)->update("questions");
 		if ($this->DB1->affected_rows() > 0) {
 			die(json_success());
 		}

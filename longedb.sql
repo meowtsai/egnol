@@ -917,7 +917,23 @@ DROP TABLE IF EXISTS `question_pictures`;
 CREATE TABLE `question_pictures` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `question_id` int(11) NOT NULL,
+  `reply_id` int(11) NOT NULL DEFAULT 0,
   `pic_path` varchar(300) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+ALTER table question_pictures
+ADD reply_id int(11) NOT NULL DEFAULT 0;
+
+
+
+CREATE TABLE `question_extra` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `question_id` int(11) NOT NULL,
+  `ip` varchar(20) DEFAULT NULL,
+  `region` varchar(100) DEFAULT NULL,
+  `isp` varchar(100) DEFAULT NULL,
+  `net_type` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
