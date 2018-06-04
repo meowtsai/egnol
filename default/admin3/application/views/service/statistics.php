@@ -110,7 +110,9 @@
 		<tr>
 			<td width="150px"><?=$row->admin_uname?></td>
 			<td>
-				<a href="get_list?reply_start_date=<?=$this->input->get('start_date')?>&reply_end_date=<?=$this->input->get("end_date")?>&cs_admin=<?=$row->admin_uid?>&action=查詢">
+				<a href="get_list?reply_start_date=<?=$this->input->get('start_date')?>&reply_end_date=<?=$this->input->get("end_date")?>&game=<?=$this->input->get("game")?>&status=<?=$this->input->get("status")?>&cs_admin=<?=$row->admin_uid?>&type=<?=$this->input->get("type")?>&action=查詢">
+
+
 					<?
 						$total_cnt += $row->cnt;
 					?>
@@ -123,7 +125,7 @@
 			<td width="150px">總計</td>
 			<td>
 					<?=$total_cnt?>
-				
+
 			</td>
 		</tr>
 		<? endif; ?>
