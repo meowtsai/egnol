@@ -235,15 +235,20 @@ function vipcolor($game_id,$deposit_number){
 		case 'L8na':
 			if ($deposit_number>=100000)
 			{
-				return "#C0C0C0";
+				return "#D4AF37";
 			}
 			else if ($deposit_number>=50000 and $deposit_number<100000)
+			{
+				return "#C0C0C0";
+			}
+			else if ($deposit_number>=30000 and $deposit_number<50000)
 			{
 				return "#FAEBD7";
 			}
 			else {
 				return "#FFFFFF";
 			}
+
 			break;
 		default:
 			# code...

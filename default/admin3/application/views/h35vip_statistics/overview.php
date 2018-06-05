@@ -174,7 +174,7 @@ endif; ?>
        <?
         $vip_header = ($game_id=='h35naxx1hmt'? "['VIP 等級','普R:$15萬~20萬', '銀R:$20萬~40萬', '金R:$40萬~70萬', '白金R:$70萬-100萬', '黑R:儲值$100萬以上',{ role: 'annotation' }]"
         :
-         "['VIP 等級','普R:$5萬~10萬', '銀R:$10萬以上', '金R:未定義', '白金R:未定義', '黑R:未定義',{ role: 'annotation' }]");
+         "['VIP 等級','普R:$3萬~5萬', '銀R:$5萬~10萬', '金R:$10萬以上', '白金R:未定義', '黑R:未定義',{ role: 'annotation' }]");
        ?>
        var data = google.visualization.arrayToDataTable([
          <? echo $vip_header; ?>,
