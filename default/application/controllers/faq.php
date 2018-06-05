@@ -10,8 +10,8 @@ class Faq extends MY_Controller {
 	function index()
 	{
 		$site = $this->_get_site();
-		$bodyonly = $this->input->get_post("bodyonly");
-		$hidetitle = $this->input->get_post("hidetitle");
+		$bodyonly = true; //$this->input->get_post("bodyonly");
+		$hidetitle = true; //$this->input->get_post("hidetitle");
 		$search_string = $this->input->get_post("search_string") ? $this->input->get_post("search_string") : "home";
 
 		//$this->load->model("g_bulletins");
