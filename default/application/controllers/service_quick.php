@@ -258,6 +258,13 @@ class Service_quick extends MY_Controller {
 			"note" => $_SESSION['q_note']."| IP={$ip}, 國家={$country_name} ",
 		);
 
+		$game = "";
+
+		if ($this->input->post("game"))
+		{
+			$game = $this->input->post("game");
+		}
+
         /*
 				$info = geoip_record_by_name($_SERVER['REMOTE_ADDR']);
 				//print_r ($info);
@@ -427,7 +434,7 @@ class Service_quick extends MY_Controller {
 
             if(filter_var($this->input->post("email"), FILTER_VALIDATE_EMAIL))
             {
-                $msg = "您提問的案件單號為#".$q_id."<br />後續若要追蹤此單號的客服問題請用以下代碼進行查詢：<br /><b>".$check_id."</b>";
+                $msg = "您提問的案件單號為#".$q_id."<br />後續若要<a href='https://game.longeplay.com.tw/service_quick?site=long_e&param_game_id=".$game."'>追蹤此單號</a>的客服問題請用以下代碼進行查詢：<br /><b>".$check_id."</b>";
 			    			$this->load->library("g_send_mail");
 
                 if($this->g_send_mail->send_view($this->input->post("email"),
