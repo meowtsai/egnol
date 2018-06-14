@@ -23,6 +23,14 @@
 
 .login-ins .notes li{ margin-left : 2em; text-indent : -1em ; line-height:20px; padding-bottom:15px;}
 
+.alert {
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+}
+
 .login .login_word{color:#fffb00;}
 .login-submit li span{width:70px;}
 .login span.UCode{max-width:300px; width:100%; text-align:left; margin:0px;}
@@ -47,20 +55,20 @@
 /*RWD*/
 
 
-@media only screen and (max-width:1150px){ 
+@media only screen and (max-width:1150px){
 
 #content-login .login-ins { width:calc(90% - 50px);}
 }
-@media only screen and (max-width:985px){ 
+@media only screen and (max-width:985px){
 
 #content-login .login-ins { width:calc(100% - 30px);}
 }
 
-@media only screen and (max-width:805px){ 
+@media only screen and (max-width:805px){
 .login_member .login_info{ padding:20px; }
 }
 
-@media only screen and (max-width:650px){ 
+@media only screen and (max-width:650px){
 .login .login_word span{ display:none;}
 .login li span, .login .lgin_word{ max-width:300px; width:90%; text-align:left; margin:0 0 10px 0;}
 .login-ins .login-other img{ margin-bottom:10px; /*width:100%; max-width:145px;*/ }
@@ -72,7 +80,7 @@
 
 }
 
-@media only screen and (max-width:450px){ 
+@media only screen and (max-width:450px){
 .login-button .button_submit{ margin-bottom:10px; }
 
 .member_info tr > th{ width:40%; }
