@@ -7,6 +7,15 @@
 
 <script type="text/javascript">
 $('.collapse').collapse()
+
+
+var game_id = window.location.href.split('?')[1].split('=')[1];
+if (game_id!== undefined)
+{
+    $( "#"+ game_id +"-tab" ).trigger( "click" );
+}
+
+
 //$("div[data-site*='g83tw']").hide();
 //$( "a[hreflang|='en']" ).css( "border", "3px dotted green" );
 
