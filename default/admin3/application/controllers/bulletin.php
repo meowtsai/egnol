@@ -96,7 +96,7 @@ class Bulletin extends MY_Controller {
 
 		$this->load->helper('form');
 		$this->load->library(array('form_validation'));
-		$this->form_validation->set_rules('bulletin_title', '標題', 'required|min_length[2]');
+		$this->form_validation->set_rules('bulletin_title', '標題', 'required|min_length[2]|max_length[20]');
 
 		if ($this->form_validation->run() == FALSE)
 		{
