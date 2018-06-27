@@ -81,15 +81,28 @@
 		<input type="text" name="content" value="<?=$this->input->get("content")?>" style="width:120px" placeholder="提問描述">
 		<input type="text" name="replies" value="<?=$this->input->get("replies")?>" style="width:120px" placeholder="回覆內容">
 		<input type="text" name="question_id" value="<?=$this->input->get("question_id")?>" style="width:90px" placeholder="#id">
-		<input type="text" name="uid" value="<?=$this->input->get("uid")?>" style="width:90px" placeholder="uid">
 		<input type="text" name="原廠uid" value="<?=$this->input->get("partner_uid")?>" style="width:90px" placeholder="原廠uid">
-		<input type="text" name="account" value="<?=$this->input->get("account")?>" style="width:90px" placeholder="龍邑帳號">
 		<input type="text" name="character_name" value="<?=$this->input->get("character_name")?>" style="width:90px" placeholder="角色名稱">
 		<input type="text" name="check_id" value="<?=$this->input->get("check_id")?>" style="width:90px" placeholder="問題檢核碼">
 		<span class="sptl"></span>
 
 		<input type="text" name="email" value="<?=$this->input->get("email")?>" style="width:90px" placeholder="Email">
 		<input type="text" name="mobile" value="<?=$this->input->get("mobile")?>" style="width:90px" placeholder="手機">
+		<span class="sptl"></span>
+		每頁顯示
+		<select name="page_size" style="width:60px">
+			<?
+			$get_size = 50;
+			if ($this->input->get("page_size"))
+			{
+				$get_size = $this->input->get("page_size");
+			}
+			$size_var = [10,25,50,100];
+			foreach($size_var as $size):?>
+			<option value="<?=$size ?>" <?=($get_size==$size ? 'selected="selected"' : '')?>><?=$size ?></option>
+			<? endforeach;?>
+
+		</select>
 
 		<span class="sptl"></span>
 
@@ -112,7 +125,7 @@
 		{
 			case "查詢":
 				$get = $this->input->get();
-				$get['sort'] = 'expense';
+				$get['sort'] = 'update_time';
 				$query_string = http_build_query($get);
 		?>
 
@@ -131,12 +144,11 @@
                 <th style="width:120px">角色名稱</th>
                 <th style="width:85px">提問類型</th>
                 <th style="width:300px">描述</th>
-                <th style="width:90px;">uid</th>
                 <th style="width:90px;">原廠uid</th>
-                <th style="width:110px;"><a href="?<?=$query_string?>">轉點金額</a><?=$this->input->get("sort") == 'expense' ? ' <i class="icon icon-chevron-down"></i>' : ''?></th>
                 <th style="width:80px;">狀態</th>
                 <th style="width:80px;">處理人</th>
                 <th style="width:100px;">日期</th>
+								<th style="width:110px;"><a href="?<?=$query_string?>">回覆日期</a><?=$this->input->get("sort") == 'update_time' ? ' <i class="icon icon-chevron-down"></i>' : ''?></th>
                 <th></th>
             </tr>
         </thead>
@@ -188,18 +200,12 @@
                     <a href="<?=site_url("service/view/{$row->id}")?>"><?=mb_strimwidth(strip_tags($row->content), 0, 66, '...', 'utf-8')?></a>
                 </td>
                 <td>
-                    <? if($row->uid):?>
-                    <a href="<?=site_url("member/view/{$row->uid}")?>"><?=$row->uid?></a>
-                    <a href="<?=site_url("service/get_list?uid={$row->uid}&action=查詢")?>"><i class="icon-search"></i></a>
-                    <? endif;?>
-                </td>
-                <td>
                     <? if($row->partner_uid):?>
                     <?=$row->partner_uid?>
                     <a href="<?=site_url("service/get_list?partner_uid={$row->partner_uid}&action=查詢")?>"><i class="icon-search"></i></a>
                     <? endif;?>
                 </td>
-                <td><?=$row->expense?></td>
+
                 <td><?=($row->status == '4' && !$row->close_admin_uid)?"玩家":""?><?=($row->status == '4' && $row->system_closed=='1')?"系統":"" ?><?=$question_status[$row->status]?>
                     <div style="font-size:11px;">
 
@@ -218,6 +224,8 @@
                 <? endif;?>
                 <td><?=(isset($admin_repliers[$row->id]))?$admin_repliers[$row->id]:""?></td>
                 <td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>
+								<td><?=format_status($row->reply_status)?></td>
+
                 <td>
                     <div class="btn-group">
                         <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
@@ -279,3 +287,45 @@
 
 		<? } ?>
 <? endif;?>
+
+
+<?php
+function pluralize( $count, $text )
+{
+    return $count . ( ( $count == 1 ) ? ( " $text" ) : ( " ${text}" ) );
+}
+
+function ago( $datetime )
+{
+    $interval = date_create('now')->diff( $datetime );
+    $suffix = ( $interval->invert ? ' 前' : '' );
+    if ( $v = $interval->y >= 1 ) return pluralize( $interval->y, '年' ) . $suffix;
+    if ( $v = $interval->m >= 1 ) return pluralize( $interval->m, '月' ) . $suffix;
+    if ( $v = $interval->d >= 1 ) return pluralize( $interval->d, '日' ) . $suffix;
+    if ( $v = $interval->h >= 1 ) return pluralize( $interval->h, '小時' ) . $suffix;
+    if ( $v = $interval->i >= 1 ) return pluralize( $interval->i, '分' ) . $suffix;
+    return pluralize( $interval->s, '秒' ) . $suffix;
+}
+function format_status($reply_text)
+{
+	if ($reply_text)
+	{
+		$byWhom =  explode('#',$reply_text)[0];
+		$when =  explode('#',$reply_text)[1];
+
+
+		if ($byWhom=="玩家"){
+			$byWhom = '<span style="color:#090">'.$byWhom.' ';
+		}
+		else {
+			$byWhom = '<span style="color:blue">'.$byWhom.' ';
+		}
+
+		return $byWhom.(ago(New DateTime($when))).' 回覆</span><div style="font-size:11px;color:#999">'.$when."</div>";
+	}
+	else{
+		return "<span style='color:red'>尚未回覆</span>";
+	}
+
+}
+?>

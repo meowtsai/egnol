@@ -437,13 +437,18 @@ class Service extends MY_Controller {
 			$this->DB2->start_cache();
 
 			$this->input->get("question_id") && $this->DB2->where("q.id", $this->input->get("question_id"));
-			$this->input->get("uid") && $this->DB2->where("q.uid", $this->input->get("uid"));
+			//$this->input->get("uid") && $this->DB2->where("q.uid", $this->input->get("uid"));
 			$this->input->get("partner_uid") && $this->DB2->where("q.partner_uid", $this->input->get("partner_uid"));
 			$this->input->get("status")<>'' && $this->DB2->where("q.status", $this->input->get("status"));
 			$this->input->get("type") && $this->DB2->where("q.type", $this->input->get("type"));
 			$this->input->get("game") && $this->DB2->where("gi.game_id", $this->input->get("game"));
 			$this->input->get("character_name") && $this->DB2->where("q.character_name", $this->input->get("character_name"));
 			$this->input->get("check_id") && $this->DB2->where("q.check_id", $this->input->get("check_id"));
+			$page_size = 50;
+			if ($this->input->get("page_size")) {
+				$page_size = $this->input->get("page_size");
+			}
+
 
 			if ($this->input->get("email")) {
                 $this->DB2->where("u.email", $this->input->get("email"));
@@ -464,23 +469,25 @@ class Service extends MY_Controller {
 
 			$this->DB2
 				//->select("q.*, g.name as game_name, au.name as admin_uname, gi.name as server_name, c.name as in_game_name")
-				->select("q.*, g.name as game_name, au.name as admin_uname, gi.name as server_name")
+				->select("q.*, g.name as game_name, au.name as admin_uname, gi.name as server_name,")
 				->select("(select name from `characters` where partner_uid=q.partner_uid and server_id=q.server_id and name=q.character_name) as in_game_name")
-				->select("(select sum(amount) from user_billing where uid=q.uid and billing_type=2 and result=1) as expense")
+				//->select("(select sum(amount) from user_billing where uid=q.uid and billing_type=2 and result=1) as expense")
+				->select("(select case when is_official=1 then CONCAT('官方#' , create_time) when is_official=0 then CONCAT('玩家#' , create_time) 	end as reply_status
+				  from question_replies where question_id =q.id order by id desc limit 1) as reply_status ",FALSE)
 				->from("questions q")
 				->join("servers gi", "gi.server_id=q.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
-				->join("users u", "u.uid=q.uid", "left")
+				//->join("users u", "u.uid=q.uid", "left")
 				->join("admin_users au", "au.uid=q.admin_uid", "left");
 			    //->join("characters c", "c.partner_uid=q.partner_uid and c.server_id=q.server_id and c.name=q.character_name", "left");
 
-			if ($this->input->get("account")) {
-				$this->DB2->join("users u", "u.uid=q.uid", "left")
-					->where("u.email", $this->input->get("account"))
-					->or_where("u.mobile", $this->input->get("account"));
-			}
+			// if ($this->input->get("account")) {
+			// 	$this->DB2->join("users u", "u.uid=q.uid", "left")
+			// 		->where("u.email", $this->input->get("account"))
+			// 		->or_where("u.mobile", $this->input->get("account"));
+			// }
 
-			if ($this->input->get("replies") || $this->input->get("cs_admin")) {
+			if ($this->input->get("replies") || $this->input->get("cs_admin") || $this->input->get("reply_start_date") ) {
 				$this->DB2->join("question_replies qr", "q.id=qr.question_id", "left");
         if ($this->input->get("replies")) $this->DB2->like("qr.content", $this->input->get("replies"), 'both');
         if ($this->input->get("cs_admin")) $this->DB2->where("qr.admin_uid", $this->input->get("cs_admin"));
@@ -515,7 +522,7 @@ class Service extends MY_Controller {
 					$total_rows = $this->DB2->count_all_results();
 					$sort = $this->input->get("sort") ? $this->input->get("sort") : 'id';
 
-					$query = $this->DB2->limit(10, $this->input->get("record"))
+					$query = $this->DB2->limit($page_size, $this->input->get("record"))
 								->order_by("{$sort} desc")->get();
 
 					$get = $this->input->get();
@@ -526,7 +533,7 @@ class Service extends MY_Controller {
 					$this->pagination->initialize(array(
 							'base_url'	=> site_url("service/get_list?".$query_string),
 							'total_rows'=> $total_rows,
-							'per_page'	=> 10
+							'per_page'	=> $page_size
 						));
 
 					$this->g_layout->set("total_rows", $total_rows);
@@ -800,6 +807,11 @@ class Service extends MY_Controller {
 	{
 		$question_id = $this->input->post("question_id");
 		$id = $this->input->post("reply_id");
+		$post_content = nl2br($this->input->post("content"));
+
+		$query = $this->DB2->query("SELECT count(*) > (3-1) as chk FROM question_replies WHERE question_id={$question_id} and content='{$post_content}'");
+		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆回答!")));
+
 
 		$data = array(
 			"uid" => 0,
