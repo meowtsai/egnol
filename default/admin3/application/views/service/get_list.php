@@ -92,7 +92,7 @@
 		每頁顯示
 		<select name="page_size" style="width:60px">
 			<?
-			$get_size = 50;
+			$get_size = 10;
 			if ($this->input->get("page_size"))
 			{
 				$get_size = $this->input->get("page_size");

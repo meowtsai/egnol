@@ -444,19 +444,19 @@ class Service extends MY_Controller {
 			$this->input->get("game") && $this->DB2->where("gi.game_id", $this->input->get("game"));
 			$this->input->get("character_name") && $this->DB2->where("q.character_name", $this->input->get("character_name"));
 			$this->input->get("check_id") && $this->DB2->where("q.check_id", $this->input->get("check_id"));
-			$page_size = 50;
+			$page_size = 10;
 			if ($this->input->get("page_size")) {
 				$page_size = $this->input->get("page_size");
 			}
 
 
 			if ($this->input->get("email")) {
-                $this->DB2->where("u.email", $this->input->get("email"));
-                $this->DB2->or_where("q.email", $this->input->get("email"));
+                //$this->DB2->where("u.email", $this->input->get("email"));
+                $this->DB2->where("q.email", $this->input->get("email"));
             }
 			if ($this->input->get("mobile")) {
-                $this->DB2->where("u.mobile", $this->input->get("mobile"));
-                $this->DB2->or_where("q.phone", $this->input->get("mobile"));
+                //$this->DB2->where("u.mobile", $this->input->get("mobile"));
+                $this->DB2->where("q.phone", $this->input->get("mobile"));
             }
 			$this->input->get("content") && $this->DB2->like("q.content", $this->input->get("content"));
 
