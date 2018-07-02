@@ -49,25 +49,25 @@ class Daily_report extends MY_Controller {
 						$h35_stat_query = $this->negame_statistics_data('h35naxx1hmt');
 						$L8na_stat_query = $this->negame_statistics_data('L8na');
 
-						$h35_ranking = array();
-						$h35_type_data = array();
-
-						if ($h35_stat_query->num_rows() > 0) {
-								foreach ($h35_stat_query->result() as $row) {
-									$h35_ranking[$row->oDate] =  $this->negame_daily_top_data($row->oDate,'h35naxx1hmt')->result();
-									$h35_type_data[$row->oDate] =  $this->negame_daily_type_data($row->oDate,'h35naxx1hmt')->result();
-								}
-						}
-
-						$L8na_ranking = array();
-						$L8na_type_data = array();
-
-						if ($L8na_stat_query->num_rows() > 0) {
-								foreach ($L8na_stat_query->result() as $row) {
-									$L8na_ranking[$row->oDate] =  $this->negame_daily_top_data($row->oDate,'L8na')->result();
-									$L8na_type_data[$row->oDate] =  $this->negame_daily_type_data($row->oDate,'L8na')->result();
-								}
-						}
+						//$h35_ranking = array();
+						//$h35_type_data = array();
+						//
+						// if ($h35_stat_query->num_rows() > 0) {
+						// 		foreach ($h35_stat_query->result() as $row) {
+						// 			$h35_ranking[$row->oDate] =  $this->negame_daily_top_data($row->oDate,'h35naxx1hmt')->result();
+						// 			$h35_type_data[$row->oDate] =  $this->negame_daily_type_data($row->oDate,'h35naxx1hmt')->result();
+						// 		}
+						// }
+						//
+						// $L8na_ranking = array();
+						// $L8na_type_data = array();
+						//
+						// if ($L8na_stat_query->num_rows() > 0) {
+						// 		foreach ($L8na_stat_query->result() as $row) {
+						// 			$L8na_ranking[$row->oDate] =  $this->negame_daily_top_data($row->oDate,'L8na')->result();
+						// 			$L8na_type_data[$row->oDate] =  $this->negame_daily_type_data($row->oDate,'L8na')->result();
+						// 		}
+						// }
 
 
             $is_game_statistics = true;
@@ -78,10 +78,6 @@ class Daily_report extends MY_Controller {
 			->set("h35_stat_query", isset($h35_stat_query) ? $h35_stat_query : false)
 			->set("L8na_stat_query", isset($L8na_stat_query) ? $L8na_stat_query : false)
 			->set("is_game_statistics", isset($is_game_statistics) ? $is_game_statistics : false)
-			->set("h35_ranking", isset($h35_ranking) ? $h35_ranking : false)
-			->set("h35_type_data", isset($h35_type_data) ? $h35_type_data : false)
-			->set("L8na_ranking", isset($L8na_ranking) ? $L8na_ranking : false)
-			->set("L8na_type_data", isset($L8na_type_data) ? $L8na_type_data : false)
 			->add_js_include("fontawesome/js/fontawesome-all")
 			->render();
 	}
@@ -386,12 +382,10 @@ class Daily_report extends MY_Controller {
 		function negame_statistics_data($game_id) {
 
 			$query = $this->DB2->query("
-			SELECT DATE_FORMAT(create_time, '%Y-%m-%d') as oDate,
-			SUM(amount) as oSum,
-			COUNT(distinct account) as oCount
-			FROM negame_orders
-			WHERE game_id = '{$game_id}' and  DATEDIFF(create_time ,now())>-13
-			GROUP BY  DATE_FORMAT(create_time, '%Y-%m-%d') ");
+			SELECT  date,game_id,topup_sum,topup_count,chanel_dist,top_users
+			FROM vip_daily_sum
+			WHERE game_id = '{$game_id}'
+			ORDER BY date desc limit 14");
 			return $query;
 
 		}

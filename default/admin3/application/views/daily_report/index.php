@@ -116,13 +116,15 @@ if ($h35_stat_query):?>
 		<tbody>
 			<? foreach($h35_stat_query->result() as $row):?>
 			<tr>
-				<td><?=date("m/d", strtotime($row->oDate))?></td>
+				<td><?=date("m/d", strtotime($row->date))?></td>
 				<td style="text-align:right">
-					<?=number_format($row->oSum)?>
+					<?=number_format($row->topup_sum)?>
 				</td>
 				<td>
-					<? foreach($h35_type_data[$row->oDate] as $type_row):
-						switch ($type_row->transaction_type) {
+					<?
+					$type_array =explode(";", $row->chanel_dist);
+					foreach($type_array as $type_row):
+						switch (explode("-",$type_row)[0]) {
 							case 'app_store':
 								echo "<i class='fab fa-apple'></i>";
 								break;
@@ -134,18 +136,15 @@ if ($h35_stat_query):?>
 								break;
 						}
 						?>
-					$ <?=number_format($type_row->oSum)?>
-					 (<?=number_format(($type_row->oSum / $row->oSum)*100, 2, '.', ',')  ?>%)
+					$<?=number_format(explode("-",$type_row)[1])?>
+
 
 					<? endforeach;?>
 
 				</td>
-				<td style="text-align:right"><?=$row->oCount?></td>
+				<td style="text-align:right"><?=$row->topup_count?></td>
 				<td>
-					<? foreach($h35_ranking[$row->oDate] as $ranking_row):?>
-					<?=$ranking_row->role_name?>($ <?=$ranking_row->oSum?>);
-					<? endforeach;?>
-
+					<?=$row->top_users?>
 				</td>
 			</tr>
 		<? endforeach;?>
@@ -177,13 +176,15 @@ if ($h35_stat_query):?>
 		<tbody>
 			<? foreach($L8na_stat_query->result() as $row):?>
 			<tr>
-				<td><?=date("m/d", strtotime($row->oDate))?></td>
+				<td><?=date("m/d", strtotime($row->date))?></td>
 				<td style="text-align:right">
-					<?=number_format($row->oSum)?>
+					<?=number_format($row->topup_sum)?>
 				</td>
 				<td>
-					<? foreach($L8na_type_data[$row->oDate] as $type_row):
-						switch ($type_row->transaction_type) {
+					<?
+					$type_array =explode(";", $row->chanel_dist);
+					foreach($type_array as $type_row):
+						switch (explode("-",$type_row)[0]) {
 							case 'app_store':
 								echo "<i class='fab fa-apple'></i>";
 								break;
@@ -195,18 +196,15 @@ if ($h35_stat_query):?>
 								break;
 						}
 						?>
-					$ <?=number_format($type_row->oSum)?>
-					 (<?=number_format(($type_row->oSum / $row->oSum)*100, 2, '.', ',')  ?>%)
+					$<?=number_format(explode("-",$type_row)[1])?>
+
 
 					<? endforeach;?>
 
 				</td>
-				<td style="text-align:right"><?=$row->oCount?></td>
+				<td style="text-align:right"><?=$row->topup_count?></td>
 				<td>
-					<? foreach($L8na_ranking[$row->oDate] as $ranking_row):?>
-					<?=$ranking_row->role_name?>($ <?=$ranking_row->oSum?>);
-					<? endforeach;?>
-
+					<?=$row->top_users?>
 				</td>
 			</tr>
 		<? endforeach;?>
