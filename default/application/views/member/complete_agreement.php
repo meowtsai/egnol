@@ -6,7 +6,7 @@ tr, td {
 <div id="content-login">
 	<div class="login-ins">
 		<div class="bread cf" typeof="v:Breadcrumb">
-			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>member?site=<?=$site?>" title="會員登入" rel="v:url" property="v:title">會員登入</a> > <a href="<?=$longe_url?>member/complete_agreement?site=<?=$site?>" title="會員服務暨個資隱私權同意書" rel="v:url" property="v:title">會員服務暨個資隱私權同意書</a>
+			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> >  <a href="<?=$longe_url?>member/complete_agreement?site=<?=$site?>" title="會員服務暨個資隱私權同意書" rel="v:url" property="v:title">會員服務暨個資隱私權同意書</a>
 		</div>
 		<div class="login_box">
 			<div class="login_member">
