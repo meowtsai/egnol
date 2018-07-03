@@ -444,9 +444,12 @@ class Service extends MY_Controller {
 			$this->input->get("game") && $this->DB2->where("gi.game_id", $this->input->get("game"));
 			$this->input->get("character_name") && $this->DB2->where("q.character_name", $this->input->get("character_name"));
 			$this->input->get("check_id") && $this->DB2->where("q.check_id", $this->input->get("check_id"));
-			$page_size = 10;
+			if (!$_SESSION['page_size']) {
+				$_SESSION['page_size']=10;
+			}
 			if ($this->input->get("page_size")) {
 				$page_size = $this->input->get("page_size");
+				$_SESSION['page_size'] = $page_size;
 			}
 
 
@@ -522,7 +525,7 @@ class Service extends MY_Controller {
 					$total_rows = $this->DB2->count_all_results();
 					$sort = $this->input->get("sort") ? $this->input->get("sort") : 'id';
 
-					$query = $this->DB2->limit($page_size, $this->input->get("record"))
+					$query = $this->DB2->limit($_SESSION['page_size'], $this->input->get("record"))
 								->order_by("{$sort} desc")->get();
 
 					$get = $this->input->get();
@@ -533,7 +536,7 @@ class Service extends MY_Controller {
 					$this->pagination->initialize(array(
 							'base_url'	=> site_url("service/get_list?".$query_string),
 							'total_rows'=> $total_rows,
-							'per_page'	=> $page_size
+							'per_page'	=> $_SESSION['page_size']
 						));
 
 					$this->g_layout->set("total_rows", $total_rows);
@@ -632,6 +635,7 @@ class Service extends MY_Controller {
 			->set("reply_query", isset($reply_query) ? $reply_query : false)
 			->set("games", $games)
 			->set("cs_admins", $cs_admins)
+			->set("todo", $this->input->get("todo"))
 			->add_js_include("service/get_list")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();

@@ -44,9 +44,18 @@
 		問題狀態
 		<select name="status" style="width:90px">
 			<option value="">--</option>
+			<?
+			$q_status = $this->input->get("status");
+			 if ($_SERVER['REQUEST_URI'] == '/service/todo' || ($this->input->get("todo"))){
+				$q_status = '1';
+			 }
+
+
+			?>
+
 
 			<? foreach($question_status as $key => $status):?>
-			<option value="<?=$key?>" <?=($this->input->get("status")===strval($key) ? 'selected="selected"' : '')?>><?=$status?></option>
+			<option value="<?=$key?>" <?=($q_status===strval($key) ? 'selected="selected"' : '')?>><?=$status?></option>
 			<? endforeach;?>
 		</select>
 
@@ -92,11 +101,8 @@
 		每頁顯示
 		<select name="page_size" style="width:60px">
 			<?
-			$get_size = 10;
-			if ($this->input->get("page_size"))
-			{
-				$get_size = $this->input->get("page_size");
-			}
+			$get_size = ($_SESSION['page_size'])?$_SESSION['page_size']:10;
+
 			$size_var = [10,25,50,100];
 			foreach($size_var as $size):?>
 			<option value="<?=$size ?>" <?=($get_size==$size ? 'selected="selected"' : '')?>><?=$size ?></option>
@@ -276,6 +282,8 @@
         setTimeout("flash_title()",500);
     }
     flash_title();
+
+
     </script>
     <? endif;?>
 
