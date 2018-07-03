@@ -444,7 +444,7 @@ class Service extends MY_Controller {
 			$this->input->get("game") && $this->DB2->where("gi.game_id", $this->input->get("game"));
 			$this->input->get("character_name") && $this->DB2->where("q.character_name", $this->input->get("character_name"));
 			$this->input->get("check_id") && $this->DB2->where("q.check_id", $this->input->get("check_id"));
-			if (!$_SESSION['page_size']) {
+			if (!isset($_SESSION['page_size'])) {
 				$_SESSION['page_size']=10;
 			}
 			if ($this->input->get("page_size")) {
@@ -475,8 +475,8 @@ class Service extends MY_Controller {
 				->select("q.*, g.name as game_name, au.name as admin_uname, gi.name as server_name,")
 				//->select("(select name from `characters` where partner_uid=q.partner_uid and server_id=q.server_id and name=q.character_name) as in_game_name")
 				//->select("(select sum(amount) from user_billing where uid=q.uid and billing_type=2 and result=1) as expense")
-				->select("(select case when is_official=1 then CONCAT('官方#' , create_time) when is_official=0 then CONCAT('玩家#' , create_time) 	end as reply_status
-				  from question_replies where question_id =q.id order by id desc limit 1) as reply_status ",FALSE)
+				// ->select("(select case when is_official=1 then CONCAT('官方#' , create_time) when is_official=0 then CONCAT('玩家#' , create_time) 	end as reply_status
+				//   from question_replies where question_id =q.id order by id desc limit 1) as reply_status ",FALSE)
 				->from("questions q")
 				->join("servers gi", "gi.server_id=q.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")

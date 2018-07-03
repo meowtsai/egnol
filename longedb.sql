@@ -921,6 +921,31 @@ ADD last_replied char(1) NOT NULL DEFAULT 'N' COMMENT 'trigger更新 N:尚未回
 ALTER table questions
 ADD last_replied_time datetime NULL COMMENT 'trigger 更新最後回覆時間';
 
+drop TRIGGER ins_reply;
+delimiter //
+CREATE TRIGGER ins_reply BEFORE INSERT ON question_replies
+   FOR EACH ROW
+   BEGIN
+   UPDATE questions SET last_replied = (CASE WHEN NEW.is_official=1 THEN 'O' ELSE 'U' END),last_replied_time=NOW()  WHERE id = NEW.question_id;
+   END;//
+delimiter ;
+
+
+drop TRIGGER del_reply;
+delimiter //
+CREATE TRIGGER del_reply AFTER DELETE ON question_replies
+   FOR EACH ROW
+   BEGIN
+   DECLARE _is_official CHAR(1);
+   DECLARE _last_replied_time datetime;
+   SELECT is_official, create_time into _is_official, _last_replied_time from question_replies where question_id=OLD.question_id order by id desc limit 1;
+   UPDATE questions SET last_replied = (CASE WHEN _is_official=1 THEN 'O' ELSE 'U' END),last_replied_time=_last_replied_time  WHERE id = OLD.question_id;
+
+   END;//
+delimiter ;
+
+
+
 select q.id, c.name as in_game_name,q.character_name,q.is_in_game from (select id,partner_uid,server_id ,character_name,is_in_game from questions order by id desc limit 10) q left join characters c
 on c.partner_uid=q.partner_uid and c.server_id=q.server_id and c.name=q.character_name;
 
@@ -929,7 +954,9 @@ UPDATE questions q
 left join characters c
 on c.partner_uid=q.partner_uid and c.server_id=q.server_id and c.name=q.character_name
 SET q.is_in_game = (CASE WHEN c.name is NULL THEN 0 ELSE 1 END)
-WHERE q.id >=15000
+WHERE q.id between 42000 and 43000
+
+
 
 
 
@@ -1703,3 +1730,34 @@ END;//
 delimiter ;
 call create_vip_daily_sum('L8na');
 call create_vip_daily_sum('h35naxx1hmt');
+
+
+
+DROP PROCEDURE IF EXISTS batch_upd_q_reply_info;
+DELIMITER //
+CREATE PROCEDURE batch_upd_q_reply_info(id1 INT,id2 INT)
+BEGIN
+  DECLARE done INT DEFAULT FALSE;
+  DECLARE c_qid INT;
+  DECLARE _is_official CHAR(1);
+  DECLARE _last_replied_time datetime;
+  DECLARE cur1 CURSOR FOR
+  SELECT id FROM questions WHERE last_replied_time is null and id between id1 and id2;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+  OPEN cur1;
+  read_loop: LOOP
+  FETCH cur1 INTO c_qid;
+  IF done THEN
+    LEAVE read_loop;
+  END IF;
+  SELECT is_official, create_time into _is_official, _last_replied_time from question_replies where question_id=c_qid order by id desc limit 1;
+  UPDATE questions SET last_replied = (CASE WHEN _is_official=1 THEN 'O' ELSE 'U' END),last_replied_time=_last_replied_time  WHERE id = c_qid;
+
+  END LOOP;
+  CLOSE cur1;
+
+END;//
+delimiter ;
+
+call batch_upd_q_reply_info(17000,17310)

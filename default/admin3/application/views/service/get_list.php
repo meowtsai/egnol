@@ -234,7 +234,7 @@
                 <? endif;?>
                 <td><?=(isset($admin_repliers[$row->id]))?$admin_repliers[$row->id]:""?></td>
                 <td><?=date("Y-m-d H:i", strtotime($row->create_time))?></td>
-								<td><?=format_status($row->reply_status)?></td>
+								<td><?=format_status($row->last_replied , $row->last_replied_time)?></td>
 
                 <td>
                     <div class="btn-group">
@@ -318,26 +318,23 @@ function ago( $datetime )
     if ( $v = $interval->i >= 1 ) return pluralize( $interval->i, '分' ) . $suffix;
     return pluralize( $interval->s, '秒' ) . $suffix;
 }
-function format_status($reply_text)
+//<td><?=format_status($row->last_replied , $row->last_replied_time)
+function format_status($last_replied,$last_replied_time)
 {
-	if ($reply_text)
-	{
-		$byWhom =  explode('#',$reply_text)[0];
-		$when =  explode('#',$reply_text)[1];
-
-
-		if ($byWhom=="玩家"){
-			$byWhom = '<span style="color:#090">'.$byWhom.' ';
-		}
-		else {
-			$byWhom = '<span style="color:blue">'.$byWhom.' ';
-		}
-
-		return $byWhom.(ago(New DateTime($when))).' 回覆</span><div style="font-size:11px;color:#999">'.$when."</div>";
-	}
-	else{
+	$byWhom="";
+	if ($last_replied=="N"){
 		return "<span style='color:red'>尚未回覆</span>";
 	}
+	elseif ($last_replied=="U"){
+		$byWhom = '<span style="color:#090">玩家 ';
+	}
+	elseif ($last_replied=="O"){
+		$byWhom = '<span style="color:blue">官方 ';
+	}
 
+	return $byWhom.(ago(New DateTime($last_replied_time))).' 回覆</span><div style="font-size:11px;color:#999">'.$last_replied_time."</div>";
 }
+
+
+
 ?>

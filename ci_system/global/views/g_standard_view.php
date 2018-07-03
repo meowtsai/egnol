@@ -49,7 +49,7 @@
 <?=$tracker_code?>
 <?
 	$this->load->view("g_top_bar");
-	
+
 	if(isset($main_banners))
 		$this->load->view("g_banner");
 ?>
@@ -82,11 +82,10 @@ $(document).ready(function(){
 });
 </script>
 <? } ?>
-	
+
 <!--nav -->
 <script>
 $('#menu').slicknav({
 		label:'',
 });
 </script>
-
