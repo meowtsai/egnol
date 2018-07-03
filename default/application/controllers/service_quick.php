@@ -250,7 +250,7 @@ class Service_quick extends MY_Controller {
 			'character_name' => htmlspecialchars($this->input->post("character_name")),
 			//"type" => '9',
 			'content' => nl2br(htmlspecialchars($this->input->post("content"))),
-			//'admin_uid' => $_SESSION['admin_uid'],
+			'is_in_game' => (($_SESSION['vendor_game_id']) ? 1 : 0),
 			'phone' => $this->input->post("mobile"),
 			'email' => $this->input->post("email"),
 			'check_id' => $check_id,

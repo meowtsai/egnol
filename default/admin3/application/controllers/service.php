@@ -470,7 +470,7 @@ class Service extends MY_Controller {
 			$this->DB2
 				//->select("q.*, g.name as game_name, au.name as admin_uname, gi.name as server_name, c.name as in_game_name")
 				->select("q.*, g.name as game_name, au.name as admin_uname, gi.name as server_name,")
-				->select("(select name from `characters` where partner_uid=q.partner_uid and server_id=q.server_id and name=q.character_name) as in_game_name")
+				//->select("(select name from `characters` where partner_uid=q.partner_uid and server_id=q.server_id and name=q.character_name) as in_game_name")
 				//->select("(select sum(amount) from user_billing where uid=q.uid and billing_type=2 and result=1) as expense")
 				->select("(select case when is_official=1 then CONCAT('官方#' , create_time) when is_official=0 then CONCAT('玩家#' , create_time) 	end as reply_status
 				  from question_replies where question_id =q.id order by id desc limit 1) as reply_status ",FALSE)
@@ -556,7 +556,11 @@ class Service extends MY_Controller {
 					foreach($query->result() as $row) {
 						$content .= "{$row->id},{$row->game_name},";
 						$content .= "{$row->character_name}($row->server_name)";
-						if (($row->partner_uid && !$row->uid && !$row->in_game_name) || !$row->partner_uid)
+						// if (($row->partner_uid && !$row->uid && !$row->in_game_name) || !$row->partner_uid)
+						// {
+						// 	$content .="(玩家填寫)";
+						// }
+						if ($row->is_in_game =='0')
 						{
 							$content .="(玩家填寫)";
 						}

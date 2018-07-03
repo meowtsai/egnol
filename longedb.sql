@@ -912,6 +912,27 @@ ALTER table questions
 ADD system_closed_start datetime NULL;
 
 
+ALTER table questions
+ADD is_in_game char(1) NOT NULL DEFAULT 0 COMMENT'0 - 玩家自填\\1 - 遊戲內帶出';
+
+ALTER table questions
+ADD last_replied char(1) NOT NULL DEFAULT 'N' COMMENT 'trigger更新 N:尚未回覆\\O:官方回覆\\U:玩家回覆';
+
+ALTER table questions
+ADD last_replied_time datetime NULL COMMENT 'trigger 更新最後回覆時間';
+
+select q.id, c.name as in_game_name,q.character_name,q.is_in_game from (select id,partner_uid,server_id ,character_name,is_in_game from questions order by id desc limit 10) q left join characters c
+on c.partner_uid=q.partner_uid and c.server_id=q.server_id and c.name=q.character_name;
+
+
+UPDATE questions q
+left join characters c
+on c.partner_uid=q.partner_uid and c.server_id=q.server_id and c.name=q.character_name
+SET q.is_in_game = (CASE WHEN c.name is NULL THEN 0 ELSE 1 END)
+WHERE q.id >=15000
+
+
+
 
 DROP TABLE IF EXISTS `question_pictures`;
 CREATE TABLE `question_pictures` (
@@ -1600,3 +1621,85 @@ ALTER EVENT daily_report_event
       `status` char(1) NOT NULL DEFAULT '1',
       PRIMARY KEY (`id`)
     ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='第五人格預註冊';
+
+CREATE TABLE `vip_daily_sum` (
+  `date` date NOT NULL,
+  `game_id` varchar(20) NOT NULL,
+  `topup_sum` int(11) DEFAULT 0,
+  `topup_count` int(11) DEFAULT 0,
+  `chanel_dist` varchar(300) DEFAULT NULL,
+  `top_users` varchar(300) DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`date`,`game_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='訂單統計';
+
+
+
+DROP PROCEDURE IF EXISTS create_vip_daily_sum;
+DELIMITER //
+CREATE PROCEDURE create_vip_daily_sum(input_game_id varchar(20))
+BEGIN
+  DECLARE done INT DEFAULT FALSE;
+  DECLARE c_min_date VARCHAR(50);
+  DECLARE c_date date;
+  DECLARE cur1 CURSOR FOR
+  SELECT `date`
+  FROM vip_daily_sum
+  where game_id = input_game_id  and chanel_dist is null;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+
+  IF input_game_id ='h35naxx1hmt' THEN
+    SET c_min_date = '2017-11-15';
+  ELSEIF input_game_id ='L8na'  THEN
+    SET c_min_date = '2018-02-24';
+  END IF;
+
+  DELETE FROM vip_daily_sum where game_id =input_game_id ORDER BY date DESC LIMIT 1;
+
+
+  insert into vip_daily_sum (date,game_id,topup_sum,topup_count)
+  SELECT DATE_FORMAT(create_time, '%Y-%m-%d') as date,
+  game_id,
+  SUM(amount) as topup_sum,
+  COUNT(distinct account) as topup_count
+  FROM negame_orders
+  WHERE game_id = input_game_id and  DATE_FORMAT(create_time, '%Y-%m-%d') > (select ifnull(max(date),c_min_date) from vip_daily_sum  WHERE game_id = input_game_id)
+  GROUP BY  DATE_FORMAT(create_time, '%Y-%m-%d');
+
+
+
+  OPEN cur1;
+
+  read_loop: LOOP
+    FETCH cur1 INTO c_date;
+    IF done THEN
+      LEAVE read_loop;
+    END IF;
+        UPDATE vip_daily_sum set top_users =
+        (select GROUP_CONCAT(content SEPARATOR ';' ) from
+        (SELECT DATE_FORMAT(create_time, '%Y-%m-%d') as oDate, concat(role_name ,'-', sum(amount) ) as content, amount
+        FROM negame_orders
+        WHERE  game_id = input_game_id and  DATE_FORMAT(create_time, '%Y-%m-%d') =c_date
+        GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d'),role_name
+        ORDER BY sum(amount) desc limit 5) aTable
+        group by oDate)
+        where game_id = input_game_id and date=c_date;
+
+        UPDATE vip_daily_sum set chanel_dist =
+        (select  GROUP_CONCAT(content SEPARATOR ';') from
+        (SELECT DATE_FORMAT(create_time, '%Y-%m-%d') as oDate,concat(transaction_type ,'-', sum(amount) ) as content
+        FROM negame_orders
+        WHERE game_id = input_game_id and DATE_FORMAT(create_time, '%Y-%m-%d') =c_date
+        GROUP BY DATE_FORMAT(create_time, '%Y-%m-%d'),transaction_type order by sum(amount) desc) aTable
+        group by oDate)
+        where game_id = input_game_id and date=c_date;
+
+  END LOOP;
+
+  CLOSE cur1;
+
+END;//
+delimiter ;
+call create_vip_daily_sum('L8na');
+call create_vip_daily_sum('h35naxx1hmt');
