@@ -665,6 +665,7 @@ class Service extends MY_Controller {
 		$this->zacl->check("service", "modify");
 
 		$question = $this->DB2->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email user_email, u.external_id, u.uid, au.name allocate_user_name, c.in_game_id, c.name as in_game_name, aux.name close_admin_name")
+			->select("(select count(*) from `question_favorites` where question_id={$id} and admin_uid={$_SESSION['admin_uid']}) as is_favorite",FALSE)
 			->where("q.id", $id)
 			->from("questions q")
 			->join("servers gi", "gi.server_id=q.server_id", "left")
@@ -708,14 +709,16 @@ class Service extends MY_Controller {
         $allocate_groups = array_unique($allocate_groups);
 
 		$allocate_users = $this->DB2->from('admin_users')->where_in('role', $allocate_groups)->order_by("role")->get();
-
+		$add_favor_ok = $this->zacl->check_acl("service", "favorite") ;
 		$this->_init_service_layout()
 			->add_breadcrumb("檢視")
 			->add_js_include("service/view")
+			->add_js_include("fontawesome-all")
 			->set("question", $question)
 			->set("replies", $replies)
 			->set("pic_plus", $pic_plus)
 			->set("allocate_users", $allocate_users)
+			->set("add_favor_ok", $add_favor_ok)
 			->set("ip", $ip)
 			->render();
 	}

@@ -6,7 +6,20 @@
 -->
 </style>
 
-<legend>案件編號 #<?=$question->id?></legend>
+
+<legend>
+<?
+
+if ($add_favor_ok):
+if ($question->is_favorite =='0'):?>
+<a href="javascript:;" class="json_post" url="<?=site_url("service/add_to_favorites/{$question->id}")?>"><i class="far fa-star text-muted" ></i></a>
+<? else:?>
+<a href="javascript:;" class="json_post" url="<?=site_url("service/remove_favorites/{$question->id}")?>"><i class="fas fa-star text-warning"></i></a>
+<? endif;
+endif;
+?>
+案件編號 #<?=$question->id?>
+</legend>
 
 <div id="func_bar">
   <? if ($question->status <> '4'):?>
