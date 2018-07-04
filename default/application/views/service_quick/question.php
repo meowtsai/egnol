@@ -87,7 +87,11 @@
 					<tr>
 						<th>問題描述</th><td><textarea name="content" class="required" minlength="5" maxlength="500"></textarea></td>
 					</tr>
-					<? if (!$is_ingame):?>
+					<?
+					//echo $_SERVER['HTTP_USER_AGENT'];
+					$ua = strtolower($_SERVER['HTTP_USER_AGENT']);
+
+					if (!$is_ingame && (stripos($ua,'android')== false) ):?>
 					<tr>
 						<th>圖片附件</th><td style="white-space:pre-wrap;"><img src="<?=$longe_url?>p/image/server/server-pic-btn1.png" class="pic_btn"> <input type="file" name="file01" class="pic_input" /></td>
 					</tr>
@@ -113,7 +117,7 @@
           <? else:?>
 					<tr>
 						<td style="white-space:pre-wrap;" colspan="2">
-            <div class="notes" style="text-align:center;padding:5px;">提醒您：需附檔案回報時，請直接利用官網線上提問，謝謝。</div></td>
+            <div class="notes" style="text-align:center;padding:5px;">提醒您：安卓機型需附檔案回報時，請直接利用官網線上提問，謝謝。</div></td>
                     </tr>
                     <? endif;?>
 				</table>
