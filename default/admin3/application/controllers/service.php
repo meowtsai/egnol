@@ -35,7 +35,16 @@ class Service extends MY_Controller {
 		$this->router->method = 'get_list';
 		$this->get_list();
 	}
+	function my_favorite()
+	{
+		$this->zacl->check_acl("service", "favorite");
+		$_GET['action'] = '查詢';
+		$_GET['favorite'] = '1';
 
+
+		$this->router->method = 'get_list';
+		$this->get_list();
+	}
 
 	function daily_report()
 	{
@@ -477,6 +486,7 @@ class Service extends MY_Controller {
 				//->select("(select sum(amount) from user_billing where uid=q.uid and billing_type=2 and result=1) as expense")
 				// ->select("(select case when is_official=1 then CONCAT('官方#' , create_time) when is_official=0 then CONCAT('玩家#' , create_time) 	end as reply_status
 				//   from question_replies where question_id =q.id order by id desc limit 1) as reply_status ",FALSE)
+				->select("(select count(*) from `question_favorites` where question_id=q.id and admin_uid={$_SESSION['admin_uid']}) as is_favorite",FALSE)
 				->from("questions q")
 				->join("servers gi", "gi.server_id=q.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
@@ -503,6 +513,11 @@ class Service extends MY_Controller {
 						else $this->DB2->where("qr.create_time >= {$reply_start_date}", null, false);
 					}
 			}
+			if ($this->input->get("favorite")) {
+				$this->DB2->where("q.id in(select question_id from question_favorites where admin_uid={$_SESSION['admin_uid']})", null, false);
+			}
+
+
 
 
 			if ($this->input->get("start_date")) {
@@ -629,6 +644,8 @@ class Service extends MY_Controller {
 		$games = $this->DB2->from("games")->get();
 		$cs_admins = $this->DB2->from("admin_users")->where_in("role", array("cs", "cs_master","glory_service"))->get();
 
+		$add_favor_ok = $this->zacl->check_acl("service", "favorite") ;
+
 		$this->g_layout
 			->add_breadcrumb("查詢")
 			->set("query", isset($query) ? $query : false)
@@ -636,8 +653,10 @@ class Service extends MY_Controller {
 			->set("games", $games)
 			->set("cs_admins", $cs_admins)
 			->set("todo", $this->input->get("todo"))
+			->set("add_favor_ok", $add_favor_ok)
 			->add_js_include("service/get_list")
 			->add_js_include("jquery-ui-timepicker-addon")
+			->add_js_include("fontawesome-all")
 			->render();
 	}
 
@@ -969,7 +988,24 @@ class Service extends MY_Controller {
 			die(json_failure("無法取消"));
 		}
 	}
+	function add_to_favorites($id)
+	{
+		if ( ! $this->zacl->check_acl("service", "favorite")) die(json_failure("沒有權限"));
 
+		$this->DB1->insert("question_favorites", array("question_id" => $id, 'admin_uid'=>$_SESSION['admin_uid']));
+		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure();
+	}
+
+	function remove_favorites($id)
+	{
+		if ( ! $this->zacl->check_acl("service", "favorite")) die(json_failure("沒有權限"));
+
+		$this->DB1
+			->where("question_id", $id)
+			->where("admin_uid", $_SESSION['admin_uid'])
+			->delete("question_favorites");
+		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure();
+	}
 
 	function complaints()
 	{

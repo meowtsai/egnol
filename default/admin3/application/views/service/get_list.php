@@ -171,7 +171,19 @@
 
             <? foreach($query->result() as $row):?>
             <tr>
-                <td><a href="<?=site_url("service/view/{$row->id}")?>"><?=$row->id?></a></td>
+                <td>
+
+									<?
+									if ($add_favor_ok):
+									if ($row->is_favorite =='0'):?>
+									<a href="javascript:;" class="json_post" url="<?=site_url("service/add_to_favorites/{$row->id}")?>"><i class="far fa-star text-muted" ></i></a>
+									<? else:?>
+									<a href="javascript:;" class="json_post" url="<?=site_url("service/remove_favorites/{$row->id}")?>"><i class="fas fa-star text-warning"></i></a>
+									<? endif;
+									endif;
+									?>
+
+									 <a href="<?=site_url("service/view/{$row->id}")?>"><?=$row->id?></a></td>
                 <td><?=$row->game_name?></td>
                 <td><?=$row->character_name?>(<?=$row->server_name?>)
 									<? if ($row->is_in_game =='0'):?>

@@ -816,6 +816,16 @@ CREATE TABLE `pictures` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+
+DROP TABLE IF EXISTS `question_favorites`;
+CREATE TABLE `question_favorites` (
+  `question_id` int(11) NOT NULL,
+  `admin_uid` int(11) NOT NULL,
+  CONSTRAINT PK_qf PRIMARY KEY (question_id,admin_uid),
+  FOREIGN KEY (question_id)
+      REFERENCES questions(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --
 -- Table structure for table `question_assignees`
 --
@@ -1761,3 +1771,4 @@ END;//
 delimiter ;
 
 call batch_upd_q_reply_info(17000,17310)
+SELECT is_official, create_time into _is_official, _last_replied_time from question_replies where question_id=46265 order by id desc limit 1;
