@@ -75,11 +75,11 @@ class Service_quick extends MY_Controller {
 						// echo rawurlencode($usr_device).'<br />';
 
 						$str_to_encrypt = "game_id={$vendor_game_id}&partner_uid={$partner_uid}&in_game_id={$in_game_id}&server_name={$encode_server_name}&character_name={$encode_c_name}&level={$level}&usr_device={$usr_device}&os_ver={$os_ver}&app_ver={$app_ver}&time_zone={$time_zone}&network={$network}&key={$key}";
-						echo $str_to_encrypt.'<br />';
+						//echo $str_to_encrypt.'<br />';
 				    $sig = MD5($str_to_encrypt);
 
-						echo $str_to_encrypt.'<br />';
-						echo $sig.'<br />';
+						//echo $str_to_encrypt.'<br />';
+						//echo $sig.'<br />';
 
 						/// 0212 h35 android sorting problems so we modified the code to fit both scenario
 

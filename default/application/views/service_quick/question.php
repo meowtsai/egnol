@@ -89,9 +89,10 @@
 					</tr>
 					<?
 					//echo $_SERVER['HTTP_USER_AGENT'];
-					$ua = strtolower($_SERVER['HTTP_USER_AGENT']);
+					//$ua = strtolower($_SERVER['HTTP_USER_AGENT']);
+					//if (!$is_ingame && (stripos($ua,'android')== false) )
 
-					if (!$is_ingame && (stripos($ua,'android')== false) ):?>
+					if (!$is_ingame):?>
 					<tr>
 						<th>圖片附件</th><td style="white-space:pre-wrap;"><img src="<?=$longe_url?>p/image/server/server-pic-btn1.png" class="pic_btn"> <input type="file" name="file01" class="pic_input" /></td>
 					</tr>
