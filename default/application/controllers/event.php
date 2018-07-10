@@ -72,6 +72,23 @@ class Event extends MY_Controller
 
   }
 
+  function h55_prereg_check()
+  {
+    header('Access-Control-Allow-Origin: *');
+    $date_now = date("Y-m-d H:i:s");
+    $date_end = date("Y-m-d", strtotime("2018-07-12"));
+    //echo $date_now."<br/>";
+    //echo $date_end."<br/>";
+    if ($date_now > $date_end)
+    {
+      //echo "已經結束";
+      echo "NOK";
+    }
+    else {
+      echo "OK";
+    }
+
+  }
 
   function h55_prereg()
   {
