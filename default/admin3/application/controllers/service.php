@@ -899,7 +899,6 @@ class Service extends MY_Controller {
 			->set('allocate_date', 'NOW()', false)
 			->set('allocate_status', '1')
 			->set('allocate_result', $result)
-			->set("status", "2")
 			->set("close_admin_uid", null)
 			->set("system_closed_start", null)
 			->update("questions", array('allocate_admin_uid' => $this->input->post("allocate_admin_uid")));
