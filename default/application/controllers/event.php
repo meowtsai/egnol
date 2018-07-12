@@ -102,6 +102,7 @@ class Event extends MY_Controller
   function h55_prereg()
   {
     header('Access-Control-Allow-Origin: *');
+    die(json_encode(array("status"=>"failure", "message"=>"活動已經結束了唷!")));
     //// TODO:  要改成post, 要視情況擋ip
     $user_email = $this->input->post("user_email");
     if (empty($user_email))
