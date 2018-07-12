@@ -67,7 +67,16 @@ class Event extends MY_Controller
       );
     }
 
-    die(json_encode(array("status"=>"success", "message"=>$data, "message2"=>$data2)));
+    $query = $this->db->query("select distinct status,count(*) as count from h55_prereg group by status order by status");
+    $data3 = array();
+    foreach($query->result() as $row) {
+      $data3[] = array(
+        'status' => $row->status,
+        'count' => $row->count,
+      );
+    }
+
+    die(json_encode(array("status"=>"success", "message"=>$data, "message2"=>$data2,"message3"=>$data3)));
 
 
   }
