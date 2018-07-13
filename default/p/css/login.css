@@ -39,8 +39,9 @@
 .login_box .button{width:100%; text-align:right;}
 .login-ins .login_box .login_member{ background: url(../image/member/member_bg.png) top center no-repeat; background-size: 100% 100%; margin:50px auto; padding:0px; text-align:left; width:100%; display:block;}
 
-.login_member .login_info{ padding:40px; }
+.login_member .login_info{ padding:80px; }
 .login_info .scrollbar{max-height:355px; overflow-x:hidden; line-height:25px;}
+.login_info .agreement{line-height:25px;}
 
 .login-form .member_info, .login-form .member_password{ max-width:500px; margin:0 auto; text-align:left; width:90%; line-height:40px;}
 
