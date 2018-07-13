@@ -3,7 +3,7 @@
 /* For IE 6/7 (trigger hasLayout) */
 
 
-#content-login{background: #fff url(/p/image/content/common-bg.jpg) top center no-repeat; -moz-background-size: cover; background-size: cover; margin:0; padding:0; text-align:center; min-height:520px; display:block; z-index:1;}
+#content-login{background: #fff url(/p/image/content/common-bg.jpg) top center no-repeat; -moz-background-size: cover; background-size: cover; margin:0; padding:0; text-align:center; min-height:360px; display:block; z-index:1;}
 #content-login .login-ins{height:80%; margin:0 auto; padding:40px 0; color:#333; max-width:1050px; }
 #content-login .login-ins a { color:#333; text-decoration: none;}
 #content-login .login-ins a:hover{color:#e6290f;}
