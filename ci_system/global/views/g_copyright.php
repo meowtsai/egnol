@@ -1,6 +1,6 @@
 <div id="clear_copyright"></div>
 <div class="copyright">
-	<p>Long E Co., Ltd © 2016 Copyrights Reserved.</p>
+	<p>Long E Co., Ltd © 2018 Copyrights Reserved.</p>
 	<br>
 	<p>
 		<a href="<?=$longe_url?>member/service_agreement?site=<?=$site?>" style="vertical-align:text-bottom;color:#a50000">會員服務條款</a><span style="vertical-align:text-bottom;">、</span>
