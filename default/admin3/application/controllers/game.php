@@ -160,7 +160,7 @@ class Game extends MY_Controller {
 			{
 				$this->load->library('upload', array("upload_path"=>realpath("p/upload/pictures"), "allowed_types"=>"gif|jpg|jpeg|png", 'encrypt_name'=>TRUE));
 
-				if ( ! $this->upload->do_upload())
+				if ( ! $this->upload->do_upload("file01"))
 				{
 					$msg[] = $this->upload->display_errors('', '');
 				}
@@ -183,7 +183,7 @@ class Game extends MY_Controller {
 			{
 				$this->load->library('upload', array("upload_path"=>realpath("p/upload/pictures"), "allowed_types"=>"gif|jpg|jpeg|png", 'encrypt_name'=>TRUE));
 
-				if ( ! $this->upload->do_upload())
+				if ( ! $this->upload->do_upload("file04"))
 				{
 					$msg[] = $this->upload->display_errors('', '');
 				}
@@ -224,7 +224,7 @@ class Game extends MY_Controller {
 
 
 
-			if ($this->DB1->affected_rows()==0 && $upload_cnt==0) $msg[] = '資料無變更';
+			if ($this->DB1->affected_rows()==0) $msg[] = '資料無變更';
 
 			$this->g_layout->set("msg", $msg);
 		}
