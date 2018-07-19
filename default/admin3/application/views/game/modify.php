@@ -31,6 +31,14 @@
 		<input type="text" name="currency" value="<?=$row ? $row->currency : ''?>" class="required" style="width:150px">
 		<span class="help-inline">例如：元寶</span>
 
+		<label>粉絲團URL</label>
+		<input type="text" name="fanpage" value="<?=$row ? $row->fanpage : ''?>"  style="width:300px">
+
+
+		<label>官網</label>
+		<input type="text" name="site" value="<?=$row ? $row->site : ''?>"  style="width:300px">
+
+
 		<label>遊戲分類</label>
 		<label class="radio inline"><input name="type" type="radio" value="" <?=(count($tags) == 0 ? "checked='checked'" : "")?>>--</label>
 		<label class="radio inline"><input name="type" type="radio" value="即時" <?=in_array("即時", $tags) ? "checked='checked'" : ""?>> 即時</label>
@@ -71,32 +79,17 @@
 			<input type="file" name="file01">
 		</label>
 
-		<label>重點縮圖(.png)
-			<span style="width:160px; height:36px; line-height:36px; background:#ddd; text-align:center; display:block; overflow:hidden;">
-				<? if (file_exists(g_conf("http_document_root")."long_e/p/img/game/{$this->game_id}_02.png")):?>
-				<img src="/p/img/game/<?=$this->game_id?>_02.png?<?=time()?>">
-				<? else: echo '160x36'; endif;?>
-			</span>
-			<input type="file" name="file02">
-		</label>
 
-		<label>小區塊(.png)
-			<span style="width:160px; height:90px; line-height:90px; background:#ddd; text-align:center; display:block; overflow:hidden;">
-				<? if (file_exists(g_conf("http_document_root")."long_e/p/img/game/{$this->game_id}_03.png")):?>
-				<img src="/p/img/game/<?=$this->game_id?>_03.png?<?=time()?>">
-				<? else: echo '160x90'; endif;?>
-			</span>
-			<input type="file" name="file03">
-		</label>
 
-		<label>小圖(.gif)
-			<span style="width:32px; height:32px; line-height:32px; background:#ddd; text-align:center; display:block; overflow:hidden;">
-				<? if (file_exists(g_conf("http_document_root")."long_e/p/img/game/{$this->game_id}.gif")):?>
-				<img src="/p/img/game/<?=$this->game_id?>.gif?<?=time()?>">
-				<? else: echo '32x'; endif;?>
+		<label>小圖(.png)
+			<span style="width:45px; height:45px; line-height:45px; background:#ddd; text-align:center; display:block; overflow:hidden;">
+				<img src="<?=$row ? $row->logo_path : ''?>">
 			</span>
 			<input type="file" name="file04">
+			<input type="hidden" name="logo_path" class="" value="<?=$row ? $row->logo_path : ''?>">
 		</label>
+
+
 
 
    		<div class="form-actions">

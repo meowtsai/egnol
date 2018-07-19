@@ -278,4 +278,18 @@ class G_Layout
 
     	echo $this->CI->load->view("g_event_view", $this->template_data, true);
     }
+
+    function g_2018_view($view="")
+    {
+      if (empty($view))
+      {
+        $view = $this->CI->router->directory . $this->CI->router->class."/".$this->CI->router->method;
+      }
+
+      $this->template_data['layout_content'] = $this->CI->load->view($view, $this->data, true);
+      $this->template_data['css_link'] = $this->produce_css_link();
+      $this->template_data['js_include'] = $this->produce_js_include();
+
+      echo $this->CI->load->view("g_2018_view", $this->template_data, true);
+    }
 }

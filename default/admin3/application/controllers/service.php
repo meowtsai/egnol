@@ -839,7 +839,7 @@ class Service extends MY_Controller {
 		$id = $this->input->post("reply_id");
 		$post_content = nl2br($this->input->post("content"));
 
-		$query = $this->DB2->query("SELECT count(*) > (3-1) as chk FROM question_replies WHERE question_id={$question_id} and content='{$post_content}'");
+		$query = $this->DB2->query("SELECT count(*) as chk FROM question_replies WHERE question_id={$question_id} and content='{$post_content}'");
 		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆回答!")));
 
 

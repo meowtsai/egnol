@@ -83,6 +83,38 @@ class Game extends MY_Controller {
 			->set("theme_list", $this->DB2->get("themes"))
 			->render("game/modify");
 	}
+	function test_upload()
+	{
+		$this->_init_game_layout();
+		if ($post = $this->input->post())
+		{
+			if ( ! empty($_FILES["file04"]['name']))
+			{
+				$this->load->library('upload', array("upload_path"=>realpath("p/upload/pictures"), "allowed_types"=>"gif|jpg|jpeg|png", 'encrypt_name'=>TRUE));
+
+				if ( ! $this->upload->do_upload())
+				{
+					echo json_failure($this->upload->display_errors());
+					return;
+				}
+				else
+				{
+					//rsync_to_slave();
+					$data = $this->upload->data();
+					$logo_path = site_url("p/upload/pictures/{$data['file_name']}");
+				}
+			}
+			else {
+				$logo_path = $this->input->post("logo_path");
+			}
+
+			$logo_path = str_replace("https://manager.longeplay.com.tw", "https://game.longeplay.com.tw", $logo_path);
+
+		}
+		$this->g_layout->render();
+
+
+	}
 
 	function modify()
 	{
@@ -100,6 +132,74 @@ class Game extends MY_Controller {
 				$tags = $this->input->post("type");
 			}
 
+
+
+			// $this->load->library('upload');
+			// $config['upload_path'] = g_conf("http_document_root")."long_e/p/img/game/";
+			// $config['allowed_types'] = 'gif|jpg|jpeg|png';
+			// $config['max_size']	= '600';
+			// $config['max_width'] = '2048';
+			// $config['max_height'] = '768';
+			// $config['overwrite'] = true;
+
+			// $upload_cnt = 0;
+			// if ( ! empty($_FILES["file01"]["name"])) {
+			// 	$config['file_name'] = "{$this->game_id}_01";
+			// 	$this->upload->initialize($config);
+			// 	if ( ! $this->upload->do_upload("file01"))
+			// 	{
+			// 		$msg[] = $this->upload->display_errors('', '');
+			// 	}
+			// 	else
+			// 	{
+			// 		$upload_cnt++;
+			// 	}
+			// }
+			$bg_path="";
+			if ( ! empty($_FILES["file01"]['name']))
+			{
+				$this->load->library('upload', array("upload_path"=>realpath("p/upload/pictures"), "allowed_types"=>"gif|jpg|jpeg|png", 'encrypt_name'=>TRUE));
+
+				if ( ! $this->upload->do_upload())
+				{
+					$msg[] = $this->upload->display_errors('', '');
+				}
+				else
+				{
+					//rsync_to_slave();
+					$upload_data = $this->upload->data();
+					$bg_path = site_url("p/upload/pictures/{$upload_data['file_name']}");
+				}
+			}
+			else {
+				$bg_path = $this->input->post("bg_path");
+			}
+
+			$bg_path = str_replace("https://manager.longeplay.com.tw", "https://game.longeplay.com.tw", $logo_path);
+
+			$logo_path="";
+
+			if ( ! empty($_FILES["file04"]['name']))
+			{
+				$this->load->library('upload', array("upload_path"=>realpath("p/upload/pictures"), "allowed_types"=>"gif|jpg|jpeg|png", 'encrypt_name'=>TRUE));
+
+				if ( ! $this->upload->do_upload())
+				{
+					$msg[] = $this->upload->display_errors('', '');
+				}
+				else
+				{
+					//rsync_to_slave();
+					$upload_data = $this->upload->data();
+					$logo_path = site_url("p/upload/pictures/{$upload_data['file_name']}");
+				}
+			}
+			else {
+				$logo_path = $this->input->post("logo_path");
+			}
+
+			$logo_path = str_replace("https://manager.longeplay.com.tw", "https://game.longeplay.com.tw", $logo_path);
+
 			$data = array(
 				"name" => $this->input->post("name"),
 				"abbr" => $this->input->post("abbr"),
@@ -108,6 +208,10 @@ class Game extends MY_Controller {
 				"is_active" => $this->input->post("is_active"),
 				"tags" => $tags,
 				'theme_id' => $this->input->post("game_theme"),
+				'fanpage' => $this->input->post("fanpage"),
+				'site' => $this->input->post("site"),
+				'logo_path'=> $logo_path,
+				'bg_path'=> $bg_path,
 			);
 
 			if ($id = $this->input->post("id")) { //修改
@@ -118,67 +222,7 @@ class Game extends MY_Controller {
 				$this->DB1->insert("games", $data);
 			}
 
-			$this->load->library('upload');
-			$config['upload_path'] = g_conf("http_document_root")."long_e/p/img/game/";
-			$config['allowed_types'] = 'png|jpg|jpeg';
-			$config['max_size']	= '600';
-			$config['max_width'] = '2048';
-			$config['max_height'] = '768';
-			$config['overwrite'] = true;
 
-			$upload_cnt = 0;
-			if ( ! empty($_FILES["file01"]["name"])) {
-				$config['file_name'] = "{$this->game_id}_01";
-				$this->upload->initialize($config);
-				if ( ! $this->upload->do_upload("file01"))
-				{
-					$msg[] = $this->upload->display_errors('', '');
-				}
-				else
-				{
-					$upload_cnt++;
-				}
-			}
-
-			if ( ! empty($_FILES["file02"]["name"])) {
-				$config['file_name'] = "{$this->game_id}_02";
-				$this->upload->initialize($config);
-				if ( ! $this->upload->do_upload("file02"))
-				{
-					$msg[] = $this->upload->display_errors('', '');
-				}
-				else
-				{
-					$upload_cnt++;
-				}
-			}
-
-			if ( ! empty($_FILES["file03"]["name"])) {
-				$config['file_name'] = "{$this->game_id}_03";
-				$this->upload->initialize($config);
-				if ( ! $this->upload->do_upload("file03"))
-				{
-					$msg[] = $this->upload->display_errors('', '');
-				}
-				else
-				{
-					$upload_cnt++;
-				}
-			}
-
-			if ( ! empty($_FILES["file04"]["name"])) {
-				$config['file_name'] = "{$this->game_id}";
-				$config['allowed_types'] = '*';
-				$this->upload->initialize($config);
-				if ( ! $this->upload->do_upload("file04"))
-				{
-					$msg[] = $this->upload->display_errors('', '');
-				}
-				else
-				{
-					$upload_cnt++;
-				}
-			}
 
 			if ($this->DB1->affected_rows()==0 && $upload_cnt==0) $msg[] = '資料無變更';
 

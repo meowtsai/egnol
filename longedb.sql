@@ -125,6 +125,13 @@ CREATE TABLE `games` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+ALTER TABLE games
+ADD site varchar(255) DEFAULT NULL;
+
+ALTER TABLE games
+ADD bg_path varchar(255) DEFAULT NULL;
+
+ALTER TABLE games MODIFY COLUMN logo_path varchar(255) DEFAULT NULL;
 --
 -- Table structure for table `gash_billing`
 --
