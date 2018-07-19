@@ -175,7 +175,7 @@ class Game extends MY_Controller {
 				$bg_path = $this->input->post("bg_path");
 			}
 
-			$bg_path = str_replace("https://manager.longeplay.com.tw", "https://game.longeplay.com.tw", $logo_path);
+			$bg_path = str_replace("https://manager.longeplay.com.tw", "https://game.longeplay.com.tw", $bg_path);
 
 			$logo_path="";
 
