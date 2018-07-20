@@ -31,12 +31,6 @@
 		<input type="text" name="currency" value="<?=$row ? $row->currency : ''?>" class="required" style="width:150px">
 		<span class="help-inline">例如：元寶</span>
 
-		<label>粉絲團URL</label>
-		<input type="text" name="fanpage" value="<?=$row ? $row->fanpage : ''?>"  style="width:300px">
-
-
-		<label>官網</label>
-		<input type="text" name="site" value="<?=$row ? $row->site : ''?>"  style="width:300px">
 
 
 		<label>遊戲分類</label>
@@ -60,7 +54,7 @@
 
 		<div style="margin-bottom:10px;"></div>
 
-		<label>套用主題</label>
+		<label>套用主題(遊戲內FAQ用)</label>
 		<select name="game_theme">
 			<? foreach($theme_list->result() as $theme_row):?>
 			<option value="<?=$theme_row->id?>" <?=$row ? ($row->theme_id == $theme_row->id ? 'selected="selected"' : '') : ''?>><?=$theme_row->title?></option>
@@ -68,26 +62,41 @@
 		</select>
 
 		<div style="margin-bottom:10px;"></div>
-		<label>首頁遊戲圖</label>
 
-		<label>重點(.jpg)
-			<span style="width:1920px; height:330px; line-height:330px; background:#ddd; text-align:center; display:block; overflow:hidden;">
-				<? if (file_exists(g_conf("http_document_root")."long_e/p/img/game/{$this->game_id}_01.jpg")):?>
-				<img src="/p/img/game/<?=$this->game_id?>_01.jpg?<?=time()?>">
-				<? else: echo '1920x330'; endif;?>
-			</span>
-			<input type="file" name="file01">
-		</label>
+		<label><font color='blue'><b>官網首頁遊設定</b></font></label>
+		<div style="margin-bottom:10px;"></div>
+		<label><font color='blue'>粉絲團URL</font> <font size="small" color="gray">* 範例: https://www.facebook.com/playvxz/</font></label>
+		<input type="text" name="fanpage" value="<?=$row ? $row->fanpage : ''?>"  style="width:300px">
 
 
+		<label><font color='blue'>官網</font> <font size="small" color="gray">* 範例: https://vxz.longeplay.com.tw/</font></label>
+		<input type="text" name="site" value="<?=$row ? $row->site : ''?>"  style="width:300px">
 
-		<label>小圖(.png)
+		<label><font color='blue'>行銷文字</font> <font size="small" color="gray">* 範例: 心驚膽戰 追逐逃生</font></label>
+		<input type="text" name="slogan" value="<?=$row ? $row->slogan : ''?>"  style="width:450px">
+
+
+		<label><font color='blue'>logo小圖(.gif, jpg, jpeg, png)</font><font size="small" color="gray"> * 設定後才會出現在首頁下拉選單</font>
 			<span style="width:45px; height:45px; line-height:45px; background:#ddd; text-align:center; display:block; overflow:hidden;">
 				<img src="<?=$row ? $row->logo_path : ''?>">
 			</span>
 			<input type="file" name="file04">
 			<input type="hidden" name="logo_path" class="" value="<?=$row ? $row->logo_path : ''?>">
 		</label>
+
+
+
+		<label><font color='blue'>輪播大圖(.gif, jpg, jpeg, png)</font><font size="small" color="gray"> * 設定後才會出現在輪播</font>
+			<span style="width:1920px; height:947px; line-height:947px; background:#ddd; text-align:center; display:block; overflow:hidden;">
+				<img src="<?=$row ? $row->bg_path : ''?>">
+			</span>
+			<input type="file" name="file01">
+			<input type="hidden" name="bg_path" class="" value="<?=$row ? $row->bg_path : ''?>">
+		</label>
+
+
+
+
 
 
 

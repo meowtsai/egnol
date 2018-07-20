@@ -9,7 +9,6 @@
 <link href="<?=$longe_url?>p/css/2018/reset.css" rel="stylesheet" type="text/css" />
 <link href="<?=$longe_url?>p/css/2018/swiper.css" rel="stylesheet" type="text/css" />
 <link href="<?=$longe_url?>p/css/2018/style.css" rel="stylesheet" type="text/css" />
-<script type="text/javascript" src="<?=$longe_url?>p/js/2018/knockout-3.4.2.js"></script>
 <link rel="Shortcut Icon" type="image/x-icon" href="longe_logo.ico" />
 <?
 	echo $js_include;
@@ -26,7 +25,7 @@
 	<a href="https://game.longeplay.com.tw/member/service_agreement?site=long_e">會員服務條款</a>
 	<a href="https://game.longeplay.com.tw/member/member_agreement?site=long_e">個資同意書</a>
 	<a href="https://game.longeplay.com.tw/member/privacy_agreement?site=long_e">隱私權政策</a>
-	
+
 	</div>
 </div>
 <script type="text/javascript" src="<?=$longe_url?>p/js/2018/jquery-3.3.1.min.js"></script>

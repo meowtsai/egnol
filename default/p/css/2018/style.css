@@ -1,5 +1,4 @@
 html, body {
-
     height: 100%;
 	font-family: "Microsoft Yahei";
 }
@@ -58,59 +57,91 @@ a{
 
 .menu{
 	position: absolute;
-	float: right;
-	margin-top: 60px;
-	width: 100%;
+	width:100%;
+    margin-top: 60px;
 	display: none;
 }
-.menu >ul>li {
+.nav_row  {
+	display: block;
     text-decoration: none;
 	line-height: 60px;
+	height:60px;
+	color: #FFF;
 	text-align: center;
-	display: block;
 	float:right;
 	width: 100%;
-	border-top:#DBDBDB solid 1px;
-}
-
-.menu >ul>li a{
-	display: block;
+    background:rgba(35,29,29,1);
 	font-family: "Microsoft JhengHei", sans-serif;
-    color: #FFF;
-	height:60px;
-	text-align: center;
-	width: 100%;
-	background:rgba(35,29,29,1);
 }
-.menu >ul>li>ul>li{
+.nav_row>img{
+	display:none;
+}
+.nav_row_inbox{
+	display:block;
+}
+.nav_row_inbox ul>li{
+	font-weight: 600;
 	background:rgba(35,29,29,1);
 	width: 100%;
 	float:left;
 }
-.menu >ul>li>ul>li:first-child{
+.nav_row_inbox ul>li:first-child{
 	border-top:#DBDBDB solid 1px;
+
 }
-.menu >ul>li>ul>li span{
+.nav_row_inbox ul>li:last-child{
+	border-bottom:#DBDBDB solid 0.5px;
+}
+.nav_row_inbox ul>li span{
 	display: block;
 	width: 45px;
 	height: 45px;
 	margin-top:7.5px;
-	margin-left:7.5px;
+	margin-left:5%;
 	float: left;
-	margin-right: 20px;
-	background:no-repeat center center;
-	background-size:cover;
+	margin-right:2%;
 	border-radius: 50px;
+	background:no-repeat center center;
+	background-size:auto;
+
+
 }
-.menu >ul>li>ul>li a{
+.nav_game{
 	text-align: left;
-	color: white;
 	width: 100%;
+	color: white;
 	float:left;
-	display:block;
 	height: 60px;
-	background:rgba(35,29,29,1);
+	border-bottom:rgba(119,119,119,0.5) solid 0.5px;
+
 }
+.nav_game>i{
+	display:none;
+}
+.home,.fb,.service{
+    display: block;
+	padding-left:2%;
+	width: 23%;
+	height:60px;
+	float: right;
+
+}
+
+.home{
+	background: url(/p/image/2018/earth.png) no-repeat center center ;
+	background-size:30px 30px;
+	  border-left:rgba(119,119,119,1) solid 0.5px;
+}
+.fb{
+	background: url(/p/image/2018/fb.png) no-repeat center center ;
+	background-size:30px 30px;
+}
+.service{
+	background: url(/p/image/2018/service.png) no-repeat center center ;
+	background-size:30px 30px;
+}
+
+
  .swiper-container {
       width: 100%;
       height:calc(100% - 60px);
@@ -164,6 +195,9 @@ a{
     font-weight: 300;
 	font-size: 30px;
 }
+.gametext{
+	display: none;
+}
 
 .homebutton {
 	display: block;
@@ -208,19 +242,7 @@ a{
 
 }
 .footer_container a{
-	margin-left: 20px;
-	text-decoration: none;
-	color:#C0BEBE;
-	background:rgba(35,29,29,1);
-}
-.footer_container a:link,
-.footer_container a:active,
-.footer_container a:visited
-{
-	color:#C0BEBE;
-}
-.footer_container a:hover{
-	color: #9C9C9C;
+	display: none;
 }
 
 
@@ -243,9 +265,11 @@ a{
     width: 100%;
 }
 .nav_container {
-	width: 1000px;
+	width: 900px;
     margin: 0 auto;
     height: 100%;
+	position: relative;
+
 }
 .nav_logo {
 	float: left;
@@ -261,41 +285,46 @@ a{
     margin-top:8px;
 }
 .menu {
+    position:absolute;
 	display: block;
-	position: inherit;
-	float: right;
 	margin-top:0;
-	width: 200px;
-}
-.menu >ul>li {
-    text-decoration: none;
-	line-height: 60px;
-	text-align: center;
-	display: block;
-	float:left;
-	width: 100px;
-	border-top:none;
-}
-.menu >ul>li a{
-	display: block;
-	font-family: "Microsoft JhengHei", sans-serif;
-    color: #FFF;
-	height:60px;
-	text-align: center;
-	width: 100px;
-	background:rgba(35,29,29,0.6);
-}
-.menu >ul>li a:hover{
-	background: #2d2828;
-}
-.menu >ul>li>ul>li{
-	background:rgba(35,29,29,1);
-	float:left;
-	display: none;
-	width: 200px;
+	width: 150px;
+    right:0;
 
 }
-.menu >ul>li>ul>li span{
+.nav_row  {
+	display: block;
+    text-decoration: none;
+	line-height: 60px;
+	height:60px;
+	color: #FFF;
+	text-align: center;
+	width: 150px;
+	font-family: "Microsoft JhengHei", sans-serif;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	cursor: pointer;
+}
+.nav_row>img{
+	display:inline-block;
+}
+.nav_row:hover{
+	background:#373737;
+}
+
+.nav_row_inbox{
+	width: 350px;
+	display: none;
+
+	}
+.nav_row_inbox ul>li{
+	float:left;
+	width: 350px;
+	background:rgba(35,29,29,0.8);
+	border-left:rgba(119,119,119,1) solid 0.5px;
+	border-right:rgba(119,119,119,1) solid 0.5px;
+}
+.nav_row_inbox ul>li span{
 	display: block;
 	width: 45px;
 	height: 45px;
@@ -308,47 +337,84 @@ a{
 	border-radius:0px;
 
 }
-
-.menu >ul>li>ul>li a{
+.nav_game{
+	line-height: 60px;
 	text-align: left;
-	color:#fff;
-	width: 200px;
+	width: 350px;
+	color: white;
 	float:left;
-	display:block;
 	height: 60px;
+	border-bottom:rgba(119,119,119,0.5) solid 0.5px;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	cursor: default;
+}
+
+.nav_game>i{
+	display:inline-block;
+}
+.home,.fb,.service{
+    display: block;
+	padding-left:5px;
+	padding-right:5px;
+	margin-top: 10px;
+	width: 40px;
+	height: 40px;
+	float: right;
+    border-left:rgba(119,119,119,1) solid 0.5px;
+	opacity:0.6;
+}
+.home{
+	background: url(/p/image/2018/earth.png) no-repeat center center ;
+	background-size:30px 30px;
+}
+.fb{
+	background: url(/p/image/2018/fb.png) no-repeat center center ;
+	background-size:30px 30px;
+}
+.service{
+	background: url(/p/image/2018/service.png) no-repeat center center ;
+	background-size:30px 30px;
 
 }
-.menu >ul>li>ul>li:first-child{
+
+.home:hover,.fb:hover,.service:hover{
+ opacity: 1;
+}
+
+
+.nav_row_inbox ul>li:first-child{
 	border-top:none;
 }
-.menu >ul>li>ul>li:hover{
-	background:#4e4645;
+.nav_row_inbox ul>li:last-child{
+	border-bottom:rgba(119,119,119,1) solid 0.5px;
 }
 
 
-    .swiper-container {
-      width: 100%;
-      height:calc(100% - 60px);
-    }
-    .swiper-slide {
 
-      text-align: center;
-      font-size: 18px;
-      background: #fff;
-      /* Center slide text vertically */
-      display: -webkit-box;
-      display: -ms-flexbox;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-box-pack: center;
-      -ms-flex-pack: center;
-      -webkit-justify-content: center;
-      justify-content: center;
-      -webkit-box-align: center;
-      -ms-flex-align: center;
-      -webkit-align-items: center;
-      align-items: center;
-    }
+.swiper-container {
+  width: 100%;
+  height:calc(100% - 60px);
+}
+.swiper-slide {
+
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
 
 
 
@@ -363,8 +429,8 @@ a{
 .homebox {
 	position: absolute;
 	width: 350px;
-	margin-left: 20%;
-	bottom:50%;
+	margin-left: 18%;
+	bottom:60%;
 	text-align: center;
 	line-height: 40px;
 	font-family: "Microsoft Yahei";
@@ -375,6 +441,9 @@ a{
     font-weight: 300;
 	font-size: 40px;
 }
+.gametext{
+	display: block;
+}
 
 .homebutton {
 	display: block;
@@ -384,7 +453,6 @@ a{
 	margin:10px auto 0 auto;
 }
 .homebutton:hover{
-
 	background: url(/p/image/2018/home_button.png) no-repeat top center
 }
 .swiper-button-prev{
@@ -396,14 +464,15 @@ a{
 	background: url(/p/image/2018/swiper_next.png) no-repeat top center;
 }
 .homebox_black {
-	background: rgba(29,28,28,0.5);
-	padding:15px;
+	background:0;
+	padding:0;
 }
 
 
 .gametext {
 	color:#CFCDCD;
 }
+
 .footer {
 	font-family: "Microsoft JhengHei", sans-serif;
     font-size: 16px;
@@ -426,6 +495,7 @@ a{
 	background:rgba(35,29,29,1);
 }
 .footer_container a{
+	display: inline-block;
 	margin-left: 20px;
 	text-decoration: none;
 	color:#C0BEBE;

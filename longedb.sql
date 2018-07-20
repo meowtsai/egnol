@@ -131,6 +131,9 @@ ADD site varchar(255) DEFAULT NULL;
 ALTER TABLE games
 ADD bg_path varchar(255) DEFAULT NULL;
 
+ALTER TABLE games
+ADD slogan varchar(255) DEFAULT NULL;
+
 ALTER TABLE games MODIFY COLUMN logo_path varchar(255) DEFAULT NULL;
 --
 -- Table structure for table `gash_billing`

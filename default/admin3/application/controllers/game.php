@@ -212,6 +212,7 @@ class Game extends MY_Controller {
 				'site' => $this->input->post("site"),
 				'logo_path'=> $logo_path,
 				'bg_path'=> $bg_path,
+				'slogan' => $this->input->post("slogan"),
 			);
 
 			if ($id = $this->input->post("id")) { //修改
