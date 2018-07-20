@@ -9,7 +9,7 @@
 <link href="<?=$longe_url?>p/css/2018/reset.css" rel="stylesheet" type="text/css" />
 <link href="<?=$longe_url?>p/css/2018/swiper.css" rel="stylesheet" type="text/css" />
 <link href="<?=$longe_url?>p/css/2018/style.css" rel="stylesheet" type="text/css" />
-<link rel="Shortcut Icon" type="image/x-icon" href="longe_logo.ico" />
+<link rel="Shortcut Icon" type="image/x-icon" href="/p/image/2018/longe_logo.ico" />
 <?
 	echo $js_include;
 ?>
