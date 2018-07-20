@@ -21,12 +21,13 @@
               <?if ($row->fanpage):?>
 							<a href="<?=$row->fanpage?>" class="fb"></a>
               <?else:?>
-              <a class="fb" style="visibility: hidden;">&nbsp;</a>
+							<a href="javascript: void(0)" class="fb" style="background:url();cursor:default" ></a>
+
               <?endif;?>
               <?if ($row->site):?>
 							<a href="<?=$row->site?>" class="home"></a>
               <?else:?>
-              <a class="home" style="visibility: hidden;">&nbsp;</a>
+              <a href="javascript: void(0)" class="home" style="background:url();cursor:default" ></a>
               <?endif;?>
 							</div>
 							</li>
