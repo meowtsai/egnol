@@ -1,7 +1,7 @@
 <div class="nav">
 	   <div class="nav_container">
 
-			<a href="https://game.longepaly.com.tw"><div class="nav_logo"></div></a>
+			<a href="https://game.longeplay.com.tw"><div class="nav_logo"></div></a>
 		   <div class="mb_menubutton"></div>
 		   <div class="mb_menubutton_x"></div>
 		   <div class="menu">
