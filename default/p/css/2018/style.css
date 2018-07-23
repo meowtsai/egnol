@@ -176,6 +176,8 @@ a{
 	color: white;
 }
 
+
+
 .homebox {
 	position: absolute;
 	width: 50%;
@@ -185,17 +187,6 @@ a{
 	bottom:100px;
 	margin-left: 25%;
 	margin-right:25%;
-	z-index: 5;
-}
-
-.homebox {
-	position: absolute;
-	width: 380px;
-	margin-left: 18%;
-	bottom:60%;
-	text-align: center;
-	line-height: 40px;
-	font-family: "Microsoft Yahei";
 	z-index: 5;
 }
 
@@ -362,6 +353,8 @@ a{
 	cursor: default;
 }
 
+
+
 .nav_game>i{
 	display:inline-block;
   font-size: small;
@@ -467,6 +460,18 @@ a{
 	display:block;
 	background: url(/p/image/2018/swiper_next.png) no-repeat top center;
 }
+
+.homebox {
+  position: absolute;
+	width: 380px;
+	margin-left: 18%;
+	bottom:60%;
+	text-align: center;
+	line-height: 40px;
+	font-family: "Microsoft Yahei";
+	z-index: 5;
+}
+
 .homebox_black {
 	background:0;
 	padding:0;
