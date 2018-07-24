@@ -22,9 +22,9 @@
 <div class="footer">
 	<div class="footer_container">
 	Long E Co., Ltd © <?=date('Y')?> Copyrights Reserved.
-	<a href="https://game.longeplay.com.tw/member/service_agreement?site=long_e">會員服務條款</a>
-	<a href="https://game.longeplay.com.tw/member/member_agreement?site=long_e">個資同意書</a>
-	<a href="https://game.longeplay.com.tw/member/privacy_agreement?site=long_e">隱私權政策</a>
+	<a href="/member/complete_agreement#service">會員服務條款</a>
+	<a href="/member/complete_agreement#data_use">個資同意書</a>
+	<a href="/member/complete_agreement#privacy">隱私權政策</a>
 
 	</div>
 </div>

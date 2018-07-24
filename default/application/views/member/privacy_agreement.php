@@ -1,12 +1,14 @@
-<div id="content-login">
-	<div class="login-ins">
-		<div class="bread cf" typeof="v:Breadcrumb">
-			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> >  <a href="<?=$longe_url?>member/privacy_agreement?site=<?=$site?>" title="隱私權政策" rel="v:url" property="v:title">隱私權政策</a>
-		</div>
-		<div class="login_box">
-			<div class="login_member">
-				<div class="login_info">
-				<p class="scrollbar">
+<div class="nav" style="position: fixed;top:0;">
+	<div class="nav_container" >
+		<a href="https://game.longeplay.com.tw"><div class="nav_logo"></div></a>
+	</div>
+</div>
+<div class="content-terms" >
+	<div >
+		<h1>隱私權政策</h1>
+		<div >
+			<div >
+				<div class="info">
 					當您加入本網站會員時，即視為您已閱讀、瞭解並同意接受本隱私權政策。龍邑股份有限公司（下稱龍邑）有權於任何時間在本網站上公布經小幅修改、變更之隱私權政策內容，當本網站公布上開修改、變更後，該更新內容即刻生效，建議您隨時注意該等修改、變更；此外，若修訂版本有實質重大更動，龍邑將會提前30日在本網站發布更新訊息，30日期間屆滿，本網站將正式施行前述之隱私權政策，若您繼續使用本網站所提供之商品或服務內容，您將被視為已閱讀、瞭解並同意接受所有修改。<br />
 					本隱私權政策描述了龍邑如何蒐集、處理、利用您的個人資訊。<br />
                     <br />
@@ -41,7 +43,7 @@
 					除本隱私權政策之規定內容外，龍邑將不會出售或出租任何您的個人資料予第三方。<br />
                     <br />
 					若相關法律之規定與本隱私權政策有所衝突，龍邑將遵循該法律之規定。<br />
-				</p>
+				
 				</div>
 			</div>
 			<div class="button"><a id="cancel-btn" href="#" class="button_submit" onclick="javascript:history.back();return false">返回</a></div>

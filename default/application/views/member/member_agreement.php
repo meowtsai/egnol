@@ -1,17 +1,21 @@
 <style>
 tr, td {
-	border:1px solid #fff;
+	border:1px solid #ccc;
+	padding:0.2rem;
 }
 </style>
-<div id="content-login">
-	<div class="login-ins">
-		<div class="bread cf" typeof="v:Breadcrumb">
-			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> >  <a href="<?=$longe_url?>member/member_agreement?site=<?=$site?>" title="個資同意書" rel="v:url" property="v:title">個資同意書</a>
-		</div>
-		<div class="login_box">
-			<div class="login_member">
-				<div class="login_info">
-					<div class="scrollbar" style="padding:0 5px;">
+<div class="nav" style="position: fixed;top:0;">
+	<div class="nav_container" >
+		<a href="https://game.longeplay.com.tw"><div class="nav_logo"></div></a>
+	</div>
+</div>
+<div class="content-terms" >
+	<div >
+		<h1>個資同意書</h1>
+		<div >
+			<div >
+				<div class="info">
+
 						個人資料提供同意書<br />
 						當您完成LongE會員註冊(免費)後，第一次登入LongE網站 (下稱本網站)進行商品購買時，您同意以下內容並於勾選後進行下一步。您瞭解：<br />
 						一、龍邑股份有限公司 (下稱本公司)取得您的個人資料，目的在於個人資料保護法及相關法令之規定下，依本公司隱私權保護政策，蒐集、處理及利用您的個人資料。<br />
@@ -76,7 +80,7 @@ tr, td {
 						5.    請求刪除。但因本公司執行職務或業務所必需者，本公司得拒絕之。<br />
 						六、您可自由選擇是否提供本公司您的個人資料，但若您所提供之個人資料，經檢舉或本公司發現不足以確認您的身分真實性或其他個人資料冒用、盜用、資料不實等情形，本公司有權暫時停止提供對您的服務，若有不便之處敬請見諒。<br />
 						七、您瞭解此一同意符合個人資料保護法及相關法規之要求，具有書面同意本公司蒐集、處理及利用您的個人資料之效果。<br />
-					</div>
+
 				</div>
 			</div>
 			<div class="button"><a id="cancel-btn" href="#" class="button_submit" onclick="javascript:history.back();return false">返回</a></div>

@@ -2,25 +2,26 @@
 tr, td {
 	border:1px solid #fff;
 }
-.login_info ol {
-	padding:5px;
-}
+
 </style>
-<div id="content-login">
-	<div class="login-ins">
-		<div class="bread cf" typeof="v:Breadcrumb">
-			  <a href="<?=$longe_url?>member/complete_agreement?site=<?=$site?>" title="會員服務暨個資隱私權同意書" rel="v:url" property="v:title">會員服務暨個資隱私權同意書</a>
-		</div>
-		<div class="login_box">
-			<div class="login_member">
-				<div class="login_info" style="font-size:0.85rem;line-height:200%;">
+<div class="nav" style="position: fixed;top:0;">
+	<div class="nav_container" >
+		<a href="https://game.longeplay.com.tw"><div class="nav_logo"></div></a>
+	</div>
+</div>
+<div class="content-terms" >
+	<div>
+		<h1>會員服務暨個資隱私權同意書</h1>
+		<div >
+			<div >
+				<div class="info" >
 
             歡迎您加入 LongE 會員並使用龍邑股份有限公司（下稱龍邑）所提供之各項會員服務。此份同意書包含<a href="#service">【LongE 會員服務同意書】</a>，<a href="#data_use">【個人資料提供同意書】</a>，<a href="#privacy">【隱私權政策】</a>為保障您的權益，請詳細閱讀本同意書所有內容，您同意當您在線上點選「接受」鍵時，即視為您已經詳細閱讀、了解並願意遵守本服務同意書、注意事項之所有約定。
 
             <br />
             <br />
-
-						              <h2><u><a name="service"> LongE 會員服務同意書</a></u></h2>
+								<a class="anchor" name="service"></a>
+						              <h2><u> LongE 會員服務同意書</u></h2>
 													<br />
   												歡迎您加入 LongE 會員並使用龍邑股份有限公司（下稱龍邑）所提供之各項會員服務。為保障您的權益，請詳細閱讀本服務同意書所有內容，您同意當您在線上點選「我同意」鍵時，即視為您已經詳細閱讀、了解並願意遵守本服務同意書、注意事項之所有約定。提醒您：如果您是未成年人（未滿二十歲），您必須告知法定代理人（如：父母、監護人）使其詳閱、瞭解本服務同意書內容，並取得法定代理人（如：父母、監護人）之允許始得進行，當您使用或繼續使用 LongE 會員得使用之服務時，即表示您對本服務同意書之同意及其他意思表示，均視為已取得法定代理人之允許：<br />
   												<br />
@@ -132,8 +133,8 @@ tr, td {
 
   					<hr />
 
-
-            <h2><u><a name="data_use"> 個人資料提供同意書</a></u></h2><br />
+						<a class="anchor" name="data_use"></a>
+            <h2><u> 個人資料提供同意書</u></h2><br />
 
 						當您完成 LongE 會員註冊(免費)後，第一次登入 LongE 網站 (下稱本網站)進行商品購買時，您同意以下內容並於勾選後進行下一步。您瞭解：<br />
 						一、龍邑股份有限公司 (下稱本公司)取得您的個人資料，目的在於個人資料保護法及相關法令之規定下，依本公司隱私權保護政策，蒐集、處理及利用您的個人資料。<br />
@@ -201,8 +202,8 @@ tr, td {
 
 
             <hr />
-
-            <h2><u><a name="privacy"> 隱私權政策</a></u></h2><br />
+						<a class="anchor" name="privacy"></a>
+            <h2><u>隱私權政策</u></h2><br />
 
             當您加入本網站會員時，即視為您已閱讀、瞭解並同意接受本隱私權政策。龍邑股份有限公司（下稱龍邑）有權於任何時間在本網站上公布經小幅修改、變更之隱私權政策內容，當本網站公布上開修改、變更後，該更新內容即刻生效，建議您隨時注意該等修改、變更；此外，若修訂版本有實質重大更動，龍邑將會提前30日在本網站發布更新訊息，30日期間屆滿，本網站將正式施行前述之隱私權政策，若您繼續使用本網站所提供之商品或服務內容，您將被視為已閱讀、瞭解並同意接受所有修改。<br />
   					本隱私權政策描述了龍邑如何蒐集、處理、利用您的個人資訊。<br />
@@ -241,7 +242,8 @@ tr, td {
 
 				</div>
 			</div>
-			<div class="button"><a id="cancel-btn" href="#" class="button_submit" onclick="javascript:history.back();return false">返回</a></div>
+
 		</div>
 	</div>
+	<div class="button"><a id="cancel-btn" href="#" class="button_submit" onclick="javascript:history.back();return false">返回</a></div>
 </div>

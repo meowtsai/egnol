@@ -727,32 +727,30 @@ class Member extends MY_Controller
 	function service_agreement()
 	{
 		$this->_init_layout()
-			->add_css_link("login")
-			->standard_view();
+			->g_2018_view("member/service_agreement");
 	}
 
 	// 隱私權政策
 	function privacy_agreement()
 	{
 		$this->_init_layout()
-			->add_css_link("login")
-			->standard_view();
+			->g_2018_view("member/privacy_agreement");
 	}
 
 	// 個資同意書
 	function member_agreement()
 	{
 		$this->_init_layout()
-			->add_css_link("login")
-			->standard_view();
+			->g_2018_view("member/member_agreement");
+
 	}
 
 	// 所有的同意書
 	function complete_agreement()
 	{
 		$this->_init_layout()
-			->add_css_link("login")
-			->quick_view();
+			->g_2018_view("member/complete_agreement");
 	}
+
 
 }

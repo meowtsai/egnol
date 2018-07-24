@@ -1,12 +1,14 @@
-<div id="content-login">
-	<div class="login-ins">
-		<div class="bread cf" typeof="v:Breadcrumb">
-			<a href="<?=$game_url?>" title="首頁" rel="v:url" property="v:title">首頁</a> > <a href="<?=$longe_url?>member/service_agreement?site=<?=$site?>" title="會員服務條款" rel="v:url" property="v:title">會員服務條款</a>
-		</div>
-		<div class="login_box">
-			<div class="login_member">
-				<div class="login_info">
-					<p class="scrollbar">
+<div class="nav" style="position: fixed;top:0;">
+	<div class="nav_container" >
+		<a href="https://game.longeplay.com.tw"><div class="nav_logo"></div></a>
+	</div>
+</div>
+<div class="content-terms" >
+	<div >
+		<h1>會員服務條款</h1>
+		<div >
+			<div >
+				<div class="info">
                         <b>LongE會員服務同意書</b><br /><br />
 
 												歡迎您加入LongE會員並使用龍邑股份有限公司（下稱龍邑）所提供之各項會員服務。為保障您的權益，請詳細閱讀本服務同意書所有內容，您同意當您在線上點選「我同意」鍵時，即視為您已經詳細閱讀、了解並願意遵守本服務同意書、注意事項之所有約定。提醒您：如果您是未成年人（未滿二十歲），您必須告知法定代理人（如：父母、監護人）使其詳閱、瞭解本服務同意書內容，並取得法定代理人（如：父母、監護人）之允許始得進行，當您使用或繼續使用LongE會員得使用之服務時，即表示您對本服務同意書之同意及其他意思表示，均視為已取得法定代理人之允許：<br />
@@ -115,7 +117,7 @@
 												十五、準據法及管轄法院：<br />
 												本服務條款之解釋及適用，以及會員因使用本服務而與龍邑間之權利義務關係，悉依中華民國法律及相關法令解釋適用之（不含涉外民事法律適用法或其他類似法規）。其因此所生之爭議，均同意以臺灣板橋地方法院為第一審管轄法院；此外，若本服務條款有任何一部無效，亦不影響其他部份之效力。<br />
 
-					</p>
+					
 				</div>
 			</div>
 			<div class="button"><a id="cancel-btn" href="#" class="button_submit" onclick="javascript:history.back();return false">返回</a></div>
