@@ -18,6 +18,7 @@ class Member extends MY_Controller
 	// 尚未登入則導向登入頁面, 已登入則顯示會員資料和修改選項
 	function index()
 	{
+		redirect('/platform', 'location', 301);
 		if(!$this->g_user->is_login())
 		{
 			$this->login();
@@ -41,6 +42,7 @@ class Member extends MY_Controller
 	//      redirect_url- String    登入完成後要返回的網址
 	function login()
 	{
+		redirect('/platform', 'location', 301);
 		// 取出 GET 參數
 		$account = urldecode($this->input->get("account", true));
 
@@ -273,6 +275,7 @@ class Member extends MY_Controller
 	// 註冊新帳號
 	function register()
 	{
+		redirect('/platform', 'location', 301);
 		$this->_init_layout()
 			->add_css_link("login")
 			->add_js_include("member/register")

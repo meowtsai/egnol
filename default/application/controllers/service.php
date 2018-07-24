@@ -10,6 +10,7 @@ class Service extends MY_Controller {
 
 	function index()
 	{
+		redirect('/platform', 'location', 301);
 		$this->_require_login();
 
 		//$this->g_user->check_account_channel('service');
