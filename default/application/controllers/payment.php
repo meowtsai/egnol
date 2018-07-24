@@ -37,7 +37,7 @@ class Payment extends MY_Controller
 
 	function index()
 	{
-		redirect('/platform', 'location', 301);
+		redirect('/', 'location', 301);
 		$this->_require_login();
 
 		$site = $this->_get_site();

@@ -9,6 +9,7 @@ class News extends MY_Controller {
 
 	function index()
 	{
+		redirect('/', 'location', 301);
 		$site = $this->_get_site();
 		$type = $this->input->get_post("type") ? $this->input->get_post("type") : 0;
 
