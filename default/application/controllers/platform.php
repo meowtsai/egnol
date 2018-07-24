@@ -31,19 +31,17 @@ class Platform extends MY_Controller
 	function index()
 	{
 		$user_ip = $_SERVER['REMOTE_ADDR'];
-    if ($user_ip!="61.220.44.200")
-    {
-			$this->_init_layout()
-			->standard_view();
-    }
-		else {
-			$games = $this->db->from("games")->where("is_active", "1")->or_where("is_active", "2")->get();
+
+			$this->db->from("games")->where("is_active", "1");
+			if ($user_ip=="61.220.44.200")
+			{
+				$this->db->or_where("is_active", "2");
+			}
+
+			$games = $this->db->get();
 			$this->_init_layout()
 			->set("games", $games)
 			->g_2018_view("platform/home");
-		}
-
-
 
 
 	}
