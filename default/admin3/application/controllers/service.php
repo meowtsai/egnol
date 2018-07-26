@@ -359,9 +359,17 @@ class Service extends MY_Controller {
 			$allocate[$row->allocate_status][] = $row;
 		}
 
+
+		 $chart_data = $this->DB2->query("SELECT g.name , count(*)  as value
+		 FROM questions q LEFT JOIN servers s ON q.server_id = s.server_id
+		 left join games g on g.game_id = s.game_id
+		 WHERE s.game_id IS NOT NULL  and q.create_time between CURDATE()-3 and CURDATE()-2 GROUP BY g.name");
+
 		$this->_init_service_layout()
 			->set("stat", $stat)
 			->set("allocate", $allocate)
+			->set("chart_data", $chart_data)
+			->add_js_include("d3")
 			->render();
 	}
 

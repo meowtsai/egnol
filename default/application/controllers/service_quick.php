@@ -232,7 +232,10 @@ class Service_quick extends MY_Controller {
 		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問，若有未說明問題，請以原提問進行補述!")));
         */
 
-    $check_id = base_convert(time(), 10, 32);
+	 	$if_a = array('1','l','0','o');
+		$then_b = array('8','k','f','w');
+
+    $check_id = str_replace($if_a, $then_b, base_convert(time(), 10, 32));
 		$ip = $_SERVER['REMOTE_ADDR'];
 		$country_name = "";
 		if ($ip)

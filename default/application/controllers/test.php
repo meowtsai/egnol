@@ -7,6 +7,24 @@ class Test extends MY_Controller {
 		parent::__construct();
 	}
 
+
+
+
+function check()
+{
+	//echo str_replace("world","Shanghai","Hello world!");
+
+	 $a = array('1','l','0','o');
+	 $b = array('8','k','9','w');
+echo str_replace($a, $b, $check_id);
+	$check_id = base_convert(time(), 10, 32);
+	echo $check_id;
+	echo '<br />';
+	echo str_replace($a, $b, $check_id);
+
+}
+
+
 	function index()
 	{
 		$site = $this->_get_site();
