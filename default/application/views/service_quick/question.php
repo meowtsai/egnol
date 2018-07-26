@@ -203,8 +203,8 @@ var faq_list =[
 	$( "select[name='question_type']" ).change(function(){
 		var hint_text = "";
 		var sel = $( "select[name='question_type']" ).val();
-		var game_id = $( "select[name='game']" ).val();
-		if (game_id==="h55naxx2tw")
+		var game_id = "<?=$site?>";
+		if (game_id==="h55naxx2tw") //h55naxx2tw
 		{
 
 			var mydata = faq_list.filter(function(item){
@@ -265,6 +265,9 @@ var faq_list =[
 			{
 				$("#div_hint").html( hint_text);
 				$("#div_hint").show();
+			}
+			else {
+				$("#div_hint").hide();
 			}
 
 		}
