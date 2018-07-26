@@ -17,6 +17,14 @@ class Service_quick extends MY_Controller {
 			header("Location: /service_quick?site=long_e&param_game_id=g78naxx2hmt");
 			die();
 		}
+		if ($this->input->get("site") == "long_e¶m_game_id=h55naxx2tw")
+		{
+			//redirect('/service_quick?site=long_e&param_game_id=g78naxx2hmt', 'location', 301);
+			header("Location: /service_quick?site=long_e&param_game_id=h55naxx2tw");
+			die();
+		}
+
+
 
         $vendor_game_id = $this->input->get_post("game_id");
         $partner_uid    = $this->input->get_post("partner_uid");

@@ -87,12 +87,19 @@
 					<tr>
 						<th>問題描述</th><td><textarea name="content" class="required" minlength="5" maxlength="500"></textarea></td>
 					</tr>
+					<tr>
+
+						<td colspan="2">
+
+
+							<div id="div_hint" style="padding: 10px;margin-left: auto;display: none;border:1px solid silver;border-radius: 0.2rem;width:350px;color: #757c81;font-size: 16px;line-height:150%;" >
+							</div>
+						</td>
+					</tr>
 					<?
 					//echo $_SERVER['HTTP_USER_AGENT'];
-					//$ua = strtolower($_SERVER['HTTP_USER_AGENT']);
-					//if (!$is_ingame && (stripos($ua,'android')== false) )
-
-					if (!$is_ingame):?>
+					$ua = strtolower($_SERVER['HTTP_USER_AGENT']);
+					if (!$is_ingame && (stripos($ua,'android')== false) ):?>
 					<tr>
 						<th>圖片附件</th><td style="white-space:pre-wrap;"><img src="<?=$longe_url?>p/image/server/server-pic-btn1.png" class="pic_btn"> <input type="file" name="file01" class="pic_input" /></td>
 					</tr>
@@ -133,3 +140,136 @@
 		</form>
 	</div>
 </div>
+
+<?
+$user_ip = $_SERVER['REMOTE_ADDR'];
+if ($user_ip=="61.220.44.200"):?>
+<script type="text/javascript">
+var faq_list =[
+	{	"type":"1",
+		"qlist":[
+		{"q":"帳號遺失/換了手機/忘了綁定？","a":"若您是要反映『帳號遺失』問題，\
+				<br />還請您提供下列資訊：\
+				<br /> ☑伺服器(亞洲服/歐美服)：\
+				<br /> ☑帳號創建時間(年/月/日)：\
+				<br /> ☑帳號等級：\
+				<br /> ☑帳號暱稱：\
+				<br /> ☑帳號最後登入裝置版本型號：\
+				<br /> ☑最後登入時間：<br />"},
+		{"q":"如何刪除帳號？","a":"目前並未提供『刪除帳號』的服務喔。<br />"},
+		{"q":"性別填錯了怎麼辦？","a":"目前並未提供『變更性別』的服務喔。<br />"},
+		{"q":"如何綁定帳號？","a":"登入畫面點選右上方帳號進入用戶中心，<br />選擇使用Google Play、Facebook帳號來進行綁定。<br />"},
+		]
+	},
+	{	"type":"2",
+	"qlist":[
+	{"q":"購買後如何退貨退款？","a":"目前並無提供退款服務。<br />"},
+	{"q":"扣款成功卻沒有拿到商品？","a":"請您重新啟動遊戲再次確認。<br />"},
+	{"q":"已經重新啟動還是沒拿到商品？","a":"還請您提供下列資訊：\
+		<br /> ☑帳號ID(於用戶中心的數字)：\
+		<br /> ☑角色名稱：\
+		<br /> ☑角色ID：(頭像旁的數字ID)\
+		<br /> ☑交易時間：  \
+		<br /> ☑訂單編號：\
+		<br /> ☑購買品項名稱：\
+		<br /> ☑未收到的商品：\
+		<br /> ☑交易收據截圖：\
+		<br /> ☑儲值地區：。<br />"},
+	{"q":"有其他（例如超商或點卡）付款方式嗎？","a":"目前《第五人格》僅提供Google與Apple雙平台<br />儲值等方式，\
+而未來若有增加其他儲值方式<br />都會公告於粉絲團或官網公告。<br />"},
+{"q":"無法儲值？","a":"請詳細說明在哪個步驟出現什麼錯誤訊息，<br />能附上擷圖會加快我們處理問題。<br />"},
+	]
+},
+{	"type":"8",
+"qlist":[
+{"q":"遊戲很卡很lag？","a":"嘗試互換您的網路連線選擇較佳的環境遊玩，<br />如Wifi / 4G 互相切換。<br />"},
+{"q":"換了網路環境還是很卡？","a":"請您來信提供下列相關連線環境資訊：\
+<br /> ☑(1)帳號ID(於用戶中心的數字) : \
+<br /> ☑(2)電信供應商／連線方式 :\
+<br /> ☑(3)戰鬥異常時間:\
+<br /> ☑(4)ping數值:（可查看遊戲左上）\
+<br /> ☑(5)伺服器:歐美服/亞洲服\
+<br /> ☑(6)異常情形說明:(如爆Ping.LAG)\
+<br /> ☑(7)使用裝置;(如iPhone X)<br />"},
+{"q":"在其他國家無法進入？","a":"亞洲服與歐美服(即全球服)，兩者資料並不共通。<br />"},]
+}
+];
+
+
+
+
+	$( "select[name='question_type']" ).change(function(){
+		var hint_text = "";
+		var sel = $( "select[name='question_type']" ).val();
+		var game_id = $( "select[name='game']" ).val();
+		if (game_id==="h55naxx2tw")
+		{
+
+			var mydata = faq_list.filter(function(item){
+				if (item.type===sel){ return item};
+			})
+			if (mydata.length>0)
+			{
+				for (var i = 0; i < mydata[0].qlist.length; i++) {
+					hint_text += "<b>" + mydata[0].qlist[i].q + "</b><br />";
+					hint_text +=  mydata[0].qlist[i].a + "<br />";
+				}
+			}
+			// switch (sel) {
+			// 	case "1":
+			// 		hint_text = "若您是要反映『帳號遺失』問題，\
+			// 				<br />還請您提供下列資訊：\
+			// 				<br /> ☑伺服器(亞洲服/歐美服)：\
+			// 				<br /> ☑帳號創建時間(年/月/日)：\
+			// 				<br /> ☑帳號等級：\
+			// 				<br /> ☑帳號暱稱：\
+			// 				<br /> ☑帳號最後登入裝置版本型號：\
+			// 				<br /> ☑最後登入時間：";
+			// 		break;
+			// 	case "2"	:
+			// 		hint_text = "若您是要反映『儲值未到帳』問題，\
+			// 					<br />請您重新啟動遊戲再次確認\
+			// 					<br />還請您提供下列資訊：\
+			// 					<br /> ☑帳號ID(於用戶中心的數字)：\
+			// 					<br /> ☑角色名稱：\
+			// 					<br /> ☑角色ID：(點選左上方頭像，點選下方的頭像會顯示您的角色ID)\
+			// 					<br /> ☑交易時間： 201X/X/X 00:00:00 \
+			// 					<br /> ☑訂單編號：\
+			// 					<br /> ☑購買品項名稱：\
+			// 					<br /> ☑未收到的商品：\
+			// 					<br /> ☑交易收據截圖：\
+			// 					<br /> ☑儲值地區：";
+			//
+			//
+			// 		break;
+			// 		case "8"	:
+			// 			hint_text = "若您是要反映『網路延遲』問題，\
+			// 			<br />建議您能嘗試互換您的網路連線選擇較佳的環境遊玩，如Wifi / 4G 互相切換，\
+			// 			<br />如仍有疑慮還請您提供下列相關連線環境資訊：\
+			// 			<br /> ☑(1)帳號ID(於用戶中心的數字) : \
+			// 			<br /> ☑(2)電信供應商／連線方式 :\
+			// 			<br /> ☑(3)戰鬥異常時間:\
+			// 			<br /> ☑(4)ping數值:（可查看遊戲左上）\
+			// 			<br /> ☑(5)伺服器:歐美服/亞洲服\
+			// 			<br /> ☑(6)異常情形說明:(如爆Ping.LAG)\
+			// 			<br /> ☑(7)使用裝置;(如iPhone X)";
+			//
+			//
+			// 			break;
+			// 	default:
+			//
+			// }
+			if (hint_text!=="")
+			{
+				$("#div_hint").html( hint_text);
+				$("#div_hint").show();
+			}
+
+		}
+
+
+
+
+	});
+</script>
+<?endif;?>
