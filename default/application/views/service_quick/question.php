@@ -100,7 +100,7 @@
 					//echo $_SERVER['HTTP_USER_AGENT'];
 					$ua = strtolower($_SERVER['HTTP_USER_AGENT']);
 					//$is_ingame
-					if (!$is_ingame ):
+					//if (!$is_ingame ):
 					?>
 					<tr>
 						<th>圖片附件</th><td style="white-space:pre-wrap;"><img src="<?=$longe_url?>p/image/server/server-pic-btn1.png" class="pic_btn"> <input type="file" name="file01" class="pic_input" /></td>
@@ -124,12 +124,12 @@
 						<th></th>
 						<td style="white-space:pre-wrap;">圖檔可接受格式：jpg、png、gif、bmp<br/>最大尺寸 6144x6144 畫素，容量最大 6MB。</td>
           </tr>
-          <? else:?>
+
 					<tr>
 						<td style="white-space:pre-wrap;" colspan="2">
-            <div class="notes" style="text-align:center;padding:5px;">提醒您：需附檔案回報時，請直接利用官網線上提問，謝謝。</div></td>
-                    </tr>
-                    <? endif;?>
+            <div class="notes" style="text-align:center;padding:5px;">提醒您：若無法選取檔案回報，請直接利用官網線上提問，謝謝。</div></td>
+          </tr>
+
 				</table>
 				<div class="login-button">
 					<p>
