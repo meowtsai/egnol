@@ -151,10 +151,6 @@ $user_ip = $_SERVER['REMOTE_ADDR'];
 var faq_list =[
 	{	"type":"1",
 		"qlist":[
-			{"q":"※陸服有辦法移轉到台服嗎?","a":"目前台版是全新的伺服器，所以無法移民喔\
-	<br />提醒您：\
-	<br />※雙版本系統(ios與安卓)是無法共用帳號，<br />但是，伺服器是可以一起遊玩喔！\
-	<br />※台灣版本與海外版本是無法共用帳號，<br />但是，伺服器是可以一起遊玩喔！<br />"},
 
 		{"q":"※帳號遺失/換了手機/忘了綁定？","a":"若您是要反映『帳號遺失』問題，\
 				<br />還請您提供下列資訊：\
@@ -164,9 +160,13 @@ var faq_list =[
 				<br /> ☑帳號暱稱：\
 				<br /> ☑帳號最後登入裝置版本型號：\
 				<br /> ☑最後登入時間：<br />"},
-		{"q":"※如何刪除帳號？","a":"目前並未提供『刪除帳號』的服務喔。<br />"},
 		{"q":"※性別填錯了怎麼辦？","a":"目前並未提供『變更性別』的服務喔。<br />"},
 		{"q":"※如何綁定帳號？","a":"登入畫面點選右上方帳號進入用戶中心，<br />選擇使用Google Play、Facebook帳號來進行綁定。<br />"},
+		{"q":"※如何刪除帳號？","a":"目前並未提供『刪除帳號』的服務喔。<br />"},
+		{"q":"※陸服有辦法移轉到台服嗎?","a":"目前台版是全新的伺服器，所以無法移民喔\
+		<br />提醒您：\
+		<br />※雙版本系統(ios與安卓)是無法共用帳號，<br />但是，伺服器是可以一起遊玩喔！\
+		<br />※台灣版本與海外版本是無法共用帳號，<br />但是，伺服器是可以一起遊玩喔！<br />"},
 
 		]
 	},
@@ -230,17 +230,17 @@ var faq_list =[
 ];
 
 
-var g78_faq_list =[
-	{	"type":"3",
-		"qlist":[
-			{"q":"※九命貓不見了?","a":"請看<a href='https://www.facebook.com/OnmyojiarenaTW/posts/484988391947545'>粉絲團公告</a>喔<br />"},
-		]
-	},
-	{	"type":"4",
-		"qlist":[
-			{"q":"※九命貓不見了?","a":"請看<a href='https://www.facebook.com/OnmyojiarenaTW/posts/484988391947545'>粉絲團公告</a>喔<br />"},
-		]
-	},];
+// var g78_faq_list =[
+// 	{	"type":"3",
+// 		"qlist":[
+// 			{"q":"※九命貓不見了?","a":"請看<a href='https://www.facebook.com/OnmyojiarenaTW/posts/484988391947545'>粉絲團公告</a>喔<br />"},
+// 		]
+// 	},
+// 	{	"type":"4",
+// 		"qlist":[
+// 			{"q":"※九命貓不見了?","a":"請看<a href='https://www.facebook.com/OnmyojiarenaTW/posts/484988391947545'>粉絲團公告</a>喔<br />"},
+// 		]
+// 	},];
 
 
 
@@ -272,31 +272,31 @@ var g78_faq_list =[
 			}
 
 		}
-
-		if (game_id==="g78naxx2hmt") //h55naxx2tw
-		{
-
-			var mydata = g78_faq_list.filter(function(item){
-				if (item.type===sel){ return item};
-			})
-			if (mydata.length>0)
-			{
-				for (var i = 0; i < mydata[0].qlist.length; i++) {
-					hint_text += "<b>" + mydata[0].qlist[i].q + "</b><br />";
-					hint_text +=  mydata[0].qlist[i].a + "<br />";
-				}
-			}
-
-			if (hint_text!=="")
-			{
-				$("#div_hint").html( hint_text);
-				$("#div_hint").show();
-			}
-			else {
-				$("#div_hint").hide();
-			}
-
-		}
+		//
+		// if (game_id==="g78naxx2hmt") //h55naxx2tw
+		// {
+		//
+		// 	var mydata = g78_faq_list.filter(function(item){
+		// 		if (item.type===sel){ return item};
+		// 	})
+		// 	if (mydata.length>0)
+		// 	{
+		// 		for (var i = 0; i < mydata[0].qlist.length; i++) {
+		// 			hint_text += "<b>" + mydata[0].qlist[i].q + "</b><br />";
+		// 			hint_text +=  mydata[0].qlist[i].a + "<br />";
+		// 		}
+		// 	}
+		//
+		// 	if (hint_text!=="")
+		// 	{
+		// 		$("#div_hint").html( hint_text);
+		// 		$("#div_hint").show();
+		// 	}
+		// 	else {
+		// 		$("#div_hint").hide();
+		// 	}
+		//
+		// }
 
 
 
