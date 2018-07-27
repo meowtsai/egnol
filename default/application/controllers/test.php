@@ -13,7 +13,7 @@ class Test extends MY_Controller {
 function check()
 {
 	//echo str_replace("world","Shanghai","Hello world!");
-
+8dkibnj
 	 $a = array('1','l','0','o');
 	 $b = array('8','k','9','w');
 echo str_replace($a, $b, $check_id);

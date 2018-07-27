@@ -239,6 +239,11 @@ class Service_quick extends MY_Controller {
         $query = $this->db->query("SELECT count(*) > (3-1) as chk FROM questions WHERE uid={$this->g_user->uid} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");
 		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問，若有未說明問題，請以原提問進行補述!")));
         */
+		$post_server_id =$this->input->post("server");
+		$post_character_name =htmlspecialchars($this->input->post("character_name"));
+		$post_content =nl2br(htmlspecialchars($this->input->post("content")));
+		$query = $this->db->query("SELECT count(*) as chk FROM questions WHERE server_id='{$post_server_id}' and character_name='{$post_character_name}' and content='{$post_content}' and create_time > Date_Sub(CURDATE(), INTERVAL 3 HOUR)");
+		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問!")));
 
 	 	$if_a = array('1','l','0','o');
 		$then_b = array('8','k','f','w');
@@ -257,10 +262,10 @@ class Service_quick extends MY_Controller {
 			"uid" => 0,
 			"partner_uid" => $_SESSION['partner_uid'],
 			'type' => $this->input->post("question_type"),
-			"server_id" => $this->input->post("server"),
-			'character_name' => htmlspecialchars($this->input->post("character_name")),
+			"server_id" => $post_server_id,
+			'character_name' => $post_character_name,
 			//"type" => '9',
-			'content' => nl2br(htmlspecialchars($this->input->post("content"))),
+			'content' => $post_content,
 			'is_in_game' => (($_SESSION['vendor_game_id']) ? 1 : 0),
 			'phone' => $this->input->post("mobile"),
 			'email' => $this->input->post("email"),
