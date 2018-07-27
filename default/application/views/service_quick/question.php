@@ -229,18 +229,17 @@ var faq_list =[
 }
 ];
 
-
-// var g78_faq_list =[
-// 	{	"type":"3",
-// 		"qlist":[
-// 			{"q":"※九命貓不見了?","a":"請看<a href='https://www.facebook.com/OnmyojiarenaTW/posts/484988391947545'>粉絲團公告</a>喔<br />"},
-// 		]
-// 	},
-// 	{	"type":"4",
-// 		"qlist":[
-// 			{"q":"※九命貓不見了?","a":"請看<a href='https://www.facebook.com/OnmyojiarenaTW/posts/484988391947545'>粉絲團公告</a>喔<br />"},
-// 		]
-// 	},];
+var g78_faq_list =[
+	{	"type":"3",
+		"qlist":[
+			{"q":"※逢魔之戰兵線、野怪、大蛇全部隱形?","a":"請<b>退出並重啟遊戲</b>下載更新包<br />更新版本之後就可以正常使用喔!<br />"},
+		]
+	},
+	{	"type":"4",
+		"qlist":[
+			{"q":"※逢魔之戰兵線、野怪、大蛇全部隱形?","a":"請<b>退出並重啟遊戲</b>下載更新包<br />更新版本之後就可以正常使用喔!<br />"},
+		]
+	},];
 
 
 
@@ -272,31 +271,31 @@ var faq_list =[
 			}
 
 		}
-		//
-		// if (game_id==="g78naxx2hmt") //h55naxx2tw
-		// {
-		//
-		// 	var mydata = g78_faq_list.filter(function(item){
-		// 		if (item.type===sel){ return item};
-		// 	})
-		// 	if (mydata.length>0)
-		// 	{
-		// 		for (var i = 0; i < mydata[0].qlist.length; i++) {
-		// 			hint_text += "<b>" + mydata[0].qlist[i].q + "</b><br />";
-		// 			hint_text +=  mydata[0].qlist[i].a + "<br />";
-		// 		}
-		// 	}
-		//
-		// 	if (hint_text!=="")
-		// 	{
-		// 		$("#div_hint").html( hint_text);
-		// 		$("#div_hint").show();
-		// 	}
-		// 	else {
-		// 		$("#div_hint").hide();
-		// 	}
-		//
-		// }
+
+		if (game_id==="g78naxx2hmt") //h55naxx2tw
+		{
+
+			var mydata = g78_faq_list.filter(function(item){
+				if (item.type===sel){ return item};
+			})
+			if (mydata.length>0)
+			{
+				for (var i = 0; i < mydata[0].qlist.length; i++) {
+					hint_text += "<b>" + mydata[0].qlist[i].q + "</b><br />";
+					hint_text +=  mydata[0].qlist[i].a + "<br />";
+				}
+			}
+
+			if (hint_text!=="")
+			{
+				$("#div_hint").html( hint_text);
+				$("#div_hint").show();
+			}
+			else {
+				$("#div_hint").hide();
+			}
+
+		}
 
 
 
