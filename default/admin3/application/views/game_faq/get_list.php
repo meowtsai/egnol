@@ -76,14 +76,20 @@ $game_dict = array();
 				     <?=$row->title?>
 		    </td>
         <td>
-					<? foreach(explode(',',$row->games) as $game_id):?>
-					<span class="badge badge-pill badge-primary"><?=$game_dict[$game_id]; ?></span>
+					<?foreach(explode(',',$row->games) as $game_id):?>
+					<span class="badge badge-pill badge-primary"><?=($game_id ? $game_dict[$game_id]:""); ?></span>
 					<?endforeach;?>
 					</td>
         <td>
-          <? foreach(explode(',',$row->type_ids) as $type_id):?>
+          <?
+					if ($row->type_ids):
+					foreach(explode(',',$row->type_ids) as $type_id):?>
+
           <span class="badge badge-pill badge-primary"><?=mb_substr($question_type[$type_id], 0, 1, 'utf-8') ?></span>
-          <?endforeach;?>
+
+					<?endforeach;
+					endif;
+					?>
         </td>
 		    <td style="font-size:13px; color:#666">
 			    <?=date("Y/m/d H:i", strtotime($row->start_time))?>

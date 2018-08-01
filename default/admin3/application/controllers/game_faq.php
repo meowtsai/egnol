@@ -141,6 +141,8 @@ class Game_faq extends MY_Controller {
 		$this->load->helper('form');
 		$this->load->library(array('form_validation'));
 		$this->form_validation->set_rules('faq_title', '標題', 'required|min_length[2]|max_length[75]');
+		$this->form_validation->set_rules('q_type', '問題類型', 'required');
+		$this->form_validation->set_rules('target', '發布遊戲', 'required');
 
 		if ($this->form_validation->run() == FALSE)
 		{

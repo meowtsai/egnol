@@ -15,7 +15,7 @@
 	<label>標題</label>
  	<input type="text" name="faq_title" class="required input-xxlarge" value="<?=$faq ? $faq->title : ''?>" size="80" maxlength="80">
 
-	<label>問題分類</label>
+	<label>問題類型</label>
   	<? foreach($question_type as $key => $type):?>
 		<label class="checkbox inline">
       <input type="checkbox" name="q_type[]" value="<?=$key?>"
