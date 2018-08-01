@@ -3,8 +3,10 @@
 //$array_games["g78naxx2hmt"];
 
 $enable = $this->config->item("enable");
-$enable[99] = array("name"=>"置頂", "color"=>"#00a");
-$enable[0] = array("name"=>"關閉", "color"=>"#a99");
+$enable[2] = array("name"=>"置頂", "color"=>"#00a");
+$enable[3] = array("name"=>"首篇", "color"=>"#a00");
+$enable[8] = array("name"=>"關閉", "color"=>"#a99");
+$enable[9] = array("name"=>"預約中", "color"=>"#977");
 
 $game_dict = array();
 ?>
