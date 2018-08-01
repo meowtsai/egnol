@@ -92,7 +92,7 @@
 						<td colspan="2">
 
 
-							<div id="div_hint" style="padding: 10px;margin-left: auto;display: none;border:1px solid silver;border-radius: 0.2rem;width:350px;color: #757c81;font-size: 16px;line-height:150%;" >
+							<div id="div_hint" style="white-space: pre-wrap;padding: 10px;margin-left: auto;display: none;border:1px solid silver;border-radius: 0.2rem;width:350px;color: #757c81;font-size: 16px;line-height:150%;" >
 							</div>
 						</td>
 					</tr>
@@ -178,7 +178,7 @@ success: function (data) {
 			if (mydata.length>0)
 			{
 				for (var i = 0; i < mydata.length; i++) {
-					
+
 					hint_text += "<b>" + mydata[i].title + (mydata[i].priority==0 ? "<font color='red'>(內網)</font>" : "") + " </b><br />";
 					hint_text +=  mydata[i].content + "<br />";
 				}
