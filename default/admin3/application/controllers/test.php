@@ -16,7 +16,21 @@ class Test extends MY_Controller {
 		echo print_r($q);
 
 	}
+function test_explode()
+{
+	$array_post_types  = explode(',' , "b,9,a");
 
+	//更新問題類型 faq_types
+	$updateSql="INSERT INTO faq_types (faq_id,type_id) VALUES";
+	for ($i=0; $i <count($array_post_types) ; $i++) {
+		if ($i>0) $updateSql .= ",";
+		$updateSql .= "(123 ,'{$array_post_types[$i]}')";
+	}
+
+	$updateSql .= " ON DUPLICATE KEY UPDATE type_id=type_id";
+
+	echo $updateSql;
+}
 
 	function wer()
 	{
