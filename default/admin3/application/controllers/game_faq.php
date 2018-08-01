@@ -69,7 +69,7 @@ class Game_faq extends MY_Controller {
 		//add keyword search
 		//echo '[keyword]'.$keyword;
 		$this->g_layout
-			->add_breadcrumb("最新消息")
+			->add_breadcrumb("客服快問快答")
 			->add_js_include("bulletin/list")
 			->set("question_type", $question_type)
 			->set("keyword", $keyword)
