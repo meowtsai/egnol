@@ -10,7 +10,7 @@ $game_dict = array();
 ?>
 
 <div id="func_bar">
-	<a href="<?=site_url("game_faq/add?game_id={$this->game_id}&type={$bulletin_type}")?>" class="btn btn-primary">+ 新增</a>
+	<a href="<?=site_url("game_faq/add?game_id={$this->game_id}")?>" class="btn btn-primary">+ 新增</a>
 </div>
 <form method="post" action="<?=site_url("game_faq/get_list?game_id={$this->game_id}")?>" class="form-inline">
 	<div class="form-group">
