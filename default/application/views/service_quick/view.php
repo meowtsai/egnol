@@ -171,7 +171,7 @@
 						<textarea name="content" rows="6" style="width:100%" class="required"></textarea>
 
 					</div>
-          <? if (!$is_ingame):?>
+          <? //if (!$is_ingame):?>
           <div>
             <img src="<?=$longe_url?>p/image/server/server-pic-btn1.png" class="pic_btn" align="middle"> <input type="file" name="reply_file01" class="pic_input" />
           </div>
@@ -181,7 +181,7 @@
           <div>
             <img src="<?=$longe_url?>p/image/server/server-pic-btn3.png" class="pic_btn" align="middle"> <input type="file" name="reply_file03" class="pic_input" />
           </div>
-          <? endif;?>
+          <? //endif;?>
 
 					<div style="text-align:center; margin-top:20px;">
 						<a href="javascript:;" onclick="$('form').submit()"><span style="background-position:-480px 0; height:50px; width:227px; display:inline-block;" class="items">填好了，送出!</span></a>
