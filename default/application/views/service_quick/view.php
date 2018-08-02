@@ -172,6 +172,10 @@
 
 					</div>
           <? //if (!$is_ingame):?>
+          <div style="white-space:pre-wrap;">
+            <div class="notes" style="text-align:center;padding:5px;">提醒您：若無法選取檔案回報，請直接利用官網線上提問，謝謝。</div></td>
+          </div>
+
           <div>
             <img src="<?=$longe_url?>p/image/server/server-pic-btn1.png" class="pic_btn" align="middle"> <input type="file" name="reply_file01" class="pic_input" />
           </div>
