@@ -1782,3 +1782,138 @@ delimiter ;
 
 call batch_upd_q_reply_info(17000,17310)
 SELECT is_official, create_time into _is_official, _last_replied_time from question_replies where question_id=46265 order by id desc limit 1;
+
+
+DROP TABLE IF EXISTS `faq`;
+CREATE TABLE `faq` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(150) NOT NULL,
+  `content` text,
+  `priority` tinyint(2) NOT NULL DEFAULT '0',
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` timestamp NULL DEFAULT NULL,
+  `start_time` timestamp NULL DEFAULT NULL,
+  `end_time` timestamp NULL DEFAULT NULL,
+  `is_active` tinyint(1) DEFAULT 0,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+ALTER TABLE faq MODIFY COLUMN create_time timestamp NULL DEFAULT CURRENT_TIMESTAMP
+
+INSERT INTO `faq`(title,content,priority,start_time,end_time,is_active)
+VALUES('※帳號遺失/換了手機/忘了綁定？','※帳號遺失/換了手機/忘了綁定？
+若您是要反映『帳號遺失』問題，
+還請您提供下列資訊：
+☑伺服器(亞洲服/歐美服)：
+☑帳號創建時間(年/月/日)：
+☑帳號等級：
+☑帳號暱稱：
+☑帳號最後登入裝置版本型號：
+☑最後登入時間：','2',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 10 YEAR))
+
+
+INSERT INTO `faq`(title,content,priority,start_time,end_time,is_active)
+VALUES('※帳號遺失/換了手機/忘了綁定？','若您是要反映『帳號遺失』問題， <br />還請您提供下列資訊： <br /> ☑伺服器(亞洲服/歐美服)： <br /> ☑帳號創建時間(年/月/日)： <br /> ☑帳號等級： <br /> ☑帳號暱稱： <br /> ☑帳號最後登入裝置版本型號： <br /> ☑最後登入時間：<br />','5',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 10 YEAR),1)
+
+
+
+INSERT INTO `faq`(title,content,priority,start_time,end_time,is_active)
+VALUES('※逢魔之戰看不到兵線、野怪、大蛇全部隱形?<br />','請<b>退出並重啟遊戲</b>下載更新包<br />更新版本之後就可以正常使用喔!<br />','5',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 1 DAY),1)
+
+
+
+{"q":"※逢魔之戰看不到兵線、野怪、大蛇全部隱形?","a":"請<b>退出並重啟遊戲</b>下載更新包<br />更新版本之後就可以正常使用喔!<br />"},
+
+INSERT INTO `faq`(title,content,priority,start_time,end_time,is_active) VALUES('※性別填錯了怎麼辦？','目前並未提供『變更性別』的服務喔。<br />','5',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 10 YEAR),1),
+('※如何綁定帳號？','登入畫面點選右上方帳號進入用戶中心，<br />選擇使用Google Play、Facebook帳號來進行綁定。<br />','5',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 10 YEAR),1),
+('※如何刪除帳號？','目前並未提供『刪除帳號』的服務喔。<br />','5',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 10 YEAR),1),
+('※陸服有辦法移轉到台服嗎?','目前台版是全新的伺服器，所以無法移民喔 <br />提醒您： <br />※雙版本系統(ios與安卓)是無法共用帳號，<br />但是，伺服器是可以一起遊玩喔！ <br />※台灣版本與海外版本是無法共用帳號，<br />但是，伺服器是可以一起遊玩喔！<br />','5',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 10 YEAR),1),
+('※扣款成功卻沒有拿到商品？','請您重新啟動遊戲再次確認。<br />','4',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 10 YEAR),1),
+('※已經重新啟動還是沒拿到商品？','還請您提供下列資訊： <br /> ☑帳號ID：(於用戶中心的數字) <br /> ☑角色ID：(頭像旁的數字ID)	<br /> ☑交易時間： <br /> ☑訂單編號：	<br /> ☑購買品項名稱：	<br /> ☑未收到的商品：	<br /> ☑交易收據截圖：<br />','4',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 10 YEAR),1),
+('※有其他（例如超商或點卡）付款方式嗎？','目前《第五人格》僅提供Google與Apple雙平台<br />儲值等方式，而未來若有增加其他儲值方式<br />都會公告於粉絲團或官網公告。<br />','4',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 10 YEAR),1),
+('※無法儲值？','請詳細說明在哪個步驟出現什麼錯誤訊息，<br />能附上擷圖會加快我們處理問題。<br />','4',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 10 YEAR),1),
+('※遊戲內沒有聲音?','可先使用「修復客戶端」<br />以及確認遊戲內「聲音設置」是否都有開啟。 <br />提醒您，裝置若於靜音下，遊戲中也不會有聲音唷。<br />','3',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 10 YEAR),1),
+('※進入匹配都不是自身選擇的陣營?','若選擇求生者進行遊戲而求生者陣營人數過多時， <br />遊戲將會詢問『<b>是否要轉監管者</b>』，<br />這時候要點『<b>否</b>』才會是求生者陣營唷。<br />','3',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 10 YEAR),1),
+('※為什麼會被禁言？','遊戲內若有不當言論時玩家可透過檢舉機制反饋，<br />當經查核屬實時，系統將會給予禁言的懲處，<br />請查看郵件即可得知被禁言的時間。<br />','3',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 10 YEAR),1),
+('※遊戲操作有異常?','請您協助說明異常時間、 <br />異常地圖與人物以及詳細的操作流程，<br />讓相關人員能更快復現您的情形唷。<br />','1',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 10 YEAR),1),
+('※遊戲很卡很lag？','嘗試互換您的網路連線選擇較佳的環境遊玩，<br />如Wifi / 4G 互相切換。<br />','3',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 10 YEAR),1),
+('※換了網路環境還是很卡？','請您來信提供下列相關連線環境資訊：<br /> ☑(1)帳號ID(於用戶中心的數字) : <br /> ☑(2)電信供應商／連線方式 :<br /> ☑(3)戰鬥異常時間:<br /> ☑(4)ping數值:（可查看遊戲左上）<br /> ☑(5)伺服器:歐美服/亞洲服<br /> ☑(6)異常情形說明:(如爆Ping.LAG)<br /> ☑(7)使用裝置;(如iPhone X)<br />','3',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 10 YEAR),1),
+('※為什麼會一直退出遊戲?','若手機記憶體緩存空間不足則會發生此情形，<br />需將手機關機重開並清除已開啟的APP應用程式，<br />倘若仍有問題，請您協助提供以下資訊：<br />☑裝置型號：<br />☑作業系統版本：<br />☑網路電信業者 / 連線方式(3G/4G/WiFi)：<br />☑遊戲版本：<br />','3',CURDATE(),DATE_ADD(CURDATE(),INTERVAL 10 YEAR),1),
+
+
+INSERT INTO `faq_games`
+select id, 'g78naxx2hmt' from faq where id=17
+
+DROP TABLE IF EXISTS `faq_games`;
+CREATE TABLE `faq_games` (
+  `faq_id` int(11) NOT NULL,
+  `game_id` varchar(20) NOT NULL,
+  CONSTRAINT PK_faqgame PRIMARY KEY (faq_id,game_id),
+  FOREIGN KEY (faq_id)
+      REFERENCES faq(id),
+  FOREIGN KEY (game_id)
+      REFERENCES games(game_id)
+
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO `faq_types`
+select id, '2' from faq where id between 6 and 9
+
+INSERT INTO `faq_types`
+select id, '3' from faq where id =17;
+
+INSERT INTO `faq_types`
+select id, '4' from faq where id =17;
+
+INSERT INTO `faq_types`
+select id, '8' from faq where id >13;
+
+DROP TABLE IF EXISTS `faq_types`;
+CREATE TABLE `faq_types` (
+  `faq_id` int(11) NOT NULL,
+  `type_id` char(1) NOT NULL,
+  CONSTRAINT PK_faqtype PRIMARY KEY (faq_id,type_id),
+  FOREIGN KEY (faq_id) REFERENCES faq(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+CREATE VIEW faq_summary AS
+select faq.id,title,type_id ,game_id
+from faq inner join faq_types on faq.id = faq_types.faq_id
+inner join faq_games on faq_games.faq_id=faq.id
+
+
+DROP VIEW IF EXISTS faq_summary;
+CREATE VIEW faq_summary AS
+  SELECT type_id,
+  cast(concat('[', group_concat(title ORDER BY title SEPARATOR ','), ']') as json) AS title_array
+  FROM (select distinct type_id from faq_types) a inner join faq
+  on A.faq_id = faq.id
+
+select  group_concat(title ORDER BY title SEPARATOR ',') AS title_array from faq
+
+select  type_id, group_concat("q:",title ORDER BY title SEPARATOR ,',') AS title_array
+from
+(select title,type_id from faq inner join faq_types on faq.id = faq_types.faq_id ) a
+group by type_id;
+
+select id, title,type_id from faq inner join faq_types on faq.id = faq_types.faq_id;
+
+
+
+
+  select type_id from (select distinct type_id from faq_types)
+
+  SELECT
+    person_id                                                                                              AS pfs_person_id,
+    max(person_name)                                                                                       AS pfs_person_name,
+    cast(concat('[', group_concat(json_quote(fruit_name) ORDER BY fruit_name SEPARATOR ','), ']') as json) AS pfs_fruit_name_array
+  FROM
+    person
+    INNER JOIN person_fruit
+      ON person.person_id = person_fruit.pf_person
+    INNER JOIN fruit
+      ON person_fruit.pf_fruit = fruit.fruit_id
+  GROUP BY
+    person_id;

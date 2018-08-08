@@ -53,7 +53,8 @@
 			</td>
 			<td>
 				<? if ($row->game_id =='Ma71tw'):?>
-				<a href="<?=$gm_tools_data[$row->game_id]?>" class="btn btn-mini">GM 工具</a>
+
+				<a href="<?=site_url("gmt")?>" class="btn btn-mini">GM 工具</a>
 				<? endif;?>
 			</td>
 

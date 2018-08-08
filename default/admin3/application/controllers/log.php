@@ -691,7 +691,7 @@ class Log extends MY_Controller {
 		header('Access-Control-Allow-Methods: GET, POST');
 		header("Access-Control-Allow-Headers: content-type");
 		header('Content-Type: application/json');
-		$query = $this->DB1->query("SELECT * FROM log_gm_actions ORDER BY create_time DESC");
+		$query = $this->DB1->query("select * from log_gm_actions a left join admin_users b on a.admin_uid = b.uid  order by id desc limit 11");
 		die(json_encode($query->result()));
 
 	}

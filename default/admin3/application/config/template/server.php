@@ -4,6 +4,7 @@ $fn = array(
 			'game/modify' => array('name' => '遊戲設定', 'path' => 'game/modify'),
 			'server' => array('name' => '伺服器管理', 'path' => 'server/get_list'),
 			'news' => array('name' => '最新消息', 'path' => 'bulletin/get_list'),
+			'gmt' => array('name' => 'GMT', 'path' => 'gmt/tool'),
 			'guide' => array('name' => '遊戲資料', 'path' => 'guide/get_list'),
 			'picture' => array('name' => '圖片管理', 'path' => 'picture/get_list'),
 			'picture' => array('name' => '圖片管理', 'path' => 'picture/get_list'),
@@ -17,18 +18,18 @@ $fn = array(
 			'character/xf_ad' => array('name' => '創角統計(原廠提供)', 'path' => 'character/xf_ad'),
 		);
 
-$config["servers"] = 
+$config["servers"] =
 	array(
 		'long_e' => array(
 			'menu' => array()
-		),	
+		),
 		'default' => array(
                         'name' => 'default',
-			'menu' => array($fn['game/modify'], $fn['server'], $fn['news'], $fn['guide'], $fn['picture'], $fn['character'], $fn['log/game_login'], $fn['log/online_user'], $fn['trade/transfer_statistics'], $fn['game/statistics']),
+			'menu' => array($fn['game/modify'], $fn['server'], $fn['news'],$fn['gmt'], $fn['guide'], $fn['picture'], $fn['character'], $fn['log/game_login'], $fn['log/online_user'], $fn['trade/transfer_statistics'], $fn['game/statistics']),
 		),
 	);
 
-$config["server_status"] = 
+$config["server_status"] =
 	array(
 		"public" => array("name" => "公開", "color" => "#080"),
 		"maintenance" => array("name" => "維護", "color" => "#921"),
