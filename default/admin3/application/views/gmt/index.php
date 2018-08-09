@@ -27,7 +27,11 @@
 			<tr>
 					<th>類別</th><th>物品</th><th>數量</th>
 			</tr>
-
+			<tr>
+					<td colspan="3">
+						<button type="button" name="btn_clear" class="btn btn-alert" onclick="resetCart()">清空</button>
+					</td>
+			</tr>
 		</table>
 
 	</div>
@@ -118,6 +122,13 @@ function setMultipleAttributes(el, attributes) {
 
 }
 
+function resetCart(){
+	console.log('resetCart!');
+	my_cart = [];
+	$('#tbl_cart tr.item_row').remove();
+	$("#tbl_cart").hide();
+}
+
 function getToolSet(act_code){
   var toolSet = [];
   switch (act_code) {
@@ -135,7 +146,8 @@ function getToolSet(act_code){
       toolSet = [{"param":"uid","type":"input"},{"param":"cid","type":"input"}];
       break;
     case 200: //发送系统邮件
-      toolSet = [{"param":"touid","type":"input"},{"param":"title","type":"input"},{"param":"msg","type":"input"},{"param":"expireddate","type":"input"},{"param":"MailAttach","type":"attach"}];
+		case 201: //发送全服系统邮件
+      toolSet = [{"param":"touid","type":"input"},{"param":"title","type":"input"},{"param":"msg","type":"input"},{"param":"expireddate","type":"input"},{"param":"attach","type":"attach"}];
       break;
 
     case 300: //禁止玩家登陸
@@ -238,7 +250,7 @@ $("#tbl_cart").hide();
       "id":"input_msg",
       "placeholder":"郵件內容",
     },
-		"MailAttach":{
+		"attach":{
       "type":"array",
       "id":"input_attach",
       "placeholder":"附件列表",
@@ -269,9 +281,28 @@ $('#action_type').change(function() {
 
 
   for (var i = 0; i < toolSet.length; i++) {
-		if (toolSet[i]["param"] ==="MailAttach")
+		if (toolSet[i]["param"] ==="attach")
 		{
 			//附件必需要帶出可選的下拉
+
+			// var form_object0 = document.createElement("select");
+			// form_object0.setAttribute("id","item_attach_type");
+			// var option_empty = document.createElement("option");
+			// option_empty.text = "=選擇附件類別=";
+			// option_empty.value = "";
+			// form_object0.appendChild(option_empty);
+			//
+			// var attach_type =  [{'value':'1', 'text':'1-道具'},{'value':'2', 'text':'2-錢幣'},{'value':'3', 'text':'3-配方'}]
+			// $.each(attach_type, function (i, item) {
+			// 		 var option = document.createElement("option");
+			// 		 option.text = item.text;
+			// 		 option.value = item.id;
+			// 		 form_object0.appendChild(option);
+			//  });
+			//  $("#input_area").append("<br />");
+			//  $("#input_area").append(form_object0);
+
+
 			var form_object = document.createElement("select");
 			form_object.setAttribute("id","item_type");
 			var option_empty = document.createElement("option");
@@ -325,7 +356,7 @@ $('#action_type').change(function() {
 					option_empty.text = "=發送數量=";
 					option_empty.value = "";
 					form_object3.appendChild(option_empty);
-					for (var i = 1; i < 6; i++) {
+					for (var i = 1; i < 101; i++) {
 						var option = document.createElement("option");
 						option.text = i;
 						option.value = i;
@@ -347,10 +378,23 @@ $('#action_type').change(function() {
 					form_object4.addEventListener("click", function(){
 						//{"type":1,"id":1,"count":1}
 						var item_info = {};
+						var attach_type=1;
 						var itemtype = parseInt($("#item_type").val());
+						switch (itemtype) {
+							case 2:
+								attach_type=2;
+								break;
+							case 112:
+								attach_type=3;
+								break;
+							default:
+								attach_type=1;
+								break;
+
+						}
 						var itemid = parseInt($("#item_id").val());
 						var itemcount = parseInt($("#item_count").val());
-						item_info = {"type":itemtype,"id":itemid,"count":itemcount};
+						item_info = {"type":attach_type,"id":itemid,"count":itemcount};
 						my_cart.push(item_info);
 						//console.log(my_cart);
 
@@ -358,7 +402,8 @@ $('#action_type').change(function() {
 						var id_text  = $('#item_id :selected').text();
 
 
-						$("#tbl_cart").append('<tr><td>'+ type_text +'</td><td>'+ id_text +'</td><td>'+ itemcount +'</td></tr>');
+						$("#tbl_cart tr:last").before('<tr class="item_row"><td>'+ type_text +'</td><td>'+ id_text +'</td><td>'+ itemcount +'</td></tr>');
+
 						$("#tbl_cart").show();
 
 					});
@@ -410,8 +455,8 @@ $( "#form1" ).submit(function( event ) {
       case "expireddate":
           paramValue = $("#" + input_list[param].id ).val();
         break;
-			case "MailAttach":
-				console.log("MailAttach",my_cart);
+			case "attach":
+				console.log("attach",my_cart);
 				paramValue = my_cart;
 				break;
 

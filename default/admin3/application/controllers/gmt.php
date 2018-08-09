@@ -20,8 +20,8 @@ class Gmt extends MY_Controller {
       "E_GM_ACTION_ADD_ITEM" => array("code"=> 150, "title" =>"增加普通物品"),
       "E_GM_ACTION_DEC_ITEM" => array("code"=> 151, "title" =>"扣除普通物品"),
 
-      //"E_GM_ACTION_SEND_MAIL" => array("code"=> 200, "title" =>"發送系統郵件"),
-      //"E_GM_ACTION_SEND_ALL_MAIL" => array("code"=> 201, "title" =>"發送全服系統郵件"),
+      "E_GM_ACTION_SEND_MAIL" => array("code"=> 200, "title" =>"發送系統郵件"),
+      "E_GM_ACTION_SEND_ALL_MAIL" => array("code"=> 201, "title" =>"發送全服系統郵件"),
 
       "E_GM_ACTION_ACCOUNT_LOCK" => array("code"=> 300, "title" =>"禁止角色登錄"),
       "E_GM_ACTION_ACCOUNT_UNLOCK" => array("code"=> 301, "title" =>"解除角色禁止登錄"),
