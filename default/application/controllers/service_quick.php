@@ -47,6 +47,8 @@ class Service_quick extends MY_Controller {
 				$evt_code	= $this->input->get("evt_code");
 				$_SESSION['evt_code']	= $evt_code;
 
+				$not_read_cnt = 0;
+
 				if ($diffgame)
 				{
 					unset($_SESSION['vendor_game_id']);
@@ -121,6 +123,14 @@ class Service_quick extends MY_Controller {
 	            $_SESSION['server_name']	= $server_name;
 	            $_SESSION['character_name']	= $character_name;
 							$_SESSION['q_note']	=  "等級={$level}, 系統={$usr_device}, os={$os_ver}, app_ver={$app_ver},time_zone={$time_zone},network={$network}";
+
+
+							$not_read_cnt = $this->db->select("q.id")
+										->where("q.partner_uid", $_SESSION['partner_uid'])
+										->where("q.status", "2")
+										->where("q.is_read", "0")
+										->from("questions q")->count_all_results();
+
 						}
 
         }
@@ -134,6 +144,8 @@ class Service_quick extends MY_Controller {
         if (!empty($server_name) && !empty($character_name)) {
             $server_info = $this->db->from("servers")->where("game_id", $game_info->game_id)->where("address", $server_name)->get()->row();
             $character_info = $this->db->from("characters")->where("server_id", $server_info->server_id)->where("in_game_id", $in_game_id)->get()->row();
+
+						//<? if ($row->status=='2' && $row->is_read=='0') echo '<span class="field" style="color:red">(未讀)</span>'
 
             if (isset($server_info->server_id)) {
 							$_SESSION['server_id'] = $server_info->server_id;

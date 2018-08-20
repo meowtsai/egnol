@@ -26,8 +26,13 @@
 		<div class="login-button">
 
 			<p>
+				<div class="item">
 				<img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-btn.png" class="button_submit" onclick="javascript:location.href='<?=$longe_url?>service_quick/question?site=<?=$site?>'" />&nbsp;
+				<? if ($not_read_cnt >0):?>
+				<span class="notify-badge"><?=$not_read_cnt?></span>
+				<? endif;?>
 				<img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-btn2.png" class="button_submit" onclick="javascript:location.href='<?=$longe_url?>service_quick/listing?site=<?=$site?>'" />
+				</div>
 			</p>
 
 		</div>
