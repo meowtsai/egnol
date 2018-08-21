@@ -882,6 +882,15 @@ class Service extends MY_Controller {
 
 		die(json_success());
 	}
+	function delete_reply_json($id)
+	{
+		$this->DB1
+			->where("id", $id)
+			->delete("question_replies");
+
+		if ($this->DB1->affected_rows() > 0) echo json_success();
+		else echo json_failure("資料庫刪除失敗或沒有權限".$this->DB1->last_query());
+	}
 
 	function update_note_json()
 	{
