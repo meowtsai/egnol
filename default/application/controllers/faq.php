@@ -9,7 +9,7 @@ class Faq extends MY_Controller {
 
 	function index()
 	{
-		die("維護中");
+		//die("維護中");
 		$site = $this->_get_site();
 		$bodyonly = true; //$this->input->get_post("bodyonly");
 		$hidetitle = true; //$this->input->get_post("hidetitle");
