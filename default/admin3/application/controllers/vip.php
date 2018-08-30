@@ -582,6 +582,7 @@ function user_dashboard($game_id,$role_id)
 		->add_breadcrumb("用戶資料檢視")
 		->add_js_include("vip/dashboard")
 		->add_js_include("jquery-ui-timepicker-addon")
+		->add_js_include("fontawesome/js/fontawesome-all")
 		->set("vip", $vip)
 		->set("admins", $admins)
 		->render();
@@ -637,6 +638,7 @@ function add_vip_request()
 	);
 
 	//die(json_success($data));
+	//game_id=h35naxx1hmt&role_id=390709&service_type=0&request_code=0&note=邀請加入
 	if (empty($role_id) || empty($game_id) || (empty($service_type) && empty($request_code))  )
 	{
 		die(json_failure("資料不完整".$data));
@@ -667,6 +669,9 @@ function vip_request_list($game_id,$role_id,$type,$page_num)
 			break;
 		case '2':
 			$service_request = $this->config->item('h35vip_service_feedback');
+			break;
+		case '3':
+			$service_request = array("3" => "邀請加入",);
 			break;
 		default:
 		$service_request = $this->config->item('h35vip_service_request');

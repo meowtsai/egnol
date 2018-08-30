@@ -1115,6 +1115,20 @@ CREATE TABLE `vip_events` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='VIP活動';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
+
+CREATE TABLE `vip_requests` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `game_id` varchar(20) DEFAULT NULL,
+  `role_id` int(11) NOT NULL,
+  `service_type` char(1) NOT NULL COMMENT '3 邀請加入line 1 服務 2 回報建議 ',
+  `request_code` char(1) NOT NULL,
+  `note` varchar(250) DEFAULT NULL,
+  `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `admin_uid` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1024 DEFAULT CHARSET=utf8 COMMENT='VIP服務紀錄'
+
+
 --
 -- Table structure for table `servers`
 --

@@ -1014,7 +1014,7 @@ class User_statistics extends MY_Controller {
 			//case 'h35naxx1hmt':
 			//case 'L8na':
 			$sum_condition = ($game_id=='h35naxx1hmt'?50000:1);
-			$report_result = $this->DB2->query("select uid,char_name 'character_name',
+			$report_result = $this->DB2->query("SELECT uid,char_name 'character_name',
 				char_in_game_id 'character_in_game_id',
 				server_name,
 				deposit_total,
@@ -1031,8 +1031,10 @@ class User_statistics extends MY_Controller {
 				DATE_FORMAT(inactive_confirm_date, '%Y-%m-%d') 'inactive_confirm_date',
 				CASE
 					WHEN vip_ranking_updated is NULL THEN '100'
-					ELSE TIMESTAMPDIFF(DAY, vip_ranking_updated, NOW())  END as 'days_vip_updated'
-				from whale_users where site = '{$game_id}' and deposit_total > {$sum_condition} order by {$orderby} ")->result();
+					ELSE TIMESTAMPDIFF(DAY, vip_ranking_updated, NOW())  END as 'days_vip_updated',
+				(select count(id) from vip_requests where game_id=w.site
+				and role_id=w.char_in_game_id and service_type=3 and request_code=3) as inv_count
+				from whale_users w where site = '{$game_id}' and deposit_total > {$sum_condition} order by {$orderby} ")->result();
 
 			switch ($this->input->get("action"))
 			{

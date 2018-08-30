@@ -41,6 +41,15 @@ if ($vip):?>
       </td>
     </tr>
     <tr>
+      <th>邀請紀錄</th>
+      <td colspan="3">
+        <span id="invi_count"></span>
+        <a href="#" onclick="invitation('add')"><i class="fas fa-plus-circle" style="size:16px;color:green"></i></a>
+
+      </td>
+
+    </tr>
+    <tr>
       <th>手機</th>
       <td><?=$vip->mobile?></td>
       <th>VIP 分層</th>
@@ -67,6 +76,26 @@ if ($vip):?>
   </table>
 
   <a href="#" id="cmd_edit" onclick="editMode()"></a>
+</fieldset>
+
+<fieldset>
+  <legend>邀請紀錄</legend>
+  <table class="table table-bordered" id="invitation-log">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">時間</th>
+        <th scope="col">類別</th>
+        <th scope="col">專員</th>
+      </tr>
+    </thead>
+    <tbody>
+
+
+
+
+    </tbody>
+  </table>
 </fieldset>
 
 <fieldset>

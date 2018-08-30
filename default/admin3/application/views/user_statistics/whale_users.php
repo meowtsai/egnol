@@ -81,8 +81,10 @@
         <th style="width:70px" >未儲值/日</th>
         <th style="width:80px" >3日內新人</th>
 				<th style="width:100px" >升階</th>
-				<th style="width:80px" >加入Line</th>
-				<th style="width:100px" >加入Line日期</th>
+				<th style="width:50px" ><i class="fab fa-line" style="color:#00c300"></i>邀請</th>
+				<th style="width:50px" ><i class="fab fa-line" style="color:#00c300"></i>加入</th>
+				<th style="width:80px" ><i class="fab fa-line" style="color:#00c300"></i>加入日期</th>
+
 				<th style="width:100px" >最後登入日期</th>
 				<th style="width:100px" >確認流失</th>
 				<th style="width:50px" ></th>
@@ -130,6 +132,10 @@
 				<td>
 						<?=$row->vip_ranking_updated?>
 				</td>
+
+				<td style="text-align:right">
+					<?=$row->inv_count?>
+        </td>
 				<td style="text-align:right">
 					<? if ($row->is_added=='1'):?>
 					V

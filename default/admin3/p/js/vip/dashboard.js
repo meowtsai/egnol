@@ -67,6 +67,7 @@ $(function() {
   ////http://test-payment.longeplay.com.tw/default/admin3/vip/vip_request_list/h35naxx1hmt/390709/1/2
   get_vip_requests_log('1',1);
   get_vip_requests_log('2',1);
+  get_invitation();
   $("#line_date").datepicker({
 		changeMonth: true,
     changeYear: true
@@ -125,7 +126,59 @@ function update_vip_info()
     console.log("complete")
   });;
 }
+function invitation(operation){
+  let url = "../../../vip/add_vip_request";
+  $.ajax({
+    type: "POST",
+    url: url,
+    data: "game_id=" + game_id+"&role_id=" + role_id + "&service_type=3&request_code=3"
+  }).done(function(result) {
+    let resultObj = JSON.parse(result);
+    if (resultObj.status == 'success') {
+        get_invitation();
 
+
+    }
+    else {
+      alert(resultObj.message)
+    }
+
+  })
+  .fail(function( jqXHR, textStatus ) {
+    console.log( "Request failed: " + textStatus );
+  })
+  .always(function() {
+    console.log("complete")
+  });
+}
+
+function get_invitation(){
+  let url = "../../../vip/vip_request_list/" + game_id + "/" + role_id + "/3/1";
+  console.log(url);
+  $.ajax({
+    type: "GET",
+    url: url,
+    data: "request_code=3",
+  }).done(function(result) {
+    console.log(result);
+    var resultObj =  JSON.parse(result);
+    page_count = resultObj.page_count;
+    var logObj = resultObj.logs;
+
+    $("#invitation-log").find('tbody').children().remove();
+
+    for (i = 0; i < logObj.length; i++) {
+        $("#invitation-log").find('tbody')
+          .append($('<tr><th>'+ logObj[i].id +'</th><td>'+ logObj[i].create_time +'</td><td>'+ logObj[i].request_text +'</td><td>'+ logObj[i].admin_name +'</td><td><button class=\'btn btn-danger\' onclick=\'delRecord('+ logObj[i].id +')\'>X</button></td></tr>'));
+    }
+
+    count_invitaion();
+  });
+
+}
+function count_invitaion(){
+  $("#invi_count").text($("#invitation-log").find('tbody tr').length);
+}
 function add_vip_request(service_type) {
 
 
@@ -298,7 +351,13 @@ function delRecord(record_id){
          if (resultObj.status == 'success') {
            //console.log(result);
            //const log = resultObj.message;
-           $("th:contains('" + record_id +"')").parent().remove()
+           let thObj = $("th:contains('" + record_id +"')");
+           let tbl =  thObj.closest('table') ;
+           thObj.parent().remove();
+           if (tbl.attr('id')=="invitation-log")
+           {
+             count_invitaion();
+           }
 
          }
          else {
