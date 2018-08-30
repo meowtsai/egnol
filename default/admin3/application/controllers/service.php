@@ -494,7 +494,8 @@ class Service extends MY_Controller {
 				//->select("(select sum(amount) from user_billing where uid=q.uid and billing_type=2 and result=1) as expense")
 				// ->select("(select case when is_official=1 then CONCAT('官方#' , create_time) when is_official=0 then CONCAT('玩家#' , create_time) 	end as reply_status
 				//   from question_replies where question_id =q.id order by id desc limit 1) as reply_status ",FALSE)
-				->select("(select count(*) from `question_favorites` where question_id=q.id and admin_uid={$_SESSION['admin_uid']}) as is_favorite",FALSE)
+				->select("(select count(*) from `question_favorites` where question_id=q.id and category=1 and admin_uid={$_SESSION['admin_uid']}) as is_favorite",FALSE)
+				->select("(select count(*) from `question_favorites` where question_id=q.id and category=2 and admin_uid={$_SESSION['admin_uid']}) as is_batch",FALSE)
 				->from("questions q")
 				->join("servers gi", "gi.server_id=q.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
@@ -968,7 +969,16 @@ class Service extends MY_Controller {
 	{
 		if ( ! $this->zacl->check_acl("service", "delete")) die(json_failure("沒有權限"));
 
-		$this->DB1->set("update_time", "now()", false)->where("id", $id)->update("questions", array("status"=>"1", 'admin_uid'=>$_SESSION['admin_uid']));
+		$this->DB1->set("update_time", "now()", false)
+		->set("close_admin_uid", null)
+		->set("system_closed_start", null)
+		->set("system_closed","0")
+		->where("id", $id)
+		->update("questions", array("status"=>"1", 'admin_uid'=>$_SESSION['admin_uid']));
+
+
+
+
 		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure();
 	}
 
@@ -1007,20 +1017,21 @@ class Service extends MY_Controller {
 			die(json_failure("無法取消"));
 		}
 	}
-	function add_to_favorites($id)
+	function add_to_favorites($id,$category=1)
 	{
 		if ( ! $this->zacl->check_acl("service", "favorite")) die(json_failure("沒有權限"));
 
-		$this->DB1->insert("question_favorites", array("question_id" => $id, 'admin_uid'=>$_SESSION['admin_uid']));
+		$this->DB1->insert("question_favorites", array("question_id" => $id, 'admin_uid'=>$_SESSION['admin_uid'],"category" => $category));
 		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure();
 	}
 
-	function remove_favorites($id)
+	function remove_favorites($id,$category=1)
 	{
 		if ( ! $this->zacl->check_acl("service", "favorite")) die(json_failure("沒有權限"));
 
 		$this->DB1
 			->where("question_id", $id)
+			->where("category", $category)
 			->where("admin_uid", $_SESSION['admin_uid'])
 			->delete("question_favorites");
 		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure();
@@ -1193,6 +1204,22 @@ class Service extends MY_Controller {
 
 
 	}
+
+
+
+	function batch_handler()
+	{
+		$this->_init_service_layout();
+
+		header("Cache-Control: private");
+
+
+		$this->g_layout
+			->add_breadcrumb("批次處理區")
+			->add_js_include("fontawesome-all")
+			->render();
+	}
+
 
 
 
