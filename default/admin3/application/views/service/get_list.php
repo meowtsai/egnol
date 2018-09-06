@@ -12,6 +12,8 @@
                 $admin_repliers[$row->question_id] = $row->name.'('.$row->cnt.')<br>';
         }
     }
+
+
 ?>
 <div id="func_bar">
 </div>
@@ -170,15 +172,30 @@
             <? else:?>
 
             <? foreach($query->result() as $row):?>
+
+						<?
+						$is_locked=false;
+						//批次鎖定中且未完成
+						if ($row->is_batch > 0 && ($row->status != '4' && $row->status != '7'))
+						{
+							$is_locked=true;
+						}
+						if (!$is_locked):?>
+
             <tr>
                 <td>
 
 									<?
 									if ($add_favor_ok):
 									if ($row->is_favorite =='0'):?>
-									<a href="javascript:;" class="json_post" url="<?=site_url("service/add_to_favorites/{$row->id}")?>"><i class="far fa-star text-muted" ></i></a>
+									<a href="javascript:;" class="json_post" url="<?=site_url("service/add_to_favorites/{$row->id}/1")?>"><i class="far fa-star text-muted" title="加入珍藏"></i></a>
 									<? else:?>
-									<a href="javascript:;" class="json_post" url="<?=site_url("service/remove_favorites/{$row->id}")?>"><i class="fas fa-star text-warning"></i></a>
+									<a href="javascript:;" class="json_post" url="<?=site_url("service/remove_favorites/{$row->id}/1")?>"><i class="fas fa-star text-warning" title="取消珍藏"></i></a>
+									<? endif;
+									if ($row->is_batch =='0' || ($row->status == '4' || $row->status == '7')):?>
+
+									<? else:?>
+									<a href="javascript:;" class="json_post" url="<?=site_url("service/remove_from_batch/{$row->id}")?>"><i class="fas fa-tasks text-warning" title="取消批次處理"></i></a>
 									<? endif;
 									endif;
 									?>
@@ -260,10 +277,36 @@
                             <li><a href="javascript:;" class="json_post" url="<?=site_url("service/show_question/{$row->id}")?>"><i class="icon-repeat"></i> 調回處理中</a></li>
                             <li><a href="javascript:;" class="json_post" url="<?=site_url("service/hide_question/{$row->id}")?>"><i class="icon-remove"></i> 隱藏</a></li>
                             <? endif;?>
+														
+
+														<?
+
+														if ($add_favor_ok && $row->is_batch=='0' && ($row->status != '4' && $row->status != '7')): //是否有特殊權限?>
+														<li class="divider"></li>
+								              <li class="dropdown-submenu">
+								                <a tabindex="-1" href="#">加入批次處理區</a>
+								                <ul class="dropdown-menu">
+																	<?
+																	$task_count = 0;
+																	foreach($tasks as $task_row):
+																		if ($row->game_name==$task_row->game_name):?>
+																			<li><a href="javascript:;" class="json_post" url="<?=site_url("service/add_to_batch/{$task_row->id}/{$row->id}")?>"><i class="fas fa-check-square" style="color:white;"></i> <?=$task_row->title?></a></li>
+																	<?
+																			$task_count++;
+																		endif;
+																	endforeach;
+																	if ($task_count<1):
+																	?>
+																		<li>(沒有相關案件)</li>
+																	<? endif;?>
+								                </ul>
+								              </li>
+														<? endif;?>
                         </ul>
                     </div>
                 </td>
             </tr>
+						<? endif;?>
             <? endforeach;?>
 
     <? if ($_SERVER['REQUEST_URI'] == '/service/todo' || ($this->input->get("todo"))):?>

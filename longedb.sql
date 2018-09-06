@@ -836,6 +836,9 @@ CREATE TABLE `question_favorites` (
       REFERENCES questions(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+ALTER table question_favorites
+ADD category char(1) NOT NULL DEFAULT 1 COMMENT'1 - 我的珍藏\\2 - 批次回覆';
+
 --
 -- Table structure for table `question_assignees`
 --
@@ -1931,3 +1934,32 @@ select id, title,type_id from faq inner join faq_types on faq.id = faq_types.faq
       ON person_fruit.pf_fruit = fruit.fruit_id
   GROUP BY
     person_id;
+
+
+
+DROP TABLE IF EXISTS `batch_tasks`;
+CREATE TABLE `batch_tasks` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `game_id` varchar(20) NOT NULL,
+  `title` varchar(150) NOT NULL,
+  `admin_uid` int(11) DEFAULT NULL,
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime DEFAULT NULL,
+  `status` char(1) NOT NULL DEFAULT '1' COMMENT '1-處理中 4-回覆並立即結案 7-回覆並預約結案',
+  FOREIGN KEY (game_id) REFERENCES games(game_id),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='批次回覆區';
+
+
+
+DROP TABLE IF EXISTS `batch_questions`;
+CREATE TABLE `batch_questions` (
+  `batch_id` int(11) NOT NULL,
+  `question_id` int(11) NOT NULL,
+  CONSTRAINT PK_qf PRIMARY KEY (question_id,batch_id),
+  FOREIGN KEY (question_id) REFERENCES questions(id),
+  FOREIGN KEY (batch_id) REFERENCES batch_tasks(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+INSERT INTO question_replies(content,question_id,uid,is_official,admin_uid) VALUES(OK啦! ,'61555',0,'1',112),(OK啦! ,'61556',0,'1',112),(OK啦! ,'61563',0,'1',112),(OK啦! ,'61564',0,'1',112)

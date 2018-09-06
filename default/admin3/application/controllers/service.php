@@ -494,8 +494,9 @@ class Service extends MY_Controller {
 				//->select("(select sum(amount) from user_billing where uid=q.uid and billing_type=2 and result=1) as expense")
 				// ->select("(select case when is_official=1 then CONCAT('官方#' , create_time) when is_official=0 then CONCAT('玩家#' , create_time) 	end as reply_status
 				//   from question_replies where question_id =q.id order by id desc limit 1) as reply_status ",FALSE)
+
 				->select("(select count(*) from `question_favorites` where question_id=q.id and category=1 and admin_uid={$_SESSION['admin_uid']}) as is_favorite",FALSE)
-				->select("(select count(*) from `question_favorites` where question_id=q.id and category=2 and admin_uid={$_SESSION['admin_uid']}) as is_batch",FALSE)
+				->select("(select count(*) from `batch_questions` where question_id=q.id) as is_batch",FALSE)
 				->from("questions q")
 				->join("servers gi", "gi.server_id=q.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
@@ -525,6 +526,9 @@ class Service extends MY_Controller {
 			if ($this->input->get("favorite")) {
 				$this->DB2->where("q.id in(select question_id from question_favorites where admin_uid={$_SESSION['admin_uid']})", null, false);
 			}
+
+
+
 
 
 
@@ -652,8 +656,15 @@ class Service extends MY_Controller {
         if (!in_array('all_game', $this->zacl->allow_games)) $this->DB2->where_in("game_id", $this->zacl->allow_games);
 		$games = $this->DB2->from("games")->get();
 		$cs_admins = $this->DB2->from("admin_users")->where_in("role", array("cs", "cs_master","glory_service"))->get();
+		$tasks = $this->DB2->query("SELECT g.name as game_name,b.game_id,b.title,b.id,b.create_time,b.update_time,b.admin_uid,adm.name as admin_name
+		from batch_tasks b
+		LEFT JOIN games g on g.game_id=b.game_id
+		LEFT JOIN admin_users adm on adm.uid=b.admin_uid
+		where b.admin_uid={$_SESSION['admin_uid']} and b.status=1
+		order by status,id desc")->result();
 
 		$add_favor_ok = $this->zacl->check_acl("service", "favorite") ;
+
 
 		$this->g_layout
 			->add_breadcrumb("查詢")
@@ -663,6 +674,7 @@ class Service extends MY_Controller {
 			->set("cs_admins", $cs_admins)
 			->set("todo", $this->input->get("todo"))
 			->set("add_favor_ok", $add_favor_ok)
+			->set("tasks", $tasks)
 			->add_js_include("service/get_list")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->add_js_include("fontawesome-all")
@@ -673,8 +685,24 @@ class Service extends MY_Controller {
 	{
 		$this->zacl->check("service", "modify");
 
+		//檢查是否有權限可以加入批次
+		$add_favor_ok = $this->zacl->check_acl("service", "favorite") ;
+		//檢查本單是否已經在批次中
+		$q_batch_info = $this->DB2->query("select adm.name as admin_name,b.admin_uid, a.batch_id,a.question_id
+		from batch_questions a left join batch_tasks b on a.batch_id=b.id
+		LEFT JOIN admin_users adm on adm.uid=b.admin_uid
+		where a.question_id={$id} and b.status=1")->result();
+		// if ($q_batch_info)
+		// {
+		//
+		// 	header("location:".site_url("service/todo"));
+		//
+		// }
+
+
 		$question = $this->DB2->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email user_email, u.external_id, u.uid, au.name allocate_user_name, c.in_game_id, c.name as in_game_name, aux.name close_admin_name")
 			->select("(select count(*) from `question_favorites` where question_id={$id} and admin_uid={$_SESSION['admin_uid']}) as is_favorite",FALSE)
+			->select("(select count(*) from `batch_questions` where question_id={$id}) as is_batch",FALSE)
 			->where("q.id", $id)
 			->from("questions q")
 			->join("servers gi", "gi.server_id=q.server_id", "left")
@@ -718,7 +746,14 @@ class Service extends MY_Controller {
         $allocate_groups = array_unique($allocate_groups);
 
 		$allocate_users = $this->DB2->from('admin_users')->where_in('role', $allocate_groups)->order_by("role")->get();
-		$add_favor_ok = $this->zacl->check_acl("service", "favorite") ;
+
+		$tasks = $this->DB2->query("SELECT g.name as game_name,b.game_id,b.title,b.id,b.create_time,b.update_time,b.admin_uid,adm.name as admin_name
+		from batch_tasks b
+		LEFT JOIN games g on g.game_id=b.game_id
+		LEFT JOIN admin_users adm on adm.uid=b.admin_uid
+		where b.admin_uid={$_SESSION['admin_uid']} and b.status=1
+		order by status,id desc")->result();
+
 		$this->_init_service_layout()
 			->add_breadcrumb("檢視")
 			->add_js_include("service/view")
@@ -727,7 +762,9 @@ class Service extends MY_Controller {
 			->set("replies", $replies)
 			->set("pic_plus", $pic_plus)
 			->set("allocate_users", $allocate_users)
+			->set("tasks", $tasks)
 			->set("add_favor_ok", $add_favor_ok)
+			->set("q_batch_info", $q_batch_info)
 			->set("ip", $ip)
 			->render();
 	}
@@ -1037,9 +1074,46 @@ class Service extends MY_Controller {
 		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure();
 	}
 
+	function add_to_batch($batch_id,$id)
+	{
+		if ( ! $this->zacl->check_acl("service", "favorite")) die(json_failure("沒有權限"));
+
+		$this->DB1->insert("batch_questions", array("question_id" => $id, "batch_id" => $batch_id));
+		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure();
+	}
+	function remove_from_batch($id)
+	{
+		if ( ! $this->zacl->check_acl("service", "favorite")) die(json_failure("沒有權限"));
+
+		$this->DB1
+			->where("question_id", $id)
+			->delete("batch_questions");
+
+		if ($this->DB1->affected_rows() > 0) echo json_success();
+		else echo json_failure("資料庫刪除失敗或沒有權限".$this->DB1->last_query());
+
+
+	}
+
+	function remove_batch_q($batch_id)
+	{
+		if ( ! $this->zacl->check_acl("service", "favorite")) die(json_failure("沒有權限"));
+
+		$this->DB1
+			->where("batch_id", $batch_id)
+			->delete("batch_questions");
+
+		if ($this->DB1->affected_rows() > 0) echo json_success();
+		else echo json_failure("資料庫刪除失敗或沒有權限".$this->DB1->last_query());
+
+	}
+
+
+
 	function complaints()
 	{
 		//select server_id,reporter_char_id,reporter_name,flagged_player_char_id,flagged_player_name,category,reason,create_time from complaints
+		$this->zacl->check("service", "favorite") ;
 		$this->_init_service_layout();
 
 		header("Cache-Control: private");
@@ -1205,22 +1279,162 @@ class Service extends MY_Controller {
 
 	}
 
+function batch_handler($batch_id){
+	$this->zacl->check("service", "favorite") ;
+	$this->_init_service_layout();
+
+	$task = $this->DB2->query("SELECT g.name as game_name,b.game_id,b.title,b.id,b.create_time,b.update_time,b.admin_uid,adm.name as admin_name,b.status,
+		CASE admin_uid WHEN '{$_SESSION['admin_uid']}' THEN '1' ELSE '0' END as is_editable,
+		(select count(*) from batch_questions bq where bq.batch_id=b.id) as count
+	from batch_tasks b
+	LEFT JOIN games g on g.game_id=b.game_id
+	LEFT JOIN admin_users adm on adm.uid=b.admin_uid
+	where b.id={$batch_id}
+	order by status,id desc")->result();
 
 
-	function batch_handler()
+	$q_list = $this->DB2->query("SELECT question_id FROM batch_questions where batch_id={$batch_id}")->result();
+
+
+	header("Cache-Control: private");
+	$this->g_layout
+		->add_breadcrumb("批次處理區")
+		->set("games", $games)
+		->set("task", $task)
+		->set("q_list", $q_list)
+		->add_js_include("fontawesome-all")
+		->render();
+}
+
+	function batch_list()
 	{
+		$this->zacl->check("service", "favorite") ;
 		$this->_init_service_layout();
 
+		$games = $this->DB2->query("select game_id,name from games where is_active=1")->result();
+		$tasks = $this->DB2->query("SELECT g.name as game_name,b.game_id,b.title,b.id,b.create_time,b.update_time,b.admin_uid,adm.name as admin_name,b.status,
+			 CASE admin_uid WHEN '{$_SESSION['admin_uid']}' THEN '1' ELSE '0' END as is_editable,
+			(select count(*) from batch_questions bq where bq.batch_id=b.id) as count
+		from batch_tasks b
+		LEFT JOIN games g on g.game_id=b.game_id
+		LEFT JOIN admin_users adm on adm.uid=b.admin_uid
+		order by status,id desc")->result();
+
 		header("Cache-Control: private");
-
-
 		$this->g_layout
 			->add_breadcrumb("批次處理區")
+			->set("games", $games)
+			->set("tasks", $tasks)
 			->add_js_include("fontawesome-all")
 			->render();
 	}
 
 
+	function batch_add_row()
+	{
+		$id = $this->input->post("id");
+
+// 		ERROR 1146 (42S02): Table 'long_e.batch_tasksl' doesn't exist
+// mysql> desc batch_tasks;
+// +-------------+--------------+------+-----+-------------------+----------------+
+// | Field       | Type         | Null | Key | Default           | Extra          |
+// +-------------+--------------+------+-----+-------------------+----------------+
+// | id          | int(11)      | NO   | PRI | NULL              | auto_increment |
+// | game_id     | varchar(20)  | NO   | MUL | NULL              |                |
+// | title       | varchar(150) | NO   |     | NULL              |                |
+// | admin_uid   | int(11)      | YES  |     | NULL              |                |
+// | create_time | timestamp    | NO   |     | CURRENT_TIMESTAMP |                |
+// | update_time | datetime     | YES  |     | NULL              |                |
+// | status      | char(1)      | NO   |     | 1                 |                |
+// +-------------+--------------+------+-----+-------------------+----------------+
+//
+//
+
+		$data = array(
+			"game_id" => $this->input->post("game_id"),
+			'title' => nl2br(htmlspecialchars($this->input->post("title"))),
+			'admin_uid' => $_SESSION['admin_uid'],
+			"status" => $this->input->post("status"),
+		);
+
+		if ($id) {
+			$this->DB1
+				->where("id", $id)
+				->set("update_time", "now()", false)
+				->update("batch_tasks", $data);
+		}
+		else {
+			$this->DB1
+				->set("create_time", "now()", false)
+				->insert("batch_tasks", $data);
+			$id = $this->DB1->insert_id();
+		}
+
+		die(json_success(array("id"=>$id)));
+	}
+
+	function delete_batch_task($id)
+	{
+		$this->DB1
+			->where("batch_id", $id)
+			->delete("batch_questions");
+
+		$this->DB1
+			->where("id", $id)
+			->delete("batch_tasks");
+
+		if ($this->DB1->affected_rows() > 0) echo json_success();
+		else echo json_failure("資料庫刪除失敗或沒有權限".$this->DB1->last_query());
+	}
+
+
+
+	function batch_reply_json()
+	{
+
+		if ( ! $this->zacl->check_acl("service", "modify")) die(json_failure("沒有權限"));
+
+		$mode = $this->input->post("mode");
+		$batch_id = $this->input->post("batch_id");
+		$new_type = $this->input->post("new_type");
+		$post_content = nl2br($this->input->post("post_content"));
+		//die(json_failure($mode));
+		// TODO:  確認是admin 本人
+		$q_list = $this->DB2->query("SELECT question_id FROM batch_questions where batch_id={$batch_id}")->result();
+
+		$updateSql="INSERT INTO question_replies(content,question_id,uid,is_official,admin_uid) VALUES";
+		$q_ids = array();
+		for ($i=0; $i <count($q_list) ; $i++) {
+			if ($i>0) $updateSql .= ",";
+			$updateSql .= "('{$post_content}' ,'{$q_list[$i]->question_id}',0,'1',{$_SESSION['admin_uid']})";
+			$q_ids[] = $q_list[$i]->question_id;
+		}
+
+	 	$this->DB1->query($updateSql);
+
+		if ($mode=="7")
+		{
+			$this->DB1->set("status", "7")->set("close_admin_uid", $_SESSION['admin_uid'])
+			->set("system_closed_start", "now()", false)
+			->set("admin_uid", $_SESSION['admin_uid'])
+			->set("type", $new_type)
+			->where("(allocate_status='2' or allocate_status='0')", null, false)
+			->where_in('id', $q_ids)
+			->update("questions");
+		}
+		else {
+			$this->DB1->set("update_time", "now()", false)
+			->where_in('id', $q_ids)
+			->update("questions",
+			array("is_read"=>'0', "status"=>'4',"type"=>$new_type, 'admin_uid'=>$_SESSION['admin_uid'],'close_admin_uid'=>$_SESSION['admin_uid'],"system_closed_start"=>null));
+		}
+
+		$this->DB1->set("update_time", "now()", false)
+			->where("id", $batch_id)
+			->update("batch_tasks", array("status" => $mode));
+
+			die(json_success());
+	}
 
 
 

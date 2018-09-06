@@ -7,6 +7,15 @@
 </style>
 
 
+<?if($q_batch_info):?>
+<div class="alert alert-error">
+	<strong>鎖定中</strong> 本提問單目前由<?=$q_batch_info[0]->admin_name?>鎖定中
+</div>
+
+<?endif;?>
+
+<?if((!$q_batch_info) || ($q_batch_info[0]->admin_uid==$_SESSION['admin_uid'])):?>
+
 <legend>
 <?
 
@@ -15,9 +24,47 @@ if ($question->is_favorite =='0'):?>
 <a href="javascript:;" class="json_post" url="<?=site_url("service/add_to_favorites/{$question->id}")?>"><i class="far fa-star text-muted" ></i></a>
 <? else:?>
 <a href="javascript:;" class="json_post" url="<?=site_url("service/remove_favorites/{$question->id}")?>"><i class="fas fa-star text-warning"></i></a>
-<? endif;
-endif;
-?>
+<? endif;?>
+
+
+<?if ($question->status != '4' && $question->status != '7'):?>
+<?if ($question->is_batch =='0'):?>
+  <div class="btn-group">
+      <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
+          <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu pull-right">
+          <?if ($add_favor_ok && $question->is_batch=='0' && ($question->status != '4' && $question->status != '7')): //是否有特殊權限?>
+            <li class="dropdown-submenu">
+              <a tabindex="-1" href="#">加入批次處理區</a>
+              <ul class="dropdown-menu">
+                <?
+                $task_count = 0;
+                foreach($tasks as $task_row):
+                  if ($question->game_name==$task_row->game_name):?>
+                    <li><a href="javascript:;" class="json_post" url="<?=site_url("service/add_to_batch/{$task_row->id}/{$question->id}")?>"><i class="fas fa-check-square" style="color:white;"></i><?=$task_row->id?> - <?=$task_row->title?></a></li>
+                <?
+                    $task_count++;
+                  endif;
+                endforeach;
+                if ($task_count<1):
+                ?>
+                  <li>(沒有相關案件)</li>
+                <? endif;?>
+              </ul>
+            </li>
+          <? endif;?>
+      </ul>
+  </div>
+<? else:?>
+  <a href="javascript:;" class="json_post" url="<?=site_url("service/remove_from_batch/{$question->id}")?>"><i class="fas fa-tasks text-warning" title="取消批次處理"></i></a>
+<? endif;?>
+
+
+<? endif;?>
+
+
+<?endif;?>
 案件編號 #<?=$question->id?>
 </legend>
 
@@ -349,3 +396,4 @@ endif;
 	<? endif;?>
 
 </div>
+<?endif;?>
