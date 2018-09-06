@@ -101,6 +101,13 @@ li.dropdown li a {line-height:25px;}
 					<a href="<?=site_url("service/my_favorite")?>">我的收藏  <span class="badge badge-warning"><?=$favor_count?></span></a>
 				</li>
 				<? endif;?>
+				<? if ($batch_count > 0):?>
+				<li>
+					<a href="<?=site_url("service/batch_list")?>">鎖定提問單:<span class="badge badge-danger"><?=$batch_count?></span> 筆</a>
+				</li>
+				<? endif;?>
+
+
 	    	<? if ($allocate_count > 0):?>
 	    	<li>
 	    		<a style="color:#c00;" href="<?=site_url("service/my")?>">後送案件  <span class="badge badge-success"><?=$allocate_count?></span> </a>

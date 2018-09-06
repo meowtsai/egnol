@@ -45,7 +45,7 @@
 											<th>案件數量</th>
 											<th>處理者</th>
 											<th>建立日期</th>
-											<th>回覆日期</th>
+											<th>更新日期</th>
 									</tr>
 							</thead>
 							<tbody>

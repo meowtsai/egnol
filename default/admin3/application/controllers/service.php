@@ -1299,7 +1299,6 @@ function batch_handler($batch_id){
 	header("Cache-Control: private");
 	$this->g_layout
 		->add_breadcrumb("批次處理區")
-		->set("games", $games)
 		->set("task", $task)
 		->set("q_list", $q_list)
 		->add_js_include("fontawesome-all")

@@ -42,11 +42,17 @@ class MY_Controller extends CI_Controller {
 		if ($this->zacl->check_login()) {
 			$favor_count = $this->DB1->from("question_favorites")->where("admin_uid", $_SESSION['admin_uid'])->count_all_results();
 		}
+
+		$batch_count = 0;
+		if ($this->zacl->check_login()) {
+			$batch_count = $this->DB1->from("batch_questions a")->join("batch_tasks b","a.batch_id=b.id")->where("b.admin_uid", $_SESSION['admin_uid'])->where("b.status", '1')->count_all_results();
+		}
 		return $this->g_layout
 			->add_css_link(array('bootstrap.min', 'jquery.autocomplete', 'jquery-ui-1.8.22.custom'))
 			->add_js_include(array('jquery-1.7.2.min', 'jquery.validate.min', 'jquery.form', 'jquery.blockUI', 'bootstrap.min', 'jquery.placeholder.min', 'jquery.autocomplete.pack', 'jquery-ui-1.8.22.custom.min', 'default'))
 			->set_meta("title", "龍邑 :: 後端管理平台")
 			->set('allocate_count', $allocate_count)
+			->set('batch_count', $batch_count)
 			->set('favor_count', $favor_count);
 	}
 
