@@ -1401,7 +1401,7 @@ function batch_handler($batch_id){
 		$q_list = $this->DB2->query("SELECT question_id FROM batch_questions where batch_id={$batch_id}")->result();
 
 		//項目沒有任何提問單
-		if (count($q_list)<1)
+		if (is_null($q_list[0]->question_id))
 		{
 			die(json_failure("該項目沒有任何提問單"));
 		}
@@ -1417,8 +1417,8 @@ function batch_handler($batch_id){
 			and (allocate_status='1' or status=4 or status=7)")->result();
 
 
-			if (count($check_q_list)>0){
-				//die(json_failure("該項目含有後送中或是已經結案的提問單".$check_q_list[0]));
+			if (!is_null($check_q_list[0]->ids)){
+				//die(json_failure("該項目含有後送中或是已經結案的提問單".));
 				die(json_failure("該項目含有不可結案的提案單:".$check_q_list[0]->ids));
 			}
 		}
@@ -1453,7 +1453,7 @@ function batch_handler($batch_id){
 
 			$this->DB1->set("update_time", "now()", false)
 				->where_in('id', $q_ids)->update("questions",
-					array("is_read"=>'0', "status"=>'2', 'admin_uid'=>$_SESSION['admin_uid']));
+					array("is_read"=>'0', "status"=>'2',"type"=>$new_type,  'admin_uid'=>$_SESSION['admin_uid']));
 
 		}
 
