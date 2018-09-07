@@ -176,7 +176,7 @@
 						<?
 						$is_locked=false;
 						//批次鎖定中且未完成
-						if ($row->is_batch > 0 && ($row->status != '4' && $row->status != '7'))
+						if ($row->is_batch > 0)
 						{
 							$is_locked=true;
 						}
@@ -277,7 +277,7 @@
                             <li><a href="javascript:;" class="json_post" url="<?=site_url("service/show_question/{$row->id}")?>"><i class="icon-repeat"></i> 調回處理中</a></li>
                             <li><a href="javascript:;" class="json_post" url="<?=site_url("service/hide_question/{$row->id}")?>"><i class="icon-remove"></i> 隱藏</a></li>
                             <? endif;?>
-														
+
 
 														<?
 

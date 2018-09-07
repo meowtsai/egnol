@@ -27,14 +27,14 @@ if ($question->is_favorite =='0'):?>
 <? endif;?>
 
 
-<?if ($question->status != '4' && $question->status != '7'):?>
-<?if ($question->is_batch =='0'):?>
+<?if ($question->status<>"4" && $question->status<>"7"):?>
+<?if (!$q_batch_info): //沒有被鎖定?>
   <div class="btn-group">
       <button type="button" class="btn btn-mini dropdown-toggle" data-toggle="dropdown">
           <span class="caret"></span>
       </button>
       <ul class="dropdown-menu pull-right">
-          <?if ($add_favor_ok && $question->is_batch=='0' && ($question->status != '4' && $question->status != '7')): //是否有特殊權限?>
+          <?if ($add_favor_ok): //是否有特殊權限?>
             <li class="dropdown-submenu">
               <a tabindex="-1" href="#">加入批次處理區</a>
               <ul class="dropdown-menu">
@@ -59,8 +59,6 @@ if ($question->is_favorite =='0'):?>
 <? else:?>
   <a href="javascript:;" class="json_post" url="<?=site_url("service/remove_from_batch/{$question->id}")?>"><i class="fas fa-tasks text-warning" title="取消批次處理"></i></a>
 <? endif;?>
-
-
 <? endif;?>
 
 

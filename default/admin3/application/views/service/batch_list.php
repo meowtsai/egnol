@@ -9,18 +9,8 @@
 
 
 <div id="func_bar">
+	<button id="addToTable" class="btn btn-success waves-effect waves-light">新增項目 <i class="fas fa-plus-circle"></i></button>
 </div>
-
-
-<form method="get" action="<?=site_url("service/complaints")?>" class="form-search">
-	<input type="hidden" name="game_id" value="<?=$this->game_id?>">
-
-	<div class="control-group">
-	</div>
-
-
-
-</form>
 
 
 <div class="content">
@@ -32,11 +22,16 @@
 					<div class="row">
 							<div class="col-sm-6">
 									<div class="m-b-30">
-											<button id="addToTable" class="btn btn-success waves-effect waves-light">新增項目 <i class="fas fa-plus-circle"></i></button>
+											<input type="text" id="find_keyword" name="find_keyword" value="" placeholder="搜尋項目名稱...">
 									</div>
 							</div>
 					</div>
-					<table class="table table-striped add-edit-table" id="datatable-editable">
+					<span class="recordcount label label-warning" style="display: inline;"></span>
+					<div class="pagination">
+						<ul>
+						</ul>
+					</div>
+					<table class="table add-edit-table" id="datatable-editable">
 							<thead>
 									<tr>
 											<th>#</th>
@@ -118,8 +113,40 @@
 
 //	//#	遊戲	專案名稱	案件數量	處理者	建立日期	回覆日期
 	var cloneAction =$(".actions").clone(true);
-	var mode ="處理中";
+
+	var curPage = 1;
+	var page_size=10;
+	var page_count=Math.ceil(taskList.length/page_size);
+	for (var i = 1; i <= page_count; i++) {
+		$(".pagination > ul").append("<li><span><a href='javascript:;;'>"+ String(i) +"</a></span></li>");
+	}
+
+	$(".pagination > ul> li").click(pageClick);
+
+
+	$("#find_keyword").keyup(function(){
+		//console.log($("#find_id").val());
+		var keyword= $("#find_keyword").val();
+		if(keyword)
+		{
+			$("#datatable-editable tr:nth-child(n+2)").hide();
+			$("#datatable-editable tr td:nth-child(2):contains('3')").each(function(){
+				$("#datatable-editable tr >td:nth-child(3):contains('"+keyword+"')").parent().show()
+			})
+		}
+		else {
+			renderListTable();
+		}
+
+	})
+
+
+	$(".recordcount").text("總筆數:" + taskList.length);
+
 	for (var i = 0; i < taskList.length; i++) {
+		var color ="#FFFFFF";
+		var mode ="處理中";
+		var tr_style ="font-weight: normal;background-color:white";
 		if (taskList[i].status =="4")
 		{
 			mode ="已完成(立即結案)";
@@ -127,8 +154,16 @@
 		else if (taskList[i].status =="7") {
 			mode ="已完成(預約結案)";
 		}
+		else if (taskList[i].status =="2") {
+			mode ="已完成(已回覆)";
+		}
+		else {
+			color ="lemonchiffon";
+			tr_style ="font-weight: bold;background-color:lemonchiffon";
 
-		var $tr = $(`<tr><td>${taskList[i].id}</td>
+		}
+
+		var $tr = $(`<tr style='${tr_style}'><td>${taskList[i].id}</td>
 			<td>${taskList[i].game_name}</td>
 			<td><a href="./batch_handler/${taskList[i].id}">${taskList[i].title}</a></td>
 			<td>${taskList[i].count}</td>
@@ -137,11 +172,14 @@
 			<td>${taskList[i].update_time}</td>
 			<td>${mode}</td>
 			</tr>`);
-      if (taskList[i].status=="1" && taskList[i].is_editable=="1"){
+      if ((taskList[i].status=="1" && taskList[i].is_editable=="1") && taskList[i].count == 0){
+				console.log(taskList[i].count);
           cloneAction.clone().appendTo($tr);
       }
 
 		$("#datatable-editable").append($tr);
+
+
 
 
 	}
@@ -210,7 +248,7 @@
 	}
 
 
-
+	renderListTable();
 
 
 
@@ -344,6 +382,23 @@
 	  });;
 	}
 
+
+	function pageClick(){
+		curPage = $(this).text();
+		renderListTable(curPage);
+	}
+
+	function renderListTable(){
+		//console.log(curPage);
+		// $("#datatable-editable tr:eq(3)) 是第一行
+		$("#datatable-editable tr").hide();
+		$("#datatable-editable tr:eq(0)").show();
+		for (var i = 0; i < 10; i++) {
+			//console.log(parseInt(3+i+((curPage-1)*page_size)));
+			$("#datatable-editable tr:eq("+ parseInt(3+i+((curPage-1)*page_size))+")").show();
+		}
+
+	}
 
 	//batch_add_row
 

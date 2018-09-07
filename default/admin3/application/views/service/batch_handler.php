@@ -84,10 +84,15 @@ if (count($task) > 0):?>
 				<p><!----送出表單前先顯示內容-----></p>
 
 			</div>
+			<div class="alert alert-error">
+
+			</div>
+
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-				<a href="javascript:;" onclick="reply_n_close('4')" class="json_post pull-right btn btn-danger">送出回覆並立即結案</a>
-				<a href="javascript:;" onclick="reply_n_close('7')" class="json_post pull-right btn btn-warning">送出回覆並預約結案</a>
+				<a href="javascript:;" onclick="reply_n_close('4')" class="pull-right btn btn-danger">送出回覆並立即結案</a>
+				<a href="javascript:;" onclick="reply_n_close('7')" class="pull-right btn btn-warning">送出回覆並預約結案</a>
+				<a href="javascript:;" onclick="reply_n_close('2')" class="pull-right btn btn-primary">送出回覆</a>
 			</div>
 		</div>
 	</div>
@@ -191,6 +196,9 @@ function confirm_before_submit()
 			<div><b>回應內容:</b>${post_content}</div>
 		`
 	);
+
+	$(".alert-error").hide();
+	$(".alert-error").text();
 	$('#comfirmModal').modal('show');
 
 
@@ -201,12 +209,13 @@ function confirm_before_submit()
 //回覆結案
 function reply_n_close(mode){
 //`batch_id=${batch_id}&new_type=${new_type}&post_content=${post_content}`
-//mode 4 = 立即結案 7 = 回覆並預約結案
+//mode 4 = 立即結案 7 = 回覆並預約結案 2=只回覆
 var batch_id = $("#batch_id").val();
 var new_type = $( "select[name='new_type']").find(":selected").val();
 var post_content = $("#content").val().replace(/(?:\r\n|\r|\n)/g, '<br>');
 let url = "../batch_reply_json";
-
+$(".alert-error").hide();
+$(".alert-error").text();
 //console.log( "reply_n_close: " + post_content );
 //return;
 $.ajax({
@@ -215,13 +224,16 @@ $.ajax({
 			dataType: "json",
 			data: `batch_id=${batch_id}&new_type=${new_type}&post_content=${post_content}&mode=${mode}`,
 		}).done(function(result) {
-
 			console.log(result);
 			if (result.status=="success")
 			{
 				$('#comfirmModal').modal('hide');
 				location.reload();
+			}else {
+				$(".alert-error").text("失敗:" + result.message);
+				$(".alert-error").show();
 			}
+			//failure
 
 		})
 		.fail(function( jqXHR, textStatus ) {

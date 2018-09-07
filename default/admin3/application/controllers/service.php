@@ -496,7 +496,7 @@ class Service extends MY_Controller {
 				//   from question_replies where question_id =q.id order by id desc limit 1) as reply_status ",FALSE)
 
 				->select("(select count(*) from `question_favorites` where question_id=q.id and category=1 and admin_uid={$_SESSION['admin_uid']}) as is_favorite",FALSE)
-				->select("(select count(*) from `batch_questions` where question_id=q.id) as is_batch",FALSE)
+				->select("(select count(*) from `batch_questions` where question_id=q.id and batch_id in(select id from batch_tasks where status=1)) as is_batch",FALSE)
 				->from("questions q")
 				->join("servers gi", "gi.server_id=q.server_id", "left")
 				->join("games g", "g.game_id=gi.game_id", "left")
@@ -702,7 +702,6 @@ class Service extends MY_Controller {
 
 		$question = $this->DB2->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email user_email, u.external_id, u.uid, au.name allocate_user_name, c.in_game_id, c.name as in_game_name, aux.name close_admin_name")
 			->select("(select count(*) from `question_favorites` where question_id={$id} and admin_uid={$_SESSION['admin_uid']}) as is_favorite",FALSE)
-			->select("(select count(*) from `batch_questions` where question_id={$id}) as is_batch",FALSE)
 			->where("q.id", $id)
 			->from("questions q")
 			->join("servers gi", "gi.server_id=q.server_id", "left")
@@ -1087,6 +1086,7 @@ class Service extends MY_Controller {
 
 		$this->DB1
 			->where("question_id", $id)
+			->where("batch_id in(select id from batch_tasks where status=1)", null, false)
 			->delete("batch_questions");
 
 		if ($this->DB1->affected_rows() > 0) echo json_success();
@@ -1398,8 +1398,31 @@ function batch_handler($batch_id){
 		$new_type = $this->input->post("new_type");
 		$post_content = nl2br($this->input->post("post_content"));
 		//die(json_failure($mode));
-		// TODO:  確認是admin 本人
 		$q_list = $this->DB2->query("SELECT question_id FROM batch_questions where batch_id={$batch_id}")->result();
+
+		//項目沒有任何提問單
+		if (count($q_list)<1)
+		{
+			die(json_failure("該項目沒有任何提問單"));
+		}
+
+
+		//->where("(allocate_status='2' or allocate_status='0')", null, false)
+		// 狀態2 或 0 的才能結案
+
+		if ($mode=="7" or $mode=="4")
+		{
+			$check_q_list = $this->DB2->query("Select group_concat(id) as ids from questions where id in(
+			SELECT question_id FROM batch_questions where batch_id={$batch_id})
+			and (allocate_status='1' or status=4 or status=7)")->result();
+
+
+			if (count($check_q_list)>0){
+				//die(json_failure("該項目含有後送中或是已經結案的提問單".$check_q_list[0]));
+				die(json_failure("該項目含有不可結案的提案單:".$check_q_list[0]->ids));
+			}
+		}
+
 
 		$updateSql="INSERT INTO question_replies(content,question_id,uid,is_official,admin_uid) VALUES";
 		$q_ids = array();
@@ -1421,11 +1444,17 @@ function batch_handler($batch_id){
 			->where_in('id', $q_ids)
 			->update("questions");
 		}
-		else {
+		elseif ($mode=="4") {
 			$this->DB1->set("update_time", "now()", false)
 			->where_in('id', $q_ids)
 			->update("questions",
 			array("is_read"=>'0', "status"=>'4',"type"=>$new_type, 'admin_uid'=>$_SESSION['admin_uid'],'close_admin_uid'=>$_SESSION['admin_uid'],"system_closed_start"=>null));
+		} elseif ($mode=="2") {
+
+			$this->DB1->set("update_time", "now()", false)
+				->where_in('id', $q_ids)->update("questions",
+					array("is_read"=>'0', "status"=>'2', 'admin_uid'=>$_SESSION['admin_uid']));
+
 		}
 
 		$this->DB1->set("update_time", "now()", false)
@@ -1433,6 +1462,7 @@ function batch_handler($batch_id){
 			->update("batch_tasks", array("status" => $mode));
 
 			die(json_success());
+
 	}
 
 
