@@ -1317,7 +1317,7 @@ function batch_handler($batch_id){
 		from batch_tasks b
 		LEFT JOIN games g on g.game_id=b.game_id
 		LEFT JOIN admin_users adm on adm.uid=b.admin_uid
-		order by status,id desc")->result();
+		order by id desc")->result();
 
 		header("Cache-Control: private");
 		$this->g_layout
