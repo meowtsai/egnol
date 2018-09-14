@@ -15,7 +15,7 @@
 			</td>
 			<td>發文日期：</td>
 			<td>
-				<input type="text" name="o_case_date" value="<?=$case->o_case_date?>" id="o_case_date">
+				<input type="text" name="o_case_date" value="<?=$case ? $case->o_case_date: ''?>" id="o_case_date">
 			</td>
 		</tr>
 		<tr>
@@ -31,7 +31,7 @@
 		<tr>
 			<td>申訴原因：</td>
 			<td colspan="3">
-				<input type="text" name="reason" maxlength="25" style="width:360px;"  value="<?=$case->reason?>" id="reason" placeholder="例:連線問題">
+				<input type="text" name="reason" maxlength="25" style="width:360px;"  value="<?=$case ? $case->reason: ''?>" id="reason" placeholder="例:連線問題">
 			</td>
 		</tr>
 		<tr>

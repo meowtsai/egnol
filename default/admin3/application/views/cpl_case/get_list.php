@@ -52,7 +52,7 @@
 		{
 			case "查詢":
 				$get = $this->input->get();
-				if ($get['sort'])
+				if (in_array("sort", $get))
 				{
 					if (strrpos($get['sort'],'desc')>0)
 					{
