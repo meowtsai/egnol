@@ -42,7 +42,9 @@ $mediation_status = $this->config->item("mediation_status");
 		</tr>
 		<tr class="<?=$warning?>">
 			<td>遊戲角色：</td>
-			<td colspan="3"><?=($case->game_name)?$case->game_name:""?><?=($case->server_id)?$case->server_id:""?><?=($case->role_name)?$case->role_name:""?></td>
+			<td colspan="3">
+				【<?=$case->game_name?>】<?=$case->role_name?><span style="font-size:60%">(<?=$case->server_name?>)</span>
+			</td>
 		</tr>
 		<tr class="<?=$warning?>">
 			<td>處理人員：</td>
@@ -92,15 +94,15 @@ $mediation_status = $this->config->item("mediation_status");
 
 <? if (($case->status == '1' || $case->status == '2') && $case->admin_uid==$_SESSION['admin_uid']): ?>
     <div style="background-color:#F6CED8;padding:10px;">
-      <label><h4>添加聯絡內容</h4></label>
+      <label><h4>添加聯絡或事件歷程</h4></label>
       <form id="reply_form" method="post" action="<?=site_url("cpl_case/modify_reply_json")?>">
           <input type="hidden" name="case_id" value="<?=$case->id?>">
 
-          聯絡日期: <input type="text" name="contact_date" value="" id="contact_date"><br />
-          玩家訴求
+          事件日期: <input type="text" name="contact_date" value="" id="contact_date"><br />
+          玩家反應或訴求
           <textarea name="claim" rows="5" style="width:98%" class="required"></textarea>
 
-          我方回覆
+          我方回覆或動作
           <textarea name="response" rows="5" style="width:98%" class="required"></textarea>
 
 

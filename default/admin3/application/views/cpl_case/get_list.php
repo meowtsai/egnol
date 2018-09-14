@@ -21,7 +21,16 @@
 			<? endforeach;?>
 		</select>
 
+
 		<span class="sptl"></span>
+		案件狀態
+		<select name="status" style="width:120px">
+			<option value="">--</option>
+			<? foreach($status as $key => $val):?>
+			<option value="<?=$key?>" <?=($this->input->get("status")===strval($key) ? 'selected="selected"' : '')?>><?=$val?></option>
+			<? endforeach;?>
+		</select>
+
 
 	</div>
 
@@ -52,7 +61,8 @@
 		{
 			case "查詢":
 				$get = $this->input->get();
-				if (in_array("sort", $get))
+
+				if (in_array("sort", array_keys($get)))
 				{
 					if (strrpos($get['sort'],'desc')>0)
 					{
@@ -85,7 +95,7 @@
 			<th style="width:120px">最新連絡</th>
 			<th style="width:80px;">連絡電話</th>
 			<th style="width:100px;">角色資訊</th>
-			<th style="width:80px;">結案日期</th>
+			<th style="width:120px" ><?=set_sort_URL('close_date',$query_string, '結案日期')?></th>
 			<th style="width:100px;">狀態</th>
 			<th style="width:110px;"><?=set_sort_URL('create_time',$query_string, '建立時間')?> </th>
 			<th style="width:100px;"></th>
@@ -146,6 +156,7 @@
 <?
 function set_sort_URL($condition,$query_string,$title_text)
 {
+
 	$new_query_string_up ="";
 	$new_query_string_down ="";
 	$icon_up="<i class='fas fa-chevron-circle-up'></i>";

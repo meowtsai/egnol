@@ -109,7 +109,7 @@ function caseClose()
     if (result.status == 'success') {
       //$("#tr" + id).children(":nth-child(2)").text(comment);
       //$('#caseCloseModal').modal('hide');
-			//location.reload();
+			location.reload();
     }
     else {
     }

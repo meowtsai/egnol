@@ -150,6 +150,7 @@ class Cpl_case extends MY_Controller {
 			$this->input->get("phone") && $this->DB2->where("c.phone", $this->input->get("phone"));
 			$this->input->get("appellant") && $this->DB2->where("c.appellant", $this->input->get("appellant"));
 			$this->input->get("game") && $this->DB2->where("c.game_id", $this->input->get("game"));
+			$this->input->get("status") && $this->DB2->where("c.status", $this->input->get("status"));
 
 			//select id, o_case_id,o_case_date,appellant,reason,phone,game_id,server_id,role_name,admin_uid,create_time,update_time,close_date,status
 			$this->DB2
@@ -215,12 +216,14 @@ class Cpl_case extends MY_Controller {
 	{
 		$this->zacl->check("cpl_case", "modify");
 
-		$case = $this->DB2->select("c.*, DATE_ADD(c.o_case_date, INTERVAL 15 DAY) as o_due,  g.name as game_name,  au.name admin_name",false)
+		$case = $this->DB2->select("c.*, DATE_ADD(c.o_case_date, INTERVAL 15 DAY) as o_due,  g.name as game_name,  gi.name as server_name,au.name admin_name",false)
 		->where("c.id", $id)
 		->from("cpl_cases c")
 		->join("games g", "g.game_id=c.game_id", "left")
 		->join("admin_users au", "au.uid=c.admin_uid", "left")
+		->join("servers gi", "gi.server_id=c.server_id", "left")
 		->get()->row();
+
 
 
 		$replies = $this->DB2
