@@ -1962,4 +1962,90 @@ CREATE TABLE `batch_questions` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-INSERT INTO question_replies(content,question_id,uid,is_official,admin_uid) VALUES(OK啦! ,'61555',0,'1',112),(OK啦! ,'61556',0,'1',112),(OK啦! ,'61563',0,'1',112),(OK啦! ,'61564',0,'1',112)
+DROP TABLE IF EXISTS `cpl_cases`;
+CREATE TABLE `cpl_cases` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `o_case_id` varchar(40) NOT NULL COMMENT '發文字號',
+  `o_case_date` DATE NOT NULL COMMENT '發文日期',
+  `appellant` varchar(20) NOT NULL COMMENT '申訴人姓名',
+  `reason` varchar(50) NOT NULL COMMENT '申訴原因',
+  `phone` varchar(100) DEFAULT NULL COMMENT '連絡電話',
+  `game_id` varchar(20) DEFAULT NULL COMMENT '遊戲',
+  `server_id` varchar(20) DEFAULT NULL COMMENT '伺服器',
+  `role_name` varchar(20) DEFAULT NULL COMMENT '角色名稱',
+  `admin_uid` int(11) DEFAULT NULL COMMENT '管理員',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime DEFAULT NULL,
+  `close_date` DATE NOT NULL COMMENT '結案日期',
+  `status` char(1) NOT NULL DEFAULT '1' COMMENT '1-處理中 2-已回覆 3-進入協調會 4-已結案',
+  FOREIGN KEY (game_id) REFERENCES games(game_id),
+  FOREIGN KEY (server_id) REFERENCES servers(server_id),
+  UNIQUE KEY `case_id_UNIQUE` (`o_case_id`),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='消保案件主表';
+
+
+DROP TABLE IF EXISTS `cpl_replies`;
+CREATE TABLE `cpl_replies` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `case_id` int(11) NOT NULL COMMENT '案件編號',
+  `claim` text NOT NULL COMMENT '訴求',
+  `response` text NOT NULL COMMENT '我方回應',
+  `contact_date` DATE NOT NULL COMMENT '聯絡日期',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `admin_uid` int(11) DEFAULT NULL,
+  FOREIGN KEY (case_id) REFERENCES cpl_cases(id),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8  COMMENT='消保案件往來回覆';
+
+
+
+
+DROP TABLE IF EXISTS `cpl_attachments`;
+CREATE TABLE `cpl_attachments` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `case_id` int(11) NOT NULL COMMENT '案件編號',
+  `pic_path` varchar(300) DEFAULT NULL,
+  FOREIGN KEY (case_id) REFERENCES cpl_cases(id),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='消保案件附件';
+
+DROP TABLE IF EXISTS `cpl_mediations`;
+CREATE TABLE `cpl_mediations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `case_id` int(11) NOT NULL COMMENT '案件編號',
+  `o_case_id` varchar(40) NOT NULL COMMENT '發文字號',
+  `o_case_date` DATE NOT NULL COMMENT '發文日期',
+  `req_date` datetime NOT NULL COMMENT '出席時間',
+  `req_place` varchar(100) NOT NULL COMMENT '出席地點',
+  `o_staff` varchar(20) NOT NULL COMMENT '主持人',
+  `o_contact` varchar(20) NOT NULL COMMENT '聯絡人',
+  `o_phone` varchar(100) DEFAULT NULL COMMENT '連絡電話',
+  `representative` varchar(20) NULL COMMENT '我方出席人員',
+  `close_date` DATE NULL COMMENT '結案日期',
+  `status` char(1) NOT NULL DEFAULT '1' COMMENT '1-處理中 4-已結案',
+  `note` text NULL COMMENT '結果',
+  `admin_uid` int(11) DEFAULT NULL COMMENT '管理員',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime DEFAULT NULL,
+  FOREIGN KEY (case_id) REFERENCES cpl_cases(id),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='調停會紀錄';
+ 
+
+drop TRIGGER ins_reply_cpl;
+delimiter //
+CREATE TRIGGER ins_reply_cpl BEFORE INSERT ON cpl_replies
+   FOR EACH ROW
+   BEGIN
+   UPDATE cpl_cases SET status=2  WHERE id = NEW.case_id;
+   END;//
+delimiter ;
+
+
+SET foreign_key_checks = 0;
+-- Drop tables
+drop table ...
+-- Drop views
+drop view ...
+SET foreign_key_checks = 1;
