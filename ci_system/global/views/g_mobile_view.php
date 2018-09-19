@@ -4,12 +4,13 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <title><?=$meta["title"]?></title>
 
-<link rel="shortcut icon" href="<?=$longe_url?>p/img/favicon.png"/>
+<link rel="Shortcut Icon" type="image/x-icon" href="<?=$longe_url?>p/image/2018/longe_logo.ico" />
 <link rel="Bookmark" href=""/>
 <meta name="keywords" content="">
 <meta name="description" content="" />
 <meta name="viewport" content="width=1000px, user-scalable=1">
 <script type="text/javascript" src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
+
 
 <?
 	unset($meta["title"]);
