@@ -239,6 +239,8 @@ class Service_quick extends MY_Controller {
 		if ( ! $this->input->post("question_type")) die(json_encode(array("status"=>"failure", "message"=>"尚未選擇問題類型")));
 		if ( ! $this->input->post("content")) die(json_encode(array("status"=>"failure", "message"=>"尚未填寫問題描述")));
 
+
+
 		if ( ! $this->input->post("partner_uid") && (!filter_var($this->input->post("email"), FILTER_VALIDATE_EMAIL)))
 		{
 			die(json_encode(array("status"=>"failure", "message"=>"E-Mail 格式錯誤。")));
@@ -254,6 +256,14 @@ class Service_quick extends MY_Controller {
 		$post_server_id =$this->input->post("server");
 		$post_character_name =htmlspecialchars($this->input->post("character_name"));
 		$post_content =nl2br(htmlspecialchars($this->input->post("content")));
+
+		// if content contains char in list extension B
+		if ($this->isListB($post_content))
+		{
+			log_message('error', '提問單可能含有冷僻字元:'.$post_character_name.':'.$post_content);
+			//die(json_encode(array("status"=>"failure", "message"=>"可能含有冷僻字元,請移除不合法字元.")));
+		}
+
 		$query = $this->db->query("SELECT count(*) as chk FROM questions WHERE server_id='{$post_server_id}' and character_name='{$post_character_name}' and content='{$post_content}' and create_time > Date_Sub(CURDATE(), INTERVAL 3 HOUR)");
 		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問!")));
 
@@ -765,5 +775,9 @@ class Service_quick extends MY_Controller {
 
 		$this->db->set("status", "4")->set("close_admin_uid", null)->set("system_closed_start", null)->where("id", $id)->update("questions");
 		die(json_encode(array("status"=>"success")));
+	}
+
+	function isListB($string) {
+		return preg_match('/[\x{20000}-\x{215FF}-\x{21600}-\x{230FF}-\x{23100}-\x{245FF}-\x{24600}-\x{260FF}-\x{26100}-\x{275FF}-\x{27600}-\x{290FF}-\x{29100}-\x{2A6DF}]/u', $string);
 	}
 }
