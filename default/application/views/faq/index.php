@@ -4,6 +4,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="Shortcut Icon" type="image/x-icon" href="/p/image/2018/longe_logo.ico" />
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
@@ -25,7 +26,7 @@
         .search_box .search_btn{width:12%; height:33px; text-align:center; font-size:16px; color:#<?=$row_theme->btn_fgcolor?>; background-color:#<?=$row_theme->btn_bgcolor?>; border-bottom-color:#<?=$row_theme->btn_bordercolor?>; border-left-width: 0px; border-top-width: 0px; border-right-width: 0px;}
         body{background-color:#<?=$row_theme->body_bgcolor?>; color:#<?=$row_theme->body_fgcolor?>;}
 
-        
+
     </style>
   </head>
   <body>
