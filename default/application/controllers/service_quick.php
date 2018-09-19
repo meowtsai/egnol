@@ -691,6 +691,12 @@ class Service_quick extends MY_Controller {
 		$query = $this->db->query("SELECT count(*) > (3-1) as chk FROM question_replies WHERE question_id={$question_id} and create_time > date_sub(now(), INTERVAL 1 MINUTE)");
 		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問!")));
 
+		if ($this->isListB(nl2br(htmlspecialchars($this->input->post("content")))))
+		{
+			log_message('error', '提問單可能含有冷僻字元:'.$question_id.':'.nl2br(htmlspecialchars($this->input->post("content"))));
+			//die(json_encode(array("status"=>"failure", "message"=>"可能含有冷僻字元,請移除不合法字元.")));
+		}
+
 		$data = array(
 			"uid" => 0,
 			"question_id" => $question_id,
