@@ -76,6 +76,47 @@ function test_explode()
 		}
 	}
 
+	function special_char(){
+		$post_content =nl2br(htmlspecialchars($this->input->get_post("content")));
+		if (strlen($post_content) != strlen(utf8_decode($post_content)))
+		{
+		    echo 'is unicode<br/>';
+		}
+		//And to find the code point of a given character:
+
+		$ord = unpack('N', mb_convert_encoding($post_content, 'UCS-4BE', 'UTF-8'));
+
+		echo $ord[1].'<br/>';
+	 	echo $post_content.'<br/>';
+
+		echo $this->isListB($post_content);
+
+	}
+
+	function isChinese($string) {
+    return preg_match("/\p{Han}+/u", $string);
+	}
+	function isListB($string) {
+		return preg_match('/[\x{20000}-\x{215FF}-\x{21600}-\x{230FF}-\x{23100}-\x{245FF}-\x{24600}-\x{260FF}-\x{26100}-\x{275FF}-\x{27600}-\x{290FF}-\x{29100}-\x{2A6DF}]/u', $string);
+	}
+
+	function isJapanese($string) {
+	    return preg_match('/[\x{4E00}-\x{9FBF}\x{3040}-\x{309F}\x{30A0}-\x{30FF}]/u', $string);
+	}
+
+	function isKorean($string) {
+	    return preg_match('/[\x{3130}-\x{318F}\x{AC00}-\x{D7AF}]/u', $string);
+	}
+//CJK Unified Ideographs (4E00-9FCC) [\u4E00-\u9FCC]
+// 	20000 – 215FF
+// 21600 – 230FF
+// 23100 – 245FF
+// 24600 – 260FF
+// 26100 – 275FF
+// 27600 – 290FF
+// 29100 – 2A6DF
+
+
 }
 
 /* End of file welcome.php */

@@ -301,6 +301,21 @@ class Cpl_case extends MY_Controller {
 		die(json_message(array("redirect_url"=> base_url("cpl_case/view/".$case_id), "id"=>$case_id), true));
 	}
 
+	function delete_case_json($id)
+	{
+		$this->DB1
+			->where("case_id", $id)
+			->delete("cpl_replies");
+		$this->DB1
+			->where("case_id", $id)
+			->delete("cpl_mediations");
+		$this->DB1
+			->where("id", $id)
+			->delete("cpl_cases");	
+		if ($this->DB1->affected_rows() > 0) echo json_success();
+		else echo json_failure("資料庫刪除失敗或沒有權限".$this->DB1->last_query());
+	}
+
 	function delete_reply_json($id)
 	{
 		$this->DB1
