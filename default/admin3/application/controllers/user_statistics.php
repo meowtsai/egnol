@@ -1046,13 +1046,15 @@ class User_statistics extends MY_Controller {
 					header("Content-type:application/vnd.ms-excel;");
 					header("Content-Disposition: filename={$filename};");
 					//排名	帳號	角色	原廠ID	伺服器	儲值累積	最後訂單時間	地區	未儲值/日	3日內新人	升階	加入Line	加入Line日期	最後登入日期	確認流失
-					$content = "帳號,角色,原廠ID,伺服器,儲值累積,最後訂單時間,地區,未儲值/日,升階,加入Line,加入Line日期,最後登入日期,確認流失\n";
+
+					$content = "帳號,角色,原廠ID,伺服器,儲值累積,最後訂單時間,地區,未儲值/日,升階,加入Line,加入Line日期,最後登入日期,確認流失,VIP級別\n";
 						foreach($report_result as $row) {
 							$content .= "{$row->uid},{$row->character_name},{$row->character_in_game_id},{$row->server_name},{$row->deposit_total},{$row->latest_topup_date},";
 							$content .= geoip_country_name_by_name($row->ip).",";
 							$content .= "{$row->days_since},{$row->vip_ranking_updated},";
 							$content .= ($row->is_added==1?"V":"").",";
-							$content .= "{$row->line_date},{$row->last_login},{$row->inactive_confirm_date}";
+							$content .= "{$row->line_date},{$row->last_login},{$row->inactive_confirm_date},";
+							$content .= $this->vipcolor($game_id,$row->deposit_total);
 							$content .= "\n";
 						}
 
@@ -1072,6 +1074,64 @@ class User_statistics extends MY_Controller {
 			->add_js_include("fontawesome/js/fontawesome-all")
 			->render();
 	}
+
+function vipcolor($game_id,$deposit_number){
+		switch ($game_id) {
+			case 'h35naxx1hmt':
+				if ($deposit_number>=1000000)
+				{
+					//return "#FFFFFF";
+					return "黑R";
+				}
+				else if ($deposit_number>=700000 and $deposit_number<1000000)
+				{
+					//return "#E5E4E2";
+					return "白金R";
+				}
+				else if ($deposit_number>=400000 and $deposit_number<700000)
+				{
+					//return "#D4AF37";
+					return "金R";
+				}
+				else if ($deposit_number>=200000 and $deposit_number<400000)
+				{
+					//return "#C0C0C0";
+					return "銀R";
+				}
+				else if ($deposit_number>=150000 and $deposit_number<200000)
+				{
+					//return "#FAEBD7";
+					return "普R";
+				}
+				else {
+					//return "#FFFFFF";
+					return "No R";
+				}
+				break;
+			case 'L8na':
+				if ($deposit_number>=100000)
+				{
+					return "#D4AF37";
+				}
+				else if ($deposit_number>=50000 and $deposit_number<100000)
+				{
+					return "#C0C0C0";
+				}
+				else if ($deposit_number>=30000 and $deposit_number<50000)
+				{
+					return "#FAEBD7";
+				}
+				else {
+					return "#FFFFFF";
+				}
+
+				break;
+			default:
+				# code...
+				break;
+		}
+
+}
 
 
 function whale_users_set_status($uid, $status)
