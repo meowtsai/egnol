@@ -193,12 +193,13 @@
 									<a href="javascript:;" class="json_post" url="<?=site_url("service/remove_favorites/{$row->id}/1")?>"><i class="fas fa-star text-warning" title="取消珍藏"></i></a>
 									<? endif;
 									if ($row->is_batch =='0' || ($row->status == '4' || $row->status == '7')):?>
-
+									<input type="checkbox" name="chk<?=$row->id?>" value="<?=$row->id?>">
 									<? else:?>
 									<a href="javascript:;" class="json_post" url="<?=site_url("service/remove_from_batch/{$row->id}")?>"><i class="fas fa-tasks text-warning" title="取消批次處理"></i></a>
-									<? endif;
-									endif;
-									?>
+									<? endif;?>
+
+
+									<?endif;?>
 
 									 <a href="<?=site_url("service/view/{$row->id}")?>"><?=$row->id?></a></td>
                 <td><?=$row->game_name?></td>
@@ -346,6 +347,27 @@
 
         </tbody>
     </table>
+
+
+		<?if ($add_favor_ok): //是否有特殊權限?>
+		<select name="batch_batch" style="width:200px">
+				<option value="" >加入批次處理區</option>
+				<?
+				$task_count = 0;
+				foreach($tasks as $task_row):
+					?>
+					<option value="<?=$task_row->id?>" > <?="[".$task_row->game_name."]-".$task_row->title?></option>
+				<?
+						$task_count++;
+
+				endforeach;
+				if ($task_count<1):
+				?>
+				<option value="" >(沒有相關案件)</option>
+					<li>(沒有相關案件)</li>
+				<? endif;?>
+		</select>
+		<? endif;?>
 </form>
 
 		<?

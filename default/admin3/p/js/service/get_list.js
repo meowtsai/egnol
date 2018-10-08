@@ -23,4 +23,46 @@ $(function(){
 			});
 		}
 	});
+
+
+	$("select[name=batch_batch]").change(function(e)
+	{
+			console.log($(this).val());
+			var batch_id = $(this).val();
+			var arr = [];
+			$('input[type=checkbox]:checked').each(function(){
+				console.log($(this).val());
+				arr.push($(this).val());
+			})
+
+			if (!batch_id || arr.length===0){
+				return;
+			}
+
+			let url = "./batch_add_to_batch";
+		  $.ajax({
+		    type: "POST",
+		    url: url,
+		    data: "ids=" + arr + "&batch_id=" + batch_id ,
+		  }).done(function(result) {
+		    console.log( "Request done: " + result );
+		    let obj = JSON.parse(result);
+		    if (obj.status == 'success') {
+					console.log('parent',parent);
+					parent.location.reload();
+		    }
+		    else {
+					alert(obj.message);
+					$("select[name=batch_batch]").children('[value=""]').attr('selected', true);
+		    }
+		  })
+		  .fail(function( jqXHR, textStatus ) {
+		    console.log( "Request failed: " + textStatus );
+		  })
+		  .always(function() {
+		    console.log("complete")
+		  });;
+	});
+
+
 });

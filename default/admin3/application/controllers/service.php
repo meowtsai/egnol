@@ -1080,6 +1080,48 @@ class Service extends MY_Controller {
 		$this->DB1->insert("batch_questions", array("question_id" => $id, "batch_id" => $batch_id));
 		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure();
 	}
+	//可以批次把提問單加入某個批次工作項目
+	function batch_add_to_batch()
+	{
+		if ( ! $this->zacl->check_acl("service", "favorite")) die(json_failure("沒有權限"));
+		$batch_id = $this->input->post("batch_id");
+		$ids = $this->input->post("ids");
+
+		//檢查遊戲不一至
+
+
+		$wrong_game = $this->DB2->query("select count(*) as wrong_cnt
+		from questions a left join servers b
+		on a.server_id = b.server_id
+		left join games c
+		on b.game_id = c.game_id
+		where a.id in({$ids}) and b.game_id <>(select game_id from batch_tasks where id={$batch_id})")->result();
+
+		$wrong_cnt=0;
+		foreach($wrong_game as $row) {
+			 if ($row->wrong_cnt>0)
+			 {
+				 $wrong_cnt = $row->wrong_cnt;
+			 }
+		}
+		if ($wrong_cnt>0)
+		{
+			die(json_failure("操作失敗, 所選問題必須和該批次工作屬於相同遊戲。"));	
+		}
+
+		$q_id = explode(',', $ids);
+		$updateSql="INSERT INTO batch_questions(question_id,batch_id) VALUES";
+
+		for ($i = 0; $i < count($q_id) ; $i++) {
+			if ($i > 0) $updateSql .= ",";
+			$updateSql .= "('{$q_id[$i]}' ,'{$batch_id}')";
+		}
+		//die(json_failure($updateSql));
+	 	$this->DB1->query($updateSql);
+		echo $this->DB1->affected_rows()>0 ? json_success() : json_failure();
+
+	}
+
 	function remove_from_batch($id)
 	{
 		if ( ! $this->zacl->check_acl("service", "favorite")) die(json_failure("沒有權限"));
