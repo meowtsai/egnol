@@ -147,7 +147,11 @@
     <table class="table table-striped table-bordered" style="width:auto;">
         <thead>
             <tr>
-                <th style="width:60px;">#</th>
+                <th style="width:60px;">#
+									<?if ($add_favor_ok):?>
+									<input type="checkbox" name="chkall" value="all">
+									<? endif;?>
+								</th>
                 <th style="width:80px">遊戲</th>
                 <th style="width:120px">角色名稱</th>
                 <th style="width:85px">提問類型</th>
@@ -193,7 +197,7 @@
 									<a href="javascript:;" class="json_post" url="<?=site_url("service/remove_favorites/{$row->id}/1")?>"><i class="fas fa-star text-warning" title="取消珍藏"></i></a>
 									<? endif;
 									if ($row->is_batch =='0' || ($row->status == '4' || $row->status == '7')):?>
-									<input type="checkbox" name="chk<?=$row->id?>" value="<?=$row->id?>">
+									<input type="checkbox" name="chk_batch" value="<?=$row->id?>">
 									<? else:?>
 									<a href="javascript:;" class="json_post" url="<?=site_url("service/remove_from_batch/{$row->id}")?>"><i class="fas fa-tasks text-warning" title="取消批次處理"></i></a>
 									<? endif;?>

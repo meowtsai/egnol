@@ -24,13 +24,27 @@ $(function(){
 		}
 	});
 
+	$("input[name='chkall']").change(function() {
+        if($(this).is(":checked")) {
+					$("input[name='chk_batch']").each(function() {
+						 $(this).prop("checked", true);
+				 });
+        }
+				else {
+					$("input[name='chk_batch']").each(function() {
+						 $(this).prop("checked", false);
+				 });
+				}
+
+  });
+
 
 	$("select[name=batch_batch]").change(function(e)
 	{
 			console.log($(this).val());
 			var batch_id = $(this).val();
 			var arr = [];
-			$('input[type=checkbox]:checked').each(function(){
+			$("input[name='chk_batch']:checked").each(function(){
 				console.log($(this).val());
 				arr.push($(this).val());
 			})
