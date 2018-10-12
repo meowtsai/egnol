@@ -148,7 +148,7 @@
         <thead>
             <tr>
                 <th style="width:60px;">#
-									<?if ($add_favor_ok):?>
+									<?if ($add_favor_ok && (sizeof($tasks)>0)): //是否有特殊權限?>
 									<input type="checkbox" name="chkall" value="all">
 									<? endif;?>
 								</th>
@@ -196,13 +196,13 @@
 									<? else:?>
 									<a href="javascript:;" class="json_post" url="<?=site_url("service/remove_favorites/{$row->id}/1")?>"><i class="fas fa-star text-warning" title="取消珍藏"></i></a>
 									<? endif;
+									if (sizeof($tasks)>0):
 									if ($row->is_batch =='0' || ($row->status == '4' || $row->status == '7')):?>
 									<input type="checkbox" name="chk_batch" value="<?=$row->id?>">
 									<? else:?>
 									<a href="javascript:;" class="json_post" url="<?=site_url("service/remove_from_batch/{$row->id}")?>"><i class="fas fa-tasks text-warning" title="取消批次處理"></i></a>
-									<? endif;?>
-
-
+									<? endif;
+									endif;?>
 									<?endif;?>
 
 									 <a href="<?=site_url("service/view/{$row->id}")?>"><?=$row->id?></a></td>
@@ -353,7 +353,7 @@
     </table>
 
 
-		<?if ($add_favor_ok): //是否有特殊權限?>
+		<?if ($add_favor_ok && (sizeof($tasks)>0)): //是否有特殊權限?>
 		<select name="batch_batch" style="width:200px">
 				<option value="" >加入批次處理區</option>
 				<?

@@ -1047,12 +1047,12 @@ class User_statistics extends MY_Controller {
 					header("Content-Disposition: filename={$filename};");
 					//排名	帳號	角色	原廠ID	伺服器	儲值累積	最後訂單時間	地區	未儲值/日	3日內新人	升階	加入Line	加入Line日期	最後登入日期	確認流失
 
-					$content = "帳號,角色,原廠ID,伺服器,儲值累積,最後訂單時間,地區,未儲值/日,升階,加入Line,加入Line日期,最後登入日期,確認流失,VIP級別\n";
+					$content = "帳號,角色,原廠ID,伺服器,儲值累積,最後訂單時間,地區,未儲值/日,升階,邀請次數,加入Line,加入Line日期,最後登入日期,確認流失,VIP級別\n";
 						foreach($report_result as $row) {
 							$content .= "{$row->uid},{$row->character_name},{$row->character_in_game_id},{$row->server_name},{$row->deposit_total},{$row->latest_topup_date},";
 							$content .= geoip_country_name_by_name($row->ip).",";
 							$content .= "{$row->days_since},{$row->vip_ranking_updated},";
-							$content .= ($row->is_added==1?"V":"").",";
+							$content .= "{$row->inv_count},".($row->is_added==1?"V":"").",";
 							$content .= "{$row->line_date},{$row->last_login},{$row->inactive_confirm_date},";
 							$content .= $this->vipcolor($game_id,$row->deposit_total);
 							$content .= "\n";
