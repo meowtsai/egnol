@@ -2031,7 +2031,7 @@ CREATE TABLE `cpl_mediations` (
   FOREIGN KEY (case_id) REFERENCES cpl_cases(id),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='調停會紀錄';
- 
+
 
 drop TRIGGER ins_reply_cpl;
 delimiter //
@@ -2049,3 +2049,14 @@ drop table ...
 -- Drop views
 drop view ...
 SET foreign_key_checks = 1;
+
+
+
+CREATE TABLE `g78_s2_result` (
+  `player_id` varchar(30) NOT NULL,
+  `season_5v5cnt` int  DEFAULT '0',
+  `punish_cnt` int  DEFAULT '0',
+  `punish_ag` float DEFAULT '0',
+  `tag` int  DEFAULT '0',
+  PRIMARY KEY (`player_id`)
+);
