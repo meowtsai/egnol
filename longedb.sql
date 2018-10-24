@@ -2060,3 +2060,28 @@ CREATE TABLE `g78_s2_result` (
   `tag` int  DEFAULT '0',
   PRIMARY KEY (`player_id`)
 );
+
+
+
+DROP TABLE IF EXISTS `gov_letters`;
+CREATE TABLE `gov_letters` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `o_letter_id` varchar(40) NOT NULL COMMENT '發文字號',
+  `o_letter_date` DATE NOT NULL COMMENT '發文日期',
+  `contact` varchar(20) NOT NULL COMMENT '承辦人姓名',
+  `game_id` varchar(20) DEFAULT NULL COMMENT '遊戲',
+  `server_id` varchar(20) DEFAULT NULL COMMENT '伺服器',
+  `role_name` varchar(20) DEFAULT NULL COMMENT '角色名稱',
+  `note` text NULL COMMENT '備註記事',
+  `file_path` varchar(300) DEFAULT NULL COMMENT '上傳檔案路徑',
+  `admin_uid` int(11) DEFAULT NULL COMMENT '管理員',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `update_time` datetime DEFAULT NULL,
+  `deadline` DATE NOT NULL COMMENT '回文期限',
+  `close_date` DATE NOT NULL COMMENT '結案日期',
+  `status` char(1) NOT NULL DEFAULT '1' COMMENT '1-處理中 4-已結案',
+  FOREIGN KEY (game_id) REFERENCES games(game_id),
+  FOREIGN KEY (server_id) REFERENCES servers(server_id),
+  UNIQUE KEY `letter_id_UNIQUE` (`o_letter_id`),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='公函主表';
