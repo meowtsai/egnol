@@ -11,17 +11,17 @@
 		<tr>
 			<td>發文字號：</td>
 			<td >
-				<input type="text" name="o_case_id" class="required" maxlength="20"  value="<?=$case ? $case->o_case_id: ''?>" placeholder="例:府建行二字第1073906069號">
+				<input type="text" name="o_case_id" class="required" maxlength="20"  value="<?=$case ? $case->o_case_id: ''?>" placeholder="例:府建行二字第1073906069號" autocomplete="off">
 			</td>
 			<td>發文日期：</td>
 			<td>
-				<input type="text" name="o_case_date" value="<?=$case ? $case->o_case_date: ''?>" id="o_case_date">
+				<input type="text" name="o_case_date" value="<?=$case ? $case->o_case_date: ''?>" id="o_case_date" autocomplete="off">
 			</td>
 		</tr>
 		<tr>
 			<td>申訴人姓名：</td>
 			<td >
-				<input type="text" name="appellant" class="required" maxlength="10"  value="<?=$case ? $case->appellant: ''?>" placeholder="例:王大同">
+				<input type="text" name="appellant" class="required" maxlength="10"  value="<?=$case ? $case->appellant: ''?>" placeholder="例:王大同" autocomplete="off">
 			</td>
 			<td>連絡電話：</td>
 			<td >

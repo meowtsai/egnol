@@ -11,30 +11,34 @@
 		<tr>
 			<td>發文字號：</td>
 			<td >
-				<input type="text" name="o_letter_id" class="required" maxlength="30"  value="<?=$letter ? $letter->o_letter_id: ''?>" placeholder="例:高市警旗分偵字第10771557500號">
+				<input type="text" name="o_letter_id" class="required" maxlength="30"  value="<?=$letter ? $letter->o_letter_id: ''?>" placeholder="例:高市警旗分偵字第10771557500號" autocomplete="off">
 			</td>
 			<td>承辦人姓名：</td>
 			<td >
-				<input type="text" name="contact" class="required" maxlength="10"  value="<?=$letter ? $letter->contact: ''?>" placeholder="例:偵查佐賴鎮生">
+				<input type="text" name="contact" class="required" maxlength="10"  value="<?=$letter ? $letter->contact: ''?>" placeholder="例:偵查佐賴鎮生" autocomplete="off">
 			</td>
 		</tr>
 		<tr>
 			<td>發文日期：</td>
 			<td>
-				<input type="text" name="o_letter_date" value="<?=$letter ? $letter->o_letter_date: ''?>" id="o_letter_date">
+				<input type="text" name="o_letter_date" value="<?=$letter ? $letter->o_letter_date: ''?>" id="o_letter_date" autocomplete="off">
 			</td>
 			<td>回文期限：</td>
 			<td>
-				<input type="text" name="deadline" value="<?=$letter ? $letter->deadline: ''?>" id="deadline">
+				<input type="text" name="deadline" value="<?=$letter ? $letter->deadline: ''?>" id="deadline" autocomplete="off">
 			</td>
 		</tr>
 		<tr>
 			<td>處理狀態：</td>
-			<td colspan="3">
+			<td>
 				<select name="status" style="width:120px;">
 					<option value="1" <?=$letter ? ($letter->status=='1' ? 'selected' : '') : ''?>>處理中</option>
 					<option value="4" <?=$letter ? ($letter->status=='4' ? 'selected' : '') : ''?>>已結案</option>
 				</select>
+			</td>
+			<td>結案日期：</td>
+			<td>
+				<input type="text" name="close_date" value="<?=$letter ? $letter->close_date: ''?>" id="close_date" autocomplete="off">
 			</td>
 		</tr>
 

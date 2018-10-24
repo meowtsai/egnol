@@ -15,6 +15,15 @@ $(function() {
 	$("#deadline").datepicker( "option", "dateFormat", "yy-mm-dd");
   $("#deadline").val(deadline);
 
+
+  var close_date = $("#close_date").val();
+  $("#close_date").datepicker({
+		changeMonth: true,
+    changeYear: true
+	});
+	$("#close_date").datepicker( "option", "dateFormat", "yy-mm-dd");
+  $("#close_date").val(close_date);
+
   $( "#game_id" ).change(function() {
     //console.log("game_id changed");
   	var select_game_id = $(this).find(":selected").val();

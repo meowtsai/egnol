@@ -70,6 +70,7 @@ class Gov_letter extends MY_Controller {
 		$data = array(
 			"o_letter_id" => $this->input->post("o_letter_id"),
 			"o_letter_date" => $this->input->post("o_letter_date"),
+			"close_date" => $this->input->post("close_date"),
 			"contact" => $this->input->post("contact"),
 			'note' => nl2br($this->input->post("note")),
 			"deadline" => $this->input->post("deadline"),
