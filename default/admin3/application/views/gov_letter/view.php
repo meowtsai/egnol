@@ -17,7 +17,7 @@ $status = $this->config->item("case_status");
 <div id="letter">
 	<div id="content">
 	<table class="table table-bordered">
-		<tr class="<?=$warning?>">
+		<tr >
 			<th style="width:80px;">狀態：</th>
 			<td colspan="3">
 			<?	echo $status[$letter->status];	?>
@@ -28,32 +28,32 @@ $status = $this->config->item("case_status");
 
 			</td>
 		</tr>
-    <tr class="<?=$warning?>">
+    <tr >
 			<th>發文字號：</th>
 			<td  id="td_o_letter_id"><?=($letter->o_letter_id)?$letter->o_letter_id:""?></td>
 			<th>承辦人：</th>
 			<td id="td_contact"><?=($letter->contact)?$letter->contact:""?></td>
 		</tr>
-    <tr class="<?=$warning?>">
+    <tr >
 
 			<th>發文日期：</th>
 			<td ><?=($letter->o_letter_date)?$letter->o_letter_date:""?></td>
 			<th>回覆期限：</th>
 			<td ><?=($letter->deadline)?$letter->deadline:""?></td>
 		</tr>
-		<tr class="<?=$warning?>">
+		<tr >
 			<th>遊戲角色：</th>
 			<td colspan="3">
 				【<?=$letter->game_name?>】<?=$letter->role_name?><span style="font-size:60%">(<?=$letter->server_name?>)</span>
 			</td>
 		</tr>
-		<tr class="<?=$warning?>">
+		<tr >
 			<th>處理人員：</th>
 			<td><?=$letter->admin_name?></td>
       <th>建立時間：</th>
 			<td><?=$letter->create_time?></td>
 		</tr>
-		<tr class="<?=$warning?>">
+		<tr >
 			<th>備註記事：</th>
 			<td colspan="3" ><?=($letter->note)?$letter->note:""?></td>
 		</tr>

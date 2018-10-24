@@ -1,3 +1,6 @@
+<?
+$status = $this->config->item("case_status");
+?>
 <div id="func_bar">
 </div>
 

@@ -108,7 +108,7 @@ class Gov_letter extends MY_Controller {
 			{
 				//rsync_to_slave();
 				$upload_data = $this->upload->data();
-				$file_path = site_url("p/upload/pictures/{$upload_data['file_name']}");
+				$file_path = site_url("p/upload/gov_letters/{$upload_data['file_name']}");
 			}
 		}
 		else {

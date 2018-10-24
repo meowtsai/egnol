@@ -63,7 +63,7 @@
 		<tr>
 			<td>相關檔案：</td>
 			<td colspan="3">
-					<?if ($letter->file_path):?>
+					<?if ($letter && $letter->file_path):?>
 					<a href="<?=$letter->file_path?>" target="_blank">檔案</a>
 					<?endif;?>
 					<input type="file" name="file01">
