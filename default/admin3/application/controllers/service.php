@@ -882,7 +882,7 @@ class Service extends MY_Controller {
 	{
 		$question_id = $this->input->post("question_id");
 		$id = $this->input->post("reply_id");
-		$post_content = nl2br($this->input->post("content"));
+		$post_content = mysql_real_escape_string(nl2br($this->input->post("content")));
 
 		$query = $this->DB2->query("SELECT count(*) as chk FROM question_replies WHERE question_id={$question_id} and content='{$post_content}'");
 		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆回答!")));
@@ -1106,7 +1106,7 @@ class Service extends MY_Controller {
 		}
 		if ($wrong_cnt>0)
 		{
-			die(json_failure("操作失敗, 所選問題必須和該批次工作屬於相同遊戲。"));	
+			die(json_failure("操作失敗, 所選問題必須和該批次工作屬於相同遊戲。"));
 		}
 
 		$q_id = explode(',', $ids);
