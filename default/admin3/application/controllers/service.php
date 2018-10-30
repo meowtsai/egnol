@@ -1527,11 +1527,25 @@ function batch_handler($batch_id){
 		")->result();
 
 
+		$stat_reply = $this->DB2->query("select g.name as '遊戲',DATE_FORMAT(qr.create_time, '%H:00') as '時間',count(*) as 'cnt'
+		from questions q
+		left join question_replies qr on q.id=qr.question_id
+		LEFT JOIN servers gi
+		ON gi.server_id=q.server_id
+		LEFT JOIN games g on g.game_id=gi.game_id
+		where qr.create_time between '{$date} 00:00:00' and '{$date} 23:59:59'
+		{$where_allow_games}
+		and qr.admin_uid <>113 and qr.is_official=1
+		group by g.name,DATE_FORMAT(qr.create_time, '%H:00')
+		")->result();
+
+
 
 
 		$this->_init_service_layout()
-			->add_breadcrumb("[時間別]進件數量統計")
+			->add_breadcrumb("[時間別]統計")
 			->set("stat", $stat)
+			->set("stat_reply", $stat_reply)
 			->add_css_link('pivot')
 			->add_js_include("@pivot/dist/pivot")
 			->add_js_include("jquery-ui-timepicker-addon")

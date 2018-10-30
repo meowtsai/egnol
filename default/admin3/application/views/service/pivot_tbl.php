@@ -11,7 +11,19 @@
 
 
 
-<div id="output" class="table table-bordered" style="margin: 30px;"></div>
+<div>
+<b>進件數量：</b>
+選擇當日每個小時玩家所送出提問單的數量統計。
+</div>
+<div id="output"  style="margin: 30px;"></div>
+
+<hr size=1 />
+<div>
+<b>官方回覆數量：</b>
+選擇當日每個小時我方所回覆的數量統計（包含批次處理，不包含機器人）。
+</div>
+
+<div id="output_reply" style="margin: 30px;"></div>
 
 
 
@@ -42,8 +54,18 @@ $(function(){
   var heatmap =  $.pivotUtilities.renderers["Heatmap"];
 
 $("#output").pivot(
-
         <?=json_encode($stat);?>
+    ,
+    {
+        rows: ["遊戲"],
+        cols: ["時間"],
+        aggregator: sum(intFormat)(["cnt"]),
+        renderer: heatmap
+    }
+);
+
+$("#output_reply").pivot(
+        <?=json_encode($stat_reply);?>
     ,
     {
         rows: ["遊戲"],
