@@ -1507,6 +1507,37 @@ function batch_handler($batch_id){
 
 	}
 
+	function pivot_tbl(){
+		$where_allow_games = (in_array('all_game', $this->zacl->allow_games))?"":" and g.game_id in ('".implode("','",$this->zacl->allow_games)."')";
+
+		$date = date('Y-m-d',(strtotime ( "now" , strtotime ( date('Y-m-d')) ) ));
+
+		if ($this->input->get("date")) {
+			$date = $this->input->get("date");
+		}
+
+
+		$stat = $this->DB2->query("SELECT gi.server_id,g.name as '遊戲', DATE_FORMAT(create_time, '%H:00') as '時間',count(*) as 'cnt'
+		from questions q LEFT JOIN servers gi
+		ON gi.server_id=q.server_id
+		LEFT JOIN games g on g.game_id=gi.game_id
+		where q.create_time between '{$date} 00:00:00' and '{$date} 23:59:59'
+		{$where_allow_games}
+		group by server_id,DATE_FORMAT(create_time, '%H:00')
+		")->result();
+
+
+
+
+		$this->_init_service_layout()
+			->add_breadcrumb("[時間別]進件數量統計")
+			->set("stat", $stat)
+			->add_css_link('pivot')
+			->add_js_include("@pivot/dist/pivot")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+
 
 
 
