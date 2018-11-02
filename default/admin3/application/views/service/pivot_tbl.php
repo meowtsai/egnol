@@ -54,7 +54,7 @@ $(function(){
 
 //console.log($("#date").val());
 
-get_data('2018-10-29');
+get_data(TODAY);
 
 
 });
