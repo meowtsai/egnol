@@ -1261,7 +1261,7 @@ class Service extends MY_Controller {
 			die(json_success());
 		}
 		else {
-			die(json_failure($query));
+			die(json_failure("標註失敗"));
 		}
 	}
 
@@ -1275,13 +1275,13 @@ class Service extends MY_Controller {
 		//$this->DB1->set("admin_comment", "CONCAT(admin_comment, $comment)",FALSE)->set("admin_uid", $_SESSION['admin_uid'])->set("update_time", "NOW()")->where("id", $id)->update("complaints");
 		if ($comment)
 		{
-		$this->DB1->set("admin_comment", $comment)->set("admin_uid", $_SESSION['admin_uid'])->set("update_time",  now())->where("id", $id)->update("complaints");
-		if ($this->DB1->affected_rows() > 0) {
-			die(json_success());
-		}
-		else {
-			die(json_failure($query));
-		}
+			$this->DB1->set("admin_comment", $comment)->set("admin_uid", $_SESSION['admin_uid'])->set("update_time",  now())->where("id", $id)->update("complaints");
+			if ($this->DB1->affected_rows() > 0) {
+				die(json_success());
+			}
+			else {
+				die(json_failure("失敗"));
+			}
 		}
 		else {
 			die(json_failure("請輸入註解"));
@@ -1374,23 +1374,6 @@ function batch_handler($batch_id){
 	function batch_add_row()
 	{
 		$id = $this->input->post("id");
-
-// 		ERROR 1146 (42S02): Table 'long_e.batch_tasksl' doesn't exist
-// mysql> desc batch_tasks;
-// +-------------+--------------+------+-----+-------------------+----------------+
-// | Field       | Type         | Null | Key | Default           | Extra          |
-// +-------------+--------------+------+-----+-------------------+----------------+
-// | id          | int(11)      | NO   | PRI | NULL              | auto_increment |
-// | game_id     | varchar(20)  | NO   | MUL | NULL              |                |
-// | title       | varchar(150) | NO   |     | NULL              |                |
-// | admin_uid   | int(11)      | YES  |     | NULL              |                |
-// | create_time | timestamp    | NO   |     | CURRENT_TIMESTAMP |                |
-// | update_time | datetime     | YES  |     | NULL              |                |
-// | status      | char(1)      | NO   |     | 1                 |                |
-// +-------------+--------------+------+-----+-------------------+----------------+
-//
-//
-
 		$data = array(
 			"game_id" => $this->input->post("game_id"),
 			'title' => nl2br(htmlspecialchars($this->input->post("title"))),
@@ -1508,8 +1491,20 @@ function batch_handler($batch_id){
 	}
 
 	function pivot_tbl(){
-		$where_allow_games = (in_array('all_game', $this->zacl->allow_games))?"":" and g.game_id in ('".implode("','",$this->zacl->allow_games)."')";
+		
 
+
+		$this->_init_service_layout()
+			->add_breadcrumb("[時間別]統計")
+			->add_css_link('pivot')
+			->add_js_include("@pivot/dist/pivot")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+
+	function hourly_count_json()
+	{
+		$where_allow_games = (in_array('all_game', $this->zacl->allow_games))?"":" and g.game_id in ('".implode("','",$this->zacl->allow_games)."')";
 		$date = date('Y-m-d',(strtotime ( "now" , strtotime ( date('Y-m-d')) ) ));
 
 		if ($this->input->get("date")) {
@@ -1540,16 +1535,8 @@ function batch_handler($batch_id){
 		")->result();
 
 
+		echo json_message(array("stat" => $stat ,"stat_reply" => $stat_reply ,"date" => $date ));
 
-
-		$this->_init_service_layout()
-			->add_breadcrumb("[時間別]統計")
-			->set("stat", $stat)
-			->set("stat_reply", $stat_reply)
-			->add_css_link('pivot')
-			->add_js_include("@pivot/dist/pivot")
-			->add_js_include("jquery-ui-timepicker-addon")
-			->render();
 	}
 
 
