@@ -49,7 +49,7 @@
 				<a href="<?=site_url("game/modify?game_id={$row->game_id}")?>" class="btn btn-mini">編輯</a>
 			</td>
 			<td>
-				<a href="https://game.longeplay.com.tw/service_quick?site=long_e&param_game_id=<?=$row->game_id?>" class="btn btn-mini">回報連結</a>
+				<a href="https://game.longeplay.com.tw/service_quick?param_game_id=<?=$row->game_id?>&site=long_e" class="btn btn-mini">回報連結</a>
 			</td>
 			<td>
 				<? if ($row->game_id =='Ma71tw'):?>

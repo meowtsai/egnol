@@ -72,10 +72,17 @@
 	    <tr>
 		    <td><?=$row->id?></td>
 		    <td>
-			    <a href="<?=server_site_url("game", "news/detail/{$row->id}?site={$this->game_id}")?>" target="_blank" title="檢視">
-				    [<?=$bulletin_type_list[$row->type]?>] <?=$row->title?></a>
-			    <a href="<?=server_site_url("game", "news/preview/{$row->id}?site={$this->game_id}")?>" target="_blank" title="預覽"><i class="icon icon-search"></i></a>
-			    <a href="<?=server_site_url("game", "news/detail/{$row->id}?site={$this->game_id}&bodyonly=true")?>" target="_blank" title="純內文檢視"><i class="icon icon-zoom-in"></i></a>
+					<?if ($this->game_id=="h55naxx2tw"):?>
+						<a href="<?="https://www.identity-v.com/pc/newspage.html?id=".$row->id?>" target="_blank" title="檢視">
+					    [<?=$bulletin_type_list[$row->type]?>] <?=$row->title?></a>
+				    <a href="<?="https://www.identity-v.com/pc/newspage.html?id=".$row->id?>" target="_blank" title="預覽"><i class="icon icon-search"></i></a>
+					<?else:?>
+						<a href="<?=server_site_url("game", "news/detail/{$row->id}?site={$this->game_id}")?>" target="_blank" title="檢視">
+					    [<?=$bulletin_type_list[$row->type]?>] <?=$row->title?></a>
+				    <a href="<?=server_site_url("game", "news/preview/{$row->id}?site={$this->game_id}")?>" target="_blank" title="預覽"><i class="icon icon-search"></i></a>
+					<?endif;?>
+
+
 		    </td>
 		    <td style="font-size:13px; color:#666">
 			    <?=date("m/d H:i", strtotime($row->start_time))?>
