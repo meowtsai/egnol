@@ -118,7 +118,6 @@
 					<th>處理狀態　|</th>
 					<td>
 					<?
-          echo "hi".$replies->num_rows();
           if ($replies->num_rows() == 0) echo '目前尚在處理中';
 					$no = $replies->num_rows();
 					foreach($replies->result() as $row):?>
