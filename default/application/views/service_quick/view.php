@@ -118,6 +118,7 @@
 					<th>處理狀態　|</th>
 					<td>
 					<?
+          echo "hi".$replies->num_rows();
           if ($replies->num_rows() == 0) echo '目前尚在處理中';
 					$no = $replies->num_rows();
 					foreach($replies->result() as $row):?>
@@ -160,7 +161,7 @@
 				</tr>
 				<tr>
 					<td colspan="2" style="overflow:visible; text-overflow:clip; white-space:normal; word-wrap: break-word;">
-					<? if ($question->status <> '4' && $replies->num_rows() > 0):?>
+					<? if ($question->status <> '4' && $replies->num_rows() > -1):?>
 					<!-- <form method="post" action="<=site_url("service_quick/insert_reply_json")?>"> -->
           <form enctype="multipart/form-data" method="post" action="<?=$longe_url?>service_quick/insert_reply_json?site=<?=$site?>">
             <input type="hidden" name="question_id" value="<?=$question->id?>">
