@@ -1999,6 +1999,11 @@ CREATE TABLE `cpl_replies` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8  COMMENT='消保案件往來回覆';
 
 
+ALTER TABLE cpl_replies
+ADD ref_gov_letter int(11) DEFAULT NULL;
+
+ALTER TABLE cpl_replies
+ADD FOREIGN KEY (ref_gov_letter) REFERENCES gov_letters(id);
 
 
 DROP TABLE IF EXISTS `cpl_attachments`;
@@ -2009,6 +2014,7 @@ CREATE TABLE `cpl_attachments` (
   FOREIGN KEY (case_id) REFERENCES cpl_cases(id),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='消保案件附件';
+
 
 DROP TABLE IF EXISTS `cpl_mediations`;
 CREATE TABLE `cpl_mediations` (

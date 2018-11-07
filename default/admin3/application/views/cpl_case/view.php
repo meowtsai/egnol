@@ -66,18 +66,29 @@ $mediation_status = $this->config->item("mediation_status");
                 <td rowspan="2" style="width:120px; text-align:center;">
                     #<?=$no++?><br>
                     <?=date('Y-m-d', strtotime($row->contact_date))?>
-										<? if ($row->admin_uid==$_SESSION['admin_uid']):?>
 										<div class="align-bottom">
-										<a href="<?=site_url("cpl_case/edit_reply/{$row->id}")?>">編輯</a>
-										</div>
+
+										<? if ($row->admin_uid==$_SESSION['admin_uid']):?>
+
+										<a href="<?=site_url("cpl_case/edit_reply/{$row->id}")?>"><i class="far fa-edit text-default" title='編輯歷程'></i> 編輯</a>
 
 										<? else:?>
 											<?=$row->admin_uname?>
 										<? endif;?>
+
+
+										</div>
                 </td>
 								<td style="word-break:break-all">
 									<span class="badge badge-warning">玩家反應</span>
 									<?=$row->claim?>
+								</td>
+								<td rowspan="2" style="width:60px;vertical-align:middle;text-align:center; ">
+									<? if ($row->ref_gov_letter): ?>
+
+										 <a href="<?=site_url("gov_letter/view/{$row->ref_gov_letter}")?>" title='相關公函'> <i class='fas fa-file-alt text-default' title='相關公函'></i> #<?=$row->ref_gov_letter?></a>
+
+									<? endif;?>
 								</td>
             </tr>
 
@@ -98,15 +109,22 @@ $mediation_status = $this->config->item("mediation_status");
       <form id="reply_form" method="post" action="<?=site_url("cpl_case/modify_reply_json")?>">
           <input type="hidden" name="case_id" value="<?=$case->id?>">
 
-          事件日期: <input type="text" name="contact_date" value="" id="contact_date"><br />
+          事件日期: <input type="text" name="contact_date" value="" id="contact_date" autocomplete="off"><br />
           玩家反應或訴求
           <textarea name="claim" rows="5" style="width:98%" class="required"></textarea>
 
           我方回覆或動作
           <textarea name="response" rows="5" style="width:98%" class="required"></textarea>
 
+					相關公函(非必要):
+					<select name="ref_gov_letter" style="width:150px;" id="ref_gov_letter">
+						<option value="">--無相關公函--</option>
+						<? foreach($letters->result() as $letter_row):?>
+						<option value="<?=$letter_row->id?>" >#<?=$letter_row->id?> - <?=$letter_row->o_letter_id?>- <?=date('Y-m-d', strtotime($letter_row->o_letter_date))?></option>
+						<? endforeach;?>
+					</select>
 
-
+					<p style="margin:20px;"/>
           <button type="submit" class="btn ">確認送出</button>
       </form>
     </div>

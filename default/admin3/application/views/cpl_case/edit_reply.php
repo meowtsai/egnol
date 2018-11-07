@@ -16,6 +16,14 @@
       我方回覆
       <textarea name="response" rows="5" style="width:98%" class="required" ><?=preg_replace('!<br.*>!iU', "", $row->response );?></textarea>
 
+      相關公函(若有):
+      <select name="ref_gov_letter" style="width:150px;" id="ref_gov_letter">
+        <option value="">--無相關公函--</option>
+        <? foreach($letters->result() as $letter_row):?>
+        <option value="<?=$letter_row->id?>" <?=($letter_row && $letter_row->id==$row->ref_gov_letter? 'selected="selected"':""); ?> >#<?=$letter_row->id?> - <?=$letter_row->o_letter_id?>- <?=date('Y-m-d', strtotime($letter_row->o_letter_date))?></option>
+        <? endforeach;?>
+      </select>
+
 
       <div class="form-actions">
       <button type="submit" class="btn ">確認送出</button>

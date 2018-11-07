@@ -156,6 +156,7 @@ class Cpl_case extends MY_Controller {
 			$this->DB2
 				->select("c.*, DATE_ADD(c.o_case_date, INTERVAL 15 DAY) as o_due,  g.name as game_name,  au.name admin_name,gi.name as server_name,",false)
 				->select("(select max(contact_date) from `cpl_replies` where case_id=c.id) as last_replied",FALSE)
+				->select("(select group_concat(ref_gov_letter) from cpl_replies where case_id=c.id) as gov_letters",FALSE)
 				->from("cpl_cases c")
         ->join("games g", "g.game_id=c.game_id", "left")
 				->join("servers gi", "gi.server_id=c.server_id", "left")
@@ -224,6 +225,19 @@ class Cpl_case extends MY_Controller {
 		->join("servers gi", "gi.server_id=c.server_id", "left")
 		->get()->row();
 
+		$letters = $this->DB2->select("id,o_letter_id,o_letter_date")
+		->where("game_id=(select game_id from cpl_cases where id={$id})", null)
+		->from("gov_letters")
+		->get();
+
+		// $letter = $this->DB2->select("c.*,  g.name as game_name,  gi.name as server_name,au.name admin_name",false)
+		// ->where("c.id", $id)
+		// ->where("c.game_id", $id)
+		// ->from("gov_letters c")
+		// ->join("games g", "g.game_id=c.game_id", "left")
+		// ->join("admin_users au", "au.uid=c.admin_uid", "left")
+		// ->join("servers gi", "gi.server_id=c.server_id", "left")
+		// ->get()->row();
 
 
 		$replies = $this->DB2
@@ -243,8 +257,10 @@ class Cpl_case extends MY_Controller {
 			->add_breadcrumb("檢視")
 			->add_js_include("cpl_case/view")
 			->add_js_include("jquery-ui-timepicker-addon")
+			->add_js_include("fontawesome-all")
 			->set("case", $case)
 			->set("replies", $replies)
+			->set("letters", $letters)
 			->set("mediations", $mediations)
 			->render();
 	}
@@ -253,10 +269,16 @@ class Cpl_case extends MY_Controller {
 	{
 		$row = $this->DB2->where("id", $id)->from("cpl_replies")->get()->row();
 
+		$letters = $this->DB2->select("id,o_letter_id,o_letter_date")
+		->where("game_id=(select game_id from cpl_cases where id={$row->case_id})", null)
+		->from("gov_letters")
+		->get();
+
 		$this->_init_cpl_case_layout()
 			->add_breadcrumb("編輯回覆")
 			->add_js_include("cpl_case/view")
 			->set("row", $row)
+			->set("letters", $letters)
 			->render();
 	}
 	function edit_mediation($id)
@@ -278,10 +300,13 @@ class Cpl_case extends MY_Controller {
 		$case_id = $this->input->post("case_id");
 		$id = $this->input->post("reply_id");
 
+		$ref_gov_letter = $this->input->post("ref_gov_letter");
+
 		$data = array(
 			"case_id" => $case_id,
 			'claim' => nl2br($this->input->post("claim")),
 			'response' => nl2br($this->input->post("response")),
+			'ref_gov_letter' => ($ref_gov_letter==""?null:$ref_gov_letter) ,
 			'contact_date' => $this->input->post("contact_date"),
 			'admin_uid' => $_SESSION['admin_uid'],
 		);
@@ -311,7 +336,7 @@ class Cpl_case extends MY_Controller {
 			->delete("cpl_mediations");
 		$this->DB1
 			->where("id", $id)
-			->delete("cpl_cases");	
+			->delete("cpl_cases");
 		if ($this->DB1->affected_rows() > 0) echo json_success();
 		else echo json_failure("資料庫刪除失敗或沒有權限".$this->DB1->last_query());
 	}
