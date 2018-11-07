@@ -67,14 +67,9 @@ $mediation_status = $this->config->item("mediation_status");
                     #<?=$no++?><br>
                     <?=date('Y-m-d', strtotime($row->contact_date))?>
 										<div class="align-bottom">
-
-										<? if ($row->admin_uid==$_SESSION['admin_uid']):?>
-
+											 編輯者:<?=$row->admin_uname?> <br /> <br />
 										<a href="<?=site_url("cpl_case/edit_reply/{$row->id}")?>"><i class="far fa-edit text-default" title='編輯歷程'></i> 編輯</a>
 
-										<? else:?>
-											<?=$row->admin_uname?>
-										<? endif;?>
 
 
 										</div>
@@ -103,7 +98,7 @@ $mediation_status = $this->config->item("mediation_status");
 
 
 
-<? if (($case->status == '1' || $case->status == '2') && $case->admin_uid==$_SESSION['admin_uid']): ?>
+<? if ($case->status == '1' || $case->status == '2') : ?>
     <div style="background-color:#F6CED8;padding:10px;">
       <label><h4>添加聯絡或事件歷程</h4></label>
       <form id="reply_form" method="post" action="<?=site_url("cpl_case/modify_reply_json")?>">
