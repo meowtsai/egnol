@@ -62,6 +62,8 @@
 			<td colspan="3">
 				<div class="form-actions">
 			  		<button type="submit" class="btn">確認送出</button>
+						<input type="hidden" id="back_url" value="<?=site_url("cpl_case/view/{$row->case_id}") ?>">
+
 						<a href="javascript:;" class="del pull-right btn btn-danger" url="<?=site_url("cpl_case/delete_mediation_json/{$row->id}")?>">
 			        <i class="icon icon-remove"></i>  刪除本篇
 			      </a>

@@ -251,6 +251,7 @@ $mediation_status = $this->config->item("mediation_status");
 
 <? if ($case->admin_uid==$_SESSION['admin_uid']): ?>
 <div class="form-actions">
+	<input type="hidden" id="back_url" value="<?=site_url("cpl_case/get_list?action=%E6%9F%A5%E8%A9%A2")?>">
 	<? if ($case->status == '2'): ?>
 			<a href="javascript:;" url="<?=site_url("cpl_case/move_case/{$case->id}?status=3")?>" class="json_post pull-left btn btn-warning">進入消保協調開會程序</a>
 				<button type="button" class="btn btn-success" data-toggle="modal" data-target="#caseCloseModal" onclick="open_modal('<?=$case->id?>')">結案</button>

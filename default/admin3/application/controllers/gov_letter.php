@@ -67,6 +67,15 @@ class Gov_letter extends MY_Controller {
 
 		$letter_id = $this->input->post("letter_id");
 
+		$game_id = $this->input->post("game_id");
+		$server_id = $this->input->post("server_id");
+		$role_name = $this->input->post("role_name");
+
+		if ($game_id=="" || $server_id==""){
+			//.$this->DB2->last_query()
+				die(json_failure("遊戲和伺服器必填喔!"));
+		}
+
 		$data = array(
 			"o_letter_id" => $this->input->post("o_letter_id"),
 			"o_letter_date" => $this->input->post("o_letter_date"),
@@ -75,9 +84,9 @@ class Gov_letter extends MY_Controller {
 			'note' => nl2br($this->input->post("note")),
 			"deadline" => $this->input->post("deadline"),
 			"status" => $this->input->post("status"),
-			"game_id" => $this->input->post("game_id"),
-			"server_id" => $this->input->post("server_id"),
-			"role_name" => $this->input->post("role_name"),
+			"game_id" => $game_id,
+			"server_id" => $server_id,
+			"role_name" => $role_name,
 			'admin_uid' => $_SESSION['admin_uid'],
 		);
 		$check_dup = null;

@@ -25,13 +25,13 @@
 			</td>
 			<td>連絡電話：</td>
 			<td >
-				<input type="text" name="phone" maxlength="10"  value="<?=$case ? $case->phone: ''?>" placeholder="例:0922******">
+				<input type="text" name="phone" maxlength="10"  value="<?=$case ? $case->phone: ''?>" placeholder="例:0922******" autocomplete="off">
 			</td>
 		</tr>
 		<tr>
 			<td>申訴原因：</td>
 			<td colspan="3">
-				<input type="text" name="reason" maxlength="25" style="width:360px;"  value="<?=$case ? $case->reason: ''?>" id="reason" placeholder="例:連線問題">
+				<input type="text" name="reason" maxlength="25" style="width:360px;"  value="<?=$case ? $case->reason: ''?>" id="reason" placeholder="例:連線問題" autocomplete="off">
 			</td>
 		</tr>
 		<tr>
@@ -46,7 +46,7 @@
 				<select name="server_id" style="width:150px;" id="server_id">
 
 				</select>
-				<input type="text" name="role_name" class="required" maxlength="15"  value="<?=$case ? $case->role_name: ''?>" placeholder="角色名稱, 例:寶寶心裡苦#P✿">
+				<input type="text" name="role_name"  maxlength="15"  value="<?=$case ? $case->role_name: ''?>" placeholder="角色名稱, 例:寶寶心裡苦#P✿">
 			</td>
 		</tr>
 

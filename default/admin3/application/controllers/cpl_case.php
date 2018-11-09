@@ -86,17 +86,29 @@ class Cpl_case extends MY_Controller {
 
 		$case_id = $this->input->post("case_id");
 
+
+		$game_id = $this->input->post("game_id");
+		$server_id = $this->input->post("server_id");
+		$role_name = $this->input->post("role_name");
+
+		if ($game_id=="" || $server_id==""){
+			//.$this->DB2->last_query()
+				die(json_failure("遊戲和伺服器必填喔!"));
+		}
+
 		$data = array(
 			"o_case_id" => $this->input->post("o_case_id"),
 			"o_case_date" => $this->input->post("o_case_date"),
 			"appellant" => $this->input->post("appellant"),
 			"reason" => $this->input->post("reason"),
 			"phone" => $this->input->post("phone"),
-			"game_id" => $this->input->post("game_id"),
-			"server_id" => $this->input->post("server_id"),
-			"role_name" => $this->input->post("role_name"),
+
+			"game_id" => $game_id,
+			"server_id" => $server_id,
+			"role_name" => $role_name,
 			'admin_uid' => $_SESSION['admin_uid'],
 		);
+		//die(json_failure(print_r($data)));
 		$check_dup = null;
 		$this->DB2->select("count(*) as cnt")->from("cpl_cases")->where("o_case_id",$this->input->post("o_case_id"));
 		if ($case_id)

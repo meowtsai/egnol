@@ -60,7 +60,7 @@
 				<select name="server_id" style="width:150px;" id="server_id">
 
 				</select>
-				<input type="text" name="role_name" class="required" maxlength="15"  value="<?=$letter ? $letter->role_name: ''?>" placeholder="角色名稱, 例:米迦聿">
+				<input type="text" name="role_name"  maxlength="15"  value="<?=$letter ? $letter->role_name: ''?>" placeholder="角色名稱, 例:米迦聿">
 			</td>
 		</tr>
 
