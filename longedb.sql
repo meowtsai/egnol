@@ -1985,6 +1985,18 @@ CREATE TABLE `cpl_cases` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='消保案件主表';
 
 
+DROP TABLE IF EXISTS `case_reference`;
+CREATE TABLE `case_reference` (
+  `case_id` int(11) NOT NULL,
+  `ref_id` int(11) NOT NULL,
+  CONSTRAINT PK_caseref PRIMARY KEY (case_id,ref_id),
+  FOREIGN KEY (case_id) REFERENCES cpl_cases(id),
+  FOREIGN KEY (ref_id) REFERENCES cpl_cases(id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
 DROP TABLE IF EXISTS `cpl_replies`;
 CREATE TABLE `cpl_replies` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2000,10 +2012,14 @@ CREATE TABLE `cpl_replies` (
 
 
 ALTER TABLE cpl_replies
-ADD ref_gov_letter int(11) DEFAULT NULL;
+ADD note text NOT NULL COMMENT '歷程紀錄';
+
+update cpl_replies set note= concat(claim,response);
 
 ALTER TABLE cpl_replies
-ADD FOREIGN KEY (ref_gov_letter) REFERENCES gov_letters(id);
+ADD contact_time timestamp NOT NULL COMMENT '聯絡時間';
+
+update cpl_replies set contact_time = contact_date;
 
 
 DROP TABLE IF EXISTS `cpl_attachments`;
@@ -2014,6 +2030,9 @@ CREATE TABLE `cpl_attachments` (
   FOREIGN KEY (case_id) REFERENCES cpl_cases(id),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='消保案件附件';
+
+ALTER TABLE cpl_attachments
+ADD title varchar(50) NOT NULL COMMENT '附件名稱';
 
 
 DROP TABLE IF EXISTS `cpl_mediations`;

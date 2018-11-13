@@ -52,7 +52,72 @@ $mediation_status = $this->config->item("mediation_status");
       <th>建立時間：</th>
 			<td><?=$case->create_time?></td>
 		</tr>
+		<tr>
+			<td colspan="4"></td>
+		</tr>
+		<tr>
+			<th>相關案件：</th>
+			<td colspan="3">
+				<div style="padding:20px;">
+					<? if ($ref_cases->num_rows() == 0):?>
+					尚未設定相關案件，有需要請在下方選擇後按加入。
+					<?else:?>
+						<ul>
+						<? foreach($ref_cases->result() as $ref_case_row):?>
+							<li><a href="<?=site_url("cpl_case/view/${$ref_case_row->ref_id}")?>">#<?=$ref_case_row->ref_id?> - <?=$ref_case_row->o_case_id?></a></li>
+						<? endforeach;?>
+						</ul>
+					<?endif;?>
+					
+				</div>
+				<div style="background-color:#BDBDBD;padding:10px;">
+		      <form id="add_ref_form" method="post" action="<?=site_url("cpl_case/add_ref_case_json")?>">
+		          <input type="hidden" name="case_id" value="<?=$case->id?>">
 
+							<select name="ref_case_list" style="width:200px;" id="ref_case_list"  class="required">
+                  <option value="">--案件列表--</option>
+                  <? foreach($ref_case_list->result() as $ref_row):?>
+                  <option value="<?=$ref_row->id?>" >#<?=$ref_row->id?> - <?=$ref_row->o_case_id?>- <?=$ref_row->appellant?> (<?=date('Y-m-d', strtotime($ref_row->o_case_date))?>)</option>
+                  <? endforeach;?>
+              </select>
+
+							<button type="submit" class="btn btn-small btn-inverse">加入</button>
+		      </form>
+		    </div>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="4"></td>
+		</tr>
+		<tr>
+			<th>相關附件：</th>
+			<td colspan="3">
+				<div style="padding:20px;">
+					<? $num=1;?>
+					<? if ($attachments->num_rows() == 0):?>
+					尚未設定相關附件，有需要請在下方選擇後按加入。
+					<?else:?>
+						<ul>
+						<? foreach($attachments->result() as $attachment):?>
+							<li><a href="<?=$attachment->file_path?>"><?=$attachment->title?></a></li>
+							<? $num++;?>
+						<? endforeach;?>
+						</ul>
+					<?endif;?>
+				</div>
+				<div style="background-color:#E1F5A9;padding:10px;">
+					<form id="add_attachment_form" method="post" action="<?=site_url("cpl_case/add_attachment_json")?>">
+							<input type="hidden" name="case_id" value="<?=$case->id?>">
+
+							<label>附件名稱</label>
+							<input type="text" name="attach_title" id="attach_title" class="required" value="附件<?=$num?>" autocomplete="off">
+							<label>選擇附件</label>
+							<input type="file" name="file01" class="required">
+							<button type="submit" class="btn btn-small btn-inverse">上傳附件</button>
+					</form>
+				</div>
+			</td>
+		</tr>
 	</table>
 
 
@@ -63,9 +128,9 @@ $mediation_status = $this->config->item("mediation_status");
 
         <table class="table table-bordered" style="position:relative;">
             <tr>
-                <td rowspan="2" style="width:120px; text-align:center;">
+                <td  style="width:120px; text-align:center;">
                     #<?=$no++?><br>
-                    <?=date('Y-m-d', strtotime($row->contact_date))?>
+                    <?=date('Y-m-d H:i', strtotime($row->contact_time))?>
 										<div class="align-bottom">
 											 編輯者:<?=$row->admin_uname?> <br /> <br />
 										<a href="<?=site_url("cpl_case/edit_reply/{$row->id}")?>"><i class="far fa-edit text-default" title='編輯歷程'></i> 編輯</a>
@@ -75,23 +140,13 @@ $mediation_status = $this->config->item("mediation_status");
 										</div>
                 </td>
 								<td style="word-break:break-all">
-									<span class="badge badge-warning">玩家反應</span>
-									<?=$row->claim?>
+									<span class="badge badge-warning">歷程紀錄</span>
+									<?=$row->note?>
 								</td>
-								<td rowspan="2" style="width:60px;vertical-align:middle;text-align:center; ">
-									<? if ($row->ref_gov_letter): ?>
 
-										 <a href="<?=site_url("gov_letter/view/{$row->ref_gov_letter}")?>" title='相關公函'> <i class='fas fa-file-alt text-default' title='相關公函'></i> #<?=$row->ref_gov_letter?></a>
-
-									<? endif;?>
-								</td>
             </tr>
 
-						<tr class="success">
-                <td style="word-break:break-all">
-									<span class="badge badge-success">我方回覆</span>
-									<?=$row->response?></td>
-            </tr>
+
         </table>
 
 	<? endforeach;?>
@@ -104,20 +159,14 @@ $mediation_status = $this->config->item("mediation_status");
       <form id="reply_form" method="post" action="<?=site_url("cpl_case/modify_reply_json")?>">
           <input type="hidden" name="case_id" value="<?=$case->id?>">
 
-          事件日期: <input type="text" name="contact_date" value="" id="contact_date" autocomplete="off"><br />
-          玩家反應或訴求
-          <textarea name="claim" rows="5" style="width:98%" class="required"></textarea>
+          <label>聯絡時間</label>
+					<input type="text" name="contact_time" id="contact_time" class="" value="<?=date('Y-m-d H:i', strtotime(now()))?>" autocomplete="off">
 
-          我方回覆或動作
-          <textarea name="response" rows="5" style="width:98%" class="required"></textarea>
 
-					相關公函(非必要):
-					<select name="ref_gov_letter" style="width:150px;" id="ref_gov_letter">
-						<option value="">--無相關公函--</option>
-						<? foreach($letters->result() as $letter_row):?>
-						<option value="<?=$letter_row->id?>" >#<?=$letter_row->id?> - <?=$letter_row->o_letter_id?>- <?=date('Y-m-d', strtotime($letter_row->o_letter_date))?></option>
-						<? endforeach;?>
-					</select>
+					<label>歷程紀錄</label>
+          <textarea name="note" rows="5" style="width:98%" class="required"></textarea>
+
+
 
 					<p style="margin:20px;"/>
           <button type="submit" class="btn ">確認送出</button>

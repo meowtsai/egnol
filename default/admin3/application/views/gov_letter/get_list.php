@@ -92,7 +92,6 @@ $status = $this->config->item("case_status");
 			<th style="width:100px;">狀態</th>
 			<th style="width:110px;"><?=set_sort_URL('create_time',$query_string, '建立時間')?> </th>
 			<th style="width:50px;"></th>
-			<th style="width:50px;">消保案</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -122,16 +121,7 @@ $status = $this->config->item("case_status");
 			<td>
 				<a href="<?=site_url("gov_letter/edit/{$row->id}")?>" class="btn btn-mini">編輯</a>
 			</td>
-			<td>
-				<? if ($row->ref_cases):
-						$case_array = explode(",",$row->ref_cases);?>
 
-						<?for ($i=0; $i < sizeof($case_array) ; $i++) : ?>
-							<a href="<?=site_url("cpl_case/view/{$case_array[$i]}")?>" title='相關消保案'> <i class='fas fa-file-alt text-default' title='相關消保案'></i> #<?=$case_array[$i]?></a> <br />
-						<? endfor;?>
-						
-				<? endif;?>
-			</td>
 
 		</tr>
 		<? endforeach;?>

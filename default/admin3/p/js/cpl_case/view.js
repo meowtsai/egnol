@@ -15,6 +15,8 @@ $(function(){
 	$("#contact_date").datepicker( "option", "dateFormat", "yy-mm-dd");
 	$("#contact_date").val(date);
 
+	$("input[name=contact_time]").datetimepicker({dateFormat: "yy-mm-dd", changeMonth: true, changeYear: true});
+
 	var o_date = $("#o_case_date").val();
 	$("#o_case_date").datepicker({
 		changeMonth: true,
@@ -39,30 +41,48 @@ $(function(){
 
 
 
+$("#add_ref_form").validate({
+	submitHandler: function(form) {
+		$(form).json_ajaxSubmit(function(json){
+			//alert(json.message);
+			//if (json.back_url) {
+			if (json.status == 'success') {
+				//location.href = location.href;
+				location.href = json.redirect_url;
+			}
+		});
+	}
+});
 
+$("#add_attachment_form").validate({
+	submitHandler: function(form) {
+		$(form).json_ajaxSubmit(function(json){
+			if (json.status == 'success') {
+				location.href = json.redirect_url;
+			}
+		});
+	}
+});
 
 	$("#reply_form").validate({
 		submitHandler: function(form) {
 			$(form).json_ajaxSubmit(function(json){
-				//alert(json.message);
-				//if (json.back_url) {
 				if (json.status == 'success') {
-					//location.href = location.href;
 					location.href = json.redirect_url;
 				}
 			});
 		}
 	});
 
+
+
+
 	$("#form_mediation").validate({
 		submitHandler: function(form) {
 			console.log("submit");
 			$(form).json_ajaxSubmit(function(json){
 				console.log("json",json);
-				//alert(json.message);
-				//location.href = json.redirect_url;
 				if (json.status == 'success') {
-					//location.href = location.href;
 					location.href = json.redirect_url;
 				}
 			});

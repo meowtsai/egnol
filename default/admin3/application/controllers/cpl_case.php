@@ -102,7 +102,6 @@ class Cpl_case extends MY_Controller {
 			"appellant" => $this->input->post("appellant"),
 			"reason" => $this->input->post("reason"),
 			"phone" => $this->input->post("phone"),
-
 			"game_id" => $game_id,
 			"server_id" => $server_id,
 			"role_name" => $role_name,
@@ -167,8 +166,7 @@ class Cpl_case extends MY_Controller {
 			//select id, o_case_id,o_case_date,appellant,reason,phone,game_id,server_id,role_name,admin_uid,create_time,update_time,close_date,status
 			$this->DB2
 				->select("c.*, DATE_ADD(c.o_case_date, INTERVAL 15 DAY) as o_due,  g.name as game_name,  au.name admin_name,gi.name as server_name,",false)
-				->select("(select max(contact_date) from `cpl_replies` where case_id=c.id) as last_replied",FALSE)
-				->select("(select group_concat(ref_gov_letter) from cpl_replies where case_id=c.id) as gov_letters",FALSE)
+				->select("(select max(contact_time) from `cpl_replies` where case_id=c.id) as last_replied",FALSE)
 				->from("cpl_cases c")
         ->join("games g", "g.game_id=c.game_id", "left")
 				->join("servers gi", "gi.server_id=c.server_id", "left")
@@ -236,20 +234,24 @@ class Cpl_case extends MY_Controller {
 		->join("admin_users au", "au.uid=c.admin_uid", "left")
 		->join("servers gi", "gi.server_id=c.server_id", "left")
 		->get()->row();
+//->select("(select group_concat(ref_id) from case_reference where case_id=c.id) as ref_cases",FALSE)
+		$ref_cases = $this->DB2->select("c.o_case_id,cr.ref_id")
+			->from("case_reference cr")
+			->join("cpl_cases c", "c.id=cr.ref_id", "left")
+			->where("cr.case_id", $id)->get();
 
-		$letters = $this->DB2->select("id,o_letter_id,o_letter_date")
-		->where("game_id=(select game_id from cpl_cases where id={$id})", null)
-		->from("gov_letters")
-		->get();
+			$attachments = $this->DB2->select("ca.*")
+				->from("cpl_attachments ca")
+				->where("ca.case_id", $id)->get();
 
-		// $letter = $this->DB2->select("c.*,  g.name as game_name,  gi.name as server_name,au.name admin_name",false)
-		// ->where("c.id", $id)
-		// ->where("c.game_id", $id)
-		// ->from("gov_letters c")
-		// ->join("games g", "g.game_id=c.game_id", "left")
-		// ->join("admin_users au", "au.uid=c.admin_uid", "left")
-		// ->join("servers gi", "gi.server_id=c.server_id", "left")
-		// ->get()->row();
+
+
+		$ref_case_list = $this->DB2->select("id,o_case_id,o_case_date,appellant")
+		 ->where("game_id=(select game_id from cpl_cases where id={$id})", null)
+		 ->from("cpl_cases c")
+		 ->where("id<>{$id}",null,false)
+		 ->where("id not in(select ref_id from case_reference where case_id={$id})", null)
+		 ->order_by("c.id", "desc")->get();
 
 
 		$replies = $this->DB2
@@ -271,8 +273,10 @@ class Cpl_case extends MY_Controller {
 			->add_js_include("jquery-ui-timepicker-addon")
 			->add_js_include("fontawesome-all")
 			->set("case", $case)
+			->set("ref_cases", $ref_cases)
+			->set("attachments", $attachments)
+			->set("ref_case_list", $ref_case_list)
 			->set("replies", $replies)
-			->set("letters", $letters)
 			->set("mediations", $mediations)
 			->render();
 	}
@@ -289,6 +293,7 @@ class Cpl_case extends MY_Controller {
 		$this->_init_cpl_case_layout()
 			->add_breadcrumb("編輯回覆")
 			->add_js_include("cpl_case/view")
+			->add_js_include("jquery-ui-timepicker-addon")
 			->set("row", $row)
 			->set("letters", $letters)
 			->render();
@@ -312,19 +317,14 @@ class Cpl_case extends MY_Controller {
 		$case_id = $this->input->post("case_id");
 		$id = $this->input->post("reply_id");
 
-		$ref_gov_letter = $this->input->post("ref_gov_letter");
-
 		$data = array(
 			"case_id" => $case_id,
-			'claim' => nl2br($this->input->post("claim")),
-			'response' => nl2br($this->input->post("response")),
-			'ref_gov_letter' => ($ref_gov_letter==""?null:$ref_gov_letter) ,
-			'contact_date' => $this->input->post("contact_date"),
+			'note' => nl2br($this->input->post("note")),
+			'contact_time' => $this->input->post("contact_time"),
 			'admin_uid' => $_SESSION['admin_uid'],
 		);
 
 		if ($id) {
-
 			$this->DB1
 				->where("id", $id)
 				->update("cpl_replies", $data);
@@ -333,11 +333,61 @@ class Cpl_case extends MY_Controller {
 			$this->DB1
 				->insert("cpl_replies", $data);
 		}
-
-		//die(json_success());
 		die(json_message(array("redirect_url"=> base_url("cpl_case/view/".$case_id), "id"=>$case_id), true));
 	}
 
+
+function add_attachment_json(){
+	$case_id = $this->input->post("case_id");
+	$attach_title = $this->input->post("attach_title");
+	$data = array(
+		"case_id" => $case_id,
+		'title' => $attach_title,
+	);
+
+	$file_path="";
+	if ( ! empty($_FILES["file01"]['name']))
+	{
+		$this->load->library('upload', array("upload_path"=>realpath("p/upload/gov_letters"), "allowed_types"=>"*", 'encrypt_name'=>TRUE));
+
+		if ( ! $this->upload->do_upload("file01"))
+		{
+			$msg[] = $this->upload->display_errors('', '');
+		}
+		else
+		{
+			//rsync_to_slave();
+			$upload_data = $this->upload->data();
+			$file_path = site_url("p/upload/gov_letters/{$upload_data['file_name']}");
+		}
+	}
+	else {
+		$file_path = $this->input->post("file_path");
+	}
+
+	$data["file_path"] = $file_path;
+
+	$this->DB1
+		->insert("cpl_attachments", $data);
+
+	die(json_message(array("redirect_url"=> base_url("cpl_case/view/".$case_id), "id"=>$case_id), true));
+
+
+}
+function add_ref_case_json(){
+	$case_id = $this->input->post("case_id");
+	$ref_id = $this->input->post("ref_case_list");
+
+	$data = array(
+		"case_id" => $case_id,
+		'ref_id' => $ref_id,
+	);
+	$this->DB1
+		->insert("case_reference", $data);
+
+	die(json_message(array("redirect_url"=> base_url("cpl_case/view/".$case_id), "id"=>$case_id), true));
+
+}
 	function delete_case_json($id)
 	{
 		$this->DB1

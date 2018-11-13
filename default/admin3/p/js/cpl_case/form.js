@@ -7,6 +7,8 @@ $(function() {
 	$("#o_case_date").datepicker( "option", "dateFormat", "yy-mm-dd");
   $("#o_case_date").val(o_date);
 
+
+  
   $( "#game_id" ).change(function() {
   	var select_game_id = $(this).find(":selected").val();
 		let url =  ($("input[name=case_id]").val()?"../":"./") + "get_servers_json/" + select_game_id;

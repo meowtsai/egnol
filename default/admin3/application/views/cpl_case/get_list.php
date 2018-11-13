@@ -99,7 +99,6 @@
 			<th style="width:100px;">狀態</th>
 			<th style="width:110px;"><?=set_sort_URL('create_time',$query_string, '建立時間')?> </th>
 			<th style="width:50px;"></th>
-			<th style="width:50px;">公函</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -124,7 +123,7 @@
 			<td><?=$row->appellant?></td>
 			<td><?=$row->reason?></td>
 			<td><?=$row->o_due?></td>
-			<td><?=$row->last_replied?></td>
+			<td><?=date("Y-m-d H:i", strtotime($row->last_replied))?></td>
 			<td><?=$row->phone?></td>
 			<td>【<?=$row->game_name?>】<br /><?=$row->role_name?><br /><span style="font-size:60%">(<?=$row->server_name?>)</span></td>
 			<td>
@@ -140,15 +139,7 @@
 
 
 			</td>
-			<td>
-				<? if ($row->gov_letters):
-						$gl_array = explode(",",$row->gov_letters);?>
 
-						<?for ($i=0; $i < sizeof($gl_array) ; $i++) : ?>
-							<a href="<?=site_url("gov_letter/view/{$gl_array[$i]}")?>" title='相關公函'> <i class='fas fa-file-alt text-default' title='相關公函'></i> #<?=$gl_array[$i]?></a> <br />
-						<? endfor;?>
-				<? endif;?>
-			</td>
 		</tr>
 		<? endforeach;?>
 
