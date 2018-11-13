@@ -365,7 +365,7 @@ function add_attachment_json(){
 		$file_path = $this->input->post("file_path");
 	}
 
-	$data["file_path"] = $file_path;
+	$data["pic_path"] = $file_path;
 
 	$this->DB1
 		->insert("cpl_attachments", $data);
@@ -381,6 +381,13 @@ function add_ref_case_json(){
 	$data = array(
 		"case_id" => $case_id,
 		'ref_id' => $ref_id,
+	);
+	$this->DB1
+		->insert("case_reference", $data);
+
+	$data = array(
+		"case_id" => $ref_id,
+		'ref_id' => $case_id,
 	);
 	$this->DB1
 		->insert("case_reference", $data);
@@ -516,6 +523,38 @@ function modify_mediation_json()
 
 	//die(json_success());
 	die(json_message(array("redirect_url"=> base_url("cpl_case/view/".$case_id), "id"=>$case_id), true));
+}
+
+function remove_case_reference($case_id,$ref_id)
+{
+	//echo json_failure("case_id=".$case_id.",ref_id=".$ref_id);
+		$this->DB1
+		->where("case_id", $case_id)
+		->where("ref_id", $ref_id)
+		->delete("case_reference");
+
+		$this->DB1
+		->where("case_id",$ref_id )
+		->where("ref_id", $case_id)
+		->delete("case_reference");
+
+	if ($this->DB1->affected_rows() > 0) echo json_success();
+	else echo json_failure("資料庫刪除失敗或沒有權限".$this->DB1->last_query());
+
+
+}
+
+function remove_case_attachment($case_id,$attach_id)
+{
+		$this->DB1
+		->where("case_id", $case_id)
+		->where("id", $attach_id)
+		->delete("cpl_attachments");
+
+	if ($this->DB1->affected_rows() > 0) echo json_success();
+	else echo json_failure("資料庫刪除失敗或沒有權限".$this->DB1->last_query());
+
+
 }
 
 }

@@ -7,7 +7,11 @@ $mediation_status = $this->config->item("mediation_status");
 #question {}
 #question table.officail {background:#e7efe5;}
 #content {width:600px;}
+.fa-trash-alt{
+	color: #d03f3f;
+}
 </style>
+
 
 <legend>消保案件 #<?=$case->id?></legend>
 
@@ -56,19 +60,22 @@ $mediation_status = $this->config->item("mediation_status");
 			<td colspan="4"></td>
 		</tr>
 		<tr>
-			<th>相關案件：</th>
+			<th>相關案件 <i class="fas fa-folder-open"></i></th>
 			<td colspan="3">
 				<div style="padding:20px;">
 					<? if ($ref_cases->num_rows() == 0):?>
 					尚未設定相關案件，有需要請在下方選擇後按加入。
 					<?else:?>
-						<ul>
+						<ul id="ul_ref_cases">
 						<? foreach($ref_cases->result() as $ref_case_row):?>
-							<li><a href="<?=site_url("cpl_case/view/${$ref_case_row->ref_id}")?>">#<?=$ref_case_row->ref_id?> - <?=$ref_case_row->o_case_id?></a></li>
+							<li key="<?=$ref_case_row->ref_id?>">
+								<a href="<?=site_url("cpl_case/view/{$ref_case_row->ref_id}")?>"># <?=$ref_case_row->ref_id?> - <?=$ref_case_row->o_case_id?></a>
+								<a href='#' class='remove-row' title='移除' data-qid='<?=$ref_case_row->ref_id?>' onclick="removeItem(<?=$ref_case_row->ref_id?>)"><i   class='far fa-trash-alt'></i></a>
+							</li>
 						<? endforeach;?>
 						</ul>
 					<?endif;?>
-					
+
 				</div>
 				<div style="background-color:#BDBDBD;padding:10px;">
 		      <form id="add_ref_form" method="post" action="<?=site_url("cpl_case/add_ref_case_json")?>">
@@ -77,7 +84,7 @@ $mediation_status = $this->config->item("mediation_status");
 							<select name="ref_case_list" style="width:200px;" id="ref_case_list"  class="required">
                   <option value="">--案件列表--</option>
                   <? foreach($ref_case_list->result() as $ref_row):?>
-                  <option value="<?=$ref_row->id?>" >#<?=$ref_row->id?> - <?=$ref_row->o_case_id?>- <?=$ref_row->appellant?> (<?=date('Y-m-d', strtotime($ref_row->o_case_date))?>)</option>
+                  <option value="<?=$ref_row->id;?>" > # <?=$ref_row->id;?> - <?=$ref_row->o_case_id?>- <?=$ref_row->appellant?> (<?=date('Y-m-d', strtotime($ref_row->o_case_date))?>)</option>
                   <? endforeach;?>
               </select>
 
@@ -90,16 +97,19 @@ $mediation_status = $this->config->item("mediation_status");
 			<td colspan="4"></td>
 		</tr>
 		<tr>
-			<th>相關附件：</th>
+			<th>相關附件 <i class="fas fa-paperclip"></i></th>
 			<td colspan="3">
 				<div style="padding:20px;">
 					<? $num=1;?>
 					<? if ($attachments->num_rows() == 0):?>
 					尚未設定相關附件，有需要請在下方選擇後按加入。
 					<?else:?>
-						<ul>
+						<ul id="ul_attach">
 						<? foreach($attachments->result() as $attachment):?>
-							<li><a href="<?=$attachment->file_path?>"><?=$attachment->title?></a></li>
+							<li key="<?=$attachment->id?>">
+								<a href="<?=$attachment->pic_path?>"><?=$attachment->title?></a>
+								<a href='#' class='remove-row' title='移除' onclick="removeAttach(<?=$attachment->id?>)" data-qid='<?=$attachment->id?>' ><i   class='far fa-trash-alt'></i></a>
+							</li>
 							<? $num++;?>
 						<? endforeach;?>
 						</ul>
@@ -347,3 +357,60 @@ $mediation_status = $this->config->item("mediation_status");
     </div>
   </div>
 </div>
+
+<script type="text/javascript">
+function removeItem(ref_id_remove){
+	if (!confirm("確定要取消關聯案件"+ref_id_remove+"嗎?")) {
+		return;
+	}
+	let url = "../remove_case_reference/<?=$case->id?>/" + ref_id_remove;
+	$.ajax({
+		type: "POST",
+		url: url,
+		dataType: "json",
+		contentType: 'application/json; charset=UTF-8',
+	}).done(function(result) {
+		//console.log( "Request done: " + JSON.stringify(result) );
+
+		if (result.status=="success")
+		{
+			$("#ul_ref_cases li[key='"+ ref_id_remove +"']").remove();
+		}
+	})
+	.fail(function( jqXHR, textStatus ) {
+		console.log( "Request failed: " + textStatus );
+	})
+	.always(function() {
+		console.log("complete")
+	});
+}
+function removeAttach(attach_id_remove){
+	if (!confirm("確定要刪除這個附件嗎?")) {
+		return;
+	}
+	console.log("attach_id_remove",attach_id_remove);
+	console.log("case_id",<?=$case->id?>);
+	//return;
+	let url = "../remove_case_attachment/<?=$case->id?>/" + attach_id_remove;
+	$.ajax({
+		type: "POST",
+		url: url,
+		dataType: "json",
+		contentType: 'application/json; charset=UTF-8',
+	}).done(function(result) {
+		//console.log( "Request done: " + JSON.stringify(result) );
+
+		if (result.status=="success")
+		{
+			$("#ul_attach li[key='"+ attach_id_remove +"']").remove();
+		}
+	})
+	.fail(function( jqXHR, textStatus ) {
+		console.log( "Request failed: " + textStatus );
+	})
+	.always(function() {
+		console.log("complete")
+	});
+}
+
+</script>
