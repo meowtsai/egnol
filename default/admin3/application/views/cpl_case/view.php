@@ -14,6 +14,7 @@ $mediation_status = $this->config->item("mediation_status");
 	size:16px;
 	color:green;
 	padding:0 0 0 10px;
+	cursor: pointer;
 }
 .form_div {
 	padding:10px;

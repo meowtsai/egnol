@@ -88,15 +88,16 @@
 	<thead>
 		<tr>
 			<th style="width:60px;"> <?=set_sort_URL('id',$query_string, '#')?></th>
-			<th style="width:80px">發文字號</th>
+			<th style="width:120px">發文字號</th>
 			<th style="width:80px">申訴人姓名</th>
 			<th style="width:120px">申訴原因</th>
-			<th style="width:120px" ><?=set_sort_URL('o_case_date',$query_string, '回文期限')?></th>
+			<th style="width:100px" ><?=set_sort_URL('o_case_date',$query_string, '回文期限')?></th>
 			<th style="width:120px">最新連絡</th>
 			<th style="width:80px;">連絡電話</th>
 			<th style="width:100px;">角色資訊</th>
-			<th style="width:120px" ><?=set_sort_URL('close_date',$query_string, '結案日期')?></th>
-			<th style="width:100px;">狀態</th>
+			<th style="width:50px;">伺服器</th>
+			<th style="width:100px" ><?=set_sort_URL('close_date',$query_string, '結案日期')?></th>
+			<th style="width:50px;">狀態</th>
 			<th style="width:110px;"><?=set_sort_URL('create_time',$query_string, '建立時間')?> </th>
 			<th style="width:50px;"></th>
 		</tr>
@@ -125,7 +126,8 @@
 			<td><?=$row->o_due?></td>
 			<td><?=$row->last_replied?date("Y-m-d H:i", strtotime($row->last_replied)):""; ?></td>
 			<td><?=$row->phone?></td>
-			<td>【<?=$row->game_name?>】<br /><?=$row->role_name?><br /><span style="font-size:60%">(<?=$row->server_name?>)</span></td>
+			<td>【<?=$row->game_name?>】<br /><?=$row->role_name?><br /></td>
+			<td><span style="font-size:60%"><?=$row->server_name?></span></td>
 			<td>
 				<?if ($row->status=='4'):?>
 				<?=$row->close_date?>
