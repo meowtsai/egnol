@@ -87,8 +87,8 @@
 <table class="table table-striped table-bordered" style="width:auto;">
 	<thead>
 		<tr>
-			<th style="width:40px;"> <?=set_sort_URL('id',$query_string, '#')?></th>
-			<th style="width:220px">發文字號</th>
+			<th style="width:50px;"> <?=set_sort_URL('id',$query_string, '#')?></th>
+			<th style="width:260px">發文字號</th>
 			<th style="width:60px">申訴人</th>
 			<th style="width:120px">申訴原因</th>
 			<th style="width:100px" ><?=set_sort_URL('o_case_date',$query_string, '回文期限')?></th>
