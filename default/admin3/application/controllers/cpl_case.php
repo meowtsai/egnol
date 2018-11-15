@@ -177,23 +177,33 @@ class Cpl_case extends MY_Controller {
 			switch ($this->input->get("action"))
 			{
 				case "查詢":
+
+					if (!isset($_SESSION['page_size'])) {
+						$_SESSION['page_size']=10;
+					}
+					if ($this->input->get("page_size")) {
+						$page_size = $this->input->get("page_size");
+						$_SESSION['page_size'] = $page_size;
+					}
 					$this->DB2->stop_cache();
 
 					$total_rows = $this->DB2->count_all_results();
 					$sort = $this->input->get("sort") ? $this->input->get("sort") : 'id desc';
 
-					$query = $this->DB2->limit(10, $this->input->get("record"))
+					$query = $this->DB2->limit($_SESSION['page_size'], $this->input->get("record"))
 								->order_by("{$sort}")->get();
 
 					$get = $this->input->get();
 					unset($get["record"]);
 					$query_string = http_build_query($get);
 
+
+
 					$this->load->library('pagination');
 					$this->pagination->initialize(array(
 							'base_url'	=> site_url("cpl_case/get_list?".$query_string),
 							'total_rows'=> $total_rows,
-							'per_page'	=> 10
+							'per_page'	=> $_SESSION['page_size']
 						));
 
 					$this->g_layout->set("total_rows", $total_rows);

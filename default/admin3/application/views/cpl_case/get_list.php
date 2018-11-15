@@ -40,8 +40,20 @@
 		<input type="text" name="phone" value="<?=$this->input->get("phone")?>" style="width:120px" placeholder="連絡電話">
 		<input type="text" name="o_case_id" value="<?=$this->input->get("o_case_id")?>" style="width:300px" placeholder="發文字號">
 
-		<span class="sptl"></span>
 
+		<span class="sptl"></span>
+		每頁顯示
+		<select name="page_size" style="width:60px">
+			<?
+			$get_size = ($_SESSION['page_size'])?$_SESSION['page_size']:10;
+
+			$size_var = [10,25,50,100];
+			foreach($size_var as $size):?>
+			<option value="<?=$size ?>" <?=($get_size==$size ? 'selected="selected"' : '')?>><?=$size ?></option>
+			<? endforeach;?>
+
+		</select>
+		<span class="sptl"></span>
 		<input type="submit" class="btn btn-small btn-inverse" name="action" value="查詢">
 
 		<? if ($this->input->get("use_default") == false):?>
