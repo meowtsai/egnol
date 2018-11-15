@@ -1965,7 +1965,7 @@ CREATE TABLE `batch_questions` (
 DROP TABLE IF EXISTS `cpl_cases`;
 CREATE TABLE `cpl_cases` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `o_case_id` varchar(40) NOT NULL COMMENT '發文字號',
+  `o_case_id` varchar(100) NOT NULL COMMENT '發文字號',
   `o_case_date` DATE NOT NULL COMMENT '發文日期',
   `appellant` varchar(20) NOT NULL COMMENT '申訴人姓名',
   `reason` varchar(50) NOT NULL COMMENT '申訴原因',
@@ -2039,7 +2039,7 @@ DROP TABLE IF EXISTS `cpl_mediations`;
 CREATE TABLE `cpl_mediations` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `case_id` int(11) NOT NULL COMMENT '案件編號',
-  `o_case_id` varchar(40) NOT NULL COMMENT '發文字號',
+  `o_case_id` varchar(100) NOT NULL COMMENT '發文字號',
   `o_case_date` DATE NOT NULL COMMENT '發文日期',
   `req_date` datetime NOT NULL COMMENT '出席時間',
   `req_place` varchar(100) NOT NULL COMMENT '出席地點',

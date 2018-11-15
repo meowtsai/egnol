@@ -33,7 +33,7 @@ $status = $this->config->item("case_status");
 	<div class="control-group">
 
 		<input type="text" name="contact" value="<?=$this->input->get("contact")?>" style="width:120px" placeholder="承辦人姓名">
-		<input type="text" name="o_letter_id" value="<?=$this->input->get("o_letter_id")?>" style="width:90px" placeholder="發文字號">
+		<input type="text" name="o_letter_id" value="<?=$this->input->get("o_letter_id")?>" style="width:300px" placeholder="發文字號">
 		<input type="text" name="role_name" value="<?=$this->input->get("role_name")?>" style="width:120px" placeholder="角色名稱">
 		<span class="sptl"></span>
 

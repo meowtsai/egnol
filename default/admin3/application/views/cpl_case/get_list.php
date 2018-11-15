@@ -38,7 +38,7 @@
 
 		<input type="text" name="appellant" value="<?=$this->input->get("appellant")?>" style="width:120px" placeholder="申訴人姓名">
 		<input type="text" name="phone" value="<?=$this->input->get("phone")?>" style="width:120px" placeholder="連絡電話">
-		<input type="text" name="o_case_id" value="<?=$this->input->get("o_case_id")?>" style="width:90px" placeholder="發文字號">
+		<input type="text" name="o_case_id" value="<?=$this->input->get("o_case_id")?>" style="width:300px" placeholder="發文字號">
 
 		<span class="sptl"></span>
 

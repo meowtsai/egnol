@@ -7,7 +7,7 @@
 		<tr>
 			<td>發文字號：</td>
 			<td >
-				<input type="text" name="o_case_id" class="required" maxlength="20"  value="<?=$row ? $row->o_case_id: ''?>" placeholder="例:府建行二字第1073906069號">
+				<input type="text" name="o_case_id" class="required" maxlength="100"  value="<?=$row ? $row->o_case_id: ''?>" placeholder="例:府建行二字第1073906069號">
 			</td>
 		</tr>
 		<tr>

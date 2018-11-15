@@ -10,11 +10,13 @@
 	<table cellspacing="0" cellpadding="0" style="width:660px;">
 		<tr>
 			<td>發文字號：</td>
-			<td >
-				<input type="text" name="o_case_id" class="required" maxlength="20"  value="<?=$case ? $case->o_case_id: ''?>" placeholder="例:府建行二字第1073906069號" autocomplete="off">
+			<td colspan="3">
+				<input type="text" name="o_case_id" class="required" maxlength="100"  style="width:500px;" value="<?=$case ? $case->o_case_id: ''?>" placeholder="例:府建行二字第1073906069號" autocomplete="off">
 			</td>
+		</tr>
+		<tr>
 			<td>發文日期：</td>
-			<td>
+			<td colspan="3">
 				<input type="text" name="o_case_date" value="<?=$case ? $case->o_case_date: ''?>" id="o_case_date" autocomplete="off">
 			</td>
 		</tr>
@@ -31,7 +33,7 @@
 		<tr>
 			<td>申訴原因：</td>
 			<td colspan="3">
-				<input type="text" name="reason" maxlength="25" style="width:360px;"  value="<?=$case ? $case->reason: ''?>" id="reason" placeholder="例:連線問題" autocomplete="off">
+				<input type="text" name="reason" maxlength="50" style="width:500px;"  value="<?=$case ? $case->reason: ''?>" id="reason" placeholder="例:連線問題" autocomplete="off">
 			</td>
 		</tr>
 		<tr>

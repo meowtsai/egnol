@@ -50,9 +50,12 @@ $mediation_status = $this->config->item("mediation_status");
 		</tr>
     <tr class="<?=$warning?>">
 			<th>申訴人：</th>
-			<td id="td_appellant"><?=($case->appellant)?$case->appellant:""?></td>
-      <th>申訴原因：</th>
-      <td><?=($case->reason)?$case->reason:""?></td>
+			<td colspan="3" id="td_appellant"><?=($case->appellant)?$case->appellant:""?></td>
+
+		</tr>
+		<tr>
+			<th>申訴原因：</th>
+      <td colspan="3"><?=($case->reason)?$case->reason:""?></td>
 		</tr>
 		<tr class="<?=$warning?>">
 			<th>遊戲角色：</th>
@@ -267,7 +270,7 @@ $mediation_status = $this->config->item("mediation_status");
 			<tr>
 				<th align="right">發文字號：</th>
 				<td >
-					<input type="text" name="o_case_id" class="required" maxlength="20"  value="" placeholder="例:府建行二字第1073906069號" autocomplete="off">
+					<input type="text" name="o_case_id" class="required" maxlength="100"  value="" placeholder="例:府建行二字第1073906069號" autocomplete="off">
 				</td>
 			</tr>
 			<tr>

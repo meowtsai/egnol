@@ -10,11 +10,14 @@
 	<table cellspacing="0" cellpadding="0" style="width:660px;">
 		<tr>
 			<td>發文字號：</td>
-			<td >
-				<input type="text" name="o_letter_id" class="required" maxlength="30"  value="<?=$letter ? $letter->o_letter_id: ''?>" placeholder="例:高市警旗分偵字第10771557500號" autocomplete="off">
+			<td colspan="3">
+				<input type="text" name="o_letter_id" class="required" maxlength="100"  value="<?=$letter ? $letter->o_letter_id: ''?>" placeholder="例:高市警旗分偵字第10771557500號" autocomplete="off">
 			</td>
+
+		</tr>
+		<tr>
 			<td>承辦人姓名：</td>
-			<td >
+			<td colspan="3">
 				<input type="text" name="contact" class="required" maxlength="10"  value="<?=$letter ? $letter->contact: ''?>" placeholder="例:偵查佐賴鎮生" autocomplete="off">
 			</td>
 		</tr>
