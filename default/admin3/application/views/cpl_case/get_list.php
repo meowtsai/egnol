@@ -95,7 +95,7 @@
 			<th style="width:120px">最新連絡</th>
 			<th style="width:80px;">連絡電話</th>
 			<th style="width:100px;">角色資訊</th>
-			<th style="width:50px;">伺服器</th>
+			<th style="width:60px;">伺服器</th>
 			<th style="width:100px" ><?=set_sort_URL('close_date',$query_string, '結案日期')?></th>
 			<th style="width:50px;">狀態</th>
 			<th style="width:110px;"><?=set_sort_URL('create_time',$query_string, '建立時間')?> </th>

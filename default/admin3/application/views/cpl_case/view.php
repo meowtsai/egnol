@@ -126,7 +126,7 @@ $mediation_status = $this->config->item("mediation_status");
 						<ul id="ul_attach">
 						<? foreach($attachments->result() as $attachment):?>
 							<li key="<?=$attachment->id?>">
-								<a href="<?=$attachment->pic_path?>"><?=$attachment->title?></a>
+								<a target="_blank" href="<?=$attachment->pic_path?>"><?=$attachment->title?></a>
 								<a href='#' class='remove-row' title='移除' onclick="removeAttach(<?=$attachment->id?>)" data-qid='<?=$attachment->id?>' ><i   class='far fa-trash-alt'></i></a>
 							</li>
 							<? $num++;?>
