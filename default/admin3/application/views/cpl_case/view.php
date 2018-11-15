@@ -258,7 +258,7 @@ $mediation_status = $this->config->item("mediation_status");
 </table>
 <? endif;?>
 
-<? if ($case->status == '3' && $case->admin_uid==$_SESSION['admin_uid']): ?>
+<? if ($case->status == '3' ): ?>
 <div style="background-color:LemonChiffon;padding:20px;">
 <fieldset>
 	<legend>新增協調會紀錄</legend>
@@ -330,7 +330,7 @@ $mediation_status = $this->config->item("mediation_status");
 </div>
 <? endif;?>
 
-<? if ($case->admin_uid==$_SESSION['admin_uid']): ?>
+
 <div class="form-actions">
 	<input type="hidden" id="back_url" value="<?=site_url("cpl_case/get_list?action=%E6%9F%A5%E8%A9%A2")?>">
 	<? if ($case->status == '2'): ?>
@@ -347,7 +347,6 @@ $mediation_status = $this->config->item("mediation_status");
 		<i class="icon icon-remove"></i>  刪除本案
 	</a>
 </div>
-<? endif;?>
 </div>
 
 

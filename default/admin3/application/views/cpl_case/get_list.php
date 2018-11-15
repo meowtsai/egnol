@@ -87,13 +87,11 @@
 <table class="table table-striped table-bordered" style="width:auto;">
 	<thead>
 		<tr>
-			<th style="width:60px;"> <?=set_sort_URL('id',$query_string, '#')?></th>
-			<th style="width:120px">發文字號</th>
-			<th style="width:80px">申訴人姓名</th>
+			<th style="width:40px;"> <?=set_sort_URL('id',$query_string, '#')?></th>
+			<th style="width:220px">發文字號</th>
+			<th style="width:60px">申訴人</th>
 			<th style="width:120px">申訴原因</th>
 			<th style="width:100px" ><?=set_sort_URL('o_case_date',$query_string, '回文期限')?></th>
-			<th style="width:120px">最新連絡</th>
-			<th style="width:80px;">連絡電話</th>
 			<th style="width:100px;">角色資訊</th>
 			<th style="width:60px;">伺服器</th>
 			<th style="width:100px" ><?=set_sort_URL('close_date',$query_string, '結案日期')?></th>
@@ -124,8 +122,6 @@
 			<td><?=$row->appellant?></td>
 			<td><?=$row->reason?></td>
 			<td><?=$row->o_due?></td>
-			<td><?=$row->last_replied?date("Y-m-d H:i", strtotime($row->last_replied)):""; ?></td>
-			<td><?=$row->phone?></td>
 			<td>【<?=$row->game_name?>】<br /><?=$row->role_name?><br /></td>
 			<td><span style="font-size:60%"><?=$row->server_name?></span></td>
 			<td>
