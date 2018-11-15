@@ -167,6 +167,7 @@ class Cpl_case extends MY_Controller {
 			$this->DB2
 				->select("c.*, DATE_ADD(c.o_case_date, INTERVAL 15 DAY) as o_due,  g.name as game_name,  au.name admin_name,gi.name as server_name,",false)
 				->select("(select max(contact_time) from `cpl_replies` where case_id=c.id) as last_replied",FALSE)
+				->select("(select count(*) from cpl_attachments where case_id=c.id) as has_attached",FALSE)
 				->from("cpl_cases c")
         ->join("games g", "g.game_id=c.game_id", "left")
 				->join("servers gi", "gi.server_id=c.server_id", "left")

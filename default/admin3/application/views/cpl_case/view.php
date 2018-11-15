@@ -10,6 +10,15 @@ $mediation_status = $this->config->item("mediation_status");
 .fa-trash-alt{
 	color: #d03f3f;
 }
+.plus-sign {
+	size:16px;
+	color:green;
+	padding:0 0 0 10px;
+}
+.form_div {
+	padding:10px;
+	display:none;
+}
 </style>
 
 
@@ -24,7 +33,7 @@ $mediation_status = $this->config->item("mediation_status");
 	<div id="content">
 	<table class="table table-bordered">
 		<tr class="<?=$warning?>">
-			<th style="width:80px;">狀態：</th>
+			<th style="width:120px;">狀態：</th>
 			<td colspan="3">
 			<?	echo $status[$case->status];	?>
 			<?if ($case->status=='4'):?>
@@ -60,11 +69,18 @@ $mediation_status = $this->config->item("mediation_status");
 			<td colspan="4"></td>
 		</tr>
 		<tr>
-			<th>相關案件 <i class="fas fa-folder-open"></i></th>
+			<th>相關案件 <i class="fas fa-folder-open"></i>
+
+				<span class="plus-sign"><i title="添加相關案件" class="fas fa-plus-circle"></i></span>
+
+			</th>
 			<td colspan="3">
+
 				<div style="padding:20px;">
+
+
 					<? if ($ref_cases->num_rows() == 0):?>
-					尚未設定相關案件，有需要請在下方選擇後按加入。
+					尚未設定相關案件，有需要請點選左方綠色+號開始新增。
 					<?else:?>
 						<ul id="ul_ref_cases">
 						<? foreach($ref_cases->result() as $ref_case_row):?>
@@ -77,7 +93,7 @@ $mediation_status = $this->config->item("mediation_status");
 					<?endif;?>
 
 				</div>
-				<div style="background-color:#BDBDBD;padding:10px;">
+				<div id="add_ref_div" style="background-color:#BDBDBD;" class="form_div">
 		      <form id="add_ref_form" method="post" action="<?=site_url("cpl_case/add_ref_case_json")?>">
 		          <input type="hidden" name="case_id" value="<?=$case->id?>">
 
@@ -97,12 +113,14 @@ $mediation_status = $this->config->item("mediation_status");
 			<td colspan="4"></td>
 		</tr>
 		<tr>
-			<th>相關附件 <i class="fas fa-paperclip"></i></th>
+			<th>相關附件 <i class="fas fa-paperclip"></i>
+				<span class="plus-sign"><i title="上傳相關附件" class="fas fa-plus-circle"></i></span>
+			</th>
 			<td colspan="3">
 				<div style="padding:20px;">
 					<? $num=1;?>
 					<? if ($attachments->num_rows() == 0):?>
-					尚未設定相關附件，有需要請在下方選擇後按加入。
+					尚未設定相關附件，有需要請點選左方綠色+號開始新增。
 					<?else:?>
 						<ul id="ul_attach">
 						<? foreach($attachments->result() as $attachment):?>
@@ -115,7 +133,7 @@ $mediation_status = $this->config->item("mediation_status");
 						</ul>
 					<?endif;?>
 				</div>
-				<div style="background-color:#E1F5A9;padding:10px;">
+				<div style="background-color:#E1F5A9"  class="form_div">
 					<form id="add_attachment_form" method="post" action="<?=site_url("cpl_case/add_attachment_json")?>">
 							<input type="hidden" name="case_id" value="<?=$case->id?>">
 
@@ -359,6 +377,26 @@ $mediation_status = $this->config->item("mediation_status");
 </div>
 
 <script type="text/javascript">
+var formDiv = $( ".form_div" );
+$("span[class=plus-sign]").click(function(e)
+{
+	var actDiv = $(this).parent().parent().find(formDiv);
+	//console.log(actDiv);
+	actDiv.is(":visible")?actDiv.hide():actDiv.show();
+	//actDiv.is(":visible")?actDiv.show():actDiv.hide();
+
+
+		//
+		// //console.log($(this).val());
+		// //var batch_id = $(this).val();
+		// if (document.getElementById('add_ref_div').style.display=='none')
+		// {document.getElementById('add_ref_div').style.display = 'block';}
+		// else
+		// {
+		// 	document.getElementById('add_ref_div').style.display='none'}
+});
+
+
 function removeItem(ref_id_remove){
 	if (!confirm("確定要取消關聯案件"+ref_id_remove+"嗎?")) {
 		return;

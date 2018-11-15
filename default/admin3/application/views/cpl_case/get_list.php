@@ -119,11 +119,11 @@
 		<? foreach($query->result() as $row):?>
 		<tr class="<?=($row->status==1 && $row->admin_uid==$_SESSION['admin_uid'])?"warning":""?>">
 			<td><a href="<?=site_url("cpl_case/view/{$row->id}")?>"><?=$row->id?></a></td>
-			<td><a href="<?=site_url("cpl_case/view/{$row->id}")?>"><?=$row->o_case_id?></a></td>
+			<td><a href="<?=site_url("cpl_case/view/{$row->id}")?>"><?=$row->o_case_id?></a> <?=$row->has_attached?" <i class='fas fa-paperclip'></i>":""; ?></td>
 			<td><?=$row->appellant?></td>
 			<td><?=$row->reason?></td>
 			<td><?=$row->o_due?></td>
-			<td><?=date("Y-m-d H:i", strtotime($row->last_replied))?></td>
+			<td><?=$row->last_replied?date("Y-m-d H:i", strtotime($row->last_replied)):""; ?></td>
 			<td><?=$row->phone?></td>
 			<td>【<?=$row->game_name?>】<br /><?=$row->role_name?><br /><span style="font-size:60%">(<?=$row->server_name?>)</span></td>
 			<td>
