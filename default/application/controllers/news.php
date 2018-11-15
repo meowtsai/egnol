@@ -120,7 +120,7 @@ class News extends MY_Controller {
 		{
 		//公告=1 活動=2 系統=3
 		//die($id);
-		$query = $this->db->query("SELECT title, DATE_FORMAT(start_time,'%Y-%m-%d') as start_time, content, CASE WHEN type=1 THEN 'news' WHEN type=2 THEN 'event' WHEN type=3 THEN 'notice'	END AS category from bulletins where id='{$news_id}'");
+		$query = $this->db->query("SELECT title, DATE_FORMAT(start_time,'%Y-%m-%d') as start_time, content, CASE WHEN type=1 THEN 'news' WHEN type=2 THEN 'event' WHEN type=3 THEN 'notice'	END AS category from bulletins where id='{$news_id}' and now() between start_time and end_time ");
 
 		//$row = $this->db->select("title, DATE_FORMAT(start_time,'%Y-%m-%d') as start_time, content, CASE WHEN type=1 THEN 'news' WHEN type=2 THEN 'event' WHEN type=3 THEN 'notice'	END AS category")->from("bulletins")->where("id", $news_id)->get()->row();
 		header('Access-Control-Allow-Origin: *');
