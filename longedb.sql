@@ -1984,6 +1984,8 @@ CREATE TABLE `cpl_cases` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='消保案件主表';
 
+ALTER TABLE cpl_cases MODIFY COLUMN o_case_id varchar(100) NOT NULL COMMENT '發文字號'
+ALTER TABLE cpl_mediations MODIFY COLUMN o_case_id varchar(100) NOT NULL COMMENT '發文字號'
 
 DROP TABLE IF EXISTS `case_reference`;
 CREATE TABLE `case_reference` (

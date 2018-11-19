@@ -16,8 +16,12 @@
 		</tr>
 		<tr>
 			<td>發文日期：</td>
-			<td colspan="3">
+			<td>
 				<input type="text" name="o_case_date" value="<?=$case ? $case->o_case_date: ''?>" id="o_case_date" autocomplete="off">
+			</td>
+			<td>回文期限：</td>
+			<td>
+				<input type="text" name="deadline" value="<?=$case ? $case->deadline: date('Y-m-d', strtotime("+15 day")) ?>" id="deadline" autocomplete="off">
 			</td>
 		</tr>
 		<tr>

@@ -99,6 +99,7 @@ class Cpl_case extends MY_Controller {
 		$data = array(
 			"o_case_id" => $this->input->post("o_case_id"),
 			"o_case_date" => $this->input->post("o_case_date"),
+			"deadline" => $this->input->post("deadline"),
 			"appellant" => $this->input->post("appellant"),
 			"reason" => $this->input->post("reason"),
 			"phone" => $this->input->post("phone"),
@@ -165,7 +166,7 @@ class Cpl_case extends MY_Controller {
 
 			//select id, o_case_id,o_case_date,appellant,reason,phone,game_id,server_id,role_name,admin_uid,create_time,update_time,close_date,status
 			$this->DB2
-				->select("c.*, DATE_ADD(c.o_case_date, INTERVAL 15 DAY) as o_due,  g.name as game_name,  au.name admin_name,gi.name as server_name,",false)
+				->select("c.*,  deadline,  g.name as game_name,  au.name admin_name,gi.name as server_name,",false)
 				->select("(select max(contact_time) from `cpl_replies` where case_id=c.id) as last_replied",FALSE)
 				->select("(select count(*) from cpl_attachments where case_id=c.id) as has_attached",FALSE)
 				->from("cpl_cases c")
@@ -238,7 +239,7 @@ class Cpl_case extends MY_Controller {
 	{
 		$this->zacl->check("cpl_case", "modify");
 
-		$case = $this->DB2->select("c.*, DATE_ADD(c.o_case_date, INTERVAL 15 DAY) as o_due,  g.name as game_name,  gi.name as server_name,au.name admin_name",false)
+		$case = $this->DB2->select("c.*, deadline,  g.name as game_name,  gi.name as server_name,au.name admin_name",false)
 		->where("c.id", $id)
 		->from("cpl_cases c")
 		->join("games g", "g.game_id=c.game_id", "left")

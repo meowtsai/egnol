@@ -133,7 +133,7 @@
 			<td><a href="<?=site_url("cpl_case/view/{$row->id}")?>"><?=$row->o_case_id?></a> <?=$row->has_attached?" <i class='fas fa-paperclip'></i>":""; ?></td>
 			<td><?=$row->appellant?></td>
 			<td><?=$row->reason?></td>
-			<td><?=$row->o_due?></td>
+			<td><?=$row->deadline?></td>
 			<td>【<?=$row->game_name?>】<br /><?=$row->role_name?><br /></td>
 			<td><span style="font-size:60%"><?=$row->server_name?></span></td>
 			<td>

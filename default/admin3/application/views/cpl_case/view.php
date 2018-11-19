@@ -48,7 +48,13 @@ $mediation_status = $this->config->item("mediation_status");
 			<th>發文字號：</th>
 			<td colspan="3" id="td_o_case_id"><?=($case->o_case_id)?$case->o_case_id:""?></td>
 		</tr>
-    <tr class="<?=$warning?>">
+		<tr>
+			<th>發文日期：</th>
+			<td><?=$case->o_case_date?></td>
+      <th>回文期限：</th>
+			<td><?=$case->deadline?></td>
+		</tr>
+		<tr class="<?=$warning?>">
 			<th>申訴人：</th>
 			<td colspan="3" id="td_appellant"><?=($case->appellant)?$case->appellant:""?></td>
 
