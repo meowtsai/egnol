@@ -144,7 +144,7 @@
 <form name="type_form" id="type_form" method="post" action="<?=site_url("service/update_type_json")?>" style="margin:0;">
     <input type="hidden" name="update_question_id" id="update_question_id" value="">
     <input type="hidden" name="select_type" id="select_type" value="">
-    <table class="table table-striped table-bordered" style="width:auto;">
+    <table class="table table-bordered" style="width:auto;">
         <thead>
             <tr>
                 <th style="width:60px;">#
@@ -183,10 +183,9 @@
 						if ($row->is_batch > 0)
 						{
 							$is_locked=true;
-						}
-						if (!$is_locked):?>
+						}?>
 
-            <tr>
+            <tr style="background-color:<?=$is_locked?'silver':''?>">
                 <td>
 
 									<?
@@ -311,7 +310,7 @@
                     </div>
                 </td>
             </tr>
-						<? endif;?>
+
             <? endforeach;?>
 
     <? if ($_SERVER['REQUEST_URI'] == '/service/todo' || ($this->input->get("todo"))):?>

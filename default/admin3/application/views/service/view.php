@@ -14,7 +14,7 @@
 
 <?endif;?>
 
-<?if((!$q_batch_info) || ($q_batch_info[0]->admin_uid==$_SESSION['admin_uid'])):?>
+
 
 <legend>
 <?
@@ -336,7 +336,7 @@ if ($question->is_favorite =='0'):?>
 
 
 	</div>
-
+<?if((!$q_batch_info) || ($q_batch_info[0]->admin_uid==$_SESSION['admin_uid'])):?>
 	<? if ($question->status <> '4'):?>
 
 	<form id="reply_form" method="post" action="<?=site_url("service/modify_reply_json")?>">
@@ -392,6 +392,5 @@ if ($question->is_favorite =='0'):?>
 	  	</div>
 	</form>
 	<? endif;?>
-
-</div>
 <?endif;?>
+</div>

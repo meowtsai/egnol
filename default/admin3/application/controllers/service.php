@@ -1326,7 +1326,7 @@ function batch_handler($batch_id){
 	$this->_init_service_layout();
 
 	$task = $this->DB2->query("SELECT g.name as game_name,b.game_id,b.title,b.id,b.create_time,b.update_time,b.admin_uid,adm.name as admin_name,b.status,
-		CASE admin_uid WHEN '{$_SESSION['admin_uid']}' THEN '1' ELSE '0' END as is_editable,
+		CASE admin_uid WHEN '{$_SESSION['admin_uid']}' THEN '1' ELSE '1' END as is_editable,
 		(select count(*) from batch_questions bq where bq.batch_id=b.id) as count
 	from batch_tasks b
 	LEFT JOIN games g on g.game_id=b.game_id
@@ -1491,7 +1491,7 @@ function batch_handler($batch_id){
 	}
 
 	function pivot_tbl(){
-		
+
 
 
 		$this->_init_service_layout()

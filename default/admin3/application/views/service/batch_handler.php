@@ -43,7 +43,7 @@ if (count($task) > 0):?>
 
 </div>
 
-<? if ($task[0]->status =="1" && $task[0]->is_editable=="1"): ?>
+<? if ($task[0]->status =="1" && $task[0]->is_editable=="1"):  ?>
 <form id="reply_form" method="post" action="<?=site_url("service/batch_reply_json")?>">
 	<input type="hidden" id="batch_id" name="batch_id" value="<?=$task[0]->id?>">
 
