@@ -82,7 +82,7 @@
 										<option value="<?=$id?>"><?=$type?></option>
 
 									<? endforeach;?>
-									<?if (IN_OFFICE && $site=='h55naxx2tw'):?>
+									<?if (IN_OFFICE && $site=='h55naxx2tw' && $partner_uid):?>
 										<option value="Yahoo">第五人格 Yahoo 購物活動獎勵</option>
 									<? endif;?>
 								<? endif;?>
