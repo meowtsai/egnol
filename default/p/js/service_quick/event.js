@@ -1,21 +1,18 @@
-
-var modal = document.getElementById('myModal');
-var span = document.getElementsByClassName("close")[0];
-var content = document.getElementsByClassName("modal-content")[0].childNodes[5];
-span.onclick = function() {
-    modal.style.display = "none";
-}
-
-window.onclick = function(event) {
-    if (event.target == modal) {
-        modal.style.display = "none";
-    }
-}
-
-
-
 $(function()
 {
+  var modal = document.getElementById('myModal');
+  var span = document.getElementsByClassName("close")[0];
+  var content = document.getElementsByClassName("modal-content")[0].childNodes[5];
+  span.onclick = function() {
+      modal.style.display = "none";
+  }
+
+  window.onclick = function(event) {
+      if (event.target == modal) {
+          modal.style.display = "none";
+      }
+  };
+
 	$("#event_form").validate({
 		onfocusout: false,
 		onkeyup: false,
