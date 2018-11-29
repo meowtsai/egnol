@@ -170,6 +170,35 @@ class Event extends MY_Controller {
 			->set("query", isset($query) ? $query : false)
       ->render();
 	}
+
+	function h55_yahoo()
+	{
+
+		$this->_init_layout();
+		$result = null ;
+
+		$result = $this->DB2
+			->select("b.name,b.in_game_id,b.partner_uid,a.serial,")
+			->select("(select create_time from log_yahoo_event c where c.char_id=a.uid order by id desc limit 1 ) as dt",FALSE)
+			->from("event_serial a")
+			->join("characters b", "a.uid=b.id", "left")
+			->where("event_id",11)
+			->where("status",1)
+			->get();
+
+		$log = $this->DB2
+			->select("b.name as char_name,c.*")
+			->from("log_yahoo_event c")
+			->join("characters b", "c.char_id=b.id", "left")
+			->order_by("c.id desc")
+			->get();
+
+		$this->g_layout
+			->add_breadcrumb("第五人格Yahoo購物活動獎勵查詢")
+			->set("result", isset($result) ? $result : false)
+			->set("log", isset($log) ? $log : false)
+      ->render();
+	}
 }
 
 /* End of file welcome.php */

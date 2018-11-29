@@ -786,4 +786,159 @@ class Service_quick extends MY_Controller {
 	function isListB($string) {
 		return preg_match('/[\x{20000}-\x{215FF}-\x{21600}-\x{230FF}-\x{23100}-\x{245FF}-\x{24600}-\x{260FF}-\x{26100}-\x{275FF}-\x{27600}-\x{290FF}-\x{29100}-\x{2A6DF}]/u', $string);
 	}
+
+
+	function yahoo_event(){
+		if (!$_SESSION['vendor_game_id'])
+		{
+			die("資料異常, 請關閉視窗重新開始流程。");
+		}
+		$result = $this->get_event_status(11);
+
+		//echo $event;
+		if ($result['status']=='success')
+		{
+			$event = $result['message'];
+
+			//get char id
+			$res_char = $this->get_character($_SESSION['server_id'],$_SESSION['partner_uid'],$_SESSION['in_game_id']);
+			if ($res_char['status']=='success')
+			{
+				$char_data = $res_char['message'];
+
+				$char_id = $char_data->id; //角色id
+				$event_status = 0;
+				$query = $this->db->from("event_serial")
+				->where("uid", $char_id)
+				->where("event_id", 11)
+				->select("serial")->get();
+
+				if ($query->num_rows()>0)  //已經領取過
+				{
+					$event_status = $query->row()->serial;
+				}
+
+				$this->_init_layout("客服中心")
+					->set("event", $event)
+					->set("char_data", $char_data)
+					->set("event_status", $event_status)
+					->add_js_include("service_quick/event")
+					->add_css_link("login")
+					->add_css_link("server")
+					->mobile_view();
+			}
+			else {
+				log_message('error', "角色異常".",".$_SESSION['server_id'].",".$_SESSION['partner_uid'].",".$_SESSION['in_game_id']);
+				header("Location: /service_quick/question?site=$site");
+				die();
+			}
+
+		}
+		else {
+			//錯誤導回前頁
+			log_message('error', '活動尚未開始:'.$_SESSION['server_id'].",".$_SESSION['partner_uid'].",".$_SESSION['in_game_id']);
+			header("Location: /service_quick/question?site=$site");
+			die();
+		}
+		//die($event);
+
+
+	}
+
+
+	function get_character($server_id,$partner_uid,$in_game_id){
+
+		$query = $this->db->from("characters")
+		->where("server_id", $server_id)
+		->where("partner_uid", $partner_uid)
+		->where("in_game_id", $in_game_id)
+		->select("id,name,in_game_id,partner_uid,server_id")->get();
+		if ($query->num_rows()>0)
+		{
+			$char = $query->row();
+			return array("status"=>"success", "message"=>$char);
+		}
+		else {
+			return array("status"=>"failure", "message"=>"沒有這個角色!");
+		}
+
+	}
+	function get_event_status($e_id){
+		$query = $this->db->from("events")
+		->where("id", $e_id)
+		->select("id,game_id,event_name,status,begin_time,end_time")
+		->get();
+
+		//$this->db->from("games")->where("vendor_game_id", $vendor_game_id)->get()->row();
+		if ($query->num_rows()>0)
+		{
+			$event = $query->row();
+			if (($event->status=='1' && now() > $event->begin_time && now() < $event->end_time) || IN_OFFICE )
+			{
+					return array("status"=>"success", "message"=>$event);
+			}
+			else {
+				return array("status"=>"failure", "message"=>"活動未開放!");
+			}
+
+			//{"status":"failure","message":{"id":"11","game_id":"h55naxx2tw","event_name":"\u7b2c\u4e94\u4eba\u683c yahoo \u626d\u86cb\u6d3b\u52d5","status":"1","begin_time":"2018-12-03 00:00:00","end_time":"2018-12-15 00:00:00"}}
+		}
+		else {
+			return array("status"=>"failure", "message"=>"沒有這個活動!");
+		}
+
+	}
+
+	function yahoo_ajax()
+	{
+		$ip = $_SERVER['REMOTE_ADDR'];
+		if ( ! $this->input->post("serial_no")) die(json_encode(array("status"=>"failure", "message"=>"尚未填寫活動序號")));
+		//if (! $this->input->post("partner_uid")) die(json_encode(array("status"=>"failure", "message"=>"沒有角色id, 資料異常, 請重新開始流程")));
+		if (! $this->input->post("char_id")) die(json_encode(array("status"=>"failure", "message"=>"沒有角色id, 資料異常, 請重新開始流程")));
+
+		$post_character_name =htmlspecialchars($this->input->post("character_name"));
+		$serial_no = $this->input->post("serial_no");
+		$char_id= $this->input->post("char_id");
+
+		$try_count = 0;
+		$query = $this->db->query("SELECT count(*) as chk FROM log_yahoo_event WHERE char_id='{$char_id}'");
+		$try_count = (4 - $query->row()->chk);
+		if ($query->row()->chk > 4) die(json_encode(array("status"=>"failure", "message"=>"回報數量已達上限,若有疑問請回報客服!")));
+
+		$query = $this->db->query("SELECT count(*) as chk FROM event_serial WHERE event_id=11 and uid='{$char_id}'");
+		if ($query->row()->chk > 0) die(json_encode(array("status"=>"failure", "message"=>"您的角色已經領取過了喔。")));
+
+		//log data
+		$data = array(
+			"char_id" => $char_id,
+			'ip' => $ip,
+			'serial_no' => $serial_no,
+		);
+		$this->db
+		->insert("log_yahoo_event", $data);
+		//end log data
+
+		//check
+		$updated_s_id = 0;
+
+		// get the record that you want to update
+		$this->db->where(array('serial'=>$data['serial_no'], 'event_id' => '11','status' => '0'));
+		$query_serial = $this->db->get('event_serial');
+
+		// getting the Id
+		$serial_result = $query_serial->result_array();
+		$updated_s_id = $serial_result[0]['id'];
+
+		if ($updated_s_id)
+		{
+			$this->db->where(array('serial'=>$data['serial_no'], 'event_id' => '11','status' => '0'));
+			$this->db->update('event_serial',array("uid" => $char_id,"status" => 1));
+			die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"兌換成功! 獎項將於 2019/01/15 晚上 00：00 前，以遊戲內郵件發送至所填寫的角色ID。")));
+		}
+		else {
+			die(json_encode(array("status"=>"failure", "site"=> $site, "message"=>"兌換失敗，請確認您的序號正確，錯誤五次將會鎖定。(剩餘次數:{$try_count})")));
+		}
+
+
+	}
 }

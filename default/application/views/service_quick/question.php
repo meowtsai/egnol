@@ -80,7 +80,11 @@
 								<?else:?>
 									<? foreach($this->config->item("question_type") as $id => $type):?>
 										<option value="<?=$id?>"><?=$type?></option>
+
 									<? endforeach;?>
+									<?if (IN_OFFICE && $site=='h55naxx2tw'):?>
+										<option value="Yahoo">第五人格 Yahoo 購物活動獎勵</option>
+									<? endif;?>
 								<? endif;?>
 							</select>
 						</td>
@@ -169,6 +173,13 @@ success: function (data) {
 		var hint_text = "";
 		$("#div_hint").hide();
 		var sel = $( "select[name='question_type']" ).val();
+
+		if (sel==='Yahoo'){
+			$( "select[name='question_type']" ).val('');
+			location.href = '/service_quick/yahoo_event';
+
+			return;
+		}
 		var mydata= faq_list[sel];
 		if (mydata===undefined)
 		{

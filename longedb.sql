@@ -1310,6 +1310,9 @@ CREATE TABLE `event_serial` (
 /* personal_id 欄位為使用在發獎勵給非會員時用來辨認使用者身分 */;
 
 
+
+
+
 CREATE TABLE `news` (
   `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '編號',
   `game_id` varchar(20) DEFAULT NULL COMMENT '對應遊戲',
@@ -1984,8 +1987,15 @@ CREATE TABLE `cpl_cases` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='消保案件主表';
 
+ALTER TABLE cpl_cases  ADD COLUMN deadline DATE NOT NULL COMMENT '回文期限';
+
+update cpl_cases set deadline=DATE_ADD(o_case_date, INTERVAL 15 DAY);
+ o_case_date +15
+
 ALTER TABLE cpl_cases MODIFY COLUMN o_case_id varchar(100) NOT NULL COMMENT '發文字號'
 ALTER TABLE cpl_mediations MODIFY COLUMN o_case_id varchar(100) NOT NULL COMMENT '發文字號'
+
+
 
 DROP TABLE IF EXISTS `case_reference`;
 CREATE TABLE `case_reference` (
@@ -2022,7 +2032,8 @@ ALTER TABLE cpl_replies
 ADD contact_time timestamp NOT NULL COMMENT '聯絡時間';
 
 update cpl_replies set contact_time = contact_date;
-
+ALTER TABLE `cpl_replies` DROP COLUMN `claim`;
+ALTER TABLE `cpl_replies` DROP COLUMN `response`;
 
 DROP TABLE IF EXISTS `cpl_attachments`;
 CREATE TABLE `cpl_attachments` (
@@ -2112,3 +2123,17 @@ CREATE TABLE `gov_letters` (
   UNIQUE KEY `letter_id_UNIQUE` (`o_letter_id`),
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='公函主表';
+
+
+
+/* 2018 h55 yahoo購物活動玩家填序號log */;
+DROP TABLE IF EXISTS `log_yahoo_event`;
+CREATE TABLE `log_yahoo_event` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `char_id` int(11)  unsigned NOT NULL,
+  `ip` varchar(50) DEFAULT NULL,
+  `serial_no` varchar(60) NOT NULL COMMENT '序號',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  FOREIGN KEY (char_id) REFERENCES characters(id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
