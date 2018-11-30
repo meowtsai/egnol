@@ -897,7 +897,7 @@ class Service_quick extends MY_Controller {
 		if (! $this->input->post("char_id")) die(json_encode(array("status"=>"failure", "message"=>"沒有角色id, 資料異常, 請重新開始流程")));
 
 		$post_character_name =htmlspecialchars($this->input->post("character_name"));
-		$serial_no = $this->input->post("serial_no");
+		$serial_no = substr($this->input->post("serial_no"),0,16);
 		$char_id= $this->input->post("char_id");
 
 		$try_count = 0;
@@ -922,7 +922,7 @@ class Service_quick extends MY_Controller {
 		$updated_s_id = 0;
 
 		// get the record that you want to update
-		$this->db->where(array('serial'=>$data['serial_no'], 'event_id' => '11','status' => '0'));
+		$this->db->where(array('substr(serial,1,16)'=>$data['serial_no'], 'event_id' => '11','status' => '0'));
 		$query_serial = $this->db->get('event_serial');
 
 		// getting the Id
@@ -931,12 +931,12 @@ class Service_quick extends MY_Controller {
 
 		if ($updated_s_id)
 		{
-			$this->db->where(array('serial'=>$data['serial_no'], 'event_id' => '11','status' => '0'));
+			$this->db->where(array('substr(serial,1,16)'=>$data['serial_no'], 'event_id' => '11','status' => '0'));
 			$this->db->update('event_serial',array("uid" => $char_id,"status" => 1));
-			die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"兌換成功! 獎項將於 2019/01/15 晚上 00：00 前，以遊戲內郵件發送至所填寫的角色ID。")));
+			die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"兌換成功! 獎項將於 2019/01/15 晚上 23：59 前，以遊戲內郵件發送至所填寫的角色ID。")));
 		}
 		else {
-			die(json_encode(array("status"=>"failure", "site"=> $site, "message"=>"兌換失敗，請確認您的序號正確，錯誤五次將會鎖定。(剩餘次數:{$try_count})")));
+			die(json_encode(array("status"=>"failure", "site"=> $site, "message"=>"兌換失敗，序號錯誤或已被使用，錯誤五次將會鎖定。(剩餘次數:{$try_count})")));
 		}
 
 

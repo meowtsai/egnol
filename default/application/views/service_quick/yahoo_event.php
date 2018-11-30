@@ -121,7 +121,7 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 									<button type="submit" name="cmdSubmit"  class="btn pull-right">送出</button>
 									<?else:?>
 									<div class="" style="background-color:#FA5858;color:#ffffff;font-weight:bold;border-radius:3px;text-align:center;padding:5px;">
-											【已經完成兌換，<br/>獎項將於 2019/01/15 晚上 00：00 前發送至指定角色ID】
+											【已經完成兌換，<br/>獎項將於 2019/01/15 晚上 23：59 前發送至指定角色ID】
 									</div>
 									<?endif?>
 								</p>
@@ -134,9 +134,10 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 									<legend>注意事項</legend>
 									<ul style="text-align: left;list-style-type:square;line-height:150%;color: #2E2E2E;font-size:smaller;">
 										<li>本序號僅提供《第五人格》亞洲服玩家兌換。</li>
-										<li>序號可兌換期限至 2018/12/31 晚上 00：00 止。</li>
+										<li>本序號不區分大小寫。建議您將取得的序號複製貼上避免手動輸入錯誤。</li>
+										<li>序號可兌換期限至 2018/12/31 晚上 23：59 止。</li>
 										<li>每個遊戲帳號可兌換一次。</li>
-										<li>獎項將於 2019/01/15 晚上 00：00 前，以遊戲內郵件發送至所填寫的角色ID。</li>
+										<li>獎項將於 2019/01/15 晚上 23：59 前，以遊戲內郵件發送至所填寫的角色ID。</li>
 									</ul>
 								</fieldset>
 
