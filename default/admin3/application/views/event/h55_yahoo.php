@@ -35,6 +35,8 @@
           	<tbody>
           	</tbody>
           </table>
+
+          <input type="button" class="btn btn-small btn-warning" name="action" value="輸出" onclick="downloadCSV()">
         <? endif;?>
       <? endif;?>
     </div>
@@ -58,7 +60,7 @@
     </div>
   </div>
 
-  <input type="button" class="btn btn-small btn-warning" name="action" value="輸出" onclick="downloadCSV()">
+
 
 <script type="text/javascript">
   var activeTable = "兌換成功紀錄";
