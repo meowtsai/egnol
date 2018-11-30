@@ -75,7 +75,8 @@
 
     activeTable = $(this).text(); //歷程紀錄
     which_tbl =  (activeTable==="兌換成功紀錄"?"list_table":"log_table");
-    showCount();
+    func_search();
+    //showCount();
 
 
   })
