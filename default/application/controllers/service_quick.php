@@ -203,6 +203,9 @@ class Service_quick extends MY_Controller {
 
 		$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("server_id")->get("servers");
 
+		$result = $this->get_event_status(11);
+
+		//echo $event;
 		// 讀取玩家角色列表
 		//$characters = $this->db->from("characters")->where("partner_uid", $partner_uid)->get();
 
@@ -213,6 +216,7 @@ class Service_quick extends MY_Controller {
 			->add_js_include("service_quick/question")
 			->set("games", $games)
 			->set("servers", $servers)
+			->set("result", $result)
 			->set("partner_uid", $_SESSION['partner_uid'])
 			->set("server_id", $_SESSION['server_id'])
 			->set("server_name", $_SESSION['server_name'])
@@ -873,7 +877,8 @@ class Service_quick extends MY_Controller {
 		if ($query->num_rows()>0)
 		{
 			$event = $query->row();
-			if (($event->status=='1' && now() > $event->begin_time && now() < $event->end_time) || IN_OFFICE )
+			//if (($event->status=='1' && now() > $event->begin_time && now() < $event->end_time) || IN_OFFICE )
+			if (($event->status=='1' && now() > $event->begin_time && now() < $event->end_time))
 			{
 					return array("status"=>"success", "message"=>$event);
 			}
