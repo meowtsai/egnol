@@ -88,7 +88,7 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 <div id="content-login">
 	<div>
 		<h3 >
-			客服中心 > 第五人格Yahoo購物活動獎勵
+			客服中心 > 第五人格 X Yahoo 天天驚喜扭一發
 		</h3>
     <form id="event_form"  method="post" action="<?=$longe_url?>service_quick/yahoo_ajax?site=<?=$site?>">
 			<div style="margin-left: auto;  margin-right: auto;  width: 400px;">
@@ -133,7 +133,7 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 								<fieldset style="width:400px;border-radius: 5px;white-space:normal;border:#848484;">
 									<legend>注意事項</legend>
 									<ul style="text-align: left;list-style-type:square;line-height:150%;color: #2E2E2E;font-size:smaller;">
-										<li>相關詳情請搜尋［<b>Yahoo 會員聚樂部</b>］查看《第五人格》狂歡禮奪寶活動訊息。</li>
+										<li>相關詳情請搜尋［<b>Yahoo 扭蛋活動</b>］查看《第五人格》狂歡禮活動訊息。</li>
 										<li>本序號僅提供《第五人格》亞洲服玩家兌換。</li>
 										<li>本序號不區分大小寫。建議您將取得的序號複製貼上避免手動輸入錯誤。</li>
 										<li>序號可兌換期限至 2018/12/31 晚上 23：59 止。</li>
