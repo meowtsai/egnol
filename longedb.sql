@@ -2137,3 +2137,21 @@ CREATE TABLE `log_yahoo_event` (
   PRIMARY KEY (`id`),
   FOREIGN KEY (char_id) REFERENCES characters(id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+
+
+CREATE TABLE `event_preregister` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `event_id` int(11) NOT NULL,
+ `fb_uid` int(11) DEFAULT NULL,
+ `nick_name` varchar(128) DEFAULT NULL,
+ `status` tinyint(4) NOT NULL DEFAULT '0',
+ `create_time` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+ `update_time` datetime DEFAULT NULL,
+ `email` varchar(128) DEFAULT NULL,
+ `ip` varchar(20) DEFAULT NULL,
+ `country` varchar(20) DEFAULT NULL,
+ PRIMARY KEY (`id`),
+ UNIQUE KEY `fb_UNIQUE` (`event_id`, `fb_uid`),
+ UNIQUE KEY `email_UNIQUE` (`event_id`, `email`)
+) ENGINE=InnoDB AUTO_INCREMENT=78112 DEFAULT CHARSET=utf8 |

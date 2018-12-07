@@ -204,7 +204,7 @@ class Event extends MY_Controller
     if ($query->num_rows()>0)
     {
       $event = $query->row();
-      if (($event->status=='1' && now() > $event->begin_time && now() < $event->end_time))
+      if (($event->status=='1' && now() > $event->begin_time && now() < $event->end_time) || IN_OFFICE)
       {
         die(json_encode(array("status"=>"success", "message"=>$event)));
       } else {
@@ -224,17 +224,17 @@ class Event extends MY_Controller
     }
     $event_id = $this->input->get_post("eid");
     $uid = $this->input->get_post("uid");
-
+    //die(json_encode(array("status"=>"failure", "message"=>"{$event_id},{$uid}")));
     $result = $this->_check_user_data($event_id,$uid);
     die(json_encode($result));
 
   }
 
   function _check_user_data($event_id,$uid){
-    $query = $this->db->from("event_serial")
+    $query = $this->db->from("event_preregister")
     ->where("event_id", $event_id)
     ->where("uid", $uid)
-    ->select("uid,personal_id,email,status")
+    ->select("uid,nick_name,email,status")
     ->get();
 
     if ($query->num_rows()>0)
@@ -249,6 +249,7 @@ class Event extends MY_Controller
 
   function user_register(){
     $http_origin = $_SERVER['HTTP_ORIGIN'];
+
     if ($http_origin == "https://meowroll.com" )
     {
         header("Access-Control-Allow-Origin: $http_origin");
@@ -258,23 +259,49 @@ class Event extends MY_Controller
     $email = $this->input->get_post("email");
     $personal_id = $this->input->get_post("personal_id");
 
+
+
     $result = $this->_check_user_data($event_id,$uid);
-    if ($result["status"] =="success") //已經註冊完畢
+
+
+    if ( $result["status"]=="success") //已經註冊完畢
     {
       die(json_encode($result));
     }
     else {
+      $query = $this->db->from("event_preregister")
+      ->where("event_id", $event_id)
+      ->where("email", $email)
+      ->select("uid,nick_name,email,status")
+      ->get();
+
+      if ($query->num_rows()>0)
+      {
+        die(json_encode(array("status"=>"failure", "message"=>"該 E-mail 已經被使用。")));
+      }
+
+      $user_ip = $_SERVER['REMOTE_ADDR'];
+      $country_name = "";
+      if ($user_ip)
+      {
+        $country_name =geoip_record_by_name($user_ip)["country_name"];
+      }
       if(filter_var($email, FILTER_VALIDATE_EMAIL)){
         $data = array(
           "event_id" => $event_id,
           "uid" => $uid,
           "email" => $email,
-          'personal_id' => $personal_id,
-        );
+          'nick_name' => $personal_id,
+          'ip' => $user_ip,
+          'country' => $country_name);
+
+        //die(json_encode(array("status"=>"failure", "message"=>$data)));
+
         $this->db
-          ->insert("event_serial", $data);
+          ->insert("event_preregister", $data);
 
           $u_id = $this->db->insert_id();
+
           if($u_id>0)
           {
             $result = $this->_check_user_data($event_id,$uid);
