@@ -195,4 +195,129 @@ class Event extends MY_Controller
           die(json_encode(array("status"=>"failure", "message"=>"E-Mail 格式錯誤。")));
         }
   }
+
+  function get_event_status($e_id){
+    $query = $this->db->from("events")
+    ->where("id", $e_id)
+    ->select("id,game_id,event_name,status,begin_time,end_time")
+    ->get();
+    if ($query->num_rows()>0)
+    {
+      $event = $query->row();
+      if (($event->status=='1' && now() > $event->begin_time && now() < $event->end_time))
+      {
+        die(json_encode(array("status"=>"success", "message"=>$event)));
+      } else {
+        die(json_encode(array("status"=>"failure", "message"=>"活動未開放")));
+      }
+    }
+    else {
+      die(json_encode(array("status"=>"failure", "message"=>"沒有這個活動")));
+    }
+  }
+
+  function check_user_data(){
+    $http_origin = $_SERVER['HTTP_ORIGIN'];
+    if ($http_origin == "https://meowroll.com" || $http_origin == "https://game.longeplay.com.tw")
+    {
+        header("Access-Control-Allow-Origin: $http_origin");
+    }
+    $event_id = $this->input->get_post("eid");
+    $uid = $this->input->get_post("uid");
+
+    $result = $this->_check_user_data($event_id,$uid);
+    die(json_encode($result));
+
+  }
+
+  function _check_user_data($event_id,$uid){
+    $query = $this->db->from("event_serial")
+    ->where("event_id", $event_id)
+    ->where("uid", $uid)
+    ->select("uid,personal_id,email,status")
+    ->get();
+
+    if ($query->num_rows()>0)
+    {
+      $user = $query->row();
+      return array("status"=>"success", "message"=>$user);
+    }
+    else {
+      return array("status"=>"failure", "message"=>"尚未完成活動");
+    }
+  }
+
+  function user_register(){
+    $http_origin = $_SERVER['HTTP_ORIGIN'];
+    if ($http_origin == "https://meowroll.com" )
+    {
+        header("Access-Control-Allow-Origin: $http_origin");
+    }
+    $event_id = $this->input->get_post("eid");
+    $uid = $this->input->get_post("uid");
+    $email = $this->input->get_post("email");
+    $personal_id = $this->input->get_post("personal_id");
+
+    $result = $this->_check_user_data($event_id,$uid);
+    if ($result["status"] =="success") //已經註冊完畢
+    {
+      die(json_encode($result));
+    }
+    else {
+      if(filter_var($user_email, FILTER_VALIDATE_EMAIL)){
+        $data = array(
+          "event_id" => $event_id,
+          "uid" => $uid,
+          "email" => $email,
+          'personal_id' => $personal_id,
+        );
+        $this->db
+          ->insert("event_serial", $data);
+
+          $u_id = $this->db->insert_id();
+          if($u_id>0)
+          {
+            $result = $this->_check_user_data($event_id,$uid);
+            die(json_encode($result));
+          }
+      }
+      else {
+        die(json_encode(array("status"=>"failure", "message"=>"請確認E-mail為有效信箱。")));
+      }
+
+    }
+  }
+  function check_fb_user()
+  {
+    $http_origin = $_SERVER['HTTP_ORIGIN'];
+    if ($http_origin == "https://meowroll.com" )
+    {
+        header("Access-Control-Allow-Origin: $http_origin");
+    }
+
+    $access_token = $this->input->get_post("access_token");
+
+
+    $facebook_url = "https://graph.facebook.com/v3.2/me?fields=id,name,email&access_token={$access_token}";
+
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, $facebook_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    $output = curl_exec($ch);
+
+    curl_close($ch);
+
+    echo $output;
+
+
+
+  }
+  //
+  // function test()
+  // {
+  //   die(json_encode("您所訪問的網頁內容被縮放可能影響正常使用，可以使用鍵盤快捷鍵 Ctrl 和 0 恢復正常。"));
+  // }
+
+
 }
