@@ -264,7 +264,7 @@ class Event extends MY_Controller
       die(json_encode($result));
     }
     else {
-      if(filter_var($user_email, FILTER_VALIDATE_EMAIL)){
+      if(filter_var($email, FILTER_VALIDATE_EMAIL)){
         $data = array(
           "event_id" => $event_id,
           "uid" => $uid,
