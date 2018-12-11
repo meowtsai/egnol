@@ -353,9 +353,9 @@ class Event extends MY_Controller
 
   }
   function l20na_send_items(){
-    if (!$_SESSION['access_token']){
-      return;
-    }
+    // if (!$_SESSION['access_token']){
+    //   return;
+    // }
 
     $http_origin = $_SERVER['HTTP_ORIGIN'];
 
@@ -366,22 +366,46 @@ class Event extends MY_Controller
     $item_id = $this->input->get_post("item_id");
     $npc_id = $this->input->get_post("npc_id");
 
+    //echo $item_id;
+    //echo $npc_id;
 
     $item_sp = $this->db->query("call l20na_give_item('{$item_id}','{$npc_id}')");
-    die(json_encode(array("status"=>"success", "message"=>$item_sp))) ;
+    $data = array();
+    foreach($item_sp->result() as $row) {
+      $data[] = array(
+        'rtn_code' => $row->rtn_code,
+        'note' => $row->note,
+
+      );
+    }
+
+    if ($data[0]["rtn_code"]=="1")
+    {
+      die(json_encode(array("status"=>"success", "message"=>$data[0]))) ;
+    }else {
+      die(json_encode(array("status"=>"failure", "message"=>$data[0]["note"]))) ;
+    }
+
+
+
+
   }
 
   function l20na_get_npcs(){
-    $query = $this->db->query('SELECT * FROM l20na_npcs');
+    $query = $this->db->query('select a.id, a.affection, b.npc_name,b.npc_gender,b.npc_code,b.npc_pic
+    from l20na_npc_affections a
+    left join l20na_npcs b
+    on a.npc_code = b.npc_code
+    where a.event_uid=14');
     $data = array();
     foreach($query->result() as $row) {
       $data[] = array(
         'id' => $row->id,
+        'affection' => $row->affection,
         'npc_name' => $row->npc_name,
         'npc_gender' => $row->npc_gender,
         'npc_code' => $row->npc_code,
         'npc_pic' => $row->npc_pic,
-        'status' => $row->status,
       );
     }
 
@@ -395,6 +419,35 @@ class Event extends MY_Controller
     }
 
   }
+
+  function l20na_get_items(){
+    $query = $this->db->query('select a.id, a.status,  b.item_code, b.item_name, b.item_pic
+    from l20na_detail a left join
+    l20na_items b on a.item_code = b.item_code
+    where a.o_id in(select id from l20na_orders
+    where event_uid=14) and a.status=1');
+    $data = array();
+    foreach($query->result() as $row) {
+      $data[] = array(
+        'id' => $row->id,
+        'item_name' => $row->item_name,
+        'item_code' => $row->item_code,
+        'item_pic' => $row->item_pic,
+      );
+    }
+
+    if (sizeof($data)>0)
+    {
+      $npc = $query->row();
+      die(json_encode(array("status"=>"success", "message"=>$data))) ;
+    }
+    else {
+      die(json_encode(array("status"=>"failure", "message"=>"沒有資料"))) ;
+    }
+
+  }
+
+
   //
   // function test()
   // {

@@ -272,10 +272,14 @@ class Service_quick extends MY_Controller {
 			//die(json_encode(array("status"=>"failure", "message"=>"可能含有冷僻字元,請移除不合法字元.")));
 		}
 		$ip = $_SERVER['REMOTE_ADDR'];
-		$query = $this->db->query("SELECT count(*) as chk FROM questions
-		WHERE (server_id='{$post_server_id}' and character_name='{$post_character_name}' and content='{$post_content}' and create_time > Date_Sub(CURDATE(), INTERVAL 3 HOUR))
-		or (note like '%IP={$ip},%' and create_time > Date_Sub(CURDATE(), INTERVAL 3 MINUTE) )");
-		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問!")));
+
+		if (!IN_OFFICE){
+			$query = $this->db->query("SELECT count(*) as chk FROM questions
+			WHERE (server_id='{$post_server_id}' and character_name='{$post_character_name}' and content='{$post_content}' and create_time > Date_Sub(CURDATE(), INTERVAL 3 HOUR))
+			or (note like '%IP={$ip},%' and create_time > Date_Sub(CURDATE(), INTERVAL 3 MINUTE) )");
+			if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問!")));
+		}
+
 
 	 	$if_a = array('1','l','0','o');
 		$then_b = array('8','k','f','w');
