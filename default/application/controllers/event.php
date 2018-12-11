@@ -197,6 +197,12 @@ class Event extends MY_Controller
   }
 
   function get_event_status($e_id){
+    $http_origin = $_SERVER['HTTP_ORIGIN'];
+
+    if ($http_origin == "https://meowroll.com" )
+    {
+        header("Access-Control-Allow-Origin: $http_origin");
+    }
     $query = $this->db->from("events")
     ->where("id", $e_id)
     ->select("id,game_id,event_name,status,begin_time,end_time")
@@ -259,6 +265,9 @@ class Event extends MY_Controller
     $email = $this->input->get_post("email");
     $personal_id = $this->input->get_post("personal_id");
 
+    $_SESSION['access_token']=$this->input->get_post("access_token");
+
+
 
 
     $result = $this->_check_user_data($event_id,$uid);
@@ -299,13 +308,16 @@ class Event extends MY_Controller
 
         $this->db
           ->insert("event_preregister", $data);
-
           $u_id = $this->db->insert_id();
-
           if($u_id>0)
           {
+            $item_sp = $this->db->query("call create_l20na_orders(curdate(),'預註冊成功送豪禮!','{$u_id}')");
+            $npc_sp = $this->db->query("call create_npc_affections('{$u_id}')");
+            //call create_l20na_orders(curdate(),'預註冊成功送豪禮!',NEW.id);
+            //call create_npc_affections(NEW.id);
             $result = $this->_check_user_data($event_id,$uid);
-            die(json_encode($result));
+
+            die(json_encode(array("status"=>"success", "message"=>$data)));
           }
       }
       else {
@@ -322,8 +334,8 @@ class Event extends MY_Controller
         header("Access-Control-Allow-Origin: $http_origin");
     }
 
-    $access_token = $this->input->get_post("access_token");
-
+    $access_token = $_SESSION['access_token'];
+    die($access_token);
 
     $facebook_url = "https://graph.facebook.com/v3.2/me?fields=id,name,email&access_token={$access_token}";
 
@@ -338,6 +350,49 @@ class Event extends MY_Controller
     echo $output;
 
 
+
+  }
+  function l20na_send_items(){
+    if (!$_SESSION['access_token']){
+      return;
+    }
+
+    $http_origin = $_SERVER['HTTP_ORIGIN'];
+
+    if ($http_origin == "https://meowroll.com" )
+    {
+        header("Access-Control-Allow-Origin: $http_origin");
+    }
+    $item_id = $this->input->get_post("item_id");
+    $npc_id = $this->input->get_post("npc_id");
+
+
+    $item_sp = $this->db->query("call l20na_give_item('{$item_id}','{$npc_id}')");
+    die(json_encode(array("status"=>"success", "message"=>$item_sp))) ;
+  }
+
+  function l20na_get_npcs(){
+    $query = $this->db->query('SELECT * FROM l20na_npcs');
+    $data = array();
+    foreach($query->result() as $row) {
+      $data[] = array(
+        'id' => $row->id,
+        'npc_name' => $row->npc_name,
+        'npc_gender' => $row->npc_gender,
+        'npc_code' => $row->npc_code,
+        'npc_pic' => $row->npc_pic,
+        'status' => $row->status,
+      );
+    }
+
+    if (sizeof($data)>0)
+    {
+      $npc = $query->row();
+      die(json_encode(array("status"=>"success", "message"=>$data))) ;
+    }
+    else {
+      die(json_encode(array("status"=>"failure", "message"=>"沒有資料"))) ;
+    }
 
   }
   //

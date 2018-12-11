@@ -81,7 +81,8 @@ class Service_quick extends MY_Controller {
 						$encode_c_name =urlencode($character_name);
 						//$usr_device =rawurlencode($usr_device);
 
-						// echo rawurlencode($usr_device).'<br />';
+						//echo "rawurlencode".rawurlencode($character_name).'<br />';
+						//echo "urlencode".urlencode($character_name).'<br />';
 						// echo rawurlencode($usr_device).'<br />';
 
 						$str_to_encrypt = "game_id={$vendor_game_id}&partner_uid={$partner_uid}&in_game_id={$in_game_id}&server_name={$encode_server_name}&character_name={$encode_c_name}&level={$level}&usr_device={$usr_device}&os_ver={$os_ver}&app_ver={$app_ver}&time_zone={$time_zone}&network={$network}&key={$key}";
@@ -90,6 +91,8 @@ class Service_quick extends MY_Controller {
 
 						//echo $str_to_encrypt.'<br />';
 						//echo $sig.'<br />';
+
+						//echo MD5('game_id=h55naxx2tw&partner_uid=222033334&in_game_id=11458024&server_name=server_h55tw&character_name=%E6%AB%BB%E4%BA%AC%E5%A1%9A%E4%B8%88~&level=&usr_device=iOS&os_ver=&app_ver=1.0.213187&time_zone=&network=&key=yxsjl3o7bm').'<br />';
 
 						/// 0212 h35 android sorting problems so we modified the code to fit both scenario
 
@@ -102,7 +105,8 @@ class Service_quick extends MY_Controller {
 								//echo "$key is at $value";
 								if ($qstringkey!='key')
 								{
-									$str_to_encrypt.=$qstringkey.'='.rawurlencode($qstringvalue).'&';
+									//$str_to_encrypt.=$qstringkey.'='.rawurlencode($qstringvalue).'&';
+									$str_to_encrypt.=$qstringkey.'='.urlencode($qstringvalue).'&';
 								}
 
 							}
@@ -111,7 +115,7 @@ class Service_quick extends MY_Controller {
 
 							$sig = MD5($str_to_encrypt);
 							//echo $sig.'<br />';
-							//echo MD5('game_id=g78naxx2hmt&partner_uid=106094919&in_game_id=2004010036&server_name=%E6%AD%A3%E5%BC%8F%E6%9C%8D&character_name=%E4%B8%80%E6%8B%9B%E5%B0%B1%E8%BA%BA&level=6&usr_device=Mi%20A1&os_ver=7.1.2&app_ver=2.1.0&network=1&key=v9nblsfhus').'<br />';
+
 
 						}
 
@@ -267,15 +271,17 @@ class Service_quick extends MY_Controller {
 			log_message('error', '提問單可能含有冷僻字元:'.$post_character_name.':'.$post_content);
 			//die(json_encode(array("status"=>"failure", "message"=>"可能含有冷僻字元,請移除不合法字元.")));
 		}
-
-		$query = $this->db->query("SELECT count(*) as chk FROM questions WHERE server_id='{$post_server_id}' and character_name='{$post_character_name}' and content='{$post_content}' and create_time > Date_Sub(CURDATE(), INTERVAL 3 HOUR)");
+		$ip = $_SERVER['REMOTE_ADDR'];
+		$query = $this->db->query("SELECT count(*) as chk FROM questions
+		WHERE (server_id='{$post_server_id}' and character_name='{$post_character_name}' and content='{$post_content}' and create_time > Date_Sub(CURDATE(), INTERVAL 3 HOUR))
+		or (note like '%IP={$ip},%' and create_time > Date_Sub(CURDATE(), INTERVAL 3 MINUTE) )");
 		if ($query->row()->chk) die(json_encode(array("status"=>"failure", "message"=>"請勿重覆提問!")));
 
 	 	$if_a = array('1','l','0','o');
 		$then_b = array('8','k','f','w');
 
     $check_id = str_replace($if_a, $then_b, base_convert(time(), 10, 32));
-		$ip = $_SERVER['REMOTE_ADDR'];
+
 		$country_name = "";
 		if ($ip)
 		{
