@@ -368,6 +368,7 @@ class Event extends MY_Controller
 
     //echo $item_id;
     //echo $npc_id;
+    //SELECT '1' AS rtn_code, @res as npc_res,@res_text as res_text,@res_vp as res_vp, affection_change, note FROM l20na_npc_affections_log WHERE id=LAST_INSERT_ID();
 
     $item_sp = $this->db->query("call l20na_give_item('{$item_id}','{$npc_id}')");
     $data = array();
@@ -375,6 +376,9 @@ class Event extends MY_Controller
       $data[] = array(
         'rtn_code' => $row->rtn_code,
         'note' => $row->note,
+        'npc_res' => $row->npc_res,
+        'res_text' => $row->res_text,
+        'res_vp' => $row->res_vp,
 
       );
     }
