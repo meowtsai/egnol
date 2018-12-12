@@ -361,13 +361,14 @@ class Event extends MY_Controller
             $item_sp = $this->db->query("call create_l20na_orders(curdate(),'預註冊成功送豪禮','{$u_id}')");
             $npc_sp = $this->db->query("call create_npc_affections('{$u_id}')");
             $result = $this->_check_user_data($event_id,$uid);
+            $reward = "";
             if ($result["status"]=="success")
             {
               $daily_result = $this->_l20na_daily_login($result["message"]->id);
-              $result["reward"]=$daily_result["message"];
+              $reward=$daily_result["message"];
             }
 
-            die(json_encode(array("status"=>"success", "message"=>$result)));
+            die(json_encode(array("status"=>"success", "message"=>$result, "reward"=>$reward)));
           }
       }
       else {
