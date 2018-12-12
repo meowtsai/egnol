@@ -2151,10 +2151,12 @@ CREATE TABLE `event_preregister` (
  `email` varchar(128) DEFAULT NULL,
  `ip` varchar(20) DEFAULT NULL,
  `country` varchar(20) DEFAULT NULL,
+ `auth_code` varchar(300) DEFAULT NULL,
  PRIMARY KEY (`id`),
  UNIQUE KEY `fb_UNIQUE` (`event_id`, `uid`),
  UNIQUE KEY `email_UNIQUE` (`event_id`, `email`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
 
 
 CREATE TABLE `l20na_items` (
@@ -2232,25 +2234,6 @@ END;
 DELIMITER ;
 
 
-DROP PROCEDURE IF EXISTS h55_prereg_insert;
-DELIMITER //
-CREATE PROCEDURE `h55_prereg_insert`(IN user_email varchar(300),IN user_ip varchar(20),IN user_country varchar(20))
- BEGIN
-  DECLARE is_exist INT;
-  SELECT count(*) into is_exist FROM h55_prereg WHERE email=user_email;
-  IF is_exist > 0
-  THEN
-    SELECT '5' AS rtn_code;
-  ELSEIF is_exist <= 0
-  THEN
-    INSERT INTO h55_prereg(email,ip,country) VALUES(user_email,user_ip,user_country);
-    SELECT '1' AS rtn_code, id, email,status,ip,create_time FROM h55_prereg WHERE email=user_email;
-  END IF;
- END;
- //
-DELIMITER ;
-
-call h55_prereg_insert('sss','222');
 
   CREATE TABLE `l20na_npcs` (
    `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2508,3 +2491,11 @@ IF(countRow >  0) THEN
 END IF;
 END
 shareedit
+
+ SELECT `desc`,create_time,
+ (select count(*) from l20na_detail where o_id in(select id from l20na_orders where event_uid=14)) as total
+ from l20na_orders where event_uid=14 and date=curdate();
+
+
+SELECT * from l20na_orders where event_uid=14 and date=curdate()
+select count(*) from l20na_detail where o_id in(select id from l20na_orders where event_uid=14);

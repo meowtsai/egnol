@@ -245,35 +245,23 @@ class Event extends MY_Controller
     if ($fb_result && $fb_result->id==$uid)
     {
         //echo $_SESSION['event12_uid']."<br />";
+      $this->db->where("event_id", $event_id)->where("uid", $uid)->update("event_preregister", array("auth_code"=>$accessToken,"update_time"=>"now()"));
+
       $result = $this->_check_user_data($event_id,$uid);
       if ($result["status"]=="success")
       {
-        $_SESSION['access_token']=$accessToken;
-        $_SESSION['event12_fbuid']=$uid;
-        $_SESSION['event12_uid']=$result["message"]->id;
-
-        // echo $_SESSION['event12_fbuid']."<br />";
-        // echo $_SESSION['event12_uid']."<br />";
-
-        $daily_result = $this->_l20na_daily_login();
+        $daily_result = $this->_l20na_daily_login($result["message"]->id);
         $result["reward"]=$daily_result["message"];
-
       }
-
-      //{"status":"success","message":{"id":"14","uid":"10213412799650864","nick_name":"Sophie Tsai","email":"sssss@gmail.com","status":"0"},"reward":{"desc":"\u9818\u53d6 20181212 \u767b\u5165\u79ae!","create_time":"2018-12-12 11:32:39"}}
       die(json_encode($result));
     }
     else {
-      unset($_SESSION['access_token']);
-      unset($_SESSION['event12_uid']);
-      unset($_SESSION['event12_fbuid']);
-
       die(json_encode(array("status"=>"failure", "message"=>"fb 資料驗證失敗。")));
     }
   }
 
-  function _l20na_daily_login(){
-       $uid = $_SESSION['event12_uid'];
+  function _l20na_daily_login($uid){
+       //$uid = $_SESSION['event12_uid'];
 
        if ($uid)
        {
@@ -322,9 +310,19 @@ class Event extends MY_Controller
     $uid = $this->input->get_post("uid");
     $email = $this->input->get_post("email");
     $personal_id = $this->input->get_post("personal_id");
+    $accessToken =  $this->input->get_post("accessToken");
+    $fb_result = json_decode($this->check_fb_user($accessToken));
+
+    if (!$fb_result || $fb_result->id==$uid)
+    {
+      die(json_encode(array("status"=>"failure", "message"=>"fb 資料驗證失敗。")));
+    }
+
     $result = $this->_check_user_data($event_id,$uid);
     if ( $result["status"]=="success") //已經註冊完畢
     {
+      $daily_result = $this->_l20na_daily_login($result["message"]->id);
+      $result["reward"]=$daily_result["message"];
       die(json_encode($result));
     }
     else {
@@ -352,7 +350,9 @@ class Event extends MY_Controller
           "email" => $email,
           'nick_name' => $personal_id,
           'ip' => $user_ip,
-          'country' => $country_name);
+          'country' => $country_name,
+          'auth_code' => $accessToken,
+        );
         $this->db
           ->insert("event_preregister", $data);
           $u_id = $this->db->insert_id();
@@ -363,10 +363,7 @@ class Event extends MY_Controller
             $result = $this->_check_user_data($event_id,$uid);
             if ($result["status"]=="success")
             {
-              $_SESSION['access_token']=$accessToken;
-              $_SESSION['event12_fbuid']=$uid;
-              $_SESSION['event12_uid']=$result["message"]->id;
-              $daily_result = $this->_l20na_daily_login();
+              $daily_result = $this->_l20na_daily_login($result["message"]->id);
               $result["reward"]=$daily_result["message"];
             }
 
@@ -397,14 +394,7 @@ class Event extends MY_Controller
   }
 
   function l20na_send_items(){
-    // if (!$_SESSION['access_token']){
-    //   return;
-    // }
-    $uid = $_SESSION['event12_uid'];
-    if (!$uid){
-      die(json_encode(array("status"=>"failure", "message"=>"沒有正確的登入資訊"))) ;
-    }
-    $http_origin = $_SERVER['HTTP_ORIGIN'];
+      $http_origin = $_SERVER['HTTP_ORIGIN'];
 
     if ($http_origin == "https://meowroll.com" )
     {
@@ -413,6 +403,17 @@ class Event extends MY_Controller
     $item_id = $this->input->get_post("item_id");
     $npc_id = $this->input->get_post("npc_id");
     //select count(*) as chk  from l20na_detail where id=54 and o_id in(select id from l20na_orders where event_uid=14);
+
+    $accessToken = $this->input->get_post("accessToken");
+    $user = $this->db->select("id, uid, nick_name,auth_code")
+                ->where("event_id", 12)
+                ->where("auth_code", $accessToken)
+                ->from("event_preregister")
+                ->get()->row();
+    if (!$user){
+      die(json_encode(array("status"=>"failure", "message"=>"沒有資料"))) ;
+    }
+    $uid=$user->id;
 
     $query = $this->db->query("SELECT count(*) as chk  from l20na_detail where id={$item_id} and o_id in(select id from l20na_orders where event_uid={$uid});");
     if (!$query->row()->chk){
@@ -440,25 +441,46 @@ class Event extends MY_Controller
 
   }
 
-  function l20na_get_npcs(){
+  function l20na_get_npcs_items(){
     $http_origin = $_SERVER['HTTP_ORIGIN'];
-
     if ($http_origin == "https://meowroll.com" )
     {
         header("Access-Control-Allow-Origin: $http_origin");
     }
-    $uid = $_SESSION['event12_uid'];
-    if (!$uid){
-      die(json_encode(array("status"=>"failure", "message"=>"沒有正確的登入資訊"))) ;
+
+    $accessToken = $this->input->get_post("accessToken");
+    $user = $this->db->select("id, uid, nick_name,auth_code")
+                ->where("event_id", 12)
+                ->where("auth_code", $accessToken)
+                ->from("event_preregister")
+                ->get()->row();
+    if (!$user){
+      die(json_encode(array("status"=>"failure", "message"=>"沒有資料"))) ;
     }
+    $uid=$user->id;
+    $query = $this->db->query("SELECT a.id, a.status,  b.item_code, b.item_name, b.item_pic
+    from l20na_detail a left join
+    l20na_items b on a.item_code = b.item_code
+    where a.o_id in(select id from l20na_orders
+    where event_uid={$uid}) and a.status=1");
+    $item_data = array();
+    foreach($query->result() as $row) {
+      $item_data[] = array(
+        'id' => $row->id,
+        'item_name' => $row->item_name,
+        'item_code' => $row->item_code,
+        'item_pic' => $row->item_pic,
+      );
+    }
+
     $query = $this->db->query("SELECT a.id, a.affection, b.npc_name,b.npc_gender,b.npc_code,b.npc_pic
     from l20na_npc_affections a
     left join l20na_npcs b
     on a.npc_code = b.npc_code
     where a.event_uid={$uid}");
-    $data = array();
+    $npc_data = array();
     foreach($query->result() as $row) {
-      $data[] = array(
+      $npc_data[] = array(
         'id' => $row->id,
         'affection' => $row->affection,
         'npc_name' => $row->npc_name,
@@ -468,60 +490,8 @@ class Event extends MY_Controller
       );
     }
 
-    if (sizeof($data)>0)
-    {
-      $npc = $query->row();
-      die(json_encode(array("status"=>"success", "message"=>$data))) ;
-    }
-    else {
-      die(json_encode(array("status"=>"failure", "message"=>"沒有資料"))) ;
-    }
+    die(json_encode(array("status"=>"success", "message"=>array("player"=> $user, "items" => $item_data, "npcs"=> $npc_data) ))) ;
 
   }
-
-  function l20na_get_items(){
-    $http_origin = $_SERVER['HTTP_ORIGIN'];
-
-    if ($http_origin == "https://meowroll.com" )
-    {
-        header("Access-Control-Allow-Origin: $http_origin");
-    }
-    $uid = $_SESSION['event12_uid'];
-    if (!$uid){
-      die(json_encode(array("status"=>"failure", "message"=>"沒有正確的登入資訊"))) ;
-    }
-    $query = $this->db->query("SELECT a.id, a.status,  b.item_code, b.item_name, b.item_pic
-    from l20na_detail a left join
-    l20na_items b on a.item_code = b.item_code
-    where a.o_id in(select id from l20na_orders
-    where event_uid={$uid}) and a.status=1");
-    $data = array();
-    foreach($query->result() as $row) {
-      $data[] = array(
-        'id' => $row->id,
-        'item_name' => $row->item_name,
-        'item_code' => $row->item_code,
-        'item_pic' => $row->item_pic,
-      );
-    }
-
-    if (sizeof($data)>0)
-    {
-      $npc = $query->row();
-      die(json_encode(array("status"=>"success", "message"=>$data))) ;
-    }
-    else {
-      die(json_encode(array("status"=>"failure", "message"=>"沒有資料"))) ;
-    }
-
-  }
-
-
-  //
-  // function test()
-  // {
-  //   die(json_encode("您所訪問的網頁內容被縮放可能影響正常使用，可以使用鍵盤快捷鍵 Ctrl 和 0 恢復正常。"));
-  // }
-
 
 }
