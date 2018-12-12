@@ -2460,10 +2460,11 @@ IF (countRow >  0) THEN
   select item_code, item_name into @item_code,@item_name from l20na_items where item_code=(select item_code from l20na_detail where id=my_item);
   select npc_code,npc_name,npc_gender into @npc_code,@npc_name,@npc_gender from l20na_npcs where npc_code=(select npc_code from l20na_npc_affections where id=my_npc);
   select response,response_text,response_voice into @res,@res_text,@res_vp from l20na_npcs_items where npc_code=@npc_code and item_code=@item_code;
+  select nick_name into @nick_name from event_preregister where id=(select event_uid from l20na_npc_affections where id=my_npc);
   update l20na_npc_affections set affection=affection+(CASE WHEN @res='awesome' THEN 20 WHEN @res='okla' THEN 10 ELSE 5 END) where id=my_npc;
   insert into l20na_npc_affections_log(aff_id,affection_change,item_id,note)
   values(my_npc,(CASE WHEN @res='awesome' THEN 20 WHEN @res='okla' THEN 10 ELSE 5 END),my_item,
-  CONCAT('你送給',@npc_name,'一個',@item_name,', ',(case when @npc_gender='m' then '他' else '她' end),
+  CONCAT(@nick_name, ' 送給 ',@npc_name,' 一個 ',@item_name,', ',(case when @npc_gender='m' then '他' else '她' end),
   (CASE WHEN @res='awesome' THEN '很喜歡' WHEN @res='okla' THEN '還算喜歡' ELSE '並不喜歡' END)));
   SELECT '1' AS rtn_code, @res as npc_res,@res_text as res_text,@res_vp as res_vp, affection_change, note FROM l20na_npc_affections_log WHERE id=LAST_INSERT_ID();
 ELSE
@@ -2474,6 +2475,7 @@ END;
 DELIMITER ;
 
 call l20na_give_item(100,64)
+call l20na_give_item(8,1)
 
 BEGIN
 DECLARE countRow INT;

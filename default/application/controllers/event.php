@@ -313,7 +313,7 @@ class Event extends MY_Controller
     $accessToken =  $this->input->get_post("accessToken");
     $fb_result = json_decode($this->check_fb_user($accessToken));
 
-    if (!$fb_result || $fb_result->id==$uid)
+    if (!$fb_result || $fb_result->id!=$uid)
     {
       die(json_encode(array("status"=>"failure", "message"=>"fb 資料驗證失敗。")));
     }
@@ -411,7 +411,7 @@ class Event extends MY_Controller
                 ->from("event_preregister")
                 ->get()->row();
     if (!$user){
-      die(json_encode(array("status"=>"failure", "message"=>"沒有資料"))) ;
+      die(json_encode(array("status"=>"failure", "message"=>"User Not found, 沒有資料"))) ;
     }
     $uid=$user->id;
 
