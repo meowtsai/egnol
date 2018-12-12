@@ -199,7 +199,7 @@ class Event extends MY_Controller
   function get_event_status($e_id){
     $http_origin = $_SERVER['HTTP_ORIGIN'];
 
-    if ($http_origin == "https://meowroll.com" )
+    if ($http_origin == "https://meowroll.com" || $http_origin == "https://yujian-love.com/" || $http_origin == "https://www.yujian-love.com/" )
     {
         header("Access-Control-Allow-Origin: $http_origin");
     }
@@ -224,7 +224,7 @@ class Event extends MY_Controller
 
   function check_user_data(){
     $http_origin = $_SERVER['HTTP_ORIGIN'];
-    if ($http_origin == "https://meowroll.com" || $http_origin == "https://game.longeplay.com.tw")
+    if ($http_origin == "https://meowroll.com" || $http_origin == "https://yujian-love.com/" || $http_origin == "https://www.yujian-love.com/" )
     {
         header("Access-Control-Allow-Origin: $http_origin");
     }
@@ -302,7 +302,7 @@ class Event extends MY_Controller
   function user_register(){
     $http_origin = $_SERVER['HTTP_ORIGIN'];
 
-    if ($http_origin == "https://meowroll.com" )
+    if ($http_origin == "https://meowroll.com" || $http_origin == "https://yujian-love.com/" || $http_origin == "https://www.yujian-love.com/" )
     {
         header("Access-Control-Allow-Origin: $http_origin");
     }
@@ -380,7 +380,7 @@ class Event extends MY_Controller
   function check_fb_user($access_token)
   {
     $http_origin = $_SERVER['HTTP_ORIGIN'];
-    if ($http_origin == "https://meowroll.com" )
+    if ($http_origin == "https://meowroll.com" || $http_origin == "https://yujian-love.com/" || $http_origin == "https://www.yujian-love.com/" )
     {
         header("Access-Control-Allow-Origin: $http_origin");
     }
@@ -397,7 +397,7 @@ class Event extends MY_Controller
   function l20na_send_items(){
       $http_origin = $_SERVER['HTTP_ORIGIN'];
 
-    if ($http_origin == "https://meowroll.com" )
+    if ($http_origin == "https://meowroll.com" || $http_origin == "https://yujian-love.com/" || $http_origin == "https://www.yujian-love.com/" )
     {
         header("Access-Control-Allow-Origin: $http_origin");
     }
@@ -444,7 +444,7 @@ class Event extends MY_Controller
 
   function l20na_get_npcs_items(){
     $http_origin = $_SERVER['HTTP_ORIGIN'];
-    if ($http_origin == "https://meowroll.com" )
+    if ($http_origin == "https://meowroll.com" || $http_origin == "https://yujian-love.com/" || $http_origin == "https://www.yujian-love.com/" )
     {
         header("Access-Control-Allow-Origin: $http_origin");
     }
