@@ -230,9 +230,67 @@ class Event extends MY_Controller
     }
     $event_id = $this->input->get_post("eid");
     $uid = $this->input->get_post("uid");
-    //die(json_encode(array("status"=>"failure", "message"=>"{$event_id},{$uid}")));
-    $result = $this->_check_user_data($event_id,$uid);
-    die(json_encode($result));
+    $accessToken = $this->input->get_post("accessToken");
+
+    //檢查是否fb token為真
+
+    $fb_result = json_decode($this->check_fb_user($accessToken));
+
+    // {
+    //   "id": "10213412799650864",
+    //   "name": "Sophie Tsai",
+    //   "email": "shihfan.tsai\u0040gmail.com"
+    // }
+    //echo json_encode($fb_result)."<br />";
+    if ($fb_result && $fb_result->id==$uid)
+    {
+        //echo $_SESSION['event12_uid']."<br />";
+      $result = $this->_check_user_data($event_id,$uid);
+      if ($result["status"]=="success")
+      {
+        $_SESSION['access_token']=$accessToken;
+        $_SESSION['event12_fbuid']=$uid;
+        $_SESSION['event12_uid']=$result["message"]->id;
+
+        // echo $_SESSION['event12_fbuid']."<br />";
+        // echo $_SESSION['event12_uid']."<br />";
+
+        $daily_result = $this->_l20na_daily_login();
+        $result["reward"]=$daily_result["message"];
+
+      }
+
+      //{"status":"success","message":{"id":"14","uid":"10213412799650864","nick_name":"Sophie Tsai","email":"sssss@gmail.com","status":"0"},"reward":{"desc":"\u9818\u53d6 20181212 \u767b\u5165\u79ae!","create_time":"2018-12-12 11:32:39"}}
+      die(json_encode($result));
+    }
+    else {
+      unset($_SESSION['access_token']);
+      unset($_SESSION['event12_uid']);
+      unset($_SESSION['event12_fbuid']);
+
+      die(json_encode(array("status"=>"failure", "message"=>"fb 資料驗證失敗。")));
+    }
+  }
+
+  function _l20na_daily_login(){
+       $uid = $_SESSION['event12_uid'];
+
+       if ($uid)
+       {
+         $query = $this->db->query("SELECT count(*) as chk from l20na_orders where event_uid={$uid} and date=curdate()");
+         if (!$query->row()->chk){
+           $today = date("Ymd");
+           $item_sp = $this->db->query("call create_l20na_orders(curdate(),'逆水寒 {$today} 登入禮','{$uid}')");
+         }
+         $query = $this->db->query("SELECT `desc`, create_time,
+           (select count(*) from l20na_detail where o_id in(select id from l20na_orders where event_uid={$uid}) and status=1) as total
+           from l20na_orders where event_uid={$uid} and date=curdate()");
+         return array("status"=>"success", "message"=>$query->row());
+
+       }
+       else {
+         return array("status"=>"failure", "message"=>"沒有登入資訊。");
+       }
 
   }
 
@@ -240,7 +298,7 @@ class Event extends MY_Controller
     $query = $this->db->from("event_preregister")
     ->where("event_id", $event_id)
     ->where("uid", $uid)
-    ->select("uid,nick_name,email,status")
+    ->select("id,uid,nick_name,email,status")
     ->get();
 
     if ($query->num_rows()>0)
@@ -264,15 +322,7 @@ class Event extends MY_Controller
     $uid = $this->input->get_post("uid");
     $email = $this->input->get_post("email");
     $personal_id = $this->input->get_post("personal_id");
-
-    $_SESSION['access_token']=$this->input->get_post("access_token");
-
-
-
-
     $result = $this->_check_user_data($event_id,$uid);
-
-
     if ( $result["status"]=="success") //已經註冊完畢
     {
       die(json_encode($result));
@@ -303,21 +353,24 @@ class Event extends MY_Controller
           'nick_name' => $personal_id,
           'ip' => $user_ip,
           'country' => $country_name);
-
-        //die(json_encode(array("status"=>"failure", "message"=>$data)));
-
         $this->db
           ->insert("event_preregister", $data);
           $u_id = $this->db->insert_id();
           if($u_id>0)
           {
-            $item_sp = $this->db->query("call create_l20na_orders(curdate(),'預註冊成功送豪禮!','{$u_id}')");
+            $item_sp = $this->db->query("call create_l20na_orders(curdate(),'預註冊成功送豪禮','{$u_id}')");
             $npc_sp = $this->db->query("call create_npc_affections('{$u_id}')");
-            //call create_l20na_orders(curdate(),'預註冊成功送豪禮!',NEW.id);
-            //call create_npc_affections(NEW.id);
             $result = $this->_check_user_data($event_id,$uid);
+            if ($result["status"]=="success")
+            {
+              $_SESSION['access_token']=$accessToken;
+              $_SESSION['event12_fbuid']=$uid;
+              $_SESSION['event12_uid']=$result["message"]->id;
+              $daily_result = $this->_l20na_daily_login();
+              $result["reward"]=$daily_result["message"];
+            }
 
-            die(json_encode(array("status"=>"success", "message"=>$data)));
+            die(json_encode(array("status"=>"success", "message"=>$result)));
           }
       }
       else {
@@ -326,37 +379,31 @@ class Event extends MY_Controller
 
     }
   }
-  function check_fb_user()
+  function check_fb_user($access_token)
   {
     $http_origin = $_SERVER['HTTP_ORIGIN'];
     if ($http_origin == "https://meowroll.com" )
     {
         header("Access-Control-Allow-Origin: $http_origin");
     }
-
-    $access_token = $_SESSION['access_token'];
-    die($access_token);
-
     $facebook_url = "https://graph.facebook.com/v3.2/me?fields=id,name,email&access_token={$access_token}";
-
     $ch = curl_init();
-
     curl_setopt($ch, CURLOPT_URL, $facebook_url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
     $output = curl_exec($ch);
-
     curl_close($ch);
-
-    echo $output;
-
-
-
+    //echo $output;
+    return $output;
   }
+
   function l20na_send_items(){
     // if (!$_SESSION['access_token']){
     //   return;
     // }
-
+    $uid = $_SESSION['event12_uid'];
+    if (!$uid){
+      die(json_encode(array("status"=>"failure", "message"=>"沒有正確的登入資訊"))) ;
+    }
     $http_origin = $_SERVER['HTTP_ORIGIN'];
 
     if ($http_origin == "https://meowroll.com" )
@@ -365,10 +412,12 @@ class Event extends MY_Controller
     }
     $item_id = $this->input->get_post("item_id");
     $npc_id = $this->input->get_post("npc_id");
+    //select count(*) as chk  from l20na_detail where id=54 and o_id in(select id from l20na_orders where event_uid=14);
 
-    //echo $item_id;
-    //echo $npc_id;
-    //SELECT '1' AS rtn_code, @res as npc_res,@res_text as res_text,@res_vp as res_vp, affection_change, note FROM l20na_npc_affections_log WHERE id=LAST_INSERT_ID();
+    $query = $this->db->query("SELECT count(*) as chk  from l20na_detail where id={$item_id} and o_id in(select id from l20na_orders where event_uid={$uid});");
+    if (!$query->row()->chk){
+      die(json_encode(array("status"=>"failure", "message"=>"資料驗證錯誤"))) ;
+    }
 
     $item_sp = $this->db->query("call l20na_give_item('{$item_id}','{$npc_id}')");
     $data = array();
@@ -382,7 +431,6 @@ class Event extends MY_Controller
 
       );
     }
-
     if ($data[0]["rtn_code"]=="1")
     {
       die(json_encode(array("status"=>"success", "message"=>$data[0]))) ;
@@ -390,17 +438,18 @@ class Event extends MY_Controller
       die(json_encode(array("status"=>"failure", "message"=>$data[0]["note"]))) ;
     }
 
-
-
-
   }
 
   function l20na_get_npcs(){
-    $query = $this->db->query('select a.id, a.affection, b.npc_name,b.npc_gender,b.npc_code,b.npc_pic
+    $uid = $_SESSION['event12_uid'];
+    if (!$uid){
+      die(json_encode(array("status"=>"failure", "message"=>"沒有正確的登入資訊"))) ;
+    }
+    $query = $this->db->query("SELECT a.id, a.affection, b.npc_name,b.npc_gender,b.npc_code,b.npc_pic
     from l20na_npc_affections a
     left join l20na_npcs b
     on a.npc_code = b.npc_code
-    where a.event_uid=14');
+    where a.event_uid={$uid}");
     $data = array();
     foreach($query->result() as $row) {
       $data[] = array(
@@ -425,11 +474,15 @@ class Event extends MY_Controller
   }
 
   function l20na_get_items(){
-    $query = $this->db->query('select a.id, a.status,  b.item_code, b.item_name, b.item_pic
+    $uid = $_SESSION['event12_uid'];
+    if (!$uid){
+      die(json_encode(array("status"=>"failure", "message"=>"沒有正確的登入資訊"))) ;
+    }
+    $query = $this->db->query("SELECT a.id, a.status,  b.item_code, b.item_name, b.item_pic
     from l20na_detail a left join
     l20na_items b on a.item_code = b.item_code
     where a.o_id in(select id from l20na_orders
-    where event_uid=14) and a.status=1');
+    where event_uid={$uid}) and a.status=1");
     $data = array();
     foreach($query->result() as $row) {
       $data[] = array(
