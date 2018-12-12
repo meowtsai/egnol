@@ -441,6 +441,12 @@ class Event extends MY_Controller
   }
 
   function l20na_get_npcs(){
+    $http_origin = $_SERVER['HTTP_ORIGIN'];
+
+    if ($http_origin == "https://meowroll.com" )
+    {
+        header("Access-Control-Allow-Origin: $http_origin");
+    }
     $uid = $_SESSION['event12_uid'];
     if (!$uid){
       die(json_encode(array("status"=>"failure", "message"=>"沒有正確的登入資訊"))) ;
@@ -474,6 +480,12 @@ class Event extends MY_Controller
   }
 
   function l20na_get_items(){
+    $http_origin = $_SERVER['HTTP_ORIGIN'];
+
+    if ($http_origin == "https://meowroll.com" )
+    {
+        header("Access-Control-Allow-Origin: $http_origin");
+    }
     $uid = $_SESSION['event12_uid'];
     if (!$uid){
       die(json_encode(array("status"=>"failure", "message"=>"沒有正確的登入資訊"))) ;
