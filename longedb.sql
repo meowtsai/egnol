@@ -2474,6 +2474,20 @@ END;
 //
 DELIMITER ;
 
+
+select * from event_preregister;
+select * from l20na_npc_affections;
+select * from l20na_npc_affections_log;
+select * from l20na_orders;
+select * from l20na_detail;
+
+delete from l20na_detail;
+delete from l20na_orders;
+delete from l20na_npc_affections_log;
+delete from l20na_npc_affections;
+delete from event_preregister;
+
+
 call l20na_give_item(100,64)
 call l20na_give_item(8,1)
 
@@ -2501,3 +2515,6 @@ shareedit
 
 SELECT * from l20na_orders where event_uid=14 and date=curdate()
 select count(*) from l20na_detail where o_id in(select id from l20na_orders where event_uid=14);
+
+
+user_register?eid=12&uid=10213412799650864&email=shihfan.tsai@gmail.com&personal_id=Sophie Tsai&accessToken=EAAEfWlUfSp8BAFUr4BzsFoPdVG89buatgu5jxOwvddm44ZAnd0CegJR6BmYF071Qx8ZAPDD989GGNZBWm2Lxq5LlZCToZCFoxDRu07hkZCUwDr6Tz0jubprnzBNqqJyOubSHVXottH6UWjB3hqeSy0BT8qvh2Q12Im4MfS80fjWr0QtKklYd5VYWWRnYSrHrZCbpFQ09jC3cQZDZD

@@ -199,6 +199,34 @@ class Event extends MY_Controller {
 			->set("log", isset($log) ? $log : false)
       ->render();
 	}
+
+
+	function l20na_preregister()
+	{
+
+		$this->_init_layout();
+		$result = null ;
+
+		$result = $this->DB2
+			->select("a.id,a.nick_name,a.create_time,a.update_time,a.email,a.ip,a.country,")
+			->select("(select concat(sum(case when status=1 then 1 else 0 end),'/',count(*)) as item_status from l20na_detail where o_id in (select id from l20na_orders where event_uid=a.id)) as item_status",FALSE)
+			->from("event_preregister a")
+			->where("event_id",12)
+			->get();
+
+		$log = $this->DB2
+			->select("c.*")
+			->from("l20na_npc_affections_log c")
+			->order_by("c.id desc")
+			->get();
+
+		$this->g_layout
+			->add_breadcrumb("逆水寒預註冊")
+			->set("result", isset($result) ? $result : false)
+			->set("log", isset($log) ? $log : false)
+      ->render();
+	}
+
 }
 
 /* End of file welcome.php */
