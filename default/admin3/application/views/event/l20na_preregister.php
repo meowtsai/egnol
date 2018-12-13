@@ -7,6 +7,7 @@
   <ul class="nav nav-tabs" id="myTab">
     <li class="active"><a href="#home">預註冊玩家清單</a></li>
     <li><a href="#profile">歷程紀錄</a></li>
+    <li><a href="#ref">關係對照表</a></li>
   </ul>
   <span class="recordcount label label-warning" style="display: flex;float:right;"></span>
   <div class="pagination">
@@ -58,6 +59,25 @@
         </tbody>
       </table>
     </div>
+
+    <div class="tab-pane" id="ref">
+      <div class="alert alert-default">
+      	NPC 和道具關係對照, 參考用
+      </div>
+      <table class="table table-striped" id="ref_table" style="width:1000px">
+        <thead>
+          <tr>
+            <th >NPC名稱</th>
+            <th >道具名稱</th>
+            <th >好感度</th>
+            <th >對白</th>
+            <th >語音檔</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
   </div>
 
 
@@ -73,14 +93,31 @@
     $(this).tab('show');
     //console.log($(this).text());
 
+//     歷程紀錄
+// l20na_preregister:397 log_table
+// l20na_preregister:337 關係對照表
+// l20na_preregister:397 log_table
+// l20na_preregister:337 預註冊玩家清單
+
     activeTable = $(this).text(); //歷程紀錄
-    which_tbl =  (activeTable==="預註冊玩家清單"?"list_table":"log_table");
+    which_tbl =  (activeTable==="預註冊玩家清單"?"list_table":activeTable==="歷程紀錄"?"log_table":"ref_table");
     func_search();
     //showCount();
   })
 
 
 
+
+var refList = <?=json_encode($refrence->result());?>;
+for (var i = 0; i < refList.length; i++) {
+  var $tr = $(`<tr><td>${refList[i].npc_name}  </td>
+    <td>${refList[i].item_name} </td>
+    <td>${(refList[i].response==='awesome'?"<font color='blue'>非常喜歡</font>":refList[i].response==='okla'?"普通":"<font color='red'>不喜歡</font>")}</td>
+    <td>${refList[i].response_text}</td>
+    <td>${refList[i].response_voice}</td>
+    </tr>`);
+  $("#ref_table").append($tr);
+}
   var logList = <?=json_encode($log->result());?>;
   for (var i = 0; i < logList.length; i++) {
     var $tr = $(`<tr><td>${logList[i].id}  </td>
@@ -159,7 +196,7 @@
   }
 
   function showCount(){
-    var count =  (activeTable==="預註冊玩家清單"?userList.length:logList.length);
+    var count =  (activeTable==="預註冊玩家清單"?userList.length:activeTable==="歷程紀錄"?logList.length:refList.length);
     $(".recordcount").text("總筆數:" + count);
     var page_count=Math.ceil(count/page_size);
 

@@ -127,7 +127,7 @@ CREATE TABLE `games` (
 
 ALTER TABLE games
 ADD site varchar(255) DEFAULT NULL;
-
+`create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 ALTER TABLE games
 ADD bg_path varchar(255) DEFAULT NULL;
 
@@ -2213,13 +2213,13 @@ BEGIN
   if my_o_id > 0
   then
     INSERT INTO l20na_detail(o_id,item_code)
-    select my_o_id,item_code from l20na_items order by rand() limit 10;
+    select my_o_id,item_code from l20na_items order by rand() limit 25;
   END IF;
 END;
 //
 DELIMITER ;
 
-call create_l20na_orders('2018-12-7','預註冊成功送豪禮!',13);
+call create_l20na_orders('2018-12-7','測試送好禮!',12);
 
 
 DROP PROCEDURE IF EXISTS create_npc_affections;
@@ -2283,7 +2283,9 @@ insert into l20na_npcs(npc_name,npc_gender,npc_code,npc_pic) values('姬蜜兒',
   ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
-
+  ALTER TABLE l20na_npc_affections_log
+  ADD create_time timestamp DEFAULT CURRENT_TIMESTAMP;
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
 
 Insert into event_preregister(event_id,uid,email,nick_name,ip,country)
@@ -2414,6 +2416,10 @@ l20na_npcs_items;
 +----+-----------+------------+----------+-------------+--------+
 1  wuq        1001 5 ……不知送我此物，是何用意？  gift_female_chalou_wuqing_021
 
+select c.npc_name,b.item_name, a.response,response_text,response_voice
+from l20na_npcs_items a
+left join l20na_items b on a.item_code = b.item_code
+left join l20na_npcs c on a.npc_code=c.npc_code
 
 CREATE TABLE `l20na_npcs_items` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2446,8 +2452,7 @@ insert into l20na_npc_affections_log(aff_id,affection_change,item_id,note)
 return ok, "謝謝你", "voice_path", "total_score"
 
 
-
-
+select concat(sum(case when status=1 then 1 else 0 end),'/',count(*)) as item_status from l20na_detail where o_id in (select id from l20na_orders where event_uid=14);
 
 DROP PROCEDURE IF EXISTS l20na_give_item;
 DELIMITER //
@@ -2461,9 +2466,9 @@ IF (countRow >  0) THEN
   select npc_code,npc_name,npc_gender into @npc_code,@npc_name,@npc_gender from l20na_npcs where npc_code=(select npc_code from l20na_npc_affections where id=my_npc);
   select response,response_text,response_voice into @res,@res_text,@res_vp from l20na_npcs_items where npc_code=@npc_code and item_code=@item_code;
   select nick_name into @nick_name from event_preregister where id=(select event_uid from l20na_npc_affections where id=my_npc);
-  update l20na_npc_affections set affection=affection+(CASE WHEN @res='awesome' THEN 20 WHEN @res='okla' THEN 10 ELSE 5 END) where id=my_npc;
+  update l20na_npc_affections set affection=affection+(CASE WHEN @res='awesome' THEN 20 WHEN @res='okla' THEN 10 ELSE -5 END) where id=my_npc;
   insert into l20na_npc_affections_log(aff_id,affection_change,item_id,note)
-  values(my_npc,(CASE WHEN @res='awesome' THEN 20 WHEN @res='okla' THEN 10 ELSE 5 END),my_item,
+  values(my_npc,(CASE WHEN @res='awesome' THEN 20 WHEN @res='okla' THEN 10 ELSE -5 END),my_item,
   CONCAT(@nick_name, ' 送給 ',@npc_name,' 一個 ',@item_name,', ',(case when @npc_gender='m' then '他' else '她' end),
   (CASE WHEN @res='awesome' THEN '很喜歡' WHEN @res='okla' THEN '還算喜歡' ELSE '並不喜歡' END)));
   SELECT '1' AS rtn_code, @res as npc_res,@res_text as res_text,@res_vp as res_vp, affection_change, note FROM l20na_npc_affections_log WHERE id=LAST_INSERT_ID();
@@ -2518,3 +2523,69 @@ select count(*) from l20na_detail where o_id in(select id from l20na_orders wher
 
 
 user_register?eid=12&uid=10213412799650864&email=shihfan.tsai@gmail.com&personal_id=Sophie Tsai&accessToken=EAAEfWlUfSp8BAFUr4BzsFoPdVG89buatgu5jxOwvddm44ZAnd0CegJR6BmYF071Qx8ZAPDD989GGNZBWm2Lxq5LlZCToZCFoxDRu07hkZCUwDr6Tz0jubprnzBNqqJyOubSHVXottH6UWjB3hqeSy0BT8qvh2Q12Im4MfS80fjWr0QtKklYd5VYWWRnYSrHrZCbpFQ09jC3cQZDZD
+
+
+SELECT a.id, a.status,  b.item_code, b.item_name, b.item_pic
+from l20na_detail a left join
+l20na_items b on a.item_code = b.item_code
+where a.o_id in(select id from l20na_orders
+where event_uid=8) and a.status=1
+
+  //item_id=202&npc_id=151
+
+select item_code, item_name from l20na_items where item_code=(select item_code from l20na_detail where id=202);
+
+-----------+--------------+
+| item_code | item_name    |
++-----------+--------------+
+| 1033      | 桃溪泥人     |
++-----------+--------------+
+
+
+select npc_code,npc_name,npc_gender  from l20na_npcs where npc_code=(select npc_code from l20na_npc_affections where id=151);
+
++----------+-----------+------------+
+| npc_code | npc_name  | npc_gender |
++----------+-----------+------------+
+| fangyk   | 方應看    | m          |
++----------+-----------+------------+
+
+
+select response,response_text,response_voice from l20na_npcs_items where npc_code='fangyk' and item_code='1033';
+| response | response_text                           | response_voice                     |
++----------+-----------------------------------------+------------------------------------+
+| okla     | 禮物一般，心意還說得過去。              | gift_female_chalou_fangyingkan_022 |
++----------+-----------------------------------------+------------------------------------+
+
+
+select nick_name  from event_preregister where id=(select event_uid from l20na_npc_affections where id=151);
+
++-------------+
+| nick_name   |
++-------------+
+| Kuanche Kao |
++-------------+
+
+update l20na_npc_affections set affection=affection+(CASE WHEN @res='awesome' THEN 20 WHEN @res='okla' THEN 10 ELSE 5 END) where id=my_npc;
+
+
+insert into l20na_npc_affections_log(aff_id,affection_change,item_id,note)
+values(151,10,202,'你送給xxx');
+
+
+
+l20na_npc_affections_log | CREATE TABLE `l20na_npc_affections_log` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `aff_id` int(11) NOT NULL,
+ `affection_change` tinyint(4) NOT NULL DEFAULT '0',
+ `item_id` tinyint(4) NOT NULL DEFAULT '0',
+ `note` varchar(200) NOT NULL DEFAULT '',
+ `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ PRIMARY KEY (`id`),
+ UNIQUE KEY `npc_UNIQUE` (`aff_id`,`item_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=131 DEFAULT CHARSET=utf8 |
+
+ALTER TABLE l20na_npc_affections_log MODIFY COLUMN item_id int(11) DEFAULT '0';
+alter table l20na_npc_affections_log
+
+SELECT '1' AS rtn_code, @res as npc_res,@res_text as res_text,@res_vp as res_vp, affection_change, note FROM l20na_npc_affections_log WHERE id=LAST_INSERT_ID();

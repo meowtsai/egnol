@@ -220,10 +220,19 @@ class Event extends MY_Controller {
 			->order_by("c.id desc")
 			->get();
 
+		$refrence = $this->DB2
+			->select("c.npc_name,b.item_name, a.response,response_text,response_voice")
+			->from("l20na_npcs_items a")
+			->join("l20na_items b","a.item_code = b.item_code","left")
+			->join("l20na_npcs c","a.npc_code=c.npc_code","left")
+			->get();
+
+
 		$this->g_layout
 			->add_breadcrumb("逆水寒預註冊")
 			->set("result", isset($result) ? $result : false)
 			->set("log", isset($log) ? $log : false)
+			->set("refrence", isset($refrence) ? $refrence : false)
       ->render();
 	}
 	function l20na_preregister_user($uid){
@@ -264,7 +273,7 @@ class Event extends MY_Controller {
 				->get();
 
 		$this->g_layout
-			->add_breadcrumb("逆水寒預註冊玩家明細","l20na_preregister")
+			->add_breadcrumb("逆水寒預註冊玩家明細","event/l20na_preregister")
 			->add_breadcrumb("單一玩家資料檢視")
 			->set("user", isset($user) ? $user : false)
 			->set("npcs", isset($npcs) ? $npcs : false)

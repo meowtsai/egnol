@@ -395,6 +395,7 @@ class Event extends MY_Controller
   }
 
   function l20na_send_items(){
+    //item_id=202&npc_id=151
       $http_origin = $_SERVER['HTTP_ORIGIN'];
 
     if ($http_origin == "https://meowroll.com" || $http_origin == "https://yujian-love.com" || $http_origin == "https://www.yujian-love.com" )
