@@ -437,7 +437,19 @@ class Event extends MY_Controller
     {
       die(json_encode(array("status"=>"success", "message"=>$data[0]))) ;
     }else {
-      die(json_encode(array("status"=>"failure", "message"=>$data[0]["note"]))) ;
+
+      $about_empty = array("天也空 地也空 人生渺渺在其中",
+      "日也空 月也空 東昇西墜為誰功",
+      "金也空 銀也空 死後何曾在手中",
+      "妻也空 子也空 黃泉路上不相逢",
+      "權也空 名也空 轉眼荒郊塗一封",
+      "酒也空 氣也空 世間浮華一陣風");
+
+
+      $rand_keys = array_rand($about_empty, 2);
+      //return $about_empty[$rand_keys[0]] . "\n";
+      //die(json_encode(array("status"=>"failure", "message"=>$data[0]["note"]))) ;
+      die(json_encode(array("status"=>"failure", "message"=>$about_empty[$rand_keys[0]]))) ;
     }
 
   }
@@ -494,5 +506,6 @@ class Event extends MY_Controller
     die(json_encode(array("status"=>"success", "message"=>array("player"=> $user, "items" => $item_data, "npcs"=> $npc_data) ))) ;
 
   }
+
 
 }

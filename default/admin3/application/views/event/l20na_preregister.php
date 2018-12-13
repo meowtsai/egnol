@@ -97,7 +97,7 @@
   var userList = <?=json_encode($result->result());?>;
   for (var i = 0; i < userList.length; i++) {
 		var $tr = $(`<tr><td>${userList[i].id}</td>
-			<td>${userList[i].nick_name}</td>
+			<td><a href="./l20na_preregister_user/${userList[i].id}">${userList[i].nick_name}</a></td>
 			<td>${userList[i].email}</td>
       <td>${userList[i].item_status}</td>
       <td>${userList[i].ip}</td>
