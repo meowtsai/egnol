@@ -101,6 +101,8 @@
 
     activeTable = $(this).text(); //歷程紀錄
     which_tbl =  (activeTable==="預註冊玩家清單"?"list_table":activeTable==="歷程紀錄"?"log_table":"ref_table");
+    curPage = 1;
+    //renderListTable(curPage);
     func_search();
     //showCount();
   })
