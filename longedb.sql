@@ -2219,7 +2219,20 @@ END;
 //
 DELIMITER ;
 
-call create_l20na_orders('2018-12-7','測試送好禮!',12);
+
+id	臉書暱稱	Email	未使用/所有物品	ip	國家	時間
+12	Sophie Tsai	11shihfan.tsai@gmail.com	35/60	61.220.44.200	Taiwan	2018-12-13 17:28:02
+13	Kuanche Kao	kenzo.com@gmail.com	9/25	61.220.44.200	Taiwan	2018-12-13 18:07:09
+14	Connie Huang	Yun_huang@longeplay.com.tw	9/50	61.220.44.200	Taiwan	2018-12-13 18:07:57
+15	朱晉廷	aixiiae2005@yahoo.com.tw	2/50	61.220.44.200	Taiwan	2018-12-13 18:26:08
+16	Pn Li	moetwchristine@gmail.com	13/25	61.220.44.200	Taiwan	2018-12-14 10:46:13
+17	于承宏	seacielo0601@gmail.com	0/25	61.2
+
+call create_l20na_orders('2018-12-7','測試送好禮',13);
+call create_l20na_orders('2018-12-7','測試送好禮',14);
+call create_l20na_orders('2018-12-7','測試送好禮',15);
+call create_l20na_orders('2018-12-7','測試送好禮',16);
+call create_l20na_orders('2018-12-7','測試送好禮',17);
 
 
 DROP PROCEDURE IF EXISTS create_npc_affections;
@@ -2286,6 +2299,8 @@ insert into l20na_npcs(npc_name,npc_gender,npc_code,npc_pic) values('姬蜜兒',
   ALTER TABLE l20na_npc_affections_log
   ADD create_time timestamp DEFAULT CURRENT_TIMESTAMP;
   `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+  alter table l20na_items add item_desc varchar(200) DEFAULT null;
 
 
 Insert into event_preregister(event_id,uid,email,nick_name,ip,country)
@@ -2420,6 +2435,11 @@ select c.npc_name,b.item_name, a.response,response_text,response_voice
 from l20na_npcs_items a
 left join l20na_items b on a.item_code = b.item_code
 left join l20na_npcs c on a.npc_code=c.npc_code
+
+response_text like '%{{玩家小名}}%'
+  select * from l20na_npcs_items where response_text like '%{{玩家小名}}%';
+update l20na_npcs_items set  response_text = '繡帕宜贈女子，於我無用，你還是自己留著吧。'  where response_text like '%{{玩家小名}}%';
+
 
 CREATE TABLE `l20na_npcs_items` (
  `id` int(11) NOT NULL AUTO_INCREMENT,

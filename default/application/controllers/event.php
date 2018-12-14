@@ -472,7 +472,7 @@ class Event extends MY_Controller
       die(json_encode(array("status"=>"failure", "message"=>"沒有資料"))) ;
     }
     $uid=$user->id;
-    $query = $this->db->query("SELECT a.id, a.status,  b.item_code, b.item_name, b.item_pic
+    $query = $this->db->query("SELECT a.id, a.status,  b.item_code, b.item_name, b.item_pic,b.item_desc
     from l20na_detail a left join
     l20na_items b on a.item_code = b.item_code
     where a.o_id in(select id from l20na_orders
@@ -484,6 +484,7 @@ class Event extends MY_Controller
         'item_name' => $row->item_name,
         'item_code' => $row->item_code,
         'item_pic' => $row->item_pic,
+        'item_desc' => $row->item_desc,
       );
     }
 
