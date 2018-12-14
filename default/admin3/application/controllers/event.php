@@ -266,11 +266,13 @@ class Event extends MY_Controller {
 
 
 		$logs =$this->DB2
-				->select("*")
+				->select(" a.id, a.aff_id,a.affection_change,a.item_id,a.note,a.create_time,b.npc_code")
 				->from("l20na_npc_affections_log a")
 				->join("l20na_npc_affections b" ,"a.aff_id=b.id", "left")
 				->where("b.event_uid",$uid)
+				->order_by("id desc")
 				->get();
+
 
 		$this->g_layout
 			->add_breadcrumb("逆水寒預註冊玩家明細","event/l20na_preregister")
