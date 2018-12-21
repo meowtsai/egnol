@@ -2284,6 +2284,7 @@ insert into l20na_npcs(npc_name,npc_gender,npc_code,npc_pic) values('姬蜜兒',
    UNIQUE KEY `npc_UNIQUE` (`event_uid`,`npc_code`)
   ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+  Update  l20na_items set item_desc='“汴京男子蹴鞠團大勝高麗蹴鞠團留念”' where item_code='1001';
 
   CREATE TABLE `l20na_npc_affections_log` (
    `id` int(11) NOT NULL AUTO_INCREMENT,
