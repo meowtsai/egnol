@@ -527,17 +527,22 @@ class Event extends MY_Controller
     $days = $interval->days;
     $hh = $interval->h;
     $min = $interval->i;
-
+    // echo $days."<br />";
+    // echo $hh."<br />";
+    // echo $min."<br />";
     if ($is_range){
-      $this_hour = $base*$date_array[$days]*$hh_array[$hh];
-      for ($i=0; $i < $days; $i++) {
-        $total += $base*$date_array[$i];
-      }
 
-      for ($j=0; $j < $hh; $j++) {
-        $total += $base*$date_array[$days]*$hh_array[$j];
-      }
-      $total += 10*$this_hour/(60-$min);
+        $this_hour = $base*$date_array[$days]*$hh_array[$hh];
+        for ($i=0; $i < ($days>sizeof($date_array)?sizeof($date_array):$days) ; $i++) {
+          $total += $base*$date_array[$i];
+        }
+
+        for ($j=0; $j < $hh; $j++) {
+          //echo "j=".$j;
+          $total += $base*$date_array[$days]*$hh_array[$j];
+        }
+        $total += 10*$this_hour/($min>50?10:(60-$min));
+
 
     }
     else {
@@ -547,5 +552,6 @@ class Event extends MY_Controller
     return intval($total);
 
   }
+
 
 }
