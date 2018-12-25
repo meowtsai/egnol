@@ -548,9 +548,4 @@ class Event extends MY_Controller
 
   }
 
-
-
-  }
-
-
 }
