@@ -5,7 +5,10 @@ class Event extends MY_Controller
   function __construct()
   {
     parent::__construct();
+    $this->load->config("event");
   }
+
+
 
   function h55_prereg_report()
   {
@@ -212,6 +215,8 @@ class Event extends MY_Controller
       $event = $query->row();
       if (($event->status=='1' && now() > $event->begin_time && now() < $event->end_time) || IN_OFFICE)
       {
+        $user_count = $this->l20na_prereg_count(now());
+        $event->user_count=$user_count;
         die(json_encode(array("status"=>"success", "message"=>$event)));
       } else {
         die(json_encode(array("status"=>"failure", "message"=>"活動未開放")));
@@ -506,6 +511,44 @@ class Event extends MY_Controller
     }
 
     die(json_encode(array("status"=>"success", "message"=>array("player"=> $user, "items" => $item_data, "npcs"=> $npc_data) ))) ;
+
+  }
+
+  function l20na_prereg_count($datetime1){
+
+    $base=$this->config->item("l20na_base");
+    $date_array = $this->config->item("l20na_date_array");
+    $hh_array = $this->config->item("l20na_hh_array");
+    $total = 0;
+
+    $datetime2 = date_create($this->config->item("l20na_base_date"));
+    $interval = date_diff(date_create($datetime1), $datetime2);
+    $is_range = $interval->invert;
+    $days = $interval->days;
+    $hh = $interval->h;
+    $min = $interval->i;
+
+    if ($is_range){
+      $this_hour = $base*$date_array[$days]*$hh_array[$hh];
+      for ($i=0; $i < $days; $i++) {
+        $total += $base*$date_array[$i];
+      }
+
+      for ($j=0; $j < $hh; $j++) {
+        $total += $base*$date_array[$days]*$hh_array[$j];
+      }
+      $total += 10*$this_hour/(60-$min);
+
+    }
+    else {
+
+    }
+
+    return intval($total);
+
+  }
+
+
 
   }
 

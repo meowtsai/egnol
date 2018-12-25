@@ -1310,6 +1310,16 @@ CREATE TABLE `event_serial` (
 /* personal_id 欄位為使用在發獎勵給非會員時用來辨認使用者身分 */;
 
 
+CREATE TABLE `serial_main` (
+ `id` int(11) NOT NULL AUTO_INCREMENT,
+ `event_id` int(11) NOT NULL,
+ `title` varchar(100) DEFAULT NULL,
+ `qty` int(11) DEFAULT NULL,
+ `status` tinyint(4) NOT NULL DEFAULT '0',
+ PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+alter table event_serial add event_sub_id int(11) ;
 
 
 
@@ -2213,26 +2223,12 @@ BEGIN
   if my_o_id > 0
   then
     INSERT INTO l20na_detail(o_id,item_code)
-    select my_o_id,item_code from l20na_items order by rand() limit 25;
+    select my_o_id,item_code from l20na_items order by rand() limit 10;
   END IF;
 END;
 //
 DELIMITER ;
 
-
-id	臉書暱稱	Email	未使用/所有物品	ip	國家	時間
-12	Sophie Tsai	11shihfan.tsai@gmail.com	35/60	61.220.44.200	Taiwan	2018-12-13 17:28:02
-13	Kuanche Kao	kenzo.com@gmail.com	9/25	61.220.44.200	Taiwan	2018-12-13 18:07:09
-14	Connie Huang	Yun_huang@longeplay.com.tw	9/50	61.220.44.200	Taiwan	2018-12-13 18:07:57
-15	朱晉廷	aixiiae2005@yahoo.com.tw	2/50	61.220.44.200	Taiwan	2018-12-13 18:26:08
-16	Pn Li	moetwchristine@gmail.com	13/25	61.220.44.200	Taiwan	2018-12-14 10:46:13
-17	于承宏	seacielo0601@gmail.com	0/25	61.2
-
-call create_l20na_orders('2018-12-7','測試送好禮',13);
-call create_l20na_orders('2018-12-7','測試送好禮',14);
-call create_l20na_orders('2018-12-7','測試送好禮',15);
-call create_l20na_orders('2018-12-7','測試送好禮',16);
-call create_l20na_orders('2018-12-7','測試送好禮',17);
 
 
 DROP PROCEDURE IF EXISTS create_npc_affections;
@@ -2260,21 +2256,6 @@ DELIMITER ;
   ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
-
-
-
-
-insert into l20na_npcs(npc_name,npc_gender,npc_code,npc_pic) values('無情','m','wuq','wuq_body');
-insert into l20na_npcs(npc_name,npc_gender,npc_code,npc_pic) values('顧惜朝','m','guxz','guxz_body');
-insert into l20na_npcs(npc_name,npc_gender,npc_code,npc_pic) values('燕無歸','m','yanwg','yanwg_body');
-insert into l20na_npcs(npc_name,npc_gender,npc_code,npc_pic) values('方應看','m','fangyk','fangyk_body');
-insert into l20na_npcs(npc_name,npc_gender,npc_code,npc_pic) values('葉問舟','m','yewz','yewz_body');
-insert into l20na_npcs(npc_name,npc_gender,npc_code,npc_pic) values('葉雪青','f','yexq','yexq_body');
-insert into l20na_npcs(npc_name,npc_gender,npc_code,npc_pic) values('溫柔','f','wenr','wenr_body');
-insert into l20na_npcs(npc_name,npc_gender,npc_code,npc_pic) values('李師師','f','liss','liss_body');
-insert into l20na_npcs(npc_name,npc_gender,npc_code,npc_pic) values('花將離','f','huajl','huajl_body');
-insert into l20na_npcs(npc_name,npc_gender,npc_code,npc_pic) values('姬蜜兒','f','jime','jime_body');
-
   CREATE TABLE `l20na_npc_affections` (
    `id` int(11) NOT NULL AUTO_INCREMENT,
    `event_uid` int(11) NOT NULL,
@@ -2284,7 +2265,6 @@ insert into l20na_npcs(npc_name,npc_gender,npc_code,npc_pic) values('姬蜜兒',
    UNIQUE KEY `npc_UNIQUE` (`event_uid`,`npc_code`)
   ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
-  Update  l20na_items set item_desc='“汴京男子蹴鞠團大勝高麗蹴鞠團留念”' where item_code='1001';
 
   CREATE TABLE `l20na_npc_affections_log` (
    `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2304,143 +2284,6 @@ insert into l20na_npcs(npc_name,npc_gender,npc_code,npc_pic) values('姬蜜兒',
   alter table l20na_items add item_desc varchar(200) DEFAULT null;
 
 
-Insert into event_preregister(event_id,uid,email,nick_name,ip,country)
-values(12,10213412799650864,'sophie@gmail.com','Sophie Tsai','61.220.44.200','Taiwan')
-
-give l20na_detail.id=46 item to l20na_npc_affections.id=16 npc
-update l20na_detail set status=0 where id=@id;
-find npc item score ,
-
-mysql> select * from l20na_detail where o_id in(select id from l20na_orders where event_uid=14)
-+----+------+-----------+---------------------+--------+
-| id | o_id | item_code | create_time         | status |
-+----+------+-----------+---------------------+--------+
-| 46 |    9 | 1034      | 2018-12-10 15:45:24 |      1 |
-| 47 |    9 | 1037      | 2018-12-10 15:45:24 |      1 |
-| 48 |    9 | 1026      | 2018-12-10 15:45:24 |      1 |
-| 49 |    9 | 1017      | 2018-12-10 15:45:24 |      1 |
-| 50 |    9 | 1015      | 2018-12-10 15:45:24 |      1 |
-| 51 |    9 | 1014      | 2018-12-10 15:45:24 |      1 |
-| 52 |    9 | 1008      | 2018-12-10 15:45:24 |      1 |
-| 53 |    9 | 1042      | 2018-12-10 15:45:24 |      1 |
-| 54 |    9 | 1043      | 2018-12-10 15:45:24 |      1 |
-| 55 |    9 | 1038      | 2018-12-10 15:45:24 |      1 |
-+----+------+-----------+---------------------+--------+
-10 rows in set (0.00 sec)
-
-mysql> select * from l20na_npc_affections;
-+----+-----------+----------+-----------+
-| id | event_uid | npc_code | affection |
-+----+-----------+----------+-----------+
-| 16 |        14 | fangyk   |         0 |
-| 17 |        14 | guxz     |         0 |
-| 18 |        14 | huajl    |         0 |
-| 19 |        14 | jime     |         0 |
-| 20 |        14 | liss     |         0 |
-| 21 |        14 | wenr     |         0 |
-| 22 |        14 | wuq      |         0 |
-| 23 |        14 | yanwq    |         0 |
-| 24 |        14 | yewz     |         0 |
-| 25 |        14 | yexq     |         0 |
-+----+-----------+----------+-----------+
-
-select a.id, a.affection, b.npc_name,b.npc_gender,b.npc_code,b.npc_pic
-from l20na_npc_affections a
-left join l20na_npcs b
-on a.npc_code = b.npc_code
-where a.event_uid=14
-
-
-{"id":"3","npc_name":"燕無歸","npc_gender":"m","npc_code":"yanwg","npc_pic":"yanwg_body","status":"1"},
-
-mysql> select * from l20na_npcs;
-+----+-----------+------------+----------+-------------+--------+
-| id | npc_name  | npc_gender | npc_code | npc_pic     | status |
-+----+-----------+------------+----------+-------------+--------+
-|  1 | 無情      | m          | wuq      | wuq_body    |      1 |
-|  2 | 顧惜朝    | m          | guxz     | guxz_body   |      1 |
-|  3 | 燕無歸    | m          | yanwg    | yanwg_body  |      1 |
-|  4 | 方應看    | m          | fangyk   | fangyk_body |      1 |
-|  5 | 葉問舟    | m          | yewz     | yewz_body   |      1 |
-|  6 | 葉雪青    | f          | yexq     | yexq_body   |      1 |
-|  7 | 溫柔      | f          | wenr     | wenr_body   |      1 |
-|  8 | 李師師    | f          | liss     | liss_body   |      1 |
-|  9 | 花將離    | f          | huajl    | huajl_body  |      1 |
-| 10 | 姬蜜兒    | f          | jime     | jime_body   |      1 |
-+----+-----------+------------+----------+-------------+--------+
-mysql> select * from l20na_items;
-select item_code, item_name into from l20na_items
-
-select * from l20na_detail where o_id in(select id from l20na_orders where event_uid=14);
-+----+------+-----------+---------------------+--------+
-| id | o_id | item_code | create_time         | status |
-
-
-select a.id,  b.item_code, b.item_name, b.item_pic
-from l20na_detail a left join
-l20na_items b on a.item_code = b.item_code
-where a.o_id in(select id from l20na_orders where event_uid=14);
-+-----+-----------+-----------------+---------------------------+--------+
-| id  | item_code | item_name       | item_pic                  | status |
-+-----+-----------+-----------------+---------------------------+--------+
-|  64 | 1001      | 蹴鞠            | item_juqiu                |      1 |
-|  65 | 1002      | 團扇            | item_tuanshan             |      1 |
-|  66 | 1003      | 蒜香排骨        | item_food_tiaoshenrou     |      1 |
-|  67 | 1004      | 阮              | item_task_ruanqin         |      1 |
-|  68 | 1005      | 剝皮小刀        | item_task_dao             |      1 |
-|  69 | 1006      | 一屜包子        | item_life_zhenglong       |      1 |
-|  70 | 1007      | 撥浪鼓          | item_bolanggu             |      1 |
-|  71 | 1008      | 繡花絹帕        | item_task_baishoupa       |      1 |
-|  72 | 1009      | 水域全圖        | item_yhshuidao            |      1 |
-|  73 | 1010      | 三合美酒        | Drink_suiyujiu            |      1 |
-|  74 | 1011      | 明前龍井        | Tea_pubuxianming          |      1 |
-|  75 | 1012      | 糖葫蘆          | icon_task_tanghulu        |      1 |
-|  76 | 1013      | 西湖蓮蓬        | item_life_lianzi          |      1 |
-|  77 | 1014      | 霹靂堂火器      | skill_Unload_ShouPao      |      1 |
-|  78 | 1015      | 雲棲竹筍        | item_life_sun             |      1 |
-|  79 | 1016      | 龍井黑豬肉      | item_life_zhurou          |      1 |
-|  80 | 1017      | 霹靂堂炮仗      | item_task_paozhang        |      1 |
-|  81 | 1018      | 熙春調味料      | item_jgxiangxin           |      1 |
-|  82 | 1019      | 彩球            | item_task_sanseqiu        |      1 |
-|  83 | 1020      | 風俗畫          | item_chungongtu           |      1 |
-|  84 | 1024      | 西域葡萄        | item_life_putao           |      1 |
-|  85 | 1025      | 碧血戰籍        | item_book_tongyong_971333 |      1 |
-|  86 | 1026      | 碧血毒蠍        | item_xiezi                |      1 |
-|  87 | 1027      | 鎖子甲          | item_bhls_suozijia        |      1 |
-|  88 | 1028      | 和田玉石        | item_life_kongqueshi      |      1 |
-|  89 | 1029      | 碧血戰鎧        | item_fashion_yuzu_s       |      1 |
-|  90 | 1030      | 蛇骨手串        | item_21091136             |      1 |
-|  91 | 1031      | 武林秘笈        | item_book_tongyong_971333 |      1 |
-|  92 | 1033      | 桃溪泥人        | item_task_wanou           |      1 |
-|  93 | 1034      | 布老虎          | item_bulaohu              |      1 |
-|  94 | 1035      | 桃溪花枝        | item_huazhi               |      1 |
-|  95 | 1037      | 孔雀翎          | item_kuileikongque        |      1 |
-|  96 | 1038      | 蟈蟈籠          | item_szqx_guoguolong      |      1 |
-|  97 | 1039      | 桃溪河蝦        | item_xia                  |      1 |
-|  98 | 1041      | 火銃            | item_szqx_huochong        |      1 |
-|  99 | 1042      | 機械鳥          | item_mutouxiaoniao        |      1 |
-| 100 | 1043      | 玉扳指          | item_szqx_banzhi          |      1 |
-| 101 | 1044      | 藥粥            | item_food_waguanlurou     |      1 |
-| 102 | 1045      | 靈芝            | item_lingzhi              |      1 |
-+-----+-----------+-----------------+---------------------------+--------+
-39 rows in set (0.00 sec)
-
-
-l20na_npcs_items;
-+----+-----------+------------+----------+-------------+--------+
-| id | npc_code  | item_code | response |  response_text   | response_voice |
-+----+-----------+------------+----------+-------------+--------+
-1  wuq        1001 5 ……不知送我此物，是何用意？  gift_female_chalou_wuqing_021
-
-select c.npc_name,b.item_name, a.response,response_text,response_voice
-from l20na_npcs_items a
-left join l20na_items b on a.item_code = b.item_code
-left join l20na_npcs c on a.npc_code=c.npc_code
-
-response_text like '%{{玩家小名}}%'
-  select * from l20na_npcs_items where response_text like '%{{玩家小名}}%';
-update l20na_npcs_items set  response_text = '繡帕宜贈女子，於我無用，你還是自己留著吧。'  where response_text like '%{{玩家小名}}%';
-
 
 CREATE TABLE `l20na_npcs_items` (
  `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2454,26 +2297,6 @@ CREATE TABLE `l20na_npcs_items` (
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 
-id  npc_code  item_code response  response_text response_voice
-id npc_code item_code	response	response_text		response_voice
-
-
-
-//update item code status
-update l20na_detail set status=0 where id=@id;
-//find npc_item score
-select score from l20na_npcs_items where npc_code=@code and item_code=@item_code
-//update npc affections
-update l20na_npc_affections set affections=affections+score where uid=@uid and npc_id=@npc_id;
-//keep log
-insert into l20na_npc_affections_log(aff_id,affection_change,item_id,note)
-  values(22,-5,46,'你送給無情一個布老虎,他並不喜歡')
-
-//return result
-return ok, "謝謝你", "voice_path", "total_score"
-
-
-select concat(sum(case when status=1 then 1 else 0 end),'/',count(*)) as item_status from l20na_detail where o_id in (select id from l20na_orders where event_uid=14);
 
 DROP PROCEDURE IF EXISTS l20na_give_item;
 DELIMITER //
@@ -2501,21 +2324,11 @@ END;
 DELIMITER ;
 
 
-select * from event_preregister;
-select * from l20na_npc_affections;
-select * from l20na_npc_affections_log;
-select * from l20na_orders;
-select * from l20na_detail;
-
 delete from l20na_detail;
 delete from l20na_orders;
 delete from l20na_npc_affections_log;
 delete from l20na_npc_affections;
 delete from event_preregister;
-
-
-call l20na_give_item(100,64)
-call l20na_give_item(8,1)
 
 BEGIN
 DECLARE countRow INT;
@@ -2532,81 +2345,14 @@ IF(countRow >  0) THEN
     INSERT hotel_has_room_type (hotel_id,room_type_id) VALUES (paramHotelId,roomTypeId);
 END IF;
 END
-shareedit
-
- SELECT `desc`,create_time,
- (select count(*) from l20na_detail where o_id in(select id from l20na_orders where event_uid=14)) as total
- from l20na_orders where event_uid=14 and date=curdate();
-
-
-SELECT * from l20na_orders where event_uid=14 and date=curdate()
-select count(*) from l20na_detail where o_id in(select id from l20na_orders where event_uid=14);
-
-
-user_register?eid=12&uid=10213412799650864&email=shihfan.tsai@gmail.com&personal_id=Sophie Tsai&accessToken=EAAEfWlUfSp8BAFUr4BzsFoPdVG89buatgu5jxOwvddm44ZAnd0CegJR6BmYF071Qx8ZAPDD989GGNZBWm2Lxq5LlZCToZCFoxDRu07hkZCUwDr6Tz0jubprnzBNqqJyOubSHVXottH6UWjB3hqeSy0BT8qvh2Q12Im4MfS80fjWr0QtKklYd5VYWWRnYSrHrZCbpFQ09jC3cQZDZD
-
-
-SELECT a.id, a.status,  b.item_code, b.item_name, b.item_pic
-from l20na_detail a left join
-l20na_items b on a.item_code = b.item_code
-where a.o_id in(select id from l20na_orders
-where event_uid=8) and a.status=1
-
-  //item_id=202&npc_id=151
-
-select item_code, item_name from l20na_items where item_code=(select item_code from l20na_detail where id=202);
-
------------+--------------+
-| item_code | item_name    |
-+-----------+--------------+
-| 1033      | 桃溪泥人     |
-+-----------+--------------+
-
-
-select npc_code,npc_name,npc_gender  from l20na_npcs where npc_code=(select npc_code from l20na_npc_affections where id=151);
-
-+----------+-----------+------------+
-| npc_code | npc_name  | npc_gender |
-+----------+-----------+------------+
-| fangyk   | 方應看    | m          |
-+----------+-----------+------------+
-
-
-select response,response_text,response_voice from l20na_npcs_items where npc_code='fangyk' and item_code='1033';
-| response | response_text                           | response_voice                     |
-+----------+-----------------------------------------+------------------------------------+
-| okla     | 禮物一般，心意還說得過去。              | gift_female_chalou_fangyingkan_022 |
-+----------+-----------------------------------------+------------------------------------+
-
-
-select nick_name  from event_preregister where id=(select event_uid from l20na_npc_affections where id=151);
-
-+-------------+
-| nick_name   |
-+-------------+
-| Kuanche Kao |
-+-------------+
-
-update l20na_npc_affections set affection=affection+(CASE WHEN @res='awesome' THEN 20 WHEN @res='okla' THEN 10 ELSE 5 END) where id=my_npc;
-
-
-insert into l20na_npc_affections_log(aff_id,affection_change,item_id,note)
-values(151,10,202,'你送給xxx');
-
-
-
-l20na_npc_affections_log | CREATE TABLE `l20na_npc_affections_log` (
- `id` int(11) NOT NULL AUTO_INCREMENT,
- `aff_id` int(11) NOT NULL,
- `affection_change` tinyint(4) NOT NULL DEFAULT '0',
- `item_id` tinyint(4) NOT NULL DEFAULT '0',
- `note` varchar(200) NOT NULL DEFAULT '',
- `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
- PRIMARY KEY (`id`),
- UNIQUE KEY `npc_UNIQUE` (`aff_id`,`item_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=131 DEFAULT CHARSET=utf8 |
 
 ALTER TABLE l20na_npc_affections_log MODIFY COLUMN item_id int(11) DEFAULT '0';
-alter table l20na_npc_affections_log
 
-SELECT '1' AS rtn_code, @res as npc_res,@res_text as res_text,@res_vp as res_vp, affection_change, note FROM l20na_npc_affections_log WHERE id=LAST_INSERT_ID();
+
+SELECT count(*) as chk FROM questions
+WHERE (server_id='{$post_server_id}' and character_name='{$post_character_name}' and content='{$post_content}' and create_time > Date_Sub(CURDATE(), INTERVAL 3 HOUR))
+or (note like '%IP={$ip},%' and create_time > Date_Sub(CURDATE(), INTERVAL 3 MINUTE)
+
+
+SELECT count(*) as chk FROM questions
+WHERE (note like '%IP=49.216.236.182,%' and create_time > Date_Sub(CURDATE(), INTERVAL 3 MINUTE))
