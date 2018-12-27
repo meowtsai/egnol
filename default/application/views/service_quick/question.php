@@ -80,12 +80,16 @@
 								<?else:?>
 									<? foreach($this->config->item("question_type") as $id => $type):?>
 										<option value="<?=$id?>"><?=$type?></option>
-
 									<? endforeach;?>
 									<?if ($site=='h55naxx2tw' && $partner_uid && $result['status']=='success'):?>
 										<option value="Yahoo">Yahoo 活動序號兌換</option>
 									<? endif;?>
-								<? endif;?>
+									<? foreach($events as $e_row):?>
+									<?if (($e_row->status==1 && now() > $event->begin_time && now() < $event->end_time) || IN_OFFICE): ?>
+									<option value="event_<?=$e_row->id?>" ><?=$e_row->event_name?></option>
+									<? endif;?>
+									<? endforeach;?>
+									<? endif;?>
 							</select>
 						</td>
 					<tr>
@@ -173,6 +177,14 @@ success: function (data) {
 		var hint_text = "";
 		$("#div_hint").hide();
 		var sel = $( "select[name='question_type']" ).val();
+
+		if (sel.substring(0,6)==='event_'){
+			//console.log(sel.replace('event_',''));
+			var event_id = sel.replace('event_','');
+			location.href = '/service_quick/event_serial?event_id='+event_id;
+
+			return;
+		}
 
 		if (sel==='Yahoo'){
 			$( "select[name='question_type']" ).val('');
