@@ -69,7 +69,6 @@
                 <th >id</th>
                 <th >臉書暱稱</th>
                 <th >Email</th>
-                <th >未使用/所有物品</th>
                 <th >ip</th>
                 <th >國家</th>
                 <th >時間</th>
@@ -212,7 +211,6 @@ for (var i = 0; i < refList.length; i++) {
 		var $tr = $(`<tr><td>${userList[i].id}</td>
 			<td><a href="./l20na_preregister_user/${userList[i].id}">${userList[i].nick_name}</a></td>
 			<td>${userList[i].email}</td>
-      <td>${userList[i].item_status}</td>
       <td>${userList[i].ip}</td>
       <td>${userList[i].country}</td>
 			<td>${userList[i].create_time}</td>

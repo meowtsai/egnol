@@ -216,10 +216,12 @@ class Event extends MY_Controller {
 
 		$result = $this->DB2
 			->select("a.id,a.nick_name,a.create_time,a.update_time,a.email,a.ip,a.country,")
-			->select("(select concat(sum(case when status=1 then 1 else 0 end),'/',count(*)) as item_status from l20na_detail where o_id in (select id from l20na_orders where event_uid=a.id)) as item_status",FALSE)
 			->from("event_preregister a")
 			->where("event_id",12)
 			->get();
+
+			//->select("(select concat(sum(case when status=1 then 1 else 0 end),'/',count(*)) as item_status from l20na_detail where o_id in (select id from l20na_orders where event_uid=a.id)) as item_status",FALSE)
+			
 
 		$log = $this->DB2
 			->select("c.*")
