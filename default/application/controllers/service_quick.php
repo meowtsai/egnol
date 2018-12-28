@@ -976,62 +976,53 @@ class Service_quick extends MY_Controller {
 		$result = $this->get_event_status($event_id);
 		if ($result['status']=='success')
 		{
+			$is_ingame = ($_SESSION['vendor_game_id']) ? 1 : 0;
 			$event = $result['message'];
-
-			//get char id
-			$res_char = $this->get_character($_SESSION['server_id'],$_SESSION['partner_uid'],$_SESSION['in_game_id']);
-
-			if ($res_char['status']=='success')
+			if ($is_ingame)
 			{
-				$char_data = $res_char['message'];
-
-				$char_id = $char_data->id; //角色id
-
-				//
-				//
-				//
-				// $query = $this->db->query("SELECT group_concat(event_sub_id) as chk_sub_id FROM event_serial WHERE event_id={$event_id} and uid='{$char_id}'");
-				// $chk_sub_id = isset($query->row()->chk_sub_id)? $query->row()->chk_sub_id:0;
-				// //if ($query->row()->chk > 0) die(json_encode(array("status"=>"failure", "message"=>"您的角色已經領取過了喔。")));
-				// echo $chk_sub_id;
-				//
-				//
-				// $this->db->where(array('substr(serial,1,16)'=>'cTD7d8428z4L', 'event_id' => $event_id,'status' => '0'));
-				// if ($chk_sub_id){
-				// 	$this->db->where_not_in("event_sub_id",explode(",",$chk_sub_id));
-				// }
-				// $query_serial = $this->db->get('event_serial');
-				// echo $this->db->last_query();
-
-				$records = 0;
-				$query = $this->db->from("event_serial a")
-				->join("events b","a.event_id = b.id" , "left")
-				->join("serial_main c", "a.event_sub_id =c.id", "left")
-				->where("a.uid", $char_id)
-				->where("a.event_id", $event_id)
-				->select("b.event_name, c.title, a.serial ")->get();
-
-
-				if ($query->num_rows()>0)  //已經領取過
+				//get char id
+				$res_char = $this->get_character($_SESSION['server_id'],$_SESSION['partner_uid'],$_SESSION['in_game_id']);
+				if ($res_char['status']=='success')
 				{
-					$records = $query->result();
+					$char_data = $res_char['message'];
+					$char_id = $char_data->id; //角色id
+					$records = 0;
+					$query = $this->db->from("event_serial a")
+					->join("events b","a.event_id = b.id" , "left")
+					->join("serial_main c", "a.event_sub_id =c.id", "left")
+					->where("a.uid", $char_id)
+					->where("a.event_id", $event_id)
+					->select("b.event_name, c.title, a.serial ")->get();
+					if ($query->num_rows()>0)  //已經領取過
+					{
+						$records = $query->result();
+					}
+
+					$this->_init_layout("客服中心")
+						->set("event", $event)
+						->set("char_data", $char_data)
+						->set("records", $records)
+						->add_css_link("login")
+						->add_css_link("server")
+						->mobile_view();
+				}
+				else {
+					log_message('error', "角色異常".",".$_SESSION['server_id'].",".$_SESSION['partner_uid'].",".$_SESSION['in_game_id']);
+					header("Location: /service_quick/question?site=$site");
+					die();
 				}
 
-
-
+			}
+			else {
+				//web版
 				$this->_init_layout("客服中心")
 					->set("event", $event)
-					->set("char_data", $char_data)
-					->set("records", $records)
+					->set("is_ingame", $is_ingame)
 					->add_css_link("login")
 					->add_css_link("server")
 					->mobile_view();
 			}
-			else {
-				log_message('error', "角色異常".",".$_SESSION['server_id'].",".$_SESSION['partner_uid'].",".$_SESSION['in_game_id']);
-				header("Location: /service_quick/question?site=$site");
-				die();
-			}
+
 
 		}
 		else {
@@ -1052,6 +1043,7 @@ class Service_quick extends MY_Controller {
 		if (! $this->input->post("char_id")) die(json_encode(array("status"=>"failure", "message"=>"沒有角色id, 資料異常, 請重新開始流程")));
 
 		$post_character_name =htmlspecialchars($this->input->post("character_name"));
+		$partner_uid=$this->input->post("partner_uid");
 		$serial_no = $this->input->post("serial_no");
 		if (strlen($serial_no)>15) {
 			$serial_no = substr($this->input->post("serial_no"),0,16);
@@ -1062,7 +1054,14 @@ class Service_quick extends MY_Controller {
 
 		$char_id= $this->input->post("char_id");
 		$event_id= $this->input->post("event_id");
-
+		$is_ingame= $this->input->post("is_ingame");
+		$email = "";
+		$server = "";
+		if (!$is_ingame)
+		{
+			if ($this->input->get_post("email")) $email = $this->input->get_post("email");
+			if ($this->input->get_post("server_list")) $server = $this->input->get_post("server_list");
+		}
 		$try_count = 0;
 		// $query = $this->db->query("SELECT count(*) as chk FROM log_yahoo_event WHERE char_id='{$char_id}' and event_id={$event_id}");
 		// $try_count = (4 - $query->row()->chk);
@@ -1074,19 +1073,24 @@ class Service_quick extends MY_Controller {
 		//echo $chk_sub_id; 1,2,2
 		//log data
 		$data = array(
+			"partner_uid" => $partner_uid,
 			"char_id" => $char_id,
+			"char_name" => $post_character_name,
 			'ip' => $ip,
-			'serial_no' => $serial_no,
+			'serial' => $serial_no,
+			'event_id' => $event_id,
+			'note' => $server."|".$email,
+
+
 		);
-		// $this->db
-		// ->insert("log_yahoo_event", $data);
+
 		//end log data
 
 		//check
 		$updated_s_id = 0;
 
 		// get the record that you want to update
-		$this->db->where(array('substr(serial,1,16)'=>$data['serial_no'], 'event_id' => $event_id,'status' => '0'));
+		$this->db->where(array('substr(serial,1,16)'=>$data['serial'], 'event_id' => $event_id,'status' => '0'));
 		if ($chk_sub_id){
 			$this->db->where_not_in("event_sub_id",explode(",",$chk_sub_id));
 		}
@@ -1098,12 +1102,22 @@ class Service_quick extends MY_Controller {
 
 		if ($updated_s_id)
 		{
-			$this->db->where(array('substr(serial,1,16)'=>$data['serial_no'], 'event_id' => $event_id,'status' => '0'));
-			$this->db->update('event_serial',array("uid" => $char_id,"status" => 1));
+			$this->db->where(array('substr(serial,1,16)'=>$data['serial'], 'event_id' => $event_id,'status' => '0'));
+			if (!$is_ingame)
+			{
+				$this->db->update('event_serial',array("uid" => $partner_uid,"personal_id" => $char_id,"email"=> $email,"mobile"=> $server,"share_code"=> $post_character_name,"status" => 1));
+			}
+			else {
+				$this->db->update('event_serial',array("uid" => $char_id,"status" => 1));
+			}
+
+			$data["status"]=1;
+			$this->db->insert("log_serial_event", $data);
 			die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"兌換成功! 獎項將於活動結束後兩周內配送至所登錄的角色ID。")));
 		}
 		else {
 			//die(json_encode(array("status"=>"failure", "site"=> $site, "message"=>"兌換失敗，序號錯誤或已被使用，錯誤五次將會鎖定。(剩餘次數:{$try_count})")));
+			$this->db->insert("log_serial_event", $data);
 			die(json_encode(array("status"=>"failure", "site"=> $site, "message"=>"兌換失敗(可能是:序號錯誤/已被使用/同組獎品僅限一次)")));
 		}
 

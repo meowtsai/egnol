@@ -2328,7 +2328,34 @@ delete from l20na_detail;
 delete from l20na_orders;
 delete from l20na_npc_affections_log;
 delete from l20na_npc_affections;
-delete from event_preregister;
+delete from event_preregister where id=12 and event_id=12;
+
+
+
+
+  select * from l20na_npc_affections where event_uid=12;
+ +-----+-----------+----------+-----------+
+ | id  | event_uid | npc_code | affection |
+ +-----+-----------+----------+-----------+
+ | 166 |        12 | fangyk   |        90 |
+ | 167 |        12 | guxz     |       115 |
+ | 168 |        12 | huajl    |        60 |
+ | 169 |        12 | jime     |       105 |
+ | 170 |        12 | liss     |        50 |
+ | 171 |        12 | wenr     |       -15 |
+ | 172 |        12 | wuq      |       127 |
+ | 173 |        12 | yanwg    |        70 |
+ | 174 |        12 | yewz     |        50 |
+ | 175 |        12 | yexq     |        35 |
+ +-----+-----------+----------+-----------+
+
+update event_preregister set uid=10213412799650865 where uid=10213412799650864
+  update event_preregister set uid=2459041487445384, email='999@g.com' where uid=2459041487445383
+
+
+10213412799650865
+  | 12 |       12 | 10213412799650864 | Sophie Tsai     |      0 | 2018-12-13 17:28:02 | 0000-00-00 00:00:00 | 11shihfan.tsai@gmail.com      | 61.220.44.200   | Taiwan             | EAAEfWlUfSp8BALtWX8EEFT7YsUFuXL4HT3WJCXqacvZBBT9CmeSBMxFNyzdCmlMEUFXkqRUha5WLjWMqaZBRI7BCIzutcjxVHnkhYbJ36ZBhgKffPPJLZB4qFpFLMUA2DK3FXVZBq3FOrWpalytJCzUw7YwG4G1SLaM673zWfQvx6gOKC9RsgNtwZBmZC3fxdZCRcwKJM497qAZDZD          |
+| 13
 
 BEGIN
 DECLARE countRow INT;
@@ -2356,3 +2383,21 @@ or (note like '%IP={$ip},%' and create_time > Date_Sub(CURDATE(), INTERVAL 3 MIN
 
 SELECT count(*) as chk FROM questions
 WHERE (note like '%IP=49.216.236.182,%' and create_time > Date_Sub(CURDATE(), INTERVAL 3 MINUTE))
+
+
+//id, acc, char_id, char_name, ip, serial, create_time, result (1 success 0 fail)
+/* 兌獎中心 log  */;
+DROP TABLE IF EXISTS `log_serial_event`;
+CREATE TABLE `log_serial_event` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `partner_uid` varchar(100) DEFAULT NULL,
+  `char_id` varchar(20) DEFAULT NULL,
+  `char_name` varchar(20) DEFAULT NULL,
+  `ip` varchar(50) DEFAULT NULL,
+  `serial` varchar(60) NOT NULL COMMENT '序號',
+  `create_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` tinyint(4) NOT NULL DEFAULT '0' COMMENT '結果 0-失敗 1-成功',
+  `note` varchar(100) NULL COMMENT '備註欄位',
+  `event_id` int(11) not NULL  default 0 COMMENT '活動id',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;

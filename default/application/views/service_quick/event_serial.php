@@ -96,26 +96,43 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 					<tr>
 						<td colspan="2">
 							<div class="user_info">
+								遊戲： <b><?=$_SESSION['game_name']?></b> <br />
+								活動名稱： <b><?=$event->event_name; ?> </b><br />
 								<input type="hidden" name="event_id" id="event_id" value="<?=$event->id?>">
+								<input type="hidden" name="is_ingame" id="is_ingame" value="<?=$is_ingame?>">
+								<?if ($is_ingame):?>
 								<input type="hidden" name="server" id="server" value="<?=$char_data->server_id?>">
                 <input type="hidden" name="partner_uid" id="partner_uid" value="<?=$char_data->partner_uid?>">
-								<input type="hidden" name="char_id" id="partner_uid" value="<?=$char_data->id?>">
+								<input type="hidden" name="char_id" id="char_id" value="<?=$char_data->id?>">
 								<input type="hidden" name="character_name" id="character_name" value="<?=$char_data->name?>">
-
-								遊戲： <b><?=$_SESSION['game_name']?></b> <br />
 								角色名稱： <b><?=$char_data->name?> </b><br />
 								角色 ID： <b><?=$char_data->in_game_id?> </b><br />
-								活動名稱： <b><?=$event->event_name; ?> </b><br />
+
+								<?else:?>
+
+								帳號：<input type="text" name="partner_uid" id="partner_uid" size="20" minlength="5" maxlength="30" placeholder="遊戲帳號" class="input_serial required" autocomplete="off" ><br />
+								角色ID：<input type="text" name="char_id" id="char_id" size="20" minlength="5" maxlength="30" placeholder="角色ID" class="input_serial required" autocomplete="off" ><br />
+								角色名：<input type="text" name="character_name" id="character_name" size="20"  maxlength="30" placeholder="角色名稱" class="input_serial required" autocomplete="off" ><br />
+								Email：<input type="text" name="email" id="email" size="20" minlength="10" placeholder="填寫Email" class="input_serial required" autocomplete="off" ><br />
+
+
+									<?if (substr($event->game_id,0,5)=='g83tw'):?>
+
+										伺服器: <select class="input_serial required" name="server_list">
+											<option value="">--選擇版本--</option>
+											<option value="mobile">手機版</option>
+											<option value="pc_japan">PC伺服器 - 日本</option>
+											<option value="pc_north_america">PC伺服器 - 北美</option>
+											<option value="pc_se_asia">PC伺服器 - 東南亞</option>
+											<option value="pc_i10n">PC伺服器 - 國際</option>
+										</select> <br />
+									<?endif;?>
+								<?endif;?>
 								序號：<input type="text" name="serial_no" id="serial_no" size="20" minlength="10" maxlength="30" placeholder="輸入序號" class="input_serial required" autocomplete="off" >
-
-
 								<hr />
 								<p>
 									<button type="button" name="cmdCancel" onclick="javascript:history.back();this.disabled=true;" class="btn btn-cancel" >取消</button>
 									<button type="submit" name="cmdSubmit"  class="btn pull-right">送出</button>
-
-
-
 
 								</p>
 							</div>

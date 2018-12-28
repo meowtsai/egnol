@@ -5,7 +5,8 @@
 <div>
   <input type="text" id="find_keyword" name="find_keyword"  value="" class="input-medium required" placeholder="關鍵字...."> <a href="javascript:;;" onclick="func_search()"><i class='icon-search'></i></a>
   <ul class="nav nav-tabs" id="myTab">
-    <li class="active"><a href="#home">預註冊玩家清單</a></li>
+    <li class="active"><a href="#home">總覽</a></li>
+    <li><a href="#all_users">預註冊玩家清單</a></li>
     <li><a href="#profile">歷程紀錄</a></li>
     <li><a href="#ref">關係對照表</a></li>
   </ul>
@@ -16,16 +17,55 @@
   </div>
   <div class="tab-content">
     <div class="tab-pane active" id="home">
+
+      <div class="container">
+        <div class="row" style="display: flex;">
+          <div class="col-sm" style="margin:0 20px;">
+            <h3>每日總數</h3>
+            <table class="table table-bordered" id="data_table_summary" >
+              <thead>
+                 <tr>
+                   <th>日期</th>
+                   <th>人數</th>
+                 </tr>
+               </thead>
+               <tbody>
+               </tbody>
+            </table>
+          </div>
+          <div class="col-sm">
+            <h3>國家分布</h3>
+            <table class="table table-bordered" id="data_table_country" >
+              <thead>
+                 <tr>
+                   <th>國家</th>
+                   <th>人數</th>
+                 </tr>
+               </thead>
+               <tbody>
+               </tbody>
+            </table>
+          </div>
+
+
+        </div>
+      </div>
+
+
+
+
+    </div>
+    <div class="tab-pane" id="all_users">
       <div class="alert alert-success">
-      	預註冊玩家清單
+        預註冊玩家清單
       </div>
       <? if ($result):?>
         <? if ($result->num_rows() == 0):?>
           <div class="none">尚無資料</div>
         <? else:?>
           <table class="table table-striped" id="list_table" style="width:800px">
-          	<thead>
-          		<tr>
+            <thead>
+              <tr>
                 <th >id</th>
                 <th >臉書暱稱</th>
                 <th >Email</th>
@@ -34,9 +74,9 @@
                 <th >國家</th>
                 <th >時間</th>
                   </tr>
-          	</thead>
-          	<tbody>
-          	</tbody>
+            </thead>
+            <tbody>
+            </tbody>
           </table>
 
           <input type="button" class="btn btn-small btn-warning" name="action" value="輸出" onclick="downloadCSV()">
@@ -84,10 +124,10 @@
 
 <script type="text/javascript">
   var activeTable = "預註冊玩家清單";
-  var which_tbl= "list_table";
+  var which_tbl= "general";
 
   var csvData ="編號,臉書暱稱,email,ip,國家,兌換時間\n";
-
+$(".pagination").hide();
   $('#myTab a').click(function (e) {
     e.preventDefault();
     $(this).tab('show');
@@ -100,14 +140,48 @@
 // l20na_preregister:337 預註冊玩家清單
 
     activeTable = $(this).text(); //歷程紀錄
-    which_tbl =  (activeTable==="預註冊玩家清單"?"list_table":activeTable==="歷程紀錄"?"log_table":"ref_table");
+    switch (activeTable) {
+      case "預註冊玩家清單":
+        which_tbl = "list_table";
+        break;
+      case "歷程紀錄":
+        which_tbl = "log_table";
+        break;
+      case "關係對照表":
+        which_tbl = "ref_table";
+        break;
+      case "總覽":
+        which_tbl = "general";
+        break;
+      default:
+        which_tbl = "general";
+        break;
+
+    }
+    //which_tbl =  (activeTable==="預註冊玩家清單"?"list_table":activeTable==="歷程紀錄"?"log_table":"ref_table");
     curPage = 1;
     //renderListTable(curPage);
     func_search();
     //showCount();
   })
 
+  // var summaryList = [{"dDate":"2018-12-10","count":"5"}];
+  // var summaryCountryList = [{"country":"Taiwan","count":"5"}];
 
+var summaryList = <?=json_encode($summary->result());?>;
+for (var i = 0; i < summaryList.length; i++) {
+  var $tr = $(`<tr><td>${summaryList[i].dDate}  </td>
+    <td>${summaryList[i].count} </td>
+    </tr>`);
+  $("#data_table_summary").append($tr);
+}
+var summaryCountryList = <?=json_encode($summary_country->result());?>;
+for (var i = 0; i < summaryCountryList.length; i++) {
+  var $tr = $(`<tr><td>${summaryCountryList[i].country}  </td>
+    <td>${summaryCountryList[i].count} </td>
+    </tr>`);
+  $("#data_table_country").append($tr);
+}
 
 
 var refList = <?=json_encode($refrence->result());?>;
@@ -159,7 +233,7 @@ for (var i = 0; i < refList.length; i++) {
   function func_search(){
 
     var keyword= $("#find_keyword").val();
-    console.log(which_tbl);
+    //console.log(which_tbl);
     if(keyword)
     {
       var rc=0;
@@ -185,6 +259,7 @@ for (var i = 0; i < refList.length; i++) {
   function renderListTable(){
     //console.log(curPage);
     // $("#datatable-editable tr:eq(3)) 是第一行
+    $(".pagination").hide();
     $("#"+ which_tbl +" tr").hide();
     $("#"+ which_tbl +" tr:eq(0)").show();
 
@@ -192,12 +267,18 @@ for (var i = 0; i < refList.length; i++) {
       //console.log(parseInt(3+i+((curPage-1)*page_size)));
       $("#"+ which_tbl +" tr:eq("+ parseInt(1+i+((curPage-1)*page_size))+")").show();
     }
-
+    //console.log("which_tbl",which_tbl);
+    if (which_tbl!="general")
+    {
     showCount();
+    }
+
 
   }
 
   function showCount(){
+
+    $(".pagination").show();
     var count =  (activeTable==="預註冊玩家清單"?userList.length:activeTable==="歷程紀錄"?logList.length:refList.length);
     $(".recordcount").text("總筆數:" + count);
     var page_count=Math.ceil(count/page_size);

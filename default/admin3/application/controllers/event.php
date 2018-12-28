@@ -207,6 +207,13 @@ class Event extends MY_Controller {
 		$this->_init_layout();
 		$result = null ;
 
+		$summary = $this->db->query("Select DATE_FORMAT(create_time,'%Y-%m-%d') as dDate,count(id) as count from event_preregister
+		where event_id=12
+    group by DATE_FORMAT(create_time,'%Y-%m-%d') order by DATE_FORMAT(create_time,'%Y-%m-%d') desc, count(id) desc");
+
+    $summary_country = $this->db->query("Select country,count(id) as count from event_preregister where event_id=12 group by country order by count(id) desc");
+
+
 		$result = $this->DB2
 			->select("a.id,a.nick_name,a.create_time,a.update_time,a.email,a.ip,a.country,")
 			->select("(select concat(sum(case when status=1 then 1 else 0 end),'/',count(*)) as item_status from l20na_detail where o_id in (select id from l20na_orders where event_uid=a.id)) as item_status",FALSE)
@@ -218,6 +225,7 @@ class Event extends MY_Controller {
 			->select("c.*")
 			->from("l20na_npc_affections_log c")
 			->order_by("c.id desc")
+			->limit(1000)
 			->get();
 
 		$refrence = $this->DB2
@@ -233,6 +241,8 @@ class Event extends MY_Controller {
 			->set("result", isset($result) ? $result : false)
 			->set("log", isset($log) ? $log : false)
 			->set("refrence", isset($refrence) ? $refrence : false)
+			->set("summary", isset($summary) ? $summary : false)
+			->set("summary_country", isset($summary_country) ? $summary_country : false)
       ->render();
 	}
 	function l20na_preregister_user($uid){
