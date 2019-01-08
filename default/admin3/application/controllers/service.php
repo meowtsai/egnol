@@ -734,15 +734,16 @@ class Service extends MY_Controller {
 
 		$pic_plus = $this->DB2->from("question_pictures")->where("question_id", $id)->order_by("id", "asc")->get();
 
-        $allocate_groups = array('pm', 'admin', 'cs_master', 'pd_chang', 'RC');
+        //$allocate_groups = array('pm', 'admin', 'cs_master', 'pd_chang', 'RC');
+				$allocate_groups = array('cs_master', 'cs');
 
-		$service_users = $this->DB2->from('admin_permissions')->where('resource', 'service')->order_by("role")->get();
-
-        foreach($service_users->result() as $row) {
-            $allocate_groups[] = $row->role;
-        }
-
-        $allocate_groups = array_unique($allocate_groups);
+		// $service_users = $this->DB2->from('admin_permissions')->where('resource', 'service')->order_by("role")->get();
+		//
+    //     foreach($service_users->result() as $row) {
+    //         $allocate_groups[] = $row->role;
+    //     }
+		//
+    //     $allocate_groups = array_unique($allocate_groups);
 
 		$allocate_users = $this->DB2->from('admin_users')->where_in('role', $allocate_groups)->order_by("role")->get();
 

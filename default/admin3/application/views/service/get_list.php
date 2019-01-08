@@ -92,7 +92,7 @@
 		<input type="text" name="content" value="<?=$this->input->get("content")?>" style="width:120px" placeholder="提問描述">
 		<input type="text" name="replies" value="<?=$this->input->get("replies")?>" style="width:120px" placeholder="回覆內容">
 		<input type="text" name="question_id" value="<?=$this->input->get("question_id")?>" style="width:90px" placeholder="#id">
-		<input type="text" name="原廠uid" value="<?=$this->input->get("partner_uid")?>" style="width:90px" placeholder="原廠uid">
+		<input type="text" name="partner_uid" value="<?=$this->input->get("partner_uid")?>" style="width:90px" placeholder="原廠uid">
 		<input type="text" name="character_name" value="<?=$this->input->get("character_name")?>" style="width:90px" placeholder="角色名稱">
 		<input type="text" name="check_id" value="<?=$this->input->get("check_id")?>" style="width:90px" placeholder="問題檢核碼">
 		<span class="sptl"></span>
