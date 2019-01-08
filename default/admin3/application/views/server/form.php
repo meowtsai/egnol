@@ -6,16 +6,17 @@
 	<input type="hidden" name="id" value="<?=$row ? $row->server_id : ''?>">
 	<input type="hidden" name="game_id" value="<?=htmlspecialchars($this->game_id)?>">
 
-	<label>伺服器代碼</label>
-	<input type="text" value="<?=$row ? $row->server_id : ''?>" name="server_id" class="required" style="width:120px;" placeholder="必須是英文數字">
+	<label>伺服器代碼(我方自訂英數代碼)</label>
+		<input type="text" value="<?=$row ? $row->server_id : ''?>" name="server_id" class="required" style="width:200px;" placeholder="必須是英文數字, 不可重複">
 
-	<label>伺服器名稱</label>
+
+	<label>伺服器名稱(玩家看到的中文名稱)</label>
 	<input type="text" value="<?=$row ? $row->name : ''?>" name="name" class="required">
 
-	<label>遊戲串接設定</label>
+	<label>遊戲串接設定(遊戲原廠指定的名稱)</label>
 	<input type="text" value="<?=$row ? $row->address : ''?>" name="address" class="required">
 
-	<label>上下架狀態</label>
+	<label>上下架狀態(設定[內測]則只有白名單ip才可以看到)</label>
 	<select name="server_status" id="server_status" style="width:120px;">
 		<? foreach($server_status as $key => $val):?>
 		<option value="<?=$key?>" <?=$row ? ($row->server_status==$key ? 'selected="selected"' : '') : ''?>><?=$val["name"]?></option>

@@ -49,7 +49,9 @@
 
 							<select id="server_pool" style="display:none;">
 								<? foreach($servers->result() as $row):?>
+								<?if ($row->server_status=='public' || ($row->server_status=='private' && IN_OFFICE) ):?>
 								<option value="<?=$row->server_id?>" <?=($this->input->get("server")==$row->server_id ? 'selected="selected"' : '')?> class="<?=$row->game_id?>"><?=$row->name?></option>
+								<?endif;?>
 								<? endforeach;?>
 							</select>
 						</td>
@@ -85,7 +87,7 @@
 										<option value="Yahoo">Yahoo 活動序號兌換</option>
 									<? endif;?>
 									<? foreach($events as $e_row):?>
-									<?if (($e_row->status==1 && now() > $event->begin_time && now() < $event->end_time) || IN_OFFICE): ?>
+									<?if ($partner_uid &&( ($e_row->status==1 && now() > $event->begin_time && now() < $event->end_time ) || IN_OFFICE)): ?>
 									<option value="event_<?=$e_row->id?>" ><?=$e_row->event_name?></option>
 									<? endif;?>
 									<? endforeach;?>

@@ -92,8 +92,12 @@ class Service_quick extends MY_Controller {
 						//echo $str_to_encrypt.'<br />';
 						//echo $sig.'<br />';
 
-						//echo MD5('game_id=h55naxx2tw&partner_uid=222033334&in_game_id=11458024&server_name=server_h55tw&character_name=%E6%AB%BB%E4%BA%AC%E5%A1%9A%E4%B8%88~&level=&usr_device=iOS&os_ver=&app_ver=1.0.213187&time_zone=&network=&key=yxsjl3o7bm').'<br />';
+						//game_id=g66naxx2tw&partner_uid=11029961&in_game_id=XDLstlJQCVT9bJ/b&server_name=審核服&character_name=Q·阿加莎&level=1&usr_device=Android&os_ver=8.0.0&app_ver=376339.382966.382939&time_zone=+0000&network=1&key=85328f5ead26ed6627690d55f8f5fc5e
 
+
+						//echo "this=> ".MD5('game_id=g66naxx2tw&partner_uid=11029961&in_game_id=XDLstlJQCVT9bJ%2Fb&server_name=%E5%AF%A9%E6%A0%B8%E6%9C%8D&character_name=Q%C2%B7%E9%98%BF%E5%8A%A0%E8%8E%8E&level=1&usr_device=Android&os_ver=8.0.0&app_ver=376339.382966.382939&time_zone=+0000&network=1&key=4yekay2g6x').'<br />';
+						//echo "+ 的".urlencode('+').'<br />';
+						//echo "+ 的".rawurlencode('+').'<br />';
 						/// 0212 h35 android sorting problems so we modified the code to fit both scenario
 
 						if ($sig !==$key_string)
@@ -205,7 +209,7 @@ class Service_quick extends MY_Controller {
 		//$games = $this->db->from("games")->where_in("is_active", array("1", "2"))->get();
 
 
-		$servers = $this->db->where_in("server_status", array("public", "maintaining"))->order_by("server_id")->get("servers");
+		$servers = $this->db->where_in("server_status", array("public", "private"))->order_by("server_id")->get("servers");
 
 		$result = $this->get_event_status(11);
 
@@ -619,6 +623,7 @@ class Service_quick extends MY_Controller {
 		        die(json_encode(array("status"=>"success", "site"=> $site, "id"=> $query->row()->id)));
             } else {
                 die(json_encode(array("status"=>"failure", "message"=>"查無此客服紀錄。")));
+								//.$this->db->last_query()
             }
         } else {
             die(json_encode(array("status"=>"failure", "message"=>"查無此客服紀錄。")));
@@ -654,9 +659,10 @@ class Service_quick extends MY_Controller {
                         //->join("users u", "u.uid=q.uid")
                         ->get()->row();
         } else {
-            $question = $this->db->select("q.*, g.name as game_name, gi.name as server_name, q.phone, q.email")
+						$question = $this->db->select("q.*, g.name as game_name, gi.name as server_name, q.phone, q.email")
                         ->where("q.check_id", $_SESSION['check_id'])
-												->where("q.email", $_SESSION['email'])
+												->where("(q.email='{$_SESSION['email']}'  or phone='{$_SESSION['mobile']}')")
+//												->where("((email <> '' and email is not null and email='{$email}') or (phone <> '' and phone is not null and phone='{$mobile}'))")
 												->where("q.id", $id)
                         ->where("q.status >", "0")
                         ->from("questions q")
