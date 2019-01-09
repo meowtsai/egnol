@@ -201,6 +201,72 @@ class Event extends MY_Controller {
 	}
 
 
+	function h55_tgs()
+	{
+
+		$this->_init_layout();
+		$result = null ;
+
+		$result = $this->DB2
+			->select("b.name,b.in_game_id,b.partner_uid,a.serial,a.event_sub_id,sm.title")
+			->select("(select create_time from log_serial_event c where c.char_id=a.uid and c.serial=a.serial and status=1 order by id desc limit 1 ) as dt",FALSE)
+			->from("event_serial a")
+			->join("characters b", "a.uid=b.id", "left")
+			->join("serial_main sm", "sm.id=a.event_sub_id", "left")
+			->where("a.event_id",13)
+			->where("a.status",1)
+			->order_by("a.event_sub_id")
+			->get();
+
+		$log = $this->DB2
+			->select("b.name as char_name,c.*")
+			->from("log_serial_event c")
+			->join("characters b", "c.char_id=b.id", "left")
+			->where("event_id",13)
+			->order_by("c.id desc")
+			->get();
+
+		$this->g_layout
+			->add_breadcrumb("第五人格TGS活動序號查詢")
+			->set("result", isset($result) ? $result : false)
+			->set("log", isset($log) ? $log : false)
+      ->render();
+	}
+
+
+	function g83_tgs()
+	{
+
+		$this->_init_layout();
+		$result = null ;
+//帳號	角色名稱	角色id
+		$result = $this->DB2
+			->select("a.uid as in_game_id,a.personal_id as name,a.email, a.serial,a.event_sub_id,sm.title,log_tb.partner_uid,log_tb.note as server")
+			->select("(select create_time from log_serial_event c where c.char_id=a.uid and c.serial=a.serial and status=1 order by id desc limit 1 ) as dt",FALSE)
+			->from("event_serial a")
+			->join("serial_main sm", "sm.id=a.event_sub_id", "left")
+			->join("( select * from log_serial_event where event_id=15 and status=1) log_tb","log_tb.serial=a.serial")
+			->where("a.event_id",15)
+			->where("a.status",1)
+			->order_by("a.event_sub_id")
+			->get();
+
+		$log = $this->DB2
+			->select("b.name as char_name,c.*")
+			->from("log_serial_event c")
+			->join("characters b", "c.char_id=b.id", "left")
+			->where("event_id",15)
+			->order_by("c.id desc")
+			->get();
+
+		$this->g_layout
+			->add_breadcrumb("荒野行動TGS虛寶活動查詢")
+			->set("result", isset($result) ? $result : false)
+			->set("log", isset($log) ? $log : false)
+      ->render();
+	}
+
+
 	function l20na_preregister()
 	{
 
@@ -221,7 +287,7 @@ class Event extends MY_Controller {
 			->get();
 
 			//->select("(select concat(sum(case when status=1 then 1 else 0 end),'/',count(*)) as item_status from l20na_detail where o_id in (select id from l20na_orders where event_uid=a.id)) as item_status",FALSE)
-			
+
 
 		$log = $this->DB2
 			->select("c.*")

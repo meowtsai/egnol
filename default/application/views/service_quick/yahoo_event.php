@@ -121,7 +121,7 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 									<button type="submit" name="cmdSubmit"  class="btn pull-right">送出</button>
 									<?else:?>
 									<div class="" style="background-color:#FA5858;color:#ffffff;font-weight:bold;border-radius:3px;text-align:center;padding:5px;">
-											【已經完成兌換，<br/>獎項將於 2019/01/15 晚上 23：59 前發送至指定角色ID】
+											【獎項已經發，請查看遊戲內主旨為 <b>Yahoo 奇摩聯名活動</b>信件】
 									</div>
 									<?endif?>
 								</p>

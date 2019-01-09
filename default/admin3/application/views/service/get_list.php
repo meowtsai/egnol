@@ -23,11 +23,25 @@
 
 	<div class="control-group">
 
+<?
+$s_flag = false;
+?>
 		遊戲
-		<select name="game" style="width:120px">
+		<select name="game" style="width:150px">
 			<option value="">--</option>
 			<? foreach($games->result() as $row):?>
-			<option value="<?=$row->game_id?>" <?=($this->input->get("game")==$row->game_id ? 'selected="selected"' : '')?>><?=$row->name?></option>
+			<?if ($row->is_active==0 && !$s_flag):?>
+			<option value="">------已下架------</option>
+			<?
+			$s_flag=true;
+			endif;
+
+
+			?>
+			<?if (!strpos($row->name,"FAQ")):?>
+			<option value="<?=$row->game_id?>" <?=($this->input->get("game")==$row->game_id ? 'selected="selected"' : '')?>> <?=$row->name?> - <?=$row->game_id?></option>
+			<?endif;?>
+
 			<? endforeach;?>
 		</select>
 

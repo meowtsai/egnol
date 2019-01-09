@@ -556,7 +556,7 @@ class Event extends MY_Controller
   function test_count(){
     //echo $this->l20na_prereg_count("2019-01-15 23:50:00");
   for ($i=0; $i < 60; $i++) {
-    $datetime1 = "2018-12-27 10:".substr("0".$i,-2,2).":00";
+    $datetime1 = "2019-01-18 10:".substr("0".$i,-2,2).":00";
     echo $datetime1;
     echo "<br />";
     echo "<font color='red'>".$this->l20na_prereg_count($datetime1)."</font>";

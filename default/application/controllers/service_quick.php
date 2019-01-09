@@ -79,6 +79,7 @@ class Service_quick extends MY_Controller {
 
 						$encode_server_name =urlencode($server_name);
 						$encode_c_name =urlencode($character_name);
+						//$in_game_id=urlencode($in_game_id);
 						//$usr_device =rawurlencode($usr_device);
 
 						//echo "rawurlencode".rawurlencode($character_name).'<br />';

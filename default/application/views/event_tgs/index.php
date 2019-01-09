@@ -12,6 +12,7 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 }
 
 .btn-cancel {
+	margin-left:50px;
 	background-color:#E6E6E6;
 	color:#848484;
 	border:1px solid #848484;
@@ -83,6 +84,9 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 .error {
 	color: red;
 }
+.tbl_head{
+	text-align:right;
+}
 </style>
 
 <div id="content-login">
@@ -90,40 +94,61 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 		<h3 >
 			兌獎中心 > <?=$event->event_name?>
 		</h3>
-    <form id="event_form"  method="post" action="<?=$longe_url?>service_quick/event_serial_ajax?site=<?=$site?>">
+    <form id="event_form"  method="post" action="<?=$longe_url?>event_tgs/event_serial_ajax">
 			<div style="margin-left: auto;  margin-right: auto;  width: 400px;">
 				<table >
 					<tr>
+						<th class="tbl_head">遊戲：</th>
+						<td><b>荒野行動</b></td>
+					</tr>
+					<tr>
+						<th class="tbl_head">活動名稱：</th>
+						<td><b>荒野行動TGS虛寶兌換</b></td>
+					</tr>
+					<tr>
+						<th class="tbl_head">帳號：</th>
+						<td><input type="text" name="partner_uid" id="partner_uid" size="20" minlength="5" maxlength="30" placeholder="遊戲帳號" class="input_serial required" autocomplete="on" ></td>
+					</tr>
+					<tr>
+						<th class="tbl_head">角色ID：</th>
+						<td><input type="text" name="char_id" id="char_id" size="20" minlength="5" maxlength="30" placeholder="角色ID" class="input_serial required" autocomplete="on" /></td>
+					</tr>
+					<tr>
+						<th class="tbl_head">角色名：</th>
+						<td><input type="text" name="character_name" id="character_name" size="20"  maxlength="30" placeholder="角色名稱" class="input_serial required" autocomplete="on" /></td>
+					</tr>
+					<tr>
+						<th class="tbl_head">Email：</th>
+						<td><input type="text" name="email" id="email" size="20" minlength="10" placeholder="填寫Email" class="input_serial required" autocomplete="on" /></td>
+					</tr>
+					<tr>
+						<th class="tbl_head">伺服器：</th>
+						<td>
+							<select class="input_serial required" name="server_list">
+								<option value="">--選擇版本--</option>
+								<? foreach($g83_server as $id => $type):?>
+									<option value="<?=$id?>"><?=$type?></option>
+								<? endforeach;?>
+							</select> <br /></td>
+					</tr>
+					<tr>
+						<th class="tbl_head">序號：</th>
+						<td><input type="text" name="serial_no" id="serial_no" size="20" minlength="10" maxlength="30" placeholder="輸入序號" class="input_serial required" autocomplete="on" ></td>
+					</tr>
+					<tr>
 						<td colspan="2">
-							<div class="user_info">
-								遊戲： <b><?=$_SESSION['game_name']?></b> <br />
-								活動名稱： <b><?=$event->event_name; ?> </b><br />
-								<input type="hidden" name="event_id" id="event_id" value="<?=$event->id?>">
-								<input type="hidden" name="is_ingame" id="is_ingame" value="<?=$is_ingame?>">
-
-								<input type="hidden" name="server" id="server" value="<?=$char_data->server_id?>">
-                <input type="hidden" name="partner_uid" id="partner_uid" value="<?=$char_data->partner_uid?>">
-								<input type="hidden" name="char_id" id="char_id" value="<?=$char_data->id?>">
-								<input type="hidden" name="character_name" id="character_name" value="<?=$char_data->name?>">
-								角色名稱： <b><?=$char_data->name?> </b><br />
-								角色 ID： <b><?=$char_data->in_game_id?> </b><br />
-
-								序號：<input type="text" name="serial_no" id="serial_no" size="20" minlength="10" maxlength="30" placeholder="輸入序號" class="input_serial required" autocomplete="off" >
-								<hr />
-								<p>
-									<button type="button" name="cmdCancel" onclick="javascript:history.back();this.disabled=true;" class="btn btn-cancel" >取消</button>
-									<button type="submit" name="cmdSubmit"  class="btn pull-right">送出</button>
-
-								</p>
-							</div>
+						<button type="button" name="cmdCancel" onclick="javascript:history.back();this.disabled=true;" class="btn btn-cancel" >取消</button>
+						<button type="submit" name="cmdSubmit"  class="btn pull-right">下一步</button>
+						<hr />
 						</td>
 					</tr>
+
 					<tr>
 						<td colspan="2">
 							<? if ($records):?>
 							<fieldset style="width:400px;border-radius: 5px;white-space:normal;border:#848484;">
-								<legend><font color='blue'>已兌換品項(預定 <b>2019/3/15 晚上 23：59 前發送</b>。)</font></legend>
-								<ul style="text-align: left;list-style-type:decimal;line-height:150%;color: #2E2E2E;font-size:smaller;">
+								<legend><font color='blue'>已兌換品項</font></legend>
+								<ul style="text-align: left;list-style-type:square;line-height:150%;color: #2E2E2E;font-size:smaller;">
 									<? foreach ($records as $record ): ?>
 									<li><?=$record->title?>(序號: <?=$record->serial?>)</li>
 									<? endforeach; ?>
@@ -134,11 +159,13 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 								<fieldset style="width:400px;border-radius: 5px;white-space:normal;border:#848484;">
 									<legend>注意事項</legend>
 									<ul style="text-align: left;list-style-type:square;line-height:150%;color: #2E2E2E;font-size:smaller;">
-										<li>本序號僅提供《第五人格》亞洲服玩家兌換。</li>
-										<li>取得序號者，可至《第五人格》遊戲內的偵探大廳→點選介面右上角「齒輪」→問題回饋→線上回報→問題類型：第五人格TGS虛寶兌換→填寫表單內容→送出。</li>
-										<li>序號可兌換期限至 2019/2/25 晚上 23：59 止。</li>
-										<li>同一獎項類別，每個遊戲帳號只能兌換一次。</li>
-										<li>獎項將於 <b>2019/3/15 晚上 23：59 </b>前，以遊戲內郵件發送獎勵至所填寫的角色ID。</li>
+										<li>本序號僅提供《荒野行動》玩家兌換。</li>
+										<li>取得序號後，請至活動網站 https://game.longeplay.com.tw/event_tgs
+										  → 荒野行動TGS虛寶兌換 → 填寫表單內容 → 送出。</li>
+										<li>序號可兌換期限至 2019/2/25 晚上 23：59 止</li>
+										<li>每個遊戲帳號每種獎項僅可兌換一次。</li>
+										<li>獎項將於 2019/3/15 晚上 23：59 前，以遊戲內郵件發送至所填寫的角色ID。</li>
+
 									</ul>
 								</fieldset>
 
@@ -185,17 +212,29 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 	      }
 	  };
 
+		var general_rule = {
+			required: "* 必填",
+			minlength: "* 錯誤",
+			maxlength: "* 錯誤"
+		};
+
 		$("#event_form").validate({
 			onfocusout: false,
 			onkeyup: false,
 			onclick: false,
 			messages: {
-				serial_no: {
-					required: "* 必填",
-					minlength: "* 序號錯誤",
-					maxlength: "* 序號錯誤"
+				email: {
+					minlength: "* ",
+					maxlength: "* ",
+					required: "*",
+					email: "格式錯誤"
 				},
+				partner_uid: general_rule,
+				char_id: general_rule,
+				character_name: general_rule,
+				serial_no: general_rule,
 			},
+
 			submitHandler: function(form)
 			{
 				$(form).ajaxSubmit(
@@ -209,7 +248,7 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 							content.innerText = json.message;
 							//location.href = '/service_quick/event_serial';
 							var timer = setTimeout(function() {
-								 window.location='/service_quick/event_serial?event_id=<?=$event->id?>'
+								 window.location='/event_tgs/tgs_confirm'
 
 						 }, 1000);
 						}
