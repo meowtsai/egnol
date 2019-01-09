@@ -83,7 +83,8 @@
 
 
   })
-  var logList = <?=json_encode($log->result());?>;
+  
+  var logList = <?=$log? json_encode($log->result()):"";?>;
   for (var i = 0; i < logList.length; i++) {
     var $tr = $(`<tr><td>${logList[i].id}  </td>
       <td>${logList[i].char_name} </td>
@@ -95,7 +96,8 @@
     $("#log_table").append($tr);
   }
 
-  var userList = <?=json_encode($result->result());?>;
+
+  var userList = <?=$result? json_encode($result->result()):"";?> ;
   for (var i = 0; i < userList.length; i++) {
 		var $tr = $(`<tr><td>${userList[i].partner_uid}</td>
 			<td>${userList[i].name}</td>
