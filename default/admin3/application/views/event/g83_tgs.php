@@ -25,9 +25,9 @@
           <table class="table table-striped" id="list_table" style="width:1500px">
           	<thead>
           		<tr>
-                <th >帳號</th>
-                <th >角色名稱</th>
                 <th >角色id</th>
+                <th >角色名稱</th>
+                <th >email</th>
                 <th >序號</th>
                 <th >兌換時間</th>
                 <th >獎項</th>
@@ -69,7 +69,7 @@
 <script type="text/javascript">
   var activeTable = "兌換成功紀錄";
   var which_tbl= "list_table";
-  var csvData ="帳號,角色名稱,角色id,序號,兌換時間,獎項,伺服器\n";
+  var csvData ="角色id,角色名稱,email,序號,兌換時間,獎項,伺服器\n";
 
   $('#myTab a').click(function (e) {
     e.preventDefault();
@@ -99,9 +99,9 @@
 
   var userList = <?=$result? json_encode($result->result()):"";?> ;
   for (var i = 0; i < userList.length; i++) {
-		var $tr = $(`<tr><td>${userList[i].email}</td>
+		var $tr = $(`<tr><td>${userList[i].in_game_id}</td>
 			<td>${userList[i].name}</td>
-			<td>${userList[i].in_game_id}</td>
+			<td>${userList[i].email}</td>
 			<td>${userList[i].serial}</td>
 			<td>${userList[i].dt}</td>
       <td>${userList[i].event_sub_id} - ${userList[i].title}</td>
