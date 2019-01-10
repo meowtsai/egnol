@@ -654,7 +654,9 @@ class Service extends MY_Controller {
 		}
 
         if (!in_array('all_game', $this->zacl->allow_games)) $this->DB2->where_in("game_id", $this->zacl->allow_games);
-		$games = $this->DB2->from("games")->order_by('is_active',"desc")->order_by("game_id")->get();
+		$this->DB2->_protect_identifiers = FALSE;
+		$games = $this->DB2->from("games")->order_by('FIELD ( is_active, 1, 2, 0 )', '', FALSE)->order_by("game_id")->get();
+		$this->DB2->_protect_identifiers = True;
 		$cs_admins = $this->DB2->from("admin_users")->where_in("role", array("cs", "cs_master","glory_service"))->get();
 		$tasks = $this->DB2->query("SELECT g.name as game_name,b.game_id,b.title,b.id,b.create_time,b.update_time,b.admin_uid,adm.name as admin_name
 		from batch_tasks b

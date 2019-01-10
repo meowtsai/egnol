@@ -30,17 +30,17 @@ $s_flag = false;
 		<select name="game" style="width:150px">
 			<option value="">--</option>
 			<? foreach($games->result() as $row):?>
-			<?if ($row->is_active==2 && !$s_flag):?>
+			<?if ($row->is_active==2 && $s_flag):?>
 			<option value="">------內測------</option>
 			<?
-			$s_flag=true;
+			$s_flag=false;
 			endif;
 			?>
 
-			<?if ($row->is_active==1 && $s_flag):?>
+			<?if ($row->is_active==1 && !$s_flag):?>
 			<option value="">------上線中------</option>
 			<?
-			$s_flag=false;
+			$s_flag=true;
 			endif;
 			?>
 
