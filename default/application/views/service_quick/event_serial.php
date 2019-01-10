@@ -211,7 +211,7 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 							var timer = setTimeout(function() {
 								 window.location='/service_quick/event_serial?event_id=<?=$event->id?>'
 
-						 }, 1000);
+						 }, 2000);
 						}
 						else
 						{

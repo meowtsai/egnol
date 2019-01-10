@@ -1099,7 +1099,7 @@ class Service_quick extends MY_Controller {
 
 			$data["status"]=1;
 			$this->db->insert("log_serial_event", $data);
-			die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"兌換成功! 獎項將於活動結束後兩周內配送至所登錄的角色ID。")));
+			die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"兌換成功! 獎項將於 2019/3/15 晚上 23：59 前，以遊戲內郵件發送獎勵至所填寫的角色ID。")));
 
 
 		}
