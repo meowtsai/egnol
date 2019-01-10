@@ -241,8 +241,8 @@ class Event extends MY_Controller {
 		$result = null ;
 //帳號	角色名稱	角色id
 		$result = $this->DB2
-			->select("a.uid as in_game_id,a.personal_id as name,a.email, a.serial,a.event_sub_id,sm.title,log_tb.partner_uid,log_tb.note as server")
-			->select("(select create_time from log_serial_event c where c.char_id=a.uid and c.serial=a.serial and status=1 order by id desc limit 1 ) as dt",FALSE)
+			->select("a.personal_id as in_game_id,log_tb.char_name as name, a.email, a.serial,a.event_sub_id,sm.title,log_tb.partner_uid,log_tb.note as server")
+			->select("(select create_time from log_serial_event c where c.char_id=a.personal_id and c.serial=a.serial and status=1 order by id desc limit 1 ) as dt",FALSE)
 			->from("event_serial a")
 			->join("serial_main sm", "sm.id=a.event_sub_id", "left")
 			->join("( select * from log_serial_event where event_id=15 and status=1) log_tb","log_tb.serial=a.serial")

@@ -106,10 +106,6 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 						<td><b>荒野行動TGS虛寶兌換</b></td>
 					</tr>
 					<tr>
-						<th class="tbl_head">帳號：</th>
-						<td><input type="text" name="partner_uid" id="partner_uid" size="20" minlength="5" maxlength="30" placeholder="遊戲帳號" class="input_serial required" autocomplete="on" ></td>
-					</tr>
-					<tr>
 						<th class="tbl_head">角色ID：</th>
 						<td><input type="text" name="char_id" id="char_id" size="20" minlength="5" maxlength="30" placeholder="角色ID" class="input_serial required" autocomplete="on" /></td>
 					</tr>
@@ -162,6 +158,7 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 										<li>本序號僅提供《荒野行動》玩家兌換。</li>
 										<li>取得序號後，請至活動網站 https://game.longeplay.com.tw/event_tgs
 										  → 荒野行動TGS虛寶兌換 → 填寫表單內容 → 送出。</li>
+										<li>序號不分大小寫</li>
 										<li>序號可兌換期限至 2019/2/25 晚上 23：59 止</li>
 										<li>每個遊戲帳號每種獎項僅可兌換一次。</li>
 										<li>獎項將於 2019/3/15 晚上 23：59 前，以遊戲內郵件發送至所填寫的角色ID。</li>
@@ -224,12 +221,11 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 			onclick: false,
 			messages: {
 				email: {
-					minlength: "* ",
-					maxlength: "* ",
-					required: "*",
+					minlength: "* 格式錯誤",
+					maxlength: "* 格式錯誤",
+					required: "* 必填",
 					email: "格式錯誤"
 				},
-				partner_uid: general_rule,
 				char_id: general_rule,
 				character_name: general_rule,
 				serial_no: general_rule,

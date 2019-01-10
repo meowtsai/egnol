@@ -106,10 +106,6 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 						<td><b>荒野行動TGS虛寶兌換</b></td>
 					</tr>
 					<tr>
-						<th class="tbl_head">帳號：</th>
-						<td><?=$data["partner_uid"]; ?></td>
-					</tr>
-					<tr>
 						<th class="tbl_head">角色ID：</th>
 						<td><?=$data["char_id"]; ?><?=$char_id; ?></td>
 					</tr>
@@ -219,7 +215,7 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
               content.innerText = json.message;
               $("button[name='cmdSubmit']").hide();
               $("button[name=cmdCancel]").hide();
-              $("#succ_info").html("登錄完成，序號對應的獎勵是：[" + json.item_title + "]<br /><button type='button' name='cmdGoGo' onclick='javascript:location.href=\"/event_tgs\"' class='btn-cancel pull-right'>>>繼續輸入其他序號<<<</button>");
+              $("#succ_info").html("登錄完成，恭喜您獲得[" + json.item_title + "]<br /><button type='button' name='cmdGoGo' onclick='javascript:location.href=\"/event_tgs\"' class='btn-cancel pull-right'>>>繼續輸入其他序號<<<</button>");
 
               $("#succ_info").show();
 

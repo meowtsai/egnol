@@ -47,14 +47,13 @@ class Event_tgs extends MY_Controller {
 	function event_serial_ajax(){
 		$ip = $_SERVER['REMOTE_ADDR'];
 		$email = $this->input->get_post("email");
-		$partner_uid    = $this->input->get_post("partner_uid");
 		$char_id	    = $this->input->get_post("char_id");
 		$server_name	= $this->input->get_post("server_list");
 		$character_name	= htmlspecialchars($this->input->get_post("character_name"));
 		$serial_no	= $this->input->get_post("serial_no");
 
 		// check if miss data
-		if (!$email || !$partner_uid || !$char_id || !$server_name || !$character_name || !$serial_no) {
+		if (!$email || !$char_id || !$server_name || !$character_name || !$serial_no) {
 			die(json_encode(array("status"=>"failure", "message"=>"資料不完整")));
 			return;
 		}
@@ -73,7 +72,6 @@ class Event_tgs extends MY_Controller {
 
 
 		$_SESSION["tgs_data"] = array(
-			"partner_uid" => $partner_uid,
 			"char_id" => $char_id,
 			"char_name" => $character_name,
 			'ip' => $ip,
@@ -108,7 +106,7 @@ function event_serial_confirm_ajax(){
 	$event_id = 15;
 	$data = $_SESSION["tgs_data"];
 
-	$query = $this->db->query("SELECT group_concat(event_sub_id) as chk_sub_id FROM event_serial WHERE event_id={$event_id} and uid='{$data["char_id"]}'");
+	$query = $this->db->query("SELECT group_concat(event_sub_id) as chk_sub_id FROM event_serial WHERE event_id={$event_id} and personal_id='{$data["char_id"]}'");
 	$chk_sub_id = isset($query->row()->chk_sub_id)? $query->row()->chk_sub_id:0;
 
 
@@ -128,7 +126,6 @@ function event_serial_confirm_ajax(){
 
 
 	$log_data = array(
-		"partner_uid" => $data["partner_uid"],
 		"char_id" => $data["char_id"],
 		"char_name" => $data["char_name"],
 		'ip' => $data["ip"],
@@ -143,7 +140,7 @@ function event_serial_confirm_ajax(){
 	{
 		// id    | event_id | serial       | uid        | personal_id  | status | create_time         | email                  | mobile | share_code   | receive_code | event_sub_id
 		$this->db->where(array('serial'=>$data['serial'], 'event_id' => $event_id,'status' => '0'));
-		$this->db->update('event_serial',array("uid" => $data["char_id"],"status" => 1,"personal_id"=>$data['char_name'],"email"=>$data['email']));
+		$this->db->update('event_serial',array("status" => 1,"personal_id"=>$data['char_id'],"email"=>$data['email']));
 
 		$log_data["status"]=1;
 
@@ -168,7 +165,7 @@ function event_serial_confirm_ajax(){
 		$this->load->library("g_send_mail");
 
 		if($this->g_send_mail->send_view($data["email"],
-			"荒野活動兌獎通知信[".date("Y/m/d H:i:s")."]",
+			"荒野行動TGS虛寶兌獎通知信[".date("Y/m/d H:i:s")."]",
 			"g_blank_mail",
 			array("game_name" => "荒野行動", "msg" => $msg),
 			array("headerimg" => FCPATH."/p/image/mail/header.jpg")))
@@ -177,7 +174,7 @@ function event_serial_confirm_ajax(){
 				$_SESSION['email'] = $this->input->post("email");
 				$_SESSION['mobile'] = $this->input->post("mobile");
 				unset($_SESSION["tgs_data"]);
-				die(json_encode(array("status"=>"success", "item_title"=> $item_title, "message"=>"兌換成功! 獎項將於活動結束後兩周內配送至所登錄的角色ID。")));
+				die(json_encode(array("status"=>"success", "item_title"=> $item_title, "message"=>"兌換成功! 獎項將於 2019/3/15 晚上 23：59 前，以遊戲內郵件發送至所填寫的角色ID。")));
 		}
 		else
 		{

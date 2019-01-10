@@ -83,7 +83,7 @@
 
 
   })
-  
+
   var logList = <?=$log? json_encode($log->result()):"";?>;
   for (var i = 0; i < logList.length; i++) {
     var $tr = $(`<tr><td>${logList[i].id}  </td>
@@ -99,7 +99,7 @@
 
   var userList = <?=$result? json_encode($result->result()):"";?> ;
   for (var i = 0; i < userList.length; i++) {
-		var $tr = $(`<tr><td>${userList[i].partner_uid}</td>
+		var $tr = $(`<tr><td>${userList[i].email}</td>
 			<td>${userList[i].name}</td>
 			<td>${userList[i].in_game_id}</td>
 			<td>${userList[i].serial}</td>

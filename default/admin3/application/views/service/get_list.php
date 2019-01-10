@@ -30,14 +30,27 @@ $s_flag = false;
 		<select name="game" style="width:150px">
 			<option value="">--</option>
 			<? foreach($games->result() as $row):?>
-			<?if ($row->is_active==0 && !$s_flag):?>
-			<option value="">------已下架------</option>
+			<?if ($row->is_active==2 && !$s_flag):?>
+			<option value="">------內測------</option>
 			<?
 			$s_flag=true;
 			endif;
-
-
 			?>
+
+			<?if ($row->is_active==1 && $s_flag):?>
+			<option value="">------上線中------</option>
+			<?
+			$s_flag=false;
+			endif;
+			?>
+
+			<?if ($row->is_active==0 && !$s_flag):?>
+			<option value="">------未上架------</option>
+			<?
+			$s_flag=true;
+			endif;
+			?>
+
 			<?if (!strpos($row->name,"FAQ")):?>
 			<option value="<?=$row->game_id?>" <?=($this->input->get("game")==$row->game_id ? 'selected="selected"' : '')?>> <?=$row->name?> - <?=$row->game_id?></option>
 			<?endif;?>
