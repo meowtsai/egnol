@@ -137,6 +137,8 @@ ADD slogan varchar(255) DEFAULT NULL;
 ALTER TABLE games
 ADD title_path varchar(255) DEFAULT NULL;
 
+--update games set title_path= concat("https://game.longeplay.com.tw",title_path) where title_path is not NULL
+
 
 ALTER TABLE games MODIFY COLUMN logo_path varchar(255) DEFAULT NULL;
 --

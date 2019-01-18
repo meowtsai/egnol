@@ -11,7 +11,7 @@
       <ul id="nav_game_list">
 
         <?foreach($games->result() as $row):
-          if ( empty($row->logo_path)) continue;?>
+          if (empty($row->site) || is_null($row->site)) continue;?>
           <a href="<?=$row->site?>"><li><?=$row->name?></li></a>
         <? endforeach;?>
 
@@ -33,7 +33,9 @@
 </div>
 <div class="customer_container">
   <div id="cs_box_outer">
-    <?foreach($games->result() as $row):?>
+    <?foreach($games->result() as $row):
+      if (empty($row->logo_path) || is_null($row->logo_path)) continue;?>
+      
       <a href="https://game.longeplay.com.tw/service_quick?param_game_id=<?=$row->game_id?>&site=long_e"><div class="cs_box"><img src="<?=$row->logo_path?>" alt=""><span><?=$row->name?></span> </div></a>
     <? endforeach;?>
   </div>
