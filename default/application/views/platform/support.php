@@ -10,7 +10,8 @@
     <li id="nav_game" class="nav_row">遊戲<img src="/p/image/2019/slidedown.png" style="margin-left:10px" alt="">
       <ul id="nav_game_list">
 
-        <?foreach($games->result() as $row):?>
+        <?foreach($games->result() as $row):
+          if ( empty($row->logo_path)) continue;?>
           <a href="<?=$row->site?>"><li><?=$row->name?></li></a>
         <? endforeach;?>
 
