@@ -83,9 +83,6 @@
 									<? foreach($this->config->item("question_type") as $id => $type):?>
 										<option value="<?=$id?>"><?=$type?></option>
 									<? endforeach;?>
-									<?if ($site=='h55naxx2tw' && $partner_uid && $result['status']=='success'):?>
-										<option value="Yahoo">Yahoo 活動序號兌換</option>
-									<? endif;?>
 									<? foreach($events as $e_row):?>
 									<?if ($partner_uid &&( ($e_row->status==1 && now() > $event->begin_time && now() < $event->end_time ) || IN_OFFICE)): ?>
 									<option value="event_<?=$e_row->id?>" ><?=$e_row->event_name?></option>

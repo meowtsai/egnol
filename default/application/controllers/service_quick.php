@@ -212,7 +212,7 @@ class Service_quick extends MY_Controller {
 
 		$servers = $this->db->where_in("server_status", array("public", "private"))->order_by("server_id")->get("servers");
 
-		$result = $this->get_event_status(11);
+		//$result = $this->get_event_status(11);
 
 		//[{"id":"11","event_name":"\u7b2c\u4e94\u4eba\u683c yahoo \u626d\u86cb\u6d3b\u52d5","begin_time":"2018-12-03 10:00:00","end_time":"2018-12-31 23:59:59"},{"id":"13","event_name":"Google Play x \u7b2c\u4e94\u4eba\u683c","begin_time":"2018-12-03 10:00:00","end_time":"2019-02-28 23:59:59"}]
 		$events = $this->get_events($site);

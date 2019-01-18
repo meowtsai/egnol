@@ -1,7 +1,7 @@
 <div id="nav">
    <div class="nav_container">
 
-    <a href="index2019"><div class="nav_logo"></div></a>
+    <a href="/"><div class="nav_logo"></div></a>
      <div class="mb_menubutton"></div>
      <div class="mb_menubutton_x"></div>
      <div class="menu">
@@ -19,7 +19,7 @@
     </li>
     <a href="#"><li class="nav_row">客服</li></a>
 
-    <a href="index2019"><li class="nav_row">首頁</li></a>
+    <a href="/"><li class="nav_row">首頁</li></a>
       </ul>
 
      </div>
@@ -35,7 +35,7 @@
   <div id="cs_box_outer">
     <?foreach($games->result() as $row):
       if (empty($row->logo_path) || is_null($row->logo_path)) continue;?>
-      
+
       <a href="https://game.longeplay.com.tw/service_quick?param_game_id=<?=$row->game_id?>&site=long_e"><div class="cs_box"><img src="<?=$row->logo_path?>" alt=""><span><?=$row->name?></span> </div></a>
     <? endforeach;?>
   </div>
