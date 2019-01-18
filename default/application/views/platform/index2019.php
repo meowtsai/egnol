@@ -11,7 +11,8 @@
     <li id="nav_game" class="nav_row">遊戲<img src="/p/image/2019/slidedown.png" style="margin-left:10px" alt="">
       <ul id="nav_game_list">
 
-        <?foreach($games->result() as $row):?>
+        <?foreach($games->result() as $row):
+          if (empty($row->site) || is_null($row->site)) continue;?>
           <a href="<?=$row->site?>"><li><?=$row->name?></li></a>
         <? endforeach;?>
 
@@ -85,7 +86,7 @@ for (var i = 0; i < game_list.length; i++) {
       </div>
       <span>${game.name}</span>
       <div class="box_detail">
-      ${game.site ? `<a href=${game.site}" target="_blank"><div class="allgame_home">前往官網</div></a>` : ''}
+      ${game.site ? `<a href="${game.site}" target="_blank"><div class="allgame_home">前往官網</div></a>` : ''}
       ${game.fanpage ? `<a href="${game.fanpage}" target="_blank"><div class="allgame_fb">facebook</div></a>`:''}
       </div>
     </div>
