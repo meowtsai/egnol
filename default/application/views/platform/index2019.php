@@ -18,7 +18,7 @@
 
       </ul>
     </li>
-    <a href="support"><li class="nav_row">客服</li></a>
+    <a href="/platform/support"><li class="nav_row">客服</li></a>
 
     <a href="#"><li class="nav_row">首頁</li></a>
       </ul>
