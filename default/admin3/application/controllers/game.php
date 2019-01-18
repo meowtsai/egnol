@@ -177,6 +177,30 @@ class Game extends MY_Controller {
 
 			$bg_path = str_replace("https://manager.longeplay.com.tw", "https://game.longeplay.com.tw", $bg_path);
 
+
+			$title_path="";
+			if ( ! empty($_FILES["file02"]['name']))
+			{
+				$this->load->library('upload', array("upload_path"=>realpath("p/upload/pictures"), "allowed_types"=>"gif|jpg|jpeg|png", 'encrypt_name'=>TRUE));
+
+				if ( ! $this->upload->do_upload("file02"))
+				{
+					$msg[] = $this->upload->display_errors('', '');
+				}
+				else
+				{
+					//rsync_to_slave();
+					$upload_data = $this->upload->data();
+					$title_path = site_url("p/upload/pictures/{$upload_data['file_name']}");
+				}
+			}
+			else {
+				$title_path = $this->input->post("title_path");
+			}
+
+			$title_path = str_replace("https://manager.longeplay.com.tw", "https://game.longeplay.com.tw", $title_path);
+
+
 			$logo_path="";
 
 			if ( ! empty($_FILES["file04"]['name']))

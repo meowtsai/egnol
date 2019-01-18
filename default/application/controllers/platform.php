@@ -47,4 +47,38 @@ class Platform extends MY_Controller
 	}
 
 
+	function index2019()
+	{
+		$user_ip = $_SERVER['REMOTE_ADDR'];
+
+			$this->db->from("games")->where("is_active", "1");
+			if ($user_ip=="61.220.44.200")
+			{
+				$this->db->or_where("is_active", "2");
+			}
+
+			$games = $this->db->get();
+			$this->_init_layout()
+			->set("games", $games)
+			->g_2019_view("platform/index2019");
+
+
+	}
+	function support()
+	{
+		$user_ip = $_SERVER['REMOTE_ADDR'];
+
+			$this->db->from("games")->where("is_active", "1");
+			if ($user_ip=="61.220.44.200")
+			{
+				$this->db->or_where("is_active", "2");
+			}
+
+			$games = $this->db->get();
+			$this->_init_layout()
+			->set("games", $games)
+			->g_2019_view("platform/support");
+
+
+	}
 }

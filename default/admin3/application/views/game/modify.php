@@ -24,35 +24,9 @@
 		<label>遊戲簡稱</label>
 		<input type="text" name="abbr" value="<?=$row ? $row->abbr : ''?>" class="required" style="width:150px">
 
-		<label>轉點比值</label>
-		<input type="text" name="exchange_rate" value="<?=$row ? $row->exchange_rate : ''?>" class="required number" style="width:50px;">
-
-		<label>遊戲中金錢名稱</label>
-		<input type="text" name="currency" value="<?=$row ? $row->currency : ''?>" class="required" style="width:150px">
-		<span class="help-inline">例如：元寶</span>
-
-
-
-		<label>遊戲分類</label>
-		<label class="radio inline"><input name="type" type="radio" value="" <?=(count($tags) == 0 ? "checked='checked'" : "")?>>--</label>
-		<label class="radio inline"><input name="type" type="radio" value="即時" <?=in_array("即時", $tags) ? "checked='checked'" : ""?>> 即時</label>
-		<label class="radio inline"><input name="type" type="radio" value="策略" <?=in_array("策略", $tags) ? "checked='checked'" : ""?>> 策略</label>
-		<label class="radio inline"><input name="type" type="radio" value="回合" <?=in_array("回合", $tags) ? "checked='checked'" : ""?>> 回合</label>
-		<label class="radio inline"><input name="type" type="radio" value="其它" <?=in_array("其它", $tags) ? "checked='checked'" : ""?>> 其它</label>
 
 		<div style="margin-bottom:10px;"></div>
 
-		<label>遊戲性質</label>
-		<label class="checkbox inline"><input name="tags[]" type="checkbox" value="最新" <?=in_array("最新", $tags) ? "checked='checked'" : ""?>> 最新</label>
-		<label class="checkbox inline"><input name="tags[]" type="checkbox" value="測試" <?=in_array("測試", $tags) ? "checked='checked'" : ""?>> 測試</label>
-		<label class="checkbox inline"><input name="tags[]" type="checkbox" value="熱門" <?=in_array("熱門", $tags) ? "checked='checked'" : ""?>> 熱門</label>
-		<label class="checkbox inline"><input name="tags[]" type="checkbox" value="推薦" <?=in_array("推薦", $tags) ? "checked='checked'" : ""?>> 推薦</label>
-		<label class="checkbox inline"><input name="tags[]" type="checkbox" value="好朋友" <?=in_array("好朋友", $tags) ? "checked='checked'" : ""?>> 好朋友</label>
-		<label class="checkbox inline"><input name="tags[]" type="checkbox" value="重點" <?=in_array("重點", $tags) ? "checked='checked'" : ""?>> 重點</label>
-		<label class="checkbox inline"><input name="tags[]" type="checkbox" value="聯運" <?=in_array("聯運", $tags) ? "checked='checked'" : ""?>> 聯運</label>
-		<label class="checkbox inline"><input name="tags[]" type="checkbox" value="手遊" <?=in_array("手遊", $tags) ? "checked='checked'" : ""?>> 手遊</label>
-
-		<div style="margin-bottom:10px;"></div>
 
 		<label>套用主題(遊戲內FAQ用)</label>
 		<select name="game_theme">
@@ -63,8 +37,14 @@
 
 		<div style="margin-bottom:10px;"></div>
 
+
 		<label><font color='blue'><b>官網首頁遊設定</b></font></label>
 		<div style="margin-bottom:10px;"></div>
+
+		<label><font color='blue'>遊戲設定</font></label>
+		<label class="checkbox inline"><input name="tags[]" type="checkbox" value="首頁輪播" <?=in_array("首頁輪播", $tags) ? "checked='checked'" : ""?>> 首頁輪播</label>
+
+
 		<label><font color='blue'>粉絲團URL</font> <font size="small" color="gray">* 範例: https://www.facebook.com/playvxz/</font></label>
 		<input type="text" name="fanpage" value="<?=$row ? $row->fanpage : ''?>"  style="width:300px">
 
@@ -82,6 +62,14 @@
 			</span>
 			<input type="file" name="file04">
 			<input type="hidden" name="logo_path" class="" value="<?=$row ? $row->logo_path : ''?>">
+		</label>
+
+		<label><font color='blue'>遊戲標題圖檔(.gif, jpg, jpeg, png)</font><font size="small" color="gray"> </font>
+			<span style="width:45px; height:45px; line-height:45px; background:#ddd; text-align:center; display:block; overflow:hidden;">
+				<img src="<?=$row ? $row->title_path : ''?>">
+			</span>
+			<input type="file" name="file02">
+			<input type="hidden" name="title_path" class="" value="<?=$row ? $row->title_path : ''?>">
 		</label>
 
 

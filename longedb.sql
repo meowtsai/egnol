@@ -134,6 +134,10 @@ ADD bg_path varchar(255) DEFAULT NULL;
 ALTER TABLE games
 ADD slogan varchar(255) DEFAULT NULL;
 
+ALTER TABLE games
+ADD title_path varchar(255) DEFAULT NULL;
+
+
 ALTER TABLE games MODIFY COLUMN logo_path varchar(255) DEFAULT NULL;
 --
 -- Table structure for table `gash_billing`
@@ -2265,6 +2269,13 @@ DELIMITER ;
    UNIQUE KEY `npc_UNIQUE` (`event_uid`,`npc_code`)
   ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
+alter table l20na_npc_affections modify column `affection` int(11) NOT NULL DEFAULT '0',
+
+select aff_id, sum(affection_change) from l20na_npc_affections_log where aff_id in(select id from l20na_npc_affections where affection>126) group by aff_id;
+
+update l20na_npc_affections
+set affection=(select sum(affection_change) from l20na_npc_affections_log where aff_id=l20na_npc_affections.id)
+where affection>126;
 
   CREATE TABLE `l20na_npc_affections_log` (
    `id` int(11) NOT NULL AUTO_INCREMENT,
