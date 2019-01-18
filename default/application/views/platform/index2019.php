@@ -64,20 +64,14 @@
 
 	</div>
 </div>
+<div class="bottom_box"></div>
 
 <script>
 var game_list = <?=json_encode($games->result());?>;
-var imageList = [];
-
 
 for (var i = 0; i < game_list.length; i++) {
   var game = game_list[i];
-  // var i = new Image();
   var cls ="img_title_horizontal";
-  //  //var item = `<div class="${cls}" style="background-image: url(${game.title_path})"></div>`;
-  // i.onload = imageSize(i);
-  // i.src = game.title_path;
-  //$(".allgame_list").append(`<a href="${game.site}>"><span>${game.name}</span></a>`);
   if (game.bg_path) {
     $(".allgame_list ").append(`
     <a href="${game.site}>"><div class="allgamebox">
@@ -121,8 +115,7 @@ function imageSize(img){
   var a  = game_list.filter(game => {
     return game.title_path == img;
   })[0];
-   console.log(a);
-  $("#title_" +  a.game_id).addClass("img_title_straight");
+   $("#title_" +  a.game_id).addClass("img_title_straight");
 
 
 }

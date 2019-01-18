@@ -17,7 +17,7 @@
 
 <body>
 	<?=$layout_content?>
-<div class="bottom_box"></div>
+
 <div class="footer">
 	<div class="footer_container">
 	Long E Co., Ltd © <?=date('Y')?> Copyrights Reserved.
