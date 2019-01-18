@@ -224,7 +224,6 @@ class Service_quick extends MY_Controller {
 			->add_js_include("service_quick/question")
 			->set("games", $games)
 			->set("servers", $servers)
-			->set("result", $result)
 			->set("events", $events)
 			->set("partner_uid", $_SESSION['partner_uid'])
 			->set("server_id", $_SESSION['server_id'])
