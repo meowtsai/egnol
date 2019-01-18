@@ -517,11 +517,14 @@ class Event extends MY_Controller
   function l20na_prereg_count($datetime1){
 
     $base=$this->config->item("l20na_base");
-    $date_array = $this->config->item("l20na_date_array");
-    $hh_array = $this->config->item("l20na_hh_array");
-    $total = 0;
 
-    $datetime2 = date_create($this->config->item("l20na_base_date"));
+    //$date_array = $this->config->item("l20na_date_array");
+
+    $hh_array = $this->config->item("l20na_hh_array");
+    $total = 82225;
+
+    //$datetime2 = date_create($this->config->item("l20na_base_date"));
+    $datetime2 = date_create("2019-01-18 18:19:00");
     $interval = date_diff(date_create($datetime1), $datetime2);
     $is_range = $interval->invert;
     $days = $interval->days;
@@ -532,14 +535,18 @@ class Event extends MY_Controller
     // echo $min."<br />";
     if ($is_range){
 
-        $this_hour = $base*$date_array[$days]*$hh_array[$hh];
-        for ($i=0; $i < ($days>sizeof($date_array)?sizeof($date_array):$days) ; $i++) {
-          $total += $base*$date_array[$i];
+        //$this_hour = $base*$date_array[$days]*$hh_array[$hh];
+        $this_hour = $base*0.001*$hh_array[$hh];
+        //for ($i=0; $i < ($days>sizeof($date_array)?sizeof($date_array):$days) ; $i++) {
+        for ($i=0; $i < $days ; $i++) {
+          //$total += $base*$date_array[$i];
+          $total += $base*0.001;
         }
 
         for ($j=0; $j < $hh; $j++) {
           //echo "j=".$j;
-          $total += $base*$date_array[$days]*$hh_array[$j];
+          //$total += $base*$date_array[$days]*$hh_array[$j];
+          $total += $base*0.001*$hh_array[$j];
         }
         $total += 10*$this_hour/($min>50?10:(60-$min));
 
@@ -556,7 +563,7 @@ class Event extends MY_Controller
   function test_count(){
     //echo $this->l20na_prereg_count("2019-01-15 23:50:00");
   for ($i=0; $i < 60; $i++) {
-    $datetime1 = "2019-01-18 10:".substr("0".$i,-2,2).":00";
+    $datetime1 = "2019-03-16 10:".substr("0".$i,-2,2).":00";
     echo $datetime1;
     echo "<br />";
     echo "<font color='red'>".$this->l20na_prereg_count($datetime1)."</font>";
