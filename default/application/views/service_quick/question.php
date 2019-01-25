@@ -84,7 +84,7 @@
 										<option value="<?=$id?>"><?=$type?></option>
 									<? endforeach;?>
 									<? foreach($events as $e_row):?>
-									<?if ($partner_uid &&( ($e_row->status==1 && now() > $event->begin_time && now() < $event->end_time ) || IN_OFFICE)): ?>
+									<?if ($partner_uid &&( ($e_row->status==1 && now() > $e_row->begin_time && now() < $e_row->end_time ) || IN_OFFICE)): ?>
 									<option value="event_<?=$e_row->id?>" ><?=$e_row->event_name?></option>
 									<? endif;?>
 									<? endforeach;?>
