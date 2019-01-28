@@ -96,6 +96,7 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 					<tr>
 						<td colspan="2">
 							<div class="user_info">
+
 								遊戲： <b><?=$_SESSION['game_name']?></b> <br />
 								活動名稱： <b><?=$event->event_name; ?> </b><br />
 								<input type="hidden" name="event_id" id="event_id" value="<?=$event->id?>">
@@ -108,7 +109,24 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 								角色名稱： <b><?=$char_data->name?> </b><br />
 								角色 ID： <b><?=$char_data->in_game_id?> </b><br />
 
+
+
 								序號：<input type="text" name="serial_no" id="serial_no" size="20" minlength="10" maxlength="30" placeholder="輸入序號" class="input_serial required" autocomplete="off" >
+
+								<? if ($records):?>
+								<div style="width:420px;border:solid 1px black;border-radius: 5px;">
+
+
+								<fieldset style="width:400px;white-space:normal;border:#848484;">
+									<legend><font color='blue'>★以下是已成功兌換品項<br/>(預定 <b>2019/3/15 晚上 23：59 前發送</b>。)</font></legend>
+									<ul style="text-align: left;list-style-type:decimal;line-height:150%;color: #2E2E2E;font-size:smaller;background-color:#F5A9A9;border-radius:5px;">
+										<? foreach ($records as $record ): ?>
+										<li><?=$record->title?>(<b>序號: <?=$record->serial?></b>)</li>
+										<? endforeach; ?>
+									</ul>
+								</fieldset>
+								</div>
+								<?endif?>
 								<hr />
 								<p>
 									<button type="button" name="cmdCancel" onclick="javascript:history.back();this.disabled=true;" class="btn btn-cancel" >取消</button>
@@ -120,16 +138,7 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 					</tr>
 					<tr>
 						<td colspan="2">
-							<? if ($records):?>
-							<fieldset style="width:400px;border-radius: 5px;white-space:normal;border:#848484;">
-								<legend><font color='blue'>已兌換品項(預定 <b>2019/3/15 晚上 23：59 前發送</b>。)</font></legend>
-								<ul style="text-align: left;list-style-type:decimal;line-height:150%;color: #2E2E2E;font-size:smaller;background-color:#F5A9A9;border-radius:5px;">
-									<? foreach ($records as $record ): ?>
-									<li><?=$record->title?>(序號: <?=$record->serial?>)</li>
-									<? endforeach; ?>
-								</ul>
-							</fieldset>
-							<?endif?>
+
 
 								<fieldset style="width:400px;border-radius: 5px;white-space:normal;border:#848484;">
 									<legend>注意事項</legend>
