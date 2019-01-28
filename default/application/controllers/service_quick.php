@@ -1057,8 +1057,8 @@ class Service_quick extends MY_Controller {
 		$try_count = 0;
 		//select count(*) from log_serial_event where status=0 and partner_uid='195335332'
 		$query = $this->db->query("SELECT count(*) as chk FROM log_serial_event WHERE status=0  and char_id='{$char_id}' and event_id={$event_id}");
-		$try_count = (4 - $query->row()->chk);
-		if ($query->row()->chk > 4) die(json_encode(array("status"=>"failure", "message"=>"回報數量已達上限,若有疑問請回報客服!")));
+		$try_count = (9 - $query->row()->chk);
+		if ($query->row()->chk > 9) die(json_encode(array("status"=>"failure", "message"=>"回報數量已達上限,若有疑問請回報客服!")));
 		// select event_sub_id from event_serial where event_id=13 and uid=361257
 		$query = $this->db->query("SELECT group_concat(event_sub_id) as chk_sub_id FROM event_serial WHERE event_id={$event_id} and uid='{$char_id}'");
 		$chk_sub_id = isset($query->row()->chk_sub_id)? $query->row()->chk_sub_id:0;
