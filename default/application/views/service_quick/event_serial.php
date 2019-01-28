@@ -123,7 +123,7 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 							<? if ($records):?>
 							<fieldset style="width:400px;border-radius: 5px;white-space:normal;border:#848484;">
 								<legend><font color='blue'>已兌換品項(預定 <b>2019/3/15 晚上 23：59 前發送</b>。)</font></legend>
-								<ul style="text-align: left;list-style-type:decimal;line-height:150%;color: #2E2E2E;font-size:smaller;">
+								<ul style="text-align: left;list-style-type:decimal;line-height:150%;color: #2E2E2E;font-size:smaller;background-color:#F5A9A9;border-radius:5px;">
 									<? foreach ($records as $record ): ?>
 									<li><?=$record->title?>(序號: <?=$record->serial?>)</li>
 									<? endforeach; ?>
@@ -212,7 +212,7 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 							var timer = setTimeout(function() {
 								 window.location='/service_quick/event_serial?event_id=<?=$event->id?>'
 
-						 }, 2000);
+						 }, 1000);
 						}
 						else
 						{
