@@ -14,7 +14,6 @@ $(function()
 	        digits: "只能輸入整數",
 	        creditcard: "請輸入合法的信用卡號",
 	        equalTo: "請再次輸入相同的值",
-	        accept: "請輸入擁有合法後綴名的字符串",
 	        maxlength: jQuery.format("請輸入一個長度最多是 {0} 的字符串"),
 	        minlength: jQuery.format("請輸入一個長度最少是 {0} 的字符串"),
 	        rangelength: jQuery.format("請輸入一個長度介於 {0} 和 {1} 之間的字符串"),
