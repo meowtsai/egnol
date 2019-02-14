@@ -74,7 +74,7 @@ for (var i = 0; i < game_list.length; i++) {
   var cls ="img_title_horizontal";
   if (game.bg_path) {
     $(".allgame_list ").append(`
-    <a href="${game.site}>"><div class="allgamebox">
+    <a href="${game.site}"><div class="allgamebox">
       <div class="allgames_img" style="background-image: url(${game.bg_path})">
         <div id="title_${game.game_id}" class="${cls}" style="background-image: url(${game.title_path})"></div>
       </div>
