@@ -133,8 +133,11 @@ body {font-family: "PingFangTC-Light","Microsoft JhengHei","Helvetica Neue","Hei
 					</tr>
 					<tr>
 						<td colspan="2">
-						<button type="button" name="cmdCancel" onclick="javascript:history.back();this.disabled=true;" class="btn btn-cancel" >取消</button>
-						<button type="submit" name="cmdSubmit"  class="btn pull-right">下一步</button>
+							<div class="" style="background-color:#FA5858;color:#ffffff;font-weight:bold;border-radius:3px;text-align:center;padding:5px;">
+									【序號可兌換期限至 2019/2/25 晚上 23：59 止，已申請兌換者請耐心等候配發喔！】
+							</div>
+						<!-- <button type="button" name="cmdCancel" onclick="javascript:history.back();this.disabled=true;" class="btn btn-cancel" >取消</button>
+						<button type="submit" name="cmdSubmit"  class="btn pull-right">下一步</button> -->
 						<hr />
 						</td>
 					</tr>
