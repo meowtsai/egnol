@@ -108,7 +108,7 @@
 			</tr>`);
 		$("#list_table").append($tr);
 
-    csvData += `${userList[i].partner_uid},${userList[i].name},${userList[i].in_game_id},${userList[i].serial},${userList[i].dt},${userList[i].event_sub_id} - ${userList[i].title}\n`;
+    csvData += `${userList[i].partner_uid},"${userList[i].name}",${userList[i].in_game_id},${userList[i].serial},${userList[i].dt},${userList[i].event_sub_id} - ${userList[i].title}\n`;
 	}
   var curPage = 1;
   var page_size=50;
