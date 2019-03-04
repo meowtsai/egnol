@@ -202,10 +202,10 @@ success: function (data) {
 
 } });
 
-	$( "select[name='question_type']" ).change(function(){
+	$( "input[name='question_type']" ).change(function(){
 		var hint_text = "";
 		$("#div_hint").hide();
-		var sel = $( "select[name='question_type']" ).val();
+		var sel = $( "input[name='question_type']:checked" ).val();
 
 		if (sel.substring(0,6)==='event_'){
 			//console.log(sel.replace('event_',''));
@@ -216,7 +216,7 @@ success: function (data) {
 		}
 
 		if (sel==='Yahoo'){
-			$( "select[name='question_type']" ).val('');
+			$( "input[name='question_type']" ).val('');
 			location.href = '/service_quick/yahoo_event';
 
 			return;
