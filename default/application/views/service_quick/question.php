@@ -1,5 +1,29 @@
 <style>
 .pic_input { color:#000; }
+/* .form_radio {
+	height: 1rem!important;
+	width: 2rem!important;
+	display: flex!important;
+	float:left;
+} */
+.wrapper-class {
+	display: inline;
+	margin-left: 5px;
+}
+.wrapper-class input[type="radio"] {
+  width: 15px;
+}
+
+.form-check-inline {
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -ms-flex-align: center;
+    align-items: center;
+    padding-left: 0;
+    margin-right: .75rem;
+		height: 1rem!important;
+}
+
 </style>
 <div id="content-login">
 	<div class="login-ins">
@@ -73,24 +97,29 @@
                         <? endif;?>
 					</tr>
 					<tr>
-						<th>問題類型</th>
-						<td>
-							<select name="question_type" class="required" style="width:90%;">
-								<option value="">--請選擇--</option>
-								<? if ($evt_code):?>
-									<option value="e" selected><?=$this->config->item("question_type")["e"];?></option>
-								<?else:?>
-									<? foreach($events as $e_row):?>
-									<?if ($partner_uid &&( ($e_row->status==1 && now() > $e_row->begin_time && now() < $e_row->end_time ) || IN_OFFICE)): ?>
-									<option value="event_<?=$e_row->id?>" ><?=$e_row->event_name?></option>
-									<? endif;?>
-									<? endforeach;?>
-									<? foreach($this->config->item("question_type") as $id => $type):?>
-										<option value="<?=$id?>"><?=$type?></option>
-									<? endforeach;?>
+						<th style="vertical-align:top;">問題類型</th>
+						<td style="white-space:normal;">
+							<div class="wrapper-class">
+							<? if ($evt_code):?>
+								<input type="radio" class="form_radio" name="question_type" value="e" checked> <?=$this->config->item("question_type")["e"];?> <br>
+							<?else:?>
+								<? foreach($events as $e_row):?>
+								<?if ($partner_uid &&( ($e_row->status==1 && now() > $e_row->begin_time && now() < $e_row->end_time ) || IN_OFFICE)): ?>
+								<div class="form-check-inline">
+									<input type="radio" class="form_radio" name="question_type" value="event_<?=$e_row->id?>" > <?=$e_row->event_name?> <br>
+								</div>
+								<? endif;?>
+								<? endforeach;?>
+								<? foreach($this->config->item("question_type") as $id => $type):?>
+								<div class="form-check-inline">
+									<input type="radio" class="form_radio" name="question_type" value="<?=$id?>" > <?=$type?> <br>
+								</div>
+								<? endforeach;?>
 
-									<? endif;?>
-							</select>
+								<? endif;?>
+							</div>
+
+
 						</td>
 					<tr>
 						<th>問題描述</th><td><textarea name="content" class="required" minlength="5" maxlength="500"></textarea></td>
@@ -111,7 +140,7 @@
 					//if (!$is_ingame ):
 					?>
 					<tr>
-						<th>圖片附件</th><td style="white-space:pre-wrap;"><img src="<?=$longe_url?>p/image/server/server-pic-btn1.png" class="pic_btn"> <input type="file" name="file01" class="pic_input"  /></td>
+						<th>圖片附件</th><td style="white-space:pre-wrap;"><img src="<?=$longe_url?>p/image/server/server-pic-btn1.png" class="pic_btn"> <input type="file" name="file01" class="pic_input"/></td>
 					</tr>
 					<tr>
 						<th>&nbsp;</th><td style="white-space:pre-wrap;"><img src="<?=$longe_url?>p/image/server/server-pic-btn2.png" class="pic_btn"> <input type="file" name="file02" class="pic_input" ></td>

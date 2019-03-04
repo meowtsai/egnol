@@ -14,12 +14,12 @@ class Faq extends MY_Controller {
 		//die("維護中");
 		$site = $this->_get_site();
 
-		$user_ip = $_SERVER['REMOTE_ADDR'];
-		//$this->db->from("games")->where("is_active", "1");
-		if ($user_ip=="61.220.44.200" && $site=="h55naFAQ"){
-			header("Location: http://test-payment.longeplay.com.tw/service_quick?game_id=h55naxx2tw&partner_uid=195335332&in_game_id=7281371&server_name=server_h55tw&character_name=%E5%AF%B6%E5%AF%B6%E7%95%AB%E7%95%AB%E5%B8%B3&usr_device=Android&app_ver=1.0.214838&key=2a5812c93ea06a6f8da4428c6912a015");
-			die();
-		}
+		// $user_ip = $_SERVER['REMOTE_ADDR'];
+		// //$this->db->from("games")->where("is_active", "1");
+		// if ($user_ip=="61.220.44.200" && $site=="h55naFAQ"){
+		// 	header("Location: http://test-payment.longeplay.com.tw/service_quick?game_id=h55naxx2tw&partner_uid=195335332&in_game_id=7281371&server_name=server_h55tw&character_name=%E5%AF%B6%E5%AF%B6%E7%95%AB%E7%95%AB%E5%B8%B3&usr_device=Android&app_ver=1.0.214838&key=2a5812c93ea06a6f8da4428c6912a015");
+		// 	die();
+		// }
 
 
 		$bodyonly = true; //$this->input->get_post("bodyonly");

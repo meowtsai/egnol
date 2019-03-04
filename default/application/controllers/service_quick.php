@@ -202,15 +202,13 @@ class Service_quick extends MY_Controller {
 	{
 
 
-
-
 		//$this->_require_login();
 		$site = $this->_get_site();
-		$user_ip = $_SERVER['REMOTE_ADDR'];
-		if ($user_ip=="61.220.44.200"){
-			header("Location: /service_quick/question_internal?site=$site");
-			die();
-		}
+		// $user_ip = $_SERVER['REMOTE_ADDR'];
+		// if ($user_ip=="61.220.44.200"){
+		// 	header("Location: /service_quick/question_internal?site=$site");
+		// 	die();
+		// }
 
 		$server = $this->db->from("servers gi")
 			->join("games g", "gi.game_id=g.game_id")->get();
@@ -1121,48 +1119,5 @@ class Service_quick extends MY_Controller {
 
 	}
 
-	function question_internal()
-	{
-
-
-
-
-		//$this->_require_login();
-		$site = $this->_get_site();
-
-
-		$server = $this->db->from("servers gi")
-			->join("games g", "gi.game_id=g.game_id")->get();
-
-
-		$games = $this->db->from("games")->where("is_active", "1")->get();
-		//$games = $this->db->from("games")->where_in("is_active", array("1", "2"))->get();
-
-
-		$servers = $this->db->where_in("server_status", array("public", "private"))->order_by("server_id")->get("servers");
-
-		//$result = $this->get_event_status(11);
-
-		//[{"id":"11","event_name":"\u7b2c\u4e94\u4eba\u683c yahoo \u626d\u86cb\u6d3b\u52d5","begin_time":"2018-12-03 10:00:00","end_time":"2018-12-31 23:59:59"},{"id":"13","event_name":"Google Play x \u7b2c\u4e94\u4eba\u683c","begin_time":"2018-12-03 10:00:00","end_time":"2019-02-28 23:59:59"}]
-		$events = $this->get_events($site);
-
-    $is_ingame = ($_SESSION['vendor_game_id']) ? 1 : 0;
-
-		$this->_init_layout("客服中心")
-			->add_js_include("jquery.blockUI")
-			->add_js_include("service_quick/question")
-			->set("games", $games)
-			->set("servers", $servers)
-			->set("events", $events)
-			->set("partner_uid", $_SESSION['partner_uid'])
-			->set("server_id", $_SESSION['server_id'])
-			->set("server_name", $_SESSION['server_name'])
-			->set("character_name", $_SESSION['character_name'])
-			->set("evt_code", $_SESSION['evt_code'])
-			->set("is_ingame", $is_ingame)
-			->add_css_link("login")
-			->add_css_link("money")
-			->add_css_link("server")
-			->mobile_view();
-	}
+	
 }
