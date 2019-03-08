@@ -218,7 +218,14 @@ class Service_quick extends MY_Controller {
 		//$games = $this->db->from("games")->where_in("is_active", array("1", "2"))->get();
 
 
-		$servers = $this->db->where_in("server_status", array("public", "private"))->order_by("name", "desc")->get("servers");
+		$this->db->from("servers")->where_in("server_status", array("public", "private"));
+		if ($site=='LRE') {
+				$this->db->order_by("name", "desc");
+		}
+		else {
+			$this->db->order_by("server_id");
+		}
+		$servers = $this->db->get();
 
 		//$result = $this->get_event_status(11);
 
