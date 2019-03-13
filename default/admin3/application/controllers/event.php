@@ -363,6 +363,36 @@ class Event extends MY_Controller {
 
 	}
 
+	function h54_preregister()
+	{
+
+		$this->_init_layout();
+		$result = null ;
+		$event_id = 16;
+
+		$summary = $this->db->query("Select DATE_FORMAT(create_time,'%Y-%m-%d') as dDate,count(id) as count from event_preregister
+		where event_id={$event_id}
+    group by DATE_FORMAT(create_time,'%Y-%m-%d') order by DATE_FORMAT(create_time,'%Y-%m-%d') desc, count(id) desc");
+
+    $summary_country = $this->db->query("Select country,count(id) as count from event_preregister where event_id={$event_id} group by country order by count(id) desc");
+
+
+		$result = $this->DB2
+			->select("a.id,a.nick_name,a.create_time,a.update_time,a.email,a.ip,a.country,")
+			->from("event_preregister a")
+			->where("event_id",$event_id)
+			->get();
+
+			//->select("(select concat(sum(case when status=1 then 1 else 0 end),'/',count(*)) as item_status from l20na_detail where o_id in (select id from l20na_orders where event_uid=a.id)) as item_status",FALSE)
+
+
+		$this->g_layout
+			->add_breadcrumb("海島紀元預註冊")
+			->set("result", isset($result) ? $result : false)
+			->set("summary", isset($summary) ? $summary : false)
+			->set("summary_country", isset($summary_country) ? $summary_country : false)
+      ->render();
+	}
 }
 
 /* End of file welcome.php */
