@@ -172,6 +172,7 @@ a:visited{
 .gametitle {
     font-weight: 300;
 	font-size: 30px;
+  text-shadow: rgba(0, 0, 0, 0.7) 2px 3px 5px;
 }
 
 
@@ -191,6 +192,7 @@ a:visited{
 	color:#CFCDCD;
 	font-size:16px;
 	letter-spacing: 2px;
+  text-shadow: rgba(0, 0, 0, 0.7) 2px 3px 5px;
 }
 /*mb_gamestyle*/
 .game_container {
@@ -662,11 +664,9 @@ a:visited{
 	.gametitle {
 		font-weight: 300;
 		font-size: 40px;
-    text-shadow: rgba(0, 0, 0, 0.7) 2px 3px 5px;
 	}
 	.gametext{
 		display: block;
-    text-shadow: rgba(0, 0, 0, 0.7) 2px 3px 5px; 
 	}
 
 	.homebutton {
