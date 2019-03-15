@@ -235,6 +235,7 @@ class Game extends MY_Controller {
 				'fanpage' => $this->input->post("fanpage"),
 				'site' => $this->input->post("site"),
 				'logo_path'=> $logo_path,
+				'title_path'=> $title_path,
 				'bg_path'=> $bg_path,
 				'slogan' => $this->input->post("slogan"),
 			);
@@ -263,6 +264,7 @@ class Game extends MY_Controller {
 				die("無此遊戲");
 			}
 			else {
+
 				$row = $query->row();
 			}
 		} else {
