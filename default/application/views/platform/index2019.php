@@ -73,18 +73,34 @@ for (var i = 0; i < game_list.length; i++) {
   var game = game_list[i];
   var cls ="img_title_horizontal";
   if (game.bg_path) {
-    $(".allgame_list ").append(`
-    <a href="${game.site}"><div class="allgamebox">
-      <div class="allgames_img" style="background-image: url(${game.bg_path})">
-        <div id="title_${game.game_id}" class="${cls}" style="background-image: url(${game.title_path})"></div>
-      </div>
-      <span>${game.name}</span>
-      <div class="box_detail">
-      ${game.site ? `<a href="${game.site}" target="_blank"><div class="allgame_home">前往官網</div></a>` : ''}
-      ${game.fanpage ? `<a href="${game.fanpage}" target="_blank"><div class="allgame_fb">facebook</div></a>`:''}
-      </div>
-    </div>
-    </a>`);
+    var strToAppend = "<a href='" + game.site +"'><div class='allgamebox'>"
+      +"<div class='allgames_img' style='background-image: url(" + game.bg_path + ")'>"
+      +"<div id='title_" + game.game_id +"' class='" + cls + "' style='background-image: url("+game.title_path+")'></div>"
+      + "</div>"
+      + "<span>" + game.name +"</span>"
+      + "<div class='box_detail'>";
+      if (game.site) {
+        strToAppend += "<a href='" + game.site + "' target='_blank'><div class='allgame_home'>前往官網</div></a>";
+      }
+      if (game.fanpage) {
+        strToAppend += "<a href='" + game.fanpage + "' target='_blank'><div class='allgame_fb'>facebook</div></a>";
+      }
+      strToAppend +="</div></div></a>";
+
+    $(".allgame_list ").append(strToAppend);
+
+    // $(".allgame_list ").append(`
+    // <a href="${game.site}"><div class="allgamebox">
+    //   <div class="allgames_img" style="background-image: url(${game.bg_path})">
+    //     <div id="title_${game.game_id}" class="${cls}" style="background-image: url(${game.title_path})"></div>
+    //   </div>
+    //   <span>${game.name}</span>
+    //   <div class="box_detail">
+    //   ${game.site ? `<a href="${game.site}" target="_blank"><div class="allgame_home">前往官網</div></a>` : ''}
+    //   ${game.fanpage ? `<a href="${game.fanpage}" target="_blank"><div class="allgame_fb">facebook</div></a>`:''}
+    //   </div>
+    // </div>
+    // </a>`);
   }
 
 
@@ -112,7 +128,7 @@ for (var j = 0; j < src.length; j++) {
 }
 
 function imageSize(img){
-  var a  = game_list.filter(game => {
+  var a  = game_list.filter(function(game){
     return game.title_path == img;
   })[0];
    $("#title_" +  a.game_id).addClass("img_title_straight");
