@@ -41,7 +41,6 @@ class Service_quick extends MY_Controller {
 				$key_string	= $this->input->get_post("key");
 				$key	= $this->config->item("question_key")[$vendor_game_id];
 
-				//echo $_SERVER['SERVER_NAME'];
 
 				$diffgame	= $this->input->get("param_game_id");
 				$evt_code	= $this->input->get("evt_code");
@@ -86,7 +85,8 @@ class Service_quick extends MY_Controller {
 						//echo "urlencode".urlencode($character_name).'<br />';
 						// echo rawurlencode($usr_device).'<br />';
 
-						$str_to_encrypt = "game_id={$vendor_game_id}&partner_uid={$partner_uid}&in_game_id={$in_game_id}&server_name={$encode_server_name}&character_name={$encode_c_name}&level={$level}&usr_device={$usr_device}&os_ver={$os_ver}&app_ver={$app_ver}&time_zone={$time_zone}&network={$network}&key={$key}";
+						//$str_to_encrypt = "game_id={$vendor_game_id}&partner_uid={$partner_uid}&in_game_id={$in_game_id}&server_name={$encode_server_name}&character_name={$encode_c_name}&level={$level}&usr_device={$usr_device}&os_ver={$os_ver}&app_ver={$app_ver}&time_zone={$time_zone}&network={$network}&key={$key}";
+						$str_to_encrypt = "game_id={$vendor_game_id}&partner_uid={$partner_uid}&in_game_id={$in_game_id}&server_name={$encode_server_name}&character_name={$encode_c_name}&level={$level}&usr_device={$usr_device}&os_ver={$os_ver}&app_ver={$app_ver}&network={$network}&key={$key}";
 						//echo $str_to_encrypt.'<br />';
 				    $sig = MD5($str_to_encrypt);
 
