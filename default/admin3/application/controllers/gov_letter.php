@@ -99,6 +99,7 @@ class Gov_letter extends MY_Controller {
 		else {
 			$check_dup = $this->DB2->get();
 		}
+
 		$cnt =  $check_dup->result()[0]->cnt;
 		if ($cnt>0){
 			//.$this->DB2->last_query()
@@ -108,7 +109,7 @@ class Gov_letter extends MY_Controller {
 		$file_path="";
 		if ( ! empty($_FILES["file01"]['name']))
 		{
-			$this->load->library('upload', array("upload_path"=>realpath("p/upload/gov_letters"), "allowed_types"=>"*", 'encrypt_name'=>TRUE));
+			$this->load->library('upload', array("upload_path"=>realpath("p/upload/gov_letters"), "allowed_types"=>"*", 'encrypt_name'=>TRUE, 'max_size'=>'10240'));
 
 			if ( ! $this->upload->do_upload("file01"))
 			{
