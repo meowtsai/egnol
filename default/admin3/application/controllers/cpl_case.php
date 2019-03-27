@@ -416,6 +416,10 @@ function add_ref_case_json(){
 			->where("case_id", $id)
 			->delete("cpl_mediations");
 		$this->DB1
+			->where("case_id", $id)
+			->delete("cpl_attachments");
+
+		$this->DB1
 			->where("id", $id)
 			->delete("cpl_cases");
 		if ($this->DB1->affected_rows() > 0) echo json_success();
