@@ -79,7 +79,7 @@ class Service_quick extends MY_Controller {
 						$encode_server_name =urlencode($server_name);
 						$encode_c_name =urlencode($character_name);
 						$os_ver =urlencode($os_ver);
-						
+
 						//$in_game_id=urlencode($in_game_id);
 						//$usr_device =rawurlencode($usr_device);
 
@@ -217,6 +217,8 @@ class Service_quick extends MY_Controller {
 
 
 		$games = $this->db->from("games")->where("is_active", "1")->get();
+		$game_info = $this->db->from("games")->where("vendor_game_id", $site)->get()->row();
+		$_SESSION['game_name']	= $game_info->name;
 		//$games = $this->db->from("games")->where_in("is_active", array("1", "2"))->get();
 
 
