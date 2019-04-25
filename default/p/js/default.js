@@ -256,6 +256,10 @@ function checkMobileRegion(value)
 	if (/^65[6|8|9]\d{7}$/.test(phone))
 		return "sg";
 
+		if (/^861[0-9]{10}$/.test(phone))
+			return "cn";
+
+
 	return 'undefined';
 }
 
