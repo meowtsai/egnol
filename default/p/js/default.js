@@ -39,7 +39,7 @@ $(function()
 			var reg = /^\d{10,12}$/;
 			return this.optional(element) || (reg.test(value));
 			*/
-		}, "請輸入正確的手機號碼(港澳新馬地區請加上國際碼)");
+		}, "請輸入正確的手機號碼(中港澳新馬地區請加上國際碼,不需+號)");
 
 		// 電話號碼驗證
 		jQuery.validator.addMethod("isPhone", function(value, element)
