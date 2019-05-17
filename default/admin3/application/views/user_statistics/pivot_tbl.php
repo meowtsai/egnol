@@ -29,31 +29,31 @@
 
 
 <script type="text/javascript">
-
-const TODAY = $.datepicker.formatDate('yy-mm-dd', new Date());
-$(function(){
-  var getDate = $("#date").val();
-  //console.log();
-  $("#date").datepicker({
-    changeMonth: true,
-    changeYear: true
-  });
-  $( "#date" ).datepicker("option", "dateFormat", "yy-mm-dd");
-
-  if (!getDate){
-    getDate =  $.datepicker.formatDate('yy-mm-dd', new Date());
-  }
-
-
-  $("#date").val(getDate);
-  //$( "#date" ).datepicker( "option", "defaultDate", -7 );
-
-//console.log($("#date").val());
-
-get_data(TODAY);
-
-
-});
+$(".lbl_loading").hide();
+// const TODAY = $.datepicker.formatDate('yy-mm-dd', new Date());
+// $(function(){
+//   var getDate = $("#date").val();
+//   //console.log();
+//   $("#date").datepicker({
+//     changeMonth: true,
+//     changeYear: true
+//   });
+//   $( "#date" ).datepicker("option", "dateFormat", "yy-mm-dd");
+//
+//   if (!getDate){
+//     getDate =  $.datepicker.formatDate('yy-mm-dd', new Date());
+//   }
+//
+//
+//   $("#date").val(getDate);
+//   //$( "#date" ).datepicker( "option", "defaultDate", -7 );
+//
+// //console.log($("#date").val());
+//
+// get_data(TODAY);
+//
+//
+// });
 
 //http://test-payment.longeplay.com.tw/default/admin3/service/hourly_count_json?date=2018-10-29
 
@@ -87,7 +87,7 @@ function get_data(date)
     url: url,
     data: "date=" + date,
   }).done(function(result) {
-    console.log( "Request done: " + result );
+    //console.log( "Request done: " + result );
 		$(".lbl_loading").hide();
 		let obj = JSON.parse(result);
 		var derivers = $.pivotUtilities.derivers;

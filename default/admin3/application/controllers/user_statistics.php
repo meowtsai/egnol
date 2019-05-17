@@ -34,6 +34,8 @@ class User_statistics extends MY_Controller {
 			->add_breadcrumb("統計", "statistics");
 	}
 
+
+
     function game_consumes() {
 		$this->zacl->check_login(true);
 
@@ -1336,7 +1338,13 @@ function whale_users_set_lastlogin()
 
 	}
 
+
+
 	function pivot_tbl(){
+
+		$this->zacl->check_login(false);
+
+		
 
 		$m_sql="select DATE_FORMAT(create_time,'%Y-%m') as month
 		from questions
@@ -1345,9 +1353,7 @@ function whale_users_set_lastlogin()
 
 		$month_data = $this->DB2->query($m_sql)->result();
 
-		$this->_init_statistics_layout()
-			->add_breadcrumb("[時間別]統計")
-			->add_css_link('pivot')
+		$this->_init_layout()->add_css_link('pivot')
 			->add_js_include("@pivot/dist/pivot")
 			->add_js_include("jquery-ui-timepicker-addon")
 			->set("month_data", $month_data)
