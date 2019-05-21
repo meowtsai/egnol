@@ -586,16 +586,13 @@ class Service extends MY_Controller {
 					$content = "編號,遊戲,角色名稱,提問類型,描述,原廠uid,狀態,處理人,日期\n";
 					foreach($query->result() as $row) {
 						$content .= "{$row->id},{$row->game_name},";
-						$content .= "{$row->character_name}($row->server_name)";
-						// if (($row->partner_uid && !$row->uid && !$row->in_game_name) || !$row->partner_uid)
-						// {
-						// 	$content .="(玩家填寫)";
-						// }
+						
+						$content .= '"'.$row->character_name.'('.$row->server_name.')';
 						if ($row->is_in_game =='0')
 						{
 							$content .="(玩家填寫)";
 						}
-						$content .= ",";
+						$content .= '",';
 						$content .= "{$question_type[$row->type]},";
 						//'\"' +  content.replace('\n', '').replace('<br />', ' , ').encode('utf-8') + '\"' ,
 						$content .= '"'. strip_tags($row->content).'",';
