@@ -620,7 +620,8 @@ class Service extends MY_Controller {
 						//$question_type = $this->config->item('question_type');
 
 					}
-					echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
+					//echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
+					echo mb_convert_encoding($content, "UTF-8", "auto"); //原始編碼不明，通過auto自動檢測，轉換UTF-8
 					exit();
 					break;
 			}
