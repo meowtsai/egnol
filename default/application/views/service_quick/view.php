@@ -186,6 +186,7 @@
           <? //endif;?>
 
 					<div style="text-align:center; margin-top:20px;">
+            <div class="g-recaptcha" data-sitekey="6LefP6UUAAAAAA0qZDJrLhODhk6vP0X6Gx--zbQ1"></div>
 						<a href="javascript:;" onclick="$('form').submit()"><span style="background-position:-480px 0; height:50px; width:227px; display:inline-block;" class="items">填好了，送出!</span></a>
 					</div>
 					</form>
@@ -206,3 +207,4 @@
 		</div>
 	</div>
 </div>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
