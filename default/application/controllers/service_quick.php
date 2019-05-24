@@ -8,10 +8,10 @@ class Service_quick extends MY_Controller {
 		parent::__construct();
 		$this->load->config("service");
 
-		$ip = $_SERVER['REMOTE_ADDR'];
-		if ($ip =="103.123.0.6" ){
-			die();
-		}
+		// $ip = $_SERVER['REMOTE_ADDR'];
+		// if ($ip =="103.123.0.6" ){
+		// 	die();
+		// }
 
 	}
 
@@ -266,9 +266,39 @@ class Service_quick extends MY_Controller {
 	function question_ajax()
 	{
 		$ip = $_SERVER['REMOTE_ADDR'];
-		if ($ip =="103.123.0.6" ){
-			die();
-		}
+
+
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL,"https://www.google.com/recaptcha/api/siteverify");
+		curl_setopt($ch, CURLOPT_POST, TRUE);
+		curl_setopt($ch, CURLOPT_POSTFIELDS,
+								http_build_query(array('secret' => '6LefP6UUAAAAAII1VSYnPPfFBFOy131pz0L9c7kX', 'response' =>$this->input->post("g-recaptcha-response")  , 'remoteip' => $ip )));
+
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		$server_output = curl_exec ($ch);
+
+		curl_close ($ch);
+
+		//{ "success": false, "error-codes": [ "invalid-input-response" ] }
+		//{ "success": true, "challenge_ts": "2019-05-24T07:56:36Z", "hostname": "test-payment.longeplay.com.tw" }
+//echo $server_output;
+
+
+// $server_output ='{"success": false, "error-codes":["invalid-input-response"]}';
+// $server_output ='{ "success": true, "challenge_ts": "2019-05-24T07:56:36Z", "hostname": "test-payment.longeplay.com.tw" }';
+//echo $server_output;
+	$google_response = json_decode($server_output);
+//{ "success": false, "error-codes": [ "invalid-input-response" ] }Array ( [success] => [error-codes] => Array ( [0] => invalid-input-response ) )
+//echo "<br />hello".$google_response->{'success'};
+
+if (!$google_response->{'success'}) {
+	die(json_encode(array("status"=>"failure", "message"=>"Are you a robot?")));
+}
+
+
+
 
 
 

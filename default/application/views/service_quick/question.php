@@ -31,6 +31,7 @@
 			<a href="<?=$longe_url?>service_quick?site=<?=$site?>" title="客服中心" rel="v:url" property="v:title">客服中心</a> > <a href="<?=$longe_url?>service_quick/question?site=<?=$site?>" title="線上回報" rel="v:url" property="v:title">線上回報</a>
 		</div>
 		<form id="question_form" enctype="multipart/form-data" method="post" action="<?=$longe_url?>service_quick/question_ajax?site=<?=$site?>">
+
 			<div class="login-form">
 				<table class="member_info">
                     <? if (!$partner_uid):?>
@@ -164,12 +165,16 @@
 
 					<tr>
 						<td style="white-space:pre-wrap;" colspan="2">
-            <div class="notes" style="text-align:center;padding:5px;">提醒您：若無法選取檔案回報，請直接利用官網線上提問，謝謝。</div></td>
+            <div class="notes" style="text-align:center;padding:5px;">提醒您：若無法選取檔案回報，請直接利用官網線上提問，謝謝。</div>
+<div class="g-recaptcha" data-sitekey="6LefP6UUAAAAAA0qZDJrLhODhk6vP0X6Gx--zbQ1"></div>
+					</td>
+
           </tr>
 
 				</table>
 				<div class="login-button">
 					<p>
+
 						<input name="doSubmit" type="submit" id="doSubmit" value="" style="display:none;" />
                         <img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-back-btn1.png" class="button_submit" onclick="javascript:$('#doSubmit').trigger('click');this.disabled=true;"/>&nbsp;
 						<img style="cursor:pointer;" src="<?=$longe_url?>p/image/server/server-back-btn2.png" class="button_submit" onclick="javascript:history.back();this.disabled=true;" />
@@ -179,7 +184,7 @@
 		</form>
 	</div>
 </div>
-
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 <?
 $user_ip = $_SERVER['REMOTE_ADDR'];
 //if ($user_ip=="61.220.44.200"):
