@@ -273,7 +273,7 @@ class Service_quick extends MY_Controller {
 		curl_setopt($ch, CURLOPT_URL,"https://www.google.com/recaptcha/api/siteverify");
 		curl_setopt($ch, CURLOPT_POST, TRUE);
 		curl_setopt($ch, CURLOPT_POSTFIELDS,
-								http_build_query(array('secret' => '6LefP6UUAAAAAII1VSYnPPfFBFOy131pz0L9c7kX', 'response' =>$this->input->post("g-recaptcha-response")  , 'remoteip' => $ip )));
+								http_build_query(array('secret' => $this->config->item("recaptcha_key"), 'response' =>$this->input->post("g-recaptcha-response")  , 'remoteip' => $ip )));
 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -294,7 +294,7 @@ class Service_quick extends MY_Controller {
 //echo "<br />hello".$google_response->{'success'};
 
 if (!$google_response->{'success'}) {
-	die(json_encode(array("status"=>"failure", "message"=>"Are you a robot?")));
+	die(json_encode(array("status"=>"failure", "message"=>"你是機器人嗎?")));
 }
 
 
@@ -779,7 +779,7 @@ if (!$google_response->{'success'}) {
 		curl_setopt($ch, CURLOPT_URL,"https://www.google.com/recaptcha/api/siteverify");
 		curl_setopt($ch, CURLOPT_POST, TRUE);
 		curl_setopt($ch, CURLOPT_POSTFIELDS,
-								http_build_query(array('secret' => '6LefP6UUAAAAAII1VSYnPPfFBFOy131pz0L9c7kX', 'response' =>$this->input->post("g-recaptcha-response")  , 'remoteip' => $ip )));
+								http_build_query(array('secret' => $this->config->item("recaptcha_key"), 'response' =>$this->input->post("g-recaptcha-response")  , 'remoteip' => $ip )));
 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
@@ -790,7 +790,7 @@ if (!$google_response->{'success'}) {
 	$google_response = json_decode($server_output);
 
 if (!$google_response->{'success'}) {
-	die(json_encode(array("status"=>"failure", "message"=>"Are you a robot?")));
+	die(json_encode(array("status"=>"failure", "message"=>"你是機器人嗎?")));
 }
 
 
