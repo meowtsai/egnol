@@ -4,8 +4,15 @@ class Service_quick extends MY_Controller {
 
 	function __construct()
 	{
+
 		parent::__construct();
 		$this->load->config("service");
+
+		$ip = $_SERVER['REMOTE_ADDR'];
+		if ($ip =="103.123.0.6" ){
+			die();
+		}
+
 	}
 
 	function index()
@@ -258,6 +265,13 @@ class Service_quick extends MY_Controller {
 
 	function question_ajax()
 	{
+		$ip = $_SERVER['REMOTE_ADDR'];
+		if ($ip =="103.123.0.6" ){
+			die();
+		}
+
+
+
 		$site = $this->_get_site();
 
 		if (isset($_SERVER["CONTENT_LENGTH"]))
@@ -294,7 +308,8 @@ class Service_quick extends MY_Controller {
 			log_message('error', '提問單可能含有冷僻字元:'.$post_character_name.':'.$post_content);
 			//die(json_encode(array("status"=>"failure", "message"=>"可能含有冷僻字元,請移除不合法字元.")));
 		}
-		$ip = $_SERVER['REMOTE_ADDR'];
+
+
 
 		if (!IN_OFFICE){
 			$query = $this->db->query("SELECT count(*) as chk FROM questions
