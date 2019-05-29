@@ -586,7 +586,6 @@ class Service extends MY_Controller {
 					$content = "編號,遊戲,角色名稱,提問類型,描述,原廠uid,狀態,處理人,日期\n";
 					foreach($query->result() as $row) {
 						$content .= "{$row->id},{$row->game_name},";
-						
 						$content .= '"'.$row->character_name.'('.$row->server_name.')';
 						if ($row->is_in_game =='0')
 						{
@@ -700,7 +699,7 @@ class Service extends MY_Controller {
 		// }
 
 
-		$question = $this->DB2->select("q.*, g.name as game_name, gi.name as server_name, u.mobile, u.email user_email, u.external_id, u.uid, au.name allocate_user_name, c.in_game_id, c.name as in_game_name, aux.name close_admin_name")
+		$question = $this->DB2->select("q.*, g.name as game_name, g.game_id as game_id,gi.name as server_name, u.mobile, u.email user_email, u.external_id, u.uid, au.name allocate_user_name, c.in_game_id, c.name as in_game_name, aux.name close_admin_name")
 			->select("(select count(*) from `question_favorites` where question_id={$id} and admin_uid={$_SESSION['admin_uid']}) as is_favorite",FALSE)
 			->where("q.id", $id)
 			->from("questions q")
@@ -882,6 +881,8 @@ class Service extends MY_Controller {
 	function modify_reply_json()
 	{
 		$question_id = $this->input->post("question_id");
+
+
 		$id = $this->input->post("reply_id");
 		$post_content = mysql_real_escape_string(nl2br($this->input->post("content")));
 
@@ -916,6 +917,42 @@ class Service extends MY_Controller {
 			$this->DB1->set("update_time", "now()", false)
 				->where("id", $question_id)->update("questions",
 					array("is_read"=>'0', "status"=>'2', 'admin_uid'=>$_SESSION['admin_uid']));
+
+					//2019-05- 17 add reply mail if user email exist
+					$email = $this->input->post("email");
+					$game_name = $this->input->post("game_name");
+					$game_id = $this->input->post("game_id");
+					$check_id = $this->input->post("check_id");
+					$is_in_game = $this->input->post("is_in_game");
+					$ip = $this->input->post("ip");
+
+
+					if(filter_var($email, FILTER_VALIDATE_EMAIL))
+					{
+						if ($is_in_game) {
+							$msg = "回覆通知，案件單編號".$question_id."，您提問的內容已收到最新回覆，<br />請您透過遊戲內客服中心，查看相關內容。";
+						} else {
+							if ($ip) {
+							$msg = "回覆通知，案件單編號".$question_id."，您提問的內容已收到最新回覆，<br />請您透過<a href='https://support.longeplay.com.tw/service_quick?param_game_id=".$game_id."'>追蹤此單號</a>，查看相關內容。<br /><br />查詢代碼<b>".$check_id."</b>";
+							} else {
+							$msg = "回覆通知，案件單編號".$question_id."，您提問的內容已收到最新回覆，<br />請您透過<a href='https://game.longeplay.com.tw/service_quick?site=long_e&param_game_id=".$game_id."'>追蹤此單號</a>，查看相關內容。<br /><br />查詢代碼<b>".$check_id."</b>";
+							}
+
+
+						}
+
+							$this->load->library("g_send_mail");
+
+							if($this->g_send_mail->send_view($email,
+								$game_name."客服回覆通知信[".date("Y/m/d H:i:s")."]",
+								"g_blank_mail",
+								array("game_name" => $game_name, "msg" => $msg),
+								array("headerimg" => FCPATH."/p/image/mail/header.jpg")))
+							{
+								die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"已發送回覆通知給玩家")));
+							}
+
+					}
 		}
 
 		die(json_success());
@@ -1537,6 +1574,28 @@ function batch_handler($batch_id){
 
 
 		echo json_message(array("stat" => $stat ,"stat_reply" => $stat_reply ,"date" => $date ));
+
+	}
+
+
+	function test()
+	{
+		$this->load->library("g_send_mail");
+		if($this->g_send_mail->send_view("shihfan.tsai@gmail.com",
+			"測試 admin",
+			"g_blank_mail",
+			array("game_name" => $_SESSION['game_name'], "msg" => $msg),
+			array("headerimg" => FCPATH."/p/image/mail/header.jpg")))
+		{
+				$_SESSION['check_id'] = $check_id;
+				$_SESSION['email'] = $this->input->post("email");
+				$_SESSION['mobile'] = $this->input->post("mobile");
+			die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題#".$q_id."請用提問時信箱或手機及以下代碼查詢：<b>".$check_id."</b>")));
+		}
+		else
+		{
+			die(json_encode(array("status"=>"failure", "message"=>"E-Mail 發送失敗。請確認E-mail為有效信箱。")));
+		}
 
 	}
 

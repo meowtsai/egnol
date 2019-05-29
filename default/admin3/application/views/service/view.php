@@ -341,6 +341,14 @@ if ($question->is_favorite =='0'):?>
 
 	<form id="reply_form" method="post" action="<?=site_url("service/modify_reply_json")?>">
 		<input type="hidden" name="question_id" value="<?=$question->id?>">
+		<input type="hidden" name="email" value="<?=$question->email?>">
+		<input type="hidden" name="game_name" value="<?=$question->game_name?>">
+		<input type="hidden" name="ip" value="<?=$question->ip?>">
+		<input type="hidden" name="game_id" value="<?=$question->game_id?>">
+		<input type="hidden" name="check_id" value="<?=$question->check_id?>">
+		<input type="hidden" name="is_in_game" value="<?=$question->is_in_game?>">
+
+
 		回覆
 		<textarea name="content" rows="28" style="width:98%" class="required">親愛的玩家您好，
 感謝您使用龍邑客服中心線上回報系統
