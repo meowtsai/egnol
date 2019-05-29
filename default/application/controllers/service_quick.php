@@ -18,6 +18,20 @@ class Service_quick extends MY_Controller {
 	function index()
 	{
 
+		if (IN_OFFICE){
+			if ($this->input->get("param_game_id") == "g78naxx2hmt")
+			{
+				header("Location: https://support.longeplay.com.tw/service_quick?param_game_id=".$this->input->get("param_game_id"));
+				die();
+			}
+			if ($this->input->get("game_id") == "g78naxx2hmt")
+			{
+				header("Location: https://support.longeplay.com.tw/service_quick?".$_SERVER['QUERY_STRING']);
+				die();
+			}
+
+		}
+
 		if ($this->input->get("site") == "long_e¶m_game_id=g78naxx2hmt")
 		{
 			//redirect('/service_quick?site=long_e&param_game_id=g78naxx2hmt', 'location', 301);
