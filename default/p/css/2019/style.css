@@ -439,6 +439,9 @@ a:visited{
 #cs_box_outer {
 	width: 90%;
 	margin: 0 auto;
+  overflow: hidden;
+  padding-bottom:150px;
+
 
 }
 #cs_qa {
