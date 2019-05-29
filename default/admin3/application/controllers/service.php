@@ -949,7 +949,7 @@ class Service extends MY_Controller {
 								array("game_name" => $game_name, "msg" => $msg),
 								array("headerimg" => FCPATH."/p/image/mail/header.jpg")))
 							{
-								die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"已發送回覆通知給玩家")));
+								die(json_encode(array("status"=>"success", "message"=>"已發送回覆通知給玩家")));
 							}
 
 					}
