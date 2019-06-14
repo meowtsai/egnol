@@ -985,7 +985,8 @@ class Service extends MY_Controller {
 
 	function allocate_json()
 	{
-		$result = $this->input->post("allocate_result").date("Y-m-d H:i")." - ".$_SESSION['admin_name']."：".$this->input->post("result")."<br>";
+		$result = str_replace('"', '',$this->input->post("allocate_result")).date("Y-m-d H:i")." - ".$_SESSION['admin_name']."：".str_replace('"', '',$this->input->post("result"))."<br>";
+
 
 		$this->DB1->where("id", $this->input->post("question_id"))
 			->set('allocate_date', 'NOW()', false)

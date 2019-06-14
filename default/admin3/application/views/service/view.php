@@ -71,7 +71,9 @@ if ($question->is_favorite =='0'):?>
 
 	  <form id="allocate_form" method="post" action="<?=site_url("service/allocate_json")?>" style="margin:0; display:inline-block">
 		<input type="hidden" name="question_id" value="<?=$question->id?>">
+
 		<input type="hidden" name="allocate_result" value="<?=$question->allocate_result?>">
+
 
 		<div style="line-height:32px;">
 			後送給
@@ -273,6 +275,12 @@ if ($question->is_favorite =='0'):?>
 			<td><?=$question->phone?></td>
 			<th>E-mail：</th>
 			<td><?=$question->email?></td>
+		</tr>
+		<tr>
+			<th>ip:</th>
+			<td><?=$question->ip?></td>
+			<th>國家：</th>
+			<td><?=$question->country?></td>
 		</tr>
 		<? endif;?>
 		<tr>
