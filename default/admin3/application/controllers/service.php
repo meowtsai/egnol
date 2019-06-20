@@ -1551,13 +1551,13 @@ function batch_handler($batch_id){
 		}
 
 
-		$stat = $this->DB2->query("SELECT gi.server_id,g.name as '遊戲', DATE_FORMAT(create_time, '%H:00') as '時間',count(*) as 'cnt'
+		$stat = $this->DB2->query("SELECT gi.server_id,g.name as '遊戲',q.type as '類型', DATE_FORMAT(create_time, '%H:00') as '時間',count(*) as 'cnt'
 		from questions q LEFT JOIN servers gi
 		ON gi.server_id=q.server_id
 		LEFT JOIN games g on g.game_id=gi.game_id
 		where q.create_time between '{$date} 00:00:00' and '{$date} 23:59:59'
 		{$where_allow_games}
-		group by server_id,DATE_FORMAT(create_time, '%H:00')
+		group by server_id,q.type,DATE_FORMAT(create_time, '%H:00')
 		")->result();
 
 

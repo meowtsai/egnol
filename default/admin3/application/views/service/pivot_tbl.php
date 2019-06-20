@@ -1,5 +1,8 @@
 
+<?php
+	$question_type = $this->config->item('question_type');
 
+?>
 
 	<div class="control-group">
 		選擇日期：<input type="text" name="date"  style="width:120px" id="date" autocomplete="off">
@@ -85,6 +88,8 @@ function get_data(date)
 	$("#output").hide();
 	$("#output_reply").hide();
 	$(".lbl_loading").show();
+
+	let question_type=<?=json_encode($question_type)?>;
   let url = "./hourly_count_json";
   $.ajax({
     type: "GET",
@@ -94,18 +99,29 @@ function get_data(date)
     //console.log( "Request done: " + result );
 		$(".lbl_loading").hide();
 		let obj = JSON.parse(result);
+		var derivers = $.pivotUtilities.derivers;
+		var tpl = $.pivotUtilities.aggregatorTemplates;
 		var sum = $.pivotUtilities.aggregatorTemplates.sum;
-	  var numberFormat = $.pivotUtilities.numberFormat;
-	  var intFormat = numberFormat({digitsAfterDecimal: 0});
-	  var heatmap =  $.pivotUtilities.renderers["Heatmap"];
+		 var numberFormat = $.pivotUtilities.numberFormat;
+		 var intFormat = numberFormat({digitsAfterDecimal: 0});
+		 var heatmap =  $.pivotUtilities.renderers["Heatmap"];
 
-		$("#output").pivot(
+
+
+		$("#output").pivotUI(
 		        obj.stat,
 		    {
-		        rows: ["遊戲"],
-		        cols: ["時間"],
-		        aggregator: sum(intFormat)(["cnt"]),
-		        renderer: heatmap
+					rows: ["遊戲"],
+					cols: ["時間"],
+					hiddenAttributes: ["cnt","server_id","類型"],
+					derivedAttributes: {
+                        "類別":  function(record) {return question_type[record.類型];}
+                    },
+
+						aggregators: {
+									 "數量":  function() { return tpl.sum(intFormat)(["cnt"]) },
+							 },
+						rendererName: "Heatmap",
 		    }
 		).show();
 
@@ -115,7 +131,7 @@ function get_data(date)
 		        rows: ["遊戲"],
 		        cols: ["時間"],
 		        aggregator: sum(intFormat)(["cnt"]),
-		        renderer: heatmap
+		         renderer: heatmap
 		    }
 		).show();
 
