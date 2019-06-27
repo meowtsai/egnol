@@ -1195,6 +1195,8 @@ class Service extends MY_Controller {
 	{
 		//select server_id,reporter_char_id,reporter_name,flagged_player_char_id,flagged_player_name,category,reason,create_time from complaints
 		$this->zacl->check("service", "favorite") ;
+
+
 		$this->_init_service_layout();
 
 		header("Cache-Control: private");
@@ -1531,7 +1533,7 @@ function batch_handler($batch_id){
 
 	function pivot_tbl(){
 
-
+		$this->zacl->check("service", "report") ;
 
 		$this->_init_service_layout()
 			->add_breadcrumb("[時間別]統計")
@@ -1541,6 +1543,7 @@ function batch_handler($batch_id){
 			->render();
 	}
 	function pivot_allocate(){
+		$this->zacl->check("service", "report") ;
 		$this->_init_service_layout()
 			->add_breadcrumb("提問單處理每日統計")
 			->add_css_link('pivot')
