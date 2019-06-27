@@ -1540,6 +1540,16 @@ function batch_handler($batch_id){
 			->add_js_include("jquery-ui-timepicker-addon")
 			->render();
 	}
+	function pivot_allocate(){
+		$this->_init_service_layout()
+			->add_breadcrumb("提問單處理每日統計")
+			->add_css_link('pivot')
+			->add_js_include("@pivot/dist/pivot")
+			->add_js_include("jquery-ui-timepicker-addon")
+			->render();
+	}
+
+
 
 	function hourly_count_json()
 	{
@@ -1575,6 +1585,34 @@ function batch_handler($batch_id){
 
 
 		echo json_message(array("stat" => $stat ,"stat_reply" => $stat_reply ,"date" => $date ));
+
+	}
+
+
+	function daily_allocate_json()
+	{
+		$where_allow_games = (in_array('all_game', $this->zacl->allow_games))?"":" and g.game_id in ('".implode("','",$this->zacl->allow_games)."')";
+		$date = date('Y-m-d',(strtotime ( "now" , strtotime ( date('Y-m-d')) ) ));
+
+		if ($this->input->get("date")) {
+			$date = $this->input->get("date");
+		}
+
+
+		$stat = $this->DB2->query("select g.name as '遊戲', q.type as '類型', u.name as '處理專員', count(distinct question_id) as 'cnt'
+		from question_allocate_logs a
+		LEFT JOIN admin_users u ON u.uid=a.admin_uid
+		LEFT JOIN questions q  on q.id = a.question_id
+		LEFT JOIN servers gi
+		ON gi.server_id=q.server_id
+		LEFT JOIN games g on g.game_id=gi.game_id
+		where a.create_time between '{$date} 00:00:00' and '{$date} 23:59:59'
+		{$where_allow_games}
+		group by q.type,g.name, u.name")->result();
+
+
+
+		echo json_message(array("stat" => $stat  ,"date" => $date ));
 
 	}
 
