@@ -65,13 +65,24 @@
 		</tr>
 <? endif;?>
 
-<? if ( ! empty($allocate[2])):?>
+<? $ants_total=0;
+if ( ! empty($allocate[2])):?>
 		<tr>
 			<th><a href="<?=site_url("service/get_list?allocate_status=2&action=查詢")?>">完成：</a></th>
 			<td>
+
 			<? foreach($allocate[2] as $row):?>
-			<span style="display:inline-block; padding:1px 4px;"><a href="<?=site_url("service/get_list?allocate_status=2&allocate_auid={$row->uid}&action=查詢")?>"><?=$row->name?>(<?=$row->cnt?>)</a></span>
+			<? if ($row->role != 'ants'):?>
+			<span style="display:inline-block; padding:1px 4px;"><a href="<?=site_url("service/get_list?allocate_status=2&allocate_auid={$row->uid}&action=查詢")?>">
+				<?=$row->name?>(<?=$row->cnt?>)</a></span>
+
+			<? else:
+				 $ants_total += $row->cnt ?>
+				<? endif;?>
 			<? endforeach;?>
+
+			<span style="display:inline-block; padding:1px 4px;">
+				蟻力群組(<?=$ants_total?>)</span>
 			</td>
 		</tr>
 <? endif;?>
@@ -114,7 +125,7 @@
 		.attr("class", "x axis")
     .attr("transform", "translate(" + margin.left + "," + margin.top + ")").call(xAxis);;
 
-		
+
 
 	  x.domain(data.map(function(d) { return d.name; }));
 	  y.domain([0, d3.max(data, function(d) { return d.value; })]);

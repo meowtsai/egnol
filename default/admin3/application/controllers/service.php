@@ -348,11 +348,11 @@ class Service extends MY_Controller {
 		")->row();
 
 		$query = $this->DB2->query("
-				select q.allocate_status, au.uid, au.name, count(*) cnt from questions q
+				select q.allocate_status, au.uid, au.name,au.role, count(*) cnt from questions q
                 left join servers s on s.server_id=q.server_id
 				left join admin_users au on au.uid = q.allocate_admin_uid
 				where allocate_status in ('1','2') {$where_allow_games}
-				group by allocate_status, uid
+				group by allocate_status, uid order by au.role desc,au.uid
 		");
 		$allocate = array();
 		foreach($query->result() as $row) {
