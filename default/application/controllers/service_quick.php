@@ -235,6 +235,13 @@ class Service_quick extends MY_Controller {
 
 		//$this->_require_login();
 		$site = $this->_get_site();
+		if ($site) {
+			header("Location: https://support.longeplay.com.tw/service_quick?param_game_id=".$site);
+			die();	
+		}
+
+
+
 		// $user_ip = $_SERVER['REMOTE_ADDR'];
 		// if ($user_ip=="61.220.44.200"){
 		// 	header("Location: /service_quick/question_internal?site=$site");
