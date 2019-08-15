@@ -299,6 +299,38 @@ $log = $this->DB2
 	}
 
 
+	function g93_events($event_id)
+	{
+
+		$this->_init_layout();
+		$result = null ;
+	//帳號	角色名稱	角色id
+	$result = $this->DB2
+	->select("b.name,b.in_game_id,b.partner_uid,a.serial,a.event_sub_id,sm.title")
+	->select("(select create_time from log_serial_event c where c.char_id=a.uid and c.serial=a.serial and status=1 order by id desc limit 1 ) as dt",FALSE)
+	->from("event_serial a")
+	->join("characters b", "a.uid=b.in_game_id", "left")
+	->join("serial_main sm", "sm.id=a.event_sub_id", "left")
+	->where("a.event_id",$event_id)
+	->where("a.status",1)
+	->order_by("a.event_sub_id")
+	->get();
+
+	$log = $this->DB2
+	->select("b.name as char_name,c.*")
+	->from("log_serial_event c")
+	->join("characters b", "c.char_id=b.id", "left")
+	->where("event_id",$event_id)
+	->order_by("c.id desc")
+	->get();
+
+		$this->g_layout
+			->add_breadcrumb("超機動聯盟 虛寶活動查詢")
+			->set("result", isset($result) ? $result : false)
+			->set("log", isset($log) ? $log : false)
+			->render();
+	}
+
 	function l20na_preregister()
 	{
 
