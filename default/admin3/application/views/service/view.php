@@ -278,7 +278,7 @@ if ($question->is_favorite =='0'):?>
 		</tr>
 		<tr>
 			<th>ip:</th>
-			<td><?=$question->ip?></td>
+			<td><?=$question->ip?>  <a target="_blank" href="https://whatismyipaddress.com/ip/<?=$question->ip?>">查看ip資訊</a> </td>
 			<th>國家：</th>
 			<td><?=$question->country?></td>
 		</tr>
