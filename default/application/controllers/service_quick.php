@@ -17,6 +17,7 @@ class Service_quick extends MY_Controller {
 
 	function index()
 	{
+
 			$go_games = $this->config->item("transfer_to_support");
 			if (in_array($this->input->get("param_game_id"),$go_games)){
 				header("Location: https://support.longeplay.com.tw/service_quick?param_game_id=".$this->input->get("param_game_id"));
@@ -38,7 +39,15 @@ class Service_quick extends MY_Controller {
 			// 	die();
 			// }
 
+//https://game.longeplay.com.tw/service_quick?param_game_id=G93site=long_e
 
+
+
+	if ($this->input->get("param_game_id") == "G93site=long_e")
+	{		
+		header("Location: https://support.longeplay.com.tw/service_quick?param_game_id=G93");
+		die();
+	}
 
 		if ($this->input->get("site") == "long_e¶m_game_id=g78naxx2hmt")
 		{
@@ -237,7 +246,7 @@ class Service_quick extends MY_Controller {
 		$site = $this->_get_site();
 		if ($site) {
 			header("Location: https://support.longeplay.com.tw/service_quick?param_game_id=".$site);
-			die();	
+			die();
 		}
 
 
