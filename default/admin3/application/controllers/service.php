@@ -926,14 +926,34 @@ class Service extends MY_Controller {
 					$is_in_game = $this->input->post("is_in_game");
 					$ip = $this->input->post("ip");
 
+					//$site = "https://support.longeplay.com.tw";
+					$site = "http://test-payment.longeplay.com.tw:5002";
+
+
 
 					if(filter_var($email, FILTER_VALIDATE_EMAIL))
 					{
+
+
 						if ($is_in_game) {
-							$msg = "回覆通知，案件單編號".$question_id."，您提問的內容已收到最新回覆，<br />請您透過遊戲內客服中心，查看相關內容。";
+							$msg = "回覆通知，案件單編號".$question_id."，您提問的內容已收到最新回覆，<br />您可以透過<b>遊戲內客服中心</b>查看相關內容。";
 						} else {
+
 							if ($ip) {
-							$msg = "回覆通知，案件單編號".$question_id."，您提問的內容已收到最新回覆，<br />請您透過<a href='https://support.longeplay.com.tw/service_quick?param_game_id=".$game_id."'>追蹤此單號</a>，查看相關內容。<br /><br />查詢代碼<b>".$check_id."</b>";
+								$post_string = ["email"=>$email,
+								"check_id"=>$check_id];
+								 $token_result= $this->request_by_curl($this->config->item('get_token_site'), $post_string);
+								$json_res = json_decode($token_result);
+
+								if ($json_res->status === 1) {
+									//<a href='${SERVICE_CONFIG.report_path}/service/${game_id}/view/${q_id}?token=${token}'>
+									$msg = "回覆通知，案件單編號".$question_id."，您提問的內容已收到最新回覆，<br />請您透過<a href='".$site."/service/".$game_id."/view/".$question_id."?token=".$json_res->msg->token."'>追蹤此單號</a>，查看相關內容。<br /><br />查詢代碼<b>".$check_id."</b>";
+								}
+								else {
+									$msg = $token_result."回覆通知，案件單編號".$question_id."，您提問的內容已收到最新回覆，<br />請您透過<a href='".$site."/service_quick?param_game_id=".$game_id."'>追蹤此單號</a>，查看相關內容。<br /><br />查詢代碼<b>".$check_id."</b>";
+								}
+
+
 							} else {
 							$msg = "回覆通知，案件單編號".$question_id."，您提問的內容已收到最新回覆，<br />請您透過<a href='https://game.longeplay.com.tw/service_quick?site=long_e&param_game_id=".$game_id."'>追蹤此單號</a>，查看相關內容。<br /><br />查詢代碼<b>".$check_id."</b>";
 							}
@@ -1620,26 +1640,24 @@ function batch_handler($batch_id){
 	}
 
 
-	function test()
-	{
-		$this->load->library("g_send_mail");
-		if($this->g_send_mail->send_view("shihfan.tsai@gmail.com",
-			"測試 admin",
-			"g_blank_mail",
-			array("game_name" => $_SESSION['game_name'], "msg" => $msg),
-			array("headerimg" => FCPATH."/p/image/mail/header.jpg")))
-		{
-				$_SESSION['check_id'] = $check_id;
-				$_SESSION['email'] = $this->input->post("email");
-				$_SESSION['mobile'] = $this->input->post("mobile");
-			die(json_encode(array("status"=>"success", "site"=> $site, "message"=>"後續追蹤客服問題#".$q_id."請用提問時信箱或手機及以下代碼查詢：<b>".$check_id."</b>")));
-		}
-		else
-		{
-			die(json_encode(array("status"=>"failure", "message"=>"E-Mail 發送失敗。請確認E-mail為有效信箱。")));
-		}
+	/**
+	* Curl版本
+	* 使用方法：
+	* $post_string = "app=request&version=beta";
+	* request_by_curl('//www.jb51.net/restServer.php', $post_string);
+	*/
+	function request_by_curl($remote_server, $post_string) {
+		//echo $post_string."<br />" ;
+	  $ch = curl_init();
+	  curl_setopt($ch, CURLOPT_URL, $remote_server);
+	  curl_setopt($ch, CURLOPT_POSTFIELDS, $post_string );
+	  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
+	  $data = curl_exec($ch);
+	  curl_close($ch);
+	  return $data;
 	}
+
 
 
 
