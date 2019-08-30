@@ -927,7 +927,7 @@ class Service extends MY_Controller {
 					$ip = $this->input->post("ip");
 
 					//$site = "https://support.longeplay.com.tw";
-					$site = "http://test-payment.longeplay.com.tw:5002";
+					$site = "https://support.longeplay.com.tw";
 
 
 
