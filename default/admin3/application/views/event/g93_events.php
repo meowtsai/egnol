@@ -145,11 +145,11 @@
     }
     else if (start_date) {
       csvData ="";
-      var startDateTimeStamp = new Date(start_date).getTime();
-      console.log(start_date, startDateTimeStamp);
+      var startDateTimeStamp = new Date(start_date + " 00:00").getTime();
+      //console.log(start_date, startDateTimeStamp);
       $("#"+ which_tbl +" tbody tr").each(function() {
         var rowDate = $(this).find('td:eq(4)').text();
-        console.log(rowDate, new Date(rowDate).getTime());
+        //console.log(rowDate, new Date(rowDate).getTime());
 
         if (new Date(rowDate).getTime() > startDateTimeStamp) {
           $(this).show();
