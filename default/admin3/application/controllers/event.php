@@ -305,21 +305,28 @@ $log = $this->DB2
 		$this->_init_layout();
 		$result = null ;
 	//帳號	角色名稱	角色id
+
+	//帳號	角色名稱	角色id	序號	兌換時間	獎項
+//
+// select a.event_sub_id,title, a.serial,b.partner_uid,b.char_name,b.create_time
+// from event_serial a left join log_serial_event b on a.uid=b.char_id  and b.event_id=a.event_id and a.status=b.status and a.serial=b.serial
+// left join serial_main sm on sm.id=a.event_sub_id
+// where a.event_id=21 and a.status=1  and b.status=1 order by b.create_time
+//
+
 	$result = $this->DB2
-	->select("b.name,b.in_game_id,b.partner_uid,a.serial,a.event_sub_id,sm.title")
-	->select("(select create_time from log_serial_event c where c.char_id=a.uid and c.serial=a.serial and status=1 order by id desc limit 1 ) as dt",FALSE)
+	->select("a.event_sub_id,sm.title, a.serial,b.partner_uid,b.char_name as name,a.uid as in_game_id, b.create_time as dt")
 	->from("event_serial a")
-	->join("characters b", "a.uid=b.in_game_id", "left")
+	->join("log_serial_event b", "a.uid=b.char_id  and b.event_id=a.event_id and a.status=b.status and a.serial=b.serial", "left")
 	->join("serial_main sm", "sm.id=a.event_sub_id", "left")
 	->where("a.event_id",$event_id)
 	->where("a.status",1)
-	->order_by("a.event_sub_id")
+	->order_by("b.create_time desc")
 	->get();
 
 	$log = $this->DB2
-	->select("b.name as char_name,c.*")
+	->select("c.*")
 	->from("log_serial_event c")
-	->join("characters b", "c.char_id=b.id", "left")
 	->where("event_id",$event_id)
 	->order_by("c.id desc")
 	->get();
@@ -328,6 +335,8 @@ $log = $this->DB2
 			->add_breadcrumb("超機動聯盟 虛寶活動查詢")
 			->set("result", isset($result) ? $result : false)
 			->set("log", isset($log) ? $log : false)
+			->add_js_include("jquery-ui-timepicker-addon")
+			->add_js_include("event/yahoo_20120717")
 			->render();
 	}
 

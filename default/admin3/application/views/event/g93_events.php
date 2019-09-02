@@ -4,6 +4,13 @@
 </div>
 <div>
   <input type="text" id="find_keyword" name="find_keyword"  value="" class="input-medium required" placeholder="關鍵字...."> <a href="javascript:;;" onclick="func_search()"><i class='icon-search'></i></a>
+
+  <span class="sptl"></span>
+
+  兌換時間大於
+  <input type="text" name="start_date"  id="start_date"  style="width:120px" autocomplete="off">
+  <a href="javascript:;;" onclick="func_search()">確定</a>
+
   <ul class="nav nav-tabs" id="myTab">
     <li class="active"><a href="#home">兌換成功紀錄</a></li>
     <li><a href="#profile">歷程紀錄</a></li>
@@ -122,15 +129,47 @@
   function func_search(){
 
     var keyword= $("#find_keyword").val();
+
+    var start_date= $("#start_date").val();
+    var end_date= $("#end_date").val();
     //console.log(which_tbl);
+    var rc=0;
     if(keyword)
     {
-      var rc=0;
+
       $("#"+ which_tbl +" tbody>tr").hide();
 
       $("#"+ which_tbl +" tr >td:contains('"+keyword+"')").parent().show();
       rc = $("#"+ which_tbl +" tr >td:contains('"+keyword+"')").parent().length;
       $(".recordcount").text("總筆數:" + rc);
+    }
+    else if (start_date) {
+      csvData ="";
+      var startDateTimeStamp = new Date(start_date).getTime();
+      console.log(start_date, startDateTimeStamp);
+      $("#"+ which_tbl +" tbody tr").each(function() {
+        var rowDate = $(this).find('td:eq(4)').text();
+        console.log(rowDate, new Date(rowDate).getTime());
+
+        if (new Date(rowDate).getTime() > startDateTimeStamp) {
+          $(this).show();
+          $(this).find('td:eq(4)').text()
+          var partner_uid = $(this).find('td:eq(0)').text();
+          var name = $(this).find('td:eq(1)').text();
+          var in_game_id = $(this).find('td:eq(2)').text();
+          var serial = $(this).find('td:eq(3)').text();
+          var dt = $(this).find('td:eq(4)').text();
+          var desc = $(this).find('td:eq(5)').text();
+          csvData += `${partner_uid},"${name}",${in_game_id},${serial},${dt},${desc}\n`;
+          rc++;
+
+        } else {
+          $(this).hide();
+        }
+
+    });
+$(".recordcount").text("總筆數:" + rc);
+
     }
     else {
       //$("#list_table tr:nth-child(n+1)").show();
@@ -189,4 +228,7 @@
       link.setAttribute('download', filename);
       link.click();
   }
+
+
+
 </script>
