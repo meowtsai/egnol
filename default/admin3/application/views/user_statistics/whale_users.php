@@ -110,7 +110,12 @@
 					<? endif;?>
 				</td>
 				<td style="text-align:right">
-					<a href="<?=site_url("vip/user_dashboard/{$game_id}/{$row->character_in_game_id}")?>">
+					<? $dashboard_url = urlencode($row->character_in_game_id);
+
+
+					?>
+
+					<a href="<?=site_url("vip/user_dashboard/{$game_id}/{$dashboard_url}")?>">
 					<?=$row->character_in_game_id?>
 					</a>
 				</td>

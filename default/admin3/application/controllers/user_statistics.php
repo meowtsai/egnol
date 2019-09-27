@@ -1138,8 +1138,17 @@ function vipcolor($game_id,$deposit_number){
 
 function whale_users_set_status($uid, $status)
 {
+	if ($status==1){
 	$this->DB2->where("uid", $uid)
-	->set("is_added", $status)->update("whale_users");
+	->update("whale_users" ,array("line_date"=> now() , "is_added"=> $status));
+} else {
+	$this->DB2->where("uid", $uid)
+	->update("whale_users" ,array("line_date"=> null , "is_added"=> $status));
+}
+	// $this->DB2->where("uid", $uid)
+	// ->set("is_added", $status)
+	// ->update("whale_users" , $status ==1 ? array("line_date"=> "DATE_FORMAT(now(), '%Y-%m-%d')"):array("line_date"=> null) );
+	//echo json_failure($status ==1);
 	echo $this->DB2->affected_rows()>0 ? json_success() : json_failure("無變更");
 }
 
