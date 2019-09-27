@@ -1060,7 +1060,7 @@ class User_statistics extends MY_Controller {
 							$content .= "\n";
 						}
 
-						echo iconv('utf-8', 'big5//TRANSLIT//IGNORE', $content);
+						echo iconv('utf-8', 'utf-8//TRANSLIT//IGNORE', $content);
 						exit();
 						break;
 			}
@@ -1344,7 +1344,7 @@ function whale_users_set_lastlogin()
 
 		$this->zacl->check_login(false);
 
-		
+
 
 		$m_sql="select DATE_FORMAT(create_time,'%Y-%m') as month
 		from questions
