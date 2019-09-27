@@ -115,7 +115,7 @@
 
 					?>
 
-					<a href="<?=site_url("vip/user_dashboard/{$game_id}/{$dashboard_url}")?>">
+					<a href="<?=site_url("vip/user_dashboard/{$game_id}?user={$dashboard_url}")?>">
 					<?=$row->character_in_game_id?>
 					</a>
 				</td>

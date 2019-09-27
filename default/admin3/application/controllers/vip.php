@@ -559,8 +559,9 @@ class Vip extends MY_Controller {
 		}
 	}
 
-function user_dashboard($game_id,$role_id)
+function user_dashboard($game_id)
 {
+	$role_id =$this->input->get("user");
 	$this->zacl->check("vip", "modify");
 
 	$vip = $this->DB2->select("uid,char_name,char_in_game_id,server_name,ip,country,vip_ranking,site,line_id,mobile")
