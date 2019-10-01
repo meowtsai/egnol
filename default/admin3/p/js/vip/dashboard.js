@@ -101,6 +101,7 @@ function update_vip_info()
     return;
   }
   let url = "../../../vip/update_vip_info";
+
   $.ajax({
     type: "POST",
     url: url,
@@ -152,13 +153,16 @@ function invitation(operation){
   });
 }
 
+
+
 function get_invitation(){
-  let url = "../../../vip/vip_request_list/" + game_id + "/" + role_id + "/3/1";
+  //let url = "../../../vip/vip_request_list/" + game_id  + "/3/1";
+  let url = "../../../vip/vip_request_list/" + game_id  + "/3/1";
   console.log(url);
   $.ajax({
     type: "GET",
     url: url,
-    data: "request_code=3",
+    data: "request_code=3&role_id=" + role_id,
   }).done(function(result) {
     console.log(result);
     var resultObj =  JSON.parse(result);
@@ -256,7 +260,7 @@ function add_vip_request(service_type) {
 
 function get_vip_requests_log(service_type,page_num) {
   //http://test-payment.longeplay.com.tw/default/admin3/vip/vip_request_list/h35naxx1hmt/390709/1/2
-  let url = "../../../vip/vip_request_list/" + game_id + "/" + role_id + "/" + service_type + "/" + page_num;
+  let url = "../../../vip/vip_request_list/" + game_id + "/" +  service_type + "/" + page_num;
 
   var tableElem = null;
   var pageElem = null;
@@ -309,7 +313,7 @@ function get_vip_requests_log(service_type,page_num) {
   $.ajax({
     type: "GET",
     url: url,
-    data: "request_code=" + request_code +"&note=" + note +"&admin_uid=" + admin_uid +"&start_date=" + start_date +"&end_date=" + end_date ,
+    data: "&role_id="+ role_id +"&request_code=" + request_code +"&note=" + note +"&admin_uid=" + admin_uid +"&start_date=" + start_date +"&end_date=" + end_date ,
   }).done(function(result) {
     var resultObj =  JSON.parse(result);
     page_count = resultObj.page_count;

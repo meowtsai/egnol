@@ -567,12 +567,12 @@ function user_dashboard($game_id)
 	$vip = $this->DB2->select("uid,char_name,char_in_game_id,server_name,ip,country,vip_ranking,site,line_id,mobile")
 		->select("DATE_FORMAT(line_date, '%Y-%m-%d') 'line_date'",false)
 		->where("site", $game_id)
-		->where("char_in_game_id", urldecode($role_id))
+		->where("char_in_game_id", $role_id)
 		->from("whale_users")
 		->get()->row();
 
 	$admins = $this->DB2->select("t.admin_uid,u.name")
-		->where("role_id", urldecode($role_id))
+		->where("role_id", $role_id)
 		->from('vip_requests t')
 		->join("admin_users u", "u.uid=t.admin_uid", "left")
 		->group_by(array("admin_uid", "name"))
@@ -662,8 +662,9 @@ function add_vip_request()
 
 }
 //傳入遊戲和角色就得到該角色的服務歷程
-function vip_request_list($game_id,$role_id,$type,$page_num)
+function vip_request_list($game_id,$type,$page_num)
 {
+	$role_id = $this->input->get("role_id");
 	switch ($type) {
 		case '1':
 			$service_request = $this->config->item('h35vip_service_request');
