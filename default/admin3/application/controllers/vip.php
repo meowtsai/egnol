@@ -628,7 +628,6 @@ function add_vip_request()
 	$request_code = $this->input->post("request_code");
 	$note = $this->input->post("note");
 
-
 	$data = array(
 		'game_id'	=> $game_id,
 		'role_id'	=> $role_id,
