@@ -753,10 +753,19 @@ class Service extends MY_Controller {
 		where b.admin_uid={$_SESSION['admin_uid']} and b.status=1
 		order by status,id desc")->result();
 
+		$vip =null;
+		if ($question->game_id =='g66naxx2tw' && $question->is_in_game=='1') {
+			$vip = $this->DB2->select("vip_ranking, deposit_total")
+				->from("whale_users")
+				->where("uid", $question->partner_uid)
+				->where("site", 'g66naxx2tw')
+				->get()->row();
+		}
+
 		$this->_init_service_layout()
 			->add_breadcrumb("檢視")
 			->add_js_include("service/view")
-			->add_js_include("fontawesome-all")
+			->add_js_include("fontawesome/js/fontawesome-all")
 			->set("question", $question)
 			->set("replies", $replies)
 			->set("pic_plus", $pic_plus)
@@ -764,6 +773,7 @@ class Service extends MY_Controller {
 			->set("tasks", $tasks)
 			->set("add_favor_ok", $add_favor_ok)
 			->set("q_batch_info", $q_batch_info)
+			->set("vip", $vip)
 			->set("ip", $ip)
 			->render();
 	}

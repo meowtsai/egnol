@@ -169,6 +169,9 @@ if ($question->is_favorite =='0'):?>
 			<th>原廠uid：</th>
 			<td colspan="3">
 				<?=$question->partner_uid?>
+				<? if ($vip !=null):?>
+				 <span class="btn-inverse btn-mini"><?=vipcolor($vip->vip_ranking) ?></span>
+				<?endif;?>
 				<a href="<?=site_url("service/get_list?partner_uid={$question->partner_uid}&action=查詢")?>"><i class="icon-search"></i></a>
 			</td>
             <? else:?>
@@ -410,3 +413,32 @@ if ($question->is_favorite =='0'):?>
 	<? endif;?>
 <?endif;?>
 </div>
+
+<?
+function vipcolor($rank_code){
+	switch ($rank_code) {
+		case "red":
+			//return "#ff9999";
+			return "紅R";
+		case "black":
+			//return "#000000";
+			return "紅R";
+		case "platinum":
+			//return "#E5E4E2";
+			return "白金R";
+		case "gold":
+			//return "#D4AF37";
+			return "金R";
+		case "silver":
+			//return "#C0C0C0";
+			return "銀R";
+		case "general":
+			//return "#FAEBD7";
+			return "普R";
+		default:
+			# code...
+			break;
+	}
+
+}
+?>

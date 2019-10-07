@@ -261,6 +261,42 @@ function vipcolor($game_id,$deposit_number){
 			}
 
 			break;
+			case 'g66naxx2tw':
+			if ($deposit_number>=1500000)
+			{
+				return "#ff9999";
+				//return "紅R";
+			}
+				else if ($deposit_number>=1000000 and $deposit_number<1500000)
+				{
+					return "#FFFFFF";
+
+				}
+				if ($deposit_number>=1000000)
+				{
+					return "#FFFFFF";
+				}
+				else if ($deposit_number>=700000 and $deposit_number<1000000)
+				{
+					return "#E5E4E2";
+				}
+				else if ($deposit_number>=400000 and $deposit_number<700000)
+				{
+					return "#D4AF37";
+				}
+				else if ($deposit_number>=200000 and $deposit_number<400000)
+				{
+					return "#C0C0C0";
+				}
+				else if ($deposit_number>=150000 and $deposit_number<200000)
+				{
+					return "#FAEBD7";
+				}
+				else {
+					return "#FFFFFF";
+				}
+				break;
+
 		default:
 			# code...
 			break;

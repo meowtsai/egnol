@@ -1128,6 +1128,42 @@ function vipcolor($game_id,$deposit_number){
 				}
 
 				break;
+				case 'g66naxx2tw':
+				if ($deposit_number>=1500000)
+				{
+					//return "#FFFFFF";
+					return "紅R";
+				}
+					else if ($deposit_number>=1000000 and $deposit_number<1500000)
+					{
+						//return "#FFFFFF";
+						return "黑R";
+					}
+					else if ($deposit_number>=700000 and $deposit_number<1000000)
+					{
+						//return "#E5E4E2";
+						return "白金R";
+					}
+					else if ($deposit_number>=400000 and $deposit_number<700000)
+					{
+						//return "#D4AF37";
+						return "金R";
+					}
+					else if ($deposit_number>=200000 and $deposit_number<400000)
+					{
+						//return "#C0C0C0";
+						return "銀R";
+					}
+					else if ($deposit_number>=150000 and $deposit_number<200000)
+					{
+						//return "#FAEBD7";
+						return "普R";
+					}
+					else {
+						//return "#FFFFFF";
+						return "No R";
+					}
+					break;
 			default:
 				# code...
 				break;
