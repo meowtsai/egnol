@@ -2098,7 +2098,7 @@ $content ="親愛的玩家您好，
 
 			$this->DB1->set("update_time", "now()", false)
 				->where("id", $row->id)->update("questions",
-					array("is_read"=>'0', "status"=>'4',"system_closed"=>'1'));
+					array("status"=>'4',"system_closed"=>'1'));
 
 			}
 		}
