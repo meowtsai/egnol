@@ -228,6 +228,7 @@ class Event extends MY_Controller
   }
 
   function check_user_data(){
+    die(json_encode(array("status"=>"failure", "message"=>"fb 資料驗證失敗。")));
     $http_origin = $_SERVER['HTTP_ORIGIN'];
     if ($http_origin == "https://meowroll.com" || $http_origin == "https://yujian-love.com" || $http_origin == "https://www.yujian-love.com" )
     {
@@ -267,7 +268,7 @@ class Event extends MY_Controller
 
   function _l20na_daily_login($uid){
        //$uid = $_SESSION['event12_uid'];
-
+        return array("status"=>"failure", "message"=>"沒有登入資訊。");
        if ($uid)
        {
          $query = $this->db->query("SELECT count(*) as chk from l20na_orders where event_uid={$uid} and date=curdate()");
@@ -305,6 +306,7 @@ class Event extends MY_Controller
   }
 
   function user_register(){
+    die(json_encode(array("status"=>"failure", "message"=>"資料驗證錯誤"))) ;
     $http_origin = $_SERVER['HTTP_ORIGIN'];
 
     if ($http_origin == "https://meowroll.com" || $http_origin == "https://yujian-love.com" || $http_origin == "https://www.yujian-love.com" )
@@ -400,6 +402,7 @@ class Event extends MY_Controller
   }
 
   function l20na_send_items(){
+    die(json_encode(array("status"=>"failure", "message"=>"資料驗證錯誤"))) ;
     //item_id=202&npc_id=151
       $http_origin = $_SERVER['HTTP_ORIGIN'];
 
@@ -461,6 +464,7 @@ class Event extends MY_Controller
   }
 
   function l20na_get_npcs_items(){
+    die(json_encode(array("status"=>"failure", "message"=>"資料驗證錯誤"))) ;
     $http_origin = $_SERVER['HTTP_ORIGIN'];
     if ($http_origin == "https://meowroll.com" || $http_origin == "https://yujian-love.com" || $http_origin == "https://www.yujian-love.com" )
     {
@@ -515,6 +519,7 @@ class Event extends MY_Controller
   }
 
   function l20na_prereg_count($datetime1){
+    return 0;
 
     $base=$this->config->item("l20na_base");
 
