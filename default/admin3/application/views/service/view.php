@@ -436,7 +436,7 @@ function vipcolor($rank_code){
 			//return "#FAEBD7";
 			return "普R";
 		default:
-			# code...
+			return "準R";
 			break;
 	}
 
