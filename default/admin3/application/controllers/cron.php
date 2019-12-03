@@ -2060,7 +2060,7 @@ function close_reserved_questions()
 	AND allocate_status!=1
 	AND close_admin_uid IS NOT NULL
 	AND system_closed!=1
-	AND TIMEDIFF(now(),system_closed_start)>'48:00:00';");
+	AND TIMEDIFF(now(),system_closed_start)>'120:00:00';");
 
 	//2.
 
