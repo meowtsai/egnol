@@ -2034,7 +2034,7 @@ function find_duplicate_characters()
 	// 			GROUP BY  name,in_game_id,server_id,partner_uid HAVING count(*)>1;");
 
 	$query = $this->DB2->query("SELECT name,server_id,partner_uid FROM characters
-	      WHERE server_id in(SELECT server_id FROM servers WHERE game_id in('h35naxx1hmt','g78naxx2hmt','h55naxx2tw'))
+	      WHERE server_id in(SELECT server_id FROM servers WHERE game_id in('h35naxx1hmt','g78naxx2hmt','h55naxx2tw','g66naxx2tw'))
       GROUP BY  name,server_id,partner_uid HAVING count(*)>1;");
 
 	if ($query->num_rows() > 0) {
@@ -2060,7 +2060,7 @@ function close_reserved_questions()
 	AND allocate_status!=1
 	AND close_admin_uid IS NOT NULL
 	AND system_closed!=1
-	AND TIMEDIFF(now(),system_closed_start)>'120:00:00';");
+	AND TIME_TO_SEC(TIMEDIFF(now(),system_closed_start))> (120*3600);");
 
 	//2.
 
